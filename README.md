@@ -18,7 +18,7 @@
 
 # Definition of Ready
 
-## User Stories 
+## User Stories
 
 * User Story format to create Github issues is used - I want to `<goal>` So that `<reason>`. Yes, we skip the persona.
 * Milestone / epic is assigned.
@@ -48,3 +48,13 @@
 # Roadmap 2019-12-02
 
 ![Roadmap of vsf-capybara](https://github.com/DivanteLtd/vsf-capybara/blob/master/capybara_roadmap_20191202.jpg "Roadmap of vsf-capybara")
+
+---
+
+# Development environment setup
+
+* Install `lerna` globally: `npm install -g lerna`
+* Configure `vsf-capybara` repo as a git submodule in theme path of your `vue-storefront` workspace and track `master` branch: `git submodule add -b master https://github.com/DivanteLtd/vsf-capybara src/themes/capybara`
+* Fetch all the data: `git submodule update --init`
+* Update `theme` property in your local configuration in `config/local.json` file: `"@vue-storefront/theme-capybara"`
+* Download all dependencies and start dev server: `lerna bootstrap && yarn && yarn dev`
