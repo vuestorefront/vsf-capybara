@@ -47,4 +47,4 @@
 
 # Roadmap 2019-12-02
 
-![Roadmap of vsf-capybara](https://github.com/DivanteLtd/vsf-capybara/capybara_roadmap_20191202.jpg "Roadmap of vsf-capybara")
+![Roadmap of vsf-capybara](https://github.com/DivanteLtd/vsf-capybara/blob/master/capybara_roadmap_20191202.jpg "Roadmap of vsf-capybara")
