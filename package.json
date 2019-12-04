@@ -5,19 +5,28 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cd ../../../ && node core/scripts/server"
+    "lint": "eslint --ext .js,.vue ./ --fix",
+    "dev": "cd ../../../ && yarn dev"
   },
   "license": "MIT",
   "dependencies": {
-    "bodybuilder": "2.2.13",
+    "body-scroll-lock": "^2.6.4",
     "vue": "^2.6.6",
     "vue-carousel": "^0.6.9",
+    "vue-lazy-hydration": "^1.0.0-beta.9",
     "vue-no-ssr": "^0.2.2",
+    "vue-offline": "^1.0.8",
     "vue-progressbar": "^0.7.5",
     "vuelidate": "^0.6.2",
     "vuex": "^3.0.1"
   },
-  "publishConfig": {
-    "access": "public"
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-loader": "^3.0.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-vue": "^6.0.1",
+    "prettier": "^1.19.1"
   }
 }

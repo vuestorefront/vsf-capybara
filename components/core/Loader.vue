@@ -1,13 +1,17 @@
 <template>
-  <div class="loader-container fixed" v-if="isVisible">
+  <div v-if="isVisible" class="loader-container fixed">
     <div class="loader-inner-container fixed">
       <div class="spinner relative">
-        <div class="double-bounce1 absolute w-100 brdr-circle bg-cl-th-success" />
-        <div class="double-bounce2 absolute w-100 brdr-circle bg-cl-th-success" />
+        <div
+          class="double-bounce1 absolute w-100 brdr-circle bg-cl-th-success"
+        />
+        <div
+          class="double-bounce2 absolute w-100 brdr-circle bg-cl-th-success"
+        />
       </div>
       <div
-        class="loader-message-container mt15 py5 px15 align-center h6 cl-white"
         v-if="message"
+        class="loader-message-container mt15 py5 px15 align-center h6 cl-white"
       >
         {{ message }}
       </div>
@@ -16,42 +20,42 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from "vuex";
 
 export default {
-  name: 'Loader',
-  data () {
+  name: "Loader",
+  data() {
     return {
       message: null
-    }
-  },
-  methods: {
-    show (message = null) {
-      this.message = message
-      this.$store.commit('ui/setLoader', true)
-    },
-    hide () {
-      this.$store.commit('ui/setLoader', false)
-    }
+    };
   },
   computed: mapState({
     isVisible: state => state.ui.loader
   }),
-  beforeMount () {
-    this.$bus.$on('notification-progress-start', this.show)
-    this.$bus.$on('notification-progress-stop', this.hide)
+  beforeMount() {
+    this.$bus.$on("notification-progress-start", this.show);
+    this.$bus.$on("notification-progress-stop", this.hide);
   },
-  beforeDestroy () {
-    this.$bus.$off('notification-progress-start', this.show)
-    this.$bus.$off('notification-progress-stop', this.hide)
+  beforeDestroy() {
+    this.$bus.$off("notification-progress-start", this.show);
+    this.$bus.$off("notification-progress-stop", this.hide);
+  },
+  methods: {
+    show(message = null) {
+      this.message = message;
+      this.$store.commit("ui/setLoader", true);
+    },
+    hide() {
+      this.$store.commit("ui/setLoader", false);
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/base/global_vars';
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/base/global_vars";
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $color-container-bg: color(black);
 $color-message-bg: color(success);
 $z-index-loader: map-get($z-index, loader);

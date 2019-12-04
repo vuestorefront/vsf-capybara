@@ -7,12 +7,12 @@
       </div>
     </div>
     <div class="py35">
-      <div class="row" v-if="items.length">
+      <div v-if="items.length" class="row">
         <div class="col-xs-12">
           <div class="compare__products-table">
             <div class="compare__features">
               <div class="compare__top-info">
-                {{ $t('Products') }}
+                {{ $t("Products") }}
               </div>
               <ul class="compare__features-list">
                 <li
@@ -34,7 +34,10 @@
                 >
                   <div class="compare__top-info">
                     <div class="check" />
-                    <product-tile class="col-md-12 collection-product" :product="product" />
+                    <product-tile
+                      class="col-md-12 collection-product"
+                      :product="product"
+                    />
                   </div>
                   <ul class="compare__features-list">
                     <li
@@ -56,11 +59,11 @@
           </div>
         </div>
       </div>
-      <div class="container" v-else>
+      <div v-else class="container">
         <div class="row">
           <div class="col-xs-12">
             <h4 class="cl-accent ml30">
-              {{ $t('You have no items to compare.') }}
+              {{ $t("You have no items to compare.") }}
             </h4>
           </div>
         </div>
@@ -70,11 +73,11 @@
 </template>
 
 <script>
-import Compare from '@vue-storefront/core/pages/Compare'
-import Breadcrumbs from '../components/core/Breadcrumbs'
-import ProductTile from '../components/core/ProductTile'
-import ProductAttribute from '../components/core/blocks/Compare/ProductAttribute'
-import i18n from '@vue-storefront/i18n'
+import Compare from "@vue-storefront/core/pages/Compare";
+import Breadcrumbs from "../components/core/Breadcrumbs";
+import ProductTile from "../components/core/ProductTile";
+import ProductAttribute from "../components/core/blocks/Compare/ProductAttribute";
+import i18n from "@vue-storefront/i18n";
 
 export default {
   components: {
@@ -89,20 +92,20 @@ export default {
       required: true
     }
   },
-  metaInfo () {
+  metaInfo() {
     return {
-      title: this.$route.meta.title || this.title || i18n.t('Compare Products'),
+      title: this.$route.meta.title || this.title || i18n.t("Compare Products"),
       meta: this.$route.meta.description
-        ? [{ vmid: 'description', description: this.$route.meta.description }]
+        ? [{ vmid: "description", description: this.$route.meta.description }]
         : []
-    }
+    };
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 
 $color-white: color(white);
 $border: mix(#000, $color-white, 10%);

@@ -3,8 +3,8 @@
     <select
       :name="name"
       :class="{
-        'cl-tertiary' : options.length === 0,
-        'empty': !selected
+        'cl-tertiary': options.length === 0,
+        empty: !selected
       }"
       :autocomplete="autocomplete"
       @focus="$emit('focus')"
@@ -12,12 +12,12 @@
       @change="$emit('change', $event.target.value)"
       @input="$emit('input', $event.target.value)"
     >
-      <option disabled selected value v-if="!selected" />
+      <option v-if="!selected" disabled selected value />
       <option
         v-for="(option, key) in options"
         :key="key"
         :value="option.value"
-        v-bind="{selected: option.value === selected}"
+        v-bind="{ selected: option.value === selected }"
       >
         {{ option.label }}
       </option>
@@ -29,10 +29,10 @@
 </template>
 
 <script>
-import ValidationMessages from './ValidationMessages.vue'
+import ValidationMessages from "./ValidationMessages.vue";
 
 export default {
-  name: 'BaseSelect',
+  name: "BaseSelect",
   components: {
     ValidationMessages
   },
@@ -40,12 +40,12 @@ export default {
     id: {
       type: String,
       required: false,
-      default: ''
+      default: ""
     },
     name: {
       type: String,
       required: false,
-      default: ''
+      default: ""
     },
     options: {
       type: Array,
@@ -55,38 +55,38 @@ export default {
     selected: {
       type: String,
       required: false,
-      default: ''
+      default: ""
     },
     placeholder: {
       type: String,
       required: false,
-      default: ''
+      default: ""
     },
     autocomplete: {
       type: String,
       required: false,
-      default: ''
+      default: ""
     },
     validations: {
       type: Array,
       default: () => []
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import '~theme/css/variables/colors';
-  @import '~theme/css/helpers/functions/color';
-  @import '~theme/css/base/text';
-  $color-tertiary: color(tertiary);
-  $color-black: color(black);
-  $color-puerto-rico: color(puerto-rico);
-  $color-hover: color(tertiary, $colors-background);
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
+@import "~theme/css/base/text";
+$color-tertiary: color(tertiary);
+$color-black: color(black);
+$color-puerto-rico: color(puerto-rico);
+$color-hover: color(tertiary, $colors-background);
 
 .select-wrapper {
   &::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     top: 1rem;
@@ -133,7 +133,8 @@ export default {
     -moz-transition: 0.2s ease all;
     -webkit-transition: 0.2s ease all;
   }
-  select:focus ~ label, select:not(.empty) ~ label {
+  select:focus ~ label,
+  select:not(.empty) ~ label {
     top: -10px;
     font-size: 14px;
     color: $color-puerto-rico;

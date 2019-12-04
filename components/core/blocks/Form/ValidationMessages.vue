@@ -1,9 +1,8 @@
 <template>
   <div v-if="validations">
     <span
-      v-for="(validation, index) in validations"
+      v-for="(validation, index) in filteredValidations"
       :key="index"
-      v-if="validation.condition"
       class="block cl-error h6 mt8"
       data-testid="errorMessage"
     >
@@ -18,6 +17,11 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  computed: {
+    filteredValidations() {
+      return this.validations.filter(validation => validation.condition);
+    }
   }
-}
+};
 </script>

@@ -2,34 +2,34 @@
   <div class="notifications fixed">
     <transition-group name="fade-in-down">
       <div
-        class="notification mt30 border-box cl-white"
         v-for="(notification, index) in notifications"
         :key="`${notification.type}_${index}`"
+        class="notification mt30 border-box cl-white"
         :class="notification.type"
       >
         <div
-          @click="execAction(notification.action1, index)"
           class="message p20"
           data-testid="notificationMessage"
+          @click="execAction(notification.action1, index)"
         >
           {{ notification.message }}
         </div>
         <div class="actions">
           <div
+            id="notificationAction1"
             class="py10 px20 pointer weight-400 action-border notification-action uppercase"
             :class="`border-${notification.type}`"
-            id="notificationAction1"
             data-testid="notificationAction1"
             @click="execAction(notification.action1, index)"
           >
             {{ notification.action1.label }}
           </div>
           <div
-            class="py10 px20 pointer weight-400 notification-action uppercase"
+            v-if="notification.action2"
             id="notificationAction2"
+            class="py10 px20 pointer weight-400 notification-action uppercase"
             data-testid="notificationAction2"
             @click="execAction(notification.action2, index)"
-            v-if="notification.action2"
           >
             {{ notification.action2.label }}
           </div>
@@ -40,30 +40,30 @@
 </template>
 
 <script>
-import { Notification } from '@vue-storefront/core/modules/notification/components/Notification'
+import { Notification } from "@vue-storefront/core/modules/notification/components/Notification";
 
 export default {
   mixins: [Notification],
   methods: {
-    execAction (action, index) {
+    execAction(action, index) {
       if (action.action) {
         // for backward compatibility
-        if (action.action === 'close') {
-          this.$store.dispatch('notification/removeNotification', index)
+        if (action.action === "close") {
+          this.$store.dispatch("notification/removeNotification", index);
         } else {
-          action.action()
+          action.action();
         }
       }
-      this.$store.dispatch('notification/removeNotification', index)
+      this.$store.dispatch("notification/removeNotification", index);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/base/global_vars';
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/base/global_vars";
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $z-index-notification: map-get($z-index, notification);
 $color-error: color(error);
 $color-success: color(success);
@@ -91,9 +91,9 @@ $color-action: color(black);
   }
 }
 .notification {
-  box-shadow: 0px 0px 35px -5px rgba($color-action, .7);
+  box-shadow: 0px 0px 35px -5px rgba($color-action, 0.7);
 
-  &:first-child  {
+  &:first-child {
     margin-top: 0;
   }
 }
@@ -103,7 +103,7 @@ $color-action: color(black);
   justify-content: space-between;
 
   .notification-action {
-    background: rgba($color-action, .2);
+    background: rgba($color-action, 0.2);
   }
 
   #notificationAction2 {

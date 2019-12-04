@@ -9,19 +9,19 @@
         </div>
       </div>
     </header>
-    <div class="container pb60" v-html="cmsPageContent.content" />
+    <div class="container pb60" v-text="cmsPageContent.content" />
   </div>
 </template>
 
 <script>
-import CmsPage from '@vue-storefront/core/pages/CmsPage'
+import CmsPage from "@vue-storefront/core/pages/CmsPage";
 
 export default {
+  mixins: [CmsPage],
   computed: {
-    cmsPageContent () {
-      return this.$store.state.cmsPage.current
+    cmsPageContent() {
+      return this.$store.state.cmsPage.current;
     }
-  },
-  mixins: [CmsPage]
-}
+  }
+};
 </script>

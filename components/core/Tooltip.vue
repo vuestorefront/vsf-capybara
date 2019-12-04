@@ -8,8 +8,8 @@
 </template>
 
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $color-border: color(accent);
 
 .tooltip {
@@ -34,7 +34,7 @@ $color-border: color(accent);
   text-align: center;
 
   &:before {
-    content: '';
+    content: "";
     display: block;
     width: 0;
     height: 0;

@@ -1,18 +1,12 @@
 <template>
   <div class="row center-xs">
     <div
-      class="col-sm-4 pb15"
       v-for="(tile, index) in social_tiles"
       :key="index"
+      class="col-sm-4 pb15"
     >
-      <div
-        class="tile center-xs middle-xs"
-      >
-        <img
-          class="tile-image"
-          v-lazy="tile.image"
-          :alt="tile.alt"
-        >
+      <div class="tile center-xs middle-xs">
+        <img v-lazy="tile.image" class="tile-image" :alt="tile.alt" />
       </div>
     </div>
   </div>
@@ -20,42 +14,42 @@
 
 <script>
 export default {
-  name: 'TileLinks',
-  data () {
+  name: "TileLinks",
+  data() {
     return {
       social_tiles: [
         {
-          image: '/assets/ig/ig01.jpg',
-          alt: 'Woman practicing on the beach'
+          image: "/assets/ig/ig01.jpg",
+          alt: "Woman practicing on the beach"
         },
         {
-          image: '/assets/ig/ig02.jpg',
-          alt: 'Man practicing on the beach'
+          image: "/assets/ig/ig02.jpg",
+          alt: "Man practicing on the beach"
         },
         {
-          image: '/assets/ig/ig03.jpg',
-          alt: 'Woman drinks water form the bottle on the beach'
+          image: "/assets/ig/ig03.jpg",
+          alt: "Woman drinks water form the bottle on the beach"
         },
         {
-          image: '/assets/ig/ig04.jpg',
-          alt: 'Man rests on the beach'
+          image: "/assets/ig/ig04.jpg",
+          alt: "Man rests on the beach"
         },
         {
-          image: '/assets/ig/ig05.jpg',
-          alt: 'Woman practicing on the beach'
+          image: "/assets/ig/ig05.jpg",
+          alt: "Woman practicing on the beach"
         },
         {
-          image: '/assets/ig/ig06.jpg',
-          alt: 'Man is holding a watter bottle'
+          image: "/assets/ig/ig06.jpg",
+          alt: "Man is holding a watter bottle"
         }
       ]
-    }
+    };
   }
-}
+};
 </script>
 
-<style lang='scss' scoped>
-@import '~theme/css/animations/transitions';
+<style lang="scss" scoped>
+@import "~theme/css/animations/transitions";
 
 .tile {
   display: flex;

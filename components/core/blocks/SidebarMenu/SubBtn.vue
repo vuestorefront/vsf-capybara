@@ -3,9 +3,9 @@
     v-if="type === 'next'"
     class="inline-flex between-xs w-100 px25 py20 pr15 serif cl-accent"
     type="button"
-    @click.stop="next()"
     :aria-label="$t('Show subcategories')"
     data-testid="categoryButton"
+    @click.stop="next()"
   >
     {{ name }}
     <i class="material-icons">keyboard_arrow_right</i>
@@ -14,30 +14,30 @@
     v-else
     class="inline-flex p15 between-xs"
     type="button"
-    @click.stop="back()"
     :aria-label="$t('Back')"
+    @click.stop="back()"
   >
     {{ name }}
     <i class="material-icons">keyboard_arrow_left</i>
   </button>
 </template>
 <script>
-import { mapState } from 'vuex'
-import config from 'config'
+import { mapState } from "vuex";
+import config from "config";
 export default {
-  name: 'SubBtn',
+  name: "SubBtn",
   props: {
     id: {
       type: null,
-      default: ''
+      default: ""
     },
     type: {
       type: String,
-      default: 'next'
+      default: "next"
     },
     name: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   computed: {
@@ -46,24 +46,25 @@ export default {
     })
   },
   methods: {
-    next () {
-      if (config.entities.category.categoriesDynamicPrefetch) this.$store.dispatch('category/list', { parent: this.id })
-      this.$store.commit('ui/setSubmenu', {
+    next() {
+      if (config.entities.category.categoriesDynamicPrefetch)
+        this.$store.dispatch("category/list", { parent: this.id });
+      this.$store.commit("ui/setSubmenu", {
         id: this.id,
         depth: ++this.submenu.depth
-      })
+      });
     },
-    back () {
-      this.$store.commit('ui/setSubmenu', {
+    back() {
+      this.$store.commit("ui/setSubmenu", {
         depth: --this.submenu.depth
-      })
+      });
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $color-gray: color(gainsboro);
 $color-black: color(matterhorn);
 

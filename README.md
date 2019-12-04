@@ -55,6 +55,6 @@
 
 * Install `lerna` globally: `npm install -g lerna`
 * Configure `vsf-capybara` repo as a git submodule in theme path of your `vue-storefront` workspace and track `master` branch: `git submodule add -b master https://github.com/DivanteLtd/vsf-capybara src/themes/capybara`
-* Fetch all the data: `git submodule update --init`
+* Fetch all the data: `git submodule update --init --remote`
 * Update `theme` property in your local configuration in `config/local.json` file: `"@vue-storefront/theme-capybara"`
 * Download all dependencies and start dev server: `lerna bootstrap && yarn && yarn dev`

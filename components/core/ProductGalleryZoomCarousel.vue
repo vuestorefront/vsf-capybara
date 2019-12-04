@@ -1,17 +1,22 @@
 <template>
   <div class="media-zoom-carousel">
     <div class="media-zoom-carousel__container row flex">
-      <ul class="media-zoom-carousel__thumbs m0 p0" ref="thumbs">
-        <li class="media-zoom-carousel__thumb bg-cl-secondary" v-for="(images, index) in gallery" :key="images.src">
+      <ul ref="thumbs" class="media-zoom-carousel__thumbs m0 p0">
+        <li
+          v-for="(images, index) in gallery"
+          :key="images.src"
+          class="media-zoom-carousel__thumb bg-cl-secondary"
+        >
           <product-image
-            @click="navigate(index)"
             :image="images"
             :alt="productName | htmlDecode"
+            @click="navigate(index)"
           />
         </li>
       </ul>
       <div class="media-zoom-carousel__gallery">
         <carousel
+          ref="zoomCarousel"
           :per-page="1"
           :mouse-drag="false"
           :navigation-enabled="true"
@@ -19,17 +24,14 @@
           pagination-color="transparent"
           navigation-next-label="<i class='material-icons p15 cl-bg-tertiary pointer'>keyboard_arrow_right</i>"
           navigation-prev-label="<i class='material-icons p15 cl-bg-tertiary pointer'>keyboard_arrow_left</i>"
-          ref="zoomCarousel"
           class="media-zoom-carousel__carousel"
           :speed="carouselTransitionSpeed"
           @pageChange="pageChange"
         >
-          <slide
-            v-for="(images, index) in gallery"
-            :key="images.src"
-          >
-            <div class="media-zoom-carousel__slide bg-cl-secondary"
-                 :class="{'video-container h-100 flex relative': images.video}"
+          <slide v-for="(images, index) in gallery" :key="images.src">
+            <div
+              class="media-zoom-carousel__slide bg-cl-secondary"
+              :class="{ 'video-container h-100 flex relative': images.video }"
             >
               <product-image
                 v-show="hideImageAtIndex !== index"
@@ -37,7 +39,7 @@
                 :alt="productName | htmlDecode"
               />
               <product-video
-                v-if="images.video && (index === currentPage)"
+                v-if="images.video && index === currentPage"
                 v-bind="images.video"
                 :index="index"
                 @video-started="onVideoStarted"
@@ -51,13 +53,19 @@
 </template>
 
 <script>
-import { Carousel, Slide } from 'vue-carousel'
-import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
-import ProductImage from './ProductImage'
-import ProductVideo from './ProductVideo'
+import { Carousel, Slide } from "vue-carousel";
+import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import ProductImage from "./ProductImage";
+import ProductVideo from "./ProductVideo";
 
 export default {
-  name: 'ProductGalleryZoomCarousel',
+  name: "ProductGalleryZoomCarousel",
+  components: {
+    Carousel,
+    Slide,
+    ProductImage,
+    ProductVideo
+  },
   props: {
     currentSlide: {
       type: Number,
@@ -73,65 +81,63 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       carouselTransitionSpeed: 300,
       currentPage: 0,
       hideImageAtIndex: null
-    }
+    };
   },
-  components: {
-    Carousel,
-    Slide,
-    ProductImage,
-    ProductVideo
-  },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      disableBodyScroll(this.$refs.thumbs)
-    })
-    this.navigate(this.currentSlide)
+      disableBodyScroll(this.$refs.thumbs);
+    });
+    this.navigate(this.currentSlide);
     if (this.$refs.zoomCarousel) {
-      let navigation = this.$refs.zoomCarousel.$children.find(c => c.$el.className === 'VueCarousel-navigation')
-      let pagination = this.$refs.zoomCarousel.$children.find(c => c.$el.className === 'VueCarousel-pagination')
+      let navigation = this.$refs.zoomCarousel.$children.find(
+        c => c.$el.className === "VueCarousel-navigation"
+      );
+      let pagination = this.$refs.zoomCarousel.$children.find(
+        c => c.$el.className === "VueCarousel-pagination"
+      );
       if (navigation !== undefined) {
-        navigation.$on('navigationclick', this.increaseCarouselTransitionSpeed)
+        navigation.$on("navigationclick", this.increaseCarouselTransitionSpeed);
       }
       if (pagination !== undefined) {
-        pagination.$on('paginationclick', this.increaseCarouselTransitionSpeed)
+        pagination.$on("paginationclick", this.increaseCarouselTransitionSpeed);
       }
     }
   },
-  destroyed () {
-    clearAllBodyScrollLocks()
+  destroyed() {
+    clearAllBodyScrollLocks();
   },
   methods: {
-    navigate (key) {
-      this.$refs.zoomCarousel.goToPage(key)
+    navigate(key) {
+      this.$refs.zoomCarousel.goToPage(key);
     },
-    increaseCarouselTransitionSpeed () {
-      this.carouselTransitionSpeed = 500
+    increaseCarouselTransitionSpeed() {
+      this.carouselTransitionSpeed = 500;
     },
-    pageChange (index) {
-      this.currentPage = index
-      this.hideImageAtIndex = null
+    pageChange(index) {
+      this.currentPage = index;
+      this.hideImageAtIndex = null;
     },
-    onVideoStarted (index) {
-      this.hideImageAtIndex = index
+    onVideoStarted(index) {
+      this.hideImageAtIndex = index;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/base/global_vars';
-@import '~theme/css/animations/transitions';
+@import "~theme/css/base/global_vars";
+@import "~theme/css/animations/transitions";
 .media-zoom-carousel {
   * {
     box-sizing: border-box;
   }
 
-  &__container{
+  &__container {
     position: absolute;
     top: 0;
     left: 0;
@@ -144,7 +150,7 @@ export default {
     max-height: 100%;
     justify-content: space-evenly;
 
-    @media (max-width: 767px){
+    @media (max-width: 767px) {
       top: 50%;
       bottom: auto;
       height: auto;
@@ -152,10 +158,10 @@ export default {
     }
   }
 
-  &__thumbs{
+  &__thumbs {
     list-style: none;
     padding-right: 20px;
-    width:100%;
+    width: 100%;
     max-width: 140px;
     height: 100%;
     overflow: auto;
@@ -170,7 +176,7 @@ export default {
     }
   }
 
-  &__thumb{
+  &__thumb {
     margin-bottom: 20px;
     max-width: 100%;
     cursor: pointer;
@@ -179,18 +185,18 @@ export default {
       margin-bottom: 0;
     }
 
-    & > *{
-      opacity: .9;
+    & > * {
+      opacity: 0.9;
       will-change: opacity;
-      transition: .3s opacity $motion-main;
+      transition: 0.3s opacity $motion-main;
 
-      &:hover{
+      &:hover {
         opacity: 1;
       }
     }
   }
 
-  &__gallery{
+  &__gallery {
     max-width: 600px;
     height: 100%;
     flex: 1;
@@ -203,12 +209,12 @@ export default {
     height: 100%;
   }
 
-  &__slide{
+  &__slide {
     height: 100%;
     max-height: 100%;
   }
 }
-.thumb-video{
+.thumb-video {
   padding-bottom: calc(319% / (568 / 100));
 }
 .video-container {
