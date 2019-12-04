@@ -1,35 +1,43 @@
 <template>
   <modal name="modal-order-confirmation" :width="640">
     <p slot="header">
-      {{ $t('Confirm your order') }}
+      {{ $t("Confirm your order") }}
     </p>
     <div slot="content">
-      <p>{{ $t('Please confirm order you placed when you was offline') }}</p>
-      <div class="mb40" v-for="(order, key) in ordersData" :key="key">
-        <h3>{{ $t('Order #{id}', { id: key + 1}) }}</h3>
-        <h4>{{ $t('Items ordered') }}</h4>
+      <p>{{ $t("Please confirm order you placed when you was offline") }}</p>
+      <div v-for="(order, key) in ordersData" :key="key" class="mb40">
+        <h3>{{ $t("Order #{id}", { id: key + 1 }) }}</h3>
+        <h4>{{ $t("Items ordered") }}</h4>
         <table class="brdr-1 brdr-cl-bg-secondary">
           <thead>
             <tr>
               <th class="serif lh20">
-                {{ $t('Product Name') }}
+                {{ $t("Product Name") }}
               </th>
               <th class="serif lh20">
-                {{ $t('Price') }}
+                {{ $t("Price") }}
               </th>
               <th class="serif lh20">
-                {{ $t('Qty') }}
+                {{ $t("Qty") }}
               </th>
               <th class="serif lh20">
-                {{ $t('Subtotal') }}
+                {{ $t("Subtotal") }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr class="brdr-top-1 brdr-cl-bg-secondary" v-for="(product, productKey) in order.products" :key="productKey">
+            <tr
+              v-for="(product, productKey) in order.products"
+              :key="productKey"
+              class="brdr-top-1 brdr-cl-bg-secondary"
+            >
               <td class="fs-medium lh25" :data-th="$t('Product Name')">
                 {{ product.name }}
-                <span class="block mt5 lh16 fs-medium-small" v-for="(option, optionKey) in product.options" :key="optionKey">
+                <span
+                  v-for="(option, optionKey) in product.options"
+                  :key="optionKey"
+                  class="block mt5 lh16 fs-medium-small"
+                >
                   <strong>{{ option.label }}: </strong> {{ option.value }}
                 </span>
               </td>
@@ -40,7 +48,7 @@
                 {{ product.qty }}
               </td>
               <td class="fs-medium lh25" :data-th="$t('Subtotal')">
-                {{ product.price_incl_tax * product.qty | price }}
+                {{ (product.price_incl_tax * product.qty) | price }}
               </td>
             </tr>
           </tbody>
@@ -48,11 +56,11 @@
       </div>
       <div class="row between-xs middle-xs mt40">
         <div class="col-xs-12 col-sm-6 cancel-order">
-          <a href="#" @click.prevent="cancelOrders()">{{ $t('Cancel') }}</a>
+          <a href="#" @click.prevent="cancelOrders()">{{ $t("Cancel") }}</a>
         </div>
         <div class="col-xs-12 col-sm-6">
           <button-full @click.native="confirmOrders()">
-            {{ $t('Confirm your order') }}
+            {{ $t("Confirm your order") }}
           </button-full>
         </div>
       </div>
@@ -61,12 +69,17 @@
 </template>
 
 <script>
-import { ConfirmOrders } from '@vue-storefront/core/modules/offline-order/components/ConfirmOrders'
-import { CancelOrders } from '@vue-storefront/core/modules/offline-order/components/CancelOrders'
-import Modal from 'theme/components/core/Modal'
-import ButtonFull from 'theme/components/theme/ButtonFull.vue'
+import { ConfirmOrders } from "@vue-storefront/core/modules/offline-order/components/ConfirmOrders";
+import { CancelOrders } from "@vue-storefront/core/modules/offline-order/components/CancelOrders";
+import Modal from "theme/components/core/Modal";
+import ButtonFull from "theme/components/theme/ButtonFull.vue";
 
 export default {
+  components: {
+    Modal,
+    ButtonFull
+  },
+  mixins: [ConfirmOrders, CancelOrders],
   props: {
     ordersData: {
       required: false,
@@ -74,32 +87,27 @@ export default {
       default: () => []
     }
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      this.$bus.$emit('modal-show', 'modal-order-confirmation')
-    })
+      this.$bus.$emit("modal-show", "modal-order-confirmation");
+    });
   },
   methods: {
-    confirmOrders () {
-      ConfirmOrders.methods.confirmOrders.call(this)
-      this.$bus.$emit('modal-hide', 'modal-order-confirmation')
+    confirmOrders() {
+      ConfirmOrders.methods.confirmOrders.call(this);
+      this.$bus.$emit("modal-hide", "modal-order-confirmation");
     },
-    cancelOrders () {
-      CancelOrders.methods.cancelOrders.call(this)
-      this.$bus.$emit('modal-hide', 'modal-order-confirmation')
+    cancelOrders() {
+      CancelOrders.methods.cancelOrders.call(this);
+      this.$bus.$emit("modal-hide", "modal-order-confirmation");
     }
-  },
-  components: {
-    Modal,
-    ButtonFull
-  },
-  mixins: [ ConfirmOrders, CancelOrders ]
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $color-tertiary: color(tertiary);
 $color-white-smoke: color(white-smoke);
 
@@ -115,7 +123,8 @@ table {
     border-top: none;
   }
 
-  th, td {
+  th,
+  td {
     text-align: left;
     padding: 20px;
 
@@ -125,13 +134,11 @@ table {
       @media (max-width: 767px) {
         text-align: left;
       }
-
     }
 
     @media (max-width: 1199px) {
       padding: 10px;
     }
-
   }
 
   thead {
@@ -141,10 +148,9 @@ table {
   }
 
   tbody {
-
     tr {
       @media (max-width: 767px) {
-        display: block
+        display: block;
       }
 
       &:nth-child(even) {
@@ -152,7 +158,6 @@ table {
           background-color: $color-white-smoke;
         }
       }
-
     }
 
     td {
@@ -163,7 +168,7 @@ table {
         text-align: left;
         padding: 10px 20px;
         &:before {
-          content: attr(data-th) ': ';
+          content: attr(data-th) ": ";
           font-weight: 700;
         }
       }
@@ -180,27 +185,24 @@ table {
         }
       }
     }
-
   }
 
   tfoot {
-
     tr {
       @media (max-width: 767px) {
-        display: block
+        display: block;
       }
 
       &:last-child {
         td:last-child {
-         padding-bottom: 20px
+          padding-bottom: 20px;
         }
       }
-
     }
 
     td {
       @media (max-width: 767px) {
-        display: block
+        display: block;
       }
 
       &:first-child {
@@ -215,15 +217,12 @@ table {
           padding: 5px 20px 0 20px;
         }
       }
-
     }
-
   }
 
   i {
     vertical-align: middle;
   }
-
 }
 
 .cancel-order {

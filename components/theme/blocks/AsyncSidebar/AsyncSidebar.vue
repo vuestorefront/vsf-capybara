@@ -1,21 +1,39 @@
 <template>
-  <transition :name="direction === 'right' ? 'slide-left' : direction === 'left' ? 'slide-right' : null ">
+  <transition
+    :name="
+      direction === 'right'
+        ? 'slide-left'
+        : direction === 'left'
+        ? 'slide-right'
+        : null
+    "
+  >
     <div
-      class="mw-100 fixed cl-accent bg-cl-primary"
-      :class="direction === 'left' ? 'left-sidebar' : direction === 'right' ? 'right-sidebar' : null "
-      data-testid="sidebar"
-      ref="sidebar"
       v-if="isOpen"
+      ref="sidebar"
+      class="mw-100 fixed cl-accent bg-cl-primary"
+      :class="
+        direction === 'left'
+          ? 'left-sidebar'
+          : direction === 'right'
+          ? 'right-sidebar'
+          : null
+      "
+      data-testid="sidebar"
     >
-      <component :is="component" @close="$emit('close')" @reload="getComponent" />
+      <component
+        :is="component"
+        @close="$emit('close')"
+        @reload="getComponent"
+      />
     </div>
   </transition>
 </template>
 
 <script>
-import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner.vue'
-import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError.vue'
-import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
+import LoadingSpinner from "theme/components/theme/blocks/AsyncSidebar/LoadingSpinner.vue";
+import LoadingError from "theme/components/theme/blocks/AsyncSidebar/LoadingError.vue";
+import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
 
 export default {
   props: {
@@ -30,49 +48,49 @@ export default {
     /** "right" or "left"  */
     direction: {
       type: String,
-      default: 'right'
+      default: "right"
     }
   },
-  data () {
+  data() {
     return {
       component: null
-    }
-  },
-  created () {
-    this.getComponent()
+    };
   },
   watch: {
-    isOpen (state) {
+    isOpen(state) {
       if (state) {
         this.$nextTick(() => {
-          disableBodyScroll(this.$refs.sidebar)
-        })
+          disableBodyScroll(this.$refs.sidebar);
+        });
       } else {
-        clearAllBodyScrollLocks()
+        clearAllBodyScrollLocks();
       }
     }
   },
+  created() {
+    this.getComponent();
+  },
   methods: {
-    getComponent () {
+    getComponent() {
       this.component = () => ({
         component: this.asyncComponent(),
         loading: LoadingSpinner,
         error: LoadingError,
         timeout: 3000
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  @import "~theme/css/animations/transitions";
+@import "~theme/css/animations/transitions";
 
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-  transition: transform .25s;
+  transition: transform 0.25s;
 }
 
 .slide-left-enter,
@@ -97,7 +115,7 @@ export default {
   -webkit-overflow-scrolling: touch;
 }
 
-.left-sidebar{
+.left-sidebar {
   height: 100vh;
   width: 350px;
   top: 0;
@@ -107,20 +125,20 @@ export default {
   -webkit-overflow-scrolling: touch;
   z-index: 4;
 
-    @media (max-width: 767px) {
-      width: 100vh;
-    }
+  @media (max-width: 767px) {
+    width: 100vh;
   }
+}
 
-  .close {
+.close {
+  i {
+    opacity: 0.6;
+  }
+  &:hover,
+  &:focus {
     i {
-      opacity: 0.6;
-    }
-    &:hover,
-    &:focus {
-      i {
-        opacity: 1;
-      }
+      opacity: 1;
     }
   }
+}
 </style>

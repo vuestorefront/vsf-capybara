@@ -9,20 +9,19 @@
   </div>
 </template>
 <script>
-
-import CmsBlock from '../components/core/blocks/Cms/Block'
+import CmsBlock from "../components/core/blocks/Cms/Block";
 
 export default {
   components: {
     CmsBlock
   },
   mixins: [CmsBlock]
-}
+};
 </script>
 
 <style lang="scss">
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $color-secondary: color(secondary);
 
 .cms-content {
@@ -34,6 +33,5 @@ $color-secondary: color(secondary);
     color: $color-secondary;
     text-decoration: underline;
   }
-
 }
 </style>

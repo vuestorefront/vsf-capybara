@@ -10,35 +10,35 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Modal from 'theme/components/core/Modal'
-import SizeGuideContent from 'theme/components/theme/blocks/Static/Example'
+import { mapState } from "vuex";
+import Modal from "theme/components/core/Modal";
+import SizeGuideContent from "theme/components/theme/blocks/Static/Example";
 
 export default {
-  name: 'SizeGuide',
+  name: "SizeGuide",
+  components: {
+    Modal,
+    SizeGuideContent
+  },
   computed: {
     ...mapState({
       activeElem: state => state.ui.authElem
     })
   },
-  components: {
-    Modal,
-    SizeGuideContent
-  },
   methods: {
-    close (e) {
-      if (e) localStorage.removeItem('redirect')
-      this.$bus.$emit('modal-hide', 'modal-sizeguide')
+    close(e) {
+      if (e) localStorage.removeItem("redirect");
+      this.$bus.$emit("modal-hide", "modal-sizeguide");
     }
   }
-}
+};
 </script>
 
 <style scoped>
-    .modal {
-        font-size: 18px;
-    }
-    .modal-content {
-        max-height: 80%;
-    }
+.modal {
+  font-size: 18px;
+}
+.modal-content {
+  max-height: 80%;
+}
 </style>

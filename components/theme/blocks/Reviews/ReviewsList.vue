@@ -1,10 +1,21 @@
 <template>
   <div>
-    <div class="mt50 h5" v-if="!itemsPerPage || itemsPerPage.length === 0">
-      {{ $t('No reviews have been posted yet. Please don\'t hesitate to share Your opinion and write the first review!') }}
+    <div v-if="!itemsPerPage || itemsPerPage.length === 0" class="mt50 h5">
+      {{
+        $t(
+          "No reviews have been posted yet. Please don't hesitate to share Your opinion and write the first review!"
+        )
+      }}
     </div>
-    <div class="mt50" v-for="(item, index) in itemsPerPage" :key="index" itemprop="review" itemscope itemtype="http://schema.org/Review">
-      <meta itemprop="itemReviewed" :content="productName | htmlDecode">
+    <div
+      v-for="(item, index) in itemsPerPage"
+      :key="index"
+      class="mt50"
+      itemprop="review"
+      itemscope
+      itemtype="http://schema.org/Review"
+    >
+      <meta itemprop="itemReviewed" :content="productName | htmlDecode" />
       <h4 class="weight-400 m0" itemprop="reviewAspect" :content="item.title">
         {{ item.title }}
       </h4>
@@ -15,19 +26,41 @@
         {{ item.detail }}
       </p>
     </div>
-    <div class="row middle-xs center-xs mt50" v-if="pageCount > 1">
-      <a href="#" class="mr10 no-underline" :class="{ inactive: currentPage === 1 }" @click.prevent="prevPage">
+    <div v-if="pageCount > 1" class="row middle-xs center-xs mt50">
+      <a
+        href="#"
+        class="mr10 no-underline"
+        :class="{ inactive: currentPage === 1 }"
+        @click.prevent="prevPage"
+      >
         <i class="material-icons">chevron_left</i>
       </a>
-      <span class="mx10 pagination-page" v-for="pageNumber in pageList" :key="pageNumber">
-        <span class="fs-medium block py15 px20 bg-cl-mine-shaft cl-white" v-if="pageNumber === currentPage">
+      <span
+        v-for="pageNumber in pageList"
+        :key="pageNumber"
+        class="mx10 pagination-page"
+      >
+        <span
+          v-if="pageNumber === currentPage"
+          class="fs-medium block py15 px20 bg-cl-mine-shaft cl-white"
+        >
           {{ pageNumber }}
         </span>
-        <a href="#" class="fs-medium block py15 px20 bg-cl-secondary pointer" v-else @click.prevent="changePage(pageNumber)">
+        <a
+          v-else
+          href="#"
+          class="fs-medium block py15 px20 bg-cl-secondary pointer"
+          @click.prevent="changePage(pageNumber)"
+        >
           {{ pageNumber }}
         </a>
       </span>
-      <a href="#" class="ml10 no-underline" :class="{ inactive: currentPage === pageCount }" @click.prevent="nextPage">
+      <a
+        href="#"
+        class="ml10 no-underline"
+        :class="{ inactive: currentPage === pageCount }"
+        @click.prevent="nextPage"
+      >
         <i class="material-icons">chevron_right</i>
       </a>
     </div>
@@ -35,7 +68,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     perPage: {
@@ -49,58 +81,80 @@ export default {
     },
     productName: {
       type: String,
-      default: ''
+      default: ""
     }
   },
-  data () {
+  data() {
     return {
       currentPage: 1
-    }
+    };
   },
   computed: {
-    itemsPerPage () {
-      let start = ((this.currentPage - 1) * this.perPage)
-      let end = start + this.perPage
-      return this.items.slice(start, end).filter(review => !!review.review_status)
+    itemsPerPage() {
+      let start = (this.currentPage - 1) * this.perPage;
+      let end = start + this.perPage;
+      return this.items
+        .slice(start, end)
+        .filter(review => !!review.review_status);
     },
-    pageCount () {
-      return Math.floor(this.items.length / this.perPage) + Math.min(1, this.items.length % this.perPage)
+    pageCount() {
+      return (
+        Math.floor(this.items.length / this.perPage) +
+        Math.min(1, this.items.length % this.perPage)
+      );
     },
-    pageList () {
-      if (this.pageCount <= 5 || this.currentPage === 1 || this.currentPage === 2) {
-        const pages = []
+    pageList() {
+      if (
+        this.pageCount <= 5 ||
+        this.currentPage === 1 ||
+        this.currentPage === 2
+      ) {
+        const pages = [];
         for (let i = 1; i <= Math.min(this.pageCount, 5); i += 1) {
-          pages.push(i)
+          pages.push(i);
         }
-        return pages
-      } else if (this.currentPage === this.pageCount || this.currentPage === this.pageCount - 1) {
-        const pages = []
-        for (let i = this.pageCount; i >= 1 && i >= this.pageCount - 4; i -= 1) {
-          pages.unshift(i)
+        return pages;
+      } else if (
+        this.currentPage === this.pageCount ||
+        this.currentPage === this.pageCount - 1
+      ) {
+        const pages = [];
+        for (
+          let i = this.pageCount;
+          i >= 1 && i >= this.pageCount - 4;
+          i -= 1
+        ) {
+          pages.unshift(i);
         }
-        return pages
+        return pages;
       } else {
-        return [this.currentPage - 2, this.currentPage - 1, this.currentPage, this.currentPage + 1, this.currentPage + 2]
+        return [
+          this.currentPage - 2,
+          this.currentPage - 1,
+          this.currentPage,
+          this.currentPage + 1,
+          this.currentPage + 2
+        ];
       }
     }
   },
   methods: {
-    prevPage () {
-      this.currentPage = Math.max(1, this.currentPage - 1)
+    prevPage() {
+      this.currentPage = Math.max(1, this.currentPage - 1);
     },
-    nextPage () {
-      this.currentPage = Math.min(this.pageCount, this.currentPage + 1)
+    nextPage() {
+      this.currentPage = Math.min(this.pageCount, this.currentPage + 1);
     },
-    changePage (pageNumber) {
-      this.currentPage = Math.max(1, Math.min(this.pageCount, pageNumber))
+    changePage(pageNumber) {
+      this.currentPage = Math.max(1, Math.min(this.pageCount, pageNumber));
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $mine-shaft: color(mine-shaft);
 $white: color(white);
 
@@ -122,7 +176,8 @@ $white: color(white);
   @media (max-width: 767px) {
     margin: 0;
   }
-  a, span {
+  a,
+  span {
     @media (max-width: 767px) {
       padding: 10px 12px;
       font-size: 16px;
