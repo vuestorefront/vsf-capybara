@@ -1,14 +1,15 @@
 <template>
   <section class="head-image w-100 bg-cl-th-accent cl-white">
-    <div class="container w-100 h-100 cl-black" v-lazy:background-image="currentImage.image" v-if="currentImage">
+    <div
+      v-if="currentImage"
+      v-lazy:background-image="currentImage.image"
+      class="container w-100 h-100 cl-black"
+    >
       <div class="head-image-content">
         <h1 class="title" data-testid="mainSliderTitle">
           {{ currentImage.title }}
         </h1>
-        <p
-          class="subtitle mb0 serif h3"
-          data-testid="mainSliderSubtitle"
-        >
+        <p class="subtitle mb0 serif h3" data-testid="mainSliderSubtitle">
           {{ currentImage.subtitle }}
         </p>
         <!-- <div class="align-center inline-flex">
@@ -23,22 +24,21 @@
 
 <script>
 // import ButtonOutline from 'theme/components/theme/ButtonOutline'
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     // ButtonOutline
   },
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
   computed: {
     ...mapGetters({
-      currentImage: 'promoted/getHeadImage'
+      currentImage: "promoted/getHeadImage"
     })
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -62,7 +62,7 @@ export default {
     .subtitle {
       font-size: 0.8rem;
       max-width: 340px;
-      font-family: 'Roboto', sans-serif;
+      font-family: "Roboto", sans-serif;
       line-height: 1.2rem;
     }
   }

@@ -1,6 +1,8 @@
 <template>
   <div class="base-input-number">
-    <label class="base-input-number__label cl-primary flex" :for="getInputId">{{ name }}</label>
+    <label class="base-input-number__label cl-primary flex" :for="getInputId">{{
+      name
+    }}</label>
     <input
       :id="getInputId"
       type="number"
@@ -12,15 +14,15 @@
       :value="value"
       @input="$emit('input', $event.target.value)"
       @blur="$emit('blur', $event.target.value)"
-    >
+    />
     <ValidationMessages v-if="validations" :validations="validations" />
   </div>
 </template>
 
 <script>
-import ValidationMessages from './ValidationMessages.vue'
+import ValidationMessages from "./ValidationMessages.vue";
 export default {
-  name: 'BaseInput',
+  name: "BaseInput",
   components: {
     ValidationMessages
   },
@@ -32,7 +34,7 @@ export default {
     name: {
       type: String,
       required: false,
-      default: ''
+      default: ""
     },
     min: {
       type: Number,
@@ -57,16 +59,16 @@ export default {
     }
   },
   computed: {
-    getInputId () {
-      return `input_${this._uid}`
+    getInputId() {
+      return `input_${this._uid}`;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 
 .base-input-number {
   &__input {

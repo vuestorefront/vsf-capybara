@@ -25,63 +25,63 @@
 </template>
 
 <script>
-import { ProductGallery } from '@vue-storefront/core/modules/catalog/components/ProductGallery.ts'
-import ProductGalleryOverlay from './ProductGalleryOverlay'
-import onEscapePress from '@vue-storefront/core/mixins/onEscapePress'
-import NoSSR from 'vue-no-ssr'
-import ProductImage from './ProductImage'
-import { onlineHelper } from '@vue-storefront/core/helpers'
+import { ProductGallery } from "@vue-storefront/core/modules/catalog/components/ProductGallery.ts";
+import ProductGalleryOverlay from "./ProductGalleryOverlay";
+import onEscapePress from "@vue-storefront/core/mixins/onEscapePress";
+import NoSSR from "vue-no-ssr";
+import ProductImage from "./ProductImage";
+import { onlineHelper } from "@vue-storefront/core/helpers";
 
-const ProductGalleryCarousel = () => import(/* webpackChunkName: "vsf-product-gallery-carousel" */ './ProductGalleryCarousel.vue')
+const ProductGalleryCarousel = () =>
+  import(
+    /* webpackChunkName: "vsf-product-gallery-carousel" */ "./ProductGalleryCarousel.vue"
+  );
 
 export default {
   components: {
     ProductGalleryCarousel,
-    'no-ssr': NoSSR,
+    "no-ssr": NoSSR,
     ProductGalleryOverlay,
     ProductImage
   },
-  mixins: [
-    ProductGallery,
-    onEscapePress
-  ],
-  watch: {
-    '$route': 'validateRoute'
-  },
-  data () {
+  mixins: [ProductGallery, onEscapePress],
+  data() {
     return {
       isZoomOpen: false,
       showProductGalleryCarousel: false,
       currentSlide: 0,
       carouselLoaded: false
-    }
-  },
-  mounted () {
-    this.showProductGalleryCarousel = true
+    };
   },
   computed: {
-    isOnline (value) {
-      return onlineHelper.isOnline
+    isOnline() {
+      return onlineHelper.isOnline;
     }
   },
+  watch: {
+    $route: "validateRoute"
+  },
+  mounted() {
+    this.showProductGalleryCarousel = true;
+  },
   methods: {
-    openOverlay (currentSlide) {
-      this.currentSlide = currentSlide
-      this.toggleZoom()
+    openOverlay(currentSlide) {
+      this.currentSlide = currentSlide;
+      this.toggleZoom();
     },
-    validateRoute () {
-      this.$forceUpdate()
+    validateRoute() {
+      this.$forceUpdate();
     },
-    toggleZoom () {
-      this.isZoomOpen = !this.isZoomOpen
+    toggleZoom() {
+      this.isZoomOpen = !this.isZoomOpen;
     },
-    onEscapePress () {
+    onEscapePress() {
       if (this.isZoomOpen) {
-        this.toggleZoom()
+        this.toggleZoom();
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -93,7 +93,7 @@ export default {
   align-items: center;
   min-height: calc(90vw * 1.1);
 
-  @media only screen and (min-width:768px) {
+  @media only screen and (min-width: 768px) {
     min-height: inherit;
   }
 

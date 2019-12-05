@@ -1,15 +1,19 @@
 <template>
-  <button-full @click.native="addToCart(product)" :disabled="isProductDisabled" data-testid="addToCart">
-    {{ $t('Add to cart') }}
+  <button-full
+    :disabled="isProductDisabled"
+    data-testid="addToCart"
+    @click.native="addToCart(product)"
+  >
+    {{ $t("Add to cart") }}
   </button-full>
 </template>
 
 <script>
-import { formatProductMessages } from '@vue-storefront/core/filters/product-messages'
-import { notifications } from '@vue-storefront/core/modules/cart/helpers'
-import focusClean from 'theme/components/theme/directives/focusClean'
-import ButtonFull from 'theme/components/theme/ButtonFull.vue'
-import { mapGetters } from 'vuex'
+import { formatProductMessages } from "@vue-storefront/core/filters/product-messages";
+import { notifications } from "@vue-storefront/core/modules/cart/helpers";
+import focusClean from "theme/components/theme/directives/focusClean";
+import ButtonFull from "theme/components/theme/ButtonFull.vue";
+import { mapGetters } from "vuex";
 
 export default {
   directives: { focusClean },
@@ -24,37 +28,47 @@ export default {
       default: false
     }
   },
-  methods: {
-    onAfterRemovedVariant () {
-      this.$forceUpdate()
-    },
-    async addToCart (product) {
-      try {
-        const diffLog = await this.$store.dispatch('cart/addItem', { productToAdd: product })
-        diffLog.clientNotifications.forEach(notificationData => {
-          this.notifyUser(notificationData)
-        })
-      } catch (message) {
-        this.notifyUser(notifications.createNotification({ type: 'error', message }))
-      }
-    },
-    notifyUser (notificationData) {
-      this.$store.dispatch('notification/spawnNotification', notificationData, { root: true })
-    }
-  },
   computed: {
     ...mapGetters({
-      isAddingToCart: 'cart/getIsAdding'
+      isAddingToCart: "cart/getIsAdding"
     }),
-    isProductDisabled () {
-      return this.disabled || formatProductMessages(this.product.errors) !== '' || this.isAddingToCart
+    isProductDisabled() {
+      return (
+        this.disabled ||
+        formatProductMessages(this.product.errors) !== "" ||
+        this.isAddingToCart
+      );
     }
   },
-  beforeMount () {
-    this.$bus.$on('product-after-removevariant', this.onAfterRemovedVariant)
+  beforeMount() {
+    this.$bus.$on("product-after-removevariant", this.onAfterRemovedVariant);
   },
-  beforeDestroy () {
-    this.$bus.$off('product-after-removevariant')
+  beforeDestroy() {
+    this.$bus.$off("product-after-removevariant");
+  },
+  methods: {
+    onAfterRemovedVariant() {
+      this.$forceUpdate();
+    },
+    async addToCart(product) {
+      try {
+        const diffLog = await this.$store.dispatch("cart/addItem", {
+          productToAdd: product
+        });
+        diffLog.clientNotifications.forEach(notificationData => {
+          this.notifyUser(notificationData);
+        });
+      } catch (message) {
+        this.notifyUser(
+          notifications.createNotification({ type: "error", message })
+        );
+      }
+    },
+    notifyUser(notificationData) {
+      this.$store.dispatch("notification/spawnNotification", notificationData, {
+        root: true
+      });
+    }
   }
-}
+};
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="mb35" v-if="order">
+  <div v-if="order" class="mb35">
     <!-- My order header -->
     <div class="row mb15">
       <div class="col-xs-12 col-md-2 col-lg-1">
@@ -7,8 +7,10 @@
       </div>
       <div class="col-xs-12 col-md-6">
         <h3 class="m0 mb5 mt5">
-          {{ $t('Order #{id}', { id: order.increment_id }) }}
-          <span class="brdr-1 brdr-cl-bg-secondary py5 px10 ml20 sans-serif fs-medium-small weight-400 cl-secondary">
+          {{ $t("Order #{id}", { id: order.increment_id }) }}
+          <span
+            class="brdr-1 brdr-cl-bg-secondary py5 px10 ml20 sans-serif fs-medium-small weight-400 cl-secondary"
+          >
             {{ order.status | capitalize }}
           </span>
         </h3>
@@ -17,40 +19,49 @@
     <!-- My order body -->
     <div class="row fs16 mb20">
       <div class="col-xs-12 h4">
-        <p>{{ order.created_at | date('LLL') }}</p>
+        <p>{{ order.created_at | date("LLL") }}</p>
         <p class="mt35">
-          <a href="#" class="underline" @click.prevent="remakeOrder(singleOrderItems)">{{ $t('Remake order') }}</a>
+          <a
+            href="#"
+            class="underline"
+            @click.prevent="remakeOrder(singleOrderItems)"
+            >{{ $t("Remake order") }}</a
+          >
         </p>
       </div>
     </div>
     <div class="row fs16 mb35">
       <div class="col-xs-12 h4">
-        <h4>{{ $t('Items ordered') }}</h4>
+        <h4>{{ $t("Items ordered") }}</h4>
         <table class="brdr-1 brdr-cl-bg-secondary">
           <thead>
             <tr>
               <th class="serif lh20">
-                {{ $t('Product Name') }}
+                {{ $t("Product Name") }}
               </th>
               <th class="serif lh20">
-                {{ $t('SKU') }}
+                {{ $t("SKU") }}
               </th>
               <th class="serif lh20">
-                {{ $t('Price') }}
+                {{ $t("Price") }}
               </th>
               <th class="serif lh20">
-                {{ $t('Qty') }}
+                {{ $t("Qty") }}
               </th>
               <th class="serif lh20">
-                {{ $t('Subtotal') }}
+                {{ $t("Subtotal") }}
               </th>
               <th class="serif lh20">
-                {{ $t('Thumbnail') }}
+                {{ $t("Thumbnail") }}
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr class="brdr-top-1 brdr-cl-bg-secondary" v-for="item in singleOrderItems" :key="item.item_id">
+            <tr
+              v-for="item in singleOrderItems"
+              :key="item.item_id"
+              class="brdr-top-1 brdr-cl-bg-secondary"
+            >
               <td class="fs-medium lh25" :data-th="$t('Product Name')">
                 {{ item.name }}
               </td>
@@ -67,38 +78,43 @@
                 {{ item.row_total_incl_tax | price }}
               </td>
               <td class="fs-medium lh25">
-                <product-image :image="{src: itemThumbnail[item.sku]}" />
+                <product-image :image="{ src: itemThumbnail[item.sku] }" />
               </td>
             </tr>
           </tbody>
           <tfoot>
             <tr class="brdr-top-1 brdr-cl-bg-secondary">
               <td colspan="5" class="align-right">
-                {{ $t('Subtotal') }}
+                {{ $t("Subtotal") }}
               </td>
               <td>{{ order.subtotal | price }}</td>
             </tr>
             <tr>
               <td colspan="5" class="align-right">
-                {{ $t('Shipping') }}
+                {{ $t("Shipping") }}
               </td>
               <td>{{ order.shipping_amount | price }}</td>
             </tr>
             <tr>
               <td colspan="5" class="align-right">
-                {{ $t('Tax') }}
+                {{ $t("Tax") }}
               </td>
-              <td>{{ order.tax_amount + order.discount_tax_compensation_amount | price }}</td>
+              <td>
+                {{
+                  (order.tax_amount + order.discount_tax_compensation_amount)
+                    | price
+                }}
+              </td>
             </tr>
             <tr v-if="order.discount_amount">
               <td colspan="5" class="align-right">
-                {{ $t('Discount') }}
+                {{ $t("Discount") }}
               </td>
               <td>{{ order.discount_amount | price }}</td>
             </tr>
             <tr>
               <td colspan="5" class="align-right">
-                {{ $t('Grand total') }}
+                {{ $t("Grand total") }}
               </td>
               <td>{{ order.grand_total | price }}</td>
             </tr>
@@ -108,32 +124,40 @@
     </div>
     <div class="row fs16 mb35">
       <div class="col-xs-12 h4">
-        <h4>{{ $t('Order informations') }}</h4>
+        <h4>{{ $t("Order informations") }}</h4>
         <div class="row">
           <div class="col-sm-6 col-md-3">
-            <h5>{{ $t('Shipping address') }}</h5>
+            <h5>{{ $t("Shipping address") }}</h5>
             <address>
-              <p>{{ shippingAddress.firstname }} {{ shippingAddress.lastname }}</p>
-              <p>{{ shippingAddress.street[0] }} {{ shippingAddress.street[1] }}</p>
+              <p>
+                {{ shippingAddress.firstname }} {{ shippingAddress.lastname }}
+              </p>
+              <p>
+                {{ shippingAddress.street[0] }} {{ shippingAddress.street[1] }}
+              </p>
               <p>{{ shippingAddress.postcode }} {{ shippingAddress.city }}</p>
               <p>{{ shippingAddress.country }}</p>
             </address>
           </div>
           <div class="col-sm-6 col-md-3">
-            <h5>{{ $t('Shipping method') }}</h5>
+            <h5>{{ $t("Shipping method") }}</h5>
             <p>{{ order.shipping_description }}</p>
           </div>
           <div class="col-sm-6 col-md-3">
-            <h5>{{ $t('Billing address') }}</h5>
+            <h5>{{ $t("Billing address") }}</h5>
             <address>
-              <p>{{ billingAddress.firstname }} {{ billingAddress.lastname }}</p>
-              <p>{{ billingAddress.street[0] }} {{ billingAddress.street[1] }}</p>
+              <p>
+                {{ billingAddress.firstname }} {{ billingAddress.lastname }}
+              </p>
+              <p>
+                {{ billingAddress.street[0] }} {{ billingAddress.street[1] }}
+              </p>
               <p>{{ billingAddress.postcode }} {{ billingAddress.city }}</p>
               <p>{{ billingAddress.country }}</p>
             </address>
           </div>
           <div class="col-sm-6 col-md-3">
-            <h5>{{ $t('Payment method') }}</h5>
+            <h5>{{ $t("Payment method") }}</h5>
             <p>{{ paymentMethod }}</p>
           </div>
         </div>
@@ -143,44 +167,56 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import MyOrder from '@vue-storefront/core/compatibility/components/blocks/MyAccount/MyOrder'
-import ReturnIcon from 'theme/components/core/blocks/Header/ReturnIcon'
-import ProductImage from 'theme/components/core/ProductImage'
-import { getThumbnailPath, productThumbnailPath } from '@vue-storefront/core/helpers'
-import { mapActions } from 'vuex'
+import Vue from "vue";
+import MyOrder from "@vue-storefront/core/compatibility/components/blocks/MyAccount/MyOrder";
+import ReturnIcon from "theme/components/core/blocks/Header/ReturnIcon";
+import ProductImage from "theme/components/core/ProductImage";
+import {
+  getThumbnailPath,
+  productThumbnailPath
+} from "@vue-storefront/core/helpers";
+import { mapActions } from "vuex";
 
 export default {
-  mixins: [MyOrder],
   components: {
     ReturnIcon,
     ProductImage
   },
-  data () {
+  mixins: [MyOrder],
+  data() {
     return {
       itemThumbnail: []
-    }
+    };
+  },
+  mounted() {
+    this.singleOrderItems.forEach(async item => {
+      if (!this.itemThumbnail[item.sku]) {
+        const product = await this.getProduct({
+          options: { sku: item.sku },
+          setCurrentProduct: false,
+          setCurrentCategoryPath: false,
+          selectDefaultVariant: false
+        });
+        const thumbnail = productThumbnailPath(product);
+        Vue.set(
+          this.itemThumbnail,
+          item.sku,
+          getThumbnailPath(thumbnail, 280, 280)
+        );
+      }
+    });
   },
   methods: {
     ...mapActions({
-      getProduct: 'product/single'
-    })
-  },
-  mounted () {
-    this.singleOrderItems.forEach(async item => {
-      if (!this.itemThumbnail[item.sku]) {
-        const product = await this.getProduct({ options: { sku: item.sku }, setCurrentProduct: false, setCurrentCategoryPath: false, selectDefaultVariant: false })
-        const thumbnail = productThumbnailPath(product)
-        Vue.set(this.itemThumbnail, item.sku, getThumbnailPath(thumbnail, 280, 280))
-      }
+      getProduct: "product/single"
     })
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $color-tertiary: color(tertiary);
 $color-white-smoke: color(white-smoke);
 
@@ -192,7 +228,8 @@ table {
     border-top: none;
   }
 
-  th, td {
+  th,
+  td {
     text-align: left;
     padding: 20px;
 
@@ -202,13 +239,11 @@ table {
       @media (max-width: 767px) {
         text-align: left;
       }
-
     }
 
     @media (max-width: 1199px) {
       padding: 10px;
     }
-
   }
 
   thead {
@@ -218,10 +253,9 @@ table {
   }
 
   tbody {
-
     tr {
       @media (max-width: 767px) {
-        display: block
+        display: block;
       }
 
       &:nth-child(even) {
@@ -229,7 +263,6 @@ table {
           background-color: $color-white-smoke;
         }
       }
-
     }
 
     td {
@@ -238,7 +271,7 @@ table {
         text-align: left;
         padding: 10px 20px;
         &:before {
-          content: attr(data-th) ': ';
+          content: attr(data-th) ": ";
           font-weight: 700;
         }
       }
@@ -255,27 +288,24 @@ table {
         }
       }
     }
-
   }
 
   tfoot {
-
     tr {
       @media (max-width: 767px) {
-        display: block
+        display: block;
       }
 
       &:last-child {
         td:last-child {
-         padding-bottom: 20px
+          padding-bottom: 20px;
         }
       }
-
     }
 
     td {
       @media (max-width: 767px) {
-        display: block
+        display: block;
       }
 
       &:first-child {
@@ -290,15 +320,12 @@ table {
           padding: 5px 20px 0 20px;
         }
       }
-
     }
-
   }
 
   i {
     vertical-align: middle;
   }
-
 }
 
 a {
@@ -323,5 +350,4 @@ a {
 address {
   font-style: normal;
 }
-
 </style>

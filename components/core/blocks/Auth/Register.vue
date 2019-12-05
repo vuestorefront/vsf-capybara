@@ -1,7 +1,7 @@
 <template>
   <div>
     <header class="modal-header py25 px65 h1 serif weight-700 bg-cl-secondary">
-      {{ $t('Register') }}
+      {{ $t("Register") }}
       <i
         slot="close"
         class="modal-close material-icons cl-bg-tertiary"
@@ -12,14 +12,13 @@
     </header>
 
     <div class="modal-content bg-cl-primary pt30 pb60 px65 cl-secondary">
-      <form @submit.prevent="register" novalidate>
+      <form novalidate @submit.prevent="register">
         <base-input
+          v-model="email"
           class="mb10"
           type="email"
           name="email"
           autocomplete="email"
-          v-model="email"
-          @blur="$v.email.$touch()"
           focus
           :placeholder="$t('E-mail address *')"
           :validations="[
@@ -32,15 +31,15 @@
               text: $t('Please provide valid e-mail address.')
             }
           ]"
+          @blur="$v.email.$touch()"
         />
         <div class="row mb10">
           <base-input
+            v-model="firstName"
             class="col-xs-6"
             type="text"
             name="first-name"
             autocomplete="given-name"
-            v-model="firstName"
-            @blur="$v.firstName.$touch()"
             :placeholder="$t('First name *')"
             :validations="[
               {
@@ -52,29 +51,31 @@
                 text: $t('Name must have at least 2 letters.')
               }
             ]"
+            @blur="$v.firstName.$touch()"
           />
           <base-input
+            v-model="lastName"
             class="col-xs-6"
             type="text"
             name="last-name"
             autocomplete="last-name"
-            v-model="lastName"
-            @blur="$v.lastName.$touch()"
             :placeholder="$t('Last name *')"
-            :validations="[{
-              condition: !$v.lastName.required && $v.lastName.$error,
-              text: $t('Field is required.')
-            }]"
+            :validations="[
+              {
+                condition: !$v.lastName.required && $v.lastName.$error,
+                text: $t('Field is required.')
+              }
+            ]"
+            @blur="$v.lastName.$touch()"
           />
         </div>
         <base-input
+          ref="password"
+          v-model="password"
           class="mb10"
           type="password"
           name="password"
-          ref="password"
           autocomplete="new-password"
-          v-model="password"
-          @blur="$v.password.$touch()"
           :placeholder="$t('Password *')"
           :validations="[
             {
@@ -86,14 +87,14 @@
               text: $t('Password must have at least 8 letters.')
             }
           ]"
+          @blur="$v.password.$touch()"
         />
         <base-input
+          v-model="rPassword"
           class="mb10"
           type="password"
           name="password-confirm"
           autocomplete="new-password"
-          v-model="rPassword"
-          @blur="$v.rPassword.$touch()"
           :placeholder="$t('Repeat password *')"
           :validations="[
             {
@@ -105,28 +106,31 @@
               text: $t('Passwords must be identical.')
             }
           ]"
+          @blur="$v.rPassword.$touch()"
         />
         <base-checkbox
-          class="mb10"
           id="terms"
           v-model="conditions"
+          class="mb10"
+          :validations="[
+            {
+              condition: !$v.conditions.required && $v.conditions.$error,
+              text: $t('You must accept the terms and conditions.')
+            }
+          ]"
           @blur="$v.conditions.$reset()"
           @change="$v.conditions.$touch()"
-          :validations="[{
-            condition: !$v.conditions.required && $v.conditions.$error,
-            text: $t('You must accept the terms and conditions.')
-          }]"
         >
-          {{ $t('I accept terms and conditions') }} *
+          {{ $t("I accept terms and conditions") }} *
         </base-checkbox>
         <button-full class="mb20" type="submit">
-          {{ $t('Register an account') }}
+          {{ $t("Register an account") }}
         </button-full>
         <div class="center-xs">
           <span>
-            {{ $t('or') }}
+            {{ $t("or") }}
             <a href="#" @click.prevent="switchElem">
-              {{ $t('login to your account') }}
+              {{ $t("login to your account") }}
             </a>
           </span>
         </div>
@@ -135,11 +139,11 @@
   </div>
 </template>
 <script>
-import Register from '@vue-storefront/core/compatibility/components/blocks/Auth/Register'
-import ButtonFull from 'theme/components/theme/ButtonFull.vue'
-import BaseCheckbox from 'theme/components/core/blocks/Form/BaseCheckbox.vue'
-import BaseInput from 'theme/components/core/blocks/Form/BaseInput.vue'
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import Register from "@vue-storefront/core/compatibility/components/blocks/Auth/Register";
+import ButtonFull from "theme/components/theme/ButtonFull.vue";
+import BaseCheckbox from "theme/components/core/blocks/Form/BaseCheckbox.vue";
+import BaseInput from "theme/components/core/blocks/Form/BaseInput.vue";
+import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 
 export default {
   validations: {
@@ -160,62 +164,62 @@ export default {
     },
     rPassword: {
       required,
-      sameAsPassword: sameAs('password')
+      sameAsPassword: sameAs("password")
     },
     conditions: {
       required
     }
   },
-  mixins: [Register],
   components: {
     ButtonFull,
     BaseCheckbox,
     BaseInput
   },
+  mixins: [Register],
   methods: {
-    register () {
+    register() {
       if (this.$v.$invalid) {
-        this.$v.$touch()
-        this.$store.dispatch('notification/spawnNotification', {
-          type: 'error',
-          message: this.$t('Please fix the validation errors'),
-          action1: { label: this.$t('OK') }
-        })
-        return
+        this.$v.$touch();
+        this.$store.dispatch("notification/spawnNotification", {
+          type: "error",
+          message: this.$t("Please fix the validation errors"),
+          action1: { label: this.$t("OK") }
+        });
+        return;
       }
-      this.callRegister()
+      this.callRegister();
     },
-    onSuccess () {
-      this.$store.dispatch('notification/spawnNotification', {
-        type: 'success',
-        message: this.$t('You are logged in!'),
-        action1: { label: this.$t('OK') }
-      })
+    onSuccess() {
+      this.$store.dispatch("notification/spawnNotification", {
+        type: "success",
+        message: this.$t("You are logged in!"),
+        action1: { label: this.$t("OK") }
+      });
     },
-    onFailure (result) {
-      this.$store.dispatch('notification/spawnNotification', {
-        type: 'error',
+    onFailure(result) {
+      this.$store.dispatch("notification/spawnNotification", {
+        type: "error",
         message: this.$t(result.result),
-        action1: { label: this.$t('OK') }
-      })
+        action1: { label: this.$t("OK") }
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-  .modal-header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-close {
+  cursor: pointer;
+}
+.modal-content {
+  @media (max-width: 400px) {
+    padding-left: 20px;
+    padding-right: 20px;
   }
-  .modal-close{
-    cursor: pointer;
-  }
-  .modal-content {
-    @media (max-width: 400px) {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-  }
+}
 </style>

@@ -4,7 +4,7 @@
     <div class="row mb15">
       <div class="col-xs-12 col-sm-6">
         <h3 class="m0 mb5">
-          {{ $t('My newsletter') }}
+          {{ $t("My newsletter") }}
         </h3>
       </div>
     </div>
@@ -13,22 +13,22 @@
     <div class="row">
       <div class="col-xs-12">
         <h4>
-          {{ $t('General agreement') }}
+          {{ $t("General agreement") }}
         </h4>
       </div>
 
       <base-checkbox
-        class="col-xs-12 mb25 cl-primary"
         id="generalAgreement"
         v-model="user.isSubscribed"
+        class="col-xs-12 mb25 cl-primary"
         @click="edit()"
       >
-        {{ $t('I want to receive a newsletter, and agree to its terms') }}
+        {{ $t("I want to receive a newsletter, and agree to its terms") }}
       </base-checkbox>
 
       <div class="col-xs-12 col-sm-6">
         <button-full @click.native="updateNewsletter">
-          {{ $t('Update my preferences') }}
+          {{ $t("Update my preferences") }}
         </button-full>
       </div>
     </div>
@@ -36,48 +36,57 @@
 </template>
 
 <script>
-import { Newsletter } from '@vue-storefront/core/modules/newsletter/components/Newsletter'
-import ButtonFull from 'theme/components/theme/ButtonFull.vue'
-import BaseCheckbox from '../Form/BaseCheckbox.vue'
-import i18n from '@vue-storefront/i18n'
+import { Newsletter } from "@vue-storefront/core/modules/newsletter/components/Newsletter";
+import ButtonFull from "theme/components/theme/ButtonFull.vue";
+import BaseCheckbox from "../Form/BaseCheckbox.vue";
+import i18n from "@vue-storefront/i18n";
 
 export default {
   components: {
     ButtonFull,
     BaseCheckbox
   },
-  data () {
-    return {
-    }
+  mixins: [Newsletter],
+  data() {
+    return {};
   },
   methods: {
-    edit () {
-      this.isEdited = true
+    edit() {
+      this.isEdited = true;
     },
-    async updateNewsletter () {
+    async updateNewsletter() {
       if (this.user.isSubscribed) {
-        const isSubscribed = await this.$store.dispatch('newsletter/subscribe', this.email)
+        const isSubscribed = await this.$store.dispatch(
+          "newsletter/subscribe",
+          this.email
+        );
 
         if (isSubscribed) {
-          this.$store.dispatch('notification/spawnNotification', {
-            type: 'success',
-            message: i18n.t('You have been successfully subscribed to our newsletter!'),
-            action1: { label: i18n.t('OK') }
-          })
+          this.$store.dispatch("notification/spawnNotification", {
+            type: "success",
+            message: i18n.t(
+              "You have been successfully subscribed to our newsletter!"
+            ),
+            action1: { label: i18n.t("OK") }
+          });
         }
-        return
+        return;
       }
 
-      const isUnsubscribed = await this.$store.dispatch('newsletter/unsubscribe', this.email)
+      const isUnsubscribed = await this.$store.dispatch(
+        "newsletter/unsubscribe",
+        this.email
+      );
       if (isUnsubscribed) {
-        this.$store.dispatch('notification/spawnNotification', {
-          type: 'success',
-          message: i18n.t('You have been successfully unsubscribed from our newsletter!'),
-          action1: { label: i18n.t('OK') }
-        })
+        this.$store.dispatch("notification/spawnNotification", {
+          type: "success",
+          message: i18n.t(
+            "You have been successfully unsubscribed from our newsletter!"
+          ),
+          action1: { label: i18n.t("OK") }
+        });
       }
     }
-  },
-  mixins: [Newsletter]
-}
+  }
+};
 </script>

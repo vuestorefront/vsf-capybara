@@ -14,8 +14,11 @@
         <div class="col-sm-3">
           <nav class="static-menu serif h4 mb35">
             <ul class="m0 p0">
-              <li class="mb10" v-for="element in navigation" :key="element.id">
-                <router-link :to="localizedRoute(element.link)" class="cl-accent relative">
+              <li v-for="element in navigation" :key="element.id" class="mb10">
+                <router-link
+                  :to="localizedRoute(element.link)"
+                  class="cl-accent relative"
+                >
                   {{ element.title }}
                 </router-link>
               </li>
@@ -31,22 +34,24 @@
 </template>
 
 <script>
-import i18n from '@vue-storefront/i18n'
-import Breadcrumbs from 'theme/components/core/Breadcrumbs'
-import StaticExample from 'theme/components/theme/blocks/Static/Example'
-import StaticShortExample from 'theme/components/theme/blocks/Static/Short'
-import { getPathForStaticPage } from 'theme/helpers'
-import { localizedRoute } from '@vue-storefront/core/lib/multistore'
+import i18n from "@vue-storefront/i18n";
+import Breadcrumbs from "theme/components/core/Breadcrumbs";
+import StaticExample from "theme/components/theme/blocks/Static/Example";
+import StaticShortExample from "theme/components/theme/blocks/Static/Short";
+import { getPathForStaticPage } from "theme/helpers";
+import { localizedRoute } from "@vue-storefront/core/lib/multistore";
 
 export default {
   components: {
     Breadcrumbs
   },
-  metaInfo () {
+  metaInfo() {
     return {
       title: this.$route.meta.title || this.$props.title,
-      meta: this.$route.meta.description ? [{vmid: 'description', description: this.$route.meta.description}] : []
-    }
+      meta: this.$route.meta.description
+        ? [{ vmid: "description", description: this.$route.meta.description }]
+        : []
+    };
   },
   props: {
     title: {
@@ -58,32 +63,66 @@ export default {
       required: true
     }
   },
-  computed: {
-    activeComponent () {
-      const matchedNav = this.navigation.find(nav => nav.link === this.$route.path)
-      return matchedNav ? matchedNav.component : null
-    }
-  },
-  data () {
+  data() {
     return {
       navigation: [
-        { title: i18n.t('About us'), link: getPathForStaticPage('/about-us'), component: StaticExample },
-        { title: i18n.t('Customer service'), link: getPathForStaticPage('/customer-service'), component: StaticShortExample },
-        { title: i18n.t('Store locator'), link: localizedRoute('/store-locator'), component: StaticExample },
-        { title: i18n.t('Delivery'), link: '/delivery', component: StaticShortExample },
-        { title: i18n.t('Return policy'), link: '/returns', component: StaticExample },
-        { title: i18n.t('Privacy policy'), link: '/privacy', component: StaticShortExample },
-        { title: i18n.t('Size guide'), link: '/size-guide', component: StaticExample },
-        { title: i18n.t('Contact us'), link: '/contact', component: StaticShortExample }
+        {
+          title: i18n.t("About us"),
+          link: getPathForStaticPage("/about-us"),
+          component: StaticExample
+        },
+        {
+          title: i18n.t("Customer service"),
+          link: getPathForStaticPage("/customer-service"),
+          component: StaticShortExample
+        },
+        {
+          title: i18n.t("Store locator"),
+          link: localizedRoute("/store-locator"),
+          component: StaticExample
+        },
+        {
+          title: i18n.t("Delivery"),
+          link: "/delivery",
+          component: StaticShortExample
+        },
+        {
+          title: i18n.t("Return policy"),
+          link: "/returns",
+          component: StaticExample
+        },
+        {
+          title: i18n.t("Privacy policy"),
+          link: "/privacy",
+          component: StaticShortExample
+        },
+        {
+          title: i18n.t("Size guide"),
+          link: "/size-guide",
+          component: StaticExample
+        },
+        {
+          title: i18n.t("Contact us"),
+          link: "/contact",
+          component: StaticShortExample
+        }
       ]
+    };
+  },
+  computed: {
+    activeComponent() {
+      const matchedNav = this.navigation.find(
+        nav => nav.link === this.$route.path
+      );
+      return matchedNav ? matchedNav.component : null;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $border-primary: color(primary, $colors-border);
 
 .static-menu {
