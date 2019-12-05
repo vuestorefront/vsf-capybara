@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --ext .js,.vue ./ --fix",
+    "lint": "cross-env NODE_ENV=production eslint --ext .js,.vue ./ --fix",
     "dev": "cd ../../../ && yarn dev"
   },
   "license": "MIT",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
+    "cross-env": "^6.0.3",
     "eslint": "^5.16.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-loader": "^3.0.2",
