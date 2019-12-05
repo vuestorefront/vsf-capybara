@@ -130,8 +130,7 @@ export default {
             });
           }
         })
-        .catch(err => {
-          console.error(err);
+        .catch(() => {
           this.$bus.$emit("notification-progress-stop");
         });
     },

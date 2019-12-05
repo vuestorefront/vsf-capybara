@@ -148,7 +148,7 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
     if (isServer) await breadCrumbsLoader;
     catalogHooksExecutors.categoryPageVisited(currentCategory);
   } catch (e) {
-    console.error("Problem with setting Category initial data!", e);
+    //
   }
 };
 
@@ -233,7 +233,7 @@ export default {
       try {
         await this.$store.dispatch("category-next/loadMoreCategoryProducts");
       } catch (e) {
-        console.error("Problem with fetching more products", e);
+        //
       } finally {
         this.loadingProducts = false;
       }
