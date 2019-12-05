@@ -4,10 +4,14 @@
     :to="redirectionLink"
     class="button-outline no-outline py15 bg-cl-transparent h4 no-underline sans-serif fs-medium"
     :class="{
-      light : color === 'light', 'brdr-white' : color === 'light', 'cl-white' : color === 'light',
-      dark : color === 'dark', 'brdr-darkgray' : color === 'dark', 'cl-secondary' : color === 'dark',
-      px0 : link ? true : false,
-      px40 : link ? false : true
+      light: color === 'light',
+      'brdr-white': color === 'light',
+      'cl-white': color === 'light',
+      dark: color === 'dark',
+      'brdr-darkgray': color === 'dark',
+      'cl-secondary': color === 'dark',
+      px0: link ? true : false,
+      px40: link ? false : true
     }"
   >
     <slot>Button</slot>
@@ -15,10 +19,10 @@
 </template>
 
 <script>
-import focusClean from 'theme/components/theme/directives/focusClean'
+import focusClean from "theme/components/theme/directives/focusClean";
 
 export default {
-  name: 'ButtonOutline',
+  name: "ButtonOutline",
   directives: { focusClean },
   props: {
     color: {
@@ -32,14 +36,14 @@ export default {
     }
   },
   computed: {
-    compontentType () {
-      return this.link ? 'router-link' : 'button'
+    compontentType() {
+      return this.link ? "router-link" : "button";
     },
-    redirectionLink () {
-      return this.link ? this.localizedRoute(this.link) : null
+    redirectionLink() {
+      return this.link ? this.localizedRoute(this.link) : null;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

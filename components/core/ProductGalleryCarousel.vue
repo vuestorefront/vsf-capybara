@@ -1,6 +1,7 @@
 <template>
   <div class="media-gallery-carousel">
     <carousel
+      ref="carousel"
       :per-page="1"
       :mouse-drag="false"
       :navigation-enabled="true"
@@ -8,27 +9,23 @@
       pagination-color="transparent"
       navigation-next-label="<i class='material-icons p15 cl-bg-tertiary pointer'>keyboard_arrow_right</i>"
       navigation-prev-label="<i class='material-icons p15 cl-bg-tertiary pointer'>keyboard_arrow_left</i>"
-      ref="carousel"
       :speed="carouselTransitionSpeed"
       @pageChange="pageChange"
     >
-      <slide
-        v-for="(images, index) in gallery"
-        :key="images.src"
-      >
+      <slide v-for="(images, index) in gallery" :key="images.src">
         <div
           class="product-image-container bg-cl-secondary"
-          :class="{'video-container w-100 h-100 flex relative': images.video}"
+          :class="{ 'video-container w-100 h-100 flex relative': images.video }"
         >
           <product-image
             v-show="hideImageAtIndex !== index"
-            @dblclick="openOverlay"
             class="pointer image"
             :image="images"
             :alt="productName | htmlDecode"
+            @dblclick="openOverlay"
           />
           <product-video
-            v-if="images.video && (index === currentPage)"
+            v-if="images.video && index === currentPage"
             v-bind="images.video"
             :index="index"
             @video-started="onVideoStarted"
@@ -39,20 +36,21 @@
     <i
       class="zoom-in material-icons p15 cl-bgs-tertiary pointer"
       @click="openOverlay"
-    >zoom_in</i>
+      >zoom_in</i
+    >
   </div>
 </template>
 
 <script>
-import config from 'config'
-import { Carousel, Slide } from 'vue-carousel'
-import ProductImage from './ProductImage'
-import ProductVideo from './ProductVideo'
-import reduce from 'lodash-es/reduce'
-import map from 'lodash-es/map'
+import config from "config";
+import { Carousel, Slide } from "vue-carousel";
+import ProductImage from "./ProductImage";
+import ProductVideo from "./ProductVideo";
+import reduce from "lodash-es/reduce";
+import map from "lodash-es/map";
 
 export default {
-  name: 'ProductGalleryCarousel',
+  name: "ProductGalleryCarousel",
   components: {
     Carousel,
     Slide,
@@ -66,91 +64,103 @@ export default {
     },
     productName: {
       type: String,
-      default: ''
+      default: ""
     },
     configuration: {
       type: Object,
       required: true
     }
   },
-  data () {
+  data() {
     return {
       carouselTransition: true,
       carouselTransitionSpeed: 0,
       currentColor: 0,
       currentPage: 0,
       hideImageAtIndex: null
-    }
+    };
   },
   computed: {},
-  beforeMount () {
-    this.$bus.$on('filter-changed-product', this.selectVariant)
-    this.$bus.$on('product-after-load', this.selectVariant)
+  beforeMount() {
+    this.$bus.$on("filter-changed-product", this.selectVariant);
+    this.$bus.$on("product-after-load", this.selectVariant);
   },
-  mounted () {
-    this.selectVariant()
+  mounted() {
+    this.selectVariant();
 
     if (this.configuration.color) {
-      const {color} = this.configuration
-      this.currentColor = color.id
+      const { color } = this.configuration;
+      this.currentColor = color.id;
     }
 
-    this.$emit('loaded')
+    this.$emit("loaded");
   },
-  beforeDestroy () {
-    this.$bus.$off('filter-changed-product', this.selectVariant)
-    this.$bus.$off('product-after-load', this.selectVariant)
+  beforeDestroy() {
+    this.$bus.$off("filter-changed-product", this.selectVariant);
+    this.$bus.$off("product-after-load", this.selectVariant);
   },
   methods: {
-    navigate (index) {
+    navigate(index) {
       if (this.$refs.carousel) {
-        this.$refs.carousel.goToPage(index)
+        this.$refs.carousel.goToPage(index);
       }
     },
-    selectVariant () {
+    selectVariant() {
       if (config.products.gallery.mergeConfigurableChildren) {
-        const option = reduce(map(this.configuration, 'attribute_code'), (result, attribute) => {
-          result[attribute] = this.configuration[attribute].id
-          return result
-        }, {})
+        const option = reduce(
+          map(this.configuration, "attribute_code"),
+          (result, attribute) => {
+            result[attribute] = this.configuration[attribute].id;
+            return result;
+          },
+          {}
+        );
         if (option) {
           let index = this.gallery.findIndex(
-            obj => obj.id && Object.entries(obj.id).toString() === Object.entries(option).toString(), option)
-          if (index < 0) index = this.gallery.findIndex(obj => obj.id && obj.id.color === option.color)
-          this.navigate(index)
+            obj =>
+              obj.id &&
+              Object.entries(obj.id).toString() ===
+                Object.entries(option).toString(),
+            option
+          );
+          if (index < 0)
+            index = this.gallery.findIndex(
+              obj => obj.id && obj.id.color === option.color
+            );
+          this.navigate(index);
         }
       }
 
-      this.$emit('close')
+      this.$emit("close");
     },
-    openOverlay () {
-      const currentSlide = this.$refs.carousel.currentPage
-      this.$emit('toggle', currentSlide)
+    openOverlay() {
+      const currentSlide = this.$refs.carousel.currentPage;
+      this.$emit("toggle", currentSlide);
     },
-    switchCarouselSpeed () {
-      const {color} = this.configuration
+    switchCarouselSpeed() {
+      const { color } = this.configuration;
       if (color && this.currentColor !== color.id) {
-        this.currentColor = color.id
-        this.carouselTransitionSpeed = 0
+        this.currentColor = color.id;
+        this.carouselTransitionSpeed = 0;
       } else {
-        this.carouselTransitionSpeed = 500
+        this.carouselTransitionSpeed = 500;
       }
     },
-    pageChange (index) {
-      this.switchCarouselSpeed()
+    pageChange(index) {
+      this.switchCarouselSpeed();
 
-      this.currentPage = index
-      this.hideImageAtIndex = null
+      this.currentPage = index;
+      this.hideImageAtIndex = null;
     },
-    onVideoStarted (index) {
-      this.hideImageAtIndex = index
+    onVideoStarted(index) {
+      this.hideImageAtIndex = index;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/animations/transitions';
+@import "~theme/css/animations/transitions";
 .media-gallery-carousel {
   position: relative;
   text-align: center;
@@ -161,12 +171,12 @@ export default {
   bottom: 0;
   right: 0;
 }
-.image{
+.image {
   opacity: 1;
   will-change: opacity;
-  transition: .3s opacity $motion-main;
-  &:hover{
-    opacity: .9;
+  transition: 0.3s opacity $motion-main;
+  &:hover {
+    opacity: 0.9;
   }
 }
 .video-container {
@@ -206,7 +216,7 @@ export default {
   }
   &:hover {
     .VueCarousel-navigation {
-      opacity: .9;
+      opacity: 0.9;
     }
     .VueCarousel-navigation-button {
       transition: opacity 3s;

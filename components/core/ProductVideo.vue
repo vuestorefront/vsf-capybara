@@ -14,7 +14,9 @@
           :src="embedUrl"
           class="absolute w-100 h-100"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          webkitallowfullscreen mozallowfullscreen allowfullscreen
+          webkitallowfullscreen
+          mozallowfullscreen
+          allowfullscreen
           @load="iframeIsLoaded()"
         />
       </div>
@@ -23,15 +25,15 @@
 </template>
 
 <script>
-import LoaderScoped from 'theme/components/core/LoaderScoped.vue'
-import { ProductVideo } from '@vue-storefront/core/modules/catalog/components/ProductVideo.ts'
+import LoaderScoped from "theme/components/core/LoaderScoped.vue";
+import { ProductVideo } from "@vue-storefront/core/modules/catalog/components/ProductVideo.ts";
 
 export default {
   components: {
     LoaderScoped
   },
   mixins: [ProductVideo]
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -47,7 +49,7 @@ export default {
       right: 0;
       color: #fff;
       font-size: 120px;
-      top: calc( 50% - 60px);
+      top: calc(50% - 60px);
       transition: transform ease 0.3s;
     }
 

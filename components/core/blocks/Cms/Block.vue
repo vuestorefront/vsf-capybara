@@ -1,14 +1,14 @@
 <template>
   <div
-    :class="['cms-content', { 'container': sync }]"
     v-if="getCmsData"
-    v-html="getCmsData.content"
+    :class="['cms-content', { container: sync }]"
+    v-text="getCmsData.content"
   />
 </template>
 
 <script>
 export default {
-  name: 'CmsBlock',
+  name: "CmsBlock",
   props: {
     id: {
       type: Number,
@@ -26,6 +26,18 @@ export default {
       required: false
     }
   },
+  computed: {
+    getCmsData() {
+      if (this.id) {
+        return this.$store.getters[`cmsBlock/getCmsBlockById`](this.id);
+      } else if (this.identifier) {
+        return this.$store.getters[`cmsBlock/getCmsBlockByIdentifier`](
+          this.identifier
+        );
+      }
+      return null;
+    }
+  },
   // asyncData ({ store, route, context }) {
   // @TODO to cover SSR need find a way to pass props identifier/id to the asyncData()
   // for now it is not possible but assuming from some info it could be available later
@@ -39,32 +51,22 @@ export default {
     })
   }) */
   // },
-  created () {
-    let queryKey = ''
-    let queryValue = ''
+  created() {
+    let queryKey = "";
+    let queryValue = "";
     if (this.id) {
-      queryKey = 'id'
-      queryValue = this.id
+      queryKey = "id";
+      queryValue = this.id;
     } else if (this.identifier) {
-      queryKey = 'identifier'
-      queryValue = this.identifier
+      queryKey = "identifier";
+      queryValue = this.identifier;
     }
     if (queryKey && queryValue) {
-      this.$store.dispatch('cmsBlock/single', {
+      this.$store.dispatch("cmsBlock/single", {
         key: queryKey,
         value: queryValue
-      })
-    }
-  },
-  computed: {
-    getCmsData () {
-      if (this.id) {
-        return this.$store.getters[`cmsBlock/getCmsBlockById`](this.id)
-      } else if (this.identifier) {
-        return this.$store.getters[`cmsBlock/getCmsBlockByIdentifier`](this.identifier)
-      }
-      return null
+      });
     }
   }
-}
+};
 </script>

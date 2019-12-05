@@ -1,11 +1,14 @@
 <template>
-  <div class="product align-center w-100 pb20" v-observe-visibility="visibilityChanged">
+  <div
+    v-observe-visibility="visibilityChanged"
+    class="product align-center w-100 pb20"
+  >
     <div class="product__icons">
       <AddToWishlist :product="product">
         <div
           class="product__icon"
-          :class="{'product__icon--active': isOnWishlist }"
-          :title="isOnWishlist ? $t('Remove') : $t('Add to favorite') "
+          :class="{ 'product__icon--active': isOnWishlist }"
+          :title="isOnWishlist ? $t('Remove') : $t('Add to favorite')"
         >
           <i class="material-icons">{{ favoriteIcon }}</i>
         </div>
@@ -13,8 +16,10 @@
       <AddToCompare :product="product">
         <div
           class="product__icon"
-          :class="{'product__icon--active':isOnCompare } "
-          :title="isOnCompare ? $t('Remove from compare') : $t('Add to compare')"
+          :class="{ 'product__icon--active': isOnCompare }"
+          :title="
+            isOnCompare ? $t('Remove from compare') : $t('Add to compare')
+          "
         >
           <i class="material-icons">compare</i>
         </div>
@@ -27,7 +32,10 @@
     >
       <div
         class="product-cover bg-cl-secondary"
-        :class="[{ sale: labelsActive && isOnSale }, { new: labelsActive && isNew }]"
+        :class="[
+          { sale: labelsActive && isOnSale },
+          { new: labelsActive && isNew }
+        ]"
       >
         <product-image
           class="product-cover__thumb"
@@ -38,45 +46,60 @@
         />
       </div>
 
-      <p class="mb0 cl-accent mt10" v-if="!onlyImage">
+      <p v-if="!onlyImage" class="mb0 cl-accent mt10">
         {{ product.name | htmlDecode }}
       </p>
 
       <span
+        v-if="
+          product.special_price &&
+            parseFloat(product.original_price_incl_tax) > 0 &&
+            !onlyImage
+        "
         class="price-original mr5 lh30 cl-secondary"
-        v-if="product.special_price && parseFloat(product.original_price_incl_tax) > 0 && !onlyImage"
-      >{{ product.original_price_incl_tax | price }}</span>
+        >{{ product.original_price_incl_tax | price }}</span
+      >
 
       <span
+        v-if="
+          product.special_price &&
+            parseFloat(product.special_price) > 0 &&
+            !onlyImage
+        "
         class="price-special lh30 cl-accent weight-700"
-        v-if="product.special_price && parseFloat(product.special_price) > 0 && !onlyImage"
-      >{{ product.price_incl_tax | price }}</span>
+        >{{ product.price_incl_tax | price }}</span
+      >
 
       <span
+        v-if="
+          !product.special_price &&
+            parseFloat(product.price_incl_tax) > 0 &&
+            !onlyImage
+        "
         class="lh30 cl-secondary"
-        v-if="!product.special_price && parseFloat(product.price_incl_tax) > 0 && !onlyImage"
-      >{{ product.price_incl_tax | price }}</span>
+        >{{ product.price_incl_tax | price }}</span
+      >
     </router-link>
   </div>
 </template>
 
 <script>
-import rootStore from '@vue-storefront/core/store'
-import { ProductTile } from '@vue-storefront/core/modules/catalog/components/ProductTile.ts'
-import config from 'config'
-import ProductImage from './ProductImage'
-import AddToWishlist from 'theme/components/core/blocks/Wishlist/AddToWishlist'
-import AddToCompare from 'theme/components/core/blocks/Compare/AddToCompare'
-import { IsOnWishlist } from '@vue-storefront/core/modules/wishlist/components/IsOnWishlist'
-import { IsOnCompare } from '@vue-storefront/core/modules/compare/components/IsOnCompare'
+import rootStore from "@vue-storefront/core/store";
+import { ProductTile } from "@vue-storefront/core/modules/catalog/components/ProductTile.ts";
+import config from "config";
+import ProductImage from "./ProductImage";
+import AddToWishlist from "theme/components/core/blocks/Wishlist/AddToWishlist";
+import AddToCompare from "theme/components/core/blocks/Compare/AddToCompare";
+import { IsOnWishlist } from "@vue-storefront/core/modules/wishlist/components/IsOnWishlist";
+import { IsOnCompare } from "@vue-storefront/core/modules/compare/components/IsOnCompare";
 
 export default {
-  mixins: [ProductTile, IsOnWishlist, IsOnCompare],
   components: {
     ProductImage,
     AddToWishlist,
     AddToCompare
   },
+  mixins: [ProductTile, IsOnWishlist, IsOnCompare],
   props: {
     labelsActive: {
       type: Boolean,
@@ -88,57 +111,57 @@ export default {
     }
   },
   computed: {
-    thumbnailObj () {
+    thumbnailObj() {
       return {
         src: this.thumbnail,
         loading: this.thumbnail
-      }
+      };
     },
-    favoriteIcon () {
-      return this.isOnWishlist ? 'favorite' : 'favorite_border'
+    favoriteIcon() {
+      return this.isOnWishlist ? "favorite" : "favorite_border";
     }
   },
+  beforeMount() {
+    this.$bus.$on("product-after-priceupdate", this.onProductPriceUpdate);
+  },
+  beforeDestroy() {
+    this.$bus.$off("product-after-priceupdate", this.onProductPriceUpdate);
+  },
   methods: {
-    onProductPriceUpdate (product) {
+    onProductPriceUpdate(product) {
       if (product.sku === this.product.sku) {
-        Object.assign(this.product, product)
+        Object.assign(this.product, product);
       }
     },
-    visibilityChanged (isVisible, entry) {
+    visibilityChanged(isVisible) {
       if (
         isVisible &&
         config.products.configurableChildrenStockPrefetchDynamic &&
         config.products.filterUnavailableVariants &&
-        this.product.type_id === 'configurable' &&
+        this.product.type_id === "configurable" &&
         this.product.configurable_children &&
         this.product.configurable_children.length > 0
       ) {
-        const skus = [this.product.sku]
+        const skus = [this.product.sku];
         for (const confChild of this.product.configurable_children) {
-          const cachedItem = rootStore.state.stock.cache[confChild.id]
-          if (typeof cachedItem === 'undefined' || cachedItem === null) {
-            skus.push(confChild.sku)
+          const cachedItem = rootStore.state.stock.cache[confChild.id];
+          if (typeof cachedItem === "undefined" || cachedItem === null) {
+            skus.push(confChild.sku);
           }
         }
         if (skus.length > 0) {
-          rootStore.dispatch('stock/list', { skus: skus }) // store it in the cache
+          rootStore.dispatch("stock/list", { skus: skus }); // store it in the cache
         }
       }
     }
-  },
-  beforeMount () {
-    this.$bus.$on('product-after-priceupdate', this.onProductPriceUpdate)
-  },
-  beforeDestroy () {
-    this.$bus.$off('product-after-priceupdate', this.onProductPriceUpdate)
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/animations/transitions';
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/animations/transitions";
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 
 $bg-secondary: color(secondary, $colors-background);
 $border-secondary: color(secondary, $colors-border);
@@ -225,13 +248,13 @@ $color-white: color(white);
   &.sale {
     &::after {
       @extend %label;
-      content: 'Sale';
+      content: "Sale";
     }
   }
   &.new {
     &::after {
       @extend %label;
-      content: 'New';
+      content: "New";
     }
   }
 }

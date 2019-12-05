@@ -2,8 +2,12 @@
   <div class="loader-container absolute">
     <div class="loader-inner-container absolute">
       <div class="spinner relative">
-        <div class="double-bounce1 absolute w-100 brdr-circle bg-cl-th-success" />
-        <div class="double-bounce2 absolute w-100 brdr-circle bg-cl-th-success" />
+        <div
+          class="double-bounce1 absolute w-100 brdr-circle bg-cl-th-success"
+        />
+        <div
+          class="double-bounce2 absolute w-100 brdr-circle bg-cl-th-success"
+        />
       </div>
     </div>
   </div>
@@ -11,14 +15,14 @@
 
 <script>
 export default {
-  name: 'LoaderScoped'
-}
+  name: "LoaderScoped"
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/base/global_vars';
-@import '~theme/css/variables/colors';
-@import '~theme/css/helpers/functions/color';
+@import "~theme/css/base/global_vars";
+@import "~theme/css/variables/colors";
+@import "~theme/css/helpers/functions/color";
 $color-container-bg: color(black);
 $color-message-bg: color(success);
 $z-index-loader: map-get($z-index, loader);

@@ -24,15 +24,20 @@
             :to="productLink"
             class="wishlist-add-to-cart no-outline button-full block brdr-none w-100 px10 py20 bg-cl-mine-shaft :bg-cl-th-secondary ripple weight-400 h4 cl-white sans-serif fs-medium col-xs-12 col-sm-4 col-md-6"
           >
-            {{ $t('Configure') }}
+            {{ $t("Configure") }}
           </router-link>
         </div>
       </div>
     </div>
     <div class="col-xs flex py15 align-right">
       <div>
-        <span class="price-special" v-if="product.special_price">{{ product.price_incl_tax | price }}</span>&nbsp;
-        <span class="price-original" v-if="product.special_price">{{ product.original_price_incl_tax | price }}</span>
+        <span v-if="product.special_price" class="price-special">{{
+          product.price_incl_tax | price
+        }}</span
+        >&nbsp;
+        <span v-if="product.special_price" class="price-original">{{
+          product.original_price_incl_tax | price
+        }}</span>
 
         <span v-if="!product.special_price">
           {{ product.price_incl_tax | price }}
@@ -40,7 +45,9 @@
       </div>
       <div>
         <div class="mt5">
-          <span @click="removeProductFromWhishList(product)"><remove-button class="cl-accent" /></span>
+          <span @click="removeProductFromWhishList(product)"
+            ><remove-button class="cl-accent"
+          /></span>
         </div>
       </div>
     </div>
@@ -48,15 +55,14 @@
 </template>
 
 <script>
-import config from 'config'
-import Product from '@vue-storefront/core/compatibility/components/blocks/Wishlist/Product'
-import { currentStoreView } from '@vue-storefront/core/lib/multistore'
-import { formatProductLink } from '@vue-storefront/core/modules/url/helpers'
-import ProductImage from 'theme/components/core/ProductImage'
-import RemoveButton from './RemoveButton'
-import i18n from '@vue-storefront/i18n'
-import { htmlDecode } from '@vue-storefront/core/lib/store/filters'
-import AddToCart from 'theme/components/core/AddToCart'
+import Product from "@vue-storefront/core/compatibility/components/blocks/Wishlist/Product";
+import { currentStoreView } from "@vue-storefront/core/lib/multistore";
+import { formatProductLink } from "@vue-storefront/core/modules/url/helpers";
+import ProductImage from "theme/components/core/ProductImage";
+import RemoveButton from "./RemoveButton";
+import i18n from "@vue-storefront/i18n";
+import { htmlDecode } from "@vue-storefront/core/lib/store/filters";
+import AddToCart from "theme/components/core/AddToCart";
 
 export default {
   components: {
@@ -72,39 +78,46 @@ export default {
     }
   },
   computed: {
-    productLink () {
-      return formatProductLink(this.product, currentStoreView().storeCode)
+    productLink() {
+      return formatProductLink(this.product, currentStoreView().storeCode);
     },
-    image () {
+    image() {
       return {
         loading: this.thumbnail,
         src: this.thumbnail
-      }
+      };
     }
   },
   methods: {
-    removeProductFromWhishList (product) {
-      this.$store.dispatch('notification/spawnNotification', {
-        type: 'success',
-        message: i18n.t('Product {productName} has been removed from wishlist!', { productName: htmlDecode(product.name) }),
-        action1: { label: i18n.t('OK') }
-      }, { root: true })
-      this.removeFromWishlist(product)
+    removeProductFromWhishList(product) {
+      this.$store.dispatch(
+        "notification/spawnNotification",
+        {
+          type: "success",
+          message: i18n.t(
+            "Product {productName} has been removed from wishlist!",
+            { productName: htmlDecode(product.name) }
+          ),
+          action1: { label: i18n.t("OK") }
+        },
+        { root: true }
+      );
+      this.removeFromWishlist(product);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-@import '~theme/css/animations/transitions';
+@import "~theme/css/animations/transitions";
 .blend {
   flex: 0 0 121px;
-  opacity: .8;
+  opacity: 0.8;
   will-change: opacity;
-  transition: .3s opacity $motion-main;
-  &:hover{
-     opacity: 1;
-   }
+  transition: 0.3s opacity $motion-main;
+  &:hover {
+    opacity: 1;
+  }
 }
 .col-xs {
   flex-direction: column;
@@ -115,7 +128,7 @@ input {
 .price-original {
   text-decoration: line-through;
   color: #828282;
-  font-size: .95rem;
+  font-size: 0.95rem;
 }
 .wishlist-add-to-cart {
   padding: 10px;
