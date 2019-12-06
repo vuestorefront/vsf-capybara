@@ -60,3 +60,4 @@
 * Update TypeScript compiler option in `compilerOptions.paths.theme/*` from default theme `["src/themes/default/*"]` to brand new `capybara` theme: `["src/themes/capybara/*"]`
 * Currently `storefront-ui` library is linked and used from its `develop` branch rather than from official releases to be able to get all fixes and new brilliant features as soon as possible. In order to make it possible `sfui` script has been introduced in `vsf-capybara`. **Every time `storefront-ui` is updated then `sfui` script has to be called.**
 * Download all dependencies and start dev server: `lerna bootstrap && lerna run sfui && yarn dev`
+* In order to fetch new commits from `storefront-ui` just call `yarn workspace @vue-storefront/theme-capybara upgrade https://github.com/DivanteLtd/storefront-ui#develop` (and then call `sfui` script as well).
