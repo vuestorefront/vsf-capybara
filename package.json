@@ -4,7 +4,7 @@
   "description": "New theme for Vue Storefront based on Storefront UI",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:unit": "echo \"No test specified yet\" && exit 0",
     "lint": "cross-env NODE_ENV=production eslint --ext .js,.vue ./ --fix",
     "dev": "cd ../../../ && yarn dev",
     "sfui:prepare": "cd ../../../node_modules/@storefront-ui/vue/packages/vue && yarn",
@@ -31,6 +31,8 @@
     "eslint-loader": "^3.0.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.0.1",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.5.0",
     "prettier": "^1.19.1"
   }
 }
