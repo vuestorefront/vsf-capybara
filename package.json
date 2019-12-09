@@ -5,11 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test:unit": "echo \"No test specified yet\" && exit 0",
-    "lint": "cross-env NODE_ENV=production eslint --ext .js,.vue --fix ./",
-    "dev": "cd ../../../ && yarn dev"
+    "lint": "cross-env NODE_ENV=production eslint --ext .js,.vue ./ --fix",
+    "dev": "cd ../../../ && yarn dev",
+    "sfui:prepare": "cd ../../../node_modules/@storefront-ui/vue/packages/vue && yarn",
+    "sfui:upgrade": "yarn upgrade https://github.com/DivanteLtd/storefront-ui#develop && yarn sfui:prepare"
   },
   "license": "MIT",
   "dependencies": {
+    "@storefront-ui/vue": "https://github.com/DivanteLtd/storefront-ui#develop",
     "body-scroll-lock": "^2.6.4",
     "vue": "^2.6.6",
     "vue-carousel": "^0.6.9",
