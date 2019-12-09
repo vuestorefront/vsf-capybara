@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "cross-env NODE_ENV=production eslint --ext .js,.vue ./ --fix",
     "dev": "cd ../../../ && yarn dev",
-    "sfui": "cd ../../../node_modules/@storefront-ui/vue/packages/vue && yarn && yarn postinstall"
+    "sfui:prepare": "cd ../../../node_modules/@storefront-ui/vue/packages/vue && yarn",
+    "sfui:upgrade": "yarn upgrade https://github.com/DivanteLtd/storefront-ui#develop && yarn sfui:prepare"
   },
   "license": "MIT",
   "dependencies": {
