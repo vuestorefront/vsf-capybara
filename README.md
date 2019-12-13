@@ -58,6 +58,4 @@
 * Fetch all the data: `git submodule update --init --remote`
 * Update `theme` property in your local configuration in `config/local.json` file: `"@vue-storefront/theme-capybara"`
 * Update TypeScript compiler option in `compilerOptions.paths.theme/*` from default theme `["src/themes/default/*"]` to brand new `capybara` theme: `["src/themes/capybara/*"]`
-* Currently `storefront-ui` library is linked and used from its `develop` branch rather than from official releases to be able to get all fixes and new brilliant features as soon as possible. In order to make it possible `sfui` script has been introduced in `vsf-capybara`. **Every time `storefront-ui` is updated then `sfui` script has to be called.**
-* Download all dependencies and start dev server: `lerna bootstrap && lerna run sfui:upgrade && yarn dev`
-* In order to just fetch new commits from `storefront-ui` from `develop` branch just call `lerna run sfui:upgrade`.
+* Download all dependencies and start dev server: `lerna bootstrap && yarn dev`
