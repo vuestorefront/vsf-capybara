@@ -2,9 +2,9 @@
   <transition
     :name="
       direction === 'right'
-        ? 'slide-left'
-        : direction === 'left'
         ? 'slide-right'
+        : direction === 'left'
+        ? 'slide-left'
         : null
     "
   >
@@ -84,24 +84,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~theme/css/animations/transitions";
-
-.slide-left-enter-active,
-.slide-left-leave-active,
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition: transform 0.25s;
-}
-
-.slide-left-enter,
-.slide-left-leave-to {
-  transform: translateX(100%);
-}
-
-.slide-right-enter,
-.slide-right-leave-to {
-  transform: translateX(-100%);
-}
+@import "~@storefront-ui/vue/styles";
 
 .right-sidebar {
   top: 0;
