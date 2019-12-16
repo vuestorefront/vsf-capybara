@@ -1,31 +1,31 @@
 {
   "mainBanners": [
     {
-      "title": "Office casual",
-      "subtitle": "Collection",
-      "image": "/assets/ban1.jpg",
-      "link": "/women/women-20"
-    }
-  ],
-  "smallBanners": [
-    {
-      "title": "Shine on",
-      "subtitle": "Accessories",
-      "image": "/assets/ban2.jpg",
-      "link": "/men/men-11"
+      "title": "COCKTAIL PARTY",
+      "subtitle": "Dresses",
+      "description": "Find stunning women's cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.",
+      "buttonText": "SHOP NOW",
+      "image": "/assets/bannerF.png",
+      "link": "/women/tops-women/tees-women/tees-25"
     },
     {
-      "title": "Spring is coming",
-      "subtitle": "Hats",
-      "image": "/assets/ban3.jpg",
-      "link": "/gear/gear-3"
-    }
-  ],
-  "productBanners": [
+      "title": "LINEN DRESSES",
+      "subtitle": "Dresses",
+      "description": "Find stunning women's cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.",
+      "buttonText": "SHOP NOW",
+      "image": "/assets/bannerE.png",
+      "link": "/women/tops-women/jackets-women/jackets-23"
+    },
     {
-      "title": "Spring is coming",
-      "subtitle": "Hats",
-      "image": "/assets/ban3.jpg",
+      "title": "THE OFFICE LIFE",
+      "subtitle": "T-Shirts",
+      "image": "/assets/bannerC.png",
+      "link": "/men/tops-men/tees-men/tees-16"
+    },
+    {
+      "title": "ECO SANDALS",
+      "subtitle": "Summer shoes",
+      "image": "/assets/bannerG.png",
       "link": "/gear/gear-3"
     }
   ]
