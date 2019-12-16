@@ -108,8 +108,6 @@ const NewsletterPopup = () =>
     /* webpackChunkName: "vsf-newsletter-modal" */ "theme/components/core/NewsletterPopup.vue"
   );
 
-import "@storefront-ui/vue/styles.scss";
-
 import {
   SfHero,
   SfImage,
@@ -276,7 +274,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/_variables.scss";
 
 @mixin for-desktop {
   @media screen and (min-width: $desktop-min) {
