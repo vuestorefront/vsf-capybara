@@ -1,0 +1,14 @@
+{
+  "theme": "@vue-storefront/theme-capybara",
+  "products": {
+    "thumbnails": {
+      "width": 216,
+      "height": 326
+    }
+  },
+  "entities": {
+    "category": {
+      "categoriesDynamicPrefetch": false
+    }
+  }
+}
