@@ -1,6 +1,5 @@
 <template>
   <div class="default-layout">
-    <overlay v-if="overlayActive" />
     <loader />
     <div id="viewport" class="w-100 relative">
       <main-header />
@@ -9,11 +8,16 @@
         :is-open="isSearchPanelOpen"
         @close="$store.commit('ui/setSearchpanel')"
       />
-      <async-sidebar
-        :async-component="Microcart"
-        :is-open="isMicrocartOpen"
-        @close="$store.commit('ui/setMicrocart')"
-      />
+      <div id="cart" data-testid="microcart">
+        <SfSidebar
+          :visible="isMicrocartOpen"
+          :heading-title="$t('My Cart')"
+          class="sf-sidebar--right"
+          @close="$store.commit('ui/setMicrocart')"
+        >
+          <Microcart />
+        </SfSidebar>
+      </div>
       <async-sidebar
         :async-component="SidebarMenu"
         :is-open="isSidebarOpen"
@@ -45,23 +49,20 @@ import { mapState } from "vuex";
 import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar.vue";
 import MainHeader from "theme/components/core/blocks/Header/Header.vue";
 import MainFooter from "theme/components/core/blocks/Footer/Footer.vue";
-import Overlay from "theme/components/core/Overlay.vue";
 import Loader from "theme/components/core/Loader.vue";
 import Notification from "theme/components/core/Notification.vue";
 import SignUp from "theme/components/core/blocks/Auth/SignUp.vue";
 import CookieNotification from "theme/components/core/CookieNotification.vue";
 import OfflineBadge from "theme/components/core/OfflineBadge.vue";
+import Microcart from "theme/components/core/blocks/Microcart/Microcart.vue";
 import { isServer } from "@vue-storefront/core/helpers";
 import Head from "theme/head";
 import config from "config";
+import { SfSidebar } from "@storefront-ui/vue";
 
 const SidebarMenu = () =>
   import(
     /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ "theme/components/core/blocks/SidebarMenu/SidebarMenu.vue"
-  );
-const Microcart = () =>
-  import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-microcart" */ "theme/components/core/blocks/Microcart/Microcart.vue"
   );
 const Wishlist = () =>
   import(
@@ -81,14 +82,15 @@ export default {
     MainHeader,
     MainFooter,
     SidebarMenu, // eslint-disable-line vue/no-unused-components
-    Overlay,
     Loader,
     Notification,
     SignUp,
     CookieNotification,
     OfflineBadge,
+    Microcart,
     OrderConfirmation,
-    AsyncSidebar
+    AsyncSidebar,
+    SfSidebar
   },
   data() {
     return {
@@ -102,7 +104,6 @@ export default {
   },
   computed: {
     ...mapState({
-      overlayActive: state => state.ui.overlay,
       isSearchPanelOpen: state => state.ui.searchpanel,
       isSidebarOpen: state => state.ui.sidebar,
       isMicrocartOpen: state => state.ui.microcart,
