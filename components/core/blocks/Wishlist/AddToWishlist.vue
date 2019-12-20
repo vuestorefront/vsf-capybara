@@ -1,7 +1,6 @@
 <template>
-  <button
-    class="p0 inline-flex middle-xs bg-cl-transparent brdr-none action h5 pointer cl-secondary"
-    type="button"
+  <SfButton
+    class="sf-button--text product__action"
     data-testid="addToWishlist"
     @click="
       isOnWishlist
@@ -9,16 +8,13 @@
         : addProductToWhishlist(product)
     "
   >
-    <slot>
-      <i class="pr5 material-icons">{{ favoriteIcon }}</i>
-      <template v-if="!isOnWishlist">
-        {{ $t("Add to favorite") }}
-      </template>
-      <template v-else>
-        {{ $t("Remove") }}
-      </template>
-    </slot>
-  </button>
+    <template v-if="!isOnWishlist">
+      {{ $t("Save for later") }}
+    </template>
+    <template v-else>
+      {{ $t("Remove") }}
+    </template>
+  </SfButton>
 </template>
 
 <script>
@@ -27,8 +23,10 @@ import { AddToWishlist } from "@vue-storefront/core/modules/wishlist/components/
 import { RemoveFromWishlist } from "@vue-storefront/core/modules/wishlist/components/RemoveFromWishlist";
 import i18n from "@vue-storefront/i18n";
 import { htmlDecode } from "@vue-storefront/core/lib/store/filters";
+import { SfButton } from "@storefront-ui/vue";
 
 export default {
+  components: { SfButton },
   mixins: [IsOnWishlist, AddToWishlist, RemoveFromWishlist],
   computed: {
     favoriteIcon() {
