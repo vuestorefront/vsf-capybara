@@ -1,20 +1,16 @@
 <template>
-  <button
-    class="p0 inline-flex middle-xs bg-cl-transparent brdr-none action h5 pointer cl-secondary"
-    type="button"
+  <SfButton
+    class="sf-button--text product__action"
     data-testid="addToCompare"
     @click="isOnCompare ? removeProduct(product) : addProduct(product)"
   >
-    <slot>
-      <i class="pr5 material-icons">compare</i>
-      <template v-if="!isOnCompare">
-        {{ $t("Add to compare") }}
-      </template>
-      <template v-else>
-        {{ $t("Remove from compare") }}
-      </template>
-    </slot>
-  </button>
+    <template v-if="!isOnCompare">
+      {{ $t("Add to compare") }}
+    </template>
+    <template v-else>
+      {{ $t("Remove from compare") }}
+    </template>
+  </SfButton>
 </template>
 
 <script>
@@ -23,8 +19,10 @@ import { AddToCompare } from "@vue-storefront/core/modules/compare/components/Ad
 import { RemoveFromCompare } from "@vue-storefront/core/modules/compare/components/RemoveFromCompare";
 import i18n from "@vue-storefront/i18n";
 import { htmlDecode } from "@vue-storefront/core/lib/store/filters";
+import { SfButton } from "@storefront-ui/vue";
 
 export default {
+  components: { SfButton },
   mixins: [IsOnCompare, AddToCompare, RemoveFromCompare],
   props: {
     product: {
