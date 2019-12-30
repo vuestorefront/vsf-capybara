@@ -1,99 +1,100 @@
 <template>
   <div id="category">
-    <header class="bg-cl-secondary py35 pl20">
-      <div class="container">
-        <breadcrumbs />
-        <div class="row middle-sm">
-          <h1 class="col-sm-8 category-title mb10">
-            {{ getCurrentCategory.name }}
-          </h1>
-          <div class="sorting col-sm-2 align-right mt50">
-            <label class="mr10">{{ $t("Columns") }}:</label>
-            <columns @change-column="columnChange" />
-          </div>
-          <div class="sorting col-sm-2 align-right mt50">
-            <sort-by
-              :has-label="true"
-              :value="getCurrentSearchQuery.sort"
-              @change="changeFilter"
-            />
-          </div>
-        </div>
+    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
+      <template #link="{breadcrumb}">
+        <router-link :to="breadcrumb.route.link">
+          {{ breadcrumb.text }}
+        </router-link>
+      </template>
+    </SfBreadcrumbs>
+    <div class="navbar section">
+      <div class="navbar__aside desktop-only">
+        <h1 class="navbar__title">{{ $t("Categories") }}</h1>
       </div>
-      <div class="container">
-        <div class="row m0">
-          <button
-            class="col-xs-5 mt25 mr15 p15 mobile-filters-button bg-cl-th-accent brdr-none cl-white h5 sans-serif fs-medium-small"
-            @click="openFilters"
-          >
-            {{ $t("Filters") }}
-          </button>
-          <div class="mobile-sorting col-xs-6 mt25">
-            <sort-by
-              :value="getCurrentSearchQuery.sort"
-              @change="changeFilter"
-            />
-          </div>
+      <div class="navbar__main">
+        <SfButton class="navbar__filters-button">
+          <IconFilter size="15px" styles="margin-right:10px" />
+          {{ $t("Filters") }}
+        </SfButton>
+        <div class="navbar__sort desktop-only">
+          <span class="navbar__label">{{ $t("Sort By") }}:</span>
         </div>
-      </div>
-    </header>
-    <div class="container pb60">
-      <div class="row m0 pt15">
-        <div class="col-md-3 start-xs category-filters">
-          <sidebar
-            :filters="getAvailableFilters"
-            @changeFilter="changeFilter"
-          />
-        </div>
-        <div v-show="mobileFilters" class="col-md-3 start-xs mobile-filters">
-          <div class="close-container absolute w-100">
-            <i class="material-icons p15 close cl-accent" @click="closeFilters"
-              >close</i
-            >
-          </div>
-          <sidebar
-            class="mobile-filters-body"
-            :filters="getAvailableFilters"
-            @changeFilter="changeFilter"
-          />
-          <div class="relative pb20 pt15">
-            <div class="brdr-top-1 brdr-cl-primary absolute divider w-100" />
-          </div>
-          <button-full class="mb20 btn__filter" @click.native="closeFilters">
-            {{ $t("Filter") }}
-          </button-full>
-        </div>
-        <div class="col-md-9 px10 border-box products-list">
-          <p class="col-xs-12 end-md m0 pb20 cl-secondary">
+        <div class="navbar__counter">
+          <span class="navbar__label desktop-only">
+            {{ $t("Products found") }}:
+          </span>
+          <strong class="desktop-only">{{ getCategoryProductsTotal }}</strong>
+          <span class="navbar__label mobile-only">
             {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
-          </p>
-          <div v-if="isCategoryEmpty" class="hidden-xs">
-            <h4 data-testid="noProductsInfo">
-              {{ $t("No products found!") }}
-            </h4>
-            <p>
-              {{
-                $t(
-                  "Please change Your search criteria and try again. If still not finding anything relevant, please visit the Home page and try out some of our bestsellers!"
-                )
-              }}
-            </p>
-          </div>
-          <lazy-hydrate
-            v-if="isLazyHydrateEnabled"
-            :trigger-hydration="!loading"
-          >
-            <product-listing
-              :columns="defaultColumn"
-              :products="getCategoryProducts"
-            />
-          </lazy-hydrate>
-          <product-listing
-            v-else
-            :columns="defaultColumn"
-            :products="getCategoryProducts"
-          />
+          </span>
         </div>
+        <div class="navbar__view desktop-only">
+          <span>{{ $t("View") }} </span>
+          <IconViewGrid size="10px" styles="margin-left:10px" />
+          <IconViewRow size="11px" styles="margin-left:10px" />
+        </div>
+        <SfButton class="navbar__filters-button mobile-only">
+          {{ $t("Sort By") }}
+          <IconSort size="15px" styles="margin-left:10px" />
+        </SfButton>
+      </div>
+    </div>
+    <div class="main section">
+      <div class="sidebar desktop-only">
+        <SfAccordion :show-chevron="false">
+          <SfAccordionItem
+            v-for="category in categories"
+            :key="category.id"
+            :header="category.name"
+          >
+            <SfList>
+              <SfListItem v-for="item in category.items" :key="item.id">
+                <router-link :to="item.link">
+                  <SfMenuItem :label="item.name" :count="item.count" />
+                </router-link>
+              </SfListItem>
+            </SfList>
+          </SfAccordionItem>
+        </SfAccordion>
+      </div>
+      <div class="products">
+        <SfHeading
+          v-if="isCategoryEmpty"
+          :title="$t('No products found!')"
+          :subtitle="
+            $t(
+              'Please change Your search criteria and try again. If still not finding anything relevant, please visit the Home page and try out some of our bestsellers!'
+            )
+          "
+        />
+        <template v-else>
+          <lazy-hydrate :trigger-hydration="!loading">
+            <div class="products__list">
+              <SfProductCard
+                v-for="product in products"
+                :key="product.id"
+                :title="product.title"
+                :image="product.image"
+                :regular-price="product.price.regular"
+                :special-price="product.price.special"
+                :max-rating="product.rating.max"
+                :score-rating="product.rating.score"
+                :link="product.link"
+                link-tag="a"
+                :is-on-wishlist="isOnWishlist(product.data)"
+                class="products__product-card"
+                @click:wishlist="toggleWishlist(product.data)"
+              />
+            </div>
+          </lazy-hydrate>
+          <SfPagination
+            class="products__pagination desktop-only"
+            :current="currentPage"
+            :total="totalPages"
+            :visible="3"
+            @click="changePage"
+          />
+        </template>
       </div>
     </div>
   </div>
@@ -101,25 +102,44 @@
 
 <script>
 import LazyHydrate from "vue-lazy-hydration";
-import Sidebar from "../components/core/blocks/Category/Sidebar.vue";
-import ProductListing from "../components/core/ProductListing.vue";
-import Breadcrumbs from "../components/core/Breadcrumbs.vue";
-import SortBy from "../components/core/SortBy.vue";
-import { isServer } from "@vue-storefront/core/helpers";
-import { getSearchOptionsFromRouteParams } from "@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers";
-import config from "config";
-import Columns from "../components/core/Columns.vue";
-import ButtonFull from "theme/components/theme/ButtonFull.vue";
 import { mapGetters } from "vuex";
+import config from "config";
+import {
+  buildFilterProductsQuery,
+  productThumbnailPath,
+  isServer
+} from "@vue-storefront/core/helpers";
+import i18n from "@vue-storefront/i18n";
 import onBottomScroll from "@vue-storefront/core/mixins/onBottomScroll";
+import { price, htmlDecode } from "@vue-storefront/core/filters";
+import { quickSearchByQuery } from "@vue-storefront/core/lib/search";
+import { getSearchOptionsFromRouteParams } from "@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers";
 import { catalogHooksExecutors } from "@vue-storefront/core/modules/catalog-next/hooks";
+import IconFilter from "theme/components/icons/IconFilter.vue";
+import IconSort from "theme/components/icons/IconSort.vue";
+import IconViewGrid from "theme/components/icons/IconViewGrid.vue";
+import IconViewRow from "theme/components/icons/IconViewRow.vue";
+import {
+  formatCategoryLink,
+  formatProductLink
+} from "@vue-storefront/core/modules/url/helpers";
 import {
   localizedRoute,
   currentStoreView
 } from "@vue-storefront/core/lib/multistore";
-import { htmlDecode } from "@vue-storefront/core/filters";
+import {
+  SfList,
+  SfButton,
+  SfHeading,
+  SfMenuItem,
+  SfAccordion,
+  SfPagination,
+  SfBreadcrumbs,
+  SfProductCard
+} from "@storefront-ui/vue";
 
-const THEME_PAGE_SIZE = 50;
+const THEME_PAGE_SIZE = 12;
+const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
 
 const composeInitialPageState = async (store, route, forceLoad = false) => {
   try {
@@ -155,20 +175,27 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
 export default {
   components: {
     LazyHydrate,
-    ButtonFull,
-    ProductListing,
-    Breadcrumbs,
-    Sidebar,
-    SortBy,
-    Columns
+    IconSort,
+    IconFilter,
+    IconViewRow,
+    IconViewGrid,
+    SfList,
+    SfButton,
+    SfHeading,
+    SfMenuItem,
+    SfAccordion,
+    SfPagination,
+    SfBreadcrumbs,
+    SfProductCard
   },
   mixins: [onBottomScroll],
   data() {
     return {
-      mobileFilters: false,
-      defaultColumn: 3,
+      loading: true,
       loadingProducts: false,
-      loading: true
+      currentPage: 1,
+      getMoreCategoryProducts: [],
+      browserWidth: 0
     };
   },
   computed: {
@@ -177,13 +204,52 @@ export default {
       getCategoryProducts: "category-next/getCategoryProducts",
       getCurrentCategory: "category-next/getCurrentCategory",
       getCategoryProductsTotal: "category-next/getCategoryProductsTotal",
-      getAvailableFilters: "category-next/getAvailableFilters"
+      getAvailableFilters: "category-next/getAvailableFilters",
+      getCategories: "category-next/getCategories",
+      categoryList: "category/getCategories",
+      getBreadcrumbsRoutes: "breadcrumbs/getBreadcrumbsRoutes",
+      getBreadcrumbsCurrent: "breadcrumbs/getBreadcrumbsCurrent",
+      isOnWishlist: "wishlist/isOnWishlist"
     }),
     isLazyHydrateEnabled() {
       return config.ssr.lazyHydrateFor.includes("category-next.products");
     },
     isCategoryEmpty() {
       return this.getCategoryProductsTotal === 0;
+    },
+    isLazyLoadingEnabled() {
+      return this.browserWidth < LAZY_LOADING_ACTIVATION_BREAKPOINT;
+    },
+    breadcrumbs() {
+      return this.getBreadcrumbsRoutes
+        .map(route => ({
+          text: htmlDecode(route.name),
+          route: {
+            link: route.route_link
+          }
+        }))
+        .concat({
+          text: htmlDecode(this.getBreadcrumbsCurrent)
+        });
+    },
+    categories() {
+      return this.prepareCategories(this.getCategories[0].children_data);
+    },
+    products() {
+      // lazy loading is disabled for desktop screen width (>= 1024px)
+      // so products from store have to be filtered out because there could
+      // be more than THEME_PAGE_SIZE of them - they could be fetched earlier
+      // when lazy loading was enabled
+      return this.isLazyLoadingEnabled || this.currentPage === 1
+        ? this.getCategoryProducts
+            .filter((product, i) => {
+              return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
+            })
+            .map(this.prepareCategoryProduct)
+        : this.getMoreCategoryProducts.map(this.prepareCategoryProduct);
+    },
+    totalPages() {
+      return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
     }
   },
   async asyncData({ store, route }) {
@@ -199,8 +265,6 @@ export default {
         vm.loading = true;
         await composeInitialPageState(vm.$store, to, true);
         await vm.$store.dispatch("category-next/cacheProducts", { route: to }); // await here is because we must wait for the hydration
-        // due to a lot of false positives reported here https://github.com/eslint/eslint/issues/11899 this rule i sdisabled for now
-        // eslint-disable-next-line require-atomic-updates
         vm.loading = false;
       });
     } else {
@@ -212,31 +276,140 @@ export default {
       });
     }
   },
+  mounted() {
+    this.$bus.$on("product-after-list", this.initPagination);
+    window.addEventListener("resize", this.getBrowserWidth);
+    this.getBrowserWidth();
+  },
+  beforeDestroy() {
+    this.$bus.$off("product-after-list", this.initPagination);
+    window.removeEventListener("resize", this.getBrowserWidth);
+  },
   methods: {
-    openFilters() {
-      this.mobileFilters = true;
+    toggleWishlist(product) {
+      const isProductOnWishlist = this.isOnWishlist(product);
+      const message = isProductOnWishlist
+        ? "Product {productName} has been removed from wishlist!"
+        : "Product {productName} has been added to wishlist!";
+      const action = isProductOnWishlist
+        ? "wishlist/removeItem"
+        : "wishlist/addItem";
+
+      this.$store.dispatch(action, product);
+      this.$store.dispatch(
+        "notification/spawnNotification",
+        {
+          type: "success",
+          message: i18n.t(message, { productName: htmlDecode(product.name) }),
+          action1: { label: i18n.t("OK") }
+        },
+        { root: true }
+      );
     },
-    closeFilters() {
-      this.mobileFilters = false;
-    },
-    async changeFilter(filterVariant) {
-      this.$store.dispatch("category-next/switchSearchFilters", [
-        filterVariant
-      ]);
-    },
-    columnChange(column) {
-      this.defaultColumn = column;
+    getBrowserWidth() {
+      return (this.browserWidth = window.innerWidth);
     },
     async onBottomScroll() {
-      if (this.loadingProducts) return;
-      this.loadingProducts = true;
-      try {
-        await this.$store.dispatch("category-next/loadMoreCategoryProducts");
-      } catch (e) {
-        //
-      } finally {
-        this.loadingProducts = false;
+      if (!this.isLazyLoadingEnabled || this.loadingProducts) {
+        return;
       }
+
+      this.loadingProducts = true;
+      await this.$store.dispatch("category-next/loadMoreCategoryProducts");
+      this.loadingProducts = false;
+    },
+    async changePage(page) {
+      const start = (page - 1) * THEME_PAGE_SIZE;
+
+      if (
+        start < 0 ||
+        start >= this.getCategoryProductsTotal ||
+        this.getCategoryProductsTotal < THEME_PAGE_SIZE
+      ) {
+        return;
+      }
+
+      const { defaultSortBy } = config.products;
+      const { includeFields, excludeFields } = config.entities.productList;
+      const { filters, sort } = this.getCurrentSearchQuery;
+      const filterQuery = buildFilterProductsQuery(
+        this.getCurrentCategory,
+        filters
+      );
+      const searchResult = await quickSearchByQuery({
+        query: filterQuery,
+        sort: sort || `${defaultSortBy.attribute}:${defaultSortBy.order}`,
+        start: start,
+        size: THEME_PAGE_SIZE,
+        includeFields: includeFields,
+        excludeFields: excludeFields
+      });
+
+      this.getMoreCategoryProducts = await this.$store.dispatch(
+        "category-next/processCategoryProducts",
+        {
+          products: searchResult.items,
+          filters: filters
+        }
+      );
+
+      this.currentPage = page;
+    },
+    initPagination() {
+      this.currentPage = 1;
+    },
+    prepareCategories(categories, firstItem = []) {
+      return categories
+        ? categories
+            .reduce((result, subCategory) => {
+              const category = this.categoryList.find(
+                c => c.id === subCategory.id
+              );
+
+              if (!category || !category.is_active) {
+                return result;
+              }
+
+              return result.concat({
+                id: category.id,
+                name: category.name,
+                link: formatCategoryLink(category),
+                count: String(category.product_count),
+                position: category.position,
+                items: this.prepareCategories(subCategory.children_data, [
+                  {
+                    id: category.id,
+                    name: i18n.t("View all"),
+                    link: formatCategoryLink(category),
+                    count: String(category.product_count),
+                    position: 0
+                  }
+                ])
+              });
+            }, firstItem)
+            .sort((a, b) => a.position - b.position)
+        : firstItem;
+    },
+    prepareCategoryProduct(product) {
+      return {
+        data: product,
+        id: product.id,
+        title: htmlDecode(product.name),
+        image: this.getThumbnail(
+          productThumbnailPath(product),
+          config.products.thumbnails.width,
+          config.products.thumbnails.height
+        ),
+        link: formatProductLink(product, currentStoreView().storeCode),
+        price: {
+          regular: price(parseFloat(product.priceInclTax)),
+          special: price(parseFloat(product.specialPriceInclTax))
+        },
+        rating: {
+          max: 5,
+          score: 5
+        }
+      };
     }
   },
   metaInfo() {
@@ -275,113 +448,190 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn {
-  &__filter {
-    min-width: 100px;
-  }
-}
-.divider {
-  width: calc(100vw - 8px);
-  bottom: 20px;
-  left: -36px;
-}
-.category-filters {
-  width: 242px;
-}
+@import "~@storefront-ui/shared/styles/_variables.scss";
 
-.mobile-filters {
-  display: none;
-  overflow: auto;
-}
-
-.mobile-filters-button {
-  display: none;
-}
-
-.mobile-sorting {
-  display: none;
-}
-
-.category-title {
-  line-height: 65px;
-}
-
-.sorting {
-  label {
-    margin-right: 10px;
+@mixin for-desktop {
+  @media screen and (min-width: $desktop-min) {
+    @content;
   }
 }
 
-@media (max-width: 64em) {
-  .products-list {
-    max-width: 530px;
+#category {
+  box-sizing: border-box;
+  @include for-desktop {
+    max-width: 1240px;
+    margin: auto;
   }
 }
-
-@media (max-width: 770px) {
-  .category-title {
+.breadcrumbs {
+  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
+}
+.main {
+  display: flex;
+}
+.navbar {
+  position: relative;
+  display: flex;
+  @include for-desktop {
+    border-top: 1px solid $c-light;
+    border-bottom: 1px solid $c-light;
+  }
+  &::after {
+    position: absolute;
+    bottom: 0;
+    left: $spacer-big;
+    width: calc(100% - (#{$spacer-big} * 2));
+    height: 1px;
+    background-color: $c-light;
+    content: "";
+    @include for-desktop {
+      content: none;
+    }
+  }
+  &__aside {
+    display: flex;
+    align-items: center;
+    flex: 0 0 15%;
+    padding: $spacer-big $spacer-extra-big;
+    border-right: 1px solid $c-light;
+  }
+  &__main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: $spacer-medium 0;
+    font-size: $font-size-small-desktop;
+    @include for-desktop {
+      padding: $spacer-big 0;
+    }
+  }
+  &__title {
+    padding: 0;
+    font-size: $font-size-big-desktop;
+    line-height: 2.23;
+  }
+  &__filters-button {
+    display: flex;
+    align-items: center;
     margin: 0;
-    font-size: 36px;
-    line-height: 40px;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    font-weight: 500;
+    @include for-desktop {
+      margin: 0 0 0 $spacer-extra-big;
+      font-weight: 400;
+      text-transform: none;
+    }
+    svg {
+      fill: $c-dark;
+      @include for-desktop {
+        fill: $c-gray-variant;
+      }
+    }
+    &:hover {
+      color: $c-primary;
+      svg {
+        fill: $c-primary;
+      }
+    }
   }
-
-  .products-list {
-    width: 100%;
-    max-width: none;
+  &__label {
+    color: $c-gray-variant;
   }
-
-  .mobile-filters {
-    display: block;
+  &__sort {
+    display: flex;
+    align-items: center;
+    margin-left: $spacer-extra-big;
+    margin-right: auto;
   }
-
-  .mobile-filters-button {
-    display: block;
-    height: 45px;
+  &__counter {
+    margin: auto;
+    @include for-desktop {
+      margin-right: 0;
+    }
   }
-
-  .sorting {
-    display: none;
-  }
-
-  .mobile-sorting {
-    display: block;
-  }
-
-  .category-filters {
-    display: none;
-  }
-
-  .product-listing {
-    justify-content: center;
-  }
-
-  .mobile-filters {
-    position: fixed;
-    background-color: #f2f2f2;
-    z-index: 5;
-    padding: 0 40px;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    box-sizing: border-box;
-  }
-
-  .mobile-filters-body {
-    padding-top: 50px;
+  &__view {
+    display: flex;
+    align-items: center;
+    margin: 0 $spacer-extra-big;
+    &-icon {
+      margin-left: 10px;
+    }
   }
 }
 
-.close-container {
-  left: 0;
+.products {
+  box-sizing: border-box;
+  flex: 1;
+  margin: 0 -#{$spacer};
+  @include for-desktop {
+    margin: $spacer-big;
+  }
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1.875rem - 0.5rem;
+  }
+  &__product-card {
+    flex: 0 0 50%;
+    padding: $spacer;
+    @include for-desktop {
+      flex: 0 0 25%;
+      padding: $spacer-big;
+    }
+  }
+  &__pagination {
+    @include for-desktop {
+      display: flex;
+      justify-content: center;
+      margin-top: $spacer-extra-big;
+    }
+  }
 }
-
-.close {
-  margin-left: auto;
+.section {
+  padding-left: $spacer-big;
+  padding-right: $spacer-big;
+  @include for-desktop {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
-</style>
-<style lang="scss">
-.product-image {
-  max-height: unset !important;
+.sidebar {
+  flex: 0 0 15%;
+  padding: $spacer-extra-big;
+  border-right: 1px solid $c-light;
+}
+.sort-by {
+  flex: unset;
+  width: 190px;
+  padding: 0 10px;
+  font-size: inherit;
+  &__option {
+    padding: 10px;
+    font-size: inherit;
+  }
+}
+.filters {
+  &__title {
+    margin: $spacer-big * 3 0 $spacer-big;
+    font-size: $font-size-big-desktop;
+    line-height: 1.6;
+    &:first-child {
+      margin: 0 0 $spacer-big 0;
+    }
+  }
+  &__item {
+    padding: $spacer-small 0;
+  }
+  &__buttons {
+    margin: $spacer-big * 3 0 0 0;
+  }
+  &__button-clear {
+    color: #a3a5ad;
+    margin-top: 10px;
+    background-color: $c-light;
+  }
 }
 </style>
