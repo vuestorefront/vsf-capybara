@@ -1,5 +1,5 @@
 <template>
-  <SfIcon :size="size" :style="style">
+  <SfIcon :size="size" :style="styles">
     <svg viewBox="0 0 11 10" fill="none">
       <rect width="11" height="2" fill="#BEBFC4" />
       <rect y="8" width="11" height="2" fill="#BEBFC4" />
@@ -20,7 +20,7 @@ export default {
       default: "",
       required: false
     },
-    style: {
+    styles: {
       type: String,
       default: "",
       required: false
