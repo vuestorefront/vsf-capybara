@@ -13,7 +13,7 @@
       </div>
       <div class="navbar__main">
         <SfButton class="navbar__filters-button">
-          <IconFilter size="15px" style="margin-right:10px" />
+          <IconFilter size="15px" styles="margin-right:10px" />
           {{ $t("Filters") }}
         </SfButton>
         <div class="navbar__sort desktop-only">
@@ -30,12 +30,12 @@
         </div>
         <div class="navbar__view desktop-only">
           <span>{{ $t("View") }} </span>
-          <IconViewGrid size="10px" style="margin-left:10px" />
-          <IconViewRow size="11px" style="margin-left:10px" />
+          <IconViewGrid size="10px" styles="margin-left:10px" />
+          <IconViewRow size="11px" styles="margin-left:10px" />
         </div>
         <SfButton class="navbar__filters-button mobile-only">
           {{ $t("Sort By") }}
-          <IconSort size="15px" style="margin-left:10px" />
+          <IconSort size="15px" styles="margin-left:10px" />
         </SfButton>
       </div>
     </div>

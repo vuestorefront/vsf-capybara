@@ -1,5 +1,5 @@
 <template>
-  <SfIcon :size="size" :style="style">
+  <SfIcon :size="size" :style="styles">
     <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
       <g clip-icon="url(#clip0)">
         <path
@@ -40,7 +40,7 @@ export default {
       default: "",
       required: false
     },
-    style: {
+    styles: {
       type: String,
       default: "",
       required: false
