@@ -18,6 +18,19 @@
         </SfButton>
         <div class="navbar__sort desktop-only">
           <span class="navbar__label">{{ $t("Sort By") }}:</span>
+          <SfSelect
+            class="sort-by"
+            :selected="sortOrder"
+            @change="changeSortOder"
+          >
+            <SfSelectOption
+              v-for="option in sortOptions"
+              :key="option.id"
+              :value="option.id"
+              class="sort-by__option"
+              >{{ option.label }}
+            </SfSelectOption>
+          </SfSelect>
         </div>
         <div class="navbar__counter">
           <span class="navbar__label desktop-only">
@@ -130,6 +143,7 @@ import {
 import {
   SfList,
   SfButton,
+  SfSelect,
   SfHeading,
   SfMenuItem,
   SfAccordion,
@@ -173,6 +187,7 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
 };
 
 export default {
+  name: "CategoryPage",
   components: {
     LazyHydrate,
     IconSort,
@@ -181,6 +196,7 @@ export default {
     IconViewGrid,
     SfList,
     SfButton,
+    SfSelect,
     SfHeading,
     SfMenuItem,
     SfAccordion,
@@ -250,6 +266,25 @@ export default {
     },
     totalPages() {
       return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
+    },
+    sortOrder() {
+      return (
+        this.getCurrentSearchQuery.sort ||
+        `${config.products.defaultSortBy.attribute}:${config.products.defaultSortBy.order}`
+      );
+    },
+    sortOptions() {
+      return Object.entries(config.products.sortByAttributes).map(attribute => {
+        const [label, id] = attribute;
+        return { id, label };
+      });
+    }
+  },
+  watch: {
+    sortOrder() {
+      if (this.currentPage > 1) {
+        this.changePage();
+      }
     }
   },
   async asyncData({ store, route }) {
@@ -318,7 +353,7 @@ export default {
       await this.$store.dispatch("category-next/loadMoreCategoryProducts");
       this.loadingProducts = false;
     },
-    async changePage(page) {
+    async changePage(page = this.currentPage) {
       const start = (page - 1) * THEME_PAGE_SIZE;
 
       if (
@@ -329,16 +364,16 @@ export default {
         return;
       }
 
-      const { defaultSortBy } = config.products;
       const { includeFields, excludeFields } = config.entities.productList;
-      const { filters, sort } = this.getCurrentSearchQuery;
+      const { filters } = this.getCurrentSearchQuery;
       const filterQuery = buildFilterProductsQuery(
         this.getCurrentCategory,
         filters
       );
+
       const searchResult = await quickSearchByQuery({
         query: filterQuery,
-        sort: sort || `${defaultSortBy.attribute}:${defaultSortBy.order}`,
+        sort: this.sortOrder,
         start: start,
         size: THEME_PAGE_SIZE,
         includeFields: includeFields,
@@ -410,6 +445,13 @@ export default {
           score: 5
         }
       };
+    },
+    changeSortOder(sortOrder) {
+      if (this.getCurrentSearchQuery.sort !== sortOrder) {
+        this.$store.dispatch("category-next/switchSearchFilters", [
+          { id: sortOrder, type: "sort" }
+        ]);
+      }
     }
   },
   metaInfo() {
