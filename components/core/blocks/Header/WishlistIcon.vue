@@ -1,35 +1,42 @@
 <template>
-  <button
-    type="button"
-    class="inline-flex bg-cl-transparent brdr-none relative"
-    :aria-label="$t('Open wishlist')"
-    @click="toggleWishlistPanel"
-  >
-    <i class="material-icons">favorite_border</i>
-    <span
-      v-cloak
-      v-show="getWishlistItemsCount"
-      class="whishlist-count absolute flex center-xs middle-xs border-box py0 px2 h6 lh16 weight-700 cl-white bg-cl-silver"
-    >
-      {{ getWishlistItemsCount }}
-    </span>
-  </button>
+  <div class="wishlist-icon">
+    <SfCircleIcon
+      icon="heart"
+      icon-size="20px"
+      icon-color="black"
+      class="sf-header__icon"
+      role="button"
+      aria-label="wishlist"
+      @click="toggleWishlistPanel"
+    />
+    <SfBadge v-show="getWishlistItemsCount" class="wishlist-icon__badge"
+      >{{ getWishlistItemsCount }}
+    </SfBadge>
+  </div>
 </template>
 
 <script>
 import WishlistIcon from "@vue-storefront/core/compatibility/components/blocks/Header/WishlistIcon";
+import { SfCircleIcon, SfBadge } from "@storefront-ui/vue";
 
 export default {
+  components: { SfCircleIcon, SfBadge },
   mixins: [WishlistIcon]
 };
 </script>
 
-<style scoped>
-.whishlist-count {
-  top: 7px;
-  left: 50%;
-  min-width: 16px;
-  min-height: 16px;
-  border-radius: 10px;
+<style lang="scss" scoped>
+.wishlist-icon {
+  position: relative;
+  &__badge {
+    position: absolute;
+    bottom: 2.2em;
+    left: 4.2em;
+    font-size: 0.6em;
+    padding: 0.3em 0;
+    border-radius: 100%;
+    width: 2.2em;
+    min-height: 2.2em;
+  }
 }
 </style>

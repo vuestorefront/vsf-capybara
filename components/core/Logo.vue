@@ -1,14 +1,10 @@
 <template>
-  <router-link
-    :to="localizedRoute('/')"
-    :title="$t('Home Page')"
-    class="no-underline inline-flex"
-  >
-    <img
-      :width="width"
-      :height="height"
+  <router-link :to="localizedRoute('/')" :title="$t('Home Page')" class="logo">
+    <SfImage
+      :style="{ width, height }"
       src="/assets/logo.svg"
       :alt="$t(defaultTitle)"
+      class="sf-header__logo no-underline"
     />
   </router-link>
 </template>
@@ -16,8 +12,11 @@
 <script>
 import config from "config";
 import { currentStoreView } from "@vue-storefront/core/lib/multistore";
+import { SfImage } from "@storefront-ui/vue";
+import get from "lodash-es/get";
 
 export default {
+  components: { SfImage },
   props: {
     width: {
       type: [String, Number],
@@ -28,13 +27,16 @@ export default {
       required: true
     }
   },
-  data() {
-    const storeView = currentStoreView();
-    return {
-      defaultTitle: storeView.seo.defaultTitle
-        ? storeView.seo.defaultTitle
-        : config.seo.defaultTitle
-    };
+  computed: {
+    defaultTitle() {
+      const storeView = currentStoreView();
+      return get(storeView, "seo.defaultTitle", config.seo.defaultTitle);
+    }
   }
 };
 </script>
+<style lang="scss" scoped>
+.logo {
+  display: inline-flex;
+}
+</style>
