@@ -12,7 +12,10 @@
         <h1 class="navbar__title">{{ $t("Categories") }}</h1>
       </div>
       <div class="navbar__main">
-        <SfButton class="navbar__filters-button">
+        <SfButton
+          class="navbar__filters-button"
+          @click="isFilterSidebarOpen = true"
+        >
           <IconFilter size="15px" styles="margin-right:10px" />
           {{ $t("Filters") }}
         </SfButton>
@@ -110,12 +113,47 @@
         </template>
       </div>
     </div>
+    <SfSidebar
+      :visible="isFilterSidebarOpen"
+      @close="isFilterSidebarOpen = false"
+    >
+      <div class="filters">
+        <template v-for="(filters, filterType) in availableFilters">
+          <h3 :key="filterType" class="filters__title">{{ $t(filterType) }}</h3>
+          <SfFilter
+            v-for="filter in filters"
+            :key="filter.id"
+            :label="filter.label"
+            :count="filter.count"
+            :color="filter.color"
+            :selected="isFilterActive(filter)"
+            class="filters__item"
+            @click.native="changeFilter(filter)"
+          />
+        </template>
+        <div class="filters__buttons">
+          <SfButton
+            class="sf-button--full-width"
+            @click="isFilterSidebarOpen = false"
+          >
+            {{ $t("Done") }}
+          </SfButton>
+          <SfButton
+            class="sf-button--full-width filters__button-clear"
+            @click="clearAllFilters"
+          >
+            {{ $t("Clear all") }}
+          </SfButton>
+        </div>
+      </div>
+    </SfSidebar>
   </div>
 </template>
 
 <script>
 import LazyHydrate from "vue-lazy-hydration";
 import { mapGetters } from "vuex";
+import castArray from "lodash-es/castArray";
 import config from "config";
 import {
   buildFilterProductsQuery,
@@ -144,6 +182,8 @@ import {
   SfList,
   SfButton,
   SfSelect,
+  SfFilter,
+  SfSidebar,
   SfHeading,
   SfMenuItem,
   SfAccordion,
@@ -197,6 +237,8 @@ export default {
     SfList,
     SfButton,
     SfSelect,
+    SfFilter,
+    SfSidebar,
     SfHeading,
     SfMenuItem,
     SfAccordion,
@@ -211,7 +253,10 @@ export default {
       loadingProducts: false,
       currentPage: 1,
       getMoreCategoryProducts: [],
-      browserWidth: 0
+      browserWidth: 0,
+      isFilterSidebarOpen: false,
+      unsubscribeFromStoreAction: null,
+      aggregations: null
     };
   },
   computed: {
@@ -221,6 +266,8 @@ export default {
       getCurrentCategory: "category-next/getCurrentCategory",
       getCategoryProductsTotal: "category-next/getCategoryProductsTotal",
       getAvailableFilters: "category-next/getAvailableFilters",
+      getCurrentFilters: "category-next/getCurrentFilters",
+      getSystemFilterNames: "category-next/getSystemFilterNames",
       getCategories: "category-next/getCategories",
       categoryList: "category/getCategories",
       getBreadcrumbsRoutes: "breadcrumbs/getBreadcrumbsRoutes",
@@ -278,6 +325,33 @@ export default {
         const [label, id] = attribute;
         return { id, label };
       });
+    },
+    availableFilters() {
+      return Object.entries(this.getAvailableFilters)
+        .filter(([filterType, filters]) => {
+          return (
+            filters.length && !this.getSystemFilterNames.includes(filterType)
+          );
+        })
+        .reduce((result, [filterType, filters]) => {
+          result[`${filterType}_filter`] = filters.map(filter => ({
+            ...filter,
+            count: this.getFilterCount(filter),
+            color:
+              filterType === "color"
+                ? (config.products.colorMappings &&
+                    config.products.colorMappings[filter.label]) ||
+                  filter.label
+                : undefined
+          }));
+          return result;
+        }, {});
+    },
+    isFilterActive() {
+      return filter =>
+        castArray(this.getCurrentFilters[filter.type]).find(
+          variant => variant && variant.id === filter.id
+        ) !== undefined;
     }
   },
   watch: {
@@ -312,11 +386,17 @@ export default {
     }
   },
   mounted() {
+    this.unsubscribeFromStoreAction = this.$store.subscribeAction(action => {
+      if (action.type === "category-next/loadAvailableFiltersFrom") {
+        this.aggregations = action.payload.aggregations;
+      }
+    });
     this.$bus.$on("product-after-list", this.initPagination);
     window.addEventListener("resize", this.getBrowserWidth);
     this.getBrowserWidth();
   },
   beforeDestroy() {
+    this.unsubscribeFromStoreAction();
     this.$bus.$off("product-after-list", this.initPagination);
     window.removeEventListener("resize", this.getBrowserWidth);
   },
@@ -452,6 +532,32 @@ export default {
           { id: sortOrder, type: "sort" }
         ]);
       }
+    },
+    changeFilter(filter) {
+      this.$store.dispatch("category-next/switchSearchFilters", [filter]);
+    },
+    clearAllFilters() {
+      this.$store.dispatch("category-next/resetSearchFilters");
+    },
+    getFilterCount(filter) {
+      const aggregations = [
+        `agg_range_${filter.type}`,
+        `agg_terms_${filter.type}`,
+        `agg_terms_${filter.type}_options`
+      ];
+
+      return aggregations
+        .reduce((result, aggregation) => {
+          const bucket =
+            this.aggregations &&
+            this.aggregations[aggregation] &&
+            this.aggregations[aggregation].buckets.find(
+              bucket => String(bucket.key) === String(filter.id)
+            );
+
+          return bucket ? result + bucket.doc_count : result;
+        }, 0)
+        .toString();
     }
   },
   metaInfo() {
