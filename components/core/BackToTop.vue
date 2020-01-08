@@ -2,11 +2,12 @@
   <transition name="back-to-top-fade">
     <div
       v-show="visible"
-      class="vue-back-to-top"
+      class="back-to-top"
       :style="{ bottom: bottom, right: right }"
       @click="backToTop"
     >
       <SfCircleIcon
+        class="back-to-top__icon"
         icon="chevron_down"
         icon-size="20px"
         icon-color="white"
@@ -96,9 +97,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.vue-back-to-top {
+.back-to-top {
   cursor: pointer;
   position: fixed;
   z-index: 1000;
+  &__icon {
+    transform: rotate(180deg);
+  }
 }
 </style>
