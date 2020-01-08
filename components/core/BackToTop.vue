@@ -6,20 +6,23 @@
       :style="{ bottom: bottom, right: right }"
       @click="backToTop"
     >
-      <slot>
-        <div class="default">
-          <span>
-            {{ text }}
-          </span>
-        </div>
-      </slot>
+      <SfCircleIcon
+        icon="chevron_down"
+        icon-size="20px"
+        icon-color="white"
+        view-box="0 -4 14 14"
+      />
     </div>
   </transition>
 </template>
 
 <script>
+import { SfCircleIcon } from "@storefront-ui/vue";
 export default {
   name: "BackToTop",
+  components: {
+    SfCircleIcon
+  },
   props: {
     text: {
       type: String,
@@ -62,7 +65,7 @@ export default {
     };
     window.addEventListener("scroll", this.catchScroll);
   },
-  destroyed() {
+  beforeDestroy() {
     window.removeEventListener("scroll", this.catchScroll);
   },
   methods: {
@@ -92,40 +95,10 @@ export default {
   }
 };
 </script>
-<style>
-.back-to-top-fade-enter-active,
-.back-to-top-fade-leave-active {
-  transition: opacity 0.7s;
-}
-
-.back-to-top-fade-enter,
-.back-to-top-fade-leave-to {
-  opacity: 0;
-}
-
+<style lang="scss" scoped>
 .vue-back-to-top {
   cursor: pointer;
   position: fixed;
   z-index: 1000;
-}
-
-.vue-back-to-top .default {
-  background-color: #f5c85c;
-  border-radius: 3px;
-  color: #ffffff;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-  width: 160px;
-}
-
-.vue-back-to-top .default span {
-  color: #ffffff;
-}
-
-.vue-back-to-top--is-footer {
-  bottom: 50% !important;
-  position: absolute;
-  transform: translateY(50%);
 }
 </style>
