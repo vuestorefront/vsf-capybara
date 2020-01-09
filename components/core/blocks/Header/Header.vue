@@ -17,6 +17,7 @@
       <template #search><div class="hidden"></div></template>
       <template #header-icons>
         <div class="sf-header__icons ml-auto">
+          <SearchIcon />
           <AccountIcon />
           <WishlistIcon />
           <MicrocartIcon />
@@ -29,6 +30,7 @@
 <script>
 import { SfHeader } from "@storefront-ui/vue";
 import Logo from "theme/components/core/Logo";
+import SearchIcon from "theme/components/core/blocks/Header/SearchIcon";
 import AccountIcon from "theme/components/core/blocks/Header/AccountIcon";
 import WishlistIcon from "theme/components/core/blocks/Header/WishlistIcon";
 import MicrocartIcon from "theme/components/core/blocks/Header/MicrocartIcon";
@@ -42,7 +44,8 @@ export default {
     Logo,
     AccountIcon,
     WishlistIcon,
-    MicrocartIcon
+    MicrocartIcon,
+    SearchIcon
   },
   computed: {
     ...mapGetters("category", ["getCategories"]),
