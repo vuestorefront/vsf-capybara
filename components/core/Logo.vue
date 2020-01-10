@@ -15,6 +15,8 @@ import { currentStoreView } from "@vue-storefront/core/lib/multistore";
 import { SfImage } from "@storefront-ui/vue";
 import get from "lodash-es/get";
 
+const storeView = currentStoreView();
+
 export default {
   components: { SfImage },
   props: {
@@ -29,7 +31,6 @@ export default {
   },
   computed: {
     defaultTitle() {
-      const storeView = currentStoreView();
       return get(storeView, "seo.defaultTitle", config.seo.defaultTitle);
     }
   }
