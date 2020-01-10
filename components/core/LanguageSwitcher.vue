@@ -1,7 +1,7 @@
 <template>
   <div>
-    <a href="#" class="store-locale" @click.prevent="showLanguagesModal">
-      {{ country }} / {{ lang }} / {{ currency }}
+    <a href="#" @click.prevent="showLanguagesModal">
+      {{ linkName }}
     </a>
     <modal-switcher v-if="loadLanguagesModal" />
   </div>
@@ -14,18 +14,21 @@ const ModalSwitcher = () =>
     /* webpackChunkName: "vsf-languages-modal" */ "theme/components/core/blocks/Switcher/Language.vue"
   );
 
+const { i18n = {} } = currentStoreView();
+
 export default {
   components: {
     ModalSwitcher
   },
   data() {
-    const storeView = currentStoreView();
     return {
-      country: storeView.i18n.defaultCountry,
-      lang: storeView.i18n.defaultLanguage,
-      currency: storeView.i18n.currencyCode,
       loadLanguagesModal: false
     };
+  },
+  computed: {
+    linkName() {
+      return `${i18n.defaultCountry} / ${i18n.defaultLanguage} / ${i18n.currencyCode}`;
+    }
   },
   methods: {
     showLanguagesModal() {
@@ -35,5 +38,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped></style>
