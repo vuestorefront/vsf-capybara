@@ -1,38 +1,30 @@
 <template>
-  <button
-    type="button"
-    class="relative bg-cl-transparent brdr-none inline-flex"
-    data-testid="openMicrocart"
-    :aria-label="$t('Open microcart')"
-    @click="openMicrocart"
-  >
-    <i class="material-icons">shopping_cart</i>
-    <span
-      v-cloak
-      v-show="totalQuantity"
-      class="minicart-count absolute flex center-xs middle-xs border-box py0 px2 h6 lh16 weight-700 cl-white bg-cl-silver"
-      data-testid="minicartCount"
-    >
-      {{ totalQuantity }}
-    </span>
-  </button>
+  <div class="cart-icon">
+    <SfCircleIcon
+      icon="empty_cart"
+      icon-size="20px"
+      icon-color="black"
+      class="sf-header__icon"
+      role="button"
+      :aria-label="$t('Open microcart')"
+      @click="openMicrocart"
+    />
+    <SfBadge v-show="totalQuantity" class="cart-icon__badge"
+      >{{ totalQuantity }}
+    </SfBadge>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { SfCircleIcon, SfBadge } from "@storefront-ui/vue";
 
 export default {
+  components: { SfCircleIcon, SfBadge },
   computed: {
     ...mapGetters({
       totalQuantity: "cart/getItemsTotalQuantity"
     })
-  },
-  mounted() {
-    document.addEventListener("visibilitychange", () => {
-      if (!document.hidden) {
-        this.$store.dispatch("cart/load");
-      }
-    });
   },
   methods: {
     ...mapActions({
@@ -42,12 +34,18 @@ export default {
 };
 </script>
 
-<style scoped>
-.minicart-count {
-  top: 7px;
-  left: 50%;
-  min-width: 16px;
-  min-height: 16px;
-  border-radius: 10px;
+<style lang="scss" scoped>
+.cart-icon {
+  position: relative;
+  &__badge {
+    position: absolute;
+    bottom: 2.2em;
+    left: 4.2em;
+    font-size: 0.6em;
+    padding: 0.3em 0;
+    border-radius: 100%;
+    width: 2.2em;
+    min-height: 2.2em;
+  }
 }
 </style>
