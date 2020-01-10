@@ -14,6 +14,8 @@ const ModalSwitcher = () =>
     /* webpackChunkName: "vsf-languages-modal" */ "theme/components/core/blocks/Switcher/Language.vue"
   );
 
+const { i18n = {} } = currentStoreView();
+
 export default {
   components: {
     ModalSwitcher
@@ -25,7 +27,6 @@ export default {
   },
   computed: {
     linkName() {
-      const { i18n = {} } = currentStoreView();
       return `${i18n.defaultCountry} / ${i18n.defaultLanguage} / ${i18n.currencyCode}`;
     }
   },
