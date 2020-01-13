@@ -40,23 +40,7 @@
 
     <SfSection title-heading="Best Sellers" class="section">
       <lazy-hydrate :trigger-hydration="!loading">
-        <SfCarousel class="product-carousel">
-          <SfCarouselItem v-for="(product, i) in products" :key="i">
-            <SfProductCard
-              :title="product.title"
-              :image="product.image"
-              :regular-price="product.price.regular"
-              :special-price="product.price.special"
-              :max-rating="product.rating.max"
-              :score-rating="product.rating.score"
-              :link="product.link"
-              link-tag="a"
-              :is-on-wishlist="isOnWishlist(product.data)"
-              class="product-card"
-              @click:wishlist="toggleWishlist(product.data)"
-            />
-          </SfCarouselItem>
-        </SfCarousel>
+        <m-product-carousel :products="newCollection" />
       </lazy-hydrate>
     </SfSection>
 
@@ -84,24 +68,16 @@
 </template>
 
 <script>
-import config from "config";
 import { mapGetters } from "vuex";
 import LazyHydrate from "vue-lazy-hydration";
-import i18n from "@vue-storefront/i18n";
 import { Logger } from "@vue-storefront/core/lib/logger";
-import { price, htmlDecode } from "@vue-storefront/core/filters";
 import Home from "@vue-storefront/core/pages/Home";
 import Onboard from "theme/components/theme/blocks/Home/Onboard";
 import { registerModule } from "@vue-storefront/core/lib/modules";
 import { RecentlyViewedModule } from "@vue-storefront/core/modules/recently-viewed";
 import { Wishlist } from "@vue-storefront/core/modules/wishlist/components/Wishlist";
-import { currentStoreView } from "@vue-storefront/core/lib/multistore";
-import { formatProductLink } from "@vue-storefront/core/modules/url/helpers";
-import {
-  isServer,
-  onlineHelper,
-  productThumbnailPath
-} from "@vue-storefront/core/helpers";
+import { isServer, onlineHelper } from "@vue-storefront/core/helpers";
+import MProductCarousel from "theme/components/molecules/m-product-carousel";
 
 const NewsletterPopup = () =>
   import(
@@ -114,9 +90,7 @@ import {
   SfButton,
   SfBanner,
   SfSection,
-  SfCarousel,
   SfBannerGrid,
-  SfProductCard,
   SfCallToAction
 } from "@storefront-ui/vue";
 
@@ -130,10 +104,9 @@ export default {
     SfButton,
     SfBanner,
     SfSection,
-    SfCarousel,
     SfBannerGrid,
-    SfProductCard,
-    SfCallToAction
+    SfCallToAction,
+    MProductCarousel
   },
   mixins: [Home, Wishlist],
   data() {
@@ -147,8 +120,7 @@ export default {
       isLoggedIn: "user/isLoggedIn",
       heroImage: "promoted/getHeadImage",
       promotedOffers: "promoted/getPromotedOffers",
-      newCollection: "homepage/getEverythingNewCollection",
-      isOnWishlist: "wishlist/isOnWishlist"
+      newCollection: "homepage/getEverythingNewCollection"
     }),
     isOnline() {
       return onlineHelper.isOnline;
@@ -171,28 +143,6 @@ export default {
 
         return result;
       }, []);
-    },
-    products() {
-      return this.newCollection.map(product => {
-        return {
-          data: product,
-          title: htmlDecode(product.name),
-          image: this.getThumbnail(
-            productThumbnailPath(product),
-            config.products.thumbnails.width,
-            config.products.thumbnails.height
-          ),
-          link: formatProductLink(product, currentStoreView().storeCode),
-          price: {
-            regular: price(parseFloat(product.priceInclTax)),
-            special: price(parseFloat(product.specialPriceInclTax))
-          },
-          rating: {
-            max: 5,
-            score: 5
-          }
-        };
-      });
     }
   },
   watch: {
@@ -245,26 +195,6 @@ export default {
     }
   },
   methods: {
-    toggleWishlist(product) {
-      const isProductOnWishlist = this.isOnWishlist(product);
-      const message = isProductOnWishlist
-        ? "Product {productName} has been removed from wishlist!"
-        : "Product {productName} has been added to wishlist!";
-      const action = isProductOnWishlist
-        ? "wishlist/removeItem"
-        : "wishlist/addItem";
-
-      this.$store.dispatch(action, product);
-      this.$store.dispatch(
-        "notification/spawnNotification",
-        {
-          type: "success",
-          message: i18n.t(message, { productName: product.name }),
-          action1: { label: i18n.t("OK") }
-        },
-        { root: true }
-      );
-    },
     showNewsletterPopup() {
       this.loadNewsletterPopup = true;
       this.$bus.$emit("modal-show", "modal-newsletter");
