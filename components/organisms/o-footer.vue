@@ -1,5 +1,5 @@
 <template>
-  <footer>
+  <footer class="o-footer">
     <SfFooter class="footer-links" :column="5" :multiple="true">
       <SfFooterColumn
         v-for="linkGroup in links"

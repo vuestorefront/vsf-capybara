@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="o-header">
     <SfHeader :active-icon="activeIcon">
       <template #logo>
         <Logo width="41px" height="41px" />
@@ -76,7 +76,7 @@ export default {
   }
 }
 
-.header {
+.o-header {
   box-sizing: border-box;
   @include for-desktop {
     max-width: 1240px;

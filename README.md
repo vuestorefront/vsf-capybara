@@ -10,6 +10,9 @@
 * At least 1 person code review for Pull Requests.
 * Always start the implementation of new pages with Storefront UI Pages.
 * Use Storefront UI CSS. Do not reinvent the wheel.
+* Put components to atoms, molecules, organisms folder based on component ability to compose (check https://bradfrost.com/blog/post/atomic-web-design/).
+* Add prefix to component name based on folder: atoms - `a-`, molecules - `m-`, organisms - `o-`.
+* Add to component root element class name same as filename, example: `a-some-atom-component.vue` => `class="a-some-atom-component"`
 
 ## Do not
 

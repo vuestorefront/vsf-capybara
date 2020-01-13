@@ -1,7 +1,7 @@
 <template>
   <transition name="fade" mode="out-in">
-    <div v-if="totalItems" key="my-cart" class="my-cart">
-      <h3 class="my-cart__total-items">
+    <div v-if="totalItems" key="my-cart" class="o-microcart">
+      <h3 class="o-microcart__total-items">
         {{ $t("Total items") }}: {{ productsCount }}
       </h3>
       <div class="collected-product-list">
@@ -37,7 +37,7 @@
           </SfCollectedProduct>
         </transition-group>
       </div>
-      <SfProperty class="sf-property--full-width my-cart__total-price">
+      <SfProperty class="sf-property--full-width o-microcart__total-price">
         <template #name>
           <span class="sf-property__name">{{ $t("TOTAL") }}</span>
         </template>
@@ -177,7 +177,7 @@ export default {
     margin: auto;
   }
 }
-.my-cart {
+.o-microcart {
   flex: 1;
   display: flex;
   flex-direction: column;

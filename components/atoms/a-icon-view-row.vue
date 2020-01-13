@@ -1,5 +1,5 @@
 <template>
-  <SfIcon :size="size" :style="styles">
+  <SfIcon :size="size" :style="styles" class="a-icon-view-row">
     <svg viewBox="0 0 11 10" fill="none">
       <rect width="11" height="2" fill="#BEBFC4" />
       <rect y="8" width="11" height="2" fill="#BEBFC4" />

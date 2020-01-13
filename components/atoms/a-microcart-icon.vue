@@ -1,32 +1,41 @@
 <template>
-  <div class="wishlist-icon">
+  <div class="a-microcart-icon">
     <SfCircleIcon
-      icon="heart"
+      icon="empty_cart"
       icon-size="20px"
       icon-color="black"
       class="sf-header__icon"
       role="button"
-      aria-label="wishlist"
-      @click="toggleWishlistPanel"
+      :aria-label="$t('Open microcart')"
+      @click="openMicrocart"
     />
-    <SfBadge v-show="getWishlistItemsCount" class="wishlist-icon__badge"
-      >{{ getWishlistItemsCount }}
+    <SfBadge v-show="totalQuantity" class="a-microcart-icon__badge"
+      >{{ totalQuantity }}
     </SfBadge>
   </div>
 </template>
 
 <script>
-import WishlistIcon from "@vue-storefront/core/compatibility/components/blocks/Header/WishlistIcon";
+import { mapGetters, mapActions } from "vuex";
 import { SfCircleIcon, SfBadge } from "@storefront-ui/vue";
 
 export default {
   components: { SfCircleIcon, SfBadge },
-  mixins: [WishlistIcon]
+  computed: {
+    ...mapGetters({
+      totalQuantity: "cart/getItemsTotalQuantity"
+    })
+  },
+  methods: {
+    ...mapActions({
+      openMicrocart: "ui/toggleMicrocart"
+    })
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-.wishlist-icon {
+.a-microcart-icon {
   position: relative;
   &__badge {
     position: absolute;
