@@ -166,10 +166,10 @@ import { price, htmlDecode } from "@vue-storefront/core/filters";
 import { quickSearchByQuery } from "@vue-storefront/core/lib/search";
 import { getSearchOptionsFromRouteParams } from "@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers";
 import { catalogHooksExecutors } from "@vue-storefront/core/modules/catalog-next/hooks";
-import IconFilter from "theme/components/atoms/a-icon-filter.vue";
-import IconSort from "theme/components/atoms/a-icon-sort.vue";
-import IconViewGrid from "theme/components/atoms/a-icon-view-grid.vue";
-import IconViewRow from "theme/components/atoms/a-icon-view-row.vue";
+import IconFilter from "theme/components/atoms/a-icon-filter";
+import IconSort from "theme/components/atoms/a-icon-sort";
+import IconViewGrid from "theme/components/atoms/a-icon-view-grid";
+import IconViewRow from "theme/components/atoms/a-icon-view-row";
 import {
   formatCategoryLink,
   formatProductLink

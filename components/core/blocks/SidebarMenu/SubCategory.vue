@@ -78,7 +78,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import SubBtn from "./SubBtn.vue";
+import SubBtn from "./SubBtn";
 import i18n from "@vue-storefront/i18n";
 import config from "config";
 import { formatCategoryLink } from "@vue-storefront/core/modules/url/helpers";

@@ -32,7 +32,7 @@
   </modal>
 </template>
 <script>
-import Modal from "theme/components/core/Modal.vue";
+import Modal from "theme/components/core/Modal";
 import config from "config";
 export default {
   components: {

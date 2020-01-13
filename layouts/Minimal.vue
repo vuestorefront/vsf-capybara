@@ -10,8 +10,8 @@
 
 <script>
 import { mapState } from "vuex";
-import MinimalHeader from "theme/components/core/blocks/Header/MinimalHeader.vue";
-import MinimalFooter from "theme/components/core/blocks/Footer/MinimalFooter.vue";
+import MinimalHeader from "theme/components/core/blocks/Header/MinimalHeader";
+import MinimalFooter from "theme/components/core/blocks/Footer/MinimalFooter";
 
 import Head from "theme/head";
 

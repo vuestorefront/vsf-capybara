@@ -1,25 +1,23 @@
 const Home = () =>
-  import(/* webpackChunkName: "vsf-home" */ "theme/pages/Home.vue");
+  import(/* webpackChunkName: "vsf-home" */ "theme/pages/Home");
 const PageNotFound = () =>
-  import(
-    /* webpackChunkName: "vsf-not-found" */ "theme/pages/PageNotFound.vue"
-  );
+  import(/* webpackChunkName: "vsf-not-found" */ "theme/pages/PageNotFound");
 const ErrorPage = () =>
-  import(/* webpackChunkName: "vsf-error" */ "theme/pages/Error.vue");
+  import(/* webpackChunkName: "vsf-error" */ "theme/pages/Error");
 const Product = () =>
-  import(/* webpackChunkName: "vsf-product" */ "theme/pages/Product.vue");
+  import(/* webpackChunkName: "vsf-product" */ "theme/pages/Product");
 const Category = () =>
-  import(/* webpackChunkName: "vsf-category" */ "theme/pages/Category.vue");
+  import(/* webpackChunkName: "vsf-category" */ "theme/pages/Category");
 const CmsPage = () =>
-  import(/* webpackChunkName: "vsf-cms" */ "theme/pages/CmsPage.vue");
+  import(/* webpackChunkName: "vsf-cms" */ "theme/pages/CmsPage");
 const Checkout = () =>
-  import(/* webpackChunkName: "vsf-checkout" */ "theme/pages/Checkout.vue");
+  import(/* webpackChunkName: "vsf-checkout" */ "theme/pages/Checkout");
 const Compare = () =>
-  import(/* webpackChunkName: "vsf-compare" */ "theme/pages/Compare.vue");
+  import(/* webpackChunkName: "vsf-compare" */ "theme/pages/Compare");
 const MyAccount = () =>
-  import(/* webpackChunkName: "vsf-my-account" */ "theme/pages/MyAccount.vue");
+  import(/* webpackChunkName: "vsf-my-account" */ "theme/pages/MyAccount");
 const Static = () =>
-  import(/* webpackChunkName: "vsf-static" */ "theme/pages/Static.vue");
+  import(/* webpackChunkName: "vsf-static" */ "theme/pages/Static");
 
 let routes = [
   { name: "home", path: "/", component: Home, alias: "/pwa.html" },

@@ -19,7 +19,7 @@
 import NoSSR from "vue-no-ssr";
 const ProductGalleryZoomCarousel = () =>
   import(
-    /* webpackChunkName: "vsf-product-gallery-zoom-carousel" */ "./ProductGalleryZoomCarousel.vue"
+    /* webpackChunkName: "vsf-product-gallery-zoom-carousel" */ "./ProductGalleryZoomCarousel"
   );
 
 export default {

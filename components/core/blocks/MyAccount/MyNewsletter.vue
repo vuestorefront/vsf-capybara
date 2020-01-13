@@ -37,8 +37,8 @@
 
 <script>
 import { Newsletter } from "@vue-storefront/core/modules/newsletter/components/Newsletter";
-import ButtonFull from "theme/components/theme/ButtonFull.vue";
-import BaseCheckbox from "../Form/BaseCheckbox.vue";
+import ButtonFull from "theme/components/theme/ButtonFull";
+import BaseCheckbox from "../Form/BaseCheckbox";
 import i18n from "@vue-storefront/i18n";
 
 export default {

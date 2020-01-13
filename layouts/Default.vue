@@ -46,15 +46,15 @@
 
 <script>
 import { mapState } from "vuex";
-import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar.vue";
-import MainHeader from "theme/components/organisms/o-header.vue";
-import MainFooter from "theme/components/organisms/o-footer.vue";
-import Loader from "theme/components/core/Loader.vue";
-import Notification from "theme/components/core/Notification.vue";
-import SignUp from "theme/components/core/blocks/Auth/SignUp.vue";
-import CookieNotification from "theme/components/core/CookieNotification.vue";
-import OfflineBadge from "theme/components/core/OfflineBadge.vue";
-import Microcart from "theme/components/organisms/o-microcart.vue";
+import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar";
+import MainHeader from "theme/components/organisms/o-header";
+import MainFooter from "theme/components/organisms/o-footer";
+import Loader from "theme/components/core/Loader";
+import Notification from "theme/components/core/Notification";
+import SignUp from "theme/components/core/blocks/Auth/SignUp";
+import CookieNotification from "theme/components/core/CookieNotification";
+import OfflineBadge from "theme/components/core/OfflineBadge";
+import Microcart from "theme/components/organisms/o-microcart";
 import { isServer } from "@vue-storefront/core/helpers";
 import Head from "theme/head";
 import config from "config";
@@ -62,19 +62,19 @@ import { SfSidebar } from "@storefront-ui/vue";
 
 const SidebarMenu = () =>
   import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ "theme/components/core/blocks/SidebarMenu/SidebarMenu.vue"
+    /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ "theme/components/core/blocks/SidebarMenu/SidebarMenu"
   );
 const Wishlist = () =>
   import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-wishlist" */ "theme/components/core/blocks/Wishlist/Wishlist.vue"
+    /* webpackPreload: true */ /* webpackChunkName: "vsf-wishlist" */ "theme/components/core/blocks/Wishlist/Wishlist"
   );
 const SearchPanel = () =>
   import(
-    /* webpackChunkName: "vsf-search-panel" */ "theme/components/core/blocks/SearchPanel/SearchPanel.vue"
+    /* webpackChunkName: "vsf-search-panel" */ "theme/components/core/blocks/SearchPanel/SearchPanel"
   );
 const OrderConfirmation = () =>
   import(
-    /* webpackChunkName: "vsf-order-confirmation" */ "theme/components/core/blocks/Checkout/OrderConfirmation.vue"
+    /* webpackChunkName: "vsf-order-confirmation" */ "theme/components/core/blocks/Checkout/OrderConfirmation"
   );
 
 export default {
