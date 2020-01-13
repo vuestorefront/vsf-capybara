@@ -193,10 +193,10 @@
             </div>
             <div class="row py40 add-to-buttons">
               <div class="col-xs-6 col-sm-3 col-md-6">
-                <AddToWishlist :product="getCurrentProduct" />
+                <AAddToWishlist :product="getCurrentProduct" />
               </div>
               <div class="col-xs-6 col-sm-3 col-md-6">
-                <AddToCompare :product="getCurrentProduct" />
+                <AAddToCompare :product="getCurrentProduct" />
               </div>
             </div>
           </div>
@@ -276,8 +276,8 @@ import PromotedOffers from "theme/components/theme/blocks/PromotedOffers/Promote
 import focusClean from "theme/components/theme/directives/focusClean";
 import WebShare from "theme/components/theme/WebShare";
 import SizeGuide from "theme/components/core/blocks/Product/SizeGuide";
-import AddToWishlist from "theme/components/atoms/a-add-to-wishlist";
-import AddToCompare from "theme/components/atoms/a-add-to-compare";
+import AAddToWishlist from "theme/components/atoms/a-add-to-wishlist";
+import AAddToCompare from "theme/components/atoms/a-add-to-compare";
 import { mapGetters } from "vuex";
 import LazyHydrate from "vue-lazy-hydration";
 import { ProductOption } from "@vue-storefront/core/modules/catalog/components/ProductOption.ts";
@@ -300,8 +300,8 @@ import { catalogHooksExecutors } from "@vue-storefront/core/modules/catalog-next
 export default {
   components: {
     AddToCart,
-    AddToCompare,
-    AddToWishlist,
+    AAddToCompare,
+    AAddToWishlist,
     Breadcrumbs,
     ColorSelector,
     GenericSelector,
