@@ -140,9 +140,9 @@
 </template>
 <script>
 import Register from "@vue-storefront/core/compatibility/components/blocks/Auth/Register";
-import ButtonFull from "theme/components/theme/ButtonFull.vue";
-import BaseCheckbox from "theme/components/core/blocks/Form/BaseCheckbox.vue";
-import BaseInput from "theme/components/core/blocks/Form/BaseInput.vue";
+import ButtonFull from "theme/components/theme/ButtonFull";
+import BaseCheckbox from "theme/components/core/blocks/Form/BaseCheckbox";
+import BaseInput from "theme/components/core/blocks/Form/BaseInput";
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 
 export default {
