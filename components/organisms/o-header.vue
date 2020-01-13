@@ -2,7 +2,7 @@
   <div class="o-header">
     <SfHeader :active-icon="activeIcon">
       <template #logo>
-        <Logo width="41px" height="41px" />
+        <ALogo width="41px" height="41px" />
       </template>
       <template #navigation>
         <router-link
@@ -17,10 +17,10 @@
       <template #search><div class="hidden"></div></template>
       <template #header-icons>
         <div class="sf-header__icons ml-auto">
-          <SearchIcon />
-          <AccountIcon />
-          <WishlistIcon />
-          <MicrocartIcon />
+          <ASearchIcon />
+          <AAccountIcon />
+          <AWishlistIcon />
+          <AMicrocartIcon />
         </div>
       </template>
     </SfHeader>
@@ -29,11 +29,11 @@
 
 <script>
 import { SfHeader } from "@storefront-ui/vue";
-import Logo from "theme/components/atoms/a-logo";
-import SearchIcon from "theme/components/atoms/a-search-icon";
-import AccountIcon from "theme/components/atoms/a-account-icon";
-import WishlistIcon from "theme/components/atoms/a-wishlist-icon";
-import MicrocartIcon from "theme/components/atoms/a-microcart-icon";
+import ALogo from "theme/components/atoms/a-logo";
+import ASearchIcon from "theme/components/atoms/a-search-icon";
+import AAccountIcon from "theme/components/atoms/a-account-icon";
+import AWishlistIcon from "theme/components/atoms/a-wishlist-icon";
+import AMicrocartIcon from "theme/components/atoms/a-microcart-icon";
 import { mapGetters } from "vuex";
 import { formatCategoryLink } from "@vue-storefront/core/modules/url/helpers";
 
@@ -41,11 +41,11 @@ export default {
   name: "Header",
   components: {
     SfHeader,
-    Logo,
-    AccountIcon,
-    WishlistIcon,
-    MicrocartIcon,
-    SearchIcon
+    ALogo,
+    AAccountIcon,
+    AWishlistIcon,
+    AMicrocartIcon,
+    ASearchIcon
   },
   computed: {
     ...mapGetters("category", ["getCategories"]),

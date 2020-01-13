@@ -16,7 +16,7 @@
           class="navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <IconFilter size="15px" styles="margin-right:10px" />
+          <AIconFilter size="15px" styles="margin-right:10px" />
           {{ $t("Filters") }}
         </SfButton>
         <div class="navbar__sort desktop-only">
@@ -46,12 +46,12 @@
         </div>
         <div class="navbar__view desktop-only">
           <span>{{ $t("View") }} </span>
-          <IconViewGrid size="10px" styles="margin-left:10px" />
-          <IconViewRow size="11px" styles="margin-left:10px" />
+          <AIconViewGrid size="10px" styles="margin-left:10px" />
+          <AIconViewRow size="11px" styles="margin-left:10px" />
         </div>
         <SfButton class="navbar__filters-button mobile-only">
           {{ $t("Sort By") }}
-          <IconSort size="15px" styles="margin-left:10px" />
+          <AIconSort size="15px" styles="margin-left:10px" />
         </SfButton>
       </div>
     </div>
@@ -166,10 +166,10 @@ import { price, htmlDecode } from "@vue-storefront/core/filters";
 import { quickSearchByQuery } from "@vue-storefront/core/lib/search";
 import { getSearchOptionsFromRouteParams } from "@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers";
 import { catalogHooksExecutors } from "@vue-storefront/core/modules/catalog-next/hooks";
-import IconFilter from "theme/components/atoms/a-icon-filter";
-import IconSort from "theme/components/atoms/a-icon-sort";
-import IconViewGrid from "theme/components/atoms/a-icon-view-grid";
-import IconViewRow from "theme/components/atoms/a-icon-view-row";
+import AIconFilter from "theme/components/atoms/a-icon-filter";
+import AIconSort from "theme/components/atoms/a-icon-sort";
+import AIconViewGrid from "theme/components/atoms/a-icon-view-grid";
+import AIconViewRow from "theme/components/atoms/a-icon-view-row";
 import {
   formatCategoryLink,
   formatProductLink
@@ -230,10 +230,10 @@ export default {
   name: "CategoryPage",
   components: {
     LazyHydrate,
-    IconSort,
-    IconFilter,
-    IconViewRow,
-    IconViewGrid,
+    AIconSort,
+    AIconFilter,
+    AIconViewRow,
+    AIconViewGrid,
     SfList,
     SfButton,
     SfSelect,
