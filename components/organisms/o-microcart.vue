@@ -83,8 +83,8 @@ import { getThumbnailForProduct } from "@vue-storefront/core/modules/cart/helper
 import VueOfflineMixin from "vue-offline/mixin";
 import onEscapePress from "@vue-storefront/core/mixins/onEscapePress";
 
-import AddToCompare from "theme/components/core/blocks/Compare/AddToCompare";
-import AddToWishlist from "theme/components/core/blocks/Wishlist/AddToWishlist";
+import AddToCompare from "theme/components/atoms/a-add-to-compare";
+import AddToWishlist from "theme/components/atoms/a-add-to-wishlist";
 import {
   SfButton,
   SfCollectedProduct,

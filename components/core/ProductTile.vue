@@ -88,8 +88,8 @@ import rootStore from "@vue-storefront/core/store";
 import { ProductTile } from "@vue-storefront/core/modules/catalog/components/ProductTile.ts";
 import config from "config";
 import ProductImage from "./ProductImage";
-import AddToWishlist from "theme/components/core/blocks/Wishlist/AddToWishlist";
-import AddToCompare from "theme/components/core/blocks/Compare/AddToCompare";
+import AddToWishlist from "theme/components/atoms/a-add-to-wishlist";
+import AddToCompare from "theme/components/atoms/a-add-to-compare";
 import { IsOnWishlist } from "@vue-storefront/core/modules/wishlist/components/IsOnWishlist";
 import { IsOnCompare } from "@vue-storefront/core/modules/compare/components/IsOnCompare";
 

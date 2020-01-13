@@ -276,8 +276,8 @@ import PromotedOffers from "theme/components/theme/blocks/PromotedOffers/Promote
 import focusClean from "theme/components/theme/directives/focusClean";
 import WebShare from "theme/components/theme/WebShare";
 import SizeGuide from "theme/components/core/blocks/Product/SizeGuide";
-import AddToWishlist from "theme/components/core/blocks/Wishlist/AddToWishlist";
-import AddToCompare from "theme/components/core/blocks/Compare/AddToCompare";
+import AddToWishlist from "theme/components/atoms/a-add-to-wishlist";
+import AddToCompare from "theme/components/atoms/a-add-to-compare";
 import { mapGetters } from "vuex";
 import LazyHydrate from "vue-lazy-hydration";
 import { ProductOption } from "@vue-storefront/core/modules/catalog/components/ProductOption.ts";

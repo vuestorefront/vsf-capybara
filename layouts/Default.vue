@@ -47,14 +47,14 @@
 <script>
 import { mapState } from "vuex";
 import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar.vue";
-import MainHeader from "theme/components/core/blocks/Header/Header.vue";
-import MainFooter from "theme/components/core/blocks/Footer/Footer.vue";
+import MainHeader from "theme/components/organisms/o-header.vue";
+import MainFooter from "theme/components/organisms/o-footer.vue";
 import Loader from "theme/components/core/Loader.vue";
 import Notification from "theme/components/core/Notification.vue";
 import SignUp from "theme/components/core/blocks/Auth/SignUp.vue";
 import CookieNotification from "theme/components/core/CookieNotification.vue";
 import OfflineBadge from "theme/components/core/OfflineBadge.vue";
-import Microcart from "theme/components/core/blocks/Microcart/Microcart.vue";
+import Microcart from "theme/components/organisms/o-microcart.vue";
 import { isServer } from "@vue-storefront/core/helpers";
 import Head from "theme/head";
 import config from "config";
