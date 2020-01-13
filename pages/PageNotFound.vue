@@ -68,7 +68,7 @@
 import { mapGetters } from "vuex";
 import { Logger } from "@vue-storefront/core/lib/logger";
 import i18n from "@vue-storefront/i18n";
-import ProductTile from "../components/core/ProductTile.vue";
+import ProductTile from "../components/core/ProductTile";
 
 export default {
   name: "PageNotFound",

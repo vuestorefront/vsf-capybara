@@ -47,9 +47,9 @@ import SubscriptionStatus from "@vue-storefront/core/modules/newsletter/mixins/S
 import Subscribe from "@vue-storefront/core/modules/newsletter/mixins/Subscribe";
 import i18n from "@vue-storefront/i18n";
 
-import ButtonFull from "theme/components/theme/ButtonFull.vue";
+import ButtonFull from "theme/components/theme/ButtonFull";
 import Modal from "theme/components/core/Modal";
-import BaseInput from "theme/components/core/blocks/Form/BaseInput.vue";
+import BaseInput from "theme/components/core/blocks/Form/BaseInput";
 
 export default {
   components: {

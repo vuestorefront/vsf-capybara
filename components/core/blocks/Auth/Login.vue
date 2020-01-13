@@ -81,9 +81,9 @@
 <script>
 import Login from "@vue-storefront/core/compatibility/components/blocks/Auth/Login";
 
-import ButtonFull from "theme/components/theme/ButtonFull.vue";
-import BaseCheckbox from "../Form/BaseCheckbox.vue";
-import BaseInput from "../Form/BaseInput.vue";
+import ButtonFull from "theme/components/theme/ButtonFull";
+import BaseCheckbox from "../Form/BaseCheckbox";
+import BaseInput from "../Form/BaseInput";
 import { required, email } from "vuelidate/lib/validators";
 
 export default {

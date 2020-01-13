@@ -1,6 +1,6 @@
 <template>
   <SfButton
-    class="sf-button--text product__action"
+    class="sf-button--text a-add-to-wishlist"
     data-testid="addToWishlist"
     @click="
       isOnWishlist

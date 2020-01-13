@@ -105,7 +105,7 @@ import {
 
 const NewsletterPopup = () =>
   import(
-    /* webpackChunkName: "vsf-newsletter-modal" */ "theme/components/core/NewsletterPopup.vue"
+    /* webpackChunkName: "vsf-newsletter-modal" */ "theme/components/core/NewsletterPopup"
   );
 
 import {

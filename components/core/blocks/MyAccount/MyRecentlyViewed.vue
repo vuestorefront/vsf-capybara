@@ -20,7 +20,7 @@
 
 <script>
 import RecentlyViewed from "@vue-storefront/core/modules/recently-viewed/components/RecentlyViewed";
-import ProductListing from "theme/components/core/ProductListing.vue";
+import ProductListing from "theme/components/core/ProductListing";
 
 export default {
   components: {

@@ -2,12 +2,12 @@
   <transition name="back-to-top-fade">
     <div
       v-show="visible"
-      class="back-to-top"
+      class="a-back-to-top"
       :style="{ bottom: bottom, right: right }"
       @click="backToTop"
     >
       <SfCircleIcon
-        class="back-to-top__icon"
+        class="a-back-to-top__icon"
         icon="chevron_down"
         icon-size="20px"
         icon-color="white"
@@ -97,7 +97,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.back-to-top {
+.a-back-to-top {
   cursor: pointer;
   position: fixed;
   z-index: 1000;

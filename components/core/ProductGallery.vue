@@ -34,7 +34,7 @@ import { onlineHelper } from "@vue-storefront/core/helpers";
 
 const ProductGalleryCarousel = () =>
   import(
-    /* webpackChunkName: "vsf-product-gallery-carousel" */ "./ProductGalleryCarousel.vue"
+    /* webpackChunkName: "vsf-product-gallery-carousel" */ "./ProductGalleryCarousel"
   );
 
 export default {

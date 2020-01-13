@@ -11,7 +11,7 @@
 import { currentStoreView } from "@vue-storefront/core/lib/multistore";
 const ModalSwitcher = () =>
   import(
-    /* webpackChunkName: "vsf-languages-modal" */ "theme/components/core/blocks/Switcher/Language.vue"
+    /* webpackChunkName: "vsf-languages-modal" */ "theme/components/core/blocks/Switcher/Language"
   );
 
 const { i18n = {} } = currentStoreView();

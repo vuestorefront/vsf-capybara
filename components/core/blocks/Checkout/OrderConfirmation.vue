@@ -72,7 +72,7 @@
 import { ConfirmOrders } from "@vue-storefront/core/modules/offline-order/components/ConfirmOrders";
 import { CancelOrders } from "@vue-storefront/core/modules/offline-order/components/CancelOrders";
 import Modal from "theme/components/core/Modal";
-import ButtonFull from "theme/components/theme/ButtonFull.vue";
+import ButtonFull from "theme/components/theme/ButtonFull";
 
 export default {
   components: {

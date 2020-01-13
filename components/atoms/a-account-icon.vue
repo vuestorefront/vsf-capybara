@@ -3,7 +3,7 @@
     icon="profile"
     icon-size="20px"
     icon-color="black"
-    class="sf-header__icon"
+    class="sf-header__icon a-account-icon"
     role="button"
     aria-label="account"
     :class="{ 'sf-header__icon--is-active': isLoggedIn }"

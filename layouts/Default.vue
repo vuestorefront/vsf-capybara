@@ -2,8 +2,8 @@
   <div class="default-layout">
     <loader />
     <div id="viewport" class="w-100 relative">
-      <main-header />
-      <async-sidebar
+      <OHeader />
+      <AsyncSidebar
         :async-component="SearchPanel"
         :is-open="isSearchPanelOpen"
         @close="$store.commit('ui/setSearchpanel')"
@@ -15,27 +15,27 @@
           class="sf-sidebar--right"
           @close="$store.commit('ui/setMicrocart')"
         >
-          <Microcart />
+          <OMicrocart />
         </SfSidebar>
       </div>
-      <async-sidebar
+      <AsyncSidebar
         :async-component="SidebarMenu"
         :is-open="isSidebarOpen"
         direction="left"
         @close="$store.commit('ui/setSidebar')"
       />
-      <async-sidebar
+      <AsyncSidebar
         :async-component="Wishlist"
         :is-open="isWishlistOpen"
         @close="$store.commit('ui/setWishlist')"
       />
       <slot />
-      <main-footer />
-      <notification />
-      <sign-up />
-      <cookie-notification />
-      <offline-badge />
-      <order-confirmation
+      <OFooter />
+      <Notification />
+      <SignUp />
+      <CookieNotification />
+      <OfflineBadge />
+      <OrderConfirmation
         v-if="loadOrderConfirmation"
         :orders-data="ordersData"
       />
@@ -46,15 +46,15 @@
 
 <script>
 import { mapState } from "vuex";
-import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar.vue";
-import MainHeader from "theme/components/core/blocks/Header/Header.vue";
-import MainFooter from "theme/components/core/blocks/Footer/Footer.vue";
-import Loader from "theme/components/core/Loader.vue";
-import Notification from "theme/components/core/Notification.vue";
-import SignUp from "theme/components/core/blocks/Auth/SignUp.vue";
-import CookieNotification from "theme/components/core/CookieNotification.vue";
-import OfflineBadge from "theme/components/core/OfflineBadge.vue";
-import Microcart from "theme/components/core/blocks/Microcart/Microcart.vue";
+import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar";
+import OHeader from "theme/components/organisms/o-header";
+import OFooter from "theme/components/organisms/o-footer";
+import Loader from "theme/components/core/Loader";
+import Notification from "theme/components/core/Notification";
+import SignUp from "theme/components/core/blocks/Auth/SignUp";
+import CookieNotification from "theme/components/core/CookieNotification";
+import OfflineBadge from "theme/components/core/OfflineBadge";
+import OMicrocart from "theme/components/organisms/o-microcart";
 import { isServer } from "@vue-storefront/core/helpers";
 import Head from "theme/head";
 import config from "config";
@@ -62,32 +62,32 @@ import { SfSidebar } from "@storefront-ui/vue";
 
 const SidebarMenu = () =>
   import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ "theme/components/core/blocks/SidebarMenu/SidebarMenu.vue"
+    /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ "theme/components/core/blocks/SidebarMenu/SidebarMenu"
   );
 const Wishlist = () =>
   import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-wishlist" */ "theme/components/core/blocks/Wishlist/Wishlist.vue"
+    /* webpackPreload: true */ /* webpackChunkName: "vsf-wishlist" */ "theme/components/core/blocks/Wishlist/Wishlist"
   );
 const SearchPanel = () =>
   import(
-    /* webpackChunkName: "vsf-search-panel" */ "theme/components/core/blocks/SearchPanel/SearchPanel.vue"
+    /* webpackChunkName: "vsf-search-panel" */ "theme/components/core/blocks/SearchPanel/SearchPanel"
   );
 const OrderConfirmation = () =>
   import(
-    /* webpackChunkName: "vsf-order-confirmation" */ "theme/components/core/blocks/Checkout/OrderConfirmation.vue"
+    /* webpackChunkName: "vsf-order-confirmation" */ "theme/components/core/blocks/Checkout/OrderConfirmation"
   );
 
 export default {
   components: {
-    MainHeader,
-    MainFooter,
+    OHeader,
+    OFooter,
     SidebarMenu, // eslint-disable-line vue/no-unused-components
     Loader,
     Notification,
     SignUp,
     CookieNotification,
     OfflineBadge,
-    Microcart,
+    OMicrocart,
     OrderConfirmation,
     AsyncSidebar,
     SfSidebar
@@ -96,7 +96,7 @@ export default {
     return {
       loadOrderConfirmation: false,
       ordersData: [],
-      Microcart,
+      OMicrocart,
       Wishlist,
       SearchPanel,
       SidebarMenu

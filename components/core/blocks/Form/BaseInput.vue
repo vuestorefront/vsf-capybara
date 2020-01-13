@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import ValidationMessages from "./ValidationMessages.vue";
+import ValidationMessages from "./ValidationMessages";
 
 export default {
   name: "BaseInput",

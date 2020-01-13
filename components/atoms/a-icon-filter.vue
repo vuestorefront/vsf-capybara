@@ -1,5 +1,5 @@
 <template>
-  <SfIcon :size="size" :style="styles">
+  <SfIcon :size="size" :style="styles" class="a-icon-filter">
     <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
       <g clip-icon="url(#clip0)">
         <path

@@ -1,5 +1,5 @@
 import { setupMultistoreRoutes } from "@vue-storefront/core/lib/multistore";
-import App from "./App.vue";
+import App from "./App";
 import routes from "./router";
 import Vue from "vue";
 import VueProgressBar from "vue-progressbar";
