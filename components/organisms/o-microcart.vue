@@ -1,7 +1,7 @@
 <template>
   <transition name="fade" mode="out-in">
-    <div v-if="totalItems" key="my-cart" class="my-cart">
-      <h3 class="my-cart__total-items">
+    <div v-if="totalItems" key="my-cart" class="o-microcart">
+      <h3 class="o-microcart__total-items">
         {{ $t("Total items") }}: {{ productsCount }}
       </h3>
       <div class="collected-product-list">
@@ -30,14 +30,14 @@
             </template>
             <template #actions>
               <div class="collected-product__actions">
-                <div><add-to-wishlist :product="product" /></div>
-                <div><add-to-compare :product="product" /></div>
+                <div><AAddToWishlist :product="product" /></div>
+                <div><AAddToCompare :product="product" /></div>
               </div>
             </template>
           </SfCollectedProduct>
         </transition-group>
       </div>
-      <SfProperty class="sf-property--full-width my-cart__total-price">
+      <SfProperty class="sf-property--full-width o-microcart__total-price">
         <template #name>
           <span class="sf-property__name">{{ $t("TOTAL") }}</span>
         </template>
@@ -83,8 +83,8 @@ import { getThumbnailForProduct } from "@vue-storefront/core/modules/cart/helper
 import VueOfflineMixin from "vue-offline/mixin";
 import onEscapePress from "@vue-storefront/core/mixins/onEscapePress";
 
-import AddToCompare from "theme/components/core/blocks/Compare/AddToCompare";
-import AddToWishlist from "theme/components/core/blocks/Wishlist/AddToWishlist";
+import AAddToCompare from "theme/components/atoms/a-add-to-compare";
+import AAddToWishlist from "theme/components/atoms/a-add-to-wishlist";
 import {
   SfButton,
   SfCollectedProduct,
@@ -94,8 +94,8 @@ import {
 
 export default {
   components: {
-    AddToCompare,
-    AddToWishlist,
+    AAddToCompare,
+    AAddToWishlist,
     SfButton,
     SfCollectedProduct,
     SfProperty,
@@ -177,7 +177,7 @@ export default {
     margin: auto;
   }
 }
-.my-cart {
+.o-microcart {
   flex: 1;
   display: flex;
   flex-direction: column;

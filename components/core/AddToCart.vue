@@ -12,7 +12,7 @@
 import { formatProductMessages } from "@vue-storefront/core/filters/product-messages";
 import { notifications } from "@vue-storefront/core/modules/cart/helpers";
 import focusClean from "theme/components/theme/directives/focusClean";
-import ButtonFull from "theme/components/theme/ButtonFull.vue";
+import ButtonFull from "theme/components/theme/ButtonFull";
 import { mapGetters } from "vuex";
 
 export default {

@@ -51,7 +51,7 @@
   </modal>
 </template>
 <script>
-import Modal from "theme/components/core/Modal.vue";
+import Modal from "theme/components/core/Modal";
 import config from "config";
 import { currentStoreView } from "@vue-storefront/core/lib/multistore";
 

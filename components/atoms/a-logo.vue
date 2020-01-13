@@ -1,5 +1,9 @@
 <template>
-  <router-link :to="localizedRoute('/')" :title="$t('Home Page')" class="logo">
+  <router-link
+    :to="localizedRoute('/')"
+    :title="$t('Home Page')"
+    class="a-logo"
+  >
     <SfImage
       :style="{ width, height }"
       src="/assets/logo.svg"
@@ -37,7 +41,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.logo {
+.a-logo {
   display: inline-flex;
 }
 </style>

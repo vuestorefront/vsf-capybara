@@ -193,10 +193,10 @@
             </div>
             <div class="row py40 add-to-buttons">
               <div class="col-xs-6 col-sm-3 col-md-6">
-                <AddToWishlist :product="getCurrentProduct" />
+                <AAddToWishlist :product="getCurrentProduct" />
               </div>
               <div class="col-xs-6 col-sm-3 col-md-6">
-                <AddToCompare :product="getCurrentProduct" />
+                <AAddToCompare :product="getCurrentProduct" />
               </div>
             </div>
           </div>
@@ -259,25 +259,25 @@
 
 <script>
 import config from "config";
-import RelatedProducts from "theme/components/core/blocks/Product/Related.vue";
-import Reviews from "theme/components/core/blocks/Reviews/Reviews.vue";
-import AddToCart from "theme/components/core/AddToCart.vue";
+import RelatedProducts from "theme/components/core/blocks/Product/Related";
+import Reviews from "theme/components/core/blocks/Reviews/Reviews";
+import AddToCart from "theme/components/core/AddToCart";
 import GenericSelector from "theme/components/core/GenericSelector";
-import ColorSelector from "theme/components/core/ColorSelector.vue";
-import SizeSelector from "theme/components/core/SizeSelector.vue";
-import Breadcrumbs from "theme/components/core/Breadcrumbs.vue";
-import ProductAttribute from "theme/components/core/ProductAttribute.vue";
-import ProductQuantity from "theme/components/core/ProductQuantity.vue";
-import ProductLinks from "theme/components/core/ProductLinks.vue";
-import ProductCustomOptions from "theme/components/core/ProductCustomOptions.vue";
-import ProductBundleOptions from "theme/components/core/ProductBundleOptions.vue";
+import ColorSelector from "theme/components/core/ColorSelector";
+import SizeSelector from "theme/components/core/SizeSelector";
+import Breadcrumbs from "theme/components/core/Breadcrumbs";
+import ProductAttribute from "theme/components/core/ProductAttribute";
+import ProductQuantity from "theme/components/core/ProductQuantity";
+import ProductLinks from "theme/components/core/ProductLinks";
+import ProductCustomOptions from "theme/components/core/ProductCustomOptions";
+import ProductBundleOptions from "theme/components/core/ProductBundleOptions";
 import ProductGallery from "theme/components/core/ProductGallery";
 import PromotedOffers from "theme/components/theme/blocks/PromotedOffers/PromotedOffers";
 import focusClean from "theme/components/theme/directives/focusClean";
 import WebShare from "theme/components/theme/WebShare";
 import SizeGuide from "theme/components/core/blocks/Product/SizeGuide";
-import AddToWishlist from "theme/components/core/blocks/Wishlist/AddToWishlist";
-import AddToCompare from "theme/components/core/blocks/Compare/AddToCompare";
+import AAddToWishlist from "theme/components/atoms/a-add-to-wishlist";
+import AAddToCompare from "theme/components/atoms/a-add-to-compare";
 import { mapGetters } from "vuex";
 import LazyHydrate from "vue-lazy-hydration";
 import { ProductOption } from "@vue-storefront/core/modules/catalog/components/ProductOption.ts";
@@ -300,8 +300,8 @@ import { catalogHooksExecutors } from "@vue-storefront/core/modules/catalog-next
 export default {
   components: {
     AddToCart,
-    AddToCompare,
-    AddToWishlist,
+    AAddToCompare,
+    AAddToWishlist,
     Breadcrumbs,
     ColorSelector,
     GenericSelector,

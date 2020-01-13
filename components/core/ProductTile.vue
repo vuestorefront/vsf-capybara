@@ -4,7 +4,7 @@
     class="product align-center w-100 pb20"
   >
     <div class="product__icons">
-      <AddToWishlist :product="product">
+      <AAddToWishlist :product="product">
         <div
           class="product__icon"
           :class="{ 'product__icon--active': isOnWishlist }"
@@ -12,8 +12,8 @@
         >
           <i class="material-icons">{{ favoriteIcon }}</i>
         </div>
-      </AddToWishlist>
-      <AddToCompare :product="product">
+      </AAddToWishlist>
+      <AAddToCompare :product="product">
         <div
           class="product__icon"
           :class="{ 'product__icon--active': isOnCompare }"
@@ -23,7 +23,7 @@
         >
           <i class="material-icons">compare</i>
         </div>
-      </AddToCompare>
+      </AAddToCompare>
     </div>
     <router-link
       class="block no-underline product-link"
@@ -88,16 +88,16 @@ import rootStore from "@vue-storefront/core/store";
 import { ProductTile } from "@vue-storefront/core/modules/catalog/components/ProductTile.ts";
 import config from "config";
 import ProductImage from "./ProductImage";
-import AddToWishlist from "theme/components/core/blocks/Wishlist/AddToWishlist";
-import AddToCompare from "theme/components/core/blocks/Compare/AddToCompare";
+import AAddToWishlist from "theme/components/atoms/a-add-to-wishlist";
+import AAddToCompare from "theme/components/atoms/a-add-to-compare";
 import { IsOnWishlist } from "@vue-storefront/core/modules/wishlist/components/IsOnWishlist";
 import { IsOnCompare } from "@vue-storefront/core/modules/compare/components/IsOnCompare";
 
 export default {
   components: {
     ProductImage,
-    AddToWishlist,
-    AddToCompare
+    AAddToWishlist,
+    AAddToCompare
   },
   mixins: [ProductTile, IsOnWishlist, IsOnCompare],
   props: {
