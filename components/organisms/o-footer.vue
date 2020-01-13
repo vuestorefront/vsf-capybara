@@ -57,7 +57,7 @@
 
 <script>
 import LanguageSwitcher from "theme/components/core/LanguageSwitcher";
-import BackToTop from "theme/components/core/BackToTop";
+import BackToTop from "theme/components/atoms/a-back-to-top";
 import { SfFooter, SfList, SfMenuItem } from "@storefront-ui/vue";
 import { getPathForStaticPage } from "theme/helpers";
 import config from "config";
