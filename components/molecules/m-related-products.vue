@@ -1,40 +1,25 @@
 <template>
-  <section
+  <m-product-carousel
     v-if="getCurrentRelatedProducts.length"
-    class="py20 new-collection container px15"
-  >
-    <div>
-      <header class="col-md-12">
-        <h2 class="align-center cl-accent">
-          {{ heading }}
-        </h2>
-      </header>
-    </div>
-    <product-listing columns="4" :products="getCurrentRelatedProducts" />
-  </section>
+    :products="getCurrentRelatedProducts"
+  />
 </template>
 
 <script>
-import ProductListing from "theme/components/core/ProductListing";
+import MProductCarousel from "theme/components/molecules/m-product-carousel";
 import { mapGetters } from "vuex";
 import { prepareRelatedQuery } from "@vue-storefront/core/modules/catalog/queries/related";
-import i18n from "@vue-storefront/i18n";
 import config from "config";
 
 export default {
-  name: "Related",
+  name: "MRelatedProducts",
   components: {
-    ProductListing
+    MProductCarousel
   },
   props: {
     type: {
       type: String,
       required: true
-    },
-    heading: {
-      type: String,
-      required: false,
-      default: i18n.t("Similar products")
     }
   },
   computed: {
@@ -64,8 +49,6 @@ export default {
       this.$bus.$off("user-after-loggedin", this.refreshList);
       this.$bus.$off("user-after-logout", this.refreshList);
     }
-  },
-  destroyed() {
     this.$bus.$off("product-after-load", this.refreshList);
   },
   methods: {
