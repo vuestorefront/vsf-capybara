@@ -275,6 +275,7 @@ import ProductLinks from "theme/components/core/ProductLinks";
 import ProductCustomOptions from "theme/components/core/ProductCustomOptions";
 import ProductBundleOptions from "theme/components/core/ProductBundleOptions";
 import ProductGallery from "theme/components/core/ProductGallery";
+import PromotedOffers from "theme/components/theme/blocks/PromotedOffers/PromotedOffers";
 import focusClean from "theme/components/theme/directives/focusClean";
 import WebShare from "theme/components/theme/WebShare";
 import SizeGuide from "theme/components/core/blocks/Product/SizeGuide";
@@ -315,6 +316,7 @@ export default {
     ProductCustomOptions,
     ProductGallery,
     ProductLinks,
+    PromotedOffers,
     Reviews,
     SizeSelector,
     WebShare,
