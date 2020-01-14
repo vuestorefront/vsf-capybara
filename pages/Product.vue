@@ -462,10 +462,10 @@ export default {
     registerModule(RecentlyViewedModule);
   },
   async mounted() {
-    await Promise.all([
-      this.$store.dispatch("recently-viewed/addItem", this.getCurrentProduct),
-      this.$store.dispatch("promoted/updatePromotedOffers")
-    ]);
+    await this.$store.dispatch(
+      "recently-viewed/addItem",
+      this.getCurrentProduct
+    );
   },
   beforeRouteEnter(to, from, next) {
     if (isServer) {
