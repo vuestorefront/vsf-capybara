@@ -242,16 +242,20 @@
       />
     </lazy-hydrate>
     <lazy-hydrate when-idle>
-      <related-products
-        type="upsell"
-        :heading="$t('We found other products you might like')"
-      />
+      <SfSection
+        :title-heading="$t('We found other products you might like')"
+        class="section"
+      >
+        <m-related-products type="upsell" />
+      </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
       <promoted-offers single-banner />
     </lazy-hydrate>
     <lazy-hydrate when-idle>
-      <related-products type="related" />
+      <SfSection :title-heading="$t('Similar Products')" class="section">
+        <m-related-products type="related" />
+      </SfSection>
     </lazy-hydrate>
     <SizeGuide />
   </div>
@@ -259,7 +263,6 @@
 
 <script>
 import config from "config";
-import RelatedProducts from "theme/components/core/blocks/Product/Related";
 import Reviews from "theme/components/core/blocks/Reviews/Reviews";
 import AddToCart from "theme/components/core/AddToCart";
 import GenericSelector from "theme/components/core/GenericSelector";
@@ -272,7 +275,6 @@ import ProductLinks from "theme/components/core/ProductLinks";
 import ProductCustomOptions from "theme/components/core/ProductCustomOptions";
 import ProductBundleOptions from "theme/components/core/ProductBundleOptions";
 import ProductGallery from "theme/components/core/ProductGallery";
-import PromotedOffers from "theme/components/theme/blocks/PromotedOffers/PromotedOffers";
 import focusClean from "theme/components/theme/directives/focusClean";
 import WebShare from "theme/components/theme/WebShare";
 import SizeGuide from "theme/components/core/blocks/Product/SizeGuide";
@@ -296,6 +298,9 @@ import { RecentlyViewedModule } from "@vue-storefront/core/modules/recently-view
 import { registerModule } from "@vue-storefront/core/lib/modules";
 import { onlineHelper, isServer } from "@vue-storefront/core/helpers";
 import { catalogHooksExecutors } from "@vue-storefront/core/modules/catalog-next/hooks";
+import MRelatedProducts from "theme/components/molecules/m-related-products";
+
+import { SfSection } from "@storefront-ui/vue";
 
 export default {
   components: {
@@ -310,14 +315,15 @@ export default {
     ProductCustomOptions,
     ProductGallery,
     ProductLinks,
-    PromotedOffers,
-    RelatedProducts,
     Reviews,
     SizeSelector,
     WebShare,
     SizeGuide,
     LazyHydrate,
-    ProductQuantity
+    ProductQuantity,
+    /////////////////
+    MRelatedProducts,
+    SfSection
   },
   directives: { focusClean },
   mixins: [ProductOption],
@@ -456,10 +462,10 @@ export default {
     registerModule(RecentlyViewedModule);
   },
   async mounted() {
-    await this.$store.dispatch(
-      "recently-viewed/addItem",
-      this.getCurrentProduct
-    );
+    await Promise.all([
+      this.$store.dispatch("recently-viewed/addItem", this.getCurrentProduct),
+      this.$store.dispatch("promoted/updatePromotedOffers")
+    ]);
   },
   beforeRouteEnter(to, from, next) {
     if (isServer) {
