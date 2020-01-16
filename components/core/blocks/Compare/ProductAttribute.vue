@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import ProductAttribute from "../../ProductAttribute";
+import ProductAttribute from '../../ProductAttribute';
 
 export default {
   mixins: [ProductAttribute]

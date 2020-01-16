@@ -2,9 +2,7 @@
   <div class="wishlist cl-accent">
     <div class="row">
       <div class="col-md-12 end-xs">
-        <i class="material-icons p15 pointer cl-accent" @click="closeWishlist"
-          >close</i
-        >
+        <i class="material-icons p15 pointer cl-accent" @click="closeWishlist">close</i>
       </div>
     </div>
     <div class="row middle-xs px40">
@@ -38,9 +36,9 @@
 </template>
 
 <script>
-import Wishlist from "@vue-storefront/core/compatibility/components/blocks/Wishlist/Wishlist";
-import Product from "theme/components/core/blocks/Wishlist/Product";
-import ClearWishlistButton from "theme/components/core/blocks/Wishlist/ClearWishlistButton";
+import Wishlist from '@vue-storefront/core/compatibility/components/blocks/Wishlist/Wishlist';
+import Product from 'theme/components/core/blocks/Wishlist/Product';
+import ClearWishlistButton from 'theme/components/core/blocks/Wishlist/ClearWishlistButton';
 
 export default {
   components: {
@@ -56,19 +54,19 @@ export default {
     }
   },
   methods: {
-    clearWishlist() {
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "warning",
+    clearWishlist () {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'warning',
         message: this.$t(
-          "Are you sure you would like to remove all the items from the wishlist?"
+          'Are you sure you would like to remove all the items from the wishlist?'
         ),
         action1: {
-          label: this.$t("OK"),
+          label: this.$t('OK'),
           action: () => {
-            this.$store.dispatch("wishlist/clear");
+            this.$store.dispatch('wishlist/clear');
           }
         },
-        action2: { label: this.$t("Cancel"), action: "close" },
+        action2: { label: this.$t('Cancel'), action: 'close' },
         hasNoTimeout: true
       });
     }

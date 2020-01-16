@@ -34,37 +34,37 @@
 </template>
 
 <script>
-import i18n from "@vue-storefront/i18n";
+import i18n from '@vue-storefront/i18n';
 export default {
   props: {
     detailsLinkText: {
       type: String,
-      default: i18n.t("See details")
+      default: i18n.t('See details')
     },
     detailsLink: {
       type: String,
-      default: "/privacy"
+      default: '/privacy'
     },
     message: {
       type: String,
       default: i18n.t(
-        "We use cookies to give you the best shopping experience."
+        'We use cookies to give you the best shopping experience.'
       )
     }
   },
-  data() {
+  data () {
     return {
       isOpen: false
     };
   },
-  created() {
+  created () {
     this.$store
-      .dispatch("claims/check", { claimCode: "cookiesAccepted" })
+      .dispatch('claims/check', { claimCode: 'cookiesAccepted' })
       .then(cookieClaim => {
         if (!cookieClaim) {
           this.isOpen = true;
-          this.$store.dispatch("claims/set", {
-            claimCode: "cookiesAccepted",
+          this.$store.dispatch('claims/set', {
+            claimCode: 'cookiesAccepted',
             value: false
           });
         } else {
@@ -73,13 +73,13 @@ export default {
       });
   },
   methods: {
-    accept() {
+    accept () {
       this.setVisited();
       this.isOpen = false;
     },
-    setVisited() {
-      this.$store.dispatch("claims/set", {
-        claimCode: "cookiesAccepted",
+    setVisited () {
+      this.$store.dispatch('claims/set', {
+        claimCode: 'cookiesAccepted',
         value: true
       });
     }

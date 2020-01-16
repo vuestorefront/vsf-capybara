@@ -47,7 +47,7 @@
             :key="item"
             :src="'assets/icons/' + item + '.svg'"
             class="social-icon__img"
-          />
+          >
         </div>
       </SfFooterColumn>
     </SfFooter>
@@ -56,15 +56,15 @@
 </template>
 
 <script>
-import LanguageSwitcher from "theme/components/core/LanguageSwitcher";
-import ABackToTop from "theme/components/atoms/a-back-to-top";
-import { SfFooter, SfList, SfMenuItem } from "@storefront-ui/vue";
-import { getPathForStaticPage } from "theme/helpers";
-import config from "config";
-import get from "lodash-es/get";
+import LanguageSwitcher from 'theme/components/core/LanguageSwitcher';
+import ABackToTop from 'theme/components/atoms/a-back-to-top';
+import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
+import { getPathForStaticPage } from 'theme/helpers';
+import config from 'config';
+import get from 'lodash-es/get';
 
 export default {
-  name: "MainFooter",
+  name: 'MainFooter',
   components: {
     LanguageSwitcher,
     ABackToTop,
@@ -72,48 +72,48 @@ export default {
     SfList,
     SfMenuItem
   },
-  data() {
+  data () {
     return {
       links: {
         orders: {
-          name: "Orders",
+          name: 'Orders',
           children: [
-            { name: "My account", link: "/my-account" },
-            { name: "Delivery", link: "/delivery" },
-            { name: "Return policy", link: "/returns" }
+            { name: 'My account', link: '/my-account' },
+            { name: 'Delivery', link: '/delivery' },
+            { name: 'Return policy', link: '/returns' }
           ]
         },
         help: {
-          name: "Help",
+          name: 'Help',
           children: [
-            { name: "Customer service", link: "/customer-service" },
-            { name: "Size guide", link: "/size-guide" },
-            { name: "Contact us", link: "/contact" }
+            { name: 'Customer service', link: '/customer-service' },
+            { name: 'Size guide', link: '/size-guide' },
+            { name: 'Contact us', link: '/contact' }
           ]
         },
         about: {
-          name: "About us",
+          name: 'About us',
           children: [
             {
-              name: "About us (Magento CMS)",
-              link: getPathForStaticPage("/about-us")
+              name: 'About us (Magento CMS)',
+              link: getPathForStaticPage('/about-us')
             },
             {
-              name: "Customer service (Magento CMS)",
-              link: getPathForStaticPage("/customer-service")
+              name: 'Customer service (Magento CMS)',
+              link: getPathForStaticPage('/customer-service')
             },
-            { name: "Store locator", link: "/store-locator" }
+            { name: 'Store locator', link: '/store-locator' }
           ]
         }
       },
-      social: ["facebook", "pinterest", "twitter", "youtube"]
+      social: ['facebook', 'pinterest', 'twitter', 'youtube']
     };
   },
   computed: {
-    multistoreEnabled() {
-      return get(config, "storeViews.multistore", false);
+    multistoreEnabled () {
+      return get(config, 'storeViews.multistore', false);
     },
-    getVersionInfo() {
+    getVersionInfo () {
       return `v${process.env.__APPVERSION__} ${process.env.__BUILDTIME__}`;
     }
   }

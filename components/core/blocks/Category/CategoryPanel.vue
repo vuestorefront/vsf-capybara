@@ -34,19 +34,19 @@ export default {
       default: () => []
     }
   },
-  data() {
+  data () {
     return {};
   },
   methods: {
-    toggleCategory(category) {
+    toggleCategory (category) {
       const isSelected = this.value.includes(category.category_id);
       if (isSelected) {
         this.$emit(
-          "input",
+          'input',
           this.value.filter(categoryId => categoryId !== category.category_id)
         );
       } else {
-        this.$emit("input", [...this.value, category.category_id]);
+        this.$emit('input', [...this.value, category.category_id]);
       }
     }
   }

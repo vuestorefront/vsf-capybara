@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import { Newsletter } from "@vue-storefront/core/modules/newsletter/components/Newsletter";
-import ButtonFull from "theme/components/theme/ButtonFull";
-import BaseCheckbox from "../Form/BaseCheckbox";
-import i18n from "@vue-storefront/i18n";
+import { Newsletter } from '@vue-storefront/core/modules/newsletter/components/Newsletter';
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import BaseCheckbox from '../Form/BaseCheckbox';
+import i18n from '@vue-storefront/i18n';
 
 export default {
   components: {
@@ -47,43 +47,43 @@ export default {
     BaseCheckbox
   },
   mixins: [Newsletter],
-  data() {
+  data () {
     return {};
   },
   methods: {
-    edit() {
+    edit () {
       this.isEdited = true;
     },
-    async updateNewsletter() {
+    async updateNewsletter () {
       if (this.user.isSubscribed) {
         const isSubscribed = await this.$store.dispatch(
-          "newsletter/subscribe",
+          'newsletter/subscribe',
           this.email
         );
 
         if (isSubscribed) {
-          this.$store.dispatch("notification/spawnNotification", {
-            type: "success",
+          this.$store.dispatch('notification/spawnNotification', {
+            type: 'success',
             message: i18n.t(
-              "You have been successfully subscribed to our newsletter!"
+              'You have been successfully subscribed to our newsletter!'
             ),
-            action1: { label: i18n.t("OK") }
+            action1: { label: i18n.t('OK') }
           });
         }
         return;
       }
 
       const isUnsubscribed = await this.$store.dispatch(
-        "newsletter/unsubscribe",
+        'newsletter/unsubscribe',
         this.email
       );
       if (isUnsubscribed) {
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "success",
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'success',
           message: i18n.t(
-            "You have been successfully unsubscribed from our newsletter!"
+            'You have been successfully unsubscribed from our newsletter!'
           ),
-          action1: { label: i18n.t("OK") }
+          action1: { label: i18n.t('OK') }
         });
       }
     }

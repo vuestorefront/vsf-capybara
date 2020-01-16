@@ -9,26 +9,26 @@
       :aria-label="$t('Open microcart')"
       @click="openMicrocart"
     />
-    <SfBadge v-show="totalQuantity" class="a-microcart-icon__badge"
-      >{{ totalQuantity }}
+    <SfBadge v-show="totalQuantity" class="a-microcart-icon__badge">
+      {{ totalQuantity }}
     </SfBadge>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { SfCircleIcon, SfBadge } from "@storefront-ui/vue";
+import { mapGetters, mapActions } from 'vuex';
+import { SfCircleIcon, SfBadge } from '@storefront-ui/vue';
 
 export default {
   components: { SfCircleIcon, SfBadge },
   computed: {
     ...mapGetters({
-      totalQuantity: "cart/getItemsTotalQuantity"
+      totalQuantity: 'cart/getItemsTotalQuantity'
     })
   },
   methods: {
     ...mapActions({
-      openMicrocart: "ui/toggleMicrocart"
+      openMicrocart: 'ui/toggleMicrocart'
     })
   }
 };

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import filterMixin from "theme/mixins/filterMixin.ts";
+import filterMixin from 'theme/mixins/filterMixin.ts';
 
 export default {
   mixins: [filterMixin]

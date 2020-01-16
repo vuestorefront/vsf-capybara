@@ -10,7 +10,7 @@
       src="/assets/placeholder.svg"
       :alt="alt"
       class="product-image__placeholder"
-    />
+    >
     <img
       v-if="!lowerQualityImageError || isOnline"
       v-show="showLowerQuality"
@@ -20,7 +20,7 @@
       class="product-image__thumb"
       @load="imageLoaded('lower', true)"
       @error="imageLoaded('lower', false)"
-    />
+    >
     <img
       v-if="!highQualityImageError || isOnline"
       v-show="showHighQuality"
@@ -29,12 +29,12 @@
       class="product-image__thumb"
       @load="imageLoaded('high', true)"
       @error="imageLoaded('high', false)"
-    />
+    >
   </div>
 </template>
 
 <script>
-import { onlineHelper } from "@vue-storefront/core/helpers";
+import { onlineHelper } from '@vue-storefront/core/helpers';
 
 export default {
   props: {
@@ -45,16 +45,16 @@ export default {
     image: {
       type: Object,
       default: () => ({
-        src: "",
-        loading: ""
+        src: '',
+        loading: ''
       })
     },
     alt: {
       type: String,
-      default: ""
+      default: ''
     }
   },
-  data() {
+  data () {
     return {
       lowerQualityImage: false,
       lowerQualityImageError: false,
@@ -64,35 +64,35 @@ export default {
     };
   },
   computed: {
-    showPlaceholder() {
+    showPlaceholder () {
       return !this.showLowerQuality && !this.showHighQuality;
     },
-    showLowerQuality() {
+    showLowerQuality () {
       return this.lowerQualityImage && !this.showHighQuality;
     },
-    showHighQuality() {
+    showHighQuality () {
       return this.highQualityImage;
     },
-    imageRatio() {
+    imageRatio () {
       const { width, height } = this.$store.state.config.products.gallery;
       return `${height / (width / 100)}%`;
     },
-    style() {
+    style () {
       return this.calcRatio ? { paddingBottom: this.imageRatio } : {};
     },
-    isOnline() {
+    isOnline () {
       return onlineHelper.isOnline;
     }
   },
   watch: {
-    lowerQualityImage(state) {
+    lowerQualityImage (state) {
       if (state) {
         this.basic = this.$refs.lQ.naturalWidth < this.$refs.lQ.naturalHeight;
       }
     }
   },
   methods: {
-    imageLoaded(type, success = true) {
+    imageLoaded (type, success = true) {
       this[`${type}QualityImage`] = success;
       this[`${type}QualityImageError`] = !success;
     }
