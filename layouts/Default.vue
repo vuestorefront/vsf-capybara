@@ -32,7 +32,7 @@
       <slot />
       <OFooter />
       <Notification />
-      <SignUp />
+      <OLogin />
       <CookieNotification />
       <OfflineBadge />
       <OrderConfirmation
@@ -49,9 +49,9 @@ import { mapState } from "vuex";
 import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar";
 import OHeader from "theme/components/organisms/o-header";
 import OFooter from "theme/components/organisms/o-footer";
+import OLogin from "theme/components/organisms/o-login";
 import Loader from "theme/components/core/Loader";
 import Notification from "theme/components/core/Notification";
-import SignUp from "theme/components/core/blocks/Auth/SignUp";
 import CookieNotification from "theme/components/core/CookieNotification";
 import OfflineBadge from "theme/components/core/OfflineBadge";
 import OMicrocart from "theme/components/organisms/o-microcart";
@@ -81,10 +81,10 @@ export default {
   components: {
     OHeader,
     OFooter,
+    OLogin,
     SidebarMenu, // eslint-disable-line vue/no-unused-components
     Loader,
     Notification,
-    SignUp,
     CookieNotification,
     OfflineBadge,
     OMicrocart,
