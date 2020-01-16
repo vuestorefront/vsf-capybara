@@ -15,20 +15,20 @@
 </template>
 
 <script>
-import { SfIcon } from "@storefront-ui/vue";
+import { SfIcon } from '@storefront-ui/vue';
 
 export default {
-  name: "IconViewGrid",
+  name: 'IconViewGrid',
   components: { SfIcon },
   props: {
     size: {
       type: String,
-      default: "",
+      default: '',
       required: false
     },
     styles: {
       type: String,
-      default: "",
+      default: '',
       required: false
     }
   }

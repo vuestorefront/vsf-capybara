@@ -11,7 +11,7 @@
         @click="$emit('click')"
         @blur="$emit('blur')"
         @change="$emit('change')"
-      />
+      >
       <label class="pl35 lh30 h4 pointer" :for="id">
         <slot />
       </label>
@@ -21,10 +21,10 @@
 </template>
 
 <script>
-import ValidationMessages from "./ValidationMessages";
+import ValidationMessages from './ValidationMessages';
 
 export default {
-  name: "BaseRadiobutton",
+  name: 'BaseRadiobutton',
   components: {
     ValidationMessages
   },

@@ -9,18 +9,18 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import MinimalHeader from "theme/components/core/blocks/Header/MinimalHeader";
-import MinimalFooter from "theme/components/core/blocks/Footer/MinimalFooter";
+import { mapState } from 'vuex';
+import MinimalHeader from 'theme/components/core/blocks/Header/MinimalHeader';
+import MinimalFooter from 'theme/components/core/blocks/Footer/MinimalFooter';
 
-import Head from "theme/head";
+import Head from 'theme/head';
 
 export default {
   components: {
     MinimalHeader,
     MinimalFooter
   },
-  data() {
+  data () {
     return {
       ordersData: []
     };
@@ -30,8 +30,8 @@ export default {
       overlayActive: state => state.ui.overlay
     })
   },
-  beforeMount() {},
-  beforeDestroy() {},
+  beforeMount () {},
+  beforeDestroy () {},
   methods: {},
   metaInfo: Head
 };

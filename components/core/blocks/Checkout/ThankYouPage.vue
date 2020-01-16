@@ -125,87 +125,87 @@
 </template>
 
 <script>
-import Composite from "@vue-storefront/core/mixins/composite";
-import Breadcrumbs from "theme/components/core/Breadcrumbs";
-import BaseTextarea from "theme/components/core/blocks/Form/BaseTextarea";
-import ButtonOutline from "theme/components/theme/ButtonOutline";
-import VueOfflineMixin from "vue-offline/mixin";
-import { EmailForm } from "@vue-storefront/core/modules/mailer/components/EmailForm";
-import { isServer } from "@vue-storefront/core/helpers";
-import config from "config";
-import { registerModule } from "@vue-storefront/core/lib/modules";
-import { MailerModule } from "@vue-storefront/core/modules/mailer";
+import Composite from '@vue-storefront/core/mixins/composite';
+import Breadcrumbs from 'theme/components/core/Breadcrumbs';
+import BaseTextarea from 'theme/components/core/blocks/Form/BaseTextarea';
+import ButtonOutline from 'theme/components/theme/ButtonOutline';
+import VueOfflineMixin from 'vue-offline/mixin';
+import { EmailForm } from '@vue-storefront/core/modules/mailer/components/EmailForm';
+import { isServer } from '@vue-storefront/core/helpers';
+import config from 'config';
+import { registerModule } from '@vue-storefront/core/lib/modules';
+import { MailerModule } from '@vue-storefront/core/modules/mailer';
 
 export default {
-  name: "ThankYouPage",
+  name: 'ThankYouPage',
   components: {
     BaseTextarea,
     Breadcrumbs,
     ButtonOutline
   },
   mixins: [Composite, VueOfflineMixin, EmailForm],
-  data() {
+  data () {
     return {
-      feedback: ""
+      feedback: ''
     };
   },
   computed: {
-    lastOrderConfirmation() {
+    lastOrderConfirmation () {
       return this.$store.state.order.last_order_confirmation
         ? this.$store.state.order.last_order_confirmation.confirmation
         : {};
     },
-    isNotificationSupported() {
-      if (isServer || !("Notification" in window)) return false;
-      return "Notification" in window;
+    isNotificationSupported () {
+      if (isServer || !('Notification' in window)) return false;
+      return 'Notification' in window;
     },
-    isPermissionGranted() {
-      if (isServer || !("Notification" in window)) return false;
-      return Notification.permission === "granted";
+    isPermissionGranted () {
+      if (isServer || !('Notification' in window)) return false;
+      return Notification.permission === 'granted';
     },
-    checkoutPersonalEmailAddress() {
+    checkoutPersonalEmailAddress () {
       return this.$store.state.checkout.personalDetails.emailAddress;
     },
-    mailerElements() {
+    mailerElements () {
       return config.mailer.contactAddress;
     }
   },
-  beforeCreate() {
+  beforeCreate () {
     registerModule(MailerModule);
   },
-  destroyed() {
-    this.$store.dispatch("checkout/setThankYouPage", false);
+  destroyed () {
+    this.$store.dispatch('checkout/setThankYouPage', false);
   },
   methods: {
-    requestNotificationPermission() {
+    requestNotificationPermission () {
       if (isServer) return false;
-      if ("Notification" in window && Notification.permission !== "granted") {
+      if ('Notification' in window && Notification.permission !== 'granted') {
         Notification.requestPermission();
       }
     },
-    sendFeedback() {
+    sendFeedback () {
       this.sendEmail(
         {
           sourceAddress: this.checkoutPersonalEmailAddress,
           targetAddress: this.mailerElements,
-          subject: this.$t("What we can improve?"),
+          subject: this.$t('What we can improve?'),
           emailText: this.feedback
         },
         this.onSuccess,
         this.onFailure
       );
     },
-    onSuccess(message) {
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "success",
+    onSuccess (message) {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'success',
         message,
-        action1: { label: this.$t("OK") }
+        action1: { label: this.$t('OK') }
       });
       if (this.mailerElements.sendConfirmation) {
         this.sendEmail({
           sourceAddress: this.mailerElements,
           targetAddress: this.checkoutPersonalEmailAddress,
-          subject: this.$t("Confirmation of receival"),
+          subject: this.$t('Confirmation of receival'),
           emailText: this.$t(
             `Dear customer,\n\nWe have received your letter.\nThank you for your feedback!`
           ),
@@ -213,11 +213,11 @@ export default {
         });
       }
     },
-    onFailure(message) {
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "error",
+    onFailure (message) {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'error',
         message,
-        action1: { label: this.$t("OK") }
+        action1: { label: this.$t('OK') }
       });
     }
   }

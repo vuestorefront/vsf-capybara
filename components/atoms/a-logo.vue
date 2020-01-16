@@ -14,10 +14,10 @@
 </template>
 
 <script>
-import config from "config";
-import { currentStoreView } from "@vue-storefront/core/lib/multistore";
-import { SfImage } from "@storefront-ui/vue";
-import get from "lodash-es/get";
+import config from 'config';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
+import { SfImage } from '@storefront-ui/vue';
+import get from 'lodash-es/get';
 
 const storeView = currentStoreView();
 
@@ -34,8 +34,8 @@ export default {
     }
   },
   computed: {
-    defaultTitle() {
-      return get(storeView, "seo.defaultTitle", config.seo.defaultTitle);
+    defaultTitle () {
+      return get(storeView, 'seo.defaultTitle', config.seo.defaultTitle);
     }
   }
 };

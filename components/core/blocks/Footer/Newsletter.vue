@@ -25,22 +25,22 @@
 </template>
 
 <script>
-import SubscriptionStatus from "@vue-storefront/core/modules/newsletter/mixins/SubscriptionStatus";
-import ButtonOutline from "theme/components/theme/ButtonOutline";
-import { mapState } from "vuex";
+import SubscriptionStatus from '@vue-storefront/core/modules/newsletter/mixins/SubscriptionStatus';
+import ButtonOutline from 'theme/components/theme/ButtonOutline';
+import { mapState } from 'vuex';
 const NewsletterPopup = () =>
   import(
-    /* webpackChunkName: "vsf-newsletter-modal" */ "theme/components/core/NewsletterPopup"
+    /* webpackChunkName: "vsf-newsletter-modal" */ 'theme/components/core/NewsletterPopup'
   );
 
 export default {
-  name: "Newsletter",
+  name: 'Newsletter',
   components: {
     ButtonOutline,
     NewsletterPopup
   },
   mixins: [SubscriptionStatus],
-  data() {
+  data () {
     return {
       loadNewsletterPopup: false
     };
@@ -51,9 +51,9 @@ export default {
     })
   },
   methods: {
-    showNewsletterPopup() {
+    showNewsletterPopup () {
       this.loadNewsletterPopup = true;
-      this.$bus.$emit("modal-show", "modal-newsletter");
+      this.$bus.$emit('modal-show', 'modal-newsletter');
     }
   }
 };

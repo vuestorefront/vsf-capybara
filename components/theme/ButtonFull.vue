@@ -19,15 +19,15 @@
 </template>
 
 <script>
-import focusClean from "theme/components/theme/directives/focusClean";
+import focusClean from 'theme/components/theme/directives/focusClean';
 export default {
-  name: "ButtonFull",
+  name: 'ButtonFull',
   directives: { focusClean },
   props: {
     type: {
       type: String,
       required: false,
-      default: "button"
+      default: 'button'
     },
     link: {
       type: Object,
@@ -41,10 +41,10 @@ export default {
     }
   },
   computed: {
-    compontentType() {
-      return this.link ? "router-link" : "button";
+    compontentType () {
+      return this.link ? 'router-link' : 'button';
     },
-    redirectionLink() {
+    redirectionLink () {
       return this.link ? this.localizedRoute(this.link) : null;
     }
   }

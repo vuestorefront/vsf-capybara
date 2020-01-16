@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import { ProductBundleOptions } from "@vue-storefront/core/modules/catalog/components/ProductBundleOptions.ts";
-import ProductBundleOption from "./ProductBundleOption";
+import { ProductBundleOptions } from '@vue-storefront/core/modules/catalog/components/ProductBundleOptions.ts';
+import ProductBundleOption from './ProductBundleOption';
 
 export default {
   components: {

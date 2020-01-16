@@ -1,18 +1,18 @@
-import Vue from "vue";
+import Vue from 'vue';
 
-export default Vue.directive("focus-clean", {
-  inserted: function(el, binding) {
+export default Vue.directive('focus-clean', {
+  inserted: function (el, binding) {
     let mouseDown = false;
     let css =
       binding.value && binding.value.class ? binding.value.class : false;
     let timeout =
       binding.value && binding.value.delay ? binding.value.delay : 1000;
 
-    el.addEventListener("mousedown", () => {
+    el.addEventListener('mousedown', () => {
       mouseDown = true;
     });
 
-    el.addEventListener("mouseup", event => {
+    el.addEventListener('mouseup', event => {
       mouseDown = false;
 
       css &&
@@ -22,7 +22,7 @@ export default Vue.directive("focus-clean", {
         }, timeout);
     });
 
-    el.addEventListener("focus", event => {
+    el.addEventListener('focus', event => {
       if (mouseDown) {
         if (css) {
           event.target.classList.add(css);

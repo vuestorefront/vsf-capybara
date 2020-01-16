@@ -29,20 +29,20 @@
 </template>
 
 <script>
-import { SfIcon } from "@storefront-ui/vue";
+import { SfIcon } from '@storefront-ui/vue';
 
 export default {
-  name: "IconFilter",
+  name: 'IconFilter',
   components: { SfIcon },
   props: {
     size: {
       type: String,
-      default: "",
+      default: '',
       required: false
     },
     styles: {
       type: String,
-      default: "",
+      default: '',
       required: false
     }
   }

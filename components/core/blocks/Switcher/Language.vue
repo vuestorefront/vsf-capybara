@@ -32,30 +32,30 @@
   </modal>
 </template>
 <script>
-import Modal from "theme/components/core/Modal";
-import config from "config";
+import Modal from 'theme/components/core/Modal';
+import config from 'config';
 export default {
   components: {
     Modal
   },
-  data() {
+  data () {
     return {
       minCountryPerColumn: 3,
       componentLoaded: false
     };
   },
   computed: {
-    fullCountryName() {
+    fullCountryName () {
       return config.i18n.fullCountryName;
     },
-    fullLanguageName() {
+    fullLanguageName () {
       return config.i18n.fullLanguageName;
     },
-    enableColumns() {
+    enableColumns () {
       const enableStoreViews = Object.keys(this.storeViews);
       return enableStoreViews.length > this.minCountryPerColumn;
     },
-    storeViews() {
+    storeViews () {
       return Object.keys(config.storeViews).reduce((storeViews, storeCode) => {
         if (this.isValidStoreCode(storeCode)) {
           storeViews[storeCode] = config.storeViews[storeCode];
@@ -64,19 +64,19 @@ export default {
       }, {});
     }
   },
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
       this.componentLoaded = true;
-      this.$bus.$emit("modal-show", "modal-switcher");
+      this.$bus.$emit('modal-show', 'modal-switcher');
     });
   },
   methods: {
-    close() {
-      this.$bus.$emit("modal-hide", "modal-switcher");
+    close () {
+      this.$bus.$emit('modal-hide', 'modal-switcher');
     },
-    isValidStoreCode(storeCode) {
+    isValidStoreCode (storeCode) {
       const storeView = config.storeViews[storeCode];
-      return !!(storeView && typeof storeView === "object" && storeView.i18n);
+      return !!(storeView && typeof storeView === 'object' && storeView.i18n);
     }
   }
 };
