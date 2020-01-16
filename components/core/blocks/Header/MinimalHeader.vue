@@ -28,7 +28,7 @@
                   height="41px"
                   src="/assets/logo.svg"
                   :alt="$t(defaultTitle)"
-                />
+                >
               </a>
             </div>
           </div>
@@ -44,13 +44,13 @@
 </template>
 
 <script>
-import CurrentPage from "theme/mixins/currentPage";
-import { currentStoreView } from "@vue-storefront/core/lib/multistore";
-import config from "config";
+import CurrentPage from 'theme/mixins/currentPage';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
+import config from 'config';
 
 export default {
   mixins: [CurrentPage],
-  data() {
+  data () {
     const storeView = currentStoreView();
     return {
       defaultTitle: storeView.seo.defaultTitle

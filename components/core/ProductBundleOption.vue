@@ -14,7 +14,7 @@
         :name="bundleOptionName + opval.id"
         focus
         :value="opval.id"
-      />
+      >
       <label
         v-if="opval.product"
         class="pl10 lh20 h4 pointer"
@@ -34,14 +34,14 @@
         class="m0 no-outline qty-input py10 brdr-cl-primary bg-cl-transparent h4"
         :name="quantityName"
         focus
-      />
+      >
     </div>
     <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
   </div>
 </template>
 
 <script>
-import { ProductBundleOption } from "@vue-storefront/core/modules/catalog/components/ProductBundleOption.ts";
+import { ProductBundleOption } from '@vue-storefront/core/modules/catalog/components/ProductBundleOption.ts';
 
 export default {
   mixins: [ProductBundleOption]

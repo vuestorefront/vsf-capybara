@@ -5,9 +5,8 @@
         slot="close"
         class="modal-close material-icons p15 cl-bg-tertiary"
         @click="close"
-        >close</i
-      >
-      <img src="/assets/logo.svg" :alt="$t(defaultTitle)" class="logo" />
+      >close</i>
+      <img src="/assets/logo.svg" :alt="$t(defaultTitle)" class="logo">
 
       <div class="copy align-center cl-secondary">
         <p class="h1">
@@ -28,12 +27,10 @@
               If you want to use the solution or join our passionate PWA
               community - feel free to contact us via
               <a href="mailto:contributors@vuestorefront.io" class="cl-success">
-                e-mail</a
-              >
+                e-mail</a>
               or
               <a href="https://vuestorefront.slack.com/" class="cl-success">
-                Slack</a
-              >.
+                Slack</a>.
             </strong>
           </p>
           <p>
@@ -51,15 +48,15 @@
   </modal>
 </template>
 <script>
-import Modal from "theme/components/core/Modal";
-import config from "config";
-import { currentStoreView } from "@vue-storefront/core/lib/multistore";
+import Modal from 'theme/components/core/Modal';
+import config from 'config';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 
 export default {
   components: {
     Modal
   },
-  data() {
+  data () {
     const storeView = currentStoreView();
     return {
       defaultTitle: storeView.seo.defaultTitle
@@ -68,8 +65,8 @@ export default {
     };
   },
   methods: {
-    close() {
-      this.$bus.$emit("modal-hide", "modal-onboard");
+    close () {
+      this.$bus.$emit('modal-hide', 'modal-onboard');
     }
   }
 };

@@ -33,8 +33,7 @@
       <div>
         <span v-if="product.special_price" class="price-special">{{
           product.price_incl_tax | price
-        }}</span
-        >&nbsp;
+        }}</span>&nbsp;
         <span v-if="product.special_price" class="price-original">{{
           product.original_price_incl_tax | price
         }}</span>
@@ -45,9 +44,7 @@
       </div>
       <div>
         <div class="mt5">
-          <span @click="removeProductFromWhishList(product)"
-            ><remove-button class="cl-accent"
-          /></span>
+          <span @click="removeProductFromWhishList(product)"><remove-button class="cl-accent" /></span>
         </div>
       </div>
     </div>
@@ -55,14 +52,14 @@
 </template>
 
 <script>
-import Product from "@vue-storefront/core/compatibility/components/blocks/Wishlist/Product";
-import { currentStoreView } from "@vue-storefront/core/lib/multistore";
-import { formatProductLink } from "@vue-storefront/core/modules/url/helpers";
-import ProductImage from "theme/components/core/ProductImage";
-import RemoveButton from "./RemoveButton";
-import i18n from "@vue-storefront/i18n";
-import { htmlDecode } from "@vue-storefront/core/lib/store/filters";
-import AddToCart from "theme/components/core/AddToCart";
+import Product from '@vue-storefront/core/compatibility/components/blocks/Wishlist/Product';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
+import ProductImage from 'theme/components/core/ProductImage';
+import RemoveButton from './RemoveButton';
+import i18n from '@vue-storefront/i18n';
+import { htmlDecode } from '@vue-storefront/core/lib/store/filters';
+import AddToCart from 'theme/components/core/AddToCart';
 
 export default {
   components: {
@@ -78,10 +75,10 @@ export default {
     }
   },
   computed: {
-    productLink() {
+    productLink () {
       return formatProductLink(this.product, currentStoreView().storeCode);
     },
-    image() {
+    image () {
       return {
         loading: this.thumbnail,
         src: this.thumbnail
@@ -89,16 +86,16 @@ export default {
     }
   },
   methods: {
-    removeProductFromWhishList(product) {
+    removeProductFromWhishList (product) {
       this.$store.dispatch(
-        "notification/spawnNotification",
+        'notification/spawnNotification',
         {
-          type: "success",
+          type: 'success',
           message: i18n.t(
-            "Product {productName} has been removed from wishlist!",
+            'Product {productName} has been removed from wishlist!',
             { productName: htmlDecode(product.name) }
           ),
-          action1: { label: i18n.t("OK") }
+          action1: { label: i18n.t('OK') }
         },
         { root: true }
       );

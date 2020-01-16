@@ -224,7 +224,7 @@
                   $v.shipping.shippingMethod.$touch();
                   changeShippingMethod();
                 "
-              />
+              >
               <span class="checkmark" />
             </label>
           </div>
@@ -270,9 +270,11 @@
             </p>
             <div v-if="shipping.phoneNumber">
               <span class="pr15">{{ shipping.phoneNumber }}</span>
-              <tooltip>{{
-                $t("Phone number may be needed by carrier")
-              }}</tooltip>
+              <tooltip>
+                {{
+                  $t("Phone number may be needed by carrier")
+                }}
+              </tooltip>
             </div>
             <div class="col-xs-12">
               <h4>
@@ -289,7 +291,7 @@
                   checked
                   disabled
                   name="chosen-shipping-method"
-                />
+                >
                 <span class="checkmark" />
               </label>
             </div>
@@ -301,18 +303,18 @@
 </template>
 
 <script>
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, minLength } from 'vuelidate/lib/validators';
 import {
   unicodeAlpha,
   unicodeAlphaNum
-} from "@vue-storefront/core/helpers/validators";
-import { Shipping } from "@vue-storefront/core/modules/checkout/components/Shipping";
+} from '@vue-storefront/core/helpers/validators';
+import { Shipping } from '@vue-storefront/core/modules/checkout/components/Shipping';
 
-import BaseCheckbox from "theme/components/core/blocks/Form/BaseCheckbox";
-import BaseInput from "theme/components/core/blocks/Form/BaseInput";
-import BaseSelect from "theme/components/core/blocks/Form/BaseSelect";
-import ButtonFull from "theme/components/theme/ButtonFull";
-import Tooltip from "theme/components/core/Tooltip";
+import BaseCheckbox from 'theme/components/core/blocks/Form/BaseCheckbox';
+import BaseInput from 'theme/components/core/blocks/Form/BaseInput';
+import BaseSelect from 'theme/components/core/blocks/Form/BaseSelect';
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import Tooltip from 'theme/components/core/Tooltip';
 
 export default {
   components: {
@@ -324,7 +326,7 @@ export default {
   },
   mixins: [Shipping],
   computed: {
-    countryOptions() {
+    countryOptions () {
       return this.countries.map(item => {
         return {
           value: item.code,

@@ -4,8 +4,8 @@
       direction === 'right'
         ? 'slide-right'
         : direction === 'left'
-        ? 'slide-left'
-        : null
+          ? 'slide-left'
+          : null
     "
   >
     <div
@@ -16,8 +16,8 @@
         direction === 'left'
           ? 'left-sidebar'
           : direction === 'right'
-          ? 'right-sidebar'
-          : null
+            ? 'right-sidebar'
+            : null
       "
       data-testid="sidebar"
     >
@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import LoadingSpinner from "theme/components/theme/blocks/AsyncSidebar/LoadingSpinner";
-import LoadingError from "theme/components/theme/blocks/AsyncSidebar/LoadingError";
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
+import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 export default {
   props: {
@@ -48,16 +48,16 @@ export default {
     /** "right" or "left"  */
     direction: {
       type: String,
-      default: "right"
+      default: 'right'
     }
   },
-  data() {
+  data () {
     return {
       component: null
     };
   },
   watch: {
-    isOpen(state) {
+    isOpen (state) {
       if (state) {
         this.$nextTick(() => {
           disableBodyScroll(this.$refs.sidebar);
@@ -67,11 +67,11 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.getComponent();
   },
   methods: {
-    getComponent() {
+    getComponent () {
       this.component = () => ({
         component: this.asyncComponent(),
         loading: LoadingSpinner,

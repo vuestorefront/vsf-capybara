@@ -55,8 +55,10 @@
           src="@storefront-ui/shared/icons/empty_cart.svg"
           alt=""
           class="empty-cart__icon"
-        />
-        <h3 class="empty-cart__label">{{ $t("Your bag is empty") }}</h3>
+        >
+        <h3 class="empty-cart__label">
+          {{ $t("Your bag is empty") }}
+        </h3>
         <p class="empty-cart__description">
           {{
             $t(
@@ -76,21 +78,21 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { localizedRoute } from "@vue-storefront/core/lib/multistore";
-import { getThumbnailForProduct } from "@vue-storefront/core/modules/cart/helpers";
+import { mapGetters } from 'vuex';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 
-import VueOfflineMixin from "vue-offline/mixin";
-import onEscapePress from "@vue-storefront/core/mixins/onEscapePress";
+import VueOfflineMixin from 'vue-offline/mixin';
+import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
-import AAddToCompare from "theme/components/atoms/a-add-to-compare";
-import AAddToWishlist from "theme/components/atoms/a-add-to-wishlist";
+import AAddToCompare from 'theme/components/atoms/a-add-to-compare';
+import AAddToWishlist from 'theme/components/atoms/a-add-to-wishlist';
 import {
   SfButton,
   SfCollectedProduct,
   SfProperty,
   SfPrice
-} from "@storefront-ui/vue";
+} from '@storefront-ui/vue';
 
 export default {
   components: {
@@ -104,17 +106,17 @@ export default {
   mixins: [VueOfflineMixin, onEscapePress],
   computed: {
     ...mapGetters({
-      productsInCart: "cart/getCartItems",
-      totals: "cart/getTotals"
+      productsInCart: 'cart/getCartItems',
+      totals: 'cart/getTotals'
     }),
-    subtotal() {
-      let subtotal = this.totals.filter(total => total.code === "subtotal");
+    subtotal () {
+      let subtotal = this.totals.filter(total => total.code === 'subtotal');
       return subtotal.length > 0 ? subtotal[0] : false;
     },
-    totalItems() {
+    totalItems () {
       return this.productsInCart.length;
     },
-    productsCount() {
+    productsCount () {
       let count = 0;
       this.productsInCart.forEach(product => {
         count = count + parseInt(product.qty);
@@ -123,38 +125,38 @@ export default {
     }
   },
   methods: {
-    closeMicrocartExtend() {
-      this.$store.dispatch("ui/toggleMicrocart");
+    closeMicrocartExtend () {
+      this.$store.dispatch('ui/toggleMicrocart');
     },
-    onEscapePress() {
+    onEscapePress () {
       this.closeMicrocartExtend();
     },
-    startShopping() {
-      this.$router.push(localizedRoute("/"));
+    startShopping () {
+      this.$router.push(localizedRoute('/'));
       this.closeMicrocartExtend();
     },
-    getThumbnailForProductExtend(product) {
+    getThumbnailForProductExtend (product) {
       return getThumbnailForProduct(product);
     },
-    getProductRegularPrice(product) {
+    getProductRegularPrice (product) {
       let price = product.original_price_incl_tax
         ? product.original_price_incl_tax
         : product.price_incl_tax;
-      return price ? this.$options.filters.price(price) : "";
+      return price ? this.$options.filters.price(price) : '';
     },
-    getProductSpecialPrice(product) {
+    getProductSpecialPrice (product) {
       let price = product.special_price ? product.price_incl_tax : false;
-      return price ? this.$options.filters.price(price) : "";
+      return price ? this.$options.filters.price(price) : '';
     },
-    removeHandler(product) {
-      this.$store.dispatch("cart/removeItem", { product: product });
+    removeHandler (product) {
+      this.$store.dispatch('cart/removeItem', { product: product });
     },
-    goToCheckout() {
-      this.$router.push(localizedRoute("/checkout"));
+    goToCheckout () {
+      this.$router.push(localizedRoute('/checkout'));
       this.closeMicrocartExtend();
     },
-    changeQuantity(product, newQuantity) {
-      this.$store.dispatch("cart/updateQuantity", {
+    changeQuantity (product, newQuantity) {
+      this.$store.dispatch('cart/updateQuantity', {
         product: product,
         qty: newQuantity
       });

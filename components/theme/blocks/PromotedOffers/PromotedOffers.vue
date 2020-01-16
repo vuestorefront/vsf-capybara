@@ -67,10 +67,10 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: "PromotedOffers",
+  name: 'PromotedOffers',
   props: {
     singleBanner: {
       type: Boolean,
@@ -80,15 +80,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      banners: "promoted/getPromotedOffers"
+      banners: 'promoted/getPromotedOffers'
     })
   },
-  async created() {
+  async created () {
     await this.updatePromotedOffers();
   },
   methods: {
     ...mapActions({
-      updatePromotedOffers: "promoted/updatePromotedOffers"
+      updatePromotedOffers: 'promoted/updatePromotedOffers'
     })
   }
 };

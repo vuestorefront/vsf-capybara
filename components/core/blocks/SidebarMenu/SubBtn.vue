@@ -22,22 +22,22 @@
   </button>
 </template>
 <script>
-import { mapState } from "vuex";
-import config from "config";
+import { mapState } from 'vuex';
+import config from 'config';
 export default {
-  name: "SubBtn",
+  name: 'SubBtn',
   props: {
     id: {
       type: null,
-      default: ""
+      default: ''
     },
     type: {
       type: String,
-      default: "next"
+      default: 'next'
     },
     name: {
       type: String,
-      default: ""
+      default: ''
     }
   },
   computed: {
@@ -46,16 +46,15 @@ export default {
     })
   },
   methods: {
-    next() {
-      if (config.entities.category.categoriesDynamicPrefetch)
-        this.$store.dispatch("category/list", { parent: this.id });
-      this.$store.commit("ui/setSubmenu", {
+    next () {
+      if (config.entities.category.categoriesDynamicPrefetch) { this.$store.dispatch('category/list', { parent: this.id }); }
+      this.$store.commit('ui/setSubmenu', {
         id: this.id,
         depth: ++this.submenu.depth
       });
     },
-    back() {
-      this.$store.commit("ui/setSubmenu", {
+    back () {
+      this.$store.commit('ui/setSubmenu', {
         depth: --this.submenu.depth
       });
     }

@@ -73,11 +73,11 @@
 </template>
 
 <script>
-import Compare from "@vue-storefront/core/pages/Compare";
-import Breadcrumbs from "../components/core/Breadcrumbs";
-import ProductTile from "../components/core/ProductTile";
-import ProductAttribute from "../components/core/blocks/Compare/ProductAttribute";
-import i18n from "@vue-storefront/i18n";
+import Compare from '@vue-storefront/core/pages/Compare';
+import Breadcrumbs from '../components/core/Breadcrumbs';
+import ProductTile from '../components/core/ProductTile';
+import ProductAttribute from '../components/core/blocks/Compare/ProductAttribute';
+import i18n from '@vue-storefront/i18n';
 
 export default {
   components: {
@@ -92,11 +92,11 @@ export default {
       required: true
     }
   },
-  metaInfo() {
+  metaInfo () {
     return {
-      title: this.$route.meta.title || this.title || i18n.t("Compare Products"),
+      title: this.$route.meta.title || this.title || i18n.t('Compare Products'),
       meta: this.$route.meta.description
-        ? [{ vmid: "description", description: this.$route.meta.description }]
+        ? [{ vmid: 'description', description: this.$route.meta.description }]
         : []
     };
   }

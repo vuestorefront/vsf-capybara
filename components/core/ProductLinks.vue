@@ -20,8 +20,7 @@
             >
               <span class="price-special">{{
                 productLink.product.price_incl_tax | price
-              }}</span
-              >&nbsp;
+              }}</span>&nbsp;
               <span class="price-original">{{
                 productLink.product.original_price_incl_tax | price
               }}</span>
@@ -47,7 +46,7 @@
             class="product-qty py10 brdr-cl-primary bg-cl-transparent h4"
             min="1"
             autofocus
-          />
+          >
         </div>
       </div>
     </div>

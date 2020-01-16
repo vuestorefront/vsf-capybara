@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { Breadcrumbs } from "@vue-storefront/core/modules/breadcrumbs/components/Breadcrumbs.ts";
+import { Breadcrumbs } from '@vue-storefront/core/modules/breadcrumbs/components/Breadcrumbs.ts';
 
 export default {
   mixins: [Breadcrumbs]

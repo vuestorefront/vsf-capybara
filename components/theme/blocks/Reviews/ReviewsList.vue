@@ -15,7 +15,7 @@
       itemscope
       itemtype="http://schema.org/Review"
     >
-      <meta itemprop="itemReviewed" :content="productName | htmlDecode" />
+      <meta itemprop="itemReviewed" :content="productName | htmlDecode">
       <h4 class="weight-400 m0" itemprop="reviewAspect" :content="item.title">
         {{ item.title }}
       </h4>
@@ -81,29 +81,29 @@ export default {
     },
     productName: {
       type: String,
-      default: ""
+      default: ''
     }
   },
-  data() {
+  data () {
     return {
       currentPage: 1
     };
   },
   computed: {
-    itemsPerPage() {
+    itemsPerPage () {
       let start = (this.currentPage - 1) * this.perPage;
       let end = start + this.perPage;
       return this.items
         .slice(start, end)
         .filter(review => !!review.review_status);
     },
-    pageCount() {
+    pageCount () {
       return (
         Math.floor(this.items.length / this.perPage) +
         Math.min(1, this.items.length % this.perPage)
       );
     },
-    pageList() {
+    pageList () {
       if (
         this.pageCount <= 5 ||
         this.currentPage === 1 ||
@@ -139,13 +139,13 @@ export default {
     }
   },
   methods: {
-    prevPage() {
+    prevPage () {
       this.currentPage = Math.max(1, this.currentPage - 1);
     },
-    nextPage() {
+    nextPage () {
       this.currentPage = Math.min(this.pageCount, this.currentPage + 1);
     },
-    changePage(pageNumber) {
+    changePage (pageNumber) {
       this.currentPage = Math.max(1, Math.min(this.pageCount, pageNumber));
     }
   }
