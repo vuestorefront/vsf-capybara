@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test:unit": "echo \"No test specified yet\" && exit 0",
-    "lint": "cross-env NODE_ENV=production eslint --ext .js,.vue ./ --fix",
+    "lint": "cd ../../../ && yarn lint",
     "dev": "cd ../../../ && yarn dev"
   },
   "license": "MIT",
@@ -22,15 +22,6 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
-    "cross-env": "^6.0.3",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^6.7.0",
-    "eslint-loader": "^3.0.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "eslint-plugin-vue": "^6.0.1",
-    "husky": "^3.1.0",
-    "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1"
+    "husky": "^3.1.0"
   }
 }
