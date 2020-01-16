@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "CmsBlock",
+  name: 'CmsBlock',
   props: {
     id: {
       type: Number,
@@ -27,7 +27,7 @@ export default {
     }
   },
   computed: {
-    getCmsData() {
+    getCmsData () {
       if (this.id) {
         return this.$store.getters[`cmsBlock/getCmsBlockById`](this.id);
       } else if (this.identifier) {
@@ -51,18 +51,18 @@ export default {
     })
   }) */
   // },
-  created() {
-    let queryKey = "";
-    let queryValue = "";
+  created () {
+    let queryKey = '';
+    let queryValue = '';
     if (this.id) {
-      queryKey = "id";
+      queryKey = 'id';
       queryValue = this.id;
     } else if (this.identifier) {
-      queryKey = "identifier";
+      queryKey = 'identifier';
       queryValue = this.identifier;
     }
     if (queryKey && queryValue) {
-      this.$store.dispatch("cmsBlock/single", {
+      this.$store.dispatch('cmsBlock/single', {
         key: queryKey,
         value: queryValue
       });

@@ -53,13 +53,13 @@
 </template>
 
 <script>
-import { Carousel, Slide } from "vue-carousel";
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
-import ProductImage from "./ProductImage";
-import ProductVideo from "./ProductVideo";
+import { Carousel, Slide } from 'vue-carousel';
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import ProductImage from './ProductImage';
+import ProductVideo from './ProductVideo';
 
 export default {
-  name: "ProductGalleryZoomCarousel",
+  name: 'ProductGalleryZoomCarousel',
   components: {
     Carousel,
     Slide,
@@ -81,48 +81,48 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       carouselTransitionSpeed: 300,
       currentPage: 0,
       hideImageAtIndex: null
     };
   },
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
       disableBodyScroll(this.$refs.thumbs);
     });
     this.navigate(this.currentSlide);
     if (this.$refs.zoomCarousel) {
       let navigation = this.$refs.zoomCarousel.$children.find(
-        c => c.$el.className === "VueCarousel-navigation"
+        c => c.$el.className === 'VueCarousel-navigation'
       );
       let pagination = this.$refs.zoomCarousel.$children.find(
-        c => c.$el.className === "VueCarousel-pagination"
+        c => c.$el.className === 'VueCarousel-pagination'
       );
       if (navigation !== undefined) {
-        navigation.$on("navigationclick", this.increaseCarouselTransitionSpeed);
+        navigation.$on('navigationclick', this.increaseCarouselTransitionSpeed);
       }
       if (pagination !== undefined) {
-        pagination.$on("paginationclick", this.increaseCarouselTransitionSpeed);
+        pagination.$on('paginationclick', this.increaseCarouselTransitionSpeed);
       }
     }
   },
-  destroyed() {
+  destroyed () {
     clearAllBodyScrollLocks();
   },
   methods: {
-    navigate(key) {
+    navigate (key) {
       this.$refs.zoomCarousel.goToPage(key);
     },
-    increaseCarouselTransitionSpeed() {
+    increaseCarouselTransitionSpeed () {
       this.carouselTransitionSpeed = 500;
     },
-    pageChange(index) {
+    pageChange (index) {
       this.currentPage = index;
       this.hideImageAtIndex = null;
     },
-    onVideoStarted(index) {
+    onVideoStarted (index) {
       this.hideImageAtIndex = index;
     }
   }

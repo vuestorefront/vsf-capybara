@@ -139,11 +139,11 @@
   </div>
 </template>
 <script>
-import Register from "@vue-storefront/core/compatibility/components/blocks/Auth/Register";
-import ButtonFull from "theme/components/theme/ButtonFull";
-import BaseCheckbox from "theme/components/core/blocks/Form/BaseCheckbox";
-import BaseInput from "theme/components/core/blocks/Form/BaseInput";
-import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
+import Register from '@vue-storefront/core/compatibility/components/blocks/Auth/Register';
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import BaseCheckbox from 'theme/components/core/blocks/Form/BaseCheckbox';
+import BaseInput from 'theme/components/core/blocks/Form/BaseInput';
+import { required, email, minLength, sameAs } from 'vuelidate/lib/validators';
 
 export default {
   validations: {
@@ -164,7 +164,7 @@ export default {
     },
     rPassword: {
       required,
-      sameAsPassword: sameAs("password")
+      sameAsPassword: sameAs('password')
     },
     conditions: {
       required
@@ -177,30 +177,30 @@ export default {
   },
   mixins: [Register],
   methods: {
-    register() {
+    register () {
       if (this.$v.$invalid) {
         this.$v.$touch();
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "error",
-          message: this.$t("Please fix the validation errors"),
-          action1: { label: this.$t("OK") }
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'error',
+          message: this.$t('Please fix the validation errors'),
+          action1: { label: this.$t('OK') }
         });
         return;
       }
       this.callRegister();
     },
-    onSuccess() {
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "success",
-        message: this.$t("You are logged in!"),
-        action1: { label: this.$t("OK") }
+    onSuccess () {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'success',
+        message: this.$t('You are logged in!'),
+        action1: { label: this.$t('OK') }
       });
     },
-    onFailure(result) {
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "error",
+    onFailure (result) {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'error',
         message: this.$t(result.result),
-        action1: { label: this.$t("OK") }
+        action1: { label: this.$t('OK') }
       });
     }
   }

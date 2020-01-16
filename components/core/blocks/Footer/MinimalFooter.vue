@@ -271,14 +271,14 @@
 </template>
 
 <script>
-import CurrentPage from "theme/mixins/currentPage";
-import config from "config";
+import CurrentPage from 'theme/mixins/currentPage';
+import config from 'config';
 
 export default {
-  name: "MainFooter",
+  name: 'MainFooter',
   mixins: [CurrentPage],
   computed: {
-    multistoreEnabled() {
+    multistoreEnabled () {
       return config.storeViews.multistore;
     }
   }

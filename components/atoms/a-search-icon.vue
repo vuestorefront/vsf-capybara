@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import { SfCircleIcon } from "@storefront-ui/vue";
-import SearchIcon from "@vue-storefront/core/compatibility/components/blocks/Header/SearchIcon";
+import { SfCircleIcon } from '@storefront-ui/vue';
+import SearchIcon from '@vue-storefront/core/compatibility/components/blocks/Header/SearchIcon';
 
 export default {
   components: {

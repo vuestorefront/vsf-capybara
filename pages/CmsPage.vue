@@ -14,12 +14,12 @@
 </template>
 
 <script>
-import CmsPage from "@vue-storefront/core/pages/CmsPage";
+import CmsPage from '@vue-storefront/core/pages/CmsPage';
 
 export default {
   mixins: [CmsPage],
   computed: {
-    cmsPageContent() {
+    cmsPageContent () {
       return this.$store.state.cmsPage.current;
     }
   }

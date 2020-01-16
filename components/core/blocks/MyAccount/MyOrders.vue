@@ -43,7 +43,9 @@
               :key="order.entity_id"
               class="brdr-top-1 brdr-cl-bg-secondary"
             >
-              <td class="fs-medium lh25">#{{ order.increment_id }}</td>
+              <td class="fs-medium lh25">
+                #{{ order.increment_id }}
+              </td>
               <td class="fs-medium lh25 hide-on-xs">
                 {{ order.created_at | date }}
               </td>
@@ -77,8 +79,7 @@
                       href="#"
                       class="no-underline block py10 px15"
                       @click.prevent="remakeOrder(skipGrouped(order.items))"
-                      >{{ $t("Remake order") }}</a
-                    >
+                    >{{ $t("Remake order") }}</a>
                   </div>
                 </span>
               </td>
@@ -94,7 +95,7 @@
 </template>
 
 <script>
-import UserOrder from "@vue-storefront/core/modules/order/components/UserOrdersHistory";
+import UserOrder from '@vue-storefront/core/modules/order/components/UserOrdersHistory';
 
 export default {
   mixins: [UserOrder]

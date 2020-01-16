@@ -84,7 +84,7 @@
 
 <script>
 export default {
-  name: "Spinner",
+  name: 'Spinner',
   functional: true
 };
 </script>

@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-import CmsBlock from "../components/core/blocks/Cms/Block";
+import CmsBlock from '../components/core/blocks/Cms/Block';
 
 export default {
   components: {
