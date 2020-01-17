@@ -51,26 +51,23 @@
         </div>
         <div class="col-xs-12 col-md-3 serif">
           <div v-if="isOnline && product.totals">
-            <span v-if="product.totals.discount_amount" class="h4 cl-error"
-              >{{
-                (product.totals.row_total -
-                  product.totals.discount_amount +
-                  product.totals.tax_amount)
-                  | price
-              }}
+            <span v-if="product.totals.discount_amount" class="h4 cl-error">{{
+              (product.totals.row_total -
+                product.totals.discount_amount +
+                product.totals.tax_amount)
+                | price
+            }}
             </span>
             <span
               v-if="product.totals.discount_amount"
               class="price-original h5"
-              >{{ product.totals.row_total_incl_tax | price }}</span
-            >
+            >{{ product.totals.row_total_incl_tax | price }}</span>
             <span v-if="!product.totals.discount_amount" class="h4">{{
               product.totals.row_total_incl_tax | price
             }}</span>
           </div>
           <div v-else>
-            <span v-if="product.special_price" class="h4 cl-error"
-              >{{ (product.price_incl_tax * product.qty) | price }}
+            <span v-if="product.special_price" class="h4 cl-error">{{ (product.price_incl_tax * product.qty) | price }}
             </span>
             <span v-if="product.special_price" class="price-original h5">{{
               (product.original_price_incl_tax * product.qty) | price
@@ -86,9 +83,9 @@
 </template>
 
 <script>
-import { Product } from "@vue-storefront/core/modules/checkout/components/Product";
-import { onlineHelper } from "@vue-storefront/core/helpers";
-import ProductImage from "theme/components/core/ProductImage";
+import { Product } from '@vue-storefront/core/modules/checkout/components/Product';
+import { onlineHelper } from '@vue-storefront/core/helpers';
+import ProductImage from 'theme/components/core/ProductImage';
 
 export default {
   components: {
@@ -96,10 +93,10 @@ export default {
   },
   mixins: [Product],
   computed: {
-    isOnline() {
+    isOnline () {
       return onlineHelper.isOnline;
     },
-    image() {
+    image () {
       return {
         loading: this.thumbnail,
         src: this.thumbnail

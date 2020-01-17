@@ -289,15 +289,14 @@
                   $v.payment.paymentMethod.$touch();
                   changePaymentMethod();
                 "
-              />
+              >
               <span class="checkmark" />
             </label>
           </div>
           <span
             v-if="!$v.payment.paymentMethod.required"
             class="validation-error"
-            >{{ $t("Field is required") }}</span
-          >
+          >{{ $t("Field is required") }}</span>
         </div>
       </div>
     </div>
@@ -331,9 +330,11 @@
             </p>
             <div v-if="payment.phoneNumber">
               <span class="pr15">{{ payment.phoneNumber }}</span>
-              <tooltip>{{
-                $t("Phone number may be needed by carrier")
-              }}</tooltip>
+              <tooltip>
+                {{
+                  $t("Phone number may be needed by carrier")
+                }}
+              </tooltip>
             </div>
             <p v-if="generateInvoice">
               {{ payment.company }} {{ payment.taxId }}
@@ -350,7 +351,7 @@
                   checked
                   disabled
                   name="chosen-payment-method"
-                />
+                >
                 <span class="checkmark" />
               </label>
             </div>
@@ -362,18 +363,18 @@
 </template>
 
 <script>
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, minLength } from 'vuelidate/lib/validators';
 import {
   unicodeAlpha,
   unicodeAlphaNum
-} from "@vue-storefront/core/helpers/validators";
-import { Payment } from "@vue-storefront/core/modules/checkout/components/Payment";
+} from '@vue-storefront/core/helpers/validators';
+import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 
-import BaseCheckbox from "theme/components/core/blocks/Form/BaseCheckbox";
-import BaseInput from "theme/components/core/blocks/Form/BaseInput";
-import BaseSelect from "theme/components/core/blocks/Form/BaseSelect";
-import ButtonFull from "theme/components/theme/ButtonFull";
-import Tooltip from "theme/components/core/Tooltip";
+import BaseCheckbox from 'theme/components/core/blocks/Form/BaseCheckbox';
+import BaseInput from 'theme/components/core/blocks/Form/BaseInput';
+import BaseSelect from 'theme/components/core/blocks/Form/BaseSelect';
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import Tooltip from 'theme/components/core/Tooltip';
 
 export default {
   components: {
@@ -385,7 +386,7 @@ export default {
   },
   mixins: [Payment],
   computed: {
-    countryOptions() {
+    countryOptions () {
       return this.countries.map(item => {
         return {
           value: item.code,
@@ -394,7 +395,7 @@ export default {
       });
     }
   },
-  validations() {
+  validations () {
     if (!this.generateInvoice) {
       return {
         payment: {

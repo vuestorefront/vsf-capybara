@@ -115,24 +115,24 @@
 </template>
 
 <script>
-import { required, email, minLength } from "vuelidate/lib/validators";
+import { required, email, minLength } from 'vuelidate/lib/validators';
 
-import BaseInput from "theme/components/core/blocks/Form/BaseInput";
-import BaseTextarea from "theme/components/core/blocks/Form/BaseTextarea";
-import ButtonFull from "theme/components/theme/ButtonFull";
-import ReviewsList from "theme/components/theme/blocks/Reviews/ReviewsList";
-import { Reviews } from "@vue-storefront/core/modules/review/components/Reviews";
-import NoSSR from "vue-no-ssr";
-import i18n from "@vue-storefront/i18n";
+import BaseInput from 'theme/components/core/blocks/Form/BaseInput';
+import BaseTextarea from 'theme/components/core/blocks/Form/BaseTextarea';
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import ReviewsList from 'theme/components/theme/blocks/Reviews/ReviewsList';
+import { Reviews } from '@vue-storefront/core/modules/review/components/Reviews';
+import NoSSR from 'vue-no-ssr';
+import i18n from '@vue-storefront/i18n';
 
 export default {
-  name: "Reviews",
+  name: 'Reviews',
   components: {
     ButtonFull,
     BaseInput,
     BaseTextarea,
     ReviewsList,
-    "no-ssr": NoSSR
+    'no-ssr': NoSSR
   },
   mixins: [Reviews],
   props: {
@@ -142,85 +142,85 @@ export default {
     },
     productName: {
       type: String,
-      default: ""
+      default: ''
     }
   },
-  data() {
+  data () {
     return {
       formData: {
-        name: "",
-        email: "",
-        summary: "",
-        review: ""
+        name: '',
+        email: '',
+        summary: '',
+        review: ''
       }
     };
   },
   computed: {
-    currentUser() {
+    currentUser () {
       return this.$store.state.user.current;
     }
   },
-  mounted() {
-    this.$bus.$on("product-after-load", this.refreshList);
-    this.$bus.$on("clear-add-review-form", this.clearReviewForm);
-    this.$bus.$on("user-after-loggedin", this.fillInUserData);
+  mounted () {
+    this.$bus.$on('product-after-load', this.refreshList);
+    this.$bus.$on('clear-add-review-form', this.clearReviewForm);
+    this.$bus.$on('user-after-loggedin', this.fillInUserData);
   },
-  destroyed() {
-    this.$bus.$off("product-after-load", this.refreshList);
-    this.$bus.$off("clear-add-review-form", this.clearReviewForm);
-    this.$bus.$off("user-after-loggedin", this.fillInUserData);
+  destroyed () {
+    this.$bus.$off('product-after-load', this.refreshList);
+    this.$bus.$off('clear-add-review-form', this.clearReviewForm);
+    this.$bus.$off('user-after-loggedin', this.fillInUserData);
   },
-  beforeMount() {
+  beforeMount () {
     this.refreshList();
     this.fillInUserData();
   },
   methods: {
-    validate() {
+    validate () {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         this.submit();
       }
     },
-    refreshList() {
-      this.$store.dispatch("review/list", { productId: this.productId });
+    refreshList () {
+      this.$store.dispatch('review/list', { productId: this.productId });
     },
-    async submit() {
-      const isReviewCreated = await this.$store.dispatch("review/add", {
+    async submit () {
+      const isReviewCreated = await this.$store.dispatch('review/add', {
         product_id: this.productId,
         title: this.formData.summary,
         detail: this.formData.review,
         nickname: this.formData.name,
-        review_entity: "product",
+        review_entity: 'product',
         customer_id: this.currentUser ? this.currentUser.id : null
       });
 
       if (isReviewCreated) {
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "success",
-          message: i18n.t("You submitted your review for moderation."),
-          action1: { label: i18n.t("OK") }
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'success',
+          message: i18n.t('You submitted your review for moderation.'),
+          action1: { label: i18n.t('OK') }
         });
 
         return;
       }
 
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "error",
-        message: i18n.t("Something went wrong. Try again in a few seconds."),
-        action1: { label: i18n.t("OK") }
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'error',
+        message: i18n.t('Something went wrong. Try again in a few seconds.'),
+        action1: { label: i18n.t('OK') }
       });
     },
-    clearReviewForm() {
-      this.formData.name = "";
-      this.formData.email = "";
-      this.formData.summary = "";
-      this.formData.review = "";
+    clearReviewForm () {
+      this.formData.name = '';
+      this.formData.email = '';
+      this.formData.summary = '';
+      this.formData.review = '';
       this.$v.$reset();
     },
-    login() {
-      this.$bus.$emit("modal-show", "modal-signup");
+    login () {
+      this.$bus.$emit('modal-show', 'modal-signup');
     },
-    fillInUserData() {
+    fillInUserData () {
       if (this.currentUser) {
         this.formData.name = this.currentUser.firstname;
         this.formData.email = this.currentUser.email;

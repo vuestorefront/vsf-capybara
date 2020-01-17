@@ -77,14 +77,14 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
-import SubBtn from "./SubBtn";
-import i18n from "@vue-storefront/i18n";
-import config from "config";
-import { formatCategoryLink } from "@vue-storefront/core/modules/url/helpers";
+import { mapState } from 'vuex';
+import SubBtn from './SubBtn';
+import i18n from '@vue-storefront/i18n';
+import config from 'config';
+import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 
 export default {
-  name: "SubCategory",
+  name: 'SubCategory',
   components: {
     SubBtn
   },
@@ -101,12 +101,12 @@ export default {
     parentSlug: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     parentPath: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     myAccountLinks: {
       type: null,
@@ -115,7 +115,7 @@ export default {
     }
   },
   computed: {
-    children() {
+    children () {
       if (
         !config.entities.category.categoriesDynamicPrefetch &&
         this.categoryLinks &&
@@ -134,18 +134,18 @@ export default {
       submenu: state => state.ui.submenu,
       path: state => state.ui.submenu.path
     }),
-    getSubmenu() {
+    getSubmenu () {
       return this.submenu;
     },
-    styles() {
+    styles () {
       const pos = this.submenu.path.indexOf(this.id);
       return pos !== -1
         ? {
-            zIndex: pos + 1
-          }
+          zIndex: pos + 1
+        }
         : false;
     },
-    isCurrentMenuShowed() {
+    isCurrentMenuShowed () {
       return (
         this.getSubmenu &&
         this.getSubmenu.depth &&
@@ -154,23 +154,23 @@ export default {
     }
   },
   methods: {
-    async logout() {
-      await this.$store.dispatch("user/logout", {});
-      this.$router.push(this.localizedRoute("/"));
-      this.$store.commit("ui/setSubmenu", { depth: false });
+    async logout () {
+      await this.$store.dispatch('user/logout', {});
+      this.$router.push(this.localizedRoute('/'));
+      this.$store.commit('ui/setSubmenu', { depth: false });
     },
-    notify(title) {
-      if (title === "My loyalty card" || title === "My product reviews") {
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "warning",
+    notify (title) {
+      if (title === 'My loyalty card' || title === 'My product reviews') {
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'warning',
           message: i18n.t(
-            "This feature is not implemented yet! Please take a look at https://github.com/DivanteLtd/vue-storefront/issues for our Roadmap!"
+            'This feature is not implemented yet! Please take a look at https://github.com/DivanteLtd/vue-storefront/issues for our Roadmap!'
           ),
-          action1: { label: i18n.t("OK") }
+          action1: { label: i18n.t('OK') }
         });
       }
     },
-    categoryLink(category) {
+    categoryLink (category) {
       return formatCategoryLink(category);
     }
   }

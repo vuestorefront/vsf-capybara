@@ -32,7 +32,9 @@
       class="call-to-action-newsletter"
     >
       <template #button>
-        <SfButton @click="showNewsletterPopup">{{ $t("Subscribe") }}</SfButton>
+        <SfButton @click="showNewsletterPopup">
+          {{ $t("Subscribe") }}
+        </SfButton>
       </template>
     </SfCallToAction>
 
@@ -68,21 +70,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import LazyHydrate from "vue-lazy-hydration";
-import { Logger } from "@vue-storefront/core/lib/logger";
-import Home from "@vue-storefront/core/pages/Home";
-import Onboard from "theme/components/theme/blocks/Home/Onboard";
-import { registerModule } from "@vue-storefront/core/lib/modules";
-import { RecentlyViewedModule } from "@vue-storefront/core/modules/recently-viewed";
-import { Wishlist } from "@vue-storefront/core/modules/wishlist/components/Wishlist";
-import { isServer, onlineHelper } from "@vue-storefront/core/helpers";
-import MProductCarousel from "theme/components/molecules/m-product-carousel";
-
-const NewsletterPopup = () =>
-  import(
-    /* webpackChunkName: "vsf-newsletter-modal" */ "theme/components/core/NewsletterPopup"
-  );
+import { mapGetters } from 'vuex';
+import LazyHydrate from 'vue-lazy-hydration';
+import { Logger } from '@vue-storefront/core/lib/logger';
+import Home from '@vue-storefront/core/pages/Home';
+import Onboard from 'theme/components/theme/blocks/Home/Onboard';
+import { registerModule } from '@vue-storefront/core/lib/modules';
+import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-viewed';
+import { Wishlist } from '@vue-storefront/core/modules/wishlist/components/Wishlist';
+import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
+import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 
 import {
   SfHero,
@@ -92,7 +89,12 @@ import {
   SfSection,
   SfBannerGrid,
   SfCallToAction
-} from "@storefront-ui/vue";
+} from '@storefront-ui/vue';
+
+const NewsletterPopup = () =>
+  import(
+    /* webpackChunkName: "vsf-newsletter-modal" */ 'theme/components/core/NewsletterPopup'
+  );
 
 export default {
   components: {
@@ -109,7 +111,7 @@ export default {
     MProductCarousel
   },
   mixins: [Home, Wishlist],
-  data() {
+  data () {
     return {
       loading: true,
       loadNewsletterPopup: false
@@ -117,23 +119,23 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isLoggedIn: "user/isLoggedIn",
-      heroImage: "promoted/getHeadImage",
-      promotedOffers: "promoted/getPromotedOffers",
-      newCollection: "homepage/getEverythingNewCollection"
+      isLoggedIn: 'user/isLoggedIn',
+      heroImage: 'promoted/getHeadImage',
+      promotedOffers: 'promoted/getPromotedOffers',
+      newCollection: 'homepage/getEverythingNewCollection'
     }),
-    isOnline() {
+    isOnline () {
       return onlineHelper.isOnline;
     },
-    heroes() {
+    heroes () {
       const hero = {
         ...this.heroImage
       };
 
       return [hero, hero, hero];
     },
-    banners() {
-      const slots = ["bannerA", "bannerB", "bannerC", "bannerD"];
+    banners () {
+      const slots = ['bannerA', 'bannerB', 'bannerC', 'bannerD'];
 
       return this.promotedOffers.mainBanners.reduce((result, banner, i) => {
         if (slots[i]) {
@@ -146,47 +148,46 @@ export default {
     }
   },
   watch: {
-    isLoggedIn() {
-      const redirectObj = localStorage.getItem("redirect");
+    isLoggedIn () {
+      const redirectObj = localStorage.getItem('redirect');
       if (redirectObj) this.$router.push(redirectObj);
-      localStorage.removeItem("redirect");
+      localStorage.removeItem('redirect');
     }
   },
-  async asyncData({ store }) {
-    Logger.info("Calling asyncData in Home (theme)")();
+  async asyncData ({ store }) {
+    Logger.info('Calling asyncData in Home (theme)')();
 
     await Promise.all([
-      store.dispatch("homepage/fetchNewCollection"),
-      store.dispatch("promoted/updateHeadImage"),
-      store.dispatch("promoted/updatePromotedOffers")
+      store.dispatch('homepage/fetchNewCollection'),
+      store.dispatch('promoted/updateHeadImage'),
+      store.dispatch('promoted/updatePromotedOffers')
     ]);
   },
-  beforeCreate() {
+  beforeCreate () {
     registerModule(RecentlyViewedModule);
   },
-  async beforeMount() {
+  async beforeMount () {
     if (this.$store.state.__DEMO_MODE__) {
-      const onboardingClaim = await this.$store.dispatch("claims/check", {
-        claimCode: "onboardingAccepted"
+      const onboardingClaim = await this.$store.dispatch('claims/check', {
+        claimCode: 'onboardingAccepted'
       });
 
       if (!onboardingClaim) {
-        this.$bus.$emit("modal-toggle", "modal-onboard");
-        this.$store.dispatch("claims/set", {
-          claimCode: "onboardingAccepted",
+        this.$bus.$emit('modal-toggle', 'modal-onboard');
+        this.$store.dispatch('claims/set', {
+          claimCode: 'onboardingAccepted',
           value: true
         });
       }
     }
   },
-  mounted() {
-    if (!this.isLoggedIn && localStorage.getItem("redirect"))
-      this.$bus.$emit("modal-show", "modal-signup");
+  mounted () {
+    if (!this.isLoggedIn && localStorage.getItem('redirect')) { this.$bus.$emit('modal-show', 'modal-signup'); }
   },
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     if (!isServer && !from.name) {
       next(vm => {
-        vm.$store.dispatch("homepage/fetchNewCollection").then(() => {
+        vm.$store.dispatch('homepage/fetchNewCollection').then(() => {
           vm.loading = false;
         });
       });
@@ -195,9 +196,9 @@ export default {
     }
   },
   methods: {
-    showNewsletterPopup() {
+    showNewsletterPopup () {
       this.loadNewsletterPopup = true;
-      this.$bus.$emit("modal-show", "modal-newsletter");
+      this.$bus.$emit('modal-show', 'modal-newsletter');
     }
   }
 };

@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import ProductTile from "theme/components/core/ProductTile";
+import ProductTile from 'theme/components/core/ProductTile';
 let lastHero = 0;
 export default {
-  name: "ProductListing",
+  name: 'ProductListing',
   components: {
     ProductTile
   },
@@ -33,16 +33,16 @@ export default {
     }
   },
   methods: {
-    wide(isOnSale, isNew, index) {
+    wide (isOnSale, isNew, index) {
       let deltaCondition = index > 0 && (index - 1 - lastHero) % 2 === 0;
       // last image always shouldn't be big, we also need to count from last promoted to check if it will look ok
       let isHero =
-        ((isOnSale === "1" || isNew === "1") && deltaCondition) ||
+        ((isOnSale === '1' || isNew === '1') && deltaCondition) ||
         (index === this.products.length - 1 && (index - lastHero) % 2 !== 0);
       if (isHero) {
         lastHero = index;
       }
-      return isHero ? "col-xs-12" : "col-xs-6";
+      return isHero ? 'col-xs-12' : 'col-xs-6';
     }
   }
 };

@@ -19,37 +19,37 @@
 </template>
 
 <script>
-import NoSSR from "vue-no-ssr";
-import { isServer } from "@vue-storefront/core/helpers";
+import NoSSR from 'vue-no-ssr';
+import { isServer } from '@vue-storefront/core/helpers';
 
 export default {
-  name: "WebShare",
+  name: 'WebShare',
   components: {
-    "no-ssr": NoSSR
+    'no-ssr': NoSSR
   },
   props: {
     title: {
       type: String,
-      default: ""
+      default: ''
     },
     text: {
       type: String,
-      default: ""
+      default: ''
     },
     url: {
       type: String,
-      default() {
-        return typeof window !== "undefined" ? window.location.href : "";
+      default () {
+        return typeof window !== 'undefined' ? window.location.href : '';
       }
     }
   },
   computed: {
-    isSupported() {
+    isSupported () {
       return !isServer && navigator.share;
     }
   },
   methods: {
-    share() {
+    share () {
       if (navigator.share) {
         navigator.share({
           title: this.title,

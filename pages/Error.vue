@@ -33,10 +33,10 @@
 </template>
 
 <script>
-import Error from "@vue-storefront/core/pages/Error";
+import Error from '@vue-storefront/core/pages/Error';
 
 export default {
-  name: "Error",
+  name: 'Error',
   mixins: [Error]
 };
 </script>

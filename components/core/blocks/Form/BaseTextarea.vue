@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import ValidationMessages from "./ValidationMessages";
+import ValidationMessages from './ValidationMessages';
 
 export default {
-  name: "BaseTextarea",
+  name: 'BaseTextarea',
   components: {
     ValidationMessages
   },
@@ -47,17 +47,17 @@ export default {
     name: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     placeholder: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     autocomplete: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     focus: {
       type: Boolean,
@@ -74,13 +74,13 @@ export default {
       default: () => []
     }
   },
-  data() {
+  data () {
     return {
       iconActive: false,
-      icon: "visibility"
+      icon: 'visibility'
     };
   },
-  mounted() {
+  mounted () {
     if (this.focus) {
       this.$refs[this.name].focus();
     }

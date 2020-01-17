@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import LoaderScoped from "theme/components/core/LoaderScoped";
-import { ProductVideo } from "@vue-storefront/core/modules/catalog/components/ProductVideo.ts";
+import LoaderScoped from 'theme/components/core/LoaderScoped';
+import { ProductVideo } from '@vue-storefront/core/modules/catalog/components/ProductVideo.ts';
 
 export default {
   components: {

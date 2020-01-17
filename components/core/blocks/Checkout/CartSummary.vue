@@ -70,8 +70,8 @@
 </template>
 
 <script>
-import { CartSummary } from "@vue-storefront/core/modules/checkout/components/CartSummary";
-import Product from "./Product";
+import { CartSummary } from '@vue-storefront/core/modules/checkout/components/CartSummary';
+import Product from './Product';
 
 export default {
   components: {
@@ -79,11 +79,11 @@ export default {
   },
   mixins: [CartSummary],
   computed: {
-    notGrandTotals() {
-      return this.totals.filter(total => total.code !== "grand_total");
+    notGrandTotals () {
+      return this.totals.filter(total => total.code !== 'grand_total');
     },
-    grandTotals() {
-      return this.totals.filter(total => total.code === "grand_total");
+    grandTotals () {
+      return this.totals.filter(total => total.code === 'grand_total');
     }
   }
 };

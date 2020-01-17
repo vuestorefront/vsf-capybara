@@ -38,12 +38,12 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
-import onEscapePress from "@vue-storefront/core/mixins/onEscapePress";
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import { mapMutations } from 'vuex';
+import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 export default {
-  name: "Modal",
+  name: 'Modal',
   mixins: [onEscapePress],
   props: {
     name: {
@@ -61,64 +61,64 @@ export default {
     },
     transitionName: {
       type: String,
-      default: "fade-in-down"
+      default: 'fade-in-down'
     }
   },
-  data() {
+  data () {
     return {
       isVisible: false
     };
   },
   computed: {
-    style() {
+    style () {
       return this.width ? `width: ${this.width}px` : false;
     }
   },
   watch: {
-    isVisible(state) {
+    isVisible (state) {
       if (state) {
         this.$nextTick(() => {
-          disableBodyScroll(this.$refs["modal"]);
+          disableBodyScroll(this.$refs['modal']);
         });
       } else {
         clearAllBodyScrollLocks();
       }
     }
   },
-  beforeMount() {
-    this.$bus.$on("modal-toggle", this.onToggle);
-    this.$bus.$on("modal-show", this.onShow);
-    this.$bus.$on("modal-hide", this.onHide);
+  beforeMount () {
+    this.$bus.$on('modal-toggle', this.onToggle);
+    this.$bus.$on('modal-show', this.onShow);
+    this.$bus.$on('modal-hide', this.onHide);
   },
-  beforeDestroy() {
-    this.$bus.$off("modal-toggle", this.onToggle);
-    this.$bus.$off("modal-show", this.onShow);
-    this.$bus.$off("modal-hide", this.onHide);
+  beforeDestroy () {
+    this.$bus.$off('modal-toggle', this.onToggle);
+    this.$bus.$off('modal-show', this.onShow);
+    this.$bus.$off('modal-hide', this.onHide);
   },
   methods: {
-    onHide(name) {
+    onHide (name) {
       return name === this.name ? this.toggle(false) : false;
     },
-    onShow(name) {
+    onShow (name) {
       return name === this.name ? this.toggle(true) : false;
     },
-    onToggle(name, state) {
+    onToggle (name, state) {
       if (name === this.name) {
-        state = typeof state === "undefined" ? !this.isVisible : state;
+        state = typeof state === 'undefined' ? !this.isVisible : state;
         this.toggle(state);
       }
     },
-    onEscapePress() {
+    onEscapePress () {
       this.close();
     },
-    ...mapMutations("ui", ["setOverlay"]),
-    toggle(state) {
+    ...mapMutations('ui', ['setOverlay']),
+    toggle (state) {
       this.isVisible = state;
       state
         ? this.setOverlay(state)
         : setTimeout(() => this.setOverlay(state), this.delay);
     },
-    close() {
+    close () {
       this.toggle(false);
     }
   }

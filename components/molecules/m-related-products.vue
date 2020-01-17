@@ -6,13 +6,13 @@
 </template>
 
 <script>
-import MProductCarousel from "theme/components/molecules/m-product-carousel";
-import { mapGetters } from "vuex";
-import { prepareRelatedQuery } from "@vue-storefront/core/modules/catalog/queries/related";
-import config from "config";
+import MProductCarousel from 'theme/components/molecules/m-product-carousel';
+import { mapGetters } from 'vuex';
+import { prepareRelatedQuery } from '@vue-storefront/core/modules/catalog/queries/related';
+import config from 'config';
 
 export default {
-  name: "MRelatedProducts",
+  name: 'MRelatedProducts',
   components: {
     MProductCarousel
   },
@@ -24,56 +24,56 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getProductRelated: "product/getProductRelated",
-      getCurrentProduct: "product/getCurrentProduct"
+      getProductRelated: 'product/getProductRelated',
+      getCurrentProduct: 'product/getCurrentProduct'
     }),
-    getCurrentRelatedProducts() {
+    getCurrentRelatedProducts () {
       return this.getProductRelated[this.type] || [];
     },
-    productLinks() {
+    productLinks () {
       return this.getCurrentProduct.product_links;
     }
   },
-  beforeMount() {
-    this.$bus.$on("product-after-load", this.refreshList);
+  beforeMount () {
+    this.$bus.$on('product-after-load', this.refreshList);
 
     if (config.usePriceTiers) {
-      this.$bus.$on("user-after-loggedin", this.refreshList);
-      this.$bus.$on("user-after-logout", this.refreshList);
+      this.$bus.$on('user-after-loggedin', this.refreshList);
+      this.$bus.$on('user-after-logout', this.refreshList);
     }
 
     this.refreshList();
   },
-  beforeDestroy() {
+  beforeDestroy () {
     if (config.usePriceTiers) {
-      this.$bus.$off("user-after-loggedin", this.refreshList);
-      this.$bus.$off("user-after-logout", this.refreshList);
+      this.$bus.$off('user-after-loggedin', this.refreshList);
+      this.$bus.$off('user-after-logout', this.refreshList);
     }
-    this.$bus.$off("product-after-load", this.refreshList);
+    this.$bus.$off('product-after-load', this.refreshList);
   },
   methods: {
-    async refreshList() {
+    async refreshList () {
       let sku = this.productLinks
         ? this.productLinks
-            .filter(pl => pl.link_type === this.type)
-            .map(pl => pl.linked_product_sku)
+          .filter(pl => pl.link_type === this.type)
+          .map(pl => pl.linked_product_sku)
         : null;
 
-      let key = "sku";
+      let key = 'sku';
       if (sku === null || sku.length === 0) {
         sku = this.getCurrentProduct.category_ids;
-        key = "category_ids";
+        key = 'category_ids';
       }
       let relatedProductsQuery = prepareRelatedQuery(key, sku);
 
-      const response = await this.$store.dispatch("product/list", {
+      const response = await this.$store.dispatch('product/list', {
         query: relatedProductsQuery,
         size: 8,
         prefetchGroupProducts: false,
         updateState: false
       });
       if (response) {
-        this.$store.dispatch("product/related", {
+        this.$store.dispatch('product/related', {
           key: this.type,
           items: response.items
         });

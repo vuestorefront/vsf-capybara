@@ -18,7 +18,7 @@
           focus
           :placeholder="option.title"
           @change="optionChanged(option)"
-        />
+        >
         <template
           v-if="
             option.type === 'radio' ||
@@ -40,7 +40,7 @@
               focus
               :value="opval.option_type_id"
               @change="optionChanged(option)"
-            /><label
+            ><label
               class="pl10 lh20 h4 pointer"
               :for="'customOption_' + opval.option_type_id"
               v-text="opval.title"
@@ -62,7 +62,7 @@
               focus
               :value="opval.option_type_id"
               @change="optionChanged(option)"
-            /><label
+            ><label
               class="pl10 lh20 h4 pointer"
               :for="'customOption_' + opval.option_type_id"
               v-text="opval.title"
@@ -72,17 +72,16 @@
         <span
           v-if="validation.results['customOption_' + option.option_id].error"
           class="error"
-          >{{
-            validation.results["customOption_" + option.option_id].message
-          }}</span
-        >
+        >{{
+          validation.results["customOption_" + option.option_id].message
+        }}</span>
       </div>
     </div>
   </form>
 </template>
 
 <script>
-import { ProductCustomOptions } from "@vue-storefront/core/modules/catalog/components/ProductCustomOptions.ts";
+import { ProductCustomOptions } from '@vue-storefront/core/modules/catalog/components/ProductCustomOptions.ts';
 
 export default {
   mixins: [ProductCustomOptions]

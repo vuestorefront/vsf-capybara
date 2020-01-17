@@ -69,10 +69,10 @@
 </template>
 
 <script>
-import { ConfirmOrders } from "@vue-storefront/core/modules/offline-order/components/ConfirmOrders";
-import { CancelOrders } from "@vue-storefront/core/modules/offline-order/components/CancelOrders";
-import Modal from "theme/components/core/Modal";
-import ButtonFull from "theme/components/theme/ButtonFull";
+import { ConfirmOrders } from '@vue-storefront/core/modules/offline-order/components/ConfirmOrders';
+import { CancelOrders } from '@vue-storefront/core/modules/offline-order/components/CancelOrders';
+import Modal from 'theme/components/core/Modal';
+import ButtonFull from 'theme/components/theme/ButtonFull';
 
 export default {
   components: {
@@ -87,19 +87,19 @@ export default {
       default: () => []
     }
   },
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
-      this.$bus.$emit("modal-show", "modal-order-confirmation");
+      this.$bus.$emit('modal-show', 'modal-order-confirmation');
     });
   },
   methods: {
-    confirmOrders() {
+    confirmOrders () {
       ConfirmOrders.methods.confirmOrders.call(this);
-      this.$bus.$emit("modal-hide", "modal-order-confirmation");
+      this.$bus.$emit('modal-hide', 'modal-order-confirmation');
     },
-    cancelOrders() {
+    cancelOrders () {
       CancelOrders.methods.cancelOrders.call(this);
-      this.$bus.$emit("modal-hide", "modal-order-confirmation");
+      this.$bus.$emit('modal-hide', 'modal-order-confirmation');
     }
   }
 };
