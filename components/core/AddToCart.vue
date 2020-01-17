@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import { formatProductMessages } from "@vue-storefront/core/filters/product-messages";
-import { notifications } from "@vue-storefront/core/modules/cart/helpers";
-import focusClean from "theme/components/theme/directives/focusClean";
-import ButtonFull from "theme/components/theme/ButtonFull";
-import { mapGetters } from "vuex";
+import { formatProductMessages } from '@vue-storefront/core/filters/product-messages';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
+import focusClean from 'theme/components/theme/directives/focusClean';
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import { mapGetters } from 'vuex';
 
 export default {
   directives: { focusClean },
@@ -30,29 +30,29 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isAddingToCart: "cart/getIsAdding"
+      isAddingToCart: 'cart/getIsAdding'
     }),
-    isProductDisabled() {
+    isProductDisabled () {
       return (
         this.disabled ||
-        formatProductMessages(this.product.errors) !== "" ||
+        formatProductMessages(this.product.errors) !== '' ||
         this.isAddingToCart
       );
     }
   },
-  beforeMount() {
-    this.$bus.$on("product-after-removevariant", this.onAfterRemovedVariant);
+  beforeMount () {
+    this.$bus.$on('product-after-removevariant', this.onAfterRemovedVariant);
   },
-  beforeDestroy() {
-    this.$bus.$off("product-after-removevariant");
+  beforeDestroy () {
+    this.$bus.$off('product-after-removevariant');
   },
   methods: {
-    onAfterRemovedVariant() {
+    onAfterRemovedVariant () {
       this.$forceUpdate();
     },
-    async addToCart(product) {
+    async addToCart (product) {
       try {
-        const diffLog = await this.$store.dispatch("cart/addItem", {
+        const diffLog = await this.$store.dispatch('cart/addItem', {
           productToAdd: product
         });
         diffLog.clientNotifications.forEach(notificationData => {
@@ -60,12 +60,12 @@ export default {
         });
       } catch (message) {
         this.notifyUser(
-          notifications.createNotification({ type: "error", message })
+          notifications.createNotification({ type: 'error', message })
         );
       }
     },
-    notifyUser(notificationData) {
-      this.$store.dispatch("notification/spawnNotification", notificationData, {
+    notifyUser (notificationData) {
+      this.$store.dispatch('notification/spawnNotification', notificationData, {
         root: true
       });
     }

@@ -57,8 +57,7 @@
             !onlyImage
         "
         class="price-original mr5 lh30 cl-secondary"
-        >{{ product.original_price_incl_tax | price }}</span
-      >
+      >{{ product.original_price_incl_tax | price }}</span>
 
       <span
         v-if="
@@ -67,8 +66,7 @@
             !onlyImage
         "
         class="price-special lh30 cl-accent weight-700"
-        >{{ product.price_incl_tax | price }}</span
-      >
+      >{{ product.price_incl_tax | price }}</span>
 
       <span
         v-if="
@@ -77,21 +75,20 @@
             !onlyImage
         "
         class="lh30 cl-secondary"
-        >{{ product.price_incl_tax | price }}</span
-      >
+      >{{ product.price_incl_tax | price }}</span>
     </router-link>
   </div>
 </template>
 
 <script>
-import rootStore from "@vue-storefront/core/store";
-import { ProductTile } from "@vue-storefront/core/modules/catalog/components/ProductTile.ts";
-import config from "config";
-import ProductImage from "./ProductImage";
-import AAddToWishlist from "theme/components/atoms/a-add-to-wishlist";
-import AAddToCompare from "theme/components/atoms/a-add-to-compare";
-import { IsOnWishlist } from "@vue-storefront/core/modules/wishlist/components/IsOnWishlist";
-import { IsOnCompare } from "@vue-storefront/core/modules/compare/components/IsOnCompare";
+import rootStore from '@vue-storefront/core/store';
+import { ProductTile } from '@vue-storefront/core/modules/catalog/components/ProductTile.ts';
+import config from 'config';
+import ProductImage from './ProductImage';
+import AAddToWishlist from 'theme/components/atoms/a-add-to-wishlist';
+import AAddToCompare from 'theme/components/atoms/a-add-to-compare';
+import { IsOnWishlist } from '@vue-storefront/core/modules/wishlist/components/IsOnWishlist';
+import { IsOnCompare } from '@vue-storefront/core/modules/compare/components/IsOnCompare';
 
 export default {
   components: {
@@ -111,46 +108,46 @@ export default {
     }
   },
   computed: {
-    thumbnailObj() {
+    thumbnailObj () {
       return {
         src: this.thumbnail,
         loading: this.thumbnail
       };
     },
-    favoriteIcon() {
-      return this.isOnWishlist ? "favorite" : "favorite_border";
+    favoriteIcon () {
+      return this.isOnWishlist ? 'favorite' : 'favorite_border';
     }
   },
-  beforeMount() {
-    this.$bus.$on("product-after-priceupdate", this.onProductPriceUpdate);
+  beforeMount () {
+    this.$bus.$on('product-after-priceupdate', this.onProductPriceUpdate);
   },
-  beforeDestroy() {
-    this.$bus.$off("product-after-priceupdate", this.onProductPriceUpdate);
+  beforeDestroy () {
+    this.$bus.$off('product-after-priceupdate', this.onProductPriceUpdate);
   },
   methods: {
-    onProductPriceUpdate(product) {
+    onProductPriceUpdate (product) {
       if (product.sku === this.product.sku) {
         Object.assign(this.product, product);
       }
     },
-    visibilityChanged(isVisible) {
+    visibilityChanged (isVisible) {
       if (
         isVisible &&
         config.products.configurableChildrenStockPrefetchDynamic &&
         config.products.filterUnavailableVariants &&
-        this.product.type_id === "configurable" &&
+        this.product.type_id === 'configurable' &&
         this.product.configurable_children &&
         this.product.configurable_children.length > 0
       ) {
         const skus = [this.product.sku];
         for (const confChild of this.product.configurable_children) {
           const cachedItem = rootStore.state.stock.cache[confChild.id];
-          if (typeof cachedItem === "undefined" || cachedItem === null) {
+          if (typeof cachedItem === 'undefined' || cachedItem === null) {
             skus.push(confChild.sku);
           }
         }
         if (skus.length > 0) {
-          rootStore.dispatch("stock/list", { skus: skus }); // store it in the cache
+          rootStore.dispatch('stock/list', { skus: skus }); // store it in the cache
         }
       }
     }

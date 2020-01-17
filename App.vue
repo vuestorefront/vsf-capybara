@@ -7,13 +7,13 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 const DefaultLayout = () =>
-  import(/* webpackChunkName: "vsf-layout-default" */ "./layouts/Default");
+  import(/* webpackChunkName: "vsf-layout-default" */ './layouts/Default');
 const EmptyLayout = () =>
-  import(/* webpackChunkName: "vsf-layout-empty" */ "./layouts/Empty");
+  import(/* webpackChunkName: "vsf-layout-empty" */ './layouts/Empty');
 const MinimalLayout = () =>
-  import(/* webpackChunkName: "vsf-layout-minimal" */ "./layouts/Minimal");
+  import(/* webpackChunkName: "vsf-layout-minimal" */ './layouts/Minimal');
 
 export default {
   components: {
@@ -21,7 +21,7 @@ export default {
     EmptyLayout,
     MinimalLayout
   },
-  data() {
+  data () {
     return {
       ordersData: []
     };
@@ -30,8 +30,8 @@ export default {
     ...mapState({
       overlayActive: state => state.ui.overlay
     }),
-    layout() {
-      return `${this.$route.meta.layout || "default"}-layout`;
+    layout () {
+      return `${this.$route.meta.layout || 'default'}-layout`;
     }
   }
 };

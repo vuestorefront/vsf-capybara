@@ -45,36 +45,36 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import AsyncSidebar from "theme/components/theme/blocks/AsyncSidebar/AsyncSidebar";
-import OHeader from "theme/components/organisms/o-header";
-import OFooter from "theme/components/organisms/o-footer";
-import OLogin from "theme/components/organisms/o-login";
-import Loader from "theme/components/core/Loader";
-import Notification from "theme/components/core/Notification";
-import CookieNotification from "theme/components/core/CookieNotification";
-import OfflineBadge from "theme/components/core/OfflineBadge";
-import OMicrocart from "theme/components/organisms/o-microcart";
-import { isServer } from "@vue-storefront/core/helpers";
-import Head from "theme/head";
-import config from "config";
-import { SfSidebar } from "@storefront-ui/vue";
+import { mapState } from 'vuex';
+import AsyncSidebar from 'theme/components/theme/blocks/AsyncSidebar/AsyncSidebar';
+import OHeader from 'theme/components/organisms/o-header';
+import OFooter from 'theme/components/organisms/o-footer';
+import OLogin from 'theme/components/organisms/o-login';
+import Loader from 'theme/components/core/Loader';
+import Notification from 'theme/components/core/Notification';
+import CookieNotification from 'theme/components/core/CookieNotification';
+import OfflineBadge from 'theme/components/core/OfflineBadge';
+import OMicrocart from 'theme/components/organisms/o-microcart';
+import { isServer } from '@vue-storefront/core/helpers';
+import Head from 'theme/head';
+import config from 'config';
+import { SfSidebar } from '@storefront-ui/vue';
 
 const SidebarMenu = () =>
   import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ "theme/components/core/blocks/SidebarMenu/SidebarMenu"
+    /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ 'theme/components/core/blocks/SidebarMenu/SidebarMenu'
   );
 const Wishlist = () =>
   import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-wishlist" */ "theme/components/core/blocks/Wishlist/Wishlist"
+    /* webpackPreload: true */ /* webpackChunkName: "vsf-wishlist" */ 'theme/components/core/blocks/Wishlist/Wishlist'
   );
 const SearchPanel = () =>
   import(
-    /* webpackChunkName: "vsf-search-panel" */ "theme/components/core/blocks/SearchPanel/SearchPanel"
+    /* webpackChunkName: "vsf-search-panel" */ 'theme/components/core/blocks/SearchPanel/SearchPanel'
   );
 const OrderConfirmation = () =>
   import(
-    /* webpackChunkName: "vsf-order-confirmation" */ "theme/components/core/blocks/Checkout/OrderConfirmation"
+    /* webpackChunkName: "vsf-order-confirmation" */ 'theme/components/core/blocks/Checkout/OrderConfirmation'
   );
 
 export default {
@@ -92,7 +92,7 @@ export default {
     AsyncSidebar,
     SfSidebar
   },
-  data() {
+  data () {
     return {
       loadOrderConfirmation: false,
       ordersData: [],
@@ -110,7 +110,7 @@ export default {
       isWishlistOpen: state => state.ui.wishlist
     })
   },
-  beforeMount() {
+  beforeMount () {
     // Progress bar on top of the page
     this.$router.beforeEach((to, from, next) => {
       this.$Progress.start();
@@ -120,19 +120,19 @@ export default {
     this.$router.afterEach(() => {
       this.$Progress.finish();
     });
-    this.$bus.$on("offline-order-confirmation", this.onOrderConfirmation);
+    this.$bus.$on('offline-order-confirmation', this.onOrderConfirmation);
   },
-  beforeDestroy() {
-    this.$bus.$off("offline-order-confirmation", this.onOrderConfirmation);
+  beforeDestroy () {
+    this.$bus.$off('offline-order-confirmation', this.onOrderConfirmation);
   },
   methods: {
-    onOrderConfirmation(payload) {
+    onOrderConfirmation (payload) {
       this.loadOrderConfirmation = true;
       this.ordersData = payload;
-      this.$bus.$emit("modal-show", "modal-order-confirmation");
+      this.$bus.$emit('modal-show', 'modal-order-confirmation');
     },
-    fetchMenuData() {
-      return this.$store.dispatch("category/list", {
+    fetchMenuData () {
+      return this.$store.dispatch('category/list', {
         level:
           config.entities.category.categoriesDynamicPrefetch &&
           config.entities.category.categoriesDynamicPrefetchLevel >= 0
@@ -146,7 +146,7 @@ export default {
       });
     }
   },
-  serverPrefetch() {
+  serverPrefetch () {
     return this.fetchMenuData();
   },
   metaInfo: Head

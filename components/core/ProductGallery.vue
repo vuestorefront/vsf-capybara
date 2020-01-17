@@ -25,27 +25,27 @@
 </template>
 
 <script>
-import { ProductGallery } from "@vue-storefront/core/modules/catalog/components/ProductGallery.ts";
-import ProductGalleryOverlay from "./ProductGalleryOverlay";
-import onEscapePress from "@vue-storefront/core/mixins/onEscapePress";
-import NoSSR from "vue-no-ssr";
-import ProductImage from "./ProductImage";
-import { onlineHelper } from "@vue-storefront/core/helpers";
+import { ProductGallery } from '@vue-storefront/core/modules/catalog/components/ProductGallery.ts';
+import ProductGalleryOverlay from './ProductGalleryOverlay';
+import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
+import NoSSR from 'vue-no-ssr';
+import ProductImage from './ProductImage';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 
 const ProductGalleryCarousel = () =>
   import(
-    /* webpackChunkName: "vsf-product-gallery-carousel" */ "./ProductGalleryCarousel"
+    /* webpackChunkName: "vsf-product-gallery-carousel" */ './ProductGalleryCarousel'
   );
 
 export default {
   components: {
     ProductGalleryCarousel,
-    "no-ssr": NoSSR,
+    'no-ssr': NoSSR,
     ProductGalleryOverlay,
     ProductImage
   },
   mixins: [ProductGallery, onEscapePress],
-  data() {
+  data () {
     return {
       isZoomOpen: false,
       showProductGalleryCarousel: false,
@@ -54,28 +54,28 @@ export default {
     };
   },
   computed: {
-    isOnline() {
+    isOnline () {
       return onlineHelper.isOnline;
     }
   },
   watch: {
-    $route: "validateRoute"
+    $route: 'validateRoute'
   },
-  mounted() {
+  mounted () {
     this.showProductGalleryCarousel = true;
   },
   methods: {
-    openOverlay(currentSlide) {
+    openOverlay (currentSlide) {
       this.currentSlide = currentSlide;
       this.toggleZoom();
     },
-    validateRoute() {
+    validateRoute () {
       this.$forceUpdate();
     },
-    toggleZoom() {
+    toggleZoom () {
       this.isZoomOpen = !this.isZoomOpen;
     },
-    onEscapePress() {
+    onEscapePress () {
       if (this.isZoomOpen) {
         this.toggleZoom();
       }

@@ -169,8 +169,7 @@
                 class="link pointer"
                 @click.prevent="$bus.$emit('modal-toggle', 'modal-terms')"
               >
-                {{ $t("Terms and conditions") }} </span
-              >*
+                {{ $t("Terms and conditions") }} </span>*
             </base-checkbox>
           </template>
         </div>
@@ -216,9 +215,11 @@
             </p>
             <div>
               <span class="pr15">{{ personalDetails.emailAddress }}</span>
-              <tooltip>{{
-                $t("We will send you details regarding the order")
-              }}</tooltip>
+              <tooltip>
+                {{
+                  $t("We will send you details regarding the order")
+                }}
+              </tooltip>
             </div>
             <template v-if="createAccount && !currentUser">
               <base-checkbox
@@ -245,13 +246,13 @@
 </template>
 
 <script>
-import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
-import { PersonalDetails } from "@vue-storefront/core/modules/checkout/components/PersonalDetails";
+import { required, minLength, email, sameAs } from 'vuelidate/lib/validators';
+import { PersonalDetails } from '@vue-storefront/core/modules/checkout/components/PersonalDetails';
 
-import BaseCheckbox from "theme/components/core/blocks/Form/BaseCheckbox";
-import BaseInput from "theme/components/core/blocks/Form/BaseInput";
-import ButtonFull from "theme/components/theme/ButtonFull";
-import Tooltip from "theme/components/core/Tooltip";
+import BaseCheckbox from 'theme/components/core/blocks/Form/BaseCheckbox';
+import BaseInput from 'theme/components/core/blocks/Form/BaseInput';
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import Tooltip from 'theme/components/core/Tooltip';
 
 export default {
   components: {
@@ -280,7 +281,7 @@ export default {
     },
     rPassword: {
       required,
-      sameAsPassword: sameAs("password")
+      sameAsPassword: sameAs('password')
     },
     acceptConditions: {
       required

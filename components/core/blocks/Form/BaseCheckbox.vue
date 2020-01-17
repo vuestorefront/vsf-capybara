@@ -11,7 +11,7 @@
         @click="$emit('click')"
         @blur="$emit('blur')"
         @change="$emit('change', $event.target.checked)"
-      />
+      >
       <label class="pl35 lh30 h4 pointer" :for="id">
         <slot />
       </label>
@@ -21,16 +21,16 @@
 </template>
 
 <script>
-import ValidationMessages from "./ValidationMessages";
+import ValidationMessages from './ValidationMessages';
 
 export default {
-  name: "BaseCheckbox",
+  name: 'BaseCheckbox',
   components: {
     ValidationMessages
   },
   model: {
-    prop: "value",
-    event: "change"
+    prop: 'value',
+    event: 'change'
   },
   props: {
     id: {

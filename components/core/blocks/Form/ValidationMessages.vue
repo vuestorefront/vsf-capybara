@@ -19,7 +19,7 @@ export default {
     }
   },
   computed: {
-    filteredValidations() {
+    filteredValidations () {
       return this.validations.filter(validation => validation.condition);
     }
   }
