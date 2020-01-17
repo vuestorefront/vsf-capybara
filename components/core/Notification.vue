@@ -40,21 +40,21 @@
 </template>
 
 <script>
-import { Notification } from "@vue-storefront/core/modules/notification/components/Notification";
+import { Notification } from '@vue-storefront/core/modules/notification/components/Notification';
 
 export default {
   mixins: [Notification],
   methods: {
-    execAction(action, index) {
+    execAction (action, index) {
       if (action.action) {
         // for backward compatibility
-        if (action.action === "close") {
-          this.$store.dispatch("notification/removeNotification", index);
+        if (action.action === 'close') {
+          this.$store.dispatch('notification/removeNotification', index);
         } else {
           action.action();
         }
       }
-      this.$store.dispatch("notification/removeNotification", index);
+      this.$store.dispatch('notification/removeNotification', index);
     }
   }
 };

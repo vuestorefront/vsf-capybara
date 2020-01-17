@@ -28,8 +28,8 @@
               :to="localizedRoute('/contact')"
               class="cl-secondary no-underline"
             >
-              {{ $t("a contact page") }} </router-link
-            >.
+              {{ $t("a contact page") }}
+            </router-link>.
           </p>
           <p>
             {{ $t("You can also use") }}
@@ -65,47 +65,47 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { Logger } from "@vue-storefront/core/lib/logger";
-import i18n from "@vue-storefront/i18n";
-import ProductTile from "../components/core/ProductTile";
+import { mapGetters } from 'vuex';
+import { Logger } from '@vue-storefront/core/lib/logger';
+import i18n from '@vue-storefront/i18n';
+import ProductTile from '../components/core/ProductTile';
 
 export default {
-  name: "PageNotFound",
+  name: 'PageNotFound',
   components: {
     ProductTile
   },
   computed: {
     ...mapGetters({
-      ourBestsellersCollection: "homepage/getBestsellers"
+      ourBestsellersCollection: 'homepage/getBestsellers'
     })
   },
-  async asyncData({ store, context }) {
-    Logger.log("Entering asyncData for PageNotFound " + new Date())();
+  async asyncData ({ store, context }) {
+    Logger.log('Entering asyncData for PageNotFound ' + new Date())();
     if (context) {
       context.output.cacheTags.add(`page-not-found`);
       context.server.response.statusCode = 404;
     }
 
-    await store.dispatch("homepage/loadBestsellers");
+    await store.dispatch('homepage/loadBestsellers');
   },
-  metaInfo() {
+  metaInfo () {
     return {
-      title: this.$route.meta.title || i18n.t("404 Page Not Found"),
+      title: this.$route.meta.title || i18n.t('404 Page Not Found'),
       meta: this.$route.meta.description
         ? [
-            {
-              vmid: "description",
-              name: "description",
-              content: this.$route.meta.description
-            }
-          ]
+          {
+            vmid: 'description',
+            name: 'description',
+            content: this.$route.meta.description
+          }
+        ]
         : []
     };
   },
   methods: {
-    toggleSearchpanel() {
-      this.$store.commit("ui/setSearchpanel", true);
+    toggleSearchpanel () {
+      this.$store.commit('ui/setSearchpanel', true);
     }
   }
 };

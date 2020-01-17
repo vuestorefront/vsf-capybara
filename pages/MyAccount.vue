@@ -38,17 +38,17 @@
 </template>
 
 <script>
-import MyAccount from "@vue-storefront/core/pages/MyAccount";
-import Breadcrumbs from "../components/core/Breadcrumbs";
-import MyProfile from "../components/core/blocks/MyAccount/MyProfile";
-import MyShippingDetails from "../components/core/blocks/MyAccount/MyShippingDetails";
-import MyNewsletter from "../components/core/blocks/MyAccount/MyNewsletter";
-import MyOrders from "../components/core/blocks/MyAccount/MyOrders";
-import MyOrder from "../components/core/blocks/MyAccount/MyOrder";
-import MyRecentlyViewed from "../components/core/blocks/MyAccount/MyRecentlyViewed";
-import NoSSR from "vue-no-ssr";
-import { RecentlyViewedModule } from "@vue-storefront/core/modules/recently-viewed";
-import { registerModule } from "@vue-storefront/core/lib/modules";
+import MyAccount from '@vue-storefront/core/pages/MyAccount';
+import Breadcrumbs from '../components/core/Breadcrumbs';
+import MyProfile from '../components/core/blocks/MyAccount/MyProfile';
+import MyShippingDetails from '../components/core/blocks/MyAccount/MyShippingDetails';
+import MyNewsletter from '../components/core/blocks/MyAccount/MyNewsletter';
+import MyOrders from '../components/core/blocks/MyAccount/MyOrders';
+import MyOrder from '../components/core/blocks/MyAccount/MyOrder';
+import MyRecentlyViewed from '../components/core/blocks/MyAccount/MyRecentlyViewed';
+import NoSSR from 'vue-no-ssr';
+import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-viewed';
+import { registerModule } from '@vue-storefront/core/lib/modules';
 
 export default {
   components: {
@@ -59,40 +59,40 @@ export default {
     MyOrders,
     MyOrder,
     MyRecentlyViewed,
-    "no-ssr": NoSSR
+    'no-ssr': NoSSR
   },
   mixins: [MyAccount],
-  data() {
+  data () {
     return {
       navigation: [
-        { title: this.$t("My profile"), link: "/my-account" },
+        { title: this.$t('My profile'), link: '/my-account' },
         {
-          title: this.$t("My shipping details"),
-          link: "/my-account/shipping-details"
+          title: this.$t('My shipping details'),
+          link: '/my-account/shipping-details'
         },
-        { title: this.$t("My newsletter"), link: "/my-account/newsletter" },
-        { title: this.$t("My orders"), link: "/my-account/orders" },
-        { title: this.$t("My loyalty card"), link: "#" },
-        { title: this.$t("My product reviews"), link: "#" },
+        { title: this.$t('My newsletter'), link: '/my-account/newsletter' },
+        { title: this.$t('My orders'), link: '/my-account/orders' },
+        { title: this.$t('My loyalty card'), link: '#' },
+        { title: this.$t('My product reviews'), link: '#' },
         {
-          title: this.$t("My Recently viewed products"),
-          link: "/my-account/recently-viewed"
+          title: this.$t('My Recently viewed products'),
+          link: '/my-account/recently-viewed'
         }
       ]
     };
   },
-  beforeCreate() {
+  beforeCreate () {
     registerModule(RecentlyViewedModule);
   },
   methods: {
-    notify(title) {
-      if (title === "My loyalty card" || title === "My product reviews") {
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "warning",
+    notify (title) {
+      if (title === 'My loyalty card' || title === 'My product reviews') {
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'warning',
           message: this.$t(
-            "This feature is not implemented yet! Please take a look at https://github.com/DivanteLtd/vue-storefront/issues for our Roadmap!"
+            'This feature is not implemented yet! Please take a look at https://github.com/DivanteLtd/vue-storefront/issues for our Roadmap!'
           ),
-          action1: { label: this.$t("OK") }
+          action1: { label: this.$t('OK') }
         });
       }
     }

@@ -14,15 +14,15 @@
       :value="value"
       @input="$emit('input', $event.target.value)"
       @blur="$emit('blur', $event.target.value)"
-    />
+    >
     <ValidationMessages v-if="validations" :validations="validations" />
   </div>
 </template>
 
 <script>
-import ValidationMessages from "./ValidationMessages";
+import ValidationMessages from './ValidationMessages';
 export default {
-  name: "BaseInput",
+  name: 'BaseInput',
   components: {
     ValidationMessages
   },
@@ -34,7 +34,7 @@ export default {
     name: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     min: {
       type: Number,
@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    getInputId() {
+    getInputId () {
       return `input_${this._uid}`;
     }
   }

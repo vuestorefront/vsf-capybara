@@ -9,7 +9,9 @@
     </SfBreadcrumbs>
     <div class="navbar section">
       <div class="navbar__aside desktop-only">
-        <h1 class="navbar__title">{{ $t("Categories") }}</h1>
+        <h1 class="navbar__title">
+          {{ $t("Categories") }}
+        </h1>
       </div>
       <div class="navbar__main">
         <SfButton
@@ -31,7 +33,8 @@
               :key="option.id"
               :value="option.id"
               class="sort-by__option"
-              >{{ option.label }}
+            >
+              {{ option.label }}
             </SfSelectOption>
           </SfSelect>
         </div>
@@ -119,7 +122,9 @@
     >
       <div class="filters">
         <template v-for="(filters, filterType) in availableFilters">
-          <h3 :key="filterType" class="filters__title">{{ $t(filterType) }}</h3>
+          <h3 :key="filterType" class="filters__title">
+            {{ $t(filterType) }}
+          </h3>
           <SfFilter
             v-for="filter in filters"
             :key="filter.id"
@@ -151,33 +156,33 @@
 </template>
 
 <script>
-import LazyHydrate from "vue-lazy-hydration";
-import { mapGetters } from "vuex";
-import castArray from "lodash-es/castArray";
-import config from "config";
+import LazyHydrate from 'vue-lazy-hydration';
+import { mapGetters } from 'vuex';
+import castArray from 'lodash-es/castArray';
+import config from 'config';
 import {
   buildFilterProductsQuery,
   productThumbnailPath,
   isServer
-} from "@vue-storefront/core/helpers";
-import i18n from "@vue-storefront/i18n";
-import onBottomScroll from "@vue-storefront/core/mixins/onBottomScroll";
-import { price, htmlDecode } from "@vue-storefront/core/filters";
-import { quickSearchByQuery } from "@vue-storefront/core/lib/search";
-import { getSearchOptionsFromRouteParams } from "@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers";
-import { catalogHooksExecutors } from "@vue-storefront/core/modules/catalog-next/hooks";
-import AIconFilter from "theme/components/atoms/a-icon-filter";
-import AIconSort from "theme/components/atoms/a-icon-sort";
-import AIconViewGrid from "theme/components/atoms/a-icon-view-grid";
-import AIconViewRow from "theme/components/atoms/a-icon-view-row";
+} from '@vue-storefront/core/helpers';
+import i18n from '@vue-storefront/i18n';
+import onBottomScroll from '@vue-storefront/core/mixins/onBottomScroll';
+import { price, htmlDecode } from '@vue-storefront/core/filters';
+import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
+import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
+import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import AIconFilter from 'theme/components/atoms/a-icon-filter';
+import AIconSort from 'theme/components/atoms/a-icon-sort';
+import AIconViewGrid from 'theme/components/atoms/a-icon-view-grid';
+import AIconViewRow from 'theme/components/atoms/a-icon-view-row';
 import {
   formatCategoryLink,
   formatProductLink
-} from "@vue-storefront/core/modules/url/helpers";
+} from '@vue-storefront/core/modules/url/helpers';
 import {
   localizedRoute,
   currentStoreView
-} from "@vue-storefront/core/lib/multistore";
+} from '@vue-storefront/core/lib/multistore';
 import {
   SfList,
   SfButton,
@@ -190,7 +195,7 @@ import {
   SfPagination,
   SfBreadcrumbs,
   SfProductCard
-} from "@storefront-ui/vue";
+} from '@storefront-ui/vue';
 
 const THEME_PAGE_SIZE = 12;
 const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
@@ -198,20 +203,20 @@ const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
 const composeInitialPageState = async (store, route, forceLoad = false) => {
   try {
     const filters = getSearchOptionsFromRouteParams(route.params);
-    const cachedCategory = store.getters["category-next/getCategoryFrom"](
+    const cachedCategory = store.getters['category-next/getCategoryFrom'](
       route.path
     );
     const currentCategory =
       cachedCategory && !forceLoad
         ? cachedCategory
-        : await store.dispatch("category-next/loadCategory", { filters });
-    await store.dispatch("category-next/loadCategoryProducts", {
+        : await store.dispatch('category-next/loadCategory', { filters });
+    await store.dispatch('category-next/loadCategoryProducts', {
       route,
       category: currentCategory,
       pageSize: THEME_PAGE_SIZE
     });
     const breadCrumbsLoader = store.dispatch(
-      "category-next/loadCategoryBreadcrumbs",
+      'category-next/loadCategoryBreadcrumbs',
       {
         category: currentCategory,
         currentRouteName: currentCategory.name,
@@ -227,7 +232,7 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
 };
 
 export default {
-  name: "CategoryPage",
+  name: 'CategoryPage',
   components: {
     LazyHydrate,
     AIconSort,
@@ -247,7 +252,7 @@ export default {
     SfProductCard
   },
   mixins: [onBottomScroll],
-  data() {
+  data () {
     return {
       loading: true,
       loadingProducts: false,
@@ -261,29 +266,29 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getCurrentSearchQuery: "category-next/getCurrentSearchQuery",
-      getCategoryProducts: "category-next/getCategoryProducts",
-      getCurrentCategory: "category-next/getCurrentCategory",
-      getCategoryProductsTotal: "category-next/getCategoryProductsTotal",
-      getAvailableFilters: "category-next/getAvailableFilters",
-      getCurrentFilters: "category-next/getCurrentFilters",
-      getSystemFilterNames: "category-next/getSystemFilterNames",
-      getCategories: "category-next/getCategories",
-      categoryList: "category/getCategories",
-      getBreadcrumbsRoutes: "breadcrumbs/getBreadcrumbsRoutes",
-      getBreadcrumbsCurrent: "breadcrumbs/getBreadcrumbsCurrent",
-      isOnWishlist: "wishlist/isOnWishlist"
+      getCurrentSearchQuery: 'category-next/getCurrentSearchQuery',
+      getCategoryProducts: 'category-next/getCategoryProducts',
+      getCurrentCategory: 'category-next/getCurrentCategory',
+      getCategoryProductsTotal: 'category-next/getCategoryProductsTotal',
+      getAvailableFilters: 'category-next/getAvailableFilters',
+      getCurrentFilters: 'category-next/getCurrentFilters',
+      getSystemFilterNames: 'category-next/getSystemFilterNames',
+      getCategories: 'category-next/getCategories',
+      categoryList: 'category/getCategories',
+      getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
+      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
+      isOnWishlist: 'wishlist/isOnWishlist'
     }),
-    isLazyHydrateEnabled() {
-      return config.ssr.lazyHydrateFor.includes("category-next.products");
+    isLazyHydrateEnabled () {
+      return config.ssr.lazyHydrateFor.includes('category-next.products');
     },
-    isCategoryEmpty() {
+    isCategoryEmpty () {
       return this.getCategoryProductsTotal === 0;
     },
-    isLazyLoadingEnabled() {
+    isLazyLoadingEnabled () {
       return this.browserWidth < LAZY_LOADING_ACTIVATION_BREAKPOINT;
     },
-    breadcrumbs() {
+    breadcrumbs () {
       return this.getBreadcrumbsRoutes
         .map(route => ({
           text: htmlDecode(route.name),
@@ -295,38 +300,38 @@ export default {
           text: htmlDecode(this.getBreadcrumbsCurrent)
         });
     },
-    categories() {
+    categories () {
       return this.prepareCategories(this.getCategories[0].children_data);
     },
-    products() {
+    products () {
       // lazy loading is disabled for desktop screen width (>= 1024px)
       // so products from store have to be filtered out because there could
       // be more than THEME_PAGE_SIZE of them - they could be fetched earlier
       // when lazy loading was enabled
       return this.isLazyLoadingEnabled || this.currentPage === 1
         ? this.getCategoryProducts
-            .filter((product, i) => {
-              return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
-            })
-            .map(this.prepareCategoryProduct)
+          .filter((product, i) => {
+            return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
+          })
+          .map(this.prepareCategoryProduct)
         : this.getMoreCategoryProducts.map(this.prepareCategoryProduct);
     },
-    totalPages() {
+    totalPages () {
       return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
     },
-    sortOrder() {
+    sortOrder () {
       return (
         this.getCurrentSearchQuery.sort ||
         `${config.products.defaultSortBy.attribute}:${config.products.defaultSortBy.order}`
       );
     },
-    sortOptions() {
+    sortOptions () {
       return Object.entries(config.products.sortByAttributes).map(attribute => {
         const [label, id] = attribute;
         return { id, label };
       });
     },
-    availableFilters() {
+    availableFilters () {
       return Object.entries(this.getAvailableFilters)
         .filter(([filterType, filters]) => {
           return (
@@ -338,7 +343,7 @@ export default {
             ...filter,
             count: this.getFilterCount(filter),
             color:
-              filterType === "color"
+              filterType === 'color'
                 ? (config.products.colorMappings &&
                     config.products.colorMappings[filter.label]) ||
                   filter.label
@@ -347,7 +352,7 @@ export default {
           return result;
         }, {});
     },
-    isFilterActive() {
+    isFilterActive () {
       return filter =>
         castArray(this.getCurrentFilters[filter.type]).find(
           variant => variant && variant.id === filter.id
@@ -355,17 +360,17 @@ export default {
     }
   },
   watch: {
-    sortOrder() {
+    sortOrder () {
       if (this.currentPage > 1) {
         this.changePage();
       }
     }
   },
-  async asyncData({ store, route }) {
+  async asyncData ({ store, route }) {
     // this is for SSR purposes to prefetch data - and it's always executed before parent component methods
     await composeInitialPageState(store, route);
   },
-  async beforeRouteEnter(to, from, next) {
+  async beforeRouteEnter (to, from, next) {
     if (isServer) next();
     // SSR no need to invoke SW caching here
     else if (!from.name) {
@@ -373,67 +378,67 @@ export default {
       next(async vm => {
         vm.loading = true;
         await composeInitialPageState(vm.$store, to, true);
-        await vm.$store.dispatch("category-next/cacheProducts", { route: to }); // await here is because we must wait for the hydration
+        await vm.$store.dispatch('category-next/cacheProducts', { route: to }); // await here is because we must wait for the hydration
         vm.loading = false;
       });
     } else {
       // Pure CSR, with no initial category state
       next(async vm => {
         vm.loading = true;
-        vm.$store.dispatch("category-next/cacheProducts", { route: to });
+        vm.$store.dispatch('category-next/cacheProducts', { route: to });
         vm.loading = false;
       });
     }
   },
-  mounted() {
+  mounted () {
     this.unsubscribeFromStoreAction = this.$store.subscribeAction(action => {
-      if (action.type === "category-next/loadAvailableFiltersFrom") {
+      if (action.type === 'category-next/loadAvailableFiltersFrom') {
         this.aggregations = action.payload.aggregations;
       }
     });
-    this.$bus.$on("product-after-list", this.initPagination);
-    window.addEventListener("resize", this.getBrowserWidth);
+    this.$bus.$on('product-after-list', this.initPagination);
+    window.addEventListener('resize', this.getBrowserWidth);
     this.getBrowserWidth();
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.unsubscribeFromStoreAction();
-    this.$bus.$off("product-after-list", this.initPagination);
-    window.removeEventListener("resize", this.getBrowserWidth);
+    this.$bus.$off('product-after-list', this.initPagination);
+    window.removeEventListener('resize', this.getBrowserWidth);
   },
   methods: {
-    toggleWishlist(product) {
+    toggleWishlist (product) {
       const isProductOnWishlist = this.isOnWishlist(product);
       const message = isProductOnWishlist
-        ? "Product {productName} has been removed from wishlist!"
-        : "Product {productName} has been added to wishlist!";
+        ? 'Product {productName} has been removed from wishlist!'
+        : 'Product {productName} has been added to wishlist!';
       const action = isProductOnWishlist
-        ? "wishlist/removeItem"
-        : "wishlist/addItem";
+        ? 'wishlist/removeItem'
+        : 'wishlist/addItem';
 
       this.$store.dispatch(action, product);
       this.$store.dispatch(
-        "notification/spawnNotification",
+        'notification/spawnNotification',
         {
-          type: "success",
+          type: 'success',
           message: i18n.t(message, { productName: htmlDecode(product.name) }),
-          action1: { label: i18n.t("OK") }
+          action1: { label: i18n.t('OK') }
         },
         { root: true }
       );
     },
-    getBrowserWidth() {
+    getBrowserWidth () {
       return (this.browserWidth = window.innerWidth);
     },
-    async onBottomScroll() {
+    async onBottomScroll () {
       if (!this.isLazyLoadingEnabled || this.loadingProducts) {
         return;
       }
 
       this.loadingProducts = true;
-      await this.$store.dispatch("category-next/loadMoreCategoryProducts");
+      await this.$store.dispatch('category-next/loadMoreCategoryProducts');
       this.loadingProducts = false;
     },
-    async changePage(page = this.currentPage) {
+    async changePage (page = this.currentPage) {
       const start = (page - 1) * THEME_PAGE_SIZE;
 
       if (
@@ -461,7 +466,7 @@ export default {
       });
 
       this.getMoreCategoryProducts = await this.$store.dispatch(
-        "category-next/processCategoryProducts",
+        'category-next/processCategoryProducts',
         {
           products: searchResult.items,
           filters: filters
@@ -470,42 +475,42 @@ export default {
 
       this.currentPage = page;
     },
-    initPagination() {
+    initPagination () {
       this.currentPage = 1;
     },
-    prepareCategories(categories, firstItem = []) {
+    prepareCategories (categories, firstItem = []) {
       return categories
         ? categories
-            .reduce((result, subCategory) => {
-              const category = this.categoryList.find(
-                c => c.id === subCategory.id
-              );
+          .reduce((result, subCategory) => {
+            const category = this.categoryList.find(
+              c => c.id === subCategory.id
+            );
 
-              if (!category || !category.is_active) {
-                return result;
-              }
+            if (!category || !category.is_active) {
+              return result;
+            }
 
-              return result.concat({
-                id: category.id,
-                name: category.name,
-                link: formatCategoryLink(category),
-                count: String(category.product_count),
-                position: category.position,
-                items: this.prepareCategories(subCategory.children_data, [
-                  {
-                    id: category.id,
-                    name: i18n.t("View all"),
-                    link: formatCategoryLink(category),
-                    count: String(category.product_count),
-                    position: 0
-                  }
-                ])
-              });
-            }, firstItem)
-            .sort((a, b) => a.position - b.position)
+            return result.concat({
+              id: category.id,
+              name: category.name,
+              link: formatCategoryLink(category),
+              count: String(category.product_count),
+              position: category.position,
+              items: this.prepareCategories(subCategory.children_data, [
+                {
+                  id: category.id,
+                  name: i18n.t('View all'),
+                  link: formatCategoryLink(category),
+                  count: String(category.product_count),
+                  position: 0
+                }
+              ])
+            });
+          }, firstItem)
+          .sort((a, b) => a.position - b.position)
         : firstItem;
     },
-    prepareCategoryProduct(product) {
+    prepareCategoryProduct (product) {
       return {
         data: product,
         id: product.id,
@@ -526,20 +531,20 @@ export default {
         }
       };
     },
-    changeSortOder(sortOrder) {
+    changeSortOder (sortOrder) {
       if (this.getCurrentSearchQuery.sort !== sortOrder) {
-        this.$store.dispatch("category-next/switchSearchFilters", [
-          { id: sortOrder, type: "sort" }
+        this.$store.dispatch('category-next/switchSearchFilters', [
+          { id: sortOrder, type: 'sort' }
         ]);
       }
     },
-    changeFilter(filter) {
-      this.$store.dispatch("category-next/switchSearchFilters", [filter]);
+    changeFilter (filter) {
+      this.$store.dispatch('category-next/switchSearchFilters', [filter]);
     },
-    clearAllFilters() {
-      this.$store.dispatch("category-next/resetSearchFilters");
+    clearAllFilters () {
+      this.$store.dispatch('category-next/resetSearchFilters');
     },
-    getFilterCount(filter) {
+    getFilterCount (filter) {
       const aggregations = [
         `agg_range_${filter.type}`,
         `agg_terms_${filter.type}`,
@@ -560,7 +565,7 @@ export default {
         .toString();
     }
   },
-  metaInfo() {
+  metaInfo () {
     const storeView = currentStoreView();
     const {
       meta_title,
@@ -570,16 +575,16 @@ export default {
     } = this.getCurrentCategory;
     const meta = meta_description
       ? [
-          {
-            vmid: "description",
-            name: "description",
-            content: htmlDecode(meta_description)
-          }
-        ]
+        {
+          vmid: 'description',
+          name: 'description',
+          content: htmlDecode(meta_description)
+        }
+      ]
       : [];
     const categoryLocaliedLink = localizedRoute(
       {
-        name: "category-amp",
+        name: 'category-amp',
         params: { slug }
       },
       storeView.storeCode
@@ -587,7 +592,7 @@ export default {
     const ampCategoryLink = this.$router.resolve(categoryLocaliedLink).href;
 
     return {
-      link: [{ rel: "amphtml", href: ampCategoryLink }],
+      link: [{ rel: 'amphtml', href: ampCategoryLink }],
       title: htmlDecode(meta_title || name),
       meta
     };

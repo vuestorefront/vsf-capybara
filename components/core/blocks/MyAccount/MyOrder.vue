@@ -25,8 +25,7 @@
             href="#"
             class="underline"
             @click.prevent="remakeOrder(singleOrderItems)"
-            >{{ $t("Remake order") }}</a
-          >
+          >{{ $t("Remake order") }}</a>
         </p>
       </div>
     </div>
@@ -167,15 +166,15 @@
 </template>
 
 <script>
-import Vue from "vue";
-import MyOrder from "@vue-storefront/core/compatibility/components/blocks/MyAccount/MyOrder";
-import ReturnIcon from "theme/components/core/blocks/Header/ReturnIcon";
-import ProductImage from "theme/components/core/ProductImage";
+import Vue from 'vue';
+import MyOrder from '@vue-storefront/core/compatibility/components/blocks/MyAccount/MyOrder';
+import ReturnIcon from 'theme/components/core/blocks/Header/ReturnIcon';
+import ProductImage from 'theme/components/core/ProductImage';
 import {
   getThumbnailPath,
   productThumbnailPath
-} from "@vue-storefront/core/helpers";
-import { mapActions } from "vuex";
+} from '@vue-storefront/core/helpers';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -183,12 +182,12 @@ export default {
     ProductImage
   },
   mixins: [MyOrder],
-  data() {
+  data () {
     return {
       itemThumbnail: []
     };
   },
-  mounted() {
+  mounted () {
     this.singleOrderItems.forEach(async item => {
       if (!this.itemThumbnail[item.sku]) {
         const product = await this.getProduct({
@@ -208,7 +207,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getProduct: "product/single"
+      getProduct: 'product/single'
     })
   }
 };

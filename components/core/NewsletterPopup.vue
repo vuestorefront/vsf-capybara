@@ -43,13 +43,13 @@
   </modal>
 </template>
 <script>
-import SubscriptionStatus from "@vue-storefront/core/modules/newsletter/mixins/SubscriptionStatus";
-import Subscribe from "@vue-storefront/core/modules/newsletter/mixins/Subscribe";
-import i18n from "@vue-storefront/i18n";
+import SubscriptionStatus from '@vue-storefront/core/modules/newsletter/mixins/SubscriptionStatus';
+import Subscribe from '@vue-storefront/core/modules/newsletter/mixins/Subscribe';
+import i18n from '@vue-storefront/i18n';
 
-import ButtonFull from "theme/components/theme/ButtonFull";
-import Modal from "theme/components/core/Modal";
-import BaseInput from "theme/components/core/blocks/Form/BaseInput";
+import ButtonFull from 'theme/components/theme/ButtonFull';
+import Modal from 'theme/components/core/Modal';
+import BaseInput from 'theme/components/core/blocks/Form/BaseInput';
 
 export default {
   components: {
@@ -58,27 +58,27 @@ export default {
     BaseInput
   },
   mixins: [SubscriptionStatus, Subscribe],
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
-      this.$bus.$emit("modal-show", "modal-newsletter");
+      this.$bus.$emit('modal-show', 'modal-newsletter');
     });
   },
-  beforeDestroy() {
-    this.$off("validation-error");
+  beforeDestroy () {
+    this.$off('validation-error');
   },
   methods: {
-    onSuccesfulSubmission(isSubscribed) {
+    onSuccesfulSubmission (isSubscribed) {
       if (isSubscribed) {
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "success",
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'success',
           message: i18n.t(
-            "You have been successfully subscribed to our newsletter!"
+            'You have been successfully subscribed to our newsletter!'
           ),
-          action1: { label: i18n.t("OK") }
+          action1: { label: i18n.t('OK') }
         });
       }
 
-      this.$bus.$emit("modal-hide", "modal-newsletter");
+      this.$bus.$emit('modal-hide', 'modal-newsletter');
     }
   }
 };

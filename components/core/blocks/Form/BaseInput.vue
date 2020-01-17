@@ -17,7 +17,7 @@
         @blur="$emit('blur')"
         @keyup.enter="$emit('keyup.enter', $event.target.value)"
         @keyup="$emit('keyup', $event)"
-      />
+      >
       <label>{{ placeholder }}</label>
     </div>
     <button
@@ -38,10 +38,10 @@
 </template>
 
 <script>
-import ValidationMessages from "./ValidationMessages";
+import ValidationMessages from './ValidationMessages';
 
 export default {
-  name: "BaseInput",
+  name: 'BaseInput',
   components: {
     ValidationMessages
   },
@@ -52,22 +52,22 @@ export default {
     },
     value: {
       type: [String, Number],
-      default: ""
+      default: ''
     },
     name: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     placeholder: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     autocomplete: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     focus: {
       type: Boolean,
@@ -84,35 +84,35 @@ export default {
       default: () => []
     }
   },
-  data() {
+  data () {
     return {
-      passType: "password",
+      passType: 'password',
       iconActive: false,
-      icon: "visibility_off"
+      icon: 'visibility_off'
     };
   },
-  created() {
-    if (this.type === "password") {
+  created () {
+    if (this.type === 'password') {
       this.iconActive = true;
     }
   },
-  mounted() {
+  mounted () {
     if (this.focus) {
       this.$refs[this.name].focus();
     }
   },
   methods: {
-    togglePassType() {
-      if (this.passType === "password") {
-        this.passType = "text";
-        this.icon = "visibility";
+    togglePassType () {
+      if (this.passType === 'password') {
+        this.passType = 'text';
+        this.icon = 'visibility';
       } else {
-        this.passType = "password";
-        this.icon = "visibility_off";
+        this.passType = 'password';
+        this.icon = 'visibility_off';
       }
     },
     // setFocus sets focus on a field which has a value of 'ref' tag equal to fieldName
-    setFocus(fieldName) {
+    setFocus (fieldName) {
       if (this.name === fieldName) {
         this.$refs[this.name].focus();
       }
