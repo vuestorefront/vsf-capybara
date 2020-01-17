@@ -30,7 +30,7 @@
               autofocus="true"
               @input="makeSearch"
               @blur="$v.search.$touch()"
-            />
+            >
           </div>
         </div>
       </div>
@@ -85,12 +85,12 @@
 </template>
 
 <script>
-import SearchPanel from "@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel";
-import ProductTile from "theme/components/core/ProductTile";
-import VueOfflineMixin from "vue-offline/mixin";
-import CategoryPanel from "theme/components/core/blocks/Category/CategoryPanel";
-import { minLength } from "vuelidate/lib/validators";
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import SearchPanel from '@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel';
+import ProductTile from 'theme/components/core/ProductTile';
+import VueOfflineMixin from 'vue-offline/mixin';
+import CategoryPanel from 'theme/components/core/blocks/Category/CategoryPanel';
+import { minLength } from 'vuelidate/lib/validators';
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 export default {
   components: {
@@ -103,13 +103,13 @@ export default {
       minLength: minLength(3)
     }
   },
-  data() {
+  data () {
     return {
       selectedCategoryIds: []
     };
   },
   computed: {
-    visibleProducts() {
+    visibleProducts () {
       const productList = this.products || [];
       if (this.selectedCategoryIds.length) {
         return productList.filter(product =>
@@ -121,7 +121,7 @@ export default {
       }
       return productList;
     },
-    categories() {
+    categories () {
       const categories = this.products
         .filter(p => p.category)
         .map(p => p.category)
@@ -133,27 +133,27 @@ export default {
 
       return discinctCategories;
     },
-    getNoResultsMessage() {
-      let msg = "";
+    getNoResultsMessage () {
+      let msg = '';
       if (!this.$v.search.minLength) {
-        msg = "Searched term should consist of at least 3 characters.";
+        msg = 'Searched term should consist of at least 3 characters.';
       } else if (this.emptyResults) {
-        msg = "No results were found.";
+        msg = 'No results were found.';
       }
       return msg;
     }
   },
   watch: {
-    categories() {
+    categories () {
       this.selectedCategoryIds = [];
     }
   },
-  mounted() {
+  mounted () {
     // add autofocus to search input field
     this.$refs.search.focus();
     disableBodyScroll(this.$el);
   },
-  destroyed() {
+  destroyed () {
     clearAllBodyScrollLocks();
   }
 };

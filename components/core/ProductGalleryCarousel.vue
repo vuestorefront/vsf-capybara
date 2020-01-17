@@ -36,21 +36,20 @@
     <i
       class="zoom-in material-icons p15 cl-bgs-tertiary pointer"
       @click="openOverlay"
-      >zoom_in</i
-    >
+    >zoom_in</i>
   </div>
 </template>
 
 <script>
-import config from "config";
-import { Carousel, Slide } from "vue-carousel";
-import ProductImage from "./ProductImage";
-import ProductVideo from "./ProductVideo";
-import reduce from "lodash-es/reduce";
-import map from "lodash-es/map";
+import config from 'config';
+import { Carousel, Slide } from 'vue-carousel';
+import ProductImage from './ProductImage';
+import ProductVideo from './ProductVideo';
+import reduce from 'lodash-es/reduce';
+import map from 'lodash-es/map';
 
 export default {
-  name: "ProductGalleryCarousel",
+  name: 'ProductGalleryCarousel',
   components: {
     Carousel,
     Slide,
@@ -64,14 +63,14 @@ export default {
     },
     productName: {
       type: String,
-      default: ""
+      default: ''
     },
     configuration: {
       type: Object,
       required: true
     }
   },
-  data() {
+  data () {
     return {
       carouselTransition: true,
       carouselTransitionSpeed: 0,
@@ -81,11 +80,11 @@ export default {
     };
   },
   computed: {},
-  beforeMount() {
-    this.$bus.$on("filter-changed-product", this.selectVariant);
-    this.$bus.$on("product-after-load", this.selectVariant);
+  beforeMount () {
+    this.$bus.$on('filter-changed-product', this.selectVariant);
+    this.$bus.$on('product-after-load', this.selectVariant);
   },
-  mounted() {
+  mounted () {
     this.selectVariant();
 
     if (this.configuration.color) {
@@ -93,22 +92,22 @@ export default {
       this.currentColor = color.id;
     }
 
-    this.$emit("loaded");
+    this.$emit('loaded');
   },
-  beforeDestroy() {
-    this.$bus.$off("filter-changed-product", this.selectVariant);
-    this.$bus.$off("product-after-load", this.selectVariant);
+  beforeDestroy () {
+    this.$bus.$off('filter-changed-product', this.selectVariant);
+    this.$bus.$off('product-after-load', this.selectVariant);
   },
   methods: {
-    navigate(index) {
+    navigate (index) {
       if (this.$refs.carousel) {
         this.$refs.carousel.goToPage(index);
       }
     },
-    selectVariant() {
+    selectVariant () {
       if (config.products.gallery.mergeConfigurableChildren) {
         const option = reduce(
-          map(this.configuration, "attribute_code"),
+          map(this.configuration, 'attribute_code'),
           (result, attribute) => {
             result[attribute] = this.configuration[attribute].id;
             return result;
@@ -123,21 +122,22 @@ export default {
                 Object.entries(option).toString(),
             option
           );
-          if (index < 0)
+          if (index < 0) {
             index = this.gallery.findIndex(
               obj => obj.id && obj.id.color === option.color
             );
+          }
           this.navigate(index);
         }
       }
 
-      this.$emit("close");
+      this.$emit('close');
     },
-    openOverlay() {
+    openOverlay () {
       const currentSlide = this.$refs.carousel.currentPage;
-      this.$emit("toggle", currentSlide);
+      this.$emit('toggle', currentSlide);
     },
-    switchCarouselSpeed() {
+    switchCarouselSpeed () {
       const { color } = this.configuration;
       if (color && this.currentColor !== color.id) {
         this.currentColor = color.id;
@@ -146,13 +146,13 @@ export default {
         this.carouselTransitionSpeed = 500;
       }
     },
-    pageChange(index) {
+    pageChange (index) {
       this.switchCarouselSpeed();
 
       this.currentPage = index;
       this.hideImageAtIndex = null;
     },
-    onVideoStarted(index) {
+    onVideoStarted (index) {
       this.hideImageAtIndex = index;
     }
   }

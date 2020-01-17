@@ -9,15 +9,15 @@
       aria-label="wishlist"
       @click="toggleWishlistPanel"
     />
-    <SfBadge v-show="getWishlistItemsCount" class="a-wishlist-icon__badge"
-      >{{ getWishlistItemsCount }}
+    <SfBadge v-show="getWishlistItemsCount" class="a-wishlist-icon__badge">
+      {{ getWishlistItemsCount }}
     </SfBadge>
   </div>
 </template>
 
 <script>
-import WishlistIcon from "@vue-storefront/core/compatibility/components/blocks/Header/WishlistIcon";
-import { SfCircleIcon, SfBadge } from "@storefront-ui/vue";
+import WishlistIcon from '@vue-storefront/core/compatibility/components/blocks/Header/WishlistIcon';
+import { SfCircleIcon, SfBadge } from '@storefront-ui/vue';
 
 export default {
   components: { SfCircleIcon, SfBadge },

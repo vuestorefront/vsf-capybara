@@ -8,8 +8,7 @@
         <i
           class="material-icons p15 pointer cl-accent"
           @click="closeSearchpanel"
-          >close</i
-        >
+        >close</i>
       </div>
     </div>
     <div class="col-md-12 end-xs">
@@ -24,7 +23,7 @@
         :placeholder="$t('Type what you are looking for...')"
         type="text"
         autofocus="true"
-      />
+      >
     </div>
     <ApolloQuery
       :query="require('../../../graphql/ProductList.gql')"
@@ -50,17 +49,17 @@
 </template>
 
 <script>
-import SearchPanel from "@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel";
-import ProductTile from "theme/components/core/ProductTile";
+import SearchPanel from '@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel';
+import ProductTile from 'theme/components/core/ProductTile';
 
 export default {
   components: {
     ProductTile
   },
   mixins: [SearchPanel],
-  data() {
+  data () {
     return {
-      query: ""
+      query: ''
     };
   }
 };

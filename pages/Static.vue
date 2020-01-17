@@ -34,22 +34,22 @@
 </template>
 
 <script>
-import i18n from "@vue-storefront/i18n";
-import Breadcrumbs from "theme/components/core/Breadcrumbs";
-import StaticExample from "theme/components/theme/blocks/Static/Example";
-import StaticShortExample from "theme/components/theme/blocks/Static/Short";
-import { getPathForStaticPage } from "theme/helpers";
-import { localizedRoute } from "@vue-storefront/core/lib/multistore";
+import i18n from '@vue-storefront/i18n';
+import Breadcrumbs from 'theme/components/core/Breadcrumbs';
+import StaticExample from 'theme/components/theme/blocks/Static/Example';
+import StaticShortExample from 'theme/components/theme/blocks/Static/Short';
+import { getPathForStaticPage } from 'theme/helpers';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 
 export default {
   components: {
     Breadcrumbs
   },
-  metaInfo() {
+  metaInfo () {
     return {
       title: this.$route.meta.title || this.$props.title,
       meta: this.$route.meta.description
-        ? [{ vmid: "description", description: this.$route.meta.description }]
+        ? [{ vmid: 'description', description: this.$route.meta.description }]
         : []
     };
   },
@@ -63,54 +63,54 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       navigation: [
         {
-          title: i18n.t("About us"),
-          link: getPathForStaticPage("/about-us"),
+          title: i18n.t('About us'),
+          link: getPathForStaticPage('/about-us'),
           component: StaticExample
         },
         {
-          title: i18n.t("Customer service"),
-          link: getPathForStaticPage("/customer-service"),
+          title: i18n.t('Customer service'),
+          link: getPathForStaticPage('/customer-service'),
           component: StaticShortExample
         },
         {
-          title: i18n.t("Store locator"),
-          link: localizedRoute("/store-locator"),
+          title: i18n.t('Store locator'),
+          link: localizedRoute('/store-locator'),
           component: StaticExample
         },
         {
-          title: i18n.t("Delivery"),
-          link: "/delivery",
+          title: i18n.t('Delivery'),
+          link: '/delivery',
           component: StaticShortExample
         },
         {
-          title: i18n.t("Return policy"),
-          link: "/returns",
+          title: i18n.t('Return policy'),
+          link: '/returns',
           component: StaticExample
         },
         {
-          title: i18n.t("Privacy policy"),
-          link: "/privacy",
+          title: i18n.t('Privacy policy'),
+          link: '/privacy',
           component: StaticShortExample
         },
         {
-          title: i18n.t("Size guide"),
-          link: "/size-guide",
+          title: i18n.t('Size guide'),
+          link: '/size-guide',
           component: StaticExample
         },
         {
-          title: i18n.t("Contact us"),
-          link: "/contact",
+          title: i18n.t('Contact us'),
+          link: '/contact',
           component: StaticShortExample
         }
       ]
     };
   },
   computed: {
-    activeComponent() {
+    activeComponent () {
       const matchedNav = this.navigation.find(
         nav => nav.link === this.$route.path
       );

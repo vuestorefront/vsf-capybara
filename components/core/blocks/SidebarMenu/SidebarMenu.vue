@@ -129,13 +129,13 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import i18n from "@vue-storefront/i18n";
-import SidebarMenu from "@vue-storefront/core/compatibility/components/blocks/SidebarMenu/SidebarMenu";
-import SubBtn from "theme/components/core/blocks/SidebarMenu/SubBtn";
-import SubCategory from "theme/components/core/blocks/SidebarMenu/SubCategory";
-import { formatCategoryLink } from "@vue-storefront/core/modules/url/helpers";
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
+import { mapState } from 'vuex';
+import i18n from '@vue-storefront/i18n';
+import SidebarMenu from '@vue-storefront/core/compatibility/components/blocks/SidebarMenu/SidebarMenu';
+import SubBtn from 'theme/components/core/blocks/SidebarMenu/SubBtn';
+import SubCategory from 'theme/components/core/blocks/SidebarMenu/SubCategory';
+import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 export default {
   components: {
@@ -143,45 +143,45 @@ export default {
     SubBtn
   },
   mixins: [SidebarMenu],
-  data() {
+  data () {
     return {
       myAccountLinks: [
         {
           id: 1,
-          name: i18n.t("My profile"),
-          url: "/my-account"
+          name: i18n.t('My profile'),
+          url: '/my-account'
         },
         {
           id: 2,
-          name: i18n.t("My shipping details"),
-          url: "/my-account/shipping-details"
+          name: i18n.t('My shipping details'),
+          url: '/my-account/shipping-details'
         },
         {
           id: 3,
-          name: i18n.t("My newsletter"),
-          url: "/my-account/newsletter"
+          name: i18n.t('My newsletter'),
+          url: '/my-account/newsletter'
         },
         {
           id: 4,
-          name: i18n.t("My orders"),
-          url: "/my-account/orders"
+          name: i18n.t('My orders'),
+          url: '/my-account/orders'
         },
         {
           id: 5,
-          name: i18n.t("My loyalty card"),
-          url: "#"
+          name: i18n.t('My loyalty card'),
+          url: '#'
         },
         {
           id: 6,
-          name: i18n.t("My product reviews"),
-          url: "#"
+          name: i18n.t('My product reviews'),
+          url: '#'
         }
       ],
       componentLoaded: false
     };
   },
   computed: {
-    mainListStyles() {
+    mainListStyles () {
       return this.submenu.depth
         ? `transform: translateX(${this.submenu.depth * 100}%)`
         : false;
@@ -190,38 +190,38 @@ export default {
       submenu: state => state.ui.submenu,
       currentUser: state => state.user.current
     }),
-    getSubmenu() {
+    getSubmenu () {
       return this.submenu;
     },
-    visibleCategories() {
+    visibleCategories () {
       return this.categories.filter(category => {
         return category.product_count > 0 || category.children_count > 0;
       });
     },
-    isCurrentMenuShowed() {
+    isCurrentMenuShowed () {
       return !this.getSubmenu || !this.getSubmenu.depth;
     }
   },
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
       this.componentLoaded = true;
       disableBodyScroll(this.$refs.container);
     });
   },
-  destroyed() {
+  destroyed () {
     clearAllBodyScrollLocks();
   },
   methods: {
-    login() {
+    login () {
       if (!this.currentUser && this.isCurrentMenuShowed) {
         this.$nextTick(() => {
-          this.$store.commit("ui/setAuthElem", "login");
-          this.$bus.$emit("modal-show", "modal-signup");
-          this.$router.push({ name: "my-account" });
+          this.$store.commit('ui/setAuthElem', 'login');
+          this.$bus.$emit('modal-show', 'modal-signup');
+          this.$router.push({ name: 'my-account' });
         });
       }
     },
-    categoryLink(category) {
+    categoryLink (category) {
       return formatCategoryLink(category);
     }
   }

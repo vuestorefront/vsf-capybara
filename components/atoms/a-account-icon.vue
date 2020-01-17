@@ -13,15 +13,15 @@
 </template>
 
 <script>
-import { SfCircleIcon } from "@storefront-ui/vue";
-import AccountIcon from "@vue-storefront/core/compatibility/components/blocks/Header/AccountIcon";
-import { mapGetters } from "vuex";
+import { SfCircleIcon } from '@storefront-ui/vue';
+import AccountIcon from '@vue-storefront/core/compatibility/components/blocks/Header/AccountIcon';
+import { mapGetters } from 'vuex';
 
 export default {
   components: { SfCircleIcon },
   mixins: [AccountIcon],
   computed: {
-    ...mapGetters("user", ["isLoggedIn"])
+    ...mapGetters('user', ['isLoggedIn'])
   }
 };
 </script>

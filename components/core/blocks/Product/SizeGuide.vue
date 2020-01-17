@@ -10,12 +10,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import Modal from "theme/components/core/Modal";
-import SizeGuideContent from "theme/components/theme/blocks/Static/Example";
+import { mapState } from 'vuex';
+import Modal from 'theme/components/core/Modal';
+import SizeGuideContent from 'theme/components/theme/blocks/Static/Example';
 
 export default {
-  name: "SizeGuide",
+  name: 'SizeGuide',
   components: {
     Modal,
     SizeGuideContent
@@ -26,9 +26,9 @@ export default {
     })
   },
   methods: {
-    close(e) {
-      if (e) localStorage.removeItem("redirect");
-      this.$bus.$emit("modal-hide", "modal-sizeguide");
+    close (e) {
+      if (e) localStorage.removeItem('redirect');
+      this.$bus.$emit('modal-hide', 'modal-sizeguide');
     }
   }
 };

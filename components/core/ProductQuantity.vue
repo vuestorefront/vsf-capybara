@@ -32,10 +32,10 @@ import {
   maxValue,
   numeric,
   required
-} from "vuelidate/lib/validators";
-import { onlineHelper } from "@vue-storefront/core/helpers";
-import BaseInputNumber from "theme/components/core/blocks/Form/BaseInputNumber";
-import Spinner from "theme/components/core/Spinner";
+} from 'vuelidate/lib/validators';
+import { onlineHelper } from '@vue-storefront/core/helpers';
+import BaseInputNumber from 'theme/components/core/blocks/Form/BaseInputNumber';
+import Spinner from 'theme/components/core/Spinner';
 
 export default {
   components: {
@@ -65,23 +65,23 @@ export default {
     }
   },
   computed: {
-    isOnline() {
+    isOnline () {
       return onlineHelper.isOnline;
     },
-    disabled() {
+    disabled () {
       return this.isOnline ? !this.maxQuantity : false;
     },
-    name() {
+    name () {
       if (this.isSimpleOrConfigurable && !this.loading && this.showQuantity) {
         return this.$i18n.t(
-          this.isOnline ? "Quantity available" : "Quantity available offline",
+          this.isOnline ? 'Quantity available' : 'Quantity available offline',
           { qty: this.maxQuantity }
         );
       }
-      return this.$i18n.t("Quantity");
+      return this.$i18n.t('Quantity');
     }
   },
-  validations() {
+  validations () {
     return {
       value: {
         minValue: minValue(1),
@@ -92,8 +92,8 @@ export default {
     };
   },
   watch: {
-    "$v.$invalid"(error) {
-      this.$emit("error", error);
+    '$v.$invalid' (error) {
+      this.$emit('error', error);
     }
   }
 };

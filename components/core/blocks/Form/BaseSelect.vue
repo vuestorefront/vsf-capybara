@@ -29,10 +29,10 @@
 </template>
 
 <script>
-import ValidationMessages from "./ValidationMessages";
+import ValidationMessages from './ValidationMessages';
 
 export default {
-  name: "BaseSelect",
+  name: 'BaseSelect',
   components: {
     ValidationMessages
   },
@@ -40,12 +40,12 @@ export default {
     id: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     name: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     options: {
       type: Array,
@@ -55,17 +55,17 @@ export default {
     selected: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     placeholder: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     autocomplete: {
       type: String,
       required: false,
-      default: ""
+      default: ''
     },
     validations: {
       type: Array,
