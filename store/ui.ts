@@ -17,18 +17,18 @@ export const uiStore = {
     }
   },
   mutations: {
-    setCheckoutMode(state, action) {
+    setCheckoutMode (state, action) {
       state.checkoutMode = action === true;
     },
-    setMicrocart(state, action) {
+    setMicrocart (state, action) {
       state.microcart = action === true;
       state.overlay = action === true;
     },
-    setSidebar(state, action) {
+    setSidebar (state, action) {
       state.sidebar = action === true;
       state.overlay = action === true;
     },
-    setSubmenu(state, { id, depth }) {
+    setSubmenu (state, { id, depth }) {
       if (id) {
         state.submenu.path.push(id);
       } else if (state.submenu.path.length) {
@@ -38,30 +38,30 @@ export const uiStore = {
       }
       state.submenu.depth = state.submenu.depth > 0 && depth;
     },
-    setSearchpanel(state, action) {
+    setSearchpanel (state, action) {
       state.searchpanel = action === true;
       state.overlay = action === true;
     },
-    setWishlist(state, action) {
+    setWishlist (state, action) {
       state.wishlist = action === true;
       state.overlay = action === true;
     },
-    setOverlay(state, action) {
+    setOverlay (state, action) {
       state.overlay = action === true;
     },
-    setLoader(state, action) {
+    setLoader (state, action) {
       state.loader = action === true;
     },
-    setAuthElem(state, action) {
+    setAuthElem (state, action) {
       state.authElem = action;
     }
   },
   actions: {
-    toggleMicrocart({ commit, state }) {
-      commit("setMicrocart", !state.microcart);
+    toggleMicrocart ({ commit, state }) {
+      commit('setMicrocart', !state.microcart);
     },
-    toggleWishlist({ commit, state }) {
-      commit("setWishlist", !state.wishlist);
+    toggleWishlist ({ commit, state }) {
+      commit('setWishlist', !state.wishlist);
     }
   }
 };

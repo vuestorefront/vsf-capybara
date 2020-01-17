@@ -118,23 +118,23 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { required, email } from "vuelidate/lib/validators";
-import { Logger } from "@vue-storefront/core/lib/logger";
-import { SfModal, SfInput, SfButton, SfCheckbox } from "@storefront-ui/vue";
+import { mapState } from 'vuex';
+import { required, email } from 'vuelidate/lib/validators';
+import { Logger } from '@vue-storefront/core/lib/logger';
+import { SfModal, SfInput, SfButton, SfCheckbox } from '@storefront-ui/vue';
 
 export default {
-  name: "Login",
+  name: 'Login',
   components: { SfModal, SfInput, SfButton, SfCheckbox },
-  data() {
+  data () {
     return {
       isLogin: true,
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       createAccount: false,
       rememberMe: false,
-      firstName: "",
-      lastName: ""
+      firstName: '',
+      lastName: ''
     };
   },
   computed: {
@@ -143,89 +143,89 @@ export default {
     })
   },
   watch: {
-    isLogin() {
-      this.email = "";
-      this.password = "";
+    isLogin () {
+      this.email = '';
+      this.password = '';
       this.createAccount = false;
       this.rememberMe = false;
-      this.firstName = "";
-      this.lastName = "";
+      this.firstName = '';
+      this.lastName = '';
     }
   },
   methods: {
-    switchElem(to) {
+    switchElem (to) {
       this.$v.$reset();
-      this.$store.commit("ui/setAuthElem", to);
+      this.$store.commit('ui/setAuthElem', to);
     },
-    login() {
+    login () {
       this.$v.$touch();
       if (this.$v.email.$error || this.$v.password.$error) {
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "error",
-          message: this.$t("Please fix the validation errors"),
-          action1: { label: this.$t("OK") }
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'error',
+          message: this.$t('Please fix the validation errors'),
+          action1: { label: this.$t('OK') }
         });
         return;
       }
       this.$bus.$emit(
-        "notification-progress-start",
-        this.$t("Authorization in progress ...")
+        'notification-progress-start',
+        this.$t('Authorization in progress ...')
       );
       this.$store
-        .dispatch("user/login", {
+        .dispatch('user/login', {
           username: this.email,
           password: this.password
         })
         .then(result => {
-          this.$bus.$emit("notification-progress-stop", {});
+          this.$bus.$emit('notification-progress-stop', {});
 
           if (result.code !== 200) {
             this.onFailure(result);
           } else {
-            this.onSuccess(this.$t("You are logged in!"));
+            this.onSuccess(this.$t('You are logged in!'));
             this.switchElem(null);
           }
         })
         .catch(err => {
-          Logger.error(err, "user")();
+          Logger.error(err, 'user')();
           this.onFailure({
             result:
-              "Unexpected authorization error. Check your Network conection."
+              'Unexpected authorization error. Check your Network conection.'
           });
-          this.$bus.$emit("notification-progress-stop");
+          this.$bus.$emit('notification-progress-stop');
         });
     },
-    register() {
+    register () {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        this.$store.dispatch("notification/spawnNotification", {
-          type: "error",
-          message: this.$t("Please fix the validation errors"),
-          action1: { label: this.$t("OK") }
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'error',
+          message: this.$t('Please fix the validation errors'),
+          action1: { label: this.$t('OK') }
         });
         return;
       }
       this.$bus.$emit(
-        "notification-progress-start",
-        this.$t("Registering the account ...")
+        'notification-progress-start',
+        this.$t('Registering the account ...')
       );
       this.$store
-        .dispatch("user/register", {
+        .dispatch('user/register', {
           email: this.email,
           password: this.password,
           firstname: this.firstName,
           lastname: this.lastName
         })
         .then(result => {
-          this.$bus.$emit("notification-progress-stop");
+          this.$bus.$emit('notification-progress-stop');
           if (result.code !== 200) {
             this.onFailure(result);
           } else {
-            this.$store.dispatch("user/login", {
+            this.$store.dispatch('user/login', {
               username: this.email,
               password: this.password
             });
-            this.onSuccess(this.$t("You are logged in!"));
+            this.onSuccess(this.$t('You are logged in!'));
             this.switchElem(null);
           }
         })
@@ -233,24 +233,24 @@ export default {
           // TODO Move to theme
           this.onFailure({
             result:
-              "Unexpected authorization error. Check your Network conection."
+              'Unexpected authorization error. Check your Network conection.'
           });
-          this.$bus.$emit("notification-progress-stop");
-          Logger.error(err, "user")();
+          this.$bus.$emit('notification-progress-stop');
+          Logger.error(err, 'user')();
         });
     },
-    onSuccess(message) {
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "success",
+    onSuccess (message) {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'success',
         message: message,
-        action1: { label: this.$t("OK") }
+        action1: { label: this.$t('OK') }
       });
     },
-    onFailure(result) {
-      this.$store.dispatch("notification/spawnNotification", {
-        type: "error",
+    onFailure (result) {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'error',
         message: this.$t(result.result),
-        action1: { label: this.$t("OK") }
+        action1: { label: this.$t('OK') }
       });
     }
   },
