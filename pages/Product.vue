@@ -241,16 +241,20 @@
       />
     </lazy-hydrate>
     <lazy-hydrate when-idle>
-      <related-products
-        type="upsell"
-        :heading="$t('We found other products you might like')"
-      />
+      <SfSection
+        :title-heading="$t('We found other products you might like')"
+        class="section"
+      >
+        <m-related-products type="upsell" />
+      </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
       <promoted-offers single-banner />
     </lazy-hydrate>
     <lazy-hydrate when-idle>
-      <related-products type="related" />
+      <SfSection :title-heading="$t('Similar Products')" class="section">
+        <m-related-products type="related" />
+      </SfSection>
     </lazy-hydrate>
     <SizeGuide />
   </div>
@@ -258,7 +262,6 @@
 
 <script>
 import config from 'config';
-import RelatedProducts from 'theme/components/core/blocks/Product/Related';
 import Reviews from 'theme/components/core/blocks/Reviews/Reviews';
 import AddToCart from 'theme/components/core/AddToCart';
 import GenericSelector from 'theme/components/core/GenericSelector';
@@ -295,6 +298,9 @@ import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-view
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import MRelatedProducts from 'theme/components/molecules/m-related-products';
+
+import { SfSection } from '@storefront-ui/vue';
 
 export default {
   components: {
@@ -310,13 +316,15 @@ export default {
     ProductGallery,
     ProductLinks,
     PromotedOffers,
-    RelatedProducts,
     Reviews,
     SizeSelector,
     WebShare,
     SizeGuide,
     LazyHydrate,
-    ProductQuantity
+    ProductQuantity,
+    /// //////////////
+    MRelatedProducts,
+    SfSection
   },
   directives: { focusClean },
   mixins: [ProductOption],
