@@ -8,7 +8,7 @@ export const uiStore = {
     newsletterPopup: false,
     overlay: false,
     loader: false,
-    authElem: 'login',
+    authElem: null,
     checkoutMode: false,
     openMyAccount: false,
     submenu: {
@@ -18,50 +18,50 @@ export const uiStore = {
   },
   mutations: {
     setCheckoutMode (state, action) {
-      state.checkoutMode = action === true
+      state.checkoutMode = action === true;
     },
     setMicrocart (state, action) {
-      state.microcart = action === true
-      state.overlay = action === true
+      state.microcart = action === true;
+      state.overlay = action === true;
     },
     setSidebar (state, action) {
-      state.sidebar = action === true
-      state.overlay = action === true
+      state.sidebar = action === true;
+      state.overlay = action === true;
     },
     setSubmenu (state, { id, depth }) {
       if (id) {
-        state.submenu.path.push(id)
+        state.submenu.path.push(id);
       } else if (state.submenu.path.length) {
         setTimeout(() => {
-          state.submenu.path.pop()
-        }, 300)
+          state.submenu.path.pop();
+        }, 300);
       }
-      state.submenu.depth = state.submenu.depth > 0 && depth
+      state.submenu.depth = state.submenu.depth > 0 && depth;
     },
     setSearchpanel (state, action) {
-      state.searchpanel = action === true
-      state.overlay = action === true
+      state.searchpanel = action === true;
+      state.overlay = action === true;
     },
     setWishlist (state, action) {
-      state.wishlist = action === true
-      state.overlay = action === true
+      state.wishlist = action === true;
+      state.overlay = action === true;
     },
     setOverlay (state, action) {
-      state.overlay = action === true
+      state.overlay = action === true;
     },
     setLoader (state, action) {
-      state.loader = action === true
+      state.loader = action === true;
     },
     setAuthElem (state, action) {
-      state.authElem = action
+      state.authElem = action;
     }
   },
   actions: {
     toggleMicrocart ({ commit, state }) {
-      commit('setMicrocart', !state.microcart)
+      commit('setMicrocart', !state.microcart);
     },
     toggleWishlist ({ commit, state }) {
-      commit('setWishlist', !state.wishlist)
+      commit('setWishlist', !state.wishlist);
     }
   }
-}
+};
