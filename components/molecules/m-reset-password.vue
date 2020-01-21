@@ -1,6 +1,7 @@
 <template>
-  <div class="m-login" key="log-in">
-    <div class="form">
+  <div class="m-reset-password" key="reset-password">
+    <div class="form" v-if="!passwordSent">
+      <p class="form__message">{{ $t('Enter your email to receive instructions on how to reset your password.') }}</p>
       <SfInput
         v-model="email"
         name="email"
@@ -14,35 +15,17 @@
         "
         class="form__input"
       />
-      <SfInput
-        v-model="password"
-        name="password"
-        :label="$t('Password')"
-        :required="true"
-        :valid="!$v.password.$error"
-        :error-message="$t('Field is required.')"
-        type="password"
-        class="form__input"
-      />
-      <SfCheckbox
-        v-model="rememberMe"
-        name="remember-me"
-        :label="$t('Remember me')"
-        class="form__checkbox"
-      />
-      <SfButton class="sf-button--full-width form__button" @click.native="login">
-        {{ $t("Login") }}
+      <SfButton class="sf-button--full-width form__button" @click.native="resetPassword">
+        {{ $t("Reset password") }}
       </SfButton>
+    </div>
+    <div v-else>
+      <p class="form__message">{{ $t('We\'ve sent password reset instructions to your email. Check your inbox and follow the link.') }}</p>
     </div>
     <div class="action">
-      <SfButton class="sf-button--text button--muted" @click.native="switchElem('forgot-pass')">
-        {{ $t("Forgotten password?") }}
-      </SfButton>
-    </div>
-    <div class="bottom">
-      {{ $t("Don't have and account yet?") }}
-      <SfButton class="sf-button--text" @click.native="switchElem('register')">
-        {{ $t("Register today?") }}
+      {{ $t("or") }}
+      <SfButton class="sf-button--text" @click.native="switchElem('login')">
+        {{ $t("login in to your account") }}
       </SfButton>
     </div>
   </div>
@@ -51,16 +34,15 @@
 <script>
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
-import { SfInput, SfButton, SfCheckbox } from '@storefront-ui/vue';
+import { SfInput, SfButton } from '@storefront-ui/vue';
 
 export default {
-  name: 'MLogin',
-  components: { SfInput, SfButton, SfCheckbox },
+  name: 'MResetPassword',
+  components: { SfInput, SfButton },
   data () {
     return {
       email: '',
-      password: '',
-      rememberMe: false
+      passwordSent: false
     };
   },
   methods: {
@@ -68,7 +50,7 @@ export default {
       this.$v.$reset();
       this.$store.commit('ui/setAuthElem', to);
     },
-    login () {
+    resetPassword () {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.$store.dispatch('notification/spawnNotification', {
@@ -80,38 +62,21 @@ export default {
       }
       this.$bus.$emit(
         'notification-progress-start',
-        this.$t('Authorization in progress ...')
+        this.$t('Resetting the password ... ')
       );
       this.$store
-        .dispatch('user/login', {
-          username: this.email,
-          password: this.password
-        })
-        .then(result => {
-          this.$bus.$emit('notification-progress-stop', {});
-
-          if (result.code !== 200) {
-            this.onFailure(result);
+        .dispatch('user/resetPassword', { email: this.email })
+        .then(response => {
+          this.$bus.$emit('notification-progress-stop');
+          if (response.code === 200) {
+            this.passwordSent = true;
           } else {
-            this.onSuccess(this.$t('You are logged in!'));
-            this.switchElem(null);
+            this.onFailure(response);
           }
         })
-        .catch(err => {
-          Logger.error(err, 'user')();
-          this.onFailure({
-            result:
-              'Unexpected authorization error. Check your Network conection.'
-          });
+        .catch(() => {
           this.$bus.$emit('notification-progress-stop');
         });
-    },
-    onSuccess (message) {
-      this.$store.dispatch('notification/spawnNotification', {
-        type: 'success',
-        message: message,
-        action1: { label: this.$t('OK') }
-      });
     },
     onFailure (result) {
       this.$store.dispatch('notification/spawnNotification', {
@@ -125,9 +90,6 @@ export default {
     email: {
       required,
       email
-    },
-    password: {
-      required
     }
   }
 }
@@ -144,6 +106,10 @@ export default {
   }
   &__button {
     margin-top: $spacer-big;
+  }
+  &__message {
+    margin-bottom: $spacer-extra-big;
+    font-size: 0.9rem;
   }
 }
 .action {

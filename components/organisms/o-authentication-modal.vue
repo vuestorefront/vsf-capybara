@@ -4,6 +4,7 @@
       <transition name="fade" mode="out-in">
         <MLogin v-if="activeElem === 'login'" />
         <MRegister v-if="activeElem === 'register'" />
+        <MResetPassword v-if="activeElem === 'forgot-pass'" />
       </transition>
     </SfModal>
   </div>
@@ -14,10 +15,11 @@ import { mapState } from 'vuex';
 import { SfModal } from '@storefront-ui/vue';
 import MLogin from 'theme/components/molecules/m-login'
 import MRegister from 'theme/components/molecules/m-register'
+import MResetPassword from 'theme/components/molecules/m-reset-password'
 
 export default {
   name: 'OAuthenticationModal',
-  components: { SfModal, MLogin, MRegister },
+  components: { SfModal, MLogin, MRegister, MResetPassword },
   computed: {
     ...mapState({
       activeElem: state => state.ui.authElem
