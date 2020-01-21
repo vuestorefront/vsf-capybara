@@ -11,6 +11,7 @@
           <AProductPrice
             class="sf-price--big m-product-short-info__sub-price"
             :product="product"
+            :custom-options="customOptions"
           />
           <AProductRating
             :score="productRating.score"
@@ -38,6 +39,10 @@ export default {
   },
   props: {
     product: {
+      type: Object,
+      default: () => ({})
+    },
+    customOptions: {
       type: Object,
       default: () => ({})
     }
