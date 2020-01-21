@@ -1,7 +1,9 @@
 <template>
   <div class="m-reset-password" key="reset-password">
     <div class="form" v-if="!passwordSent">
-      <p class="form__message">{{ $t('Enter your email to receive instructions on how to reset your password.') }}</p>
+      <p class="form__message">
+        {{ $t('Enter your email to receive instructions on how to reset your password.') }}
+      </p>
       <SfInput
         v-model="email"
         name="email"
@@ -20,7 +22,9 @@
       </SfButton>
     </div>
     <div v-else>
-      <p class="form__message">{{ $t('We\'ve sent password reset instructions to your email. Check your inbox and follow the link.') }}</p>
+      <p class="form__message">
+        {{ $t('We\'ve sent password reset instructions to your email. Check your inbox and follow the link.') }}
+      </p>
     </div>
     <div class="action">
       {{ $t("or") }}

@@ -18,15 +18,15 @@
   </SfCarousel>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import { SfProductCard, SfCarousel } from "@storefront-ui/vue";
-import { price, htmlDecode } from "@vue-storefront/core/filters";
-import config from "config";
-import { currentStoreView } from "@vue-storefront/core/lib/multistore";
-import { formatProductLink } from "@vue-storefront/core/modules/url/helpers";
-import { productThumbnailPath } from "@vue-storefront/core/helpers";
+import { mapGetters } from 'vuex';
+import { SfProductCard, SfCarousel } from '@storefront-ui/vue';
+import { price, htmlDecode } from '@vue-storefront/core/filters';
+import config from 'config';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
+import { productThumbnailPath } from '@vue-storefront/core/helpers';
 export default {
-  name: "MProductCarousel",
+  name: 'MProductCarousel',
   components: {
     SfCarousel,
     SfProductCard
@@ -39,9 +39,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isOnWishlist: "wishlist/isOnWishlist"
+      isOnWishlist: 'wishlist/isOnWishlist'
     }),
-    carouselProducts() {
+    carouselProducts () {
       return this.products.map(product => {
         return {
           data: product,
@@ -65,22 +65,22 @@ export default {
     }
   },
   methods: {
-    toggleWishlist(product) {
+    toggleWishlist (product) {
       const isProductOnWishlist = this.isOnWishlist(product);
       const message = isProductOnWishlist
-        ? "Product {productName} has been removed from wishlist!"
-        : "Product {productName} has been added to wishlist!";
+        ? 'Product {productName} has been removed from wishlist!'
+        : 'Product {productName} has been added to wishlist!';
       const action = isProductOnWishlist
-        ? "wishlist/removeItem"
-        : "wishlist/addItem";
+        ? 'wishlist/removeItem'
+        : 'wishlist/addItem';
 
       this.$store.dispatch(action, product);
       this.$store.dispatch(
-        "notification/spawnNotification",
+        'notification/spawnNotification',
         {
-          type: "success",
+          type: 'success',
           message: this.$t(message, { productName: product.name }),
-          action1: { label: this.$t("OK") }
+          action1: { label: this.$t('OK') }
         },
         { root: true }
       );
