@@ -1,245 +1,15 @@
 <template>
-  <div id="product" itemscope itemtype="http://schema.org/Product">
-    <section class="bg-cl-secondary px20 product-top-section">
-      <div class="container">
-        <section class="row m0 between-xs">
-          <div class="col-xs-12 col-md-6 center-xs middle-xs image">
-            <product-gallery
-              :offline="getOfflineImage"
-              :gallery="getProductGallery"
-              :configuration="getCurrentProductConfiguration"
-              :product="getCurrentProduct"
-            />
-          </div>
-          <div class="col-xs-12 col-md-5 data">
-            <breadcrumbs class="pt40 pb20 hidden-xs" />
-            <h1
-              class="mb20 mt0 cl-mine-shaft product-name"
-              data-testid="productName"
-              itemprop="name"
-            >
-              {{ getCurrentProduct.name | htmlDecode }}
-              <web-share
-                :title="getCurrentProduct.name | htmlDecode"
-                text="Check this product!"
-                class="web-share"
-              />
-            </h1>
-            <div
-              class="mb20 uppercase cl-secondary"
-              itemprop="sku"
-              :content="getCurrentProduct.sku"
-            >
-              {{ $t("SKU: {sku}", { sku: getCurrentProduct.sku }) }}
-            </div>
-            <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-              <meta
-                itemprop="priceCurrency"
-                :content="$store.state.storeView.i18n.currencyCode"
-              >
-              <meta
-                itemprop="price"
-                :content="parseFloat(getCurrentProduct.priceInclTax).toFixed(2)"
-              >
-              <meta
-                itemprop="availability"
-                :content="structuredData.availability"
-              >
-              <meta itemprop="url" :content="getCurrentProduct.url_path">
-              <div
-                v-if="getCurrentProduct.type_id !== 'grouped'"
-                class="mb40 price serif"
-              >
-                <div
-                  v-if="
-                    getCurrentProduct.special_price &&
-                      getCurrentProduct.priceInclTax &&
-                      getCurrentProduct.original_price_incl_tax
-                  "
-                  class="h3 cl-secondary"
-                >
-                  <span class="h2 cl-mine-shaft weight-700">{{
-                    (getCurrentProduct.priceInclTax * getCurrentProduct.qty)
-                      | price
-                  }}</span>&nbsp;
-                  <span class="price-original h3">{{
-                    (getCurrentProduct.original_price_incl_tax *
-                      getCurrentProduct.qty)
-                      | price
-                  }}</span>
-                </div>
-                <div
-                  v-if="
-                    !getCurrentProduct.special_price &&
-                      getCurrentProduct.priceInclTax
-                  "
-                  class="h2 cl-mine-shaft weight-700"
-                >
-                  {{
-                    getCurrentProduct.qty > 0
-                      ? getCurrentProduct.priceInclTax * getCurrentProduct.qty
-                      : getCurrentProduct.priceInclTax | price
-                  }}
-                </div>
-              </div>
-              <div
-                v-if="getCurrentProduct.type_id == 'configurable'"
-                class="cl-primary variants"
-              >
-                <div
-                  v-if="
-                    getCurrentProduct.errors &&
-                      Object.keys(getCurrentProduct.errors).length > 0
-                  "
-                  class="error"
-                >
-                  {{ getCurrentProduct.errors | formatProductMessages }}
-                </div>
-                <div
-                  v-for="option in getProductOptions"
-                  :key="option.id"
-                  class="h5"
-                >
-                  <div class="variants-label" data-testid="variantsLabel">
-                    {{ option.label }}
-                    <span class="weight-700">{{ getOptionLabel(option) }}</span>
-                  </div>
-                  <div class="row top-xs m0 pt15 pb40 variants-wrapper">
-                    <div v-if="option.label == 'Color'">
-                      <color-selector
-                        v-for="filter in getAvailableFilters[
-                          option.attribute_code
-                        ]"
-                        :key="filter.id"
-                        :variant="filter"
-                        :selected-filters="getSelectedFilters"
-                        @change="changeFilter"
-                      />
-                    </div>
-                    <div v-else-if="option.label == 'Size'" class="sizes">
-                      <size-selector
-                        v-for="filter in getAvailableFilters[
-                          option.attribute_code
-                        ]"
-                        :key="filter.id"
-                        class="mr10 mb10"
-                        :variant="filter"
-                        :selected-filters="getSelectedFilters"
-                        @change="changeFilter"
-                      />
-                    </div>
-                    <div v-else :class="option.attribute_code">
-                      <generic-selector
-                        v-for="filter in getAvailableFilters[
-                          option.attribute_code
-                        ]"
-                        :key="filter.id"
-                        class="mr10 mb10"
-                        :variant="filter"
-                        :selected-filters="getSelectedFilters"
-                        @change="changeFilter"
-                      />
-                    </div>
-                    <span
-                      v-if="option.label == 'Size'"
-                      class="p0 ml30 inline-flex middle-xs no-underline h5 action size-guide pointer cl-secondary"
-                      @click="openSizeGuide"
-                    >
-                      <i class="pr5 material-icons">accessibility</i>
-                      <span>{{ $t("Size guide") }}</span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <product-links
-              v-if="getCurrentProduct.type_id == 'grouped'"
-              :products="getCurrentProduct.product_links"
-            />
-            <product-bundle-options
-              v-if="
-                getCurrentProduct.bundle_options &&
-                  getCurrentProduct.bundle_options.length > 0
-              "
-              :product="getCurrentProduct"
-            />
-            <product-custom-options
-              v-else-if="
-                getCurrentProduct.custom_options &&
-                  getCurrentProduct.custom_options.length > 0
-              "
-              :product="getCurrentProduct"
-            />
-            <product-quantity
-              v-if="
-                getCurrentProduct.type_id !== 'grouped' &&
-                  getCurrentProduct.type_id !== 'bundle'
-              "
-              v-model="getCurrentProduct.qty"
-              class="row m0 mb35"
-              :max-quantity="maxQuantity"
-              :loading="isStockInfoLoading"
-              :is-simple-or-configurable="isSimpleOrConfigurable"
-              show-quantity
-              @error="handleQuantityError"
-            />
-            <div class="row m0">
-              <add-to-cart
-                :product="getCurrentProduct"
-                :disabled="isAddToCartDisabled"
-                class="col-xs-12 col-sm-4 col-md-6"
-              />
-            </div>
-            <div class="row py40 add-to-buttons">
-              <div class="col-xs-6 col-sm-3 col-md-6">
-                <AAddToWishlist :product="getCurrentProduct" />
-              </div>
-              <div class="col-xs-6 col-sm-3 col-md-6">
-                <AAddToCompare :product="getCurrentProduct" />
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-    </section>
-    <section class="container px15 pt50 pb35 cl-accent details">
-      <h2 class="h3 m0 mb10 serif lh20 details-title">
-        {{ $t("Product details") }}
-      </h2>
-      <div
-        class="h4 details-wrapper"
-        :class="{ 'details-wrapper--open': detailsOpen }"
-      >
-        <div class="row between-md m0">
-          <div class="col-xs-12 col-sm-6">
-            <div
-              class="lh30 h5"
-              itemprop="description"
-              v-text="getCurrentProduct.description"
-            />
-          </div>
-          <div class="col-xs-12 col-sm-5">
-            <ul class="attributes p0 pt5 m0">
-              <product-attribute
-                v-for="attr in getCustomAttributes"
-                :key="attr.attribute_code"
-                :product="getCurrentProduct"
-                :attribute="attr"
-                empty-placeholder="N/A"
-              />
-            </ul>
-          </div>
-          <div class="details-overlay" @click="showDetails" />
-        </div>
-      </div>
-    </section>
-    <lazy-hydrate when-idle>
-      <reviews
-        v-show="isOnline"
-        :product-name="getOriginalProduct.name"
-        :product-id="getOriginalProduct.id"
-      />
-    </lazy-hydrate>
+  <div
+    id="product"
+    class="product"
+    itemscope
+    itemtype="http://schema.org/Product"
+  >
+    <OProductDetails
+      :product="getCurrentProduct"
+      :product-gallery="getProductGallery"
+      :product-configuration="getCurrentProductConfiguration"
+    />
     <lazy-hydrate when-idle>
       <SfSection
         :title-heading="$t('We found other products you might like')"
@@ -261,25 +31,9 @@
 </template>
 
 <script>
-import config from 'config';
-import Reviews from 'theme/components/core/blocks/Reviews/Reviews';
-import AddToCart from 'theme/components/core/AddToCart';
-import GenericSelector from 'theme/components/core/GenericSelector';
-import ColorSelector from 'theme/components/core/ColorSelector';
-import SizeSelector from 'theme/components/core/SizeSelector';
-import Breadcrumbs from 'theme/components/core/Breadcrumbs';
-import ProductAttribute from 'theme/components/core/ProductAttribute';
-import ProductQuantity from 'theme/components/core/ProductQuantity';
-import ProductLinks from 'theme/components/core/ProductLinks';
-import ProductCustomOptions from 'theme/components/core/ProductCustomOptions';
-import ProductBundleOptions from 'theme/components/core/ProductBundleOptions';
-import ProductGallery from 'theme/components/core/ProductGallery';
 import PromotedOffers from 'theme/components/theme/blocks/PromotedOffers/PromotedOffers';
 import focusClean from 'theme/components/theme/directives/focusClean';
-import WebShare from 'theme/components/theme/WebShare';
 import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
-import AAddToWishlist from 'theme/components/atoms/a-add-to-wishlist';
-import AAddToCompare from 'theme/components/atoms/a-add-to-compare';
 import { mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { ProductOption } from '@vue-storefront/core/modules/catalog/components/ProductOption.ts';
@@ -299,32 +53,19 @@ import { registerModule } from '@vue-storefront/core/lib/modules';
 import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
+import OProductDetails from 'theme/components/organisms/o-product-details';
 
 import { SfSection } from '@storefront-ui/vue';
 
 export default {
   components: {
-    AddToCart,
-    AAddToCompare,
-    AAddToWishlist,
-    Breadcrumbs,
-    ColorSelector,
-    GenericSelector,
-    ProductAttribute,
-    ProductBundleOptions,
-    ProductCustomOptions,
-    ProductGallery,
-    ProductLinks,
     PromotedOffers,
-    Reviews,
-    SizeSelector,
-    WebShare,
     SizeGuide,
+    // changed
     LazyHydrate,
-    ProductQuantity,
-    /// //////////////
     MRelatedProducts,
-    SfSection
+    SfSection,
+    OProductDetails
   },
   directives: { focusClean },
   mixins: [ProductOption],
@@ -377,25 +118,6 @@ export default {
         return [];
       }
       return this.getCurrentProduct.configurable_options;
-    },
-    getOfflineImage () {
-      return {
-        src: this.getThumbnail(
-          this.getCurrentProduct.image,
-          config.products.thumbnails.width,
-          config.products.thumbnails.height
-        ),
-        error: this.getThumbnail(
-          this.getCurrentProduct.image,
-          config.products.thumbnails.width,
-          config.products.thumbnails.height
-        ),
-        loading: this.getThumbnail(
-          this.getCurrentProduct.image,
-          config.products.thumbnails.width,
-          config.products.thumbnails.height
-        )
-      };
     },
     getCustomAttributes () {
       return Object.values(this.attributesByCode)
@@ -507,9 +229,6 @@ export default {
       );
       this.getQuantity();
     },
-    openSizeGuide () {
-      this.$bus.$emit('modal-show', 'modal-sizeguide');
-    },
     isOptionAvailable (option) {
       // check if the option is available
       const currentConfig = Object.assign(
@@ -588,7 +307,20 @@ $color-secondary: color(secondary);
 $color-white: color(white);
 $bg-secondary: color(secondary, $colors-background);
 
+@import "~@storefront-ui/vue/styles";
+
+@mixin for-desktop {
+  @media screen and (min-width: $desktop-min) {
+    @content;
+  }
+}
+
 .product {
+  box-sizing: border-box;
+  @include for-desktop {
+    max-width: 1240px;
+    margin: auto;
+  }
   &__add-to-compare {
     display: none;
     @media (min-width: 767px) {
