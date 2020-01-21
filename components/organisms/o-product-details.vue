@@ -7,7 +7,11 @@
     />
     <div class="o-product-details__description">
       <SfSticky>
-        <MProductShortInfo :product="product" :custom-options="productCustomOptions" />
+        <MProductShortInfo
+          :product="product"
+          :custom-options="productCustomOptions"
+          :reviews="reviews"
+        />
         <ATextAction
           class="o-product-details__text-action"
           text="Size guide"
@@ -22,12 +26,16 @@
           />
           <MProductCallToAction />
         </div>
-        <MProductAdditionalInfo />
+        <MProductAdditionalInfo
+          :product="product"
+          :reviews="reviews"
+          :attributes="productAttributes" />
       </SfSticky>
     </div>
   </div>
 </template>
 <script>
+import get from 'lodash-es/get'
 import config from 'config';
 import { mapGetters } from 'vuex';
 import { SfAlert, SfSticky } from '@storefront-ui/vue';
@@ -65,6 +73,10 @@ export default {
     productCustomOptions: {
       type: Object,
       default: () => ({})
+    },
+    productAttributes: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
@@ -72,15 +84,11 @@ export default {
       const width = config.products.thumbnails.width;
       const height = config.products.thumbnails.height;
       return {
-        small: {
+        mobile: {
           url: this.getThumbnail(this.product.image, width, height),
           alt: this.product.name
         },
-        normal: {
-          url: this.getThumbnail(this.product.image, width, height),
-          alt: this.product.name
-        },
-        big: {
+        desktop: {
           url: this.getThumbnail(this.product.image, width, height),
           alt: this.product.name
         }
@@ -89,19 +97,24 @@ export default {
     gallery () {
       return this.productGallery.map(imageObject => ({
         ...imageObject,
-        small: {
+        mobile: {
           url: imageObject.loading,
           alt: this.product.name
         },
-        normal: {
-          url: imageObject.src,
-          alt: this.product.name
-        },
-        big: {
+        desktop: {
           url: imageObject.src,
           alt: this.product.name
         }
       }));
+    },
+    reviews () {
+      const baseReviews = get(this.$store.state.review, 'items.items', [])
+      return baseReviews.map((review) => ({
+        author: review.nickname,
+        date: review.created_at,
+        message: `${review.title}: ${review.detail}`,
+        rating: 1 // TODO: remove hardcode
+      }))
     }
   },
   methods: {

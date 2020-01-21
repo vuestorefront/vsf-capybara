@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@storefront-ui/vue": "^0.4.0",
+    "@storefront-ui/vue": "latest",
     "body-scroll-lock": "^2.6.4",
     "vue": "^2.6.6",
     "vue-carousel": "^0.6.9",

@@ -14,10 +14,17 @@
             :custom-options="customOptions"
           /> -->
           <AProductRating
-            :score="productRating.score"
-            :max="productRating.max"
-            :review="productRating.review"
-          />
+            @click:stars="handleOpenReviewModal"
+            @click:text="handleOpenReviewList"
+            :reviews="reviews"
+          >
+            <span class="m-product-short-info__rating-text desktop-only">
+              {{ $t("Read all {count} review", { count: reviewsCount }) }}
+            </span>
+            <span class="m-product-short-info__rating-text mobile-only">
+              {{ `(${reviewsCount})` }}
+            </span>
+          </AProductRating>
         </div>
       </div>
     </div>
@@ -30,6 +37,7 @@
 import { SfHeading } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 // import AProductPrice from 'theme/components/atoms/a-product-price';
+import { createSmoothscroll } from 'theme/helpers'
 export default {
   name: 'MProductShortInfo',
   components: {
@@ -45,15 +53,27 @@ export default {
     customOptions: {
       type: Object,
       default: () => ({})
+    },
+    reviews: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
-    productRating () {
-      return {
-        score: 1,
-        max: 5,
-        review: 1
-      }
+    reviewsCount () {
+      return this.reviews.length
+    }
+  },
+  methods: {
+    handleOpenReviewModal () {
+      this.$bus.$emit('modal-show', 'modal-add-review')
+    },
+    handleOpenReviewList () {
+      const reviewsEl = document.querySelector('#m-product-additional-info')
+      if (!reviewsEl) return
+      const currentScroll =
+        document.documentElement.scrollTop || document.body.scrollTop
+      createSmoothscroll(currentScroll, reviewsEl.getBoundingClientRect().top)
     }
   }
 };
@@ -110,6 +130,10 @@ export default {
       flex-basis: auto;
       margin-top: $spacer-big / 2;
     }
+  }
+  &__rating-text {
+    margin-left: 10px;
+    font-size: 0.75rem;
   }
 }
 </style>

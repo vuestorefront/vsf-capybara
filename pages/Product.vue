@@ -10,13 +10,14 @@
       :product-gallery="getProductGallery"
       :product-configuration="getCurrentProductConfiguration"
       :product-custom-options="getCurrentCustomOptions"
+      :product-attributes="getCustomAttributes"
     />
     <lazy-hydrate when-idle>
       <SfSection
         :title-heading="$t('We found other products you might like')"
         class="section"
       >
-        <m-related-products type="upsell" />
+        <MRelatedProducts type="upsell" />
       </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
@@ -24,10 +25,11 @@
     </lazy-hydrate>
     <lazy-hydrate when-idle>
       <SfSection :title-heading="$t('Similar Products')" class="section">
-        <m-related-products type="related" />
+        <MRelatedProducts type="related" />
       </SfSection>
     </lazy-hydrate>
     <SizeGuide />
+    <OReviewModal :product-id="getOriginalProduct.id" />
   </div>
 </template>
 
@@ -35,7 +37,7 @@
 import PromotedOffers from 'theme/components/theme/blocks/PromotedOffers/PromotedOffers';
 import focusClean from 'theme/components/theme/directives/focusClean';
 import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { ProductOption } from '@vue-storefront/core/modules/catalog/components/ProductOption.ts';
 import {
@@ -58,6 +60,11 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 
 import { SfSection } from '@storefront-ui/vue';
 
+const OReviewModal = () =>
+  import(
+    /* webpackChunkName: "vsf-review-modal" */ 'theme/components/organisms/o-review-modal'
+  );
+
 export default {
   components: {
     PromotedOffers,
@@ -66,7 +73,8 @@ export default {
     LazyHydrate,
     MRelatedProducts,
     SfSection,
-    OProductDetails
+    OProductDetails,
+    OReviewModal
   },
   directives: { focusClean },
   mixins: [ProductOption],
@@ -187,10 +195,10 @@ export default {
     registerModule(RecentlyViewedModule);
   },
   async mounted () {
-    await this.$store.dispatch(
-      'recently-viewed/addItem',
-      this.getCurrentProduct
-    );
+    await Promise.all([
+      this.$store.dispatch('recently-viewed/addItem', this.getCurrentProduct),
+      this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id })
+    ])
   },
   beforeRouteEnter (to, from, next) {
     if (isServer) {

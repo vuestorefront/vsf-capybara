@@ -1,13 +1,8 @@
 <template>
   <div class="a-product-rating">
-    <SfRating :score="score" :max="max" />
-    <ATextAction class="a-product-rating__action">
-      <span class="a-product-rating__reviews desktop-only">
-        {{ $t("Read all {review} review", { review: review }) }}
-      </span>
-      <span class="a-product-rating__reviews mobile-only">
-        {{ `(${review})` }}
-      </span>
+    <SfRating :score="score" :max="max" @click="$emit('click:stars')" />
+    <ATextAction :text="text" class="a-product-rating__action" @click="$emit('click:text')">
+      <slot></slot>
     </ATextAction>
   </div>
 </template>
@@ -20,19 +15,27 @@ export default {
     ATextAction
   },
   props: {
-    score: {
-      type: Number,
-      default: 0,
-      reqiured: true
+    reviews: {
+      type: Array,
+      default: () => []
     },
-    max: {
-      type: Number,
-      default: 0,
-      reqiured: true
+    text: {
+      type: String,
+      default: ''
+    }
+  },
+  data () {
+    return {
+      max: 5
+    }
+  },
+  computed: {
+    score () {
+      const allScore = this.reviews.reduce((sum, rev) => (sum + (rev.rating || 0)), 0)
+      return allScore ? allScore / this.count : allScore
     },
-    review: {
-      type: Number,
-      default: 0
+    count () {
+      return this.reviews.length
     }
   }
 };
@@ -51,16 +54,15 @@ export default {
   @include for-desktop {
     margin-left: auto;
   }
-  &__reviews {
-    margin-left: 10px;
-    font-size: 0.75rem;
-  }
   &__action {
     margin: 0;
     ::v-deep .sf-action {
       line-height: 1;
       padding-bottom: 5px;
     }
+  }
+  ::v-deep .sf-rating {
+    cursor: pointer;
   }
 }
 </style>
