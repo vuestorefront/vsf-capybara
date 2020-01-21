@@ -9,6 +9,7 @@
       :product="getCurrentProduct"
       :product-gallery="getProductGallery"
       :product-configuration="getCurrentProductConfiguration"
+      :product-custom-options="getCurrentCustomOptions"
     />
     <lazy-hydrate when-idle>
       <SfSection
@@ -85,7 +86,8 @@ export default {
       getProductGallery: 'product/getProductGallery',
       getCurrentProductConfiguration: 'product/getCurrentProductConfiguration',
       getOriginalProduct: 'product/getOriginalProduct',
-      attributesByCode: 'attribute/attributeListByCode'
+      attributesByCode: 'attribute/attributeListByCode',
+      getCurrentCustomOptions: 'product/getCurrentCustomOptions'
     }),
     getOptionLabel () {
       return option => {

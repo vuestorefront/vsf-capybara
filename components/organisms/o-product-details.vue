@@ -7,7 +7,7 @@
     />
     <div class="o-product-details__description">
       <SfSticky>
-        <MProductShortInfo :product="product" />
+        <MProductShortInfo :product="product" :custom-options="productCustomOptions" />
         <ATextAction
           class="o-product-details__text-action"
           text="Size guide"
@@ -59,6 +59,10 @@ export default {
       default: () => []
     },
     productConfiguration: {
+      type: Object,
+      default: () => ({})
+    },
+    productCustomOptions: {
       type: Object,
       default: () => ({})
     }
