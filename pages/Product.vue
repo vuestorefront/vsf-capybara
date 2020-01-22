@@ -75,6 +75,11 @@ export default {
     OProductDetails,
     OReviewModal
   },
+  provide () {
+    return {
+      configurableOptionCallback: this.configurableOptionCallback
+    }
+  },
   mixins: [ProductOption],
   data () {
     return {
@@ -94,28 +99,8 @@ export default {
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions'
     }),
-    getOptionLabel () {
-      return option => {
-        const configName = option.attribute_code
-          ? option.attribute_code
-          : option.label.toLowerCase();
-        return this.getCurrentProductConfiguration[configName]
-          ? this.getCurrentProductConfiguration[configName].label
-          : configName;
-      };
-    },
     isOnline () {
       return onlineHelper.isOnline;
-    },
-    getProductOptions () {
-      if (
-        this.getCurrentProduct.errors &&
-        Object.keys(this.getCurrentProduct.errors).length &&
-        Object.keys(this.getCurrentProductConfiguration).length
-      ) {
-        return [];
-      }
-      return this.getCurrentProduct.configurable_options;
     },
     getCustomAttributes () {
       return Object.values(this.attributesByCode)
@@ -186,11 +171,8 @@ export default {
     }
   },
   methods: {
-    changeFilter (variant) {
-      this.$bus.$emit(
-        'filter-changed-product',
-        Object.assign({ attribute_code: variant.type }, variant)
-      );
+    configurableOptionCallback (variant) {
+      this.$bus.$emit('filter-changed-product', variant)
       this.getQuantity();
     },
     async getQuantity () {

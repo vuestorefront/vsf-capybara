@@ -2,7 +2,7 @@
   <div class="o-product-details" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
     <meta itemprop="priceCurrency" :content="$store.state.storeView.i18n.currencyCode">
     <meta itemprop="price" :content="parseFloat(product.price_incl_tax).toFixed(2)">
-    <meta itemprop="availability" :content="structuredData.availability">
+    <meta itemprop="availability" :content="availability">
     <meta itemprop="url" :content="product.url_path">
     <MProductGallery
       :offline-image="offlineImage"
@@ -17,11 +17,28 @@
           :reviews="reviews"
         />
         <ATextAction
+          v-if="sizeOption"
           class="o-product-details__text-action"
           text="Size guide"
           @click="openSizeGuide"
         />
-        <MProductOptions />
+        <MProductOptionsConfigurable
+          v-if="product.type_id =='configurable'"
+          :product="product"
+          :configuration="productConfiguration"
+        />
+        <MProductOptionsGroup
+          v-if="product.type_id =='grouped'"
+          :product-options="product.product_links"
+        />
+        <MProductOptionsBundle
+          v-if="product.bundle_options && product.bundle_options.length > 0"
+          :product="product"
+        />
+        <MProductOptionsCustom
+          v-else-if="product.custom_options && product.custom_options.length > 0"
+          :product="product"
+        />
         <MProductCallToAction
           class="o-product-details__section"
           :product="product"
@@ -44,9 +61,12 @@ import { SfSticky } from '@storefront-ui/vue';
 import ATextAction from 'theme/components/atoms/a-text-action';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
-import MProductOptions from 'theme/components/molecules/m-product-options';
 import MProductCallToAction from 'theme/components/molecules/m-product-call-to-action';
 import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
+import MProductOptionsConfigurable from 'theme/components/molecules/m-product-options-configurable';
+import MProductOptionsBundle from 'theme/components/molecules/m-product-options-bundle';
+import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
+import MProductOptionsGroup from 'theme/components/molecules/m-product-options-group';
 
 export default {
   components: {
@@ -54,9 +74,12 @@ export default {
     ATextAction,
     MProductGallery,
     MProductShortInfo,
-    MProductOptions,
     MProductCallToAction,
-    MProductAdditionalInfo
+    MProductAdditionalInfo,
+    MProductOptionsConfigurable,
+    MProductOptionsBundle,
+    MProductOptionsCustom,
+    MProductOptionsGroup
   },
   props: {
     product: {
@@ -121,14 +144,11 @@ export default {
         rating: 1 // TODO: remove hardcode
       }))
     },
-    structuredData () {
-      return {
-        availability:
-          this.product.stock &&
-          this.product.stock.is_in_stock
-            ? 'InStock'
-            : 'OutOfStock'
-      };
+    availability () {
+      return this.product.stock && this.product.stock.is_in_stock ? 'InStock' : 'OutOfStock'
+    },
+    sizeOption () {
+      return get(this.productConfiguration, 'size', false)
     }
   },
   methods: {
