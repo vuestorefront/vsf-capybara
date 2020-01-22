@@ -10,7 +10,7 @@
         />
         <div class="m-product-short-info__sub">
           <!-- <AProductPrice
-            v-if="getCurrentProduct.type_id !== 'grouped'"
+            v-if="product.type_id !== 'grouped'"
             class="sf-price--big m-product-short-info__sub-price"
             :product="product"
             :custom-options="customOptions"
