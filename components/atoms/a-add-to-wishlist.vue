@@ -8,12 +8,7 @@
         : addProductToWhishlist(product)
     "
   >
-    <template v-if="!isOnWishlist">
-      {{ $t("Save for later") }}
-    </template>
-    <template v-else>
-      {{ $t("Remove") }}
-    </template>
+    {{ !isOnWishlist ? $t("Save for later") : $t("Remove") }}
   </SfButton>
 </template>
 
