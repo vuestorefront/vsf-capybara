@@ -25,7 +25,7 @@
           :text="$t('Leave me review')"
         />
       </div>
-      <SfDivider v-show="reviewsCount"/>
+      <SfDivider v-show="reviewsCount" />
       <MReviewList v-show="reviewsCount" :reviews="reviews" />
     </SfTab>
   </SfTabs>

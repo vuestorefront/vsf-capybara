@@ -2,7 +2,7 @@
   <div class="a-product-rating">
     <SfRating :score="score" :max="max" @click="$emit('click:stars')" />
     <ATextAction :text="text" class="a-product-rating__action" @click="$emit('click:text')">
-      <slot></slot>
+      <slot />
     </ATextAction>
   </div>
 </template>

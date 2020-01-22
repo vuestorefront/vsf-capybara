@@ -9,14 +9,15 @@
       :message="review.message"
       :rating="review.rating"
       :max-rating="5"
-      :readMoreText="$t('Read more')"
-      :hideFullText="$t('Read less')"
+      :read-more-text="$t('Read more')"
+      :hide-full-text="$t('Read less')"
     />
     <SfPagination
       :current="currentPage"
       :visible="visible"
       :total="total"
-      @click="value => currentPage = value"/>
+      @click="setCurrentPage"
+    />
   </div>
 </template>
 <script>
@@ -29,14 +30,17 @@ export default {
   },
   data () {
     return {
-      currentPage: 1,
-      visible: 2
+      currentPage: 1
     }
   },
   props: {
     reviews: {
       type: Array,
       default: () => []
+    },
+    visible: {
+      type: Number,
+      default: 2
     }
   },
   computed: {
@@ -47,6 +51,11 @@ export default {
       const startIndex = (this.currentPage - 1) * this.visible
       const endIndex = startIndex + this.visible
       return this.reviews.slice(startIndex, endIndex)
+    }
+  },
+  methods: {
+    setCurrentPage (newPage) {
+      this.currentPage = newPage
     }
   }
 }

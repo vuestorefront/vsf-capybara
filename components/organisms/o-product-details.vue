@@ -29,7 +29,8 @@
         <MProductAdditionalInfo
           :product="product"
           :reviews="reviews"
-          :attributes="productAttributes" />
+          :attributes="productAttributes"
+        />
       </SfSticky>
     </div>
   </div>
