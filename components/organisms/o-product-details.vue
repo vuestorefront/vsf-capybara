@@ -1,5 +1,9 @@
 <template>
-  <div class="o-product-details">
+  <div class="o-product-details" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+    <meta itemprop="priceCurrency" :content="$store.state.storeView.i18n.currencyCode">
+    <meta itemprop="price" :content="parseFloat(product.price_incl_tax).toFixed(2)">
+    <meta itemprop="availability" :content="structuredData.availability">
+    <meta itemprop="url" :content="product.url_path">
     <MProductGallery
       :offline-image="offlineImage"
       :gallery="gallery"
@@ -18,14 +22,11 @@
           @click="openSizeGuide"
         />
         <MProductOptions />
-        <div class="o-product-details__section">
-          <SfAlert
-            message="Low in stock"
-            type="warning"
-            class="o-product-details__alert"
-          />
-          <MProductCallToAction />
-        </div>
+        <MProductCallToAction
+          class="o-product-details__section"
+          :product="product"
+          :stock="productStock"
+        />
         <MProductAdditionalInfo
           :product="product"
           :reviews="reviews"
@@ -39,7 +40,7 @@
 import get from 'lodash-es/get'
 import config from 'config';
 import { mapGetters } from 'vuex';
-import { SfAlert, SfSticky } from '@storefront-ui/vue';
+import { SfSticky } from '@storefront-ui/vue';
 import ATextAction from 'theme/components/atoms/a-text-action';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
@@ -49,7 +50,6 @@ import MProductAdditionalInfo from 'theme/components/molecules/m-product-additio
 
 export default {
   components: {
-    SfAlert,
     SfSticky,
     ATextAction,
     MProductGallery,
@@ -78,6 +78,10 @@ export default {
     productAttributes: {
       type: Array,
       default: () => []
+    },
+    productStock: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
@@ -116,6 +120,15 @@ export default {
         message: `${review.title}: ${review.detail}`,
         rating: 1 // TODO: remove hardcode
       }))
+    },
+    structuredData () {
+      return {
+        availability:
+          this.product.stock &&
+          this.product.stock.is_in_stock
+            ? 'InStock'
+            : 'OutOfStock'
+      };
     }
   },
   methods: {
@@ -149,9 +162,6 @@ export default {
     @include for-desktop {
       justify-content: flex-end;
     }
-  }
-  &__alert {
-    margin-top: 1.5rem;
   }
   &__section {
     border-bottom: 1px solid #f1f2f3;

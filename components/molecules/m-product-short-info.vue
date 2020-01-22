@@ -3,6 +3,7 @@
     <div class="m-product-short-info__mobile-top">
       <div>
         <SfHeading
+          itemprop="name"
           :title="product.name | htmlDecode"
           :level="1"
           class="sf-heading--no-underline sf-heading--left m-product-short-info__heading"
@@ -28,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="m-product-short-info__description desktop-only">
+    <div class="m-product-short-info__description desktop-only" itemprop="sku">
       {{ $t("SKU: {sku}", { sku: product.sku }) }}
     </div>
   </div>
