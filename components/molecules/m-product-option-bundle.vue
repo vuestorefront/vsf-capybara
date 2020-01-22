@@ -1,6 +1,11 @@
 <template>
   <div class="a-product-option-bundle">
-    <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
+    <SfAlert
+      v-if="errorMessage"
+      class="a-product-option-bundle__alert"
+      :message="errorMessage"
+      type="danger"
+    />
     <SfHeading
       :title="option.title"
       :level="4"
@@ -33,7 +38,7 @@
 
 <script>
 import { ProductBundleOption } from '@vue-storefront/core/modules/catalog/components/ProductBundleOption';
-import { SfHeading, SfRadio, SfDivider } from '@storefront-ui/vue';
+import { SfHeading, SfRadio, SfDivider, SfAlert } from '@storefront-ui/vue';
 import AProductPrice from 'theme/components/atoms/a-product-price'
 import AProductQuantity from 'theme/components/atoms/a-product-quantity'
 
@@ -45,7 +50,8 @@ export default {
     SfHeading,
     SfRadio,
     SfDivider,
-    AProductQuantity
+    AProductQuantity,
+    SfAlert
   }
 };
 </script>
@@ -55,6 +61,9 @@ export default {
   &__label {
     display: flex;
     justify-content: space-between;
+  }
+  &__alert {
+    margin-bottom: 1rem;
   }
 }
 ::v-deep {
