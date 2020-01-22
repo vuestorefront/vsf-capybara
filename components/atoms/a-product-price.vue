@@ -43,11 +43,11 @@ export default {
       return priceDelta
     },
     price () {
-      const special = (this.product.price_incl_tax + this.customOptionsPriceDelta.priceInclTax) * this.product.qty
-      const original = (this.product.original_price_incl_tax + this.customOptionsPriceDelta.priceInclTax) * this.product.qty
+      const special = (this.productPrices.priceInclTax + this.customOptionsPriceDelta.priceInclTax) * this.product.qty
+      const original = (this.productPrices.originalPriceInclTax + this.customOptionsPriceDelta.priceInclTax) * this.product.qty
       const defaultPrice = this.product.qty > 0
-        ? (this.product.price_incl_tax + this.customOptionsPriceDelta.priceInclTax) * this.product.qty
-        : this.product.price_incl_tax
+        ? (this.productPrices.priceInclTax + this.customOptionsPriceDelta.priceInclTax) * this.product.qty
+        : this.productPrices.priceInclTax
 
       if (this.bundleOptionsPrice.priceInclTax > 0) {
         return {
@@ -64,12 +64,22 @@ export default {
       }
     },
     isSpecialPrice () {
-      return this.product.special_price && this.product.price_incl_tax && this.product.original_price_incl_tax
+      return this.productPrices.specialPrice && this.productPrices.priceInclTax && this.productPrices.originalPriceInclTax
     },
     renderPrice () {
       return {
         regular: this.isSpecialPrice ? price(this.price.original) : price(this.price.default),
         special: this.isSpecialPrice ? price(this.price.special) : ''
+      }
+    },
+    productPrices () {
+      const priceInclTax = this.product.price_incl_tax || this.product.priceInclTax || 0
+      const originalPriceInclTax = this.product.original_price_incl_tax || this.product.originalPriceInclTax || 0
+      const specialPrice = this.product.special_price || this.product.specialPrice || 0
+      return {
+        priceInclTax,
+        originalPriceInclTax,
+        specialPrice
       }
     }
   }
