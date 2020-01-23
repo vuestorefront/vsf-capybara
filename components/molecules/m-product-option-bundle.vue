@@ -69,4 +69,7 @@ export default {
     min-height: 3rem;
   }
 }
+.sf-divider {
+  margin-top: 1.5rem;
+}
 </style>
