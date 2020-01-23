@@ -2,7 +2,6 @@
   <div class="a-product-option-bundle">
     <SfAlert
       v-if="errorMessage"
-      class="a-product-option-bundle__alert"
       :message="errorMessage"
       type="danger"
     />
@@ -61,9 +60,6 @@ export default {
   &__label {
     display: flex;
     justify-content: space-between;
-  }
-  &__alert {
-    margin-bottom: 1rem;
   }
 }
 ::v-deep {
