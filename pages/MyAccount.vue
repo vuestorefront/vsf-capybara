@@ -76,8 +76,8 @@ export default {
     };
   },
   methods: {
-    changeActivePage(title) {
-      if (title === "Log out") {
+    changeActivePage (title) {
+      if (title === 'Log out') {
         this.logout();
         return;
       }
