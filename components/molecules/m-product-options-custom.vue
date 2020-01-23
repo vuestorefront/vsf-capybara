@@ -1,158 +1,104 @@
 <template>
-  <form class="custom-options">
+  <form class="m-product-options-custom">
     <div v-for="option in product.custom_options" :key="('customOption_' + option.option_id)">
-      <div class="custom-option mb15">
-        <h4>{{ option.title }}</h4>
-        <input
-          class="
-            py10 w-100 border-box brdr-none brdr-bottom-1
-            brdr-cl-primary h4 sans-serif
-          "
-          v-if="option.type === 'field'"
+      <SfAlert
+        v-if="getError(option.option_id).error"
+        type="danger"
+        :message="getError(option.option_id).message"
+      />
+      <SfHeading
+        :title="option.title"
+        :level="4"
+        class="sf-heading--left"
+      />
+      <div v-if="option.type === 'field'">
+        <SfInput
           type="text"
+          :required="true"
+          :label="option.title"
           :name="('customOption_' + option.option_id)"
-          focus
           v-model="inputValues[('customOption_' + option.option_id)]"
-          :placeholder="option.title"
           @change="optionChanged(option)"
+        />
+      </div>
+      <div v-if="option.type === 'drop_down' || option.type === 'select'">
+        <SfSelect
+          class="sf-select--bordered"
+          v-model="inputValues[('customOption_' + option.option_id)]"
+          :required="true"
         >
-        <div class="m5 relative" v-for="opval in option.values" :key="opval.option_type_id" v-if="option.type === 'radio' || option.type === 'select' || option.type === 'drop_down'">
-          <input
-            @change="optionChanged(option)"
-            type="radio"
-            class="m0 no-outline"
-            :name="('customOption_' + option.option_id)"
-            :id="('customOption_' + opval.option_type_id)"
-            focus
-            :value="opval.option_type_id"
-            v-model="inputValues[('customOption_' + option.option_id)]"
-          ><label class="pl10 lh20 h4 pointer" :for="('customOption_' + opval.option_type_id)" v-html="opval.title" />
-        </div>
-        <div class="m5 relative" v-for="opval in option.values" :key="opval.option_type_id" v-if="option.type === 'checkbox'">
-          <input
-            @change="optionChanged(option)"
-            type="checkbox"
-            class="m0 no-outline"
-            :name="('customOption_' + option.option_id)"
-            :id="('customOption_' + opval.option_type_id)"
-            focus
-            :value="opval.option_type_id"
-            v-model="inputValues[('customOption_' + option.option_id)]"
-          ><label class="pl10 lh20 h4 pointer" :for="('customOption_' + opval.option_type_id)" v-html="opval.title" />
-        </div>
-        <span class="error" v-if="validation.results[('customOption_' + option.option_id)].error">{{ validation.results[('customOption_' + option.option_id)].message }}</span>
+          <SfSelectOption
+            v-for="opval in option.values"
+            :key="opval.option_type_id"
+            :value="String(opval.option_type_id)"
+          >
+            <SfProductOption :label="opval.title" />
+          </SfSelectOption>
+        </SfSelect>
+      </div>
+      <div v-if="option.type === 'radio'">
+        <SfRadio
+          v-for="opval in option.values"
+          :key="opval.option_type_id"
+          :label="opval.title"
+          :name="('customOption_' + option.option_id + opval.option_type_id)"
+          :value="String(opval.option_type_id)"
+          v-model="inputValues[('customOption_' + option.option_id)]"
+          @change="optionChanged(option)"
+        />
+      </div>
+      <div v-if="option.type === 'checkbox'">
+        <SfCheckbox
+          v-for="opval in option.values"
+          :key="opval.option_type_id"
+          :label="opval.title"
+          :name="('customOption_' + option.option_id + opval.option_type_id)"
+          :value="String(opval.option_type_id)"
+          v-model="inputValues[('customOption_' + option.option_id)]"
+          @change="optionChanged(option)"
+        />
       </div>
     </div>
   </form>
 </template>
 
 <script>
-import { ProductCustomOptions } from '@vue-storefront/core/modules/catalog/components/ProductCustomOptions.ts'
+import { ProductCustomOptions } from '@vue-storefront/core/modules/catalog/components/ProductCustomOptions'
+import { SfCheckbox, SfAlert, SfHeading, SfRadio, SfSelect, SfProductOption, SfInput } from '@storefront-ui/vue';
+import get from 'lodash-es/get'
+import { customOptionFieldName, defaultCustomOptionValue, selectedCustomOptionValue } from '@vue-storefront/core/modules/catalog/helpers/customOption';
 
 export default {
-  mixins: [ProductCustomOptions]
+  mixins: [ProductCustomOptions],
+  components: {
+    SfCheckbox,
+    SfAlert,
+    SfHeading,
+    SfRadio,
+    SfSelect,
+    SfProductOption,
+    SfInput
+  },
+  computed: {
+    getError () {
+      return optionId => {
+        const error = get(this.validation.results, 'customOption_' + optionId, {})
+        return error
+      }
+    }
+  },
+  methods: {
+    setupInputFields () {
+      for (const customOption of this.product.custom_options) {
+        const fieldName = customOptionFieldName(customOption)
+        const initValue = defaultCustomOptionValue(customOption)
+        this.$set(this.inputValues, fieldName, Array.isArray(initValue) ? [] : String(initValue))
+        if (customOption.is_require) { // validation rules are very basic
+          this.$set(this.validation.rules, fieldName, 'required') // TODO: add custom validators for the custom options
+        }
+        this.optionChanged(customOption)
+      }
+    }
+  }
 }
 </script>
-<style lang="scss" scoped>
-  @import '~theme/css/variables/colors';
-  @import '~theme/css/helpers/functions/color';
-  $color-tertiary: color(tertiary);
-  $color-black: color(black);
-  $color-hover: color(tertiary, $colors-background);
-
-  $bg-secondary: color(secondary, $colors-background);
-  $color-secondary: color(secondary);
-  $color-error: color(error);
-
-  .custom-option > label {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  .error {
-    color: $color-error;
-    padding-top: 5px;
-    display: block;
-  }
-  $color-silver: color(silver);
-  $color-active: color(secondary);
-  $color-white: color(white);
-
-  .relative label {
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 30px;
-    &:before {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: 0;
-      width: 22px;
-      height: 22px;
-      background-color: $color-white;
-      border: 1px solid $color-silver;
-      cursor: pointer;
-    }
-  }
-  input[type='text'] {
-    transition: 0.3s all;
-    &::-webkit-input-placeholder {
-      color: $color-tertiary;
-    }
-    &::-moz-placeholder {
-      color: $color-tertiary;
-    }
-    &:hover,
-    &:focus {
-      outline: none;
-      border-color: $color-black;
-    }
-    background: inherit;
-  }
-  input[type='radio'], input[type='checkbox']  {
-    position: absolute;
-    top: 3px;
-    left: 0;
-    opacity: 0;
-    &:checked + label {
-      &:before {
-        background-color: $color-silver;
-        border-color: $color-silver;
-        cursor: pointer;
-      }
-      &:after {
-        content: '';
-        position: absolute;
-        top: 9px;
-        left: 5px;
-        width: 11px;
-        height: 5px;
-        border: 3px solid $color-white;
-        border-top: none;
-        border-right: none;
-        background-color: $color-silver;
-        transform: rotate(-45deg);
-      }
-    }
-    &:hover,
-    &:focus {
-      + label {
-        &:before {
-          border-color: $color-active;
-        }
-      }
-    }
-    &:disabled + label {
-      cursor: not-allowed;
-      &:hover,
-      &:focus {
-        &:before {
-          border-color: $color-silver;
-          cursor: not-allowed;
-        }
-      }
-    }
-  }
-</style>

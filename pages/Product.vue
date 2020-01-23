@@ -39,11 +39,6 @@ import PromotedOffers from 'theme/components/theme/blocks/PromotedOffers/Promote
 import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
-import { ProductOption } from '@vue-storefront/core/modules/catalog/components/ProductOption.ts';
-import {
-  getAvailableFiltersByProduct,
-  getSelectedFiltersByProduct
-} from '@vue-storefront/core/modules/catalog/helpers/filters';
 import {
   localizedRoute,
   currentStoreView
@@ -80,7 +75,6 @@ export default {
       configurableOptionCallback: this.configurableOptionCallback
     }
   },
-  mixins: [ProductOption],
   data () {
     return {
       stock: {
@@ -116,15 +110,6 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
-    },
-    getAvailableFilters () {
-      return getAvailableFiltersByProduct(this.getCurrentProduct);
-    },
-    getSelectedFilters () {
-      return getSelectedFiltersByProduct(
-        this.getCurrentProduct,
-        this.getCurrentProductConfiguration
-      );
     }
   },
   watch: {
