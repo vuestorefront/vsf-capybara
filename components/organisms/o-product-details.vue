@@ -19,7 +19,7 @@
         <ATextAction
           v-if="sizeOption"
           class="text-action"
-          text="Size guide"
+          :text="$t('Size guide')"
           @click="openSizeGuide"
         />
         <MProductOptionsConfigurable
