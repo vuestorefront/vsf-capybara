@@ -3,7 +3,7 @@
     <div
       v-for="option in product.custom_options"
       :key="('customOption_' + option.option_id)"
-      class="m-product-options-custom__single"
+      class="single-option"
     >
       <SfAlert
         v-if="getError(option.option_id).error"
@@ -135,10 +135,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.m-product-options-custom {
-  &__single {
-    margin-top: 1.5rem;
-  }
+.single-option {
+  margin-top: 1.5rem;
 }
 .sf-divider {
   margin-top: 1.5rem;

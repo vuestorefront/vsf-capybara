@@ -7,7 +7,7 @@
       @click="backToTop"
     >
       <SfCircleIcon
-        class="a-back-to-top__icon"
+        class="icon"
         icon="chevron_down"
         icon-size="20px"
         icon-color="white"
@@ -94,8 +94,8 @@ export default {
   cursor: pointer;
   position: fixed;
   z-index: 0;
-  &__icon {
-    transform: rotate(180deg);
-  }
+}
+.icon {
+  transform: rotate(180deg);
 }
 </style>

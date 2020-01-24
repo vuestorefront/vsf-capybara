@@ -1,17 +1,17 @@
 <template>
   <div class="m-product-short-info">
-    <div class="m-product-short-info__mobile-top">
+    <div class="mobile-top">
       <div>
         <SfHeading
           itemprop="name"
           :title="product.name | htmlDecode"
           :level="1"
-          class="sf-heading--no-underline sf-heading--left m-product-short-info__heading"
+          class="sf-heading--no-underline sf-heading--left heading"
         />
-        <div class="m-product-short-info__sub">
+        <div class="sub">
           <AProductPrice
             v-if="product.type_id !== 'grouped'"
-            class="sf-price--big m-product-short-info__sub-price"
+            class="sf-price--big sub-price"
             :product="product"
             :custom-options="customOptions"
           />
@@ -20,17 +20,17 @@
             @click:text="handleOpenReviewList"
             :reviews="reviews"
           >
-            <span class="m-product-short-info__rating-text desktop-only">
+            <span class="rating-text desktop-only">
               {{ $t("Read all {count} review", { count: reviewsCount }) }}
             </span>
-            <span class="m-product-short-info__rating-text mobile-only">
+            <span class="rating-text mobile-only">
               {{ `(${reviewsCount})` }}
             </span>
           </AProductRating>
         </div>
       </div>
     </div>
-    <div class="m-product-short-info__description desktop-only" itemprop="sku">
+    <div class="description desktop-only" itemprop="sku">
       {{ $t("SKU: {sku}", { sku: product.sku }) }}
     </div>
   </div>
@@ -89,53 +89,51 @@ export default {
   }
 }
 
-.m-product-short-info {
-  &__description {
-    margin: $spacer-extra-big 0 ($spacer-big * 3) 0;
-    font-family: $body-font-family-secondary;
-    font-size: $font-size-regular-mobile;
-    line-height: 1.6;
+.description {
+  margin: $spacer-extra-big 0 ($spacer-big * 3) 0;
+  font-family: $body-font-family-secondary;
+  font-size: $font-size-regular-mobile;
+  line-height: 1.6;
+  @include for-desktop {
+    font-size: $font-size-regular-desktop;
+  }
+}
+.heading {
+  margin-top: $spacer-big;
+  ::v-deep .sf-heading__title {
+    font-size: $font-size-big-mobile;
+    font-weight: $body-font-weight-primary;
     @include for-desktop {
-      font-size: $font-size-regular-desktop;
+      font-size: $h1-font-size-desktop;
+      font-weight: $body-font-weight-secondary;
     }
   }
-  &__heading {
-    margin-top: $spacer-big;
-    ::v-deep .sf-heading__title {
-      font-size: $font-size-big-mobile;
-      font-weight: $body-font-weight-primary;
-      @include for-desktop {
-        font-size: $h1-font-size-desktop;
-        font-weight: $body-font-weight-secondary;
-      }
-    }
-    @include for-desktop {
-      margin-top: 0;
-    }
+  @include for-desktop {
+    margin-top: 0;
   }
-  &__mobile-top {
-    display: flex;
-    align-items: center;
-    @include for-desktop {
-      display: block;
-    }
+}
+.mobile-top {
+  display: flex;
+  align-items: center;
+  @include for-desktop {
+    display: block;
   }
-  &__sub {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+}
+.sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.sub-price {
+  flex-basis: 100%;
+  margin-top: $spacer-big / 4;
+  @include for-desktop {
+    flex-basis: auto;
+    margin-top: $spacer-big / 2;
   }
-  &__sub-price {
-    flex-basis: 100%;
-    margin-top: $spacer-big / 4;
-    @include for-desktop {
-      flex-basis: auto;
-      margin-top: $spacer-big / 2;
-    }
-  }
-  &__rating-text {
-    margin-left: 10px;
-    font-size: 0.75rem;
-  }
+}
+.rating-text {
+  margin-left: 10px;
+  font-size: 0.75rem;
 }
 </style>

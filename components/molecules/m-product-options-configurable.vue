@@ -12,7 +12,7 @@
       :label="getAttributeLabel(attribute)"
       :value="getActiveOption(attribute)"
       @change="handleChangeOption"
-      class="sf-select--bordered m-product-options-configurable__attribute"
+      class="sf-select--bordered attribute"
     >
       <SfSelectOption
         v-for="attributeOption in availableOptions[attribute.attribute_code]"
@@ -106,8 +106,8 @@ export default {
     border: 0;
     padding-bottom: 0;
   }
-  &__attribute {
-    margin-bottom: $spacer-big;
-  }
+}
+.attribute {
+  margin-bottom: $spacer-big;
 }
 </style>

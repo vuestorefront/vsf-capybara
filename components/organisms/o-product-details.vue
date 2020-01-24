@@ -9,7 +9,7 @@
       :gallery="gallery"
       :configuration="productConfiguration"
     />
-    <div class="o-product-details__description">
+    <div class="description">
       <SfSticky>
         <MProductShortInfo
           :product="product"
@@ -18,7 +18,7 @@
         />
         <ATextAction
           v-if="sizeOption"
-          class="o-product-details__text-action"
+          class="text-action"
           text="Size guide"
           @click="openSizeGuide"
         />
@@ -40,7 +40,7 @@
           :product="product"
         />
         <MProductCallToAction
-          class="o-product-details__section"
+          class="section"
           :product="product"
           :stock="productStock"
         />
@@ -171,25 +171,25 @@ export default {
   @include for-desktop {
     display: flex;
   }
-  &__description {
-    flex: 1;
-    padding: 0 $spacer-big;
-    @include for-desktop {
-      margin-left: $spacer-big * 5;
-    }
+}
+.description {
+  flex: 1;
+  padding: 0 $spacer-big;
+  @include for-desktop {
+    margin-left: $spacer-big * 5;
   }
-  &__text-action {
-    @include for-desktop {
-      justify-content: flex-end;
-    }
+}
+.text-action {
+  @include for-desktop {
+    justify-content: flex-end;
   }
-  &__section {
-    border-bottom: 1px solid #f1f2f3;
-    padding-bottom: 10px;
-    @include for-desktop {
-      border: 0;
-      padding-bottom: 0;
-    }
+}
+.section {
+  border-bottom: 1px solid #f1f2f3;
+  padding-bottom: 10px;
+  @include for-desktop {
+    border: 0;
+    padding-bottom: 0;
   }
 }
 </style>
