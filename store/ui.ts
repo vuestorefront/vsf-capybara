@@ -14,7 +14,8 @@ export const uiStore = {
     submenu: {
       depth: false,
       path: []
-    }
+    },
+    activeModals: []
   },
   mutations: {
     setCheckoutMode (state, action) {
@@ -54,6 +55,12 @@ export const uiStore = {
     },
     setAuthElem (state, action) {
       state.authElem = action;
+    },
+    openModal (state, modalName) {
+      state.activeModals = [...state.activeModals, modalName];
+    },
+    closeModal (state, modalName) {
+      state.activeModals = state.activeModals.filter(modal => modal !== modalName);
     }
   },
   actions: {

@@ -9,7 +9,7 @@
       :aria-label="$t('Open microcart')"
       @click="openMicrocart"
     />
-    <SfBadge v-show="totalQuantity" class="a-microcart-icon__badge">
+    <SfBadge v-show="totalQuantity" class="badge">
       {{ totalQuantity }}
     </SfBadge>
   </div>
@@ -37,15 +37,15 @@ export default {
 <style lang="scss" scoped>
 .a-microcart-icon {
   position: relative;
-  &__badge {
-    position: absolute;
-    bottom: 2.2em;
-    left: 4.2em;
-    font-size: 0.6em;
-    padding: 0.3em 0;
-    border-radius: 100%;
-    width: 2.2em;
-    min-height: 2.2em;
-  }
+}
+.badge {
+  position: absolute;
+  bottom: 2.2em;
+  left: 4.2em;
+  font-size: 0.6em;
+  padding: 0.3em 0;
+  border-radius: 100%;
+  width: 2.2em;
+  min-height: 2.2em;
 }
 </style>

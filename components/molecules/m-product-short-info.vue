@@ -1,27 +1,36 @@
 <template>
   <div class="m-product-short-info">
-    <div class="m-product-short-info__mobile-top">
+    <div class="mobile-top">
       <div>
         <SfHeading
+          itemprop="name"
           :title="product.name | htmlDecode"
           :level="1"
-          class="sf-heading--no-underline sf-heading--left m-product-short-info__heading"
+          class="sf-heading--no-underline sf-heading--left heading"
         />
-        <div class="m-product-short-info__sub">
-          <!-- <AProductPrice
-            class="sf-price--big m-product-short-info__sub-price"
+        <div class="sub">
+          <AProductPrice
+            v-if="product.type_id !== 'grouped'"
+            class="sf-price--big sub-price"
             :product="product"
             :custom-options="customOptions"
-          /> -->
-          <AProductRating
-            :score="productRating.score"
-            :max="productRating.max"
-            :review="productRating.review"
           />
+          <AProductRating
+            @click:stars="handleOpenReviewModal"
+            @click:text="handleOpenReviewList"
+            :reviews="reviews"
+          >
+            <span class="rating-text desktop-only">
+              {{ $t("Read all {count} review", { count: reviewsCount }) }}
+            </span>
+            <span class="rating-text mobile-only">
+              {{ `(${reviewsCount})` }}
+            </span>
+          </AProductRating>
         </div>
       </div>
     </div>
-    <div class="m-product-short-info__description desktop-only">
+    <div class="description desktop-only" itemprop="sku">
       {{ $t("SKU: {sku}", { sku: product.sku }) }}
     </div>
   </div>
@@ -29,13 +38,14 @@
 <script>
 import { SfHeading } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
-// import AProductPrice from 'theme/components/atoms/a-product-price';
+import AProductPrice from 'theme/components/atoms/a-product-price';
+import { createSmoothscroll } from 'theme/helpers'
 export default {
   name: 'MProductShortInfo',
   components: {
     SfHeading,
-    AProductRating
-    // AProductPrice
+    AProductRating,
+    AProductPrice
   },
   props: {
     product: {
@@ -45,15 +55,27 @@ export default {
     customOptions: {
       type: Object,
       default: () => ({})
+    },
+    reviews: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
-    productRating () {
-      return {
-        score: 1,
-        max: 5,
-        review: 1
-      }
+    reviewsCount () {
+      return this.reviews.length
+    }
+  },
+  methods: {
+    handleOpenReviewModal () {
+      this.$bus.$emit('modal-show', 'modal-add-review')
+    },
+    handleOpenReviewList () {
+      const reviewsEl = document.querySelector('#m-product-additional-info')
+      if (!reviewsEl) return
+      const currentScroll =
+        document.documentElement.scrollTop || document.body.scrollTop
+      createSmoothscroll(currentScroll, reviewsEl.getBoundingClientRect().top)
     }
   }
 };
@@ -67,49 +89,51 @@ export default {
   }
 }
 
-.m-product-short-info {
-  &__description {
-    margin: $spacer-extra-big 0 ($spacer-big * 3) 0;
-    font-family: $body-font-family-secondary;
-    font-size: $font-size-regular-mobile;
-    line-height: 1.6;
+.description {
+  margin: $spacer-extra-big 0 ($spacer-big * 3) 0;
+  font-family: $body-font-family-secondary;
+  font-size: $font-size-regular-mobile;
+  line-height: 1.6;
+  @include for-desktop {
+    font-size: $font-size-regular-desktop;
+  }
+}
+.heading {
+  margin-top: $spacer-big;
+  ::v-deep .sf-heading__title {
+    font-size: $font-size-big-mobile;
+    font-weight: $body-font-weight-primary;
     @include for-desktop {
-      font-size: $font-size-regular-desktop;
+      font-size: $h1-font-size-desktop;
+      font-weight: $body-font-weight-secondary;
     }
   }
-  &__heading {
-    margin-top: $spacer-big;
-    ::v-deep .sf-heading__title {
-      font-size: $font-size-big-mobile;
-      font-weight: $body-font-weight-primary;
-      @include for-desktop {
-        font-size: $h1-font-size-desktop;
-        font-weight: $body-font-weight-secondary;
-      }
-    }
-    @include for-desktop {
-      margin-top: 0;
-    }
+  @include for-desktop {
+    margin-top: 0;
   }
-  &__mobile-top {
-    display: flex;
-    align-items: center;
-    @include for-desktop {
-      display: block;
-    }
+}
+.mobile-top {
+  display: flex;
+  align-items: center;
+  @include for-desktop {
+    display: block;
   }
-  &__sub {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+}
+.sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.sub-price {
+  flex-basis: 100%;
+  margin-top: $spacer-big / 4;
+  @include for-desktop {
+    flex-basis: auto;
+    margin-top: $spacer-big / 2;
   }
-  &__sub-price {
-    flex-basis: 100%;
-    margin-top: $spacer-big / 4;
-    @include for-desktop {
-      flex-basis: auto;
-      margin-top: $spacer-big / 2;
-    }
-  }
+}
+.rating-text {
+  margin-left: 10px;
+  font-size: 0.75rem;
 }
 </style>
