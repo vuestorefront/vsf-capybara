@@ -1,35 +1,110 @@
 <template>
   <div class="m-product-call-to-action">
-    <SfAddToCart
-      v-model="qty"
-      :stock="stock"
-      :can-add-to-cart="stock > 0"
-      class="m-product-call-to-action__add-to-cart"
+    <div class="add-to-cart">
+      <SfAlert
+        v-if="alert.message"
+        class="alert"
+        :message="alert.message"
+        :type="alert.type"
+      />
+      <div class="add-to-cart-action">
+        <AProductQuantity
+          v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"
+          v-model="qty"
+          :max-quantity="stock.max"
+          :loading="stock.isLoading"
+          :unlimit-quantity="!isSimpleOrConfigurable"
+          @error="handleQuantityValidationError"
+        />
+        <AAddToCart
+          :product="product"
+          :disabled="isAddToCartDisabled"
+        />
+      </div>
+    </div>
+    <AAddToWishlist
+      class="text-action"
+      :product="product"
     />
-    <ATextAction
-      class="m-product-call-to-action__text-action"
-      text="Save for later"
-    />
-    <ATextAction
-      class="m-product-call-to-action__text-action"
-      text="Add to compare"
+    <AAddToCompare
+      class="text-action"
+      :product="product"
     />
   </div>
 </template>
 <script>
-import { SfAddToCart } from '@storefront-ui/vue';
-import ATextAction from 'theme/components/atoms/a-text-action';
+import { onlineHelper } from '@vue-storefront/core/helpers';
+import { SfAlert } from '@storefront-ui/vue';
+import AProductQuantity from 'theme/components/atoms/a-product-quantity';
+import AAddToCart from 'theme/components/atoms/a-add-to-cart';
+import AAddToWishlist from 'theme/components/atoms/a-add-to-wishlist';
+import AAddToCompare from 'theme/components/atoms/a-add-to-compare';
 export default {
   name: 'MProductCallToAction',
   components: {
-    SfAddToCart,
-    ATextAction
+    SfAlert,
+    AProductQuantity,
+    AAddToCart,
+    AAddToWishlist,
+    AAddToCompare
   },
   data () {
     return {
-      qty: '1',
-      stock: 5
+      qty: 1,
+      qtyValidationError: ''
     };
+  },
+  props: {
+    product: {
+      type: Object,
+      required: true,
+      default: () => ({})
+    },
+    stock: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  computed: {
+    isOnline () {
+      return onlineHelper.isOnline;
+    },
+    isAddToCartDisabled () {
+      return this.qtyValidationError ||
+        this.stock.isLoading ||
+        (this.isOnline && !this.stock.max && this.isSimpleOrConfigurable)
+    },
+    isSimpleOrConfigurable () {
+      return ['simple', 'configurable'].includes(
+        this.product.type_id
+      );
+    },
+    alert () {
+      if (this.qtyValidationError) {
+        return {
+          type: 'danger',
+          message: this.qtyValidationError
+        }
+      }
+      return {
+        type: this.stock.max ? 'info' : 'warning',
+        message: this.quantityInfo
+      }
+    },
+    quantityInfo () {
+      if (this.isSimpleOrConfigurable) {
+        return this.$i18n.t(
+          this.isOnline ? 'Quantity available' : 'Quantity available offline',
+          { qty: this.stock.max }
+        );
+      }
+      return ''
+    }
+  },
+  methods: {
+    handleQuantityValidationError (error) {
+      this.qtyValidationError = error
+    }
   }
 };
 </script>
@@ -41,16 +116,37 @@ export default {
   }
 }
 .m-product-call-to-action {
-  &__add-to-cart {
-    margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.add-to-cart {
+  margin-top: 1.5rem;
+  @include for-desktop {
+    margin-top: $spacer-extra-big;
+  }
+}
+.add-to-cart-action {
+  display: flex;
+  flex-direction: row-reverse;
+  @include for-desktop {
+    flex-direction: row;
+  }
+  ::v-deep .a-product-quantity {
+    margin: 0 0 0 .5rem;
     @include for-desktop {
-      margin-top: $spacer-extra-big;
+      margin-left: 0;
     }
   }
-  &__text-action {
-    @include for-desktop {
-      justify-content: flex-end;
-    }
+}
+.text-action {
+  margin: 1.25rem auto .625rem 0;
+  font-size: $font-size-regular-mobile;
+  @include for-desktop {
+    margin: 1.25rem 0 .625rem auto;
+    font-size: $font-size-regular-desktop;
   }
+}
+.alert {
+  margin-bottom: 1rem;
 }
 </style>
