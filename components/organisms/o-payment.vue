@@ -25,14 +25,13 @@
         v-model.trim="payment.firstName"
         class="form__element form__element--half"
         name="first-name"
-        :label="$t('First name *')"
+        :label="$t('First name')"
+        :required="true"
         :valid="!$v.payment.firstName.$error"
         :error-message="
           !$v.payment.firstName.required
             ? $t('Field is required')
-            : !$v.payment.firstName.minLength
-              ? $t('Name must have at least 2 letters.')
-              : ''
+            : $t('Name must have at least 2 letters.')
         "
         @blur="$v.payment.firstName.$touch()"
       />
@@ -40,44 +39,40 @@
         v-model.trim="payment.lastName"
         class="form__element form__element--half form__element--half-even"
         name="last-name"
-        :label="$t('Last name *')"
+        :label="$t('Last name')"
+        :required="true"
         :valid="!$v.payment.lastName.$error"
-        :error-message="
-          !$v.payment.lastName.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.payment.lastName.$touch()"
       />
       <SfInput
         v-model.trim="payment.streetAddress"
         class="form__element"
         name="street-address"
-        :label="$t('Street name *')"
+        :label="$t('Street name')"
+        :required="true"
         :valid="!$v.payment.streetAddress.$error"
-        :error-message="
-          !$v.payment.streetAddress.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.payment.streetAddress.$touch()"
       />
       <SfInput
         v-model.trim="payment.apartmentNumber"
         class="form__element"
         name="apartment-number"
-        :label="$t('House/Apartment number *')"
+        :label="$t('House/Apartment number')"
+        :required="true"
         :valid="!$v.payment.apartmentNumber.$error"
-        :error-message="
-          !$v.payment.apartmentNumber.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.payment.apartmentNumber.$touch()"
       />
       <SfInput
         v-model.trim="payment.city"
         class="form__element form__element--half"
         name="city"
-        :label="$t('City *')"
+        :label="$t('City')"
+        :required="true"
         :valid="!$v.payment.city.$error"
-        :error-message="
-          !$v.payment.city.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.payment.city.$touch()"
       />
       <SfInput
@@ -90,14 +85,13 @@
         v-model.trim="payment.zipCode"
         class="form__element form__element--half"
         name="zipCode"
-        :label="$t('Zip-code *')"
+        :label="$t('Zip-code')"
+        :required="true"
         :valid="!$v.payment.zipCode.$error"
         :error-message="
           !$v.payment.zipCode.required
             ? $t('Field is required')
-            : !$v.payment.zipCode.minLength
-              ? $t('Name must have at least 3 letters.')
-              : ''
+            : $t('Name must have at least 3 letters.')
         "
         @blur="$v.payment.zipCode.$touch()"
       />
@@ -105,11 +99,10 @@
         v-model="payment.country"
         class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
         name="countries"
-        :label="$t('Country *')"
+        :label="$t('Country')"
+        :required="true"
         :valid="!$v.payment.country.$error"
-        :error-message="
-          !$v.payment.country.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @change="changeCountry"
       >
         <SfSelectOption
@@ -137,25 +130,23 @@
           v-model.trim="payment.company"
           class="form__element form__element--half"
           name="company-name"
-          :label="$t('Company name *')"
+          :label="$t('Company name')"
+          :required="true"
           :valid="!$v.payment.company.$error"
-          :error-message="
-            !$v.payment.company.required ? $t('Field is required') : ''
-          "
+          :error-message="$t('Field is required')"
           @blur="$v.payment.company.$touch()"
         />
         <SfInput
           v-model.trim="payment.taxId"
           class="form__element form__element--half form__element--half-even"
           name="tax-id"
-          :label="$t('Tax identification number *')"
+          :label="$t('Tax identification number')"
+          :required="true"
           :valid="!$v.payment.taxId.$error"
           :error-message="
             !$v.payment.taxId.required
               ? $t('Field is required')
-              : !$v.payment.taxId.minLength
-                ? $t('Tax identification number must have at least 3 letters.')
-                : ''
+              : $t('Tax identification number must have at least 3 letters.')
           "
           @blur="$v.payment.taxId.$touch()"
         />

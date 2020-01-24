@@ -20,14 +20,13 @@
         v-model.trim="shipping.firstName"
         class="form__element form__element--half"
         name="first-name"
-        :label="$t('First name *')"
+        :label="$t('First name')"
+        :required="true"
         :valid="!$v.shipping.firstName.$error"
         :error-message="
           !$v.shipping.firstName.required
             ? $t('Field is required')
-            : !$v.shipping.firstName.minLength
-              ? $t('Name must have at least 2 letters.')
-              : ''
+            : $t('Name must have at least 2 letters.')
         "
         @blur="$v.shipping.firstName.$touch()"
       />
@@ -35,44 +34,40 @@
         v-model.trim="shipping.lastName"
         class="form__element form__element--half form__element--half-even"
         name="last-name"
-        :label="$t('Last name *')"
+        :label="$t('Last name')"
+        :required="true"
         :valid="!$v.shipping.lastName.$error"
-        :error-message="
-          !$v.shipping.lastName.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.shipping.lastName.$touch()"
       />
       <SfInput
         v-model.trim="shipping.streetAddress"
         class="form__element"
         name="street-address"
-        :label="$t('Street name *')"
+        :label="$t('Street name')"
+        :required="true"
         :valid="!$v.shipping.streetAddress.$error"
-        :error-message="
-          !$v.shipping.streetAddress.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.shipping.streetAddress.$touch()"
       />
       <SfInput
         v-model.trim="shipping.apartmentNumber"
         class="form__element"
         name="apartment-number"
-        :label="$t('House/Apartment number *')"
+        :label="$t('House/Apartment number')"
+        :required="true"
         :valid="!$v.shipping.apartmentNumber.$error"
-        :error-message="
-          !$v.shipping.apartmentNumber.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.shipping.apartmentNumber.$touch()"
       />
       <SfInput
         v-model.trim="shipping.city"
         class="form__element form__element--half"
         name="city"
-        :label="$t('City *')"
+        :label="$t('City')"
+        :required="true"
         :valid="!$v.shipping.city.$error"
-        :error-message="
-          !$v.shipping.city.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.shipping.city.$touch()"
       />
       <SfInput
@@ -85,14 +80,13 @@
         v-model.trim="shipping.zipCode"
         class="form__element form__element--half"
         name="zipCode"
-        :label="$t('Zip-code *')"
+        :label="$t('Zip-code')"
+        :required="true"
         :valid="!$v.shipping.zipCode.$error"
         :error-message="
           !$v.shipping.zipCode.required
             ? $t('Field is required')
-            : !$v.shipping.zipCode.minLength
-              ? $t('Name must have at least 3 letters.')
-              : ''
+            : $t('Name must have at least 3 letters.')
         "
         @blur="$v.shipping.zipCode.$touch()"
       />
@@ -100,11 +94,10 @@
         v-model="shipping.country"
         class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
         name="countries"
-        :label="$t('Country *')"
+        :label="$t('Country')"
+        :required="true"
         :valid="!$v.shipping.country.$error"
-        :error-message="
-          !$v.shipping.country.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @change="changeCountry"
       >
         <SfSelectOption

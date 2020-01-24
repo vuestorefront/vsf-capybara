@@ -9,7 +9,7 @@
       <SfHeading
         :title="$t('Account Benefits')"
         :subtitle="$t('Enjoy these perks with your free account!')"
-        class="sf-heading--left sf-heading--no-underline modal__heading"
+        class="sf-heading--left sf-heading--no-underline"
       />
       <SfCharacteristic
         v-for="({ description, icon }, index) in characteristics"
@@ -20,7 +20,7 @@
         class="characteristic"
       />
       <SfButton
-        class="sf-button--full-width color-secondary modal__button"
+        class="sf-button--full-width color-secondary"
         @click="showAccountBenefits = false"
       >
         {{ $t("OK") }}
