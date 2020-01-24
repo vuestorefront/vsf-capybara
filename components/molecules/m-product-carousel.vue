@@ -11,7 +11,6 @@
         :link="product.link"
         link-tag="a"
         :is-on-wishlist="isOnWishlist(product.data)"
-        class="product-card"
         @click:wishlist="toggleWishlist(product.data)"
       />
     </SfCarouselItem>

@@ -1,53 +1,85 @@
 <template>
-  <div class="o-product-details">
+  <div class="o-product-details" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+    <meta itemprop="priceCurrency" :content="$store.state.storeView.i18n.currencyCode">
+    <meta itemprop="price" :content="parseFloat(product.price_incl_tax).toFixed(2)">
+    <meta itemprop="availability" :content="availability">
+    <meta itemprop="url" :content="product.url_path">
     <MProductGallery
       :offline-image="offlineImage"
       :gallery="gallery"
       :configuration="productConfiguration"
     />
-    <div class="o-product-details__description">
+    <div class="description">
       <SfSticky>
-        <MProductShortInfo :product="product" :custom-options="productCustomOptions" />
+        <MProductShortInfo
+          :product="product"
+          :custom-options="productCustomOptions"
+          :reviews="reviews"
+        />
         <ATextAction
-          class="o-product-details__text-action"
-          text="Size guide"
+          v-if="sizeOption"
+          class="text-action"
+          :text="$t('Size guide')"
           @click="openSizeGuide"
         />
-        <MProductOptions />
-        <div class="o-product-details__section">
-          <SfAlert
-            message="Low in stock"
-            type="warning"
-            class="o-product-details__alert"
-          />
-          <MProductCallToAction />
-        </div>
-        <MProductAdditionalInfo />
+        <MProductOptionsConfigurable
+          v-if="product.type_id =='configurable'"
+          :product="product"
+          :configuration="productConfiguration"
+        />
+        <MProductOptionsGroup
+          v-if="product.type_id =='grouped'"
+          :product-options="product.product_links"
+        />
+        <MProductOptionsBundle
+          v-if="product.bundle_options && product.bundle_options.length > 0"
+          :product="product"
+        />
+        <MProductOptionsCustom
+          v-else-if="product.custom_options && product.custom_options.length > 0"
+          :product="product"
+        />
+        <MProductCallToAction
+          class="section"
+          :product="product"
+          :stock="productStock"
+        />
+        <MProductAdditionalInfo
+          :product="product"
+          :reviews="reviews"
+          :attributes="productAttributes"
+        />
       </SfSticky>
     </div>
   </div>
 </template>
 <script>
+import get from 'lodash-es/get'
 import config from 'config';
 import { mapGetters } from 'vuex';
-import { SfAlert, SfSticky } from '@storefront-ui/vue';
+import { SfSticky } from '@storefront-ui/vue';
 import ATextAction from 'theme/components/atoms/a-text-action';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
-import MProductOptions from 'theme/components/molecules/m-product-options';
 import MProductCallToAction from 'theme/components/molecules/m-product-call-to-action';
 import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
+import MProductOptionsConfigurable from 'theme/components/molecules/m-product-options-configurable';
+import MProductOptionsBundle from 'theme/components/molecules/m-product-options-bundle';
+import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
+import MProductOptionsGroup from 'theme/components/molecules/m-product-options-group';
 
 export default {
   components: {
-    SfAlert,
     SfSticky,
     ATextAction,
     MProductGallery,
     MProductShortInfo,
-    MProductOptions,
     MProductCallToAction,
-    MProductAdditionalInfo
+    MProductAdditionalInfo,
+    MProductOptionsConfigurable,
+    MProductOptionsBundle,
+    MProductOptionsCustom,
+    MProductOptionsGroup
   },
   props: {
     product: {
@@ -65,6 +97,14 @@ export default {
     productCustomOptions: {
       type: Object,
       default: () => ({})
+    },
+    productAttributes: {
+      type: Array,
+      default: () => []
+    },
+    productStock: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
@@ -72,15 +112,11 @@ export default {
       const width = config.products.thumbnails.width;
       const height = config.products.thumbnails.height;
       return {
-        small: {
+        mobile: {
           url: this.getThumbnail(this.product.image, width, height),
           alt: this.product.name
         },
-        normal: {
-          url: this.getThumbnail(this.product.image, width, height),
-          alt: this.product.name
-        },
-        big: {
+        desktop: {
           url: this.getThumbnail(this.product.image, width, height),
           alt: this.product.name
         }
@@ -89,19 +125,30 @@ export default {
     gallery () {
       return this.productGallery.map(imageObject => ({
         ...imageObject,
-        small: {
+        mobile: {
           url: imageObject.loading,
           alt: this.product.name
         },
-        normal: {
-          url: imageObject.src,
-          alt: this.product.name
-        },
-        big: {
+        desktop: {
           url: imageObject.src,
           alt: this.product.name
         }
       }));
+    },
+    reviews () {
+      const baseReviews = get(this.$store.state.review, 'items.items', [])
+      return baseReviews.map((review) => ({
+        author: review.nickname,
+        date: review.created_at,
+        message: `${review.title}: ${review.detail}`,
+        rating: 1 // TODO: remove hardcode
+      }))
+    },
+    availability () {
+      return this.product.stock && this.product.stock.is_in_stock ? 'InStock' : 'OutOfStock'
+    },
+    sizeOption () {
+      return get(this.productConfiguration, 'size', false)
     }
   },
   methods: {
@@ -124,28 +171,25 @@ export default {
   @include for-desktop {
     display: flex;
   }
-  &__description {
-    flex: 1;
-    padding: 0 $spacer-big;
-    @include for-desktop {
-      margin-left: $spacer-big * 5;
-    }
+}
+.description {
+  flex: 1;
+  padding: 0 $spacer-big;
+  @include for-desktop {
+    margin-left: $spacer-big * 5;
   }
-  &__text-action {
-    @include for-desktop {
-      justify-content: flex-end;
-    }
+}
+.text-action {
+  @include for-desktop {
+    justify-content: flex-end;
   }
-  &__alert {
-    margin-top: 1.5rem;
-  }
-  &__section {
-    border-bottom: 1px solid #f1f2f3;
-    padding-bottom: 10px;
-    @include for-desktop {
-      border: 0;
-      padding-bottom: 0;
-    }
+}
+.section {
+  border-bottom: 1px solid #f1f2f3;
+  padding-bottom: 10px;
+  @include for-desktop {
+    border: 0;
+    padding-bottom: 0;
   }
 }
 </style>

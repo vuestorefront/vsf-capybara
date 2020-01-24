@@ -1,19 +1,24 @@
 <template>
-  <button-full
+  <SfButton
+    class="a-add-to-cart sf-button--full-width"
     :disabled="isProductDisabled"
-    data-testid="addToCart"
-    @click.native="addToCart(product)"
+    @click.native="addToCart"
   >
-    {{ $t("Add to cart") }}
-  </button-full>
+    {{ $t('Add to cart') }}
+  </SfButton>
 </template>
 
 <script>
+import { SfButton } from '@storefront-ui/vue';
 import { formatProductMessages } from '@vue-storefront/core/filters/product-messages';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { mapGetters } from 'vuex';
 
 export default {
+  name: 'AAddToCart',
+  components: {
+    SfButton
+  },
   props: {
     product: {
       required: true,
@@ -36,16 +41,7 @@ export default {
       );
     }
   },
-  beforeMount () {
-    this.$bus.$on('product-after-removevariant', this.onAfterRemovedVariant);
-  },
-  beforeDestroy () {
-    this.$bus.$off('product-after-removevariant');
-  },
   methods: {
-    onAfterRemovedVariant () {
-      this.$forceUpdate();
-    },
     async addToCart () {
       try {
         const diffLog = await this.$store.dispatch('cart/addItem', {
