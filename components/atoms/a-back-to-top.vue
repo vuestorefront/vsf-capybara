@@ -7,7 +7,7 @@
       @click="backToTop"
     >
       <SfCircleIcon
-        class="a-back-to-top__icon"
+        class="icon"
         icon="chevron_down"
         icon-size="20px"
         icon-color="white"
@@ -19,6 +19,7 @@
 
 <script>
 import { SfCircleIcon } from '@storefront-ui/vue';
+import { createSmoothscroll } from 'theme/helpers'
 export default {
   name: 'BackToTop',
   components: {
@@ -56,14 +57,6 @@ export default {
     };
   },
   mounted () {
-    window.smoothscroll = () => {
-      let currentScroll =
-        document.documentElement.scrollTop || document.body.scrollTop;
-      if (currentScroll > 0) {
-        window.requestAnimationFrame(window.smoothscroll);
-        window.scrollTo(0, Math.floor(currentScroll - currentScroll / 5));
-      }
-    };
     window.addEventListener('scroll', this.catchScroll);
   },
   beforeDestroy () {
@@ -90,7 +83,7 @@ export default {
      * @return {void}
      */
     backToTop () {
-      window.smoothscroll();
+      createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0)
       this.$emit('scrolled');
     }
   }
@@ -100,9 +93,9 @@ export default {
 .a-back-to-top {
   cursor: pointer;
   position: fixed;
-  z-index: 1000;
-  &__icon {
-    transform: rotate(180deg);
-  }
+  z-index: 0;
+}
+.icon {
+  transform: rotate(180deg);
 }
 </style>
