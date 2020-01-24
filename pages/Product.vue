@@ -10,13 +10,15 @@
       :product-gallery="getProductGallery"
       :product-configuration="getCurrentProductConfiguration"
       :product-custom-options="getCurrentCustomOptions"
+      :product-attributes="getCustomAttributes"
+      :product-stock="stock"
     />
     <lazy-hydrate when-idle>
       <SfSection
         :title-heading="$t('We found other products you might like')"
         class="section"
       >
-        <m-related-products type="upsell" />
+        <MRelatedProducts type="upsell" />
       </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
@@ -24,25 +26,19 @@
     </lazy-hydrate>
     <lazy-hydrate when-idle>
       <SfSection :title-heading="$t('Similar Products')" class="section">
-        <m-related-products type="related" />
+        <MRelatedProducts type="related" />
       </SfSection>
     </lazy-hydrate>
     <SizeGuide />
+    <OReviewModal :product-id="getOriginalProduct.id" />
   </div>
 </template>
 
 <script>
 import PromotedOffers from 'theme/components/theme/blocks/PromotedOffers/PromotedOffers';
-import focusClean from 'theme/components/theme/directives/focusClean';
 import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
-import { ProductOption } from '@vue-storefront/core/modules/catalog/components/ProductOption.ts';
-import {
-  getAvailableFiltersByProduct,
-  getSelectedFiltersByProduct
-} from '@vue-storefront/core/modules/catalog/helpers/filters';
-import { isOptionAvailableAsync } from '@vue-storefront/core/modules/catalog/helpers/index';
 import {
   localizedRoute,
   currentStoreView
@@ -58,6 +54,11 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 
 import { SfSection } from '@storefront-ui/vue';
 
+const OReviewModal = () =>
+  import(
+    /* webpackChunkName: "vsf-review-modal" */ 'theme/components/organisms/o-review-modal'
+  );
+
 export default {
   components: {
     PromotedOffers,
@@ -66,17 +67,20 @@ export default {
     LazyHydrate,
     MRelatedProducts,
     SfSection,
-    OProductDetails
+    OProductDetails,
+    OReviewModal
   },
-  directives: { focusClean },
-  mixins: [ProductOption],
+  provide () {
+    return {
+      configurableOptionCallback: this.configurableOptionCallback
+    }
+  },
   data () {
     return {
-      detailsOpen: false,
-      maxQuantity: 0,
-      quantityError: false,
-      isStockInfoLoading: false,
-      hasAttributesLoaded: false
+      stock: {
+        isLoading: false,
+        max: 0
+      }
     };
   },
   computed: {
@@ -89,37 +93,8 @@ export default {
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions'
     }),
-    getOptionLabel () {
-      return option => {
-        const configName = option.attribute_code
-          ? option.attribute_code
-          : option.label.toLowerCase();
-        return this.getCurrentProductConfiguration[configName]
-          ? this.getCurrentProductConfiguration[configName].label
-          : configName;
-      };
-    },
     isOnline () {
       return onlineHelper.isOnline;
-    },
-    structuredData () {
-      return {
-        availability:
-          this.getCurrentProduct.stock &&
-          this.getCurrentProduct.stock.is_in_stock
-            ? 'InStock'
-            : 'OutOfStock'
-      };
-    },
-    getProductOptions () {
-      if (
-        this.getCurrentProduct.errors &&
-        Object.keys(this.getCurrentProduct.errors).length &&
-        Object.keys(this.getCurrentProductConfiguration).length
-      ) {
-        return [];
-      }
-      return this.getCurrentProduct.configurable_options;
     },
     getCustomAttributes () {
       return Object.values(this.attributesByCode)
@@ -135,27 +110,6 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
-    },
-    getAvailableFilters () {
-      return getAvailableFiltersByProduct(this.getCurrentProduct);
-    },
-    getSelectedFilters () {
-      return getSelectedFiltersByProduct(
-        this.getCurrentProduct,
-        this.getCurrentProductConfiguration
-      );
-    },
-    isSimpleOrConfigurable () {
-      return ['simple', 'configurable'].includes(
-        this.getCurrentProduct.type_id
-      );
-    },
-    isAddToCartDisabled () {
-      return (
-        this.quantityError ||
-        this.isStockInfoLoading ||
-        (this.isOnline && !this.maxQuantity && this.isSimpleOrConfigurable)
-      );
     }
   },
   watch: {
@@ -187,10 +141,10 @@ export default {
     registerModule(RecentlyViewedModule);
   },
   async mounted () {
-    await this.$store.dispatch(
-      'recently-viewed/addItem',
-      this.getCurrentProduct
-    );
+    await Promise.all([
+      this.$store.dispatch('recently-viewed/addItem', this.getCurrentProduct),
+      this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id })
+    ])
   },
   beforeRouteEnter (to, from, next) {
     if (isServer) {
@@ -202,62 +156,22 @@ export default {
     }
   },
   methods: {
-    showDetails (event) {
-      this.detailsOpen = true;
-      event.target.classList.add('hidden');
-    },
-    notifyOutStock () {
-      this.$store.dispatch('notification/spawnNotification', {
-        type: 'error',
-        message: this.$t(
-          'The product is out of stock and cannot be added to the cart!'
-        ),
-        action1: { label: this.$t('OK') }
-      });
-    },
-    notifyWrongAttributes () {
-      this.$store.dispatch('notification/spawnNotification', {
-        type: 'warning',
-        message: this.$t(
-          'No such configuration for the product. Please do choose another combination of attributes.'
-        ),
-        action1: { label: this.$t('OK') }
-      });
-    },
-    changeFilter (variant) {
-      this.$bus.$emit(
-        'filter-changed-product',
-        Object.assign({ attribute_code: variant.type }, variant)
-      );
+    configurableOptionCallback (variant) {
+      this.$bus.$emit('filter-changed-product', variant)
       this.getQuantity();
     },
-    isOptionAvailable (option) {
-      // check if the option is available
-      const currentConfig = Object.assign(
-        {},
-        this.getCurrentProductConfiguration
-      );
-      currentConfig[option.type] = option;
-      return isOptionAvailableAsync(this.$store, {
-        product: this.getCurrentProduct,
-        configuration: currentConfig
-      });
-    },
     async getQuantity () {
-      if (this.isStockInfoLoading) return; // stock info is already loading
-      this.isStockInfoLoading = true;
+      if (this.stock.isLoading) return; // stock info is already loading
+      this.stock.isLoading = true;
       try {
         const res = await this.$store.dispatch('stock/check', {
           product: this.getCurrentProduct,
           qty: this.getCurrentProduct.qty
         });
-        this.maxQuantity = res.qty;
+        this.stock.max = res.qty;
       } finally {
-        this.isStockInfoLoading = false;
+        this.stock.isLoading = false;
       }
-    },
-    handleQuantityError (error) {
-      this.quantityError = error;
     }
   },
   metaInfo () {
@@ -301,14 +215,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~theme/css/variables/colors";
-@import "~theme/css/helpers/functions/color";
-$color-primary: color(primary);
-$color-tertiary: color(tertiary);
-$color-secondary: color(secondary);
-$color-white: color(white);
-$bg-secondary: color(secondary, $colors-background);
-
 @import "~@storefront-ui/vue/styles";
 
 @mixin for-desktop {
@@ -323,165 +229,5 @@ $bg-secondary: color(secondary, $colors-background);
     max-width: 1240px;
     margin: auto;
   }
-  &__add-to-compare {
-    display: none;
-    @media (min-width: 767px) {
-      display: block;
-    }
-  }
-}
-
-.breadcrumbs {
-  @media (max-width: 767px) {
-    margin: 15px 0;
-    padding: 15px 0 0 15px;
-  }
-}
-
-.error {
-  color: red;
-  font-weight: bold;
-  padding-bottom: 15px;
-}
-.data {
-  @media (max-width: 767px) {
-    border-bottom: 1px solid $bg-secondary;
-  }
-}
-
-.image {
-  @media (max-width: 1023px) {
-    margin-bottom: 20px;
-  }
-}
-
-.product-name {
-  @media (max-width: 767px) {
-    font-size: 36px;
-  }
-}
-
-.price {
-  @media (max-width: 767px) {
-    color: $color-primary;
-  }
-}
-
-.variants-label {
-  @media (max-width: 767px) {
-    font-size: 14px;
-  }
-}
-
-.variants-wrapper {
-  @media (max-width: 767px) {
-    padding-bottom: 30px;
-  }
-
-  .sizes {
-    @media (max-width: 767px) {
-      width: 100%;
-    }
-  }
-
-  .size-guide {
-    height: 40px;
-    @media (max-width: 767px) {
-      width: 100%;
-      margin-left: 0;
-    }
-  }
-}
-
-.product-top-section {
-  @media (max-width: 767px) {
-    padding: 0;
-    background-color: $color-white;
-  }
-}
-
-.add-to-buttons {
-  @media (max-width: 767px) {
-    padding-top: 30px;
-    margin-bottom: 40px;
-  }
-}
-
-.details {
-  @media (max-width: 767px) {
-    padding: 50px 15px 15px;
-  }
-}
-
-.details-title {
-  padding: 0 8px;
-
-  @media (max-width: 767px) {
-    font-size: 18px;
-    margin: 0;
-  }
-}
-
-.details-wrapper {
-  @media (max-width: 767px) {
-    position: relative;
-    max-height: 140px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    font-size: 14px;
-  }
-
-  &--open {
-    max-height: none;
-  }
-}
-
-.details-overlay {
-  @media (max-width: 767px) {
-    position: absolute;
-    height: 75%;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-    cursor: pointer;
-    background: linear-gradient(rgba($color-white, 0), rgba($color-white, 1));
-    &.hidden {
-      display: none;
-    }
-  }
-}
-
-.price-original {
-  text-decoration: line-through;
-}
-
-.action {
-  &:hover {
-    color: $color-tertiary;
-  }
-}
-
-.attributes {
-  list-style-type: none;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
-}
-
-.fade-enter,
-.fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-
-.product-image {
-  mix-blend-mode: multiply;
-  width: 460px;
-}
-
-.web-share {
-  float: right;
 }
 </style>

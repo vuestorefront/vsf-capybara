@@ -1,204 +1,175 @@
 <template>
   <div id="checkout">
-    <div class="container">
-      <div v-show="!isThankYouPage" class="row">
-        <div class="col-sm-7 col-xs-12 pb70">
-          <div class="checkout-title py5 px20">
-            <h1>
-              {{ $t("Checkout") }}
-            </h1>
-          </div>
-          <personal-details
-            class="line relative"
-            :is-active="activeSection.personalDetails"
-            :focused-field="focusedField"
-          />
-          <shipping
-            v-if="!isVirtualCart"
-            class="line relative"
-            :is-active="activeSection.shipping"
-          />
-          <payment class="line relative" :is-active="activeSection.payment" />
-          <order-review
-            class="line relative"
-            :is-active="activeSection.orderReview"
-          />
-          <div id="custom-steps" />
-        </div>
-        <div class="hidden-xs col-sm-5 bg-cl-secondary">
-          <cart-summary />
-        </div>
+    <div v-if="!isThankYouPage" class="checkout">
+      <div class="checkout__main">
+        <SfSteps
+          :active="currentStep"
+          :steps="steps.map(step => step.name)"
+          @change="changeStep"
+        >
+          <SfStep v-for="step in steps" :key="step.key" :name="step.name">
+            <component :is="step.component" :is-active="true" />
+          </SfStep>
+        </SfSteps>
+      </div>
+      <div class="checkout__aside desktop-only">
+        <transition name="fade">
+          <OOrderSummary v-if="currentStep <= 2" />
+          <OOrderReview v-else />
+        </transition>
       </div>
     </div>
-    <thank-you-page v-show="isThankYouPage" />
+    <thank-you-page v-if="isThankYouPage" />
   </div>
 </template>
-
 <script>
+import i18n from '@vue-storefront/i18n';
 import Checkout from '@vue-storefront/core/pages/Checkout';
-
-import PersonalDetails from 'theme/components/core/blocks/Checkout/PersonalDetails';
-import Shipping from 'theme/components/core/blocks/Checkout/Shipping';
-import Payment from 'theme/components/core/blocks/Checkout/Payment';
-import OrderReview from 'theme/components/core/blocks/Checkout/OrderReview';
-import CartSummary from 'theme/components/core/blocks/Checkout/CartSummary';
+import { SfSteps } from '@storefront-ui/vue';
+import OPayment from 'theme/components/organisms/o-payment';
+import OShipping from 'theme/components/organisms/o-shipping';
+import OConfirmOrder from 'theme/components/organisms/o-confirm-order';
+import OOrderReview from 'theme/components/organisms/o-order-review';
+import OOrderSummary from 'theme/components/organisms/o-order-summary';
+import OPersonalDetails from 'theme/components/organisms/o-personal-details';
 import ThankYouPage from 'theme/components/core/blocks/Checkout/ThankYouPage';
-import { registerModule } from '@vue-storefront/core/lib/modules';
-import { OrderModule } from '@vue-storefront/core/modules/order';
 
 export default {
+  name: 'Checkout',
   components: {
-    PersonalDetails,
-    Shipping,
-    Payment,
-    OrderReview,
-    CartSummary,
+    SfSteps,
+    OPayment,
+    OShipping,
+    OOrderReview,
+    OOrderSummary,
+    OConfirmOrder,
+    OPersonalDetails,
     ThankYouPage
   },
   mixins: [Checkout],
-  beforeCreate () {
-    registerModule(OrderModule);
+  data () {
+    return {
+      steps: [
+        {
+          key: 'personalDetails',
+          name: i18n.t('Personal Details'),
+          component: OPersonalDetails
+        },
+        {
+          key: 'shipping',
+          name: i18n.t('Shipping'),
+          component: OShipping
+        },
+        {
+          key: 'payment',
+          name: i18n.t('Payment'),
+          component: OPayment
+        },
+        {
+          key: 'orderReview',
+          name: i18n.t('Review order'),
+          component: OConfirmOrder
+        }
+      ]
+    };
+  },
+  computed: {
+    currentStep () {
+      return this.steps.findIndex(step => this.activeSection[step.key]);
+    }
   },
   methods: {
-    notifyEmptyCart () {
+    changeStep (nextStep) {
+      if (nextStep < this.currentStep) {
+        this.$bus.$emit('checkout-before-edit', this.steps[nextStep].key);
+      }
+    },
+    showNotification ({ type, message }) {
       this.$store.dispatch('notification/spawnNotification', {
+        type,
+        message,
+        action1: { label: this.$t('OK') }
+      });
+    },
+    notifyEmptyCart () {
+      this.showNotification({
         type: 'warning',
         message: this.$t(
           'Shopping cart is empty. Please add some products before entering Checkout'
-        ),
-        action1: { label: this.$t('OK') }
+        )
       });
     },
-    notifyOutStock (chp) {
-      this.$store.dispatch('notification/spawnNotification', {
+    notifyOutStock (p) {
+      this.showNotification({
         type: 'error',
-        message: chp.name + this.$t(' is out of stock!'),
-        action1: { label: this.$t('OK') }
+        message: p.name + this.$t(' is out of stock!')
       });
     },
     notifyNotAvailable () {
-      this.$store.dispatch('notification/spawnNotification', {
+      this.showNotification({
         type: 'error',
-        message: this.$t('Some of the ordered products are not available!'),
-        action1: { label: this.$t('OK') }
+        message: this.$t('Some of the ordered products are not available!')
       });
     },
     notifyStockCheck () {
-      this.$store.dispatch('notification/spawnNotification', {
+      this.showNotification({
         type: 'warning',
         message: this.$t(
           'Stock check in progress, please wait while available stock quantities are checked'
-        ),
-        action1: { label: this.$t('OK') }
+        )
       });
     },
     notifyNoConnection () {
-      this.$store.dispatch('notification/spawnNotification', {
+      this.showNotification({
         type: 'warning',
         message: this.$t(
           'There is no Internet connection. You can still place your order. We will notify you if any of ordered products is not available because we cannot check it right now.'
-        ),
-        action1: { label: this.$t('OK') }
+        )
       });
     }
   }
 };
 </script>
-
-<style lang="scss">
-@import "~theme/css/base/text";
-@import "~theme/css/variables/colors";
-@import "~theme/css/helpers/functions/color";
-$bg-secondary: color(secondary, $colors-background);
-$color-tertiary: color(tertiary);
-$color-secondary: color(secondary);
-$color-error: color(error);
-$color-white: color(white);
-$color-black: color(black);
-
-#checkout {
-  .number-circle {
-    width: 35px;
-    height: 35px;
-
-    @media (max-width: 768px) {
-      width: 25px;
-      height: 25px;
-      line-height: 25px;
-    }
+<style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/_variables.scss";
+@import "~@storefront-ui/shared/styles/helpers/visibility";
+@mixin for-desktop {
+  @media screen and (min-width: $desktop-min) {
+    @content;
   }
-  .radioStyled {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 30px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
-    input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .checkmark {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 25px;
-      width: 25px;
-      border-radius: 50%;
-      border: 1px solid $bg-secondary;
-
-      &:after {
-        content: "";
-        position: absolute;
-        display: none;
-        top: 3px;
-        left: 3px;
-        width: 19px;
-        height: 19px;
-        border-radius: 50%;
-        background: $color-secondary;
+}
+#checkout {
+  box-sizing: border-box;
+  padding: 0 $spacer-big;
+  @include for-desktop {
+    max-width: 1240px;
+    margin: auto;
+    padding: 0;
+  }
+  ::v-deep {
+    .sf-steps__header {
+      &-step {
+        cursor: initial;
+      }
+      &-step-done {
+        cursor: pointer;
       }
     }
-
-    input:checked ~ .checkmark:after {
-      display: block;
-    }
   }
 }
-
-.line {
-  &:after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 37px;
-    z-index: -1;
-    width: 1px;
-    height: 100%;
-    background-color: $bg-secondary;
-
-    @media (max-width: 768px) {
-      display: none;
+.checkout {
+  @include for-desktop {
+    display: flex;
+  }
+  &__main {
+    @include for-desktop {
+      flex: 1;
     }
   }
-}
-
-.checkout-title {
-  @media (max-width: 767px) {
-    background-color: $bg-secondary;
-    margin-bottom: 25px;
-
-    h1 {
-      font-size: 36px;
+  &__aside {
+    @include for-desktop {
+      flex: 0 0 25.5rem;
+      margin-left: 6.25rem;
     }
   }
 }
