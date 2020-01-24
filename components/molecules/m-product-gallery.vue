@@ -8,10 +8,12 @@
     />
     <SfGallery
       ref="imageGallery"
-      class="m-product-gallery__mobile mobile-only"
+      class="mobile-only"
       :images="gallery"
       :current="currentIndex + 1"
       :slider-options="sliderOptions"
+      :image-width="imageSize.width"
+      :image-height="imageSize.height"
     />
   </div>
 </template>
@@ -21,6 +23,7 @@ import reduce from 'lodash-es/reduce';
 import map from 'lodash-es/map';
 import isEqual from 'lodash-es/isEqual';
 import { onlineHelper } from '@vue-storefront/core/helpers';
+import config from 'config'
 export default {
   name: 'MProductGallery',
   components: {
@@ -99,6 +102,11 @@ export default {
       );
 
       return index === -1 ? 0 : index;
+    },
+    imageSize () {
+      const width = config.products.gallery.width;
+      const height = config.products.gallery.height;
+      return { width, height }
     }
   }
 };
@@ -107,36 +115,5 @@ export default {
 @import "~@storefront-ui/vue/styles";
 .m-product-gallery {
   flex: 1;
-  &__mobile {
-    $height-other: 240px;
-    $height-iOS: 265px;
-
-    height: calc(100vh - #{$height-other});
-    @supports (-webkit-overflow-scrolling: touch) {
-      height: calc(100vh - #{$height-iOS});
-    }
-    ::v-deep .glide {
-      &,
-      * {
-        height: 100%;
-      }
-      &__slide {
-        position: relative;
-        overflow: hidden;
-      }
-      img {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        min-width: calc((375 / 490) * (100vh - #{$height-other}));
-        @supports (-webkit-overflow-scrolling: touch) {
-          min-width: calc((375 / 490) * (100vh - #{$height-iOS}));
-        }
-      }
-    }
-    ::v-deep .sf-gallery__stage {
-      width: 100%;
-    }
-  }
 }
 </style>
