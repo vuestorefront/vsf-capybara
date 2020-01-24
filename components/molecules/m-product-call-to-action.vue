@@ -1,13 +1,13 @@
 <template>
   <div class="m-product-call-to-action">
-    <div class="m-product-call-to-action__add-to-cart">
+    <div class="add-to-cart">
       <SfAlert
         v-if="alert.message"
-        class="m-product-call-to-action__alert"
+        class="alert"
         :message="alert.message"
         :type="alert.type"
       />
-      <div class="m-product-call-to-action__add-to-cart-action">
+      <div class="add-to-cart-action">
         <AProductQuantity
           v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"
           v-model="qty"
@@ -23,11 +23,11 @@
       </div>
     </div>
     <AAddToWishlist
-      class="m-product-call-to-action__text-action"
+      class="text-action"
       :product="product"
     />
     <AAddToCompare
-      class="m-product-call-to-action__text-action"
+      class="text-action"
       :product="product"
     />
   </div>
@@ -118,35 +118,35 @@ export default {
 .m-product-call-to-action {
   display: flex;
   flex-direction: column;
-  &__add-to-cart {
-    margin-top: 1.5rem;
+}
+.add-to-cart {
+  margin-top: 1.5rem;
+  @include for-desktop {
+    margin-top: $spacer-extra-big;
+  }
+}
+.add-to-cart-action {
+  display: flex;
+  flex-direction: row-reverse;
+  @include for-desktop {
+    flex-direction: row;
+  }
+  ::v-deep .a-product-quantity {
+    margin: 0 0 0 .5rem;
     @include for-desktop {
-      margin-top: $spacer-extra-big;
+      margin-left: 0;
     }
   }
-  &__add-to-cart-action {
-    display: flex;
-    flex-direction: row-reverse;
-    @include for-desktop {
-      flex-direction: row;
-    }
-    ::v-deep .a-product-quantity {
-      margin: 0 0 0 .5rem;
-      @include for-desktop {
-        margin-left: 0;
-      }
-    }
+}
+.text-action {
+  margin: 1.25rem auto .625rem 0;
+  font-size: $font-size-regular-mobile;
+  @include for-desktop {
+    margin: 1.25rem 0 .625rem auto;
+    font-size: $font-size-regular-desktop;
   }
-  &__text-action {
-    margin: 1.25rem auto .625rem 0;
-    font-size: $font-size-regular-mobile;
-    @include for-desktop {
-      margin: 1.25rem 0 .625rem auto;
-      font-size: $font-size-regular-desktop;
-    }
-  }
-  &__alert {
-    margin-bottom: 1rem;
-  }
+}
+.alert {
+  margin-bottom: 1rem;
 }
 </style>

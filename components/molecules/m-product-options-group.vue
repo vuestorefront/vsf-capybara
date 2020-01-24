@@ -12,7 +12,7 @@
         :qty-min="1"
       >
         <template #details>
-          <div class="m-product-options-group__sku">
+          <div class="sku">
             {{ product.sku }}
           </div>
         </template>
@@ -63,14 +63,14 @@ export default {
 
 <style lang="scss" scoped>
 .m-product-options-group {
-  &__sku {
-    color: #a3a5ad;
-  }
   ::v-deep {
     .sf-grouped-product-item__aside {
       display: flex;
       justify-content: flex-end;
     }
   }
+}
+.sku {
+  color: #a3a5ad;
 }
 </style>

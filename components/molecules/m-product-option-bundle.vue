@@ -19,7 +19,7 @@
       v-model="productOptionId"
     >
       <template #label="{label}">
-        <div class="a-product-option-bundle__label">
+        <div class="label">
           <div class="sf-radio__label">
             {{ label }}
           </div>
@@ -57,10 +57,10 @@ export default {
 <style lang="scss" scoped>
 .a-product-option-bundle {
   margin-top: 1.5rem;
-  &__label {
-    display: flex;
-    justify-content: space-between;
-  }
+}
+.label {
+  display: flex;
+  justify-content: space-between;
 }
 ::v-deep {
   .a-product-quantity {

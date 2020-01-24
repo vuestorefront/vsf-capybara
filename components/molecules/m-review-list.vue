@@ -3,7 +3,7 @@
     <SfReview
       v-for="(review, i) in pageReviews"
       :key="i"
-      class="m-review-list__record"
+      class="record"
       :author="review.author"
       :date="review.date"
       :message="review.message"
@@ -68,20 +68,19 @@ export default {
     @content;
   }
 }
-.m-review-list {
-  &__record {
-    padding-bottom: $spacer-big;
+
+.record {
+  padding-bottom: $spacer-big;
+  @include for-desktop {
+    padding-bottom: $spacer-extra-big;
+    border-bottom: 1px solid $c-light;
+  }
+  & + & {
+    padding-top: $spacer-extra-big;
+    border-top: 1px solid $c-light;
     @include for-desktop {
-      padding-bottom: $spacer-extra-big;
-      border-bottom: 1px solid $c-light;
-    }
-    & + & {
+      border-top: 0;
       padding-top: $spacer-extra-big;
-      border-top: 1px solid $c-light;
-      @include for-desktop {
-        border-top: 0;
-        padding-top: $spacer-extra-big;
-      }
     }
   }
 }

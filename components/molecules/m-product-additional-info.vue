@@ -2,7 +2,7 @@
   <SfTabs class="m-product-additional-info" :open-tab="openTab" id="m-product-additional-info">
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
-      <div class="m-product-additional-info__properties">
+      <div class="properties">
         <AProductAttribute
           v-for="(attribute, i) in attributes"
           :key="i"
@@ -12,7 +12,7 @@
       </div>
     </SfTab>
     <SfTab :title="$t('Read reviews')">
-      <div class="m-product-additional-info__review-header">
+      <div class="review-header">
         <SfHeading
           :title="$t('{count} Reviews', { count: reviewsCount })"
           :level="3"
@@ -96,25 +96,25 @@ export default {
   p {
     margin: 0;
   }
-  &__properties {
-    margin-top: $spacer-big;
-  }
-  &__review-header {
-    display: flex;
-    ::v-deep {
-      .sf-heading {
-        flex-shrink: 0;
-      }
-      .a-product-rating {
-        margin-left: 10px;
-        width: 100%;
-        justify-content: space-between;
-      }
-      .sf-rating {
-        .sf-icon {
-          width: 20px;
-          height: 20px;
-        }
+}
+.properties {
+  margin-top: $spacer-big;
+}
+.review-header {
+  display: flex;
+  ::v-deep {
+    .sf-heading {
+      flex-shrink: 0;
+    }
+    .a-product-rating {
+      margin-left: 10px;
+      width: 100%;
+      justify-content: space-between;
+    }
+    .sf-rating {
+      .sf-icon {
+        width: 20px;
+        height: 20px;
       }
     }
   }

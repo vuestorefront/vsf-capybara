@@ -8,7 +8,7 @@
     />
     <SfGallery
       ref="imageGallery"
-      class="m-product-gallery__mobile mobile-only"
+      class="mobile-only"
       :images="gallery"
       :current="currentIndex + 1"
       :slider-options="sliderOptions"
