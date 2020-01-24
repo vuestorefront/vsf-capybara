@@ -84,10 +84,8 @@ export default {
 @import "~@storefront-ui/vue/styles";
 .modal {
   cursor: default;
-  .modal {
-    &__heading {
-      margin-bottom: $spacer-extra-big;
-    }
+  &__heading {
+    margin-bottom: $spacer-extra-big;
   }
   &__button {
     display: block;

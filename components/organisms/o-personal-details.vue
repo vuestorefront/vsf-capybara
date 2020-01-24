@@ -9,14 +9,13 @@
         v-model.trim="personalDetails.firstName"
         class="form__element form__element--half"
         name="first-name"
-        :label="$t('First name *')"
+        :label="$t('First name')"
+        :required="true"
         :valid="!$v.personalDetails.firstName.$error"
         :error-message="
           !$v.personalDetails.firstName.required
             ? $t('Field is required')
-            : !$v.personalDetails.firstName.minLength
-              ? $t('Name must have at least 2 letters.')
-              : ''
+            : $t('Name must have at least 2 letters.')
         "
         @blur="$v.personalDetails.firstName.$touch()"
       />
@@ -24,25 +23,23 @@
         v-model.trim="personalDetails.lastName"
         class="form__element form__element--half form__element--half-even"
         name="last-name"
-        :label="$t('Last name *')"
+        :label="$t('Last name')"
+        :required="true"
         :valid="!$v.personalDetails.lastName.$error"
-        :error-message="
-          !$v.personalDetails.lastName.required ? $t('Field is required') : ''
-        "
+        :error-message="$t('Field is required')"
         @blur="$v.personalDetails.lastName.$touch()"
       />
       <SfInput
         v-model.trim="personalDetails.emailAddress"
         class="form__element"
         name="email-address"
-        :label="$t('Email address *')"
+        :label="$t('Email address')"
+        :required="true"
         :valid="!$v.personalDetails.emailAddress.$error"
         :error-message="
           !$v.personalDetails.emailAddress.required
             ? $t('Field is required')
-            : !$v.personalDetails.emailAddress.email
-              ? $t('Please provide valid e-mail address.')
-              : ''
+            : $t('Please provide valid e-mail address.')
         "
         @blur="$v.personalDetails.emailAddress.$touch()"
       />
@@ -67,18 +64,17 @@
           type="password"
           class="form__element"
           name="password"
-          :label="$t('Password *')"
+          :label="$t('Password')"
+          :required="true"
           :valid="!$v.password.$error"
           :error-message="
             !$v.password.required
               ? $t('Field is required')
               : !$v.password.minLength
                 ? $t('Password must have at least 8 letters.')
-                : !$v.password.complex
-                  ? $t(
-                    'Password must contain at least 3 different character classes: lower case, upper case, digits, special characters.'
-                  )
-                  : ''
+                : $t(
+                  'Password must contain at least 3 different character classes: lower case, upper case, digits, special characters.'
+                )
           "
           @blur="$v.password.$touch()"
         />
@@ -87,14 +83,13 @@
           type="password"
           class="form__element"
           name="password-confirm"
-          :label="$t('Repeat password *')"
+          :label="$t('Repeat password')"
+          :required="true"
           :valid="!$v.rPassword.$error"
           :error-message="
             !$v.rPassword.required
               ? $t('Field is required')
-              : !$v.rPassword.sameAsPassword
-                ? $t('Passwords must be identical.')
-                : ''
+              : $t('Passwords must be identical.')
           "
           @blur="$v.rPassword.$touch()"
         />
@@ -103,6 +98,7 @@
             v-model="acceptConditions"
             class="form__element form__checkbox"
             name="acceptConditions"
+            :required="true"
             @blur="$v.acceptConditions.$touch()"
           >
             <template #label>
@@ -111,7 +107,6 @@
               </div>
               &nbsp;
               <ATermsAndConditions />
-              *
             </template>
           </SfCheckbox>
         </div>

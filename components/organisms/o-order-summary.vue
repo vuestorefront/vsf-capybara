@@ -56,35 +56,14 @@
       </transition>
     </div>
     <MPriceSummary class="highlighted highlighted--total" />
-    <div class="highlighted promo-code">
-      <SfButton
-        class="promo-code__button"
-        @click="showPromoCode = !showPromoCode"
-      >
-        {{ showPromoCode ? "-" : "+" }} {{ $t("Discount code") }}
-      </SfButton>
-      <transition name="fade">
-        <div v-if="showPromoCode">
-          <SfInput
-            v-model="promoCode"
-            name="promoCode"
-            :label="$t('Add a discount code')"
-            class="promo-code__input"
-            @keyup.enter="applyCoupon"
-          />
-          <SfButton class="sf-button--full-width" @click="applyCoupon">
-            {{ $t("Add discount code") }}
-          </SfButton>
-        </div>
-      </transition>
-    </div>
+    <APromoCode class="highlighted" />
     <div class="highlighted">
       <SfCharacteristic
-        v-for="characteristic in characteristics"
-        :key="characteristic.title"
-        :title="characteristic.title"
-        :description="characteristic.description"
-        :icon="characteristic.icon"
+        v-for="benefit in orderBenefits"
+        :key="benefit.title"
+        :title="benefit.title"
+        :description="benefit.description"
+        :icon="benefit.icon"
         class="characteristic"
       />
     </div>
@@ -95,31 +74,35 @@ import { mapGetters } from 'vuex';
 import i18n from '@vue-storefront/i18n';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import {
-  SfInput,
   SfButton,
   SfHeading,
   SfProperty,
   SfCharacteristic,
   SfCollectedProduct
 } from '@storefront-ui/vue';
+import APromoCode from 'theme/components/atoms/a-promo-code';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 export default {
   name: 'OOrderSummary',
   components: {
-    SfInput,
     SfButton,
     SfHeading,
     SfProperty,
     SfCharacteristic,
     SfCollectedProduct,
+    APromoCode,
     MPriceSummary
   },
   data () {
     return {
-      promoCode: '',
-      showPromoCode: false,
-      showProducts: false,
-      characteristics: [
+      showProducts: false
+    };
+  },
+  props: {
+    orderBenefits: {
+      type: Array,
+      required: false,
+      default: () => ([
         {
           title: i18n.t('Safety'),
           description: i18n.t('It carefully packaged with a personal touch'),
@@ -139,8 +122,8 @@ export default {
           ),
           icon: 'return'
         }
-      ]
-    };
+      ])
+    }
   },
   computed: {
     ...mapGetters({
@@ -169,12 +152,6 @@ export default {
     },
     changeQuantity (product, qty) {
       this.$store.dispatch('cart/updateQuantity', { product, qty });
-    },
-    applyCoupon () {
-      this.$store.dispatch('cart/applyCoupon', this.promoCode);
-    },
-    removeCoupon () {
-      this.$store.dispatch('cart/removeCoupon');
     }
   }
 };
@@ -219,20 +196,6 @@ export default {
 .characteristic {
   &:not(:last-child) {
     margin-bottom: $spacer-big;
-  }
-}
-.promo-code {
-  &__button {
-    padding: 0;
-    background-color: transparent;
-    color: $c-primary;
-    font-size: $font-size-big-desktop;
-  }
-  &__input {
-    margin: $spacer-big 0;
-    ::v-deep input {
-      border-color: $c-gray-variant;
-    }
   }
 }
 .product {
