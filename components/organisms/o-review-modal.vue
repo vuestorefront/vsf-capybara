@@ -34,11 +34,7 @@
           :label="$t('Summary')"
           :required="true"
           :valid="!$v.formData.summary.$error"
-          :error-message="
-            !$v.formData.summary.required
-              ? $t('Field is required.')
-              : ''
-          "
+          :error-message="$t('Field is required.')"
           class="form__input"
         />
         <SfInput
@@ -47,11 +43,7 @@
           :label="$t('Review')"
           :required="true"
           :valid="!$v.formData.review.$error"
-          :error-message="
-            !$v.formData.review.required
-              ? $t('Field is required.')
-              : ''
-          "
+          :error-message="$t('Field is required.')"
           class="form__input"
         />
         <SfButton class="sf-button--full-width form__button" @click.native="submit">
