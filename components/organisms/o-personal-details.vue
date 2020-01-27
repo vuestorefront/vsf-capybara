@@ -126,7 +126,7 @@
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
         >
           {{ $t("or") }}
-          <span class="link pointer" @click="gotoAccount">
+          <span class="link pointer" @click="login">
             {{ $t("login to your account") }}
           </span>
         </SfButton>
@@ -188,6 +188,12 @@ export default {
     },
     acceptConditions: {
       required
+    }
+  },
+  methods: {
+    login () {
+      this.$store.commit('ui/setAuthElem', 'login');
+      this.$bus.$emit('modal-show', 'modal-signup');
     }
   }
 };
