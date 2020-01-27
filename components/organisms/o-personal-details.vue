@@ -124,11 +124,9 @@
         <SfButton
           v-if="!currentUser"
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
+          @click="login"
         >
-          {{ $t("or") }}
-          <span class="link pointer" @click="gotoAccount">
-            {{ $t("login to your account") }}
-          </span>
+          {{ $t("or login to your account") }}
         </SfButton>
       </div>
     </div>
@@ -188,6 +186,12 @@ export default {
     },
     acceptConditions: {
       required
+    }
+  },
+  methods: {
+    login () {
+      this.$store.commit('ui/setAuthElem', 'login');
+      this.$bus.$emit('modal-show', 'modal-signup');
     }
   }
 };
