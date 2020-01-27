@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { SfInput, SfButton } from "@storefront-ui/vue";
+import { SfInput, SfButton } from '@storefront-ui/vue';
 import { required, minLength, email } from 'vuelidate/lib/validators';
 import { unicodeAlpha } from '@vue-storefront/core/helpers/validators';
 

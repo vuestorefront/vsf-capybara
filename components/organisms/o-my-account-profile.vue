@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { SfTabs } from "@storefront-ui/vue";
+import { SfTabs } from '@storefront-ui/vue';
 import MUpdatePersonalData from 'theme/components/molecules/m-update-personal-data'
 import MUpdatePassword from 'theme/components/molecules/m-update-password'
 
