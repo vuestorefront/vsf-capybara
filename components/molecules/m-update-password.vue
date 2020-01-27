@@ -1,7 +1,7 @@
 <template>
   <div class="m-update-password">
     <p class="message">
-      {{ $t('If you want to change the password to access your account, enter the following information:') }}<br />
+      {{ $t('If you want to change the password to access your account, enter the following information:') }}<br>
       {{ $t('Your current email address is') }} <span class="message__label">{{ currentUser.email }}</span>
     </p>
     <div class="form">
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { SfInput, SfButton } from "@storefront-ui/vue";
+import { SfInput, SfButton } from '@storefront-ui/vue';
 import { required, sameAs } from 'vuelidate/lib/validators';
 
 export default {
