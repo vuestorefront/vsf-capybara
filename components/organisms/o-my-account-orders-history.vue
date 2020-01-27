@@ -6,20 +6,29 @@
           {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
         </p>
         <div v-if="orders.length === 0" class="no-orders">
-          <p class="no-orders__title">{{ $t('You currently have no orders') }}</p>
-          <p class="no-orders__content">{{ $t('Best get shopping pronto...') }}</p>
-          <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
+          <p class="no-orders__title">
+            {{ $t('You currently have no orders') }}
+          </p>
+          <p class="no-orders__content">
+            {{ $t('Best get shopping pronto...') }}
+          </p>
+          <SfButton class="no-orders__button">
+            {{ $t('Start shopping') }}
+          </SfButton>
         </div>
         <SfTable v-else class="orders">
           <SfTableHeading>
             <SfTableHeader
               v-for="tableHeader in tableHeaders"
               :key="tableHeader"
-              >{{ tableHeader }}</SfTableHeader
             >
+              {{ tableHeader }}
+            </SfTableHeader>
             <SfTableHeader>
               <span class="mobile-only">{{ $t('Download') }}</span>
-              <SfButton class="desktop-only orders__download-all">{{ $t('Download all') }}</SfButton>
+              <SfButton class="desktop-only orders__download-all">
+                {{ $t('Download all') }}
+              </SfButton>
             </SfTableHeader>
           </SfTableHeading>
           <SfTableRow v-for="order in orders" :key="order[0]">
@@ -30,21 +39,26 @@
                     'text-success': data === 'Finalised',
                     'text-warning': data === 'In process'
                   }"
-                  >{{ data }}</span
-                >
+                >{{ data }}</span>
               </template>
-              <template v-else>{{ data }}</template>
+              <template v-else>
+                {{ data }}
+              </template>
             </SfTableData>
             <SfTableData class="orders__view">
-              <SfButton class="sf-button--text mobile-only">{{ $t('Download') }}</SfButton>
-              <SfButton class="sf-button--text desktop-only">{{ $t('VIEW') }}</SfButton>
+              <SfButton class="sf-button--text mobile-only">
+                {{ $t('Download') }}
+              </SfButton>
+              <SfButton class="sf-button--text desktop-only">
+                {{ $t('VIEW') }}
+              </SfButton>
             </SfTableData>
           </SfTableRow>
         </SfTable>
       </SfTab>
       <SfTab :title="$t('Returns')">
         <p class="message">
-          {{ $t('This feature is not implemented yet! Please take a look at') }}<br />
+          {{ $t('This feature is not implemented yet! Please take a look at') }}<br>
           <a href="#">https://github.com/DivanteLtd/vue-storefront/issues {{ $t('for our Roadmap!') }}</a>
         </p>
       </SfTab>
@@ -54,24 +68,24 @@
 
 <script>
 import UserOrder from '@vue-storefront/core/modules/order/components/UserOrdersHistory';
-import { SfTabs, SfTable, SfButton } from "@storefront-ui/vue";
+import { SfTabs, SfTable, SfButton } from '@storefront-ui/vue';
 
 export default {
-  name: "OMyAccountOrdersHistory",
+  name: 'OMyAccountOrdersHistory',
   mixins: [UserOrder],
   components: {
     SfTabs,
     SfTable,
     SfButton
   },
-  data() {
+  data () {
     return {
       tableHeaders: [
-        "Order ID",
-        "Order date",
-        "Payment method",
-        "Amount",
-        "Status"
+        'Order ID',
+        'Order date',
+        'Payment method',
+        'Amount',
+        'Status'
       ]
     };
   },
