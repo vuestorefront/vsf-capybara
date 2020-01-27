@@ -136,8 +136,7 @@ export default {
     }
   }
 }
-.message,
-.notice {
+.message {
   font-family: $body-font-family-primary;
   font-weight: $body-font-weight-primary;
   line-height: 1.6;
@@ -150,15 +149,6 @@ export default {
   }
   &__label {
     font-weight: 400;
-  }
-}
-.notice {
-  margin: $spacer-big 0 0 0;
-  font-size: $font-size-extra-small-mobile;
-  @include for-desktop {
-    max-width: 70%;
-    margin: $spacer 0 0 0;
-    font-size: $font-size-extra-small-desktop;
   }
 }
 </style>
