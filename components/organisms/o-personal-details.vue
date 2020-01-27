@@ -124,11 +124,9 @@
         <SfButton
           v-if="!currentUser"
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
+          @click="login"
         >
-          {{ $t("or") }}
-          <span class="link pointer" @click="login">
-            {{ $t("login to your account") }}
-          </span>
+          {{ $t("or login to your account") }}
         </SfButton>
       </div>
     </div>
