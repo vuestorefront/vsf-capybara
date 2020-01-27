@@ -155,9 +155,6 @@ export default {
   @include for-desktop {
     font-size: $font-size-regular-desktop;
   }
-  &__label {
-    font-weight: 400;
-  }
 }
 .notice {
   margin: $spacer-big 0 0 0;
