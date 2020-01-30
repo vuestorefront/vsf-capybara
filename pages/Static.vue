@@ -1,167 +1,151 @@
 <template>
-  <div>
-    <div class="bg-cl-secondary py35 pl20">
-      <div class="container">
-        <breadcrumbs :with-homepage="true" :active-route="$props.title" />
-        <h2 class="fs-big">
-          {{ $props.title }}
-        </h2>
-      </div>
-    </div>
-
-    <div class="container pt45 pb70">
-      <div class="row pl20 pt0">
-        <div class="col-sm-3">
-          <nav class="static-menu serif h4 mb35">
-            <ul class="m0 p0">
-              <li v-for="element in navigation" :key="element.id" class="mb10">
-                <router-link
-                  :to="localizedRoute(element.link)"
-                  class="cl-accent relative"
-                >
-                  {{ element.title }}
-                </router-link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-        <div class="static-content h4 lh35 col-sm-9">
-          <component :is="activeComponent" />
-        </div>
-      </div>
-    </div>
+  <div id="static">
+    <SfBreadcrumbs
+      class="breadcrumbs desktop-only"
+      :breadcrumbs="breadcrumbs"
+    >
+      <template #link="{breadcrumb}">
+        <router-link :to="breadcrumb.route.link">
+          {{ breadcrumb.text }}
+        </router-link>
+      </template>
+    </SfBreadcrumbs>
+    <SfContentPages
+      :active="currentRoute.title"
+      :title="currentRoute.title"
+      @click:change="updateRoute"
+    >
+      <SfContentPage v-for="n in navigation" :key="n.title" :title="n.title">
+        <AStatic :content="content" />
+      </SfContentPage>
+    </SfContentPages>
   </div>
 </template>
 
 <script>
 import i18n from '@vue-storefront/i18n';
-import Breadcrumbs from 'theme/components/core/Breadcrumbs';
-import StaticExample from 'theme/components/theme/blocks/Static/Example';
-import StaticShortExample from 'theme/components/theme/blocks/Static/Short';
+import {
+  SfBreadcrumbs,
+  SfContentPages
+} from '@storefront-ui/vue';
 import { getPathForStaticPage } from 'theme/helpers';
-import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import CmsPage from '@vue-storefront/core/pages/CmsPage';
+import AStatic from 'theme/components/atoms/a-static';
 
 export default {
+  name: 'Static',
   components: {
-    Breadcrumbs
+    SfBreadcrumbs,
+    SfContentPages,
+    AStatic
   },
-  metaInfo () {
-    return {
-      title: this.$route.meta.title || this.$props.title,
-      meta: this.$route.meta.description
-        ? [{ vmid: 'description', description: this.$route.meta.description }]
-        : []
-    };
-  },
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    page: {
-      type: String,
-      required: true
-    }
-  },
+  mixins: [CmsPage],
   data () {
     return {
       navigation: [
+        { title: i18n.t('About us (Magento CMS)'), link: getPathForStaticPage('/about-us'), isCms: true },
+        { title: i18n.t('Customer service (Magento CMS)'), link: getPathForStaticPage('/customer-service'), isCms: true },
+        { title: i18n.t('Customer service'), link: '/customer-service' },
+        { title: i18n.t('Legal notice'), link: '/legal' },
+        { title: i18n.t('Store locator'), link: '/store-locator' },
+        { title: i18n.t('Delivery'), link: '/delivery' },
+        { title: i18n.t('Return policy'), link: '/returns' },
+        { title: i18n.t('Privacy policy'), link: '/privacy' },
+        { title: i18n.t('Size guide'), link: '/size-guide' },
+        { title: i18n.t('Contact us'), link: '/contact' }
+      ],
+      messages: [
         {
-          title: i18n.t('About us'),
-          link: getPathForStaticPage('/about-us'),
-          component: StaticExample
+          title: 'Privacy Policy',
+          message: `To help us achieve our goal of providing the highest quality products and
+      services, we use information from our interactions with you and other
+      customers, as well as from other parties. Because we respect your privacy,
+      we have implemented procedures to ensure that your personal information is
+      handled in a safe, secure, and responsible manner. We have posted this
+      privacy policy in order to explain our information collection practices
+      and the choices you have about the way information is collected and used.`
         },
         {
-          title: i18n.t('Customer service'),
-          link: getPathForStaticPage('/customer-service'),
-          component: StaticShortExample
+          title: 'Security',
+          message: `Personal information provided on the website and online credit card
+      transactions are transmitted through a secure server. We are committed to
+      handling your personal information with high standards of information
+      security. We take appropriate physical, electronic, and administrative
+      steps to maintain the security and accuracy of personally identifiable
+      information we collect, including limiting the number of people who have
+      physical access to our database servers, as well as employing electronic
+      security systems and password protections that guard against unauthorized
+      access.`
         },
         {
-          title: i18n.t('Store locator'),
-          link: localizedRoute('/store-locator'),
-          component: StaticExample
-        },
-        {
-          title: i18n.t('Delivery'),
-          link: '/delivery',
-          component: StaticShortExample
-        },
-        {
-          title: i18n.t('Return policy'),
-          link: '/returns',
-          component: StaticExample
-        },
-        {
-          title: i18n.t('Privacy policy'),
-          link: '/privacy',
-          component: StaticShortExample
-        },
-        {
-          title: i18n.t('Size guide'),
-          link: '/size-guide',
-          component: StaticExample
-        },
-        {
-          title: i18n.t('Contact us'),
-          link: '/contact',
-          component: StaticShortExample
+          title: 'Additional Information',
+          message: `This website ("website") is operated by Luma Inc., which includes Luma
+      stores, and Luma Private Sales. This privacy policy only covers
+      information collected at this website, and does not cover any information
+      collected offline by Luma. All Luma websites are covered by this privacy
+      policy.`
         }
       ]
     };
   },
   computed: {
-    activeComponent () {
-      const matchedNav = this.navigation.find(
-        nav => nav.link === this.$route.path
-      );
-      return matchedNav ? matchedNav.component : null;
+    breadcrumbs () {
+      return [
+        { text: i18n.t('Homepage'), route: { link: '/' } },
+        { text: this.currentRoute.title }
+      ];
+    },
+    currentRoute () {
+      return {
+        ...this.navigation.find(navigation => navigation.link === this.$route.path)
+      };
+    },
+    content () {
+      return this.currentRoute.isCms
+        ? {
+          title: this.$store.state.cmsPage.current.title,
+          message: this.$store.state.cmsPage.current.content
+        }
+        : this.messages;
+    }
+  },
+  methods: {
+    updateRoute (title) {
+      if (title === undefined) {
+        this.$router.back();
+      } else {
+        const nextRoute = this.navigation.find(navigation => navigation.title === title);
+        if (nextRoute) {
+          this.$router.push(nextRoute.link);
+        }
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "~theme/css/variables/colors";
-@import "~theme/css/helpers/functions/color";
-$border-primary: color(primary, $colors-border);
-
-.static-menu {
-  ul {
-    list-style: none;
-  }
-
-  a::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: $border-primary;
-  }
-
-  a:hover::after,
-  .router-link-active::after {
-    opacity: 0;
+@import "~@storefront-ui/vue/styles";
+@mixin for-desktop {
+  @media screen and (min-width: $desktop-min) {
+    @content;
   }
 }
-
-.static-content {
-  *:first-of-type {
-    margin-top: 0;
+#static {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  @include for-desktop {
+    max-width: 1240px;
+    margin: auto;
   }
 }
-</style>
-
-<style lang="scss">
-.static-content {
-  h3 {
-    margin-top: 40px;
-    margin-bottom: 25px;
-    @media (max-width: 767px) {
-      margin-top: 35px;
-      margin-bottom: 10px;
-    }
+.breadcrumbs {
+  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
+}
+::v-deep {
+  .sf-bar__icon *[role=button] {
+    cursor: pointer;
   }
 }
 </style>

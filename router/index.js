@@ -8,8 +8,6 @@ const Product = () =>
   import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Product');
 const Category = () =>
   import(/* webpackChunkName: "vsf-category" */ 'theme/pages/Category');
-const CmsPage = () =>
-  import(/* webpackChunkName: "vsf-cms" */ 'theme/pages/CmsPage');
 const Checkout = () =>
   import(/* webpackChunkName: "vsf-checkout" */ 'theme/pages/Checkout');
 const Compare = () =>
@@ -174,7 +172,7 @@ let routes = [
     component: Product
   }, // :sku param can be marked as optional with ":sku?" (https://github.com/vuejs/vue-router/blob/dev/examples/route-matching/app.js#L16), but it requires a lot of work to adjust the rest of the site
   { name: 'category', path: '/c/:slug', component: Category },
-  { name: 'cms-page', path: '/i/:slug', component: CmsPage }
+  { name: 'cms-page', path: '/i/:slug', component: Static }
 ];
 
 export default routes;
