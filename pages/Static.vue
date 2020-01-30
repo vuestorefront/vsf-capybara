@@ -111,9 +111,17 @@ export default {
   },
   methods: {
     updateRoute (title) {
+      /**
+       * On mobile view clicking the "back" icon in SfContentPages emits click:change
+       * event but without an argument. Unfortunately the same event is also used for
+       * "normal" page changes so it has to be checked explicitly if it comes from "back"
+       * icon or not. Currently this is the only way to do that.
+       */
       if (title === undefined) {
+        // "Back" icon was clicked in SfContentPages
         this.$router.back();
       } else {
+        // "Normal" navigation to next page - if it exists
         const nextRoute = this.navigation.find(navigation => navigation.title === title);
         if (nextRoute) {
           this.$router.push(nextRoute.link);
