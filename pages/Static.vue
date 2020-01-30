@@ -5,7 +5,7 @@
       :breadcrumbs="breadcrumbs"
     >
       <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link">
+        <router-link :to="localizedRoute(breadcrumb.route.link)">
           {{ breadcrumb.text }}
         </router-link>
       </template>
@@ -91,13 +91,13 @@ export default {
   computed: {
     breadcrumbs () {
       return [
-        { text: i18n.t('Homepage'), route: { link: '/' } },
+        { text: i18n.t('Homepage'), route: { link: this.localizedRoute('/') } },
         { text: this.currentRoute.title }
       ];
     },
     currentRoute () {
       return {
-        ...this.navigation.find(navigation => navigation.link === this.$route.path)
+        ...this.navigation.find(navigation => this.localizedRoute(navigation.link) === this.$route.path)
       };
     },
     content () {
