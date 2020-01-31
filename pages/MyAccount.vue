@@ -27,7 +27,7 @@
       </SfContentCategory>
       <SfContentCategory :title="$t('Order details')">
         <SfContentPage :title="$t('Order history')">
-          <MyOrders />
+          <OMyAccountOrdersHistory />
         </SfContentPage>
         <SfContentPage :title="$t('My reviews')" />
       </SfContentCategory>
@@ -40,9 +40,9 @@
 import MyAccount from '@vue-storefront/core/pages/MyAccount';
 import MyShippingDetails from '../components/core/blocks/MyAccount/MyShippingDetails';
 import MyNewsletter from '../components/core/blocks/MyAccount/MyNewsletter';
-import MyOrders from '../components/core/blocks/MyAccount/MyOrders';
 
 import OMyAccountProfile from 'theme/components/organisms/o-my-account-profile';
+import OMyAccountOrdersHistory from 'theme/components/organisms/o-my-account-orders-history';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 
@@ -51,9 +51,9 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     OMyAccountProfile,
+    OMyAccountOrdersHistory,
     MyShippingDetails,
-    MyNewsletter,
-    MyOrders
+    MyNewsletter
   },
   mixins: [MyAccount],
   data () {
