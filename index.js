@@ -3,6 +3,7 @@ import App from './App';
 import routes from './router';
 import Vue from 'vue';
 import VueProgressBar from 'vue-progressbar';
+import VueSanitize from 'vue-sanitize';
 import '@vue-storefront/core/lib/passive-listeners';
 import { once } from '@vue-storefront/core/helpers';
 import { module as cartModule } from './store/cart';
@@ -15,6 +16,10 @@ import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
 
 once('__VUE_EXTEND_DROPPOINT_VPB__', () => {
   Vue.use(VueProgressBar);
+});
+
+once('__VUE_EXTEND_SANITIZE__', () => {
+  Vue.use(VueSanitize);
 });
 
 const themeEntry = App;
