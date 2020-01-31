@@ -3,7 +3,8 @@
     <p class="message">
       {{ $t('If you want to change the password to access your account, enter the following information:') }}<br>
       <template v-if="currentUser">
-        {{ $t('Your current email address is') }} <span class="message__label">{{ currentUser ? currentUser.email : '' }}</span>
+        {{ $t('Your current email address is') }}
+        <span class="message__label">{{ typeof currentUser.email !== 'undefined' ? currentUser.email : '' }}</span>
       </template>
     </p>
     <div class="form">
