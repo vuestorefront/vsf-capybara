@@ -22,7 +22,7 @@
               v-for="tableHeader in tableHeaders"
               :key="tableHeader"
             >
-              {{ tableHeader }}
+              {{ $t(tableHeader) }}
             </SfTableHeader>
             <SfTableHeader>
               <span class="mobile-only">{{ $t('Download') }}</span>
@@ -31,12 +31,12 @@
               </SfButton>
             </SfTableHeader>
           </SfTableHeading>
-          <SfTableRow v-for="order in orders" :key="order[0]">
+          <SfTableRow v-for="order in orders" :key="order.order_id">
             <SfTableData v-for="(data, key) in order" :key="key">
-              <template v-if="key === 4">
+              <template v-if="key === 'status'">
                 <span
                   :class="{
-                    'text-success': data === 'Finalised',
+                    'text-success': data === 'Complete',
                     'text-warning': data === 'In process'
                   }"
                 >{{ data }}</span>
