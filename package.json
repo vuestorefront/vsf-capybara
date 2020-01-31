@@ -18,10 +18,12 @@
     "vue-no-ssr": "^0.2.2",
     "vue-offline": "^1.0.8",
     "vue-progressbar": "^0.7.5",
+    "vue-sanitize": "^0.2.0",
     "vuelidate": "^0.6.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "husky": "^3.1.0"
+    "husky": "^3.1.0",
+    "postcss-filter-stream": "^0.0.6"
   }
 }
