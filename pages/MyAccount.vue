@@ -18,7 +18,7 @@
           <OMyAccountProfile />
         </SfContentPage>
         <SfContentPage :title="$t('Shipping details')">
-          <MyShippingDetails />
+          <OMyAccountShippingDetails />
         </SfContentPage>
         <SfContentPage :title="$t('Loyalty Card')" />
         <SfContentPage :title="$t('My newsletter')">
@@ -38,11 +38,11 @@
 
 <script>
 import MyAccount from '@vue-storefront/core/pages/MyAccount';
-import MyShippingDetails from '../components/core/blocks/MyAccount/MyShippingDetails';
 import MyNewsletter from '../components/core/blocks/MyAccount/MyNewsletter';
 import MyOrders from '../components/core/blocks/MyAccount/MyOrders';
 
 import OMyAccountProfile from 'theme/components/organisms/o-my-account-profile';
+import OMyAccountShippingDetails from 'theme/components/organisms/o-my-account-shipping-details'
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 
@@ -51,7 +51,7 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     OMyAccountProfile,
-    MyShippingDetails,
+    OMyAccountShippingDetails,
     MyNewsletter,
     MyOrders
   },
