@@ -1,5 +1,5 @@
 export default {
-  title: 'Default Theme',
+  title: 'VSF Capybara',
   titleTemplate: '%s - Vue Storefront',
   htmlAttrs: {
     lang: 'en'
