@@ -15,7 +15,6 @@ import { SfModal } from '@storefront-ui/vue';
 import MLogin from 'theme/components/molecules/m-login'
 import MRegister from 'theme/components/molecules/m-register'
 import MResetPassword from 'theme/components/molecules/m-reset-password'
-import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'MModalAuthentication',
