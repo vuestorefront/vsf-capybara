@@ -2,7 +2,8 @@
   <div class="m-product-gallery">
     <SfImage class="desktop-only" :src="variantImage" />
     <SfImage
-      v-if="additionalImage"
+      v-for="additionalImage in additionalImageList"
+      :key="additionalImage.src"
       class="desktop-only"
       :src="additionalImage"
     />
@@ -72,16 +73,16 @@ export default {
 
       return variantImage;
     },
-    additionalImage () {
+    additionalImageList () {
       const withoutVariantImage = this.gallery.filter(
         imageObject => !isEqual(this.variantImage.id, imageObject.id)
       );
 
       if (!this.isOnline) {
-        return null;
+        return [];
       }
 
-      return withoutVariantImage[0];
+      return withoutVariantImage;
     },
     option () {
       return reduce(
