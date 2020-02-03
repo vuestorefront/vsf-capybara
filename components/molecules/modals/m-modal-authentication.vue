@@ -1,10 +1,10 @@
 <template>
-  <div class="m-authentication-modal">
+  <div class="m-modal-authentication">
     <SfModal :visible="isVisible" @close="closeModal">
       <transition name="fade" mode="out-in">
-        <MLogin v-if="activeElem === 'login'" />
-        <MRegister v-if="activeElem === 'register'" />
-        <MResetPassword v-if="activeElem === 'forgot-pass'" />
+        <MLogin v-if="modalData.payload === 'login'" />
+        <MRegister v-if="modalData.payload === 'register'" />
+        <MResetPassword v-if="modalData.payload === 'forgot-pass'" />
       </transition>
     </SfModal>
   </div>
@@ -25,6 +25,11 @@ export default {
     isVisible: {
       type: Boolean,
       default: false
+    },
+    modalData: {
+      type: Object,
+      default: () => ({}),
+      required: false
     }
   },
   computed: {
@@ -34,7 +39,6 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$store.commit('ui/setAuthElem', null);
       this.$store.dispatch('ui/closeModal', { name: ModalList.Auth });
     }
   }

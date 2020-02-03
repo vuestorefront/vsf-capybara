@@ -13,7 +13,6 @@ export const uiStore = {
     newsletterPopup: false,
     overlay: false,
     loader: false,
-    authElem: null,
     checkoutMode: false,
     openMyAccount: false,
     submenu: {
@@ -56,9 +55,6 @@ export const uiStore = {
     },
     setLoader (state, action) {
       state.loader = action === true;
-    },
-    setAuthElem (state, action) {
-      state.authElem = action;
     }
   },
   actions: {

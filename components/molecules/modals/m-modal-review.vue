@@ -1,5 +1,5 @@
 <template>
-  <div class="m-review-modal">
+  <div class="m-modal-review">
     <SfModal :visible="isVisible" @close="closeModal">
       <div class="form">
         <SfInput
@@ -79,7 +79,7 @@ export default {
     },
     modalData: {
       type: Object,
-      default: null,
+      default: () => ({}),
       required: false
     }
   },

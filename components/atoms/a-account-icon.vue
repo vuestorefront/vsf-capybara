@@ -14,14 +14,25 @@
 
 <script>
 import { SfCircleIcon } from '@storefront-ui/vue';
-import AccountIcon from '@vue-storefront/core/compatibility/components/blocks/Header/AccountIcon';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   components: { SfCircleIcon },
-  mixins: [AccountIcon],
   computed: {
     ...mapGetters('user', ['isLoggedIn'])
+  },
+  methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
+    goToAccount () {
+      if (this.isLoggedIn) {
+        this.$router.push(this.localizedRoute('/my-account'))
+      } else {
+        this.openModal({name: ModalList.Auth, payload: 'login'})
+      }
+    }
   }
 };
 </script>
