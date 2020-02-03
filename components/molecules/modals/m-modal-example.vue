@@ -1,7 +1,7 @@
 <template>
   <!-- Please add class name to your root element same as filename -->
   <div class="m-modal-example">
-    <SfModal :visible="isVisible" @close="closeModal">
+    <SfModal :visible="isVisible" @close="$emit('close', modalData.name)">
       {{ modalData }}
     </SfModal>
   </div>
@@ -15,6 +15,12 @@ import { ModalList } from 'theme/store/ui/modals'
  * check 'theme/store/ui/modals'
  */
 
+/**
+ * How to open modal?
+ * import 'ModalList'
+ * and fire this.$store.dispatch('ui/openModal', { name: ModalList.Example, payload: 'optional data' });
+ */
+
 export default {
   name: 'MModalExample',
   props: {
@@ -23,26 +29,17 @@ export default {
      */
     isVisible: {
       type: Boolean,
-      default: false
+      default: false,
+      required: true
     },
     /**
-     * optional data that can be used in modal
+     * data that can be used in modal
      * format: { name: string, payload: any }
      */
     modalData: {
       type: Object,
       default: () => ({}),
-      required: false
-    }
-  },
-  methods: {
-    openModal () {
-      // open modal - can be used in app
-      this.$store.dispatch('ui/openModal', { name: ModalList.Example, payload: 'optional data' });
-    },
-    closeModal () {
-      // close modal - should be mainly used in this component
-      this.$store.dispatch('ui/closeModal', { name: ModalList.Example });
+      required: true
     }
   }
 }
