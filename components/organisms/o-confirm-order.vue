@@ -190,7 +190,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import i18n from '@vue-storefront/i18n';
 import { required } from 'vuelidate/lib/validators';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
@@ -269,6 +269,9 @@ export default {
     registerModule(OrderModule);
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     getThumbnailForProduct (product) {
       return getThumbnailForProduct(product);
     },
