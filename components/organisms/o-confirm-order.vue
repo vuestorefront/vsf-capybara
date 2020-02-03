@@ -164,7 +164,9 @@
               {{ $t("I accept ") }}
             </div>
             &nbsp;
-            <ATermsAndConditions />
+            <a href="#" @click="openTermsAndConditionsModal">
+              <span>{{ $t("Terms and conditions") }}</span>
+            </a>
             *
           </template>
         </SfCheckbox>
@@ -205,8 +207,8 @@ import {
   SfCheckbox,
   SfAccordion
 } from '@storefront-ui/vue';
-import ATermsAndConditions from 'theme/components/atoms/a-terms-and-conditions';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'OConfirmOrder',
@@ -219,8 +221,7 @@ export default {
     SfHeading,
     SfCheckbox,
     SfAccordion,
-    MPriceSummary,
-    ATermsAndConditions
+    MPriceSummary
   },
   mixins: [OrderReview],
   data () {
@@ -295,6 +296,9 @@ export default {
         message: this.$t(response.result),
         action1: { label: this.$t('OK') }
       });
+    },
+    openTermsAndConditionsModal () {
+      this.openModal({name: ModalList.AccountBenefits})
     }
   }
 };

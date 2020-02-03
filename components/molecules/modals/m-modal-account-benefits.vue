@@ -1,11 +1,6 @@
 <template>
-  <div class="a-icon-account-benefits" @click.prevent>
-    <a href="#" @click="showAccountBenefits = true">{{ $t("+info") }}</a>
-    <SfModal
-      :visible="showAccountBenefits"
-      class="modal"
-      @close="showAccountBenefits = false"
-    >
+  <div class="m-modal-account-benefits">
+    <SfModal :visible="isVisible" @close="closeModal">
       <SfHeading
         :title="$t('Account Benefits')"
         :subtitle="$t('Enjoy these perks with your free account!')"
@@ -21,7 +16,7 @@
       />
       <SfButton
         class="sf-button--full-width color-secondary"
-        @click="showAccountBenefits = false"
+        @click="closeModal"
       >
         {{ $t("OK") }}
       </SfButton>
@@ -37,9 +32,10 @@ import {
   SfCharacteristic
 } from '@storefront-ui/vue';
 import i18n from '@vue-storefront/i18n';
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
-  name: 'AIconshowAccountBenefits',
+  name: 'MModalAccountBenefits',
   components: {
     SfModal,
     SfButton,
@@ -48,7 +44,6 @@ export default {
   },
   data () {
     return {
-      showAccountBenefits: false,
       characteristics: [
         {
           description: i18n.t('Faster checkout'),
@@ -68,19 +63,27 @@ export default {
         }
       ]
     };
+  },
+  props: {
+    isVisible: {
+      type: Boolean,
+      default: false
+    }
+  },
+  methods: {
+    closeModal () {
+      this.$store.dispatch('ui/closeModal', { name: ModalList.AccountBenefits });
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-.a-icon-account-benefits {
+.m-modal-account-benefits {
   line-height: 1;
 }
 .characteristic {
   margin-top: $spacer-big;
   margin-bottom: $spacer-big;
-}
-.modal {
-  cursor: initial;
 }
 </style>

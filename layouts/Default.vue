@@ -33,7 +33,6 @@
       <OFooter />
       <OModal />
       <Notification />
-      <OAuthenticationModal />
       <CookieNotification />
       <OfflineBadge />
       <OrderConfirmation
