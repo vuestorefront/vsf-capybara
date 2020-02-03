@@ -259,6 +259,9 @@ export default {
     @content;
   }
 }
+.section {
+  padding: 0 1.25rem;
+}
 
 .product {
   box-sizing: border-box;
