@@ -1,6 +1,6 @@
 <template>
-  <div class="o-authentication-modal">
-    <SfModal :visible="!!activeElem" @close="switchElem(null)">
+  <div class="m-authentication-modal">
+    <SfModal :visible="isVisible" @close="closeModal">
       <transition name="fade" mode="out-in">
         <MLogin v-if="activeElem === 'login'" />
         <MRegister v-if="activeElem === 'register'" />
@@ -16,35 +16,27 @@ import { SfModal } from '@storefront-ui/vue';
 import MLogin from 'theme/components/molecules/m-login'
 import MRegister from 'theme/components/molecules/m-register'
 import MResetPassword from 'theme/components/molecules/m-reset-password'
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
-  name: 'OAuthenticationModal',
+  name: 'MModalAuthentication',
   components: { SfModal, MLogin, MRegister, MResetPassword },
+  props: {
+    isVisible: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapState({
       activeElem: state => state.ui.authElem
     })
   },
   methods: {
-    switchElem (to) {
-      this.$store.commit('ui/setAuthElem', to);
+    closeModal () {
+      this.$store.commit('ui/setAuthElem', null);
+      this.$store.dispatch('ui/closeModal', { name: ModalList.Auth });
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-.o-authentication-modal {
-  box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
-  }
-}
-</style>

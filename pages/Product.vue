@@ -30,7 +30,6 @@
       </SfSection>
     </lazy-hydrate>
     <SizeGuide />
-    <OReviewModal :product-id="getOriginalProduct.id" />
   </div>
 </template>
 
@@ -54,11 +53,6 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 
 import { SfSection } from '@storefront-ui/vue';
 
-const OReviewModal = () =>
-  import(
-    /* webpackChunkName: "vsf-review-modal" */ 'theme/components/organisms/o-review-modal'
-  );
-
 export default {
   components: {
     PromotedOffers,
@@ -67,8 +61,7 @@ export default {
     LazyHydrate,
     MRelatedProducts,
     SfSection,
-    OProductDetails,
-    OReviewModal
+    OProductDetails
   },
   provide () {
     return {

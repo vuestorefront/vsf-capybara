@@ -1,6 +1,6 @@
 <template>
-  <div class="o-review-modal">
-    <SfModal :visible="isModalVisible" @close="closeModal">
+  <div class="m-review-modal">
+    <SfModal :visible="isVisible" @close="closeModal">
       <div class="form">
         <SfInput
           v-model="formData.name"
@@ -57,10 +57,10 @@
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators';
 import { SfModal, SfInput, SfButton } from '@storefront-ui/vue';
-import { mapState } from 'vuex'
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
-  name: 'OReviewModal',
+  name: 'MModalReview',
   components: { SfModal, SfInput, SfButton },
   data () {
     return {
@@ -73,20 +73,19 @@ export default {
     }
   },
   props: {
-    productId: {
-      type: [String, Number],
-      required: true
+    isVisible: {
+      type: Boolean,
+      default: false
+    },
+    modalData: {
+      type: Object,
+      default: null,
+      required: false
     }
   },
   computed: {
-    ...mapState('ui', {
-      activeModals: 'activeModals'
-    }),
     currentUser () {
       return this.$store.state.user.current;
-    },
-    isModalVisible () {
-      return this.activeModals.includes('product-review')
     }
   },
   mounted () {
@@ -94,7 +93,7 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$store.commit('ui/closeModal', 'product-review');
+      this.$store.dispatch('ui/closeModal', { name: ModalList.Review });
     },
     clearReviewForm () {
       this.formData.name = '';
@@ -113,7 +112,7 @@ export default {
       this.$v.$touch();
       if (this.$v.$invalid) return
       const isReviewCreated = await this.$store.dispatch('review/add', {
-        product_id: this.productId,
+        product_id: this.modalData.payload,
         title: this.formData.summary,
         detail: this.formData.review,
         nickname: this.formData.name,
@@ -162,18 +161,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-.o-review-modal {
-  box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
-  }
-}
 
 .form {
   &__input {
