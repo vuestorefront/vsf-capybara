@@ -29,6 +29,15 @@
         <MRelatedProducts type="related" />
       </SfSection>
     </lazy-hydrate>
+
+    <SfSection
+      v-if="isOnline"
+      title-heading="Share Your Look"
+      subtitle-heading="#YOURLOOK"
+      class="section"
+    >
+      <AImagesGrid :images="dummyInstaImages" />
+    </SfSection>
     <SizeGuide />
     <OReviewModal :product-id="getOriginalProduct.id" />
   </div>
@@ -51,6 +60,7 @@ import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
+import AImagesGrid from 'theme/components/atoms/a-images-grid';
 
 import { SfSection } from '@storefront-ui/vue';
 
@@ -68,7 +78,8 @@ export default {
     MRelatedProducts,
     SfSection,
     OProductDetails,
-    OReviewModal
+    OReviewModal,
+    AImagesGrid
   },
   provide () {
     return {
@@ -80,7 +91,33 @@ export default {
       stock: {
         isLoading: false,
         max: 0
-      }
+      },
+      dummyInstaImages: [
+        {
+          mobile: { url: `/assets/ig/ig01.jpg` },
+          desktop: { url: `/assets/ig/ig01.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig02.jpg` },
+          desktop: { url: `/assets/ig/ig02.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig03.jpg` },
+          desktop: { url: `/assets/ig/ig03.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig04.jpg` },
+          desktop: { url: `/assets/ig/ig04.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig05.jpg` },
+          desktop: { url: `/assets/ig/ig06.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig06.jpg` },
+          desktop: { url: `/assets/ig/ig06.jpg` }
+        }
+      ]
     };
   },
   computed: {
