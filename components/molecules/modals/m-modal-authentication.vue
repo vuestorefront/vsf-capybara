@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import { SfModal } from '@storefront-ui/vue';
 import MLogin from 'theme/components/molecules/m-login'
 import MRegister from 'theme/components/molecules/m-register'
@@ -31,11 +30,6 @@ export default {
       default: () => ({}),
       required: true
     }
-  },
-  computed: {
-    ...mapState({
-      activeElem: state => state.ui.authElem
-    })
   },
   methods: {
     closeModal () {
