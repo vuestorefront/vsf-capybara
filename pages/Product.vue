@@ -22,7 +22,16 @@
       </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
-      <promoted-offers single-banner />
+      <SfSection class="section" v-show="promotedBanners.length">
+        <router-link :key="i" :to="banner.link" v-for="(banner, i) in promotedBanners">
+          <SfBanner
+            :subtitle="banner.subtitle"
+            :title="banner.title"
+            :image="banner.image"
+            class="banner sf-banner--slim"
+          />
+        </router-link>
+      </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
       <SfSection :title-heading="$t('Similar Products')" class="section">
@@ -35,7 +44,6 @@
 </template>
 
 <script>
-import PromotedOffers from 'theme/components/theme/blocks/PromotedOffers/PromotedOffers';
 import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -52,7 +60,7 @@ import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 
-import { SfSection } from '@storefront-ui/vue';
+import { SfSection, SfBanner } from '@storefront-ui/vue';
 
 const OReviewModal = () =>
   import(
@@ -61,14 +69,14 @@ const OReviewModal = () =>
 
 export default {
   components: {
-    PromotedOffers,
     SizeGuide,
     // changed
     LazyHydrate,
     MRelatedProducts,
     SfSection,
     OProductDetails,
-    OReviewModal
+    OReviewModal,
+    SfBanner
   },
   provide () {
     return {
@@ -91,7 +99,8 @@ export default {
       getCurrentProductConfiguration: 'product/getCurrentProductConfiguration',
       getOriginalProduct: 'product/getOriginalProduct',
       attributesByCode: 'attribute/attributeListByCode',
-      getCurrentCustomOptions: 'product/getCurrentCustomOptions'
+      getCurrentCustomOptions: 'product/getCurrentCustomOptions',
+      promotedOffers: 'promoted/getPromotedOffers'
     }),
     isOnline () {
       return onlineHelper.isOnline;
@@ -110,6 +119,9 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
+    },
+    promotedBanners () {
+      return this.promotedOffers.productBanners || []
     }
   },
   watch: {
@@ -143,7 +155,8 @@ export default {
   async mounted () {
     await Promise.all([
       this.$store.dispatch('recently-viewed/addItem', this.getCurrentProduct),
-      this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id })
+      this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
+      this.$store.dispatch('promoted/updatePromotedOffers')
     ])
   },
   beforeRouteEnter (to, from, next) {
@@ -220,6 +233,13 @@ export default {
 @mixin for-desktop {
   @media screen and (min-width: $desktop-min) {
     @content;
+  }
+}
+
+.banner {
+  margin: $spacer-big 0;
+  @include for-desktop {
+    margin: $spacer-extra-big 0;
   }
 }
 
