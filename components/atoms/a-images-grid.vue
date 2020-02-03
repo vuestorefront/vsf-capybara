@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     col () {
-      const images = this.images.length || 1
+      const images = this.images.length
       return Math.ceil(images / this.row)
     }
   },

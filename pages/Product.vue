@@ -260,7 +260,12 @@ export default {
   }
 }
 .section {
-  padding: 0 1.25rem;
+  padding-left: $spacer-big;
+  padding-right: $spacer-big;
+  @include for-desktop {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .product {
