@@ -8,12 +8,13 @@
         :is="modal.component"
         :is-visible="modalsNames.includes(modal.name)"
         :modal-data="getModalData(modal.name)"
+        @close="closeModal"
       />
     </transition-group>
   </div>
 </template>
 <script>
-import { ModalList, modalComponents } from 'theme/store/ui/modals'
+import { modalComponents } from 'theme/store/ui/modals'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -33,6 +34,9 @@ export default {
   methods: {
     getModalData (name) {
       return this.activeModals.find(modal => modal.name === name)
+    },
+    closeModal (name) {
+      this.$store.dispatch('ui/closeModal', { name })
     }
   }
 }

@@ -58,7 +58,6 @@
 
 <script>
 import { SfModal, SfButton, SfHeading } from '@storefront-ui/vue';
-import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'ATermsAndConditions',
@@ -75,7 +74,7 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$store.dispatch('ui/closeModal', { name: ModalList.TermsAndConditions });
+      this.$emit('close', this.modalData.name)
     }
   }
 };

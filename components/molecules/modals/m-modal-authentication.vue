@@ -29,7 +29,7 @@ export default {
     modalData: {
       type: Object,
       default: () => ({}),
-      required: false
+      required: true
     }
   },
   computed: {
@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$store.dispatch('ui/closeModal', { name: ModalList.Auth });
+      this.$emit('close', this.modalData.name)
     }
   }
 };

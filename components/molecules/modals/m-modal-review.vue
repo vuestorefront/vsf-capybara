@@ -57,7 +57,6 @@
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators';
 import { SfModal, SfInput, SfButton } from '@storefront-ui/vue';
-import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'MModalReview',
@@ -75,12 +74,13 @@ export default {
   props: {
     isVisible: {
       type: Boolean,
-      default: false
+      default: false,
+      required: true
     },
     modalData: {
       type: Object,
       default: () => ({}),
-      required: false
+      required: true
     }
   },
   computed: {
@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$store.dispatch('ui/closeModal', { name: ModalList.Review });
+      this.$emit('close', this.modalData.name)
     },
     clearReviewForm () {
       this.formData.name = '';

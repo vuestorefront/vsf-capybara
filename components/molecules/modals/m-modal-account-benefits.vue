@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     closeModal () {
-      this.$store.dispatch('ui/closeModal', { name: ModalList.AccountBenefits });
+      this.$emit('close', this.modalData.name)
     }
   }
 };
