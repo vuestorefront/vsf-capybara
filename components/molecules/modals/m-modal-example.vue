@@ -7,9 +7,6 @@
   </div>
 </template>
 <script>
-// import modals names and use it in actions
-import { ModalList } from 'theme/store/ui/modals'
-
 /**
  * You need to add this component in 'ModalList' enum and 'modalComponents' map
  * check 'theme/store/ui/modals'
@@ -17,8 +14,8 @@ import { ModalList } from 'theme/store/ui/modals'
 
 /**
  * How to open modal?
- * import 'ModalList'
- * and fire this.$store.dispatch('ui/openModal', { name: ModalList.Example, payload: 'optional data' });
+ * import { ModalList } from 'theme/store/ui/modals'
+ * this.$store.dispatch('ui/openModal', { name: ModalList.Example, payload: 'optional data' });
  */
 
 export default {

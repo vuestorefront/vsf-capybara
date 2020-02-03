@@ -32,7 +32,6 @@ import {
   SfCharacteristic
 } from '@storefront-ui/vue';
 import i18n from '@vue-storefront/i18n';
-import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'MModalAccountBenefits',
