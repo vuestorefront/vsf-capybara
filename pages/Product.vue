@@ -48,7 +48,6 @@
       <AImagesGrid :images="dummyInstaImages" />
     </SfSection>
     <SizeGuide />
-    <OReviewModal :product-id="getOriginalProduct.id" />
   </div>
 </template>
 
@@ -72,11 +71,6 @@ import AImagesGrid from 'theme/components/atoms/a-images-grid';
 
 import { SfSection, SfBanner } from '@storefront-ui/vue';
 
-const OReviewModal = () =>
-  import(
-    /* webpackChunkName: "vsf-review-modal" */ 'theme/components/organisms/o-review-modal'
-  );
-
 export default {
   components: {
     SizeGuide,
@@ -85,7 +79,6 @@ export default {
     MRelatedProducts,
     SfSection,
     OProductDetails,
-    OReviewModal,
     SfBanner,
     AImagesGrid
   },
