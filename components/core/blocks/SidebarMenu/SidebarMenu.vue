@@ -129,13 +129,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import i18n from '@vue-storefront/i18n';
 import SidebarMenu from '@vue-storefront/core/compatibility/components/blocks/SidebarMenu/SidebarMenu';
 import SubBtn from 'theme/components/core/blocks/SidebarMenu/SubBtn';
 import SubCategory from 'theme/components/core/blocks/SidebarMenu/SubCategory';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   components: {
@@ -212,11 +213,13 @@ export default {
     clearAllBodyScrollLocks();
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     login () {
       if (!this.currentUser && this.isCurrentMenuShowed) {
         this.$nextTick(() => {
-          this.$store.commit('ui/setAuthElem', 'login');
-          this.$bus.$emit('modal-show', 'modal-signup');
+          this.openModal({name: ModalList.Auth, payload: 'login'})
           this.$router.push({ name: 'my-account' });
         });
       }
