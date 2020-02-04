@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import { SfTabs } from "@storefront-ui/vue";
+import { SfTabs } from '@storefront-ui/vue';
 export default {
-  name: "OMyAccountPlaceholder",
+  name: 'OMyAccountPlaceholder',
   components: { SfTabs },
   props: {
     title: {
