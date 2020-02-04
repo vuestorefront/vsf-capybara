@@ -6,7 +6,7 @@
 
 <script>
 import i18n from '@vue-storefront/i18n';
-import Error from '@vue-storefront/core/pages/Error';
+import { Logger } from '@vue-storefront/core/lib/logger';
 import MError from 'theme/components/molecules/m-error';
 
 export default {
@@ -14,7 +14,6 @@ export default {
   components: {
     MError
   },
-  mixins: [Error],
   props: {
     title: {
       type: String,
@@ -37,6 +36,15 @@ export default {
         ? i18n.t('Internal Server Error 500')
         : i18n.t('404 Page Not Found');
     }
+  },
+  asyncData ({ store, route, context }) {
+    return new Promise((resolve, reject) => {
+      Logger.log('Calling asyncData for Error page ' + new Date())();
+      if (context) {
+        context.output.cacheTags.add(`error`);
+      }
+      resolve();
+    })
   },
   metaInfo () {
     return {
