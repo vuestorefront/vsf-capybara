@@ -1,44 +1,36 @@
 <template>
   <modal name="modal-sizeguide" :width="620">
     <div slot="header">
-      Size Guide
+      {{ $t('Size guide') }}
     </div>
     <div slot="content">
-      <SizeGuideContent />
+      <AStatic :content="content" />
     </div>
   </modal>
 </template>
 
 <script>
-import { mapState } from 'vuex';
 import Modal from 'theme/components/core/Modal';
-import SizeGuideContent from 'theme/components/theme/blocks/Static/Example';
+import AStatic from 'theme/components/atoms/a-static';
 
 export default {
   name: 'SizeGuide',
   components: {
     Modal,
-    SizeGuideContent
+    AStatic
   },
-  computed: {
-    ...mapState({
-      activeElem: state => state.ui.authElem
-    })
-  },
-  methods: {
-    close (e) {
-      if (e) localStorage.removeItem('redirect');
-      this.$bus.$emit('modal-hide', 'modal-sizeguide');
-    }
+  data () {
+    return {
+      content: {
+        message: `To help us achieve our goal of providing the highest quality products and
+      services, we use information from our interactions with you and other
+      customers, as well as from other parties. Because we respect your privacy,
+      we have implemented procedures to ensure that your personal information is
+      handled in a safe, secure, and responsible manner. We have posted this
+      privacy policy in order to explain our information collection practices
+      and the choices you have about the way information is collected and used.`
+      }
+    };
   }
 };
 </script>
-
-<style scoped>
-.modal {
-  font-size: 18px;
-}
-.modal-content {
-  max-height: 80%;
-}
-</style>

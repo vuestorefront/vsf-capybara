@@ -52,19 +52,8 @@
       subtitle-heading="#YOURLOOK"
       class="section"
     >
-      <div class="images-grid">
-        <div v-for="row in 2" :key="row" class="images-grid__row">
-          <div v-for="col in 3" :key="col" class="images-grid__col">
-            <SfImage
-              :src="{ normal: { url: `/assets/ig/ig0${row * col}.jpg` } }"
-            >
-              #YOURLOOK
-            </SfImage>
-          </div>
-        </div>
-      </div>
+      <AImagesGrid :images="dummyInstaImages" />
     </SfSection>
-
     <Onboard />
   </div>
 </template>
@@ -80,10 +69,10 @@ import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-view
 import { Wishlist } from '@vue-storefront/core/modules/wishlist/components/Wishlist';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
+import AImagesGrid from 'theme/components/atoms/a-images-grid';
 
 import {
   SfHero,
-  SfImage,
   SfButton,
   SfBanner,
   SfSection,
@@ -102,19 +91,45 @@ export default {
     LazyHydrate,
     NewsletterPopup,
     SfHero,
-    SfImage,
     SfButton,
     SfBanner,
     SfSection,
     SfBannerGrid,
     SfCallToAction,
-    MProductCarousel
+    MProductCarousel,
+    AImagesGrid
   },
   mixins: [Home, Wishlist],
   data () {
     return {
       loading: true,
-      loadNewsletterPopup: false
+      loadNewsletterPopup: false,
+      dummyInstaImages: [
+        {
+          mobile: { url: `/assets/ig/ig01.jpg` },
+          desktop: { url: `/assets/ig/ig01.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig02.jpg` },
+          desktop: { url: `/assets/ig/ig02.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig03.jpg` },
+          desktop: { url: `/assets/ig/ig03.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig04.jpg` },
+          desktop: { url: `/assets/ig/ig04.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig05.jpg` },
+          desktop: { url: `/assets/ig/ig06.jpg` }
+        },
+        {
+          mobile: { url: `/assets/ig/ig06.jpg` },
+          desktop: { url: `/assets/ig/ig06.jpg` }
+        }
+      ]
     };
   },
   computed: {
@@ -244,29 +259,6 @@ export default {
   margin: $spacer-big 0;
   @include for-desktop {
     margin: $spacer-extra-big 0;
-  }
-}
-
-.images-grid {
-  max-width: 960px;
-  margin: auto;
-  &__row {
-    display: flex;
-    & + & {
-      margin-top: $spacer-big / 2;
-      @include for-desktop {
-        margin-top: $spacer-big;
-      }
-    }
-  }
-  &__col {
-    margin: 0;
-    & + & {
-      margin-left: $spacer-big / 2;
-      @include for-desktop {
-        margin-left: $spacer-big;
-      }
-    }
   }
 }
 

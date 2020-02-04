@@ -5,14 +5,17 @@
         <ALogo width="41px" height="41px" />
       </template>
       <template #navigation>
-        <router-link
+        <SfHeaderNavigationItem
           v-for="category in categories"
           :key="category.id"
-          class="no-underline"
-          :to="categoryLink(category)"
         >
-          <SfHeaderNavigationItem>{{ category.name }}</SfHeaderNavigationItem>
-        </router-link>
+          <router-link
+            class="no-underline"
+            :to="categoryLink(category)"
+          >
+            {{ category.name }}
+          </router-link>
+        </SfHeaderNavigationItem>
       </template>
       <template #search>
         <div class="hidden" />
