@@ -31,7 +31,8 @@
   </SfTabs>
 </template>
 <script>
-import { mapMutations } from 'vuex'
+import { ModalList } from 'theme/store/ui/modals'
+import { mapActions } from 'vuex'
 import { SfHeading, SfTabs, SfDivider } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductAttribute from 'theme/components/atoms/a-product-attribute';
@@ -70,11 +71,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('ui', {
+    ...mapActions('ui', {
       openModal: 'openModal'
     }),
     handleOpenReviewModal () {
-      this.openModal('product-review')
+      this.openModal({name: ModalList.Review, payload: this.product.id})
     }
   }
 };

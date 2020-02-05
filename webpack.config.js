@@ -47,17 +47,23 @@ function fixPostCSSPlugins (rules) {
 }
 
 module.exports = function (config) {
-  const mergedConfig = merge({
-    default: {
-      resolve: {
-        alias: {
-          'src/modules/client': `${themeRoot}/config/modules`
-        }
-      }
-    }
-  }, config);
+  /**
+   * This webpack config depends on the build type: for development build it is wrapped inside 'default' key
+   * but for production build this 'default' key does not exist. This misconfiguration should be fixed in
+   * Vue Storefront v1.11.1 and then 'hasDefaultKey' will never be true, so all these lines could be then
+   * simplified/removed.
+   */
 
-  fixPostCSSPlugins(mergedConfig.default.module.rules);
+  const hasDefaultKey = config.default !== undefined; // TODO: remove after Vue Storefront v1.11.1 release
 
-  return mergedConfig;
+  const mergedConfig = merge(
+    { resolve: { alias: { 'src/modules/client': `${themeRoot}/config/modules` } } },
+    hasDefaultKey ? config.default : config // TODO: simplify after Vue Storefront v1.11.1 release
+  );
+
+  fixPostCSSPlugins(mergedConfig.module.rules);
+
+  return hasDefaultKey // TODO: simplify after Vue Storefront v1.11.1 release
+    ? { default: mergedConfig }
+    : mergedConfig;
 };

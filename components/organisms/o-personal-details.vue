@@ -54,7 +54,7 @@
             <span class="sf-checkbox__label">
               {{ $t("I want to create an account") }}
             </span>
-            <AIconAccountBenefits class="ml20" />
+            <a href="#" @click="openAccountBenefitsModal" class="ml20">{{ $t("+info") }}</a>
           </template>
         </SfCheckbox>
       </div>
@@ -106,7 +106,9 @@
                 {{ $t("I accept ") }}
               </div>
               &nbsp;
-              <ATermsAndConditions />
+              <a href="#" @click="openTermsAndConditionsModal">
+                <span>{{ $t("Terms and conditions") }}</span>
+              </a>
             </template>
           </SfCheckbox>
         </div>
@@ -136,8 +138,8 @@
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators';
 import { PersonalDetails } from '@vue-storefront/core/modules/checkout/components/PersonalDetails';
 import { SfInput, SfButton, SfHeading, SfCheckbox } from '@storefront-ui/vue';
-import ATermsAndConditions from 'theme/components/atoms/a-terms-and-conditions';
-import AIconAccountBenefits from 'theme/components/atoms/a-icon-account-benefits';
+import { ModalList } from 'theme/store/ui/modals'
+import { mapActions } from 'vuex';
 
 export default {
   name: 'OPersonalDetails',
@@ -145,9 +147,7 @@ export default {
     SfInput,
     SfButton,
     SfHeading,
-    SfCheckbox,
-    ATermsAndConditions,
-    AIconAccountBenefits
+    SfCheckbox
   },
   mixins: [PersonalDetails],
   validations: {
@@ -189,9 +189,17 @@ export default {
     }
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     login () {
-      this.$store.commit('ui/setAuthElem', 'login');
-      this.$bus.$emit('modal-show', 'modal-signup');
+      this.openModal({name: ModalList.Auth, payload: 'login'})
+    },
+    openAccountBenefitsModal () {
+      this.openModal({name: ModalList.AccountBenefits})
+    },
+    openTermsAndConditionsModal () {
+      this.openModal({name: ModalList.AccountBenefits})
     }
   }
 };

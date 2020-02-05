@@ -1,5 +1,10 @@
+import { modalStore } from './modals';
+
 export const uiStore = {
   namespaced: true,
+  modules: {
+    modal: modalStore
+  },
   state: {
     sidebar: false,
     microcart: false,
@@ -8,14 +13,12 @@ export const uiStore = {
     newsletterPopup: false,
     overlay: false,
     loader: false,
-    authElem: null,
     checkoutMode: false,
     openMyAccount: false,
     submenu: {
       depth: false,
       path: []
-    },
-    activeModals: []
+    }
   },
   mutations: {
     setCheckoutMode (state, action) {
@@ -52,15 +55,6 @@ export const uiStore = {
     },
     setLoader (state, action) {
       state.loader = action === true;
-    },
-    setAuthElem (state, action) {
-      state.authElem = action;
-    },
-    openModal (state, modalName) {
-      state.activeModals = [...state.activeModals, modalName];
-    },
-    closeModal (state, modalName) {
-      state.activeModals = state.activeModals.filter(modal => modal !== modalName);
     }
   },
   actions: {

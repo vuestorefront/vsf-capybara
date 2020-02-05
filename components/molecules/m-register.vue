@@ -68,6 +68,8 @@
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
 import { SfInput, SfButton, SfCheckbox } from '@storefront-ui/vue';
+import { ModalList } from 'theme/store/ui/modals'
+import { mapActions } from 'vuex';
 
 export default {
   name: 'MRegister',
@@ -82,9 +84,12 @@ export default {
     };
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     switchElem (to) {
       this.$v.$reset();
-      this.$store.commit('ui/setAuthElem', to);
+      this.openModal({name: ModalList.Auth, payload: to})
     },
     register () {
       this.$v.$touch();
