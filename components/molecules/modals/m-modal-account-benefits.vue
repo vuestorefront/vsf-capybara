@@ -67,6 +67,11 @@ export default {
     isVisible: {
       type: Boolean,
       default: false
+    },
+    modalData: {
+      type: Object,
+      default: () => ({}),
+      required: true
     }
   },
   methods: {
