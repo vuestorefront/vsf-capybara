@@ -15,7 +15,7 @@
             <SfInput
               v-model="editedAddress.firstname"
               name="firstname"
-              label="First Name"
+              :label="$t('First Name')"
               required
               :valid="!$v.editedAddress.firstname.$error"
               :error-message="
@@ -28,7 +28,7 @@
             <SfInput
               v-model="editedAddress.lastname"
               name="lastname"
-              label="Last Name"
+              :label="$t('Last Name')"
               required
               :valid="!$v.editedAddress.lastname.$error"
               :error-message="$t('Field is required.')"
@@ -37,7 +37,7 @@
             <SfInput
               v-model="editedAddress.streetName"
               name="streetName"
-              label="Street Name"
+              :label="$t('Street Name')"
               required
               :valid="!$v.editedAddress.streetName.$error"
               :error-message="$t('Field is required.')"
@@ -46,7 +46,7 @@
             <SfInput
               v-model="editedAddress.apartment"
               name="apartment"
-              label="House/Apartment number"
+              :label="$t('House/Apartment number')"
               required
               :valid="!$v.editedAddress.apartment.$error"
               :error-message="$t('Field is required.')"
@@ -55,7 +55,7 @@
             <SfInput
               v-model="editedAddress.city"
               name="city"
-              label="City"
+              :label="$t('City')"
               required
               :valid="!$v.editedAddress.city.$error"
               :error-message="$t('Field is required.')"
@@ -64,13 +64,13 @@
             <SfInput
               v-model="editedAddress.state"
               name="state"
-              label="State/Province"
+              :label="$t('State/Province')"
               class="form__element form__element--half form__element--half-even"
             />
             <SfInput
               v-model="editedAddress.postcode"
               name="postcode"
-              label="Zip-code"
+              :label="$t('Zip-code')"
               required
               :valid="!$v.editedAddress.postcode.$error"
               :error-message="
@@ -83,7 +83,7 @@
             <SfSelect
               v-model="editedAddress.country"
               name="country"
-              label="Country"
+              :label="$t('Country')"
               required
               :valid="!$v.editedAddress.country.$error"
               :error-message="$t('Field is required.')"
@@ -100,7 +100,7 @@
             <SfInput
               v-model="editedAddress.telephone"
               name="telephone"
-              label="Phone number"
+              :label="$t('Phone number')"
               class="form__element"
             />
             <SfButton class="form__button" @click="updateAddress">
