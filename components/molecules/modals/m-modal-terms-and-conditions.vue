@@ -1,13 +1,6 @@
 <template>
-  <div class="a-terms-and-conditions" @click.prevent>
-    <a href="#" @click="showTermsAndConditions = true">
-      <span>{{ $t("Terms and conditions") }}</span>
-    </a>
-    <SfModal
-      :visible="showTermsAndConditions"
-      class="modal"
-      @close="showTermsAndConditions = false"
-    >
+  <div class="m-modal-terms-and-conditions">
+    <SfModal :visible="isVisible" @close="closeModal">
       <SfHeading
         :title="$t('Terms and conditions')"
         class="sf-heading--left sf-heading--no-underline modal__heading"
@@ -55,7 +48,7 @@
       </p>
       <SfButton
         class="sf-button--full-width color-secondary modal__button"
-        @click="showTermsAndConditions = false"
+        @click="closeModal"
       >
         {{ $t("OK") }}
       </SfButton>
@@ -73,10 +66,21 @@ export default {
     SfButton,
     SfHeading
   },
-  data () {
-    return {
-      showTermsAndConditions: false
-    };
+  props: {
+    isVisible: {
+      type: Boolean,
+      default: false
+    },
+    modalData: {
+      type: Object,
+      default: () => ({}),
+      required: true
+    }
+  },
+  methods: {
+    closeModal () {
+      this.$emit('close', this.modalData.name)
+    }
   }
 };
 </script>

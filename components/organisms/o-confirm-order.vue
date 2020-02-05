@@ -164,7 +164,9 @@
               {{ $t("I accept ") }}
             </div>
             &nbsp;
-            <ATermsAndConditions />
+            <a href="#" @click="openTermsAndConditionsModal">
+              <span>{{ $t("Terms and conditions") }}</span>
+            </a>
             *
           </template>
         </SfCheckbox>
@@ -188,7 +190,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import i18n from '@vue-storefront/i18n';
 import { required } from 'vuelidate/lib/validators';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
@@ -205,8 +207,8 @@ import {
   SfCheckbox,
   SfAccordion
 } from '@storefront-ui/vue';
-import ATermsAndConditions from 'theme/components/atoms/a-terms-and-conditions';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'OConfirmOrder',
@@ -219,8 +221,7 @@ export default {
     SfHeading,
     SfCheckbox,
     SfAccordion,
-    MPriceSummary,
-    ATermsAndConditions
+    MPriceSummary
   },
   mixins: [OrderReview],
   data () {
@@ -268,6 +269,9 @@ export default {
     registerModule(OrderModule);
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     getThumbnailForProduct (product) {
       return getThumbnailForProduct(product);
     },
@@ -295,6 +299,9 @@ export default {
         message: this.$t(response.result),
         action1: { label: this.$t('OK') }
       });
+    },
+    openTermsAndConditionsModal () {
+      this.openModal({name: ModalList.AccountBenefits})
     }
   }
 };

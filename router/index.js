@@ -1,7 +1,5 @@
 const Home = () =>
   import(/* webpackChunkName: "vsf-home" */ 'theme/pages/Home');
-const PageNotFound = () =>
-  import(/* webpackChunkName: "vsf-not-found" */ 'theme/pages/PageNotFound');
 const ErrorPage = () =>
   import(/* webpackChunkName: "vsf-error" */ 'theme/pages/Error');
 const Product = () =>
@@ -145,7 +143,11 @@ let routes = [
     component: Compare,
     props: { title: 'Compare Products' }
   },
-  { name: 'page-not-found', path: '*', component: PageNotFound },
+  {
+    name: 'page-not-found',
+    path: '*',
+    component: ErrorPage
+  },
   {
     name: 'error',
     path: '/error',
