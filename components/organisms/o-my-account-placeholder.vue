@@ -1,5 +1,5 @@
 <template>
-  <SfTabs :open-tab="1" class="tab-orphan">
+  <SfTabs :open-tab="1" class="o-my-account-placeholder">
     <SfTab :title="title">
       <p class="message">
         {{ $t('This feature is not implemented yet! Please take a look at') }}<br>
@@ -45,7 +45,7 @@ export default {
     font-size: $font-size-regular-desktop;
   }
 }
-.tab-orphan {
+.o-my-account-placeholder {
   @include for-mobile {
     ::v-deep .sf-tabs {
       &__title {
