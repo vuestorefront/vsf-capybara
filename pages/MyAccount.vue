@@ -18,18 +18,22 @@
           <OMyAccountProfile />
         </SfContentPage>
         <SfContentPage :title="$t('Shipping details')">
-          <MyShippingDetails />
+          <OMyAccountShippingDetails />
         </SfContentPage>
-        <SfContentPage :title="$t('Loyalty Card')" />
+        <SfContentPage :title="$t('Loyalty Card')">
+          <OMyAccountPlaceholder :title="$t('Loyalty Card')" />
+        </SfContentPage>
         <SfContentPage :title="$t('My newsletter')">
-          <MyNewsletter />
+          <OMyAccountPlaceholder :title="$t('My newsletter')" />
         </SfContentPage>
       </SfContentCategory>
       <SfContentCategory :title="$t('Order details')">
         <SfContentPage :title="$t('Order history')">
           <OMyAccountOrdersHistory />
         </SfContentPage>
-        <SfContentPage :title="$t('My reviews')" />
+        <SfContentPage :title="$t('My reviews')">
+          <OMyAccountPlaceholder :title="$t('My reviews')" />
+        </SfContentPage>
       </SfContentCategory>
       <SfContentPage :title="$t('Log out')" />
     </SfContentPages>
@@ -38,11 +42,11 @@
 
 <script>
 import MyAccount from '@vue-storefront/core/pages/MyAccount';
-import MyShippingDetails from '../components/core/blocks/MyAccount/MyShippingDetails';
-import MyNewsletter from '../components/core/blocks/MyAccount/MyNewsletter';
 
 import OMyAccountProfile from 'theme/components/organisms/o-my-account-profile';
+import OMyAccountShippingDetails from 'theme/components/organisms/o-my-account-shipping-details'
 import OMyAccountOrdersHistory from 'theme/components/organisms/o-my-account-orders-history';
+import OMyAccountPlaceholder from 'theme/components/organisms/o-my-account-placeholder';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 
@@ -51,9 +55,9 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     OMyAccountProfile,
+    OMyAccountShippingDetails,
     OMyAccountOrdersHistory,
-    MyShippingDetails,
-    MyNewsletter
+    OMyAccountPlaceholder
   },
   mixins: [MyAccount],
   data () {
