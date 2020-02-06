@@ -123,7 +123,7 @@ export default {
         },
         {
           mobile: { url: `/assets/ig/ig05.jpg` },
-          desktop: { url: `/assets/ig/ig06.jpg` }
+          desktop: { url: `/assets/ig/ig05.jpg` }
         },
         {
           mobile: { url: `/assets/ig/ig06.jpg` },
