@@ -1,6 +1,6 @@
 <template>
   <footer class="o-footer">
-    <SfFooter class="footer-links" :column="5" :multiple="true">
+    <SfFooter :column="5" :multiple="true">
       <SfFooterColumn
         v-for="linkGroup in links"
         :key="linkGroup.name"
@@ -95,11 +95,11 @@ export default {
           name: 'About us',
           children: [
             {
-              name: 'About us (Magento CMS)',
+              name: 'About us',
               link: getPathForStaticPage('/about-us')
             },
             {
-              name: 'Customer service (Magento CMS)',
+              name: 'Customer service',
               link: getPathForStaticPage('/customer-service')
             },
             { name: 'Store locator', link: '/store-locator' }
@@ -127,10 +127,11 @@ export default {
     @content;
   }
 }
-.footer-links {
-  max-width: 64rem;
-  margin-left: auto;
-  margin-right: auto;
+.o-footer {
+  @include for-desktop {
+    max-width: 1240px;
+    margin: auto;
+  }
 }
 .social-column {
   margin-left: auto;
@@ -141,7 +142,7 @@ export default {
     padding: 6px 0;
   }
   &__img {
-    height: 0.75rem;
+    height: 1.75rem;
     margin-right: 1.25rem;
   }
 }
