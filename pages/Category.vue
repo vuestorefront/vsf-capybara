@@ -107,6 +107,7 @@
             </div>
           </lazy-hydrate>
           <SfPagination
+            v-if="totalPages > 1"
             class="products__pagination desktop-only"
             :current="currentPage"
             :total="totalPages"
