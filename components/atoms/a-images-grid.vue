@@ -52,10 +52,10 @@ export default {
   }
 }
 .a-images-grid {
-  max-width: 960px;
   margin: auto;
   &__row {
     display: flex;
+    justify-content: space-between;
     & + & {
       margin-top: $spacer-big / 2;
       @include for-desktop {
