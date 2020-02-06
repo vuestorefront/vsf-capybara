@@ -134,7 +134,7 @@
             :color="filter.color"
             :selected="isFilterActive(filter)"
             class="filters__item"
-            @click.native="changeFilter(filter)"
+            @change="changeFilter(filter)"
           />
         </template>
         <div class="filters__buttons">
