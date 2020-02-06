@@ -134,7 +134,7 @@ export default {
   }
 }
 .social-column {
-  margin-left: auto;
+  flex-basis: auto;
 }
 .social-icon {
   padding: 20px 40px;
@@ -143,7 +143,9 @@ export default {
   }
   &__img {
     height: 1.75rem;
-    margin-right: 1.25rem;
+    &:not(:last-child) {
+      margin-right: 1.25rem;
+    }
   }
 }
 </style>
