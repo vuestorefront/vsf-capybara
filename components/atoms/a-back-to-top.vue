@@ -11,7 +11,6 @@
         icon="chevron_down"
         icon-size="20px"
         icon-color="white"
-        view-box="0 -4 14 14"
       />
     </div>
   </transition>
@@ -97,5 +96,8 @@ export default {
 }
 .icon {
   transform: rotate(180deg);
+  ::v-deep .sf-icon {
+    transform: translateY(25%);
+  }
 }
 </style>
