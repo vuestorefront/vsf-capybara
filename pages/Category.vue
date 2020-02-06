@@ -342,7 +342,7 @@ export default {
         .reduce((result, [filterType, filters]) => {
           result[`${filterType}_filter`] = filters.map(filter => ({
             ...filter,
-            count: this.getFilterCount(filter),
+            count: this.getFilterCount(filter) || '',
             color:
               filterType === 'color'
                 ? (config.products.colorMappings &&
@@ -562,8 +562,7 @@ export default {
             );
 
           return bucket ? result + bucket.doc_count : result;
-        }, 0)
-        .toString();
+        }, 0);
     }
   },
   metaInfo () {
