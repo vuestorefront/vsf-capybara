@@ -45,7 +45,7 @@
           <img
             v-for="item in social"
             :key="item"
-            :src="'assets/icons/' + item + '.svg'"
+            :src="'/assets/icons/' + item + '.svg'"
             class="social-icon__img"
           >
         </div>
