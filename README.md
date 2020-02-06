@@ -1,4 +1,35 @@
-# vsf-capybara
+<img src="https://blog.vuestorefront.io/wp-content/uploads/2020/02/CAPYBARA.png"></img>
+
+# Capybara - Storefront UI based theme for Vue Storefront
+
+New default template theme for [Vue Storefront](https://github.com/DivanteLtd/vue-storefront), based on [Storefront UI](https://storefrontui.io/). 90% of the Capybara code is closed in the [Storefront UI library](https://github.com/DivanteLtd/storefront-ui). Thanks to it, Capybara can maintain its flexibility, but minimize the risk of errors.
+
+ **🔨  Current status: Developer's preview**
+
+## ✨  Features 
+
+Capybara theme provides out of the box ready to use elements, like Cart, Checkout, Modals or Product-related components - to name only a few of them, which all are based on awesome Storefront UI. It provides new look & feel for the Vue Storefront with simpler development experience. You can just grab it and use it, or you can play around to re-design existing components and build something new easily.
+
+If you're new and need some guidance feel free to visit out [forum](https://forum.vuestorefront.io/) or reach anyone from the core team on our slack:
+- Tomasz Kikowski - [@qiqqq](https://github.com/qiqqq)
+- Tomasz Kostuch - [@gibkigonzo](https://github.com/gibkigonzo)
+- Paweł Smyrek - [@psmyrek](https://github.com/psmyrek)
+- Rafał Makara - [@rmakara](https://github.com/rmakara)
+
+
+## 🤝  Contributing 
+
+We are currently in the early developer’s preview phase. If you would like to help us improve this beautiful theme we'd be more than happy if you want to contribute! Here you can find all the required information. 
+Interested - contact [@psmyrek](https://github.com/psmyrek) on slack
+
+## Installation
+
+-   Install  `lerna`  globally:  `npm install -g lerna`
+-   Configure  `vsf-capybara`  repo as a git submodule in theme path of your  `vue-storefront`  workspace and track  `master`  branch:  `git submodule add -b master https://github.com/DivanteLtd/vsf-capybara src/themes/capybara`
+-   Fetch all the data:  `git submodule update --init --remote`
+-   Update VS configuration by copying  `local.json`  file to root  `config`  directory
+-   Update TypeScript compiler option in  `compilerOptions.paths.theme/*`  from default theme  `["src/themes/default/*"]`  to brand new  `capybara`  theme:  `["src/themes/capybara/*"]`
+-   Download all dependencies and start dev server:  `lerna bootstrap && yarn dev`
 
 # Coding Standards
 
@@ -51,14 +82,3 @@
 # Roadmap 2019-12-02
 
 ![Roadmap of vsf-capybara](https://github.com/DivanteLtd/vsf-capybara/blob/master/capybara_roadmap_20191202.jpg "Roadmap of vsf-capybara")
-
----
-
-# Development environment setup
-
-* Install `lerna` globally: `npm install -g lerna`
-* Configure `vsf-capybara` repo as a git submodule in theme path of your `vue-storefront` workspace and track `master` branch: `git submodule add -b master https://github.com/DivanteLtd/vsf-capybara src/themes/capybara`
-* Fetch all the data: `git submodule update --init --remote`
-* Update VS configuration by copying `local.json` file to root `config` directory
-* Update TypeScript compiler option in `compilerOptions.paths.theme/*` from default theme `["src/themes/default/*"]` to brand new `capybara` theme: `["src/themes/capybara/*"]`
-* Download all dependencies and start dev server: `lerna bootstrap && yarn dev`
