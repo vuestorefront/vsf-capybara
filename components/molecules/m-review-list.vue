@@ -13,6 +13,7 @@
       :hide-full-text="$t('Read less')"
     />
     <SfPagination
+      v-if="total > 1"
       :current="currentPage"
       :visible="visible"
       :total="total"
