@@ -20,7 +20,7 @@ If you're new and need some guidance feel free to visit out [forum](https://foru
 
 We are currently in the early developer’s preview phase. If you would like to help us improve this beautiful theme we'd be more than happy if you want to contribute! [Here](https://github.com/DivanteLtd/vsf-capybara/blob/master/CONTRIBUTING.md) you can find all the required information how to start.
 
-## Installation
+## 🔌  Installation
 To be able to use new Capybara theme in your Vue Storefront installation, you need to:
 
 1. Install `lerna` globally:
