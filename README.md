@@ -38,7 +38,7 @@ To be able to use new Capybara theme in your Vue Storefront installation, you ne
 1. Configure `vsf-capybara` repository as a git submodule in theme path of your Vue Storefront workspace, and then track `master` branch:
 
    ```
-   git submodule add -b master https://github.com/DivanteLtd/vsf-capybara src/themes/capybara
+   git submodule add -b master git@github.com:DivanteLtd/vsf-capybara.git src/themes/capybara
    ```
 
 1. Fetch all the data:
