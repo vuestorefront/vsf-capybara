@@ -1,19 +1,20 @@
 <template>
   <div id="home">
     <SfHero class="section">
-      <SfHeroItem
+      <OHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
         :title="hero.title"
         :subtitle="hero.subtitle"
         :image="hero.image"
+        :unique-id="'home-banner_' + i"
       />
     </SfHero>
 
     <SfBannerGrid :banner-grid="1" class="banners section">
       <template v-for="(banner, i) in banners" v-slot:[banner.slot]>
         <router-link :key="i" :to="banner.link">
-          <SfBanner
+          <MBanner
             :subtitle="banner.subtitle"
             :title="banner.title"
             :description="banner.description"
@@ -25,10 +26,11 @@
       </template>
     </SfBannerGrid>
 
-    <SfCallToAction
+    <MCallToAction
       title="Subscribe to Newsletters"
       description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      image="/assets/newsletter.png"
+      :image='{ webp : "/assets/newsletter/webp/newsletter.webp", fallback : "/assets/newsletter/png/newsletter.png" }'
+      :unique-id="'newsletter'"
       class="call-to-action-newsletter"
     >
       <template #button>
@@ -36,7 +38,7 @@
           {{ $t("Subscribe") }}
         </SfButton>
       </template>
-    </SfCallToAction>
+    </MCallToAction>
 
     <newsletter-popup v-if="loadNewsletterPopup" />
 
@@ -70,14 +72,15 @@ import { Wishlist } from '@vue-storefront/core/modules/wishlist/components/Wishl
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
+import MBanner from 'theme/components/molecules/m-banner'
+import MCallToAction from 'theme/components/molecules/m-call-to-action'
+import OHeroItem from 'theme/components/organisms/o-hero-item'
 
 import {
   SfHero,
   SfButton,
-  SfBanner,
   SfSection,
-  SfBannerGrid,
-  SfCallToAction
+  SfBannerGrid
 } from '@storefront-ui/vue';
 
 const NewsletterPopup = () =>
@@ -92,12 +95,13 @@ export default {
     NewsletterPopup,
     SfHero,
     SfButton,
-    SfBanner,
     SfSection,
     SfBannerGrid,
-    SfCallToAction,
     MProductCarousel,
-    AImagesGrid
+    AImagesGrid,
+    MBanner,
+    MCallToAction,
+    OHeroItem
   },
   mixins: [Home, Wishlist],
   data () {
@@ -106,28 +110,28 @@ export default {
       loadNewsletterPopup: false,
       dummyInstaImages: [
         {
-          mobile: { url: `/assets/ig/ig01.jpg` },
-          desktop: { url: `/assets/ig/ig01.jpg` }
+          webp: { url: `/assets/ig/webp/ig01.webp` },
+          fallback: { url: `/assets/ig/jpg/ig01.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig02.jpg` },
-          desktop: { url: `/assets/ig/ig02.jpg` }
+          webp: { url: `/assets/ig/webp/ig02.webp` },
+          fallback: { url: `/assets/ig/jpg/ig02.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig03.jpg` },
-          desktop: { url: `/assets/ig/ig03.jpg` }
+          webp: { url: `/assets/ig/webp/ig03.webp` },
+          fallback: { url: `/assets/ig/jpg/ig03.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig04.jpg` },
-          desktop: { url: `/assets/ig/ig04.jpg` }
+          webp: { url: `/assets/ig/webp/ig04.webp` },
+          fallback: { url: `/assets/ig/jpg/ig04.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig05.jpg` },
-          desktop: { url: `/assets/ig/ig05.jpg` }
+          webp: { url: `/assets/ig/webp/ig05.webp` },
+          fallback: { url: `/assets/ig/jpg/ig05.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig06.jpg` },
-          desktop: { url: `/assets/ig/ig06.jpg` }
+          webp: { url: `/assets/ig/webp/ig06.webp` },
+          fallback: { url: `/assets/ig/jpg/ig06.jpg` }
         }
       ]
     };

@@ -95,28 +95,28 @@ export default {
       },
       dummyInstaImages: [
         {
-          mobile: { url: `/assets/ig/ig01.jpg` },
-          desktop: { url: `/assets/ig/ig01.jpg` }
+          webp: { url: `/assets/ig/webp/ig01.webp` },
+          fallback: { url: `/assets/ig/jpg/ig01.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig02.jpg` },
-          desktop: { url: `/assets/ig/ig02.jpg` }
+          webp: { url: `/assets/ig/webp/ig02.webp` },
+          fallback: { url: `/assets/ig/jpg/ig02.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig03.jpg` },
-          desktop: { url: `/assets/ig/ig03.jpg` }
+          webp: { url: `/assets/ig/webp/ig03.webp` },
+          fallback: { url: `/assets/ig/jpg/ig03.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig04.jpg` },
-          desktop: { url: `/assets/ig/ig04.jpg` }
+          webp: { url: `/assets/ig/webp/ig04.webp` },
+          fallback: { url: `/assets/ig/jpg/ig04.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig05.jpg` },
-          desktop: { url: `/assets/ig/ig05.jpg` }
+          webp: { url: `/assets/ig/webp/ig05.webp` },
+          fallback: { url: `/assets/ig/jpg/ig05.jpg` }
         },
         {
-          mobile: { url: `/assets/ig/ig06.jpg` },
-          desktop: { url: `/assets/ig/ig06.jpg` }
+          webp: { url: `/assets/ig/webp/ig06.webp` },
+          fallback: { url: `/assets/ig/jpg/ig06.jpg` }
         }
       ]
     };
