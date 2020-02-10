@@ -27,10 +27,10 @@ export default {
   },
   computed: {
     bundleOptionsPrice () {
-      const allBundeOptions = this.product.bundle_options || []
+      const allBundleOptions = this.product.bundle_options || []
       const selectedBundleOptions = Object.values(get(this.product, 'product_option.extension_attributes.bundle_options', {}))
       const price = getBundleOptionPrice(
-        getBundleOptionsValues(selectedBundleOptions, allBundeOptions)
+        getBundleOptionsValues(selectedBundleOptions, allBundleOptions)
       )
       return price
     },
