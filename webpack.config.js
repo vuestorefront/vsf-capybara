@@ -56,9 +56,22 @@ module.exports = function (config) {
 
   const hasDefaultKey = config.default !== undefined; // TODO: remove after Vue Storefront v1.11.1 release
 
+  const optimization = {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui)[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
+  }
+
   const mergedConfig = merge(
     { resolve: { alias: { 'src/modules/client': `${themeRoot}/config/modules` } } },
-    hasDefaultKey ? config.default : config // TODO: simplify after Vue Storefront v1.11.1 release
+    hasDefaultKey ? config.default : config, // TODO: simplify after Vue Storefront v1.11.1 release
+    { optimization }
   );
 
   fixPostCSSPlugins(mergedConfig.module.rules);
