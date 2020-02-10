@@ -86,9 +86,9 @@
 
 <script>
 import SearchPanel from '@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel';
-import ProductTile from 'theme/components/core/ProductTile';
+import ProductTile from './ProductTile';
 import VueOfflineMixin from 'vue-offline/mixin';
-import CategoryPanel from 'theme/components/core/blocks/Category/CategoryPanel';
+import CategoryPanel from './CategoryPanel';
 import { minLength } from 'vuelidate/lib/validators';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 

@@ -220,26 +220,6 @@ export default {
   metaInfo () {
     const storeView = currentStoreView();
     return {
-      link: [
-        {
-          rel: 'amphtml',
-          href: this.$router.resolve(
-            localizedRoute(
-              {
-                name: this.getCurrentProduct.type_id + '-product-amp',
-                params: {
-                  parentSku: this.getCurrentProduct.parentSku
-                    ? this.getCurrentProduct.parentSku
-                    : this.getCurrentProduct.sku,
-                  slug: this.getCurrentProduct.slug,
-                  childSku: this.getCurrentProduct.sku
-                }
-              },
-              storeView.storeCode
-            )
-          ).href
-        }
-      ],
       title: htmlDecode(
         this.getCurrentProduct.meta_title || this.getCurrentProduct.name
       ),

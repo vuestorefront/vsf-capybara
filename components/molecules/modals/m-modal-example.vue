@@ -18,6 +18,7 @@
  * this.$store.dispatch('ui/openModal', { name: ModalList.Example, payload: 'optional data' });
  */
 
+import { SfModal } from '@storefront-ui/vue';
 export default {
   name: 'MModalExample',
   props: {
@@ -38,6 +39,9 @@ export default {
       default: () => ({}),
       required: true
     }
+  },
+  components: {
+    SfModal
   }
 }
 </script>

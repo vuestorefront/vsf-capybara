@@ -9,15 +9,13 @@
         :max-rating="product.rating.max"
         :score-rating="product.rating.score"
         :link="product.link"
+        :wishlist-icon="false"
         link-tag="a"
-        :is-on-wishlist="isOnWishlist(product.data)"
-        @click:wishlist="toggleWishlist(product.data)"
       />
     </SfCarouselItem>
   </SfCarousel>
 </template>
 <script>
-import { mapGetters } from 'vuex';
 import { SfProductCard, SfCarousel } from '@storefront-ui/vue';
 import { price, htmlDecode } from '@vue-storefront/core/filters';
 import config from 'config';
@@ -37,9 +35,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      isOnWishlist: 'wishlist/isOnWishlist'
-    }),
     carouselProducts () {
       return this.products.map(product => {
         return {
@@ -61,28 +56,6 @@ export default {
           }
         };
       });
-    }
-  },
-  methods: {
-    toggleWishlist (product) {
-      const isProductOnWishlist = this.isOnWishlist(product);
-      const message = isProductOnWishlist
-        ? 'Product {productName} has been removed from wishlist!'
-        : 'Product {productName} has been added to wishlist!';
-      const action = isProductOnWishlist
-        ? 'wishlist/removeItem'
-        : 'wishlist/addItem';
-
-      this.$store.dispatch(action, product);
-      this.$store.dispatch(
-        'notification/spawnNotification',
-        {
-          type: 'success',
-          message: this.$t(message, { productName: product.name }),
-          action1: { label: this.$t('OK') }
-        },
-        { root: true }
-      );
     }
   }
 };
