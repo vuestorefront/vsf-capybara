@@ -38,8 +38,6 @@
       </template>
     </SfCallToAction>
 
-    <newsletter-popup v-if="loadNewsletterPopup" />
-
     <SfSection title-heading="Best Sellers" class="section">
       <lazy-hydrate :trigger-hydration="!loading">
         <m-product-carousel :products="newCollection" />
@@ -66,10 +64,10 @@ import Home from '@vue-storefront/core/pages/Home';
 import Onboard from 'theme/components/theme/blocks/Home/Onboard';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-viewed';
-import { Wishlist } from '@vue-storefront/core/modules/wishlist/components/Wishlist';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
+import { ModalList } from 'theme/store/ui/modals'
 
 import {
   SfHero,
@@ -80,16 +78,10 @@ import {
   SfCallToAction
 } from '@storefront-ui/vue';
 
-const NewsletterPopup = () =>
-  import(
-    /* webpackChunkName: "vsf-newsletter-modal" */ 'theme/components/core/NewsletterPopup'
-  );
-
 export default {
   components: {
     Onboard,
     LazyHydrate,
-    NewsletterPopup,
     SfHero,
     SfButton,
     SfBanner,
@@ -99,11 +91,10 @@ export default {
     MProductCarousel,
     AImagesGrid
   },
-  mixins: [Home, Wishlist],
+  mixins: [Home],
   data () {
     return {
       loading: true,
-      loadNewsletterPopup: false,
       dummyInstaImages: [
         {
           mobile: { url: `/assets/ig/ig01.jpg` },
@@ -212,8 +203,7 @@ export default {
   },
   methods: {
     showNewsletterPopup () {
-      this.loadNewsletterPopup = true;
-      this.$bus.$emit('modal-show', 'modal-newsletter');
+      this.$store.dispatch('ui/openModal', { name: ModalList.Newsletter })
     }
   }
 };

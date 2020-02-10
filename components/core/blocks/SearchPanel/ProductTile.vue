@@ -3,28 +3,6 @@
     v-observe-visibility="visibilityChanged"
     class="product align-center w-100 pb20"
   >
-    <div class="product__icons">
-      <AAddToWishlist :product="product">
-        <div
-          class="product__icon"
-          :class="{ 'product__icon--active': isOnWishlist }"
-          :title="isOnWishlist ? $t('Remove') : $t('Add to favorite')"
-        >
-          <i class="material-icons">{{ favoriteIcon }}</i>
-        </div>
-      </AAddToWishlist>
-      <AAddToCompare :product="product">
-        <div
-          class="product__icon"
-          :class="{ 'product__icon--active': isOnCompare }"
-          :title="
-            isOnCompare ? $t('Remove from compare') : $t('Add to compare')
-          "
-        >
-          <i class="material-icons">compare</i>
-        </div>
-      </AAddToCompare>
-    </div>
     <router-link
       class="block no-underline product-link"
       :to="productLink"
@@ -84,19 +62,13 @@
 import rootStore from '@vue-storefront/core/store';
 import { ProductTile } from '@vue-storefront/core/modules/catalog/components/ProductTile.ts';
 import config from 'config';
-import ProductImage from './ProductImage';
-import AAddToWishlist from 'theme/components/atoms/a-add-to-wishlist';
-import AAddToCompare from 'theme/components/atoms/a-add-to-compare';
-import { IsOnWishlist } from '@vue-storefront/core/modules/wishlist/components/IsOnWishlist';
-import { IsOnCompare } from '@vue-storefront/core/modules/compare/components/IsOnCompare';
+import ProductImage from '../../ProductImage';
 
 export default {
   components: {
-    ProductImage,
-    AAddToWishlist,
-    AAddToCompare
+    ProductImage
   },
-  mixins: [ProductTile, IsOnWishlist, IsOnCompare],
+  mixins: [ProductTile],
   props: {
     labelsActive: {
       type: Boolean,
@@ -113,9 +85,6 @@ export default {
         src: this.thumbnail,
         loading: this.thumbnail
       };
-    },
-    favoriteIcon () {
-      return this.isOnWishlist ? 'favorite' : 'favorite_border';
     }
   },
   beforeMount () {

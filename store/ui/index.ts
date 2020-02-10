@@ -8,9 +8,7 @@ export const uiStore = {
   state: {
     sidebar: false,
     microcart: false,
-    wishlist: false,
     searchpanel: false,
-    newsletterPopup: false,
     overlay: false,
     loader: false,
     checkoutMode: false,
@@ -46,10 +44,6 @@ export const uiStore = {
       state.searchpanel = action === true;
       state.overlay = action === true;
     },
-    setWishlist (state, action) {
-      state.wishlist = action === true;
-      state.overlay = action === true;
-    },
     setOverlay (state, action) {
       state.overlay = action === true;
     },
@@ -60,9 +54,6 @@ export const uiStore = {
   actions: {
     toggleMicrocart ({ commit, state }) {
       commit('setMicrocart', !state.microcart);
-    },
-    toggleWishlist ({ commit, state }) {
-      commit('setWishlist', !state.wishlist);
     }
   }
 };
