@@ -6,9 +6,8 @@
 </template>
 <script>
 import { price } from '@vue-storefront/core/filters';
-// TODO: uncomment after vsf 1.11.1 release
-// import { getCustomOptionValues, getCustomOptionPriceDelta } from '@vue-storefront/core/modules/catalog/helpers/customOption'
-// import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
+import { getCustomOptionValues, getCustomOptionPriceDelta } from '@vue-storefront/core/modules/catalog/helpers/customOption'
+import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
 import get from 'lodash-es/get'
 import { SfPrice } from '@storefront-ui/vue';
 export default {
@@ -28,24 +27,20 @@ export default {
   },
   computed: {
     bundleOptionsPrice () {
-      // TODO: uncomment after vsf 1.11.1 release
-      // const allBundeOptions = this.product.bundle_options || []
-      // const selectedBundleOptions = Object.values(get(this.product, 'product_option.extension_attributes.bundle_options', {}))
-      // const price = getBundleOptionPrice(
-      //   getBundleOptionsValues(selectedBundleOptions, allBundeOptions)
-      // )
-      // return price
-      return { priceInclTax: 0 } // TODO: remove after vsf 1.11.1 release
+      const allBundeOptions = this.product.bundle_options || []
+      const selectedBundleOptions = Object.values(get(this.product, 'product_option.extension_attributes.bundle_options', {}))
+      const price = getBundleOptionPrice(
+        getBundleOptionsValues(selectedBundleOptions, allBundeOptions)
+      )
+      return price
     },
     customOptionsPriceDelta () {
-      // TODO: uncomment after vsf 1.11.1 release
-      // const priceDelta = getCustomOptionPriceDelta(
-      //   getCustomOptionValues(Object.values(this.customOptions), this.product.custom_options),
-      //   this.product
-      // )
+      const priceDelta = getCustomOptionPriceDelta(
+        getCustomOptionValues(Object.values(this.customOptions), this.product.custom_options),
+        this.product
+      )
 
-      // return priceDelta
-      return { priceInclTax: 0 } // TODO: remove after vsf 1.11.1 release
+      return priceDelta
     },
     price () {
       const special = (this.productPrices.priceInclTax + this.customOptionsPriceDelta.priceInclTax) * this.product.qty
