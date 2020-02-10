@@ -197,15 +197,6 @@ export default {
   &__properties {
     margin-top: $spacer-big;
   }
-  &__actions {
-    opacity: 0;
-    transition: opacity 300ms ease-in-out;
-    @at-root.collected-product:hover & {
-      @include for-desktop {
-        opacity: 1;
-      }
-    }
-  }
 }
 .empty-cart {
   flex: 1;

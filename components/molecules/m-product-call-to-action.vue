@@ -127,14 +127,6 @@ export default {
     }
   }
 }
-.text-action {
-  margin: 1.25rem auto .625rem 0;
-  font-size: $font-size-regular-mobile;
-  @include for-desktop {
-    margin: 1.25rem 0 .625rem auto;
-    font-size: $font-size-regular-desktop;
-  }
-}
 .alert {
   margin-bottom: 1rem;
 }
