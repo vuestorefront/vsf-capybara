@@ -15,7 +15,7 @@
         :alt="alt"
         :width="width"
         :height="height"
-      />
+      >
     </template>
     <template v-else>
       <picture>
@@ -51,20 +51,20 @@ import {
 } from '@storefront-ui/vue';
 
 export default {
-  name: "APicture",
+  name: 'APicture',
   mixins: [SfImage],
   props: {
     src: {
       type: [String, Object],
-      default: () => ({ webp: { url: "" }, fallback: { url: "" } })
+      default: () => ({ webp: { url: '' }, fallback: { url: '' } })
     }
   },
   computed: {
-    source() {
-      let src = this.src || "";
-      if (typeof src === "object") {
+    source () {
+      let src = this.src || '';
+      if (typeof src === 'object') {
         if (!src.webp || !src.fallback) {
-          const object = src.webp || src.fallback || { url: "" };
+          const object = src.webp || src.fallback || { url: '' };
           src = object.url;
         }
       }

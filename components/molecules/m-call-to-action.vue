@@ -4,11 +4,11 @@
     class="sf-call-to-action"
   >
     <v-style>
-      .no-webp #cta_{{uniqueId}} {
-        background-image: url({{ image.fallback }});
+      .no-webp #cta_{{ uniqueId }} {
+      background-image: url({{ image.fallback }});
       }
-      .webp #cta_{{uniqueId}} {
-        background-image: url({{ image.webp }});
+      .webp #cta_{{ uniqueId }} {
+      background-image: url({{ image.webp }});
       }
     </v-style>
     <div class="sf-call-to-action__text-container">
@@ -40,16 +40,16 @@ import {
 } from '@storefront-ui/vue';
 
 export default {
-  name: "MCallToAction",
+  name: 'MCallToAction',
   mixins: [SfCallToAction],
   props: {
     uniqueId: {
       type: String,
-      default: ""
+      default: ''
     },
     image: {
       type: [String, Object],
-      default: () => ({ webp: { url: "" }, fallback: { url: "" } })
+      default: () => ({ webp: { url: '' }, fallback: { url: '' } })
     }
   }
 }

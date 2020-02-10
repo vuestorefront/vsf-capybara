@@ -1,11 +1,11 @@
 <template>
   <section :id="getBannerId" class="sf-banner" v-on="isMobile ? $listeners : {}">
     <v-style>
-      .no-webp #banner_{{_uid}} {
-        background-image: url({{ image.fallback }});
+      .no-webp #banner_{{ _uid }} {
+      background-image: url({{ image.fallback }});
       }
-      .webp #banner_{{_uid}} {
-        background-image: url({{ image.webp }});
+      .webp #banner_{{ _uid }} {
+      background-image: url({{ image.webp }});
       }
     </v-style>
     <div class="sf-banner__container">
@@ -43,7 +43,7 @@ import {
 } from '@storefront-ui/vue';
 
 export default {
-  name: "ABanner",
+  name: 'ABanner',
   mixins: [SfBanner],
   computed: {
     getBannerId () {
