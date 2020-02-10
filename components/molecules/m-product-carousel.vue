@@ -38,7 +38,6 @@ export default {
     carouselProducts () {
       return this.products.map(product => {
         return {
-          data: product,
           title: htmlDecode(product.name),
           image: this.getThumbnail(
             productThumbnailPath(product),

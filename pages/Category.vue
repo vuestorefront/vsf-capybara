@@ -491,7 +491,6 @@ export default {
     },
     prepareCategoryProduct (product) {
       return {
-        data: product,
         id: product.id,
         title: htmlDecode(product.name),
         image: this.getThumbnail(
