@@ -29,7 +29,7 @@
     <MCallToAction
       title="Subscribe to Newsletters"
       description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      :image='{ webp : "/assets/newsletter/webp/newsletter.webp", fallback : "/assets/newsletter/png/newsletter.png" }'
+      :image="{ webp : &quot;/assets/newsletter/webp/newsletter.webp&quot;, fallback : &quot;/assets/newsletter/png/newsletter.png&quot; }"
       :unique-id="'newsletter'"
       class="call-to-action-newsletter"
     >
