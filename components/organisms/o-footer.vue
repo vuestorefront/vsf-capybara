@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import LanguageSwitcher from 'theme/components/core/LanguageSwitcher';
+import LanguageSwitcher from 'theme/components/core/blocks/Switcher/LanguageSwitcher';
 import ABackToTop from 'theme/components/atoms/a-back-to-top';
 import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
 import { getPathForStaticPage } from 'theme/helpers';

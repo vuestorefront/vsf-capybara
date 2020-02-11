@@ -24,7 +24,6 @@
         <div class="sf-header__icons ml-auto">
           <ASearchIcon />
           <AAccountIcon />
-          <AWishlistIcon />
           <AMicrocartIcon />
         </div>
       </template>
@@ -37,7 +36,6 @@ import { SfHeader } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
-import AWishlistIcon from 'theme/components/atoms/a-wishlist-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import { mapGetters } from 'vuex';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
@@ -48,7 +46,6 @@ export default {
     SfHeader,
     ALogo,
     AAccountIcon,
-    AWishlistIcon,
     AMicrocartIcon,
     ASearchIcon
   },

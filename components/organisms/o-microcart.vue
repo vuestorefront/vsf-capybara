@@ -29,10 +29,7 @@
               </div>
             </template>
             <template #actions>
-              <div class="collected-product__actions">
-                <div><AAddToWishlist :product="product" /></div>
-                <div><AAddToCompare :product="product" /></div>
-              </div>
+              <div class="hidden" />
             </template>
           </SfCollectedProduct>
         </transition-group>
@@ -85,8 +82,6 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
-import AAddToCompare from 'theme/components/atoms/a-add-to-compare';
-import AAddToWishlist from 'theme/components/atoms/a-add-to-wishlist';
 import {
   SfButton,
   SfCollectedProduct,
@@ -96,8 +91,6 @@ import {
 
 export default {
   components: {
-    AAddToCompare,
-    AAddToWishlist,
     SfButton,
     SfCollectedProduct,
     SfProperty,
@@ -203,15 +196,6 @@ export default {
   margin: $spacer-big 0;
   &__properties {
     margin-top: $spacer-big;
-  }
-  &__actions {
-    opacity: 0;
-    transition: opacity 300ms ease-in-out;
-    @at-root.collected-product:hover & {
-      @include for-desktop {
-        opacity: 1;
-      }
-    }
   }
 }
 .empty-cart {
