@@ -167,7 +167,7 @@ import {
 } from '@vue-storefront/core/helpers';
 import i18n from '@vue-storefront/i18n';
 import onBottomScroll from '@vue-storefront/core/mixins/onBottomScroll';
-import { price, htmlDecode } from '@vue-storefront/core/filters';
+import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
@@ -179,6 +179,7 @@ import {
   formatCategoryLink,
   formatProductLink
 } from '@vue-storefront/core/modules/url/helpers';
+import { getProductPrice } from 'theme/helpers';
 import {
   localizedRoute,
   currentStoreView
@@ -473,14 +474,14 @@ export default {
               id: category.id,
               name: category.name,
               link: formatCategoryLink(category),
-              count: String(category.product_count),
+              count: category.product_count,
               position: category.position,
               items: this.prepareCategories(subCategory.children_data, [
                 {
                   id: category.id,
                   name: i18n.t('View all'),
                   link: formatCategoryLink(category),
-                  count: String(category.product_count),
+                  count: category.product_count,
                   position: 0
                 }
               ])
@@ -499,10 +500,7 @@ export default {
           config.products.thumbnails.height
         ),
         link: formatProductLink(product, currentStoreView().storeCode),
-        price: {
-          regular: price(parseFloat(product.priceInclTax)),
-          special: price(parseFloat(product.specialPriceInclTax))
-        },
+        price: getProductPrice(product),
         rating: {
           max: 5,
           score: 5

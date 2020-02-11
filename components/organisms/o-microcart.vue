@@ -11,8 +11,8 @@
             :key="product.id"
             :image="getThumbnailForProductExtend(product)"
             :title="product.name"
-            :regular-price="getProductRegularPrice(product)"
-            :special-price="getProductSpecialPrice(product)"
+            :regular-price="getProductPrice(product.totals).regular"
+            :special-price="getProductPrice(product.totals).special"
             :stock="10"
             class="collected-product"
             @click:remove="removeHandler(product)"
@@ -39,7 +39,7 @@
           <span class="sf-property__name">{{ $t("TOTAL") }}</span>
         </template>
         <template #value>
-          <SfPrice :regular="subtotal.value | price" class="sf-price--big" />
+          <SfPrice :regular="total | price" class="sf-price--big" />
         </template>
       </SfProperty>
       <SfButton class="sf-button--full-width" @click.native="goToCheckout">
@@ -78,7 +78,7 @@
 import { mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-
+import { getProductPrice } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
@@ -102,9 +102,13 @@ export default {
       productsInCart: 'cart/getCartItems',
       totals: 'cart/getTotals'
     }),
-    subtotal () {
-      let subtotal = this.totals.filter(total => total.code === 'subtotal');
-      return subtotal.length > 0 ? subtotal[0] : false;
+    total () {
+      return this.totals.reduce(
+        (result, total) => total.code === 'subtotal' || total.code === 'tax'
+          ? result + total.value
+          : result,
+        0
+      );
     },
     totalItems () {
       return this.productsInCart.length;
@@ -131,15 +135,8 @@ export default {
     getThumbnailForProductExtend (product) {
       return getThumbnailForProduct(product);
     },
-    getProductRegularPrice (product) {
-      let price = product.original_price_incl_tax
-        ? product.original_price_incl_tax
-        : product.price_incl_tax;
-      return price ? this.$options.filters.price(price) : '';
-    },
-    getProductSpecialPrice (product) {
-      let price = product.special_price ? product.price_incl_tax : false;
-      return price ? this.$options.filters.price(price) : '';
+    getProductPrice (product) {
+      return getProductPrice(product);
     },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });
