@@ -47,11 +47,23 @@ function fixPostCSSPlugins (rules) {
 }
 
 module.exports = function (config) {
+  const optimization = {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui)[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
+  }
   const mergedConfig = merge(
     // alias for 'src/modules/client' has to be the first one, because it has to be
     // handled earlier than already existing aliases in VSF (like general 'src' path)
     { resolve: { alias: { 'src/modules/client': `${themeRoot}/config/modules` } } },
-    config
+    config, // default vsf config
+    { optimization }
   );
 
   fixPostCSSPlugins(mergedConfig.module.rules);
