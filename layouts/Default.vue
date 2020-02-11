@@ -24,11 +24,6 @@
         direction="left"
         @close="$store.commit('ui/setSidebar')"
       />
-      <AsyncSidebar
-        :async-component="Wishlist"
-        :is-open="isWishlistOpen"
-        @close="$store.commit('ui/setWishlist')"
-      />
       <slot />
       <OFooter />
       <OModal />
@@ -64,10 +59,6 @@ const SidebarMenu = () =>
   import(
     /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ 'theme/components/core/blocks/SidebarMenu/SidebarMenu'
   );
-const Wishlist = () =>
-  import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-wishlist" */ 'theme/components/core/blocks/Wishlist/Wishlist'
-  );
 const SearchPanel = () =>
   import(
     /* webpackChunkName: "vsf-search-panel" */ 'theme/components/core/blocks/SearchPanel/SearchPanel'
@@ -97,7 +88,6 @@ export default {
       loadOrderConfirmation: false,
       ordersData: [],
       OMicrocart,
-      Wishlist,
       SearchPanel,
       SidebarMenu
     };
@@ -106,8 +96,7 @@ export default {
     ...mapState({
       isSearchPanelOpen: state => state.ui.searchpanel,
       isSidebarOpen: state => state.ui.sidebar,
-      isMicrocartOpen: state => state.ui.microcart,
-      isWishlistOpen: state => state.ui.wishlist
+      isMicrocartOpen: state => state.ui.microcart
     })
   },
   beforeMount () {

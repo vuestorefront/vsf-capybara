@@ -3,18 +3,14 @@ import { CatalogModule } from '@vue-storefront/core/modules/catalog'
 import { CatalogNextModule } from '@vue-storefront/core/modules/catalog-next'
 import { CartModule } from '@vue-storefront/core/modules/cart'
 import { CheckoutModule } from '@vue-storefront/core/modules/checkout'
-import { CompareModule } from '@vue-storefront/core/modules/compare'
-import { WishlistModule } from '@vue-storefront/core/modules/wishlist'
 import { NotificationModule } from '@vue-storefront/core/modules/notification'
 import { UrlModule } from '@vue-storefront/core/modules/url'
 import { BreadcrumbsModule } from '@vue-storefront/core/modules/breadcrumbs'
 import { UserModule } from '@vue-storefront/core/modules/user'
 import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { GoogleTagManagerModule } from 'src/modules/google-tag-manager'
-// import { AmpRendererModule } from 'src/modules/amp-renderer'
 import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
 import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-delivery'
-import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
 
@@ -26,16 +22,12 @@ export function registerClientModules () {
   registerModule(CartModule)
   registerModule(PaymentBackendMethodsModule)
   registerModule(PaymentCashOnDeliveryModule)
-  registerModule(WishlistModule) // Trigger on wishlist icon click
   registerModule(NotificationModule)
   registerModule(UserModule) // Trigger on user icon click
   registerModule(CatalogNextModule)
-  registerModule(CompareModule)
   registerModule(BreadcrumbsModule)
   registerModule(GoogleTagManagerModule)
-  // registerModule(AmpRendererModule)
   registerModule(CmsModule)
-  registerModule(NewsletterModule)
 }
 
 // Deprecated API, will be removed in 2.0

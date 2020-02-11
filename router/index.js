@@ -8,8 +8,6 @@ const Category = () =>
   import(/* webpackChunkName: "vsf-category" */ 'theme/pages/Category');
 const Checkout = () =>
   import(/* webpackChunkName: "vsf-checkout" */ 'theme/pages/Checkout');
-const Compare = () =>
-  import(/* webpackChunkName: "vsf-compare" */ 'theme/pages/Compare');
 const MyAccount = () =>
   import(/* webpackChunkName: "vsf-my-account" */ 'theme/pages/MyAccount');
 const Static = () =>
@@ -136,12 +134,6 @@ let routes = [
     path: '/contact',
     component: Static,
     props: { page: 'contact', title: 'Contact' }
-  },
-  {
-    name: 'compare',
-    path: '/compare',
-    component: Compare,
-    props: { title: 'Compare Products' }
   },
   {
     name: 'page-not-found',

@@ -86,19 +86,6 @@
             </router-link>
           </li>
           <li
-            v-if="compareIsActive && isCurrentMenuShowed"
-            class="bg-cl-secondary"
-            @click="closeMenu"
-          >
-            <router-link
-              class="block px25 py20 brdr-bottom-1 brdr-cl-secondary cl-accent no-underline fs-medium-small"
-              :to="localizedRoute('/compare')"
-              exact
-            >
-              {{ $t("Compare products") }}
-            </router-link>
-          </li>
-          <li
             class="brdr-bottom-1 brdr-cl-secondary bg-cl-secondary flex"
             @click="login"
           >

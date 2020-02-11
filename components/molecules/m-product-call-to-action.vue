@@ -22,14 +22,7 @@
         />
       </div>
     </div>
-    <AAddToWishlist
-      class="text-action"
-      :product="product"
-    />
-    <AAddToCompare
-      class="text-action"
-      :product="product"
-    />
+    <slot name="buttons" />
   </div>
 </template>
 <script>
@@ -37,16 +30,12 @@ import { onlineHelper } from '@vue-storefront/core/helpers';
 import { SfAlert } from '@storefront-ui/vue';
 import AProductQuantity from 'theme/components/atoms/a-product-quantity';
 import AAddToCart from 'theme/components/atoms/a-add-to-cart';
-import AAddToWishlist from 'theme/components/atoms/a-add-to-wishlist';
-import AAddToCompare from 'theme/components/atoms/a-add-to-compare';
 export default {
   name: 'MProductCallToAction',
   components: {
     SfAlert,
     AProductQuantity,
-    AAddToCart,
-    AAddToWishlist,
-    AAddToCompare
+    AAddToCart
   },
   data () {
     return {
@@ -136,14 +125,6 @@ export default {
     @include for-desktop {
       margin-left: 0;
     }
-  }
-}
-.text-action {
-  margin: 1.25rem auto .625rem 0;
-  font-size: $font-size-regular-mobile;
-  @include for-desktop {
-    margin: 1.25rem 0 .625rem auto;
-    font-size: $font-size-regular-desktop;
   }
 }
 .alert {
