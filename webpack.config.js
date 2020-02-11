@@ -46,24 +46,34 @@ function fixPostCSSPlugins (rules) {
   });
 }
 
+/**
+ * Checks if current process is for client config
+ */
+function isClientConfig () {
+  const argvString = process.argv.join('')
+  return argvString.includes('webpack.prod.client.config')
+}
+
 module.exports = function (config) {
-  const optimization = {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui)[\\/]/,
-          name: 'vendor',
-          chunks: 'all'
+  const clientConfig = isClientConfig() ? {
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui)[\\/]/,
+            name: 'vendor',
+            chunks: 'all'
+          }
         }
       }
     }
-  }
+  } : {}
   const mergedConfig = merge(
     // alias for 'src/modules/client' has to be the first one, because it has to be
     // handled earlier than already existing aliases in VSF (like general 'src' path)
     { resolve: { alias: { 'src/modules/client': `${themeRoot}/config/modules` } } },
     config, // default vsf config
-    { optimization }
+    clientConfig
   );
 
   fixPostCSSPlugins(mergedConfig.module.rules);
