@@ -2,12 +2,12 @@
   <div class="a-static">
     <SfTabs v-if="showTabs" :open-tab="1">
       <SfTab v-for="c in content" :key="c.title" :title="c.title">
-        <div v-html="$sanitize(c.message)" />
+        <div v-html="c.message" />
       </SfTab>
     </SfTabs>
     <div v-else>
       <SfHeading :level="1" :title="content.title" />
-      <div v-html="$sanitize(content.message)" />
+      <div v-html="content.message" />
     </div>
   </div>
 </template>
