@@ -46,16 +46,8 @@ function fixPostCSSPlugins (rules) {
   });
 }
 
-/**
- * Checks if current process is for client config
- */
-function isClientConfig () {
-  const argvString = process.argv.join('')
-  return argvString.includes('webpack.prod.client.config')
-}
-
-module.exports = function (config) {
-  const clientConfig = isClientConfig() ? {
+module.exports = function (config, { isClient }) {
+  const clientConfig = isClient ? {
     optimization: {
       splitChunks: {
         cacheGroups: {
