@@ -11,8 +11,8 @@
             :key="product.id"
             :image="getThumbnailForProductExtend(product)"
             :title="product.name"
-            :regular-price="getProductPrice(product.totals).regular"
-            :special-price="getProductPrice(product.totals).special"
+            :regular-price="getProductPrice(product).regular"
+            :special-price="getProductPrice(product).special"
             :stock="10"
             class="collected-product"
             @click:remove="removeHandler(product)"
@@ -77,8 +77,9 @@
 <script>
 import { mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-import { getProductPrice } from 'theme/helpers';
+import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
@@ -136,7 +137,9 @@ export default {
       return getThumbnailForProduct(product);
     },
     getProductPrice (product) {
-      return getProductPrice(product);
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? getProductPriceFromTotals(product)
+        : getProductPrice(product);
     },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });
