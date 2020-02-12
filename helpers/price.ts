@@ -23,10 +23,17 @@ function calculateCustomOptionsPriceDelta (product, customOptions) {
 }
 
 function formatPrice (value) {
-  return value ? price(value) : '';
+  return value ? price(value) : ''
 }
 
 export function getProductPrice (product, customOptions = {}) {
+  if (!product) {
+    return {
+      regular: '',
+      special: ''
+    }
+  }
+
   const priceInclTax = product.price_incl_tax || product.priceInclTax || 0
   const originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
   const specialPrice = product.special_price || product.specialPrice || 0
@@ -40,6 +47,25 @@ export function getProductPrice (product, customOptions = {}) {
 
   return {
     regular: isSpecialPrice ? formatPrice(original) : formatPrice(regular),
+    special: isSpecialPrice ? formatPrice(special) : ''
+  }
+}
+
+export function getProductPriceFromTotals (product) {
+  if (!product.totals || !product.totals.options) {
+    return {
+      regular: '',
+      special: ''
+    }
+  }
+
+  const isSpecialPrice = product.totals.discount_amount > 0
+
+  const special = product.totals.row_total_incl_tax - product.totals.discount_amount
+  const regular = product.totals.row_total_incl_tax
+
+  return {
+    regular: formatPrice(regular),
     special: isSpecialPrice ? formatPrice(special) : ''
   }
 }
