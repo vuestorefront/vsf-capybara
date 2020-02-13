@@ -125,7 +125,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~theme/css/animations/transitions";
+@import "~theme/css/transitions";
 @import "~theme/css/variables/colors";
 @import "~theme/css/helpers/functions/color";
 
