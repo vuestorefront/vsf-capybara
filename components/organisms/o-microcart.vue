@@ -14,6 +14,7 @@
             :regular-price="getProductPrice(product).regular"
             :special-price="getProductPrice(product).special"
             :stock="10"
+            :qty="product.qty"
             class="collected-product"
             @click:remove="removeHandler(product)"
             @input="changeQuantity(product, $event)"
@@ -153,7 +154,21 @@ export default {
         product: product,
         qty: newQuantity
       });
+    },
+    onQuantityChange () {
+      // Unfortunately $forceUpdate() is needed here because `totals` key in cart items
+      // is added but not in a reactive way, so Vue is not able to detect this change and
+      // re-render our view.
+      // The callback for 'cart-after-itemchanged' event can be removed when the following PR
+      // will be merged in VSF: https://github.com/DivanteLtd/vue-storefront/pull/4079/
+      this.$forceUpdate();
     }
+  },
+  beforeMount () {
+    this.$bus.$on('cart-after-itemchanged', this.onQuantityChange);
+  },
+  beforeDestroy () {
+    this.$bus.$off('cart-after-itemchanged', this.onQuantityChange);
   }
 };
 </script>
