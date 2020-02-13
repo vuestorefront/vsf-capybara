@@ -52,7 +52,6 @@
     >
       <AImagesGrid :images="dummyInstaImages" />
     </SfSection>
-    <Onboard />
   </div>
 </template>
 
@@ -61,7 +60,6 @@ import { mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import Home from '@vue-storefront/core/pages/Home';
-import Onboard from 'theme/components/theme/blocks/Home/Onboard';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-viewed';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
@@ -80,7 +78,6 @@ import {
 
 export default {
   components: {
-    Onboard,
     LazyHydrate,
     SfHero,
     SfButton,
@@ -171,21 +168,6 @@ export default {
   },
   beforeCreate () {
     registerModule(RecentlyViewedModule);
-  },
-  async beforeMount () {
-    if (this.$store.state.__DEMO_MODE__) {
-      const onboardingClaim = await this.$store.dispatch('claims/check', {
-        claimCode: 'onboardingAccepted'
-      });
-
-      if (!onboardingClaim) {
-        this.$bus.$emit('modal-toggle', 'modal-onboard');
-        this.$store.dispatch('claims/set', {
-          claimCode: 'onboardingAccepted',
-          value: true
-        });
-      }
-    }
   },
   mounted () {
     if (!this.isLoggedIn && localStorage.getItem('redirect')) { this.$bus.$emit('modal-show', 'modal-signup'); }
