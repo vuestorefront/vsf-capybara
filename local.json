@@ -2,8 +2,8 @@
   "theme": "@vue-storefront/theme-capybara",
   "products": {
     "thumbnails": {
-      "width": 140,
-      "height": 200
+      "width": 216,
+      "height": 326
     }
   },
   "cart": {
