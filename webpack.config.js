@@ -52,7 +52,7 @@ module.exports = function (config, { isClient }) {
       splitChunks: {
         cacheGroups: {
           commons: {
-            test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui)[\\/]/,
+            test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui|lean-he|vue-lazyload|js-sha3|dayjs|core-js|whatwg-fetch|vuelidate)[\\/]/,
             name: 'vendor',
             chunks: 'all'
           }
