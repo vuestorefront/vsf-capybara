@@ -86,7 +86,7 @@ const NewsletterPopup = () =>
   );
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     Onboard,
     LazyHydrate,
