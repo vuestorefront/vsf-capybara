@@ -79,10 +79,6 @@ export default {
       integrity:
         'sha384-GOaSLecPIMCJksN83HLuYf9FToOiQ2Df0+0ntv7ey8zjUHESXhthwvq9hXAZTifA',
       crossorigin: 'anonymous'
-    },
-    {
-      src: '/assets/scripts/modernizr-custom.js',
-      async: true
     }
   ]
 };

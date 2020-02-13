@@ -1,20 +1,19 @@
 <template>
   <div id="home">
     <SfHero class="section">
-      <OHeroItem
+      <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
         :title="hero.title"
         :subtitle="hero.subtitle"
-        :image="hero.image"
-        :unique-id="'home-banner_' + i"
+        :image="typeof hero.image === 'string' ? hero.image : ''"
       />
     </SfHero>
 
     <SfBannerGrid :banner-grid="1" class="banners section">
       <template v-for="(banner, i) in banners" v-slot:[banner.slot]>
         <router-link :key="i" :to="banner.link">
-          <MBanner
+          <SfBanner
             :subtitle="banner.subtitle"
             :title="banner.title"
             :description="banner.description"
@@ -26,11 +25,10 @@
       </template>
     </SfBannerGrid>
 
-    <MCallToAction
+    <SfCallToAction
       title="Subscribe to Newsletters"
       description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      :image="{ webp : &quot;/assets/newsletter/webp/newsletter.webp&quot;, fallback : &quot;/assets/newsletter/png/newsletter.png&quot; }"
-      :unique-id="'newsletter'"
+      :image="newsletterImage"
       class="call-to-action-newsletter"
     >
       <template #button>
@@ -38,7 +36,7 @@
           {{ $t("Subscribe") }}
         </SfButton>
       </template>
-    </MCallToAction>
+    </SfCallToAction>
 
     <newsletter-popup v-if="loadNewsletterPopup" />
 
@@ -61,6 +59,7 @@
 </template>
 
 <script>
+import supportsWebP from 'supports-webp';
 import { mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -72,15 +71,13 @@ import { Wishlist } from '@vue-storefront/core/modules/wishlist/components/Wishl
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
-import MBanner from 'theme/components/molecules/m-banner'
-import MCallToAction from 'theme/components/molecules/m-call-to-action'
-import OHeroItem from 'theme/components/organisms/o-hero-item'
-
 import {
   SfHero,
   SfButton,
   SfSection,
-  SfBannerGrid
+  SfBannerGrid,
+  SfCallToAction,
+  SfBanner
 } from '@storefront-ui/vue';
 
 const NewsletterPopup = () =>
@@ -89,6 +86,7 @@ const NewsletterPopup = () =>
   );
 
 export default {
+  name: "Home",
   components: {
     Onboard,
     LazyHydrate,
@@ -97,11 +95,10 @@ export default {
     SfButton,
     SfSection,
     SfBannerGrid,
+    SfCallToAction,
+    SfBanner,
     MProductCarousel,
-    AImagesGrid,
-    MBanner,
-    MCallToAction,
-    OHeroItem
+    AImagesGrid
   },
   mixins: [Home, Wishlist],
   data () {
@@ -133,37 +130,49 @@ export default {
           webp: { url: `/assets/ig/webp/ig06.webp` },
           fallback: { url: `/assets/ig/jpg/ig06.jpg` }
         }
-      ]
+      ],
+      newsletterImage: null,
+      banners: [],
+      heroes: []
     };
   },
   computed: {
     ...mapGetters({
       isLoggedIn: 'user/isLoggedIn',
-      heroImage: 'promoted/getHeadImage',
+      heroImages: 'promoted/getHeadImage',
       promotedOffers: 'promoted/getPromotedOffers',
       newCollection: 'homepage/getEverythingNewCollection'
     }),
     isOnline () {
       return onlineHelper.isOnline;
+    }
+  },
+  methods: {
+    showNewsletterPopup () {
+      this.loadNewsletterPopup = true;
+      this.$bus.$emit('modal-show', 'modal-newsletter');
     },
-    heroes () {
-      const hero = {
-        ...this.heroImage
-      };
-
-      return [hero, hero, hero];
-    },
-    banners () {
-      const slots = ['bannerA', 'bannerB', 'bannerC', 'bannerD'];
-
-      return this.promotedOffers.mainBanners.reduce((result, banner, i) => {
-        if (slots[i]) {
-          banner.slot = slots[i];
-          result.push(banner);
+    createBanners (webpSupported) {
+      let banners = this.promotedOffers.mainBanners.map((banner) => {
+        if (webpSupported) {
+          banner.image = banner.image.webp
+        } else {
+          banner.image = banner.image.fallback
         }
-
-        return result;
-      }, []);
+        return banner;
+      });
+      this.banners = banners
+    },
+    createHeroes (webpSupported) {
+      let heroes = this.heroImages.map((banner) => {
+        if (webpSupported) {
+          banner.image = banner.image.webp
+        } else {
+          banner.image = banner.image.fallback
+        }
+        return banner;
+      });
+      this.heroes = heroes
     }
   },
   watch: {
@@ -202,6 +211,17 @@ export default {
   },
   mounted () {
     if (!this.isLoggedIn && localStorage.getItem('redirect')) { this.$bus.$emit('modal-show', 'modal-signup'); }
+    this.banners = this.promotedOffers.mainBanners
+    this.heroes = this.heroImages
+    supportsWebP.then(supported => {
+      this.createBanners(supported)
+      this.createHeroes(supported)
+      if (supported) {
+        this.newsletterImage = '/assets/newsletter/webp/newsletter.webp';
+      } else {
+        this.newsletterImage = '/assets/newsletter/png/newsletter.png'
+      }
+    })
   },
   beforeRouteEnter (to, from, next) {
     if (!isServer && !from.name) {
@@ -212,12 +232,6 @@ export default {
       });
     } else {
       next();
-    }
-  },
-  methods: {
-    showNewsletterPopup () {
-      this.loadNewsletterPopup = true;
-      this.$bus.$emit('modal-show', 'modal-newsletter');
     }
   }
 };

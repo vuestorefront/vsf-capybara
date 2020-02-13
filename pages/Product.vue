@@ -22,8 +22,8 @@
       </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
-      <SfSection class="section" v-show="promotedBanners.length">
-        <router-link :key="i" :to="banner.link" v-for="(banner, i) in promotedBanners">
+      <SfSection class="section" v-show="banners.length">
+        <router-link :key="i" :to="banner.link" v-for="(banner, i) in banners">
           <SfBanner
             :subtitle="banner.subtitle"
             :title="banner.title"
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import supportsWebP from 'supports-webp';
 import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -118,7 +119,8 @@ export default {
           webp: { url: `/assets/ig/webp/ig06.webp` },
           fallback: { url: `/assets/ig/jpg/ig06.jpg` }
         }
-      ]
+      ],
+      banners: []
     };
   },
   computed: {
@@ -149,9 +151,6 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
-    },
-    promotedBanners () {
-      return this.promotedOffers.productBanners || []
     }
   },
   watch: {
@@ -182,7 +181,13 @@ export default {
     registerModule(ReviewModule);
     registerModule(RecentlyViewedModule);
   },
+  beforeMount () {
+    this.banners = this.promotedOffers.productBanners
+  },
   async mounted () {
+    supportsWebP.then(supported => {
+      this.createBanners(supported)
+    })
     await Promise.all([
       this.$store.dispatch('recently-viewed/addItem', this.getCurrentProduct),
       this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
@@ -215,6 +220,17 @@ export default {
       } finally {
         this.stock.isLoading = false;
       }
+    },
+    createBanners (webpSupported) {
+      let banners = this.promotedOffers.productBanners.map((banner) => {
+        if (webpSupported) {
+          banner.image = banner.image.webp
+        } else {
+          banner.image = banner.image.fallback
+        }
+        return banner;
+      });
+      this.banners = banners
     }
   },
   metaInfo () {
