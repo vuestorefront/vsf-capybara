@@ -22,12 +22,6 @@ once('__VUE_EXTEND_SANITIZE__', () => {
   Vue.use(VueSanitize);
 });
 
-Vue.component('v-style', {
-  render: function (createElement) {
-    return createElement('style', this.$slots.default)
-  }
-})
-
 const themeEntry = App;
 function initTheme (app, router, store, config) {
   store.registerModule('themeCart', cartModule);
