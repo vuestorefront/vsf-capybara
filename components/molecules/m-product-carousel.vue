@@ -17,11 +17,12 @@
 </template>
 <script>
 import { SfProductCard, SfCarousel } from '@storefront-ui/vue';
-import { price, htmlDecode } from '@vue-storefront/core/filters';
+import { htmlDecode } from '@vue-storefront/core/filters';
 import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { productThumbnailPath } from '@vue-storefront/core/helpers';
+import { getProductPrice } from 'theme/helpers';
 export default {
   name: 'MProductCarousel',
   components: {
@@ -45,10 +46,7 @@ export default {
             config.products.thumbnails.height
           ),
           link: formatProductLink(product, currentStoreView().storeCode),
-          price: {
-            regular: price(parseFloat(product.priceInclTax)),
-            special: price(parseFloat(product.specialPriceInclTax))
-          },
+          price: getProductPrice(product),
           rating: {
             max: 5,
             score: 5
