@@ -11,9 +11,10 @@
             :key="product.id"
             :image="getThumbnailForProductExtend(product)"
             :title="product.name"
-            :regular-price="getProductRegularPrice(product)"
-            :special-price="getProductSpecialPrice(product)"
+            :regular-price="getProductPrice(product).regular"
+            :special-price="getProductPrice(product).special"
             :stock="10"
+            :qty="product.qty"
             class="collected-product"
             @click:remove="removeHandler(product)"
             @input="changeQuantity(product, $event)"
@@ -39,7 +40,7 @@
           <span class="sf-property__name">{{ $t("TOTAL") }}</span>
         </template>
         <template #value>
-          <SfPrice :regular="subtotal.value | price" class="sf-price--big" />
+          <SfPrice :regular="total | price" class="sf-price--big" />
         </template>
       </SfProperty>
       <SfButton class="sf-button--full-width" @click.native="goToCheckout">
@@ -77,8 +78,9 @@
 <script>
 import { mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-
+import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
@@ -102,9 +104,13 @@ export default {
       productsInCart: 'cart/getCartItems',
       totals: 'cart/getTotals'
     }),
-    subtotal () {
-      let subtotal = this.totals.filter(total => total.code === 'subtotal');
-      return subtotal.length > 0 ? subtotal[0] : false;
+    total () {
+      return this.totals.reduce(
+        (result, total) => total.code === 'subtotal' || total.code === 'tax'
+          ? result + total.value
+          : result,
+        0
+      );
     },
     totalItems () {
       return this.productsInCart.length;
@@ -131,15 +137,10 @@ export default {
     getThumbnailForProductExtend (product) {
       return getThumbnailForProduct(product);
     },
-    getProductRegularPrice (product) {
-      let price = product.original_price_incl_tax
-        ? product.original_price_incl_tax
-        : product.price_incl_tax;
-      return price ? this.$options.filters.price(price) : '';
-    },
-    getProductSpecialPrice (product) {
-      let price = product.special_price ? product.price_incl_tax : false;
-      return price ? this.$options.filters.price(price) : '';
+    getProductPrice (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? getProductPriceFromTotals(product)
+        : getProductPrice(product);
     },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });
@@ -153,7 +154,21 @@ export default {
         product: product,
         qty: newQuantity
       });
+    },
+    onQuantityChange () {
+      // Unfortunately $forceUpdate() is needed here because `totals` key in cart items
+      // is added but not in a reactive way, so Vue is not able to detect this change and
+      // re-render our view.
+      // The callback for 'cart-after-itemchanged' event can be removed when the following PR
+      // will be merged in VSF: https://github.com/DivanteLtd/vue-storefront/pull/4079/
+      this.$forceUpdate();
     }
+  },
+  beforeMount () {
+    this.$bus.$on('cart-after-itemchanged', this.onQuantityChange);
+  },
+  beforeDestroy () {
+    this.$bus.$off('cart-after-itemchanged', this.onQuantityChange);
   }
 };
 </script>

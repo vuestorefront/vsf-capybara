@@ -1,6 +1,8 @@
 import config from 'config'
 import { currentStoreView } from '@vue-storefront/core/lib/multistore'
 
+export * from './price'
+
 export function getPathForStaticPage (path: string) {
   const { storeCode } = currentStoreView()
   const isStoreCodeEquals = storeCode === config.defaultStoreCode
