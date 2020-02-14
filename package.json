@@ -12,6 +12,7 @@
   "dependencies": {
     "@storefront-ui/vue": "latest",
     "body-scroll-lock": "^2.6.4",
+    "supports-webp": "^2.0.1",
     "vue": "^2.6.6",
     "vue-carousel": "^0.6.9",
     "vue-lazy-hydration": "^1.0.0-beta.9",

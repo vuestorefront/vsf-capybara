@@ -3,7 +3,7 @@
     <div v-for="singleRow in row" :key="singleRow" class="a-images-grid__row">
       <div v-for="singleCol in col" :key="singleCol" class="a-images-grid__col">
         <SfImage
-          :src="getImage(singleRow, singleCol)"
+          :src="typeof getImage(singleRow, singleCol).image === 'string' ? getImage(singleRow, singleCol).image : ''"
         />
       </div>
     </div>
@@ -13,6 +13,7 @@
 import {
   SfImage
 } from '@storefront-ui/vue';
+
 export default {
   name: 'AImagesGrid',
   props: {

@@ -1,3 +1,4 @@
+import supportsWebP from 'supports-webp';
 import { modalStore } from './modals';
 
 export const uiStore = {
@@ -16,7 +17,8 @@ export const uiStore = {
     submenu: {
       depth: false,
       path: []
-    }
+    },
+    isWebpSupported: null
   },
   mutations: {
     setCheckoutMode (state, action) {
@@ -49,11 +51,19 @@ export const uiStore = {
     },
     setLoader (state, action) {
       state.loader = action === true;
+    },
+    setWebpSupport (state, action) {
+      state.isWebpSupported = action
     }
   },
   actions: {
     toggleMicrocart ({ commit, state }) {
       commit('setMicrocart', !state.microcart);
+    },
+    checkWebpSupport ({ commit }) {
+      supportsWebP.then(isWebpSupported => {
+        commit('setWebpSupport', isWebpSupported);
+      })
     }
   }
 };

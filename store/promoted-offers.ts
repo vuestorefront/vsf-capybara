@@ -6,7 +6,7 @@ export default interface PromotedOffersState {
     smallBanners: any[],
     productBanners: any[]
   },
-  headImage: Record<string, any>
+  headImage: any[]
 }
 
 export const promotedStore = {
@@ -17,7 +17,7 @@ export const promotedStore = {
       smallBanners: [],
       productBanners: []
     },
-    headImage: null
+    headImage: []
   },
   getters: {
     getPromotedOffers: state => {
@@ -37,11 +37,11 @@ export const promotedStore = {
       }
     },
     async updateHeadImage ({commit, rootState}, data) {
-      let mainImageResource = rootState.storeView && rootState.storeView.storeCode ? `banners/${rootState.storeView.storeCode}_main-image` : `main-image`
+      let mainImageResource = rootState.storeView && rootState.storeView.storeCode ? `banners/${rootState.storeView.storeCode}_main-images` : `main-images`
       try {
         // Workaround to get jest --watch to work so don't change the import sting to a template string
         const imageModule = await import(/* webpackChunkName: "vsf-head-img-[request]" */ 'theme/resource/' + mainImageResource + '.json')
-        commit('SET_HEAD_IMAGE', imageModule.image)
+        commit('SET_HEAD_IMAGE', imageModule.images)
       } catch (err) {
         Logger.debug('Unable to load headImage' + err)()
       }
