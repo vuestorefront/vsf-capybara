@@ -105,32 +105,7 @@ export default {
     return {
       loading: true,
       loadNewsletterPopup: false,
-      dummyInstaImages: [
-        {
-          webp: { url: `/assets/ig/webp/ig01.webp` },
-          fallback: { url: `/assets/ig/jpg/ig01.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig02.webp` },
-          fallback: { url: `/assets/ig/jpg/ig02.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig03.webp` },
-          fallback: { url: `/assets/ig/jpg/ig03.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig04.webp` },
-          fallback: { url: `/assets/ig/jpg/ig04.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig05.webp` },
-          fallback: { url: `/assets/ig/jpg/ig05.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig06.webp` },
-          fallback: { url: `/assets/ig/jpg/ig06.jpg` }
-        }
-      ],
+      dummyInstaImages: [],
       newsletterImage: null,
       banners: [],
       heroes: []
@@ -173,6 +148,24 @@ export default {
         return banner;
       });
       this.heroes = heroes
+    },
+    createDummyInstaImages (webpSupported) {
+      let dummyImages = [
+        { webp: { url: `/assets/ig/webp/ig01.webp` }, fallback: { url: `/assets/ig/jpg/ig01.jpg` } },
+        { webp: { url: `/assets/ig/webp/ig02.webp` }, fallback: { url: `/assets/ig/jpg/ig02.jpg` } },
+        { webp: { url: `/assets/ig/webp/ig03.webp` }, fallback: { url: `/assets/ig/jpg/ig03.jpg` } },
+        { webp: { url: `/assets/ig/webp/ig04.webp` }, fallback: { url: `/assets/ig/jpg/ig04.jpg` } },
+        { webp: { url: `/assets/ig/webp/ig05.webp` }, fallback: { url: `/assets/ig/jpg/ig05.jpg` } },
+        { webp: { url: `/assets/ig/webp/ig06.webp` }, fallback: { url: `/assets/ig/jpg/ig06.jpg` } }
+      ]
+
+      this.dummyInstaImages = dummyImages.map(image => {
+        if (webpSupported) {
+          return image.webp.url
+        } else {
+          return image.fallback.url
+        }
+      })
     }
   },
   watch: {
@@ -216,6 +209,7 @@ export default {
     supportsWebP.then(supported => {
       this.createBanners(supported)
       this.createHeroes(supported)
+      this.createDummyInstaImages(supported)
       if (supported) {
         this.newsletterImage = '/assets/newsletter/webp/newsletter.webp';
       } else {
