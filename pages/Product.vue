@@ -22,8 +22,8 @@
       </SfSection>
     </lazy-hydrate>
     <lazy-hydrate when-idle>
-      <SfSection class="section" v-show="promotedBanners.length">
-        <router-link :key="i" :to="banner.link" v-for="(banner, i) in promotedBanners">
+      <SfSection class="section" v-show="banners.length">
+        <router-link :key="i" :to="banner.link" v-for="(banner, i) in banners">
           <SfBanner
             :subtitle="banner.subtitle"
             :title="banner.title"
@@ -45,7 +45,7 @@
       subtitle-heading="#YOURLOOK"
       class="section"
     >
-      <AImagesGrid :images="dummyInstaImages" />
+      <AImagesGrid :images="instagramImages" />
     </SfSection>
     <SizeGuide />
   </div>
@@ -68,6 +68,7 @@ import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
+import { checkWebpSupport } from 'theme/helpers'
 
 import { SfSection, SfBanner } from '@storefront-ui/vue';
 
@@ -92,36 +93,13 @@ export default {
       stock: {
         isLoading: false,
         max: 0
-      },
-      dummyInstaImages: [
-        {
-          mobile: { url: `/assets/ig/ig01.jpg` },
-          desktop: { url: `/assets/ig/ig01.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig02.jpg` },
-          desktop: { url: `/assets/ig/ig02.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig03.jpg` },
-          desktop: { url: `/assets/ig/ig03.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig04.jpg` },
-          desktop: { url: `/assets/ig/ig04.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig05.jpg` },
-          desktop: { url: `/assets/ig/ig05.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig06.jpg` },
-          desktop: { url: `/assets/ig/ig06.jpg` }
-        }
-      ]
+      }
     };
   },
   computed: {
+    ...mapState({
+      isWebpSupported: state => state.ui.isWebpSupported
+    }),
     ...mapGetters({
       getCurrentCategory: 'category-next/getCurrentCategory',
       getCurrentProduct: 'product/getCurrentProduct',
@@ -130,7 +108,8 @@ export default {
       getOriginalProduct: 'product/getOriginalProduct',
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
-      promotedOffers: 'promoted/getPromotedOffers'
+      promotedOffers: 'promoted/getPromotedOffers',
+      dummyInstagramImages: 'instagram/getInstagramImages'
     }),
     isOnline () {
       return onlineHelper.isOnline;
@@ -150,8 +129,11 @@ export default {
           return a.attribute_id > b.attribute_id;
         });
     },
-    promotedBanners () {
-      return this.promotedOffers.productBanners || []
+    banners () {
+      return checkWebpSupport(this.promotedOffers.productBanners, this.isWebpSupported)
+    },
+    instagramImages () {
+      return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
     }
   },
   watch: {
@@ -186,7 +168,8 @@ export default {
     await Promise.all([
       this.$store.dispatch('recently-viewed/addItem', this.getCurrentProduct),
       this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
-      this.$store.dispatch('promoted/updatePromotedOffers')
+      this.$store.dispatch('promoted/updatePromotedOffers'),
+      this.$store.dispatch('instagram/updateInstagramImages')
     ])
   },
   beforeRouteEnter (to, from, next) {

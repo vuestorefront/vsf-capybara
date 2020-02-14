@@ -6,7 +6,7 @@
         :key="i"
         :title="hero.title"
         :subtitle="hero.subtitle"
-        :image="hero.image"
+        :image="typeof hero.image === 'string' ? hero.image : ''"
       />
     </SfHero>
 
@@ -18,7 +18,7 @@
             :title="banner.title"
             :description="banner.description"
             :button-text="banner.buttonText"
-            :image="banner.image"
+            :image="typeof banner.image === 'string' ? banner.image : ''"
             class="sf-banner--slim"
           />
         </router-link>
@@ -28,7 +28,7 @@
     <SfCallToAction
       title="Subscribe to Newsletters"
       description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      image="/assets/newsletter.png"
+      :image="typeof newsletterImage === 'string' ? newsletterImage : ''"
       class="call-to-action-newsletter"
     >
       <template #button>
@@ -50,13 +50,13 @@
       subtitle-heading="#YOURLOOK"
       class="section"
     >
-      <AImagesGrid :images="dummyInstaImages" />
+      <AImagesGrid :images="instagramImages" />
     </SfSection>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import Home from '@vue-storefront/core/pages/Home';
@@ -66,25 +66,27 @@ import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { ModalList } from 'theme/store/ui/modals'
+import { checkWebpSupport } from 'theme/helpers'
 
 import {
   SfHero,
   SfButton,
-  SfBanner,
   SfSection,
   SfBannerGrid,
-  SfCallToAction
+  SfCallToAction,
+  SfBanner
 } from '@storefront-ui/vue';
 
 export default {
+  name: 'Home',
   components: {
     LazyHydrate,
     SfHero,
     SfButton,
-    SfBanner,
     SfSection,
     SfBannerGrid,
     SfCallToAction,
+    SfBanner,
     MProductCarousel,
     AImagesGrid
   },
@@ -92,62 +94,46 @@ export default {
   data () {
     return {
       loading: true,
-      dummyInstaImages: [
-        {
-          mobile: { url: `/assets/ig/ig01.jpg` },
-          desktop: { url: `/assets/ig/ig01.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig02.jpg` },
-          desktop: { url: `/assets/ig/ig02.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig03.jpg` },
-          desktop: { url: `/assets/ig/ig03.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig04.jpg` },
-          desktop: { url: `/assets/ig/ig04.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig05.jpg` },
-          desktop: { url: `/assets/ig/ig05.jpg` }
-        },
-        {
-          mobile: { url: `/assets/ig/ig06.jpg` },
-          desktop: { url: `/assets/ig/ig06.jpg` }
-        }
-      ]
+      loadNewsletterPopup: false
     };
   },
   computed: {
+    ...mapState({
+      isWebpSupported: state => state.ui.isWebpSupported
+    }),
     ...mapGetters({
       isLoggedIn: 'user/isLoggedIn',
-      heroImage: 'promoted/getHeadImage',
+      heroImages: 'promoted/getHeadImage',
       promotedOffers: 'promoted/getPromotedOffers',
-      newCollection: 'homepage/getEverythingNewCollection'
+      newCollection: 'homepage/getEverythingNewCollection',
+      dummyInstagramImages: 'instagram/getInstagramImages'
     }),
     isOnline () {
       return onlineHelper.isOnline;
     },
-    heroes () {
-      const hero = {
-        ...this.heroImage
-      };
-
-      return [hero, hero, hero];
-    },
     banners () {
-      const slots = ['bannerA', 'bannerB', 'bannerC', 'bannerD'];
-
-      return this.promotedOffers.mainBanners.reduce((result, banner, i) => {
-        if (slots[i]) {
-          banner.slot = slots[i];
-          result.push(banner);
+      return checkWebpSupport(this.promotedOffers.mainBanners, this.isWebpSupported)
+    },
+    heroes () {
+      return checkWebpSupport(this.heroImages, this.isWebpSupported)
+    },
+    newsletterImage () {
+      return checkWebpSupport([
+        {
+          image: {
+            webp: '/assets/newsletter/webp/newsletter.webp',
+            fallback: '/assets/newsletter/png/newsletter.png'
+          }
         }
-
-        return result;
-      }, []);
+      ], this.isWebpSupported)[0].image
+    },
+    instagramImages () {
+      return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
+    }
+  },
+  methods: {
+    showNewsletterPopup () {
+      this.$store.dispatch('ui/openModal', { name: ModalList.Newsletter })
     }
   },
   watch: {
@@ -163,7 +149,8 @@ export default {
     await Promise.all([
       store.dispatch('homepage/fetchNewCollection'),
       store.dispatch('promoted/updateHeadImage'),
-      store.dispatch('promoted/updatePromotedOffers')
+      store.dispatch('promoted/updatePromotedOffers'),
+      store.dispatch('instagram/updateInstagramImages')
     ]);
   },
   beforeCreate () {
@@ -181,11 +168,6 @@ export default {
       });
     } else {
       next();
-    }
-  },
-  methods: {
-    showNewsletterPopup () {
-      this.$store.dispatch('ui/openModal', { name: ModalList.Newsletter })
     }
   }
 };
