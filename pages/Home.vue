@@ -18,7 +18,7 @@
             :title="banner.title"
             :description="banner.description"
             :button-text="banner.buttonText"
-            :image="banner.image"
+            :image="typeof banner.image === 'string' ? banner.image : ''"
             class="sf-banner--slim"
           />
         </router-link>
@@ -28,7 +28,7 @@
     <SfCallToAction
       title="Subscribe to Newsletters"
       description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      :image="newsletterImage"
+      :image="typeof newsletterImage === 'string' ? newsletterImage : ''"
       class="call-to-action-newsletter"
     >
       <template #button>
@@ -50,14 +50,13 @@
       subtitle-heading="#YOURLOOK"
       class="section"
     >
-      <AImagesGrid :images="dummyInstaImages" />
+      <AImagesGrid :images="instagramImages" />
     </SfSection>
   </div>
 </template>
 
 <script>
-import supportsWebP from 'supports-webp';
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import Home from '@vue-storefront/core/pages/Home';
@@ -67,6 +66,7 @@ import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { ModalList } from 'theme/store/ui/modals'
+import { checkWebpSupport } from 'theme/helpers'
 
 import {
   SfHero,
@@ -94,67 +94,46 @@ export default {
   data () {
     return {
       loading: true,
-      loadNewsletterPopup: false,
-      dummyInstaImages: [],
-      newsletterImage: null,
-      banners: [],
-      heroes: []
+      loadNewsletterPopup: false
     };
   },
   computed: {
+    ...mapState({
+      isWebpSupported: state => state.ui.isWebpSupported
+    }),
     ...mapGetters({
       isLoggedIn: 'user/isLoggedIn',
       heroImages: 'promoted/getHeadImage',
       promotedOffers: 'promoted/getPromotedOffers',
-      newCollection: 'homepage/getEverythingNewCollection'
+      newCollection: 'homepage/getEverythingNewCollection',
+      dummyInstagramImages: 'instagram/getInstagramImages'
     }),
     isOnline () {
       return onlineHelper.isOnline;
+    },
+    banners () {
+      return checkWebpSupport(this.promotedOffers.mainBanners, this.isWebpSupported)
+    },
+    heroes () {
+      return checkWebpSupport(this.heroImages, this.isWebpSupported)
+    },
+    newsletterImage () {
+      return checkWebpSupport([
+        {
+          image: {
+            webp: '/assets/newsletter/webp/newsletter.webp',
+            fallback: '/assets/newsletter/png/newsletter.png'
+          }
+        }
+      ], this.isWebpSupported)[0].image
+    },
+    instagramImages () {
+      return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
     }
   },
   methods: {
     showNewsletterPopup () {
       this.$store.dispatch('ui/openModal', { name: ModalList.Newsletter })
-    },
-    createBanners (webpSupported) {
-      let banners = this.promotedOffers.mainBanners.map((banner) => {
-        if (webpSupported) {
-          banner.image = banner.image.webp
-        } else {
-          banner.image = banner.image.fallback
-        }
-        return banner;
-      });
-      this.banners = banners
-    },
-    createHeroes (webpSupported) {
-      let heroes = this.heroImages.map((banner) => {
-        if (webpSupported) {
-          banner.image = banner.image.webp
-        } else {
-          banner.image = banner.image.fallback
-        }
-        return banner;
-      });
-      this.heroes = heroes
-    },
-    createDummyInstaImages (webpSupported) {
-      let dummyImages = [
-        { webp: { url: `/assets/ig/webp/ig01.webp` }, fallback: { url: `/assets/ig/jpg/ig01.jpg` } },
-        { webp: { url: `/assets/ig/webp/ig02.webp` }, fallback: { url: `/assets/ig/jpg/ig02.jpg` } },
-        { webp: { url: `/assets/ig/webp/ig03.webp` }, fallback: { url: `/assets/ig/jpg/ig03.jpg` } },
-        { webp: { url: `/assets/ig/webp/ig04.webp` }, fallback: { url: `/assets/ig/jpg/ig04.jpg` } },
-        { webp: { url: `/assets/ig/webp/ig05.webp` }, fallback: { url: `/assets/ig/jpg/ig05.jpg` } },
-        { webp: { url: `/assets/ig/webp/ig06.webp` }, fallback: { url: `/assets/ig/jpg/ig06.jpg` } }
-      ]
-
-      this.dummyInstaImages = dummyImages.map(image => {
-        if (webpSupported) {
-          return image.webp.url
-        } else {
-          return image.fallback.url
-        }
-      })
     }
   },
   watch: {
@@ -170,7 +149,8 @@ export default {
     await Promise.all([
       store.dispatch('homepage/fetchNewCollection'),
       store.dispatch('promoted/updateHeadImage'),
-      store.dispatch('promoted/updatePromotedOffers')
+      store.dispatch('promoted/updatePromotedOffers'),
+      store.dispatch('instagram/updateInstagramImages')
     ]);
   },
   beforeCreate () {
@@ -178,18 +158,6 @@ export default {
   },
   mounted () {
     if (!this.isLoggedIn && localStorage.getItem('redirect')) { this.$bus.$emit('modal-show', 'modal-signup'); }
-    this.banners = this.promotedOffers.mainBanners
-    this.heroes = this.heroImages
-    supportsWebP.then(supported => {
-      this.createBanners(supported)
-      this.createHeroes(supported)
-      this.createDummyInstaImages(supported)
-      if (supported) {
-        this.newsletterImage = '/assets/newsletter/webp/newsletter.webp';
-      } else {
-        this.newsletterImage = '/assets/newsletter/png/newsletter.png'
-      }
-    })
   },
   beforeRouteEnter (to, from, next) {
     if (!isServer && !from.name) {

@@ -111,6 +111,9 @@ export default {
     });
     this.$bus.$on('offline-order-confirmation', this.onOrderConfirmation);
   },
+  mounted () {
+    this.$store.dispatch('ui/checkWebpSupport');
+  },
   beforeDestroy () {
     this.$bus.$off('offline-order-confirmation', this.onOrderConfirmation);
   },
