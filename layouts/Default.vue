@@ -18,12 +18,6 @@
           <OMicrocart />
         </SfSidebar>
       </div>
-      <AsyncSidebar
-        :async-component="SidebarMenu"
-        :is-open="isSidebarOpen"
-        direction="left"
-        @close="$store.commit('ui/setSidebar')"
-      />
       <slot />
       <OFooter />
       <OModal />
@@ -55,10 +49,6 @@ import Head from 'theme/head';
 import config from 'config';
 import { SfSidebar } from '@storefront-ui/vue';
 
-const SidebarMenu = () =>
-  import(
-    /* webpackPreload: true */ /* webpackChunkName: "vsf-sidebar-menu" */ 'theme/components/core/blocks/SidebarMenu/SidebarMenu'
-  );
 const SearchPanel = () =>
   import(
     /* webpackChunkName: "vsf-search-panel" */ 'theme/components/core/blocks/SearchPanel/SearchPanel'
@@ -72,7 +62,6 @@ export default {
   components: {
     OHeader,
     OFooter,
-    SidebarMenu, // eslint-disable-line vue/no-unused-components
     Loader,
     Notification,
     CookieNotification,
@@ -88,14 +77,12 @@ export default {
       loadOrderConfirmation: false,
       ordersData: [],
       OMicrocart,
-      SearchPanel,
-      SidebarMenu
+      SearchPanel
     };
   },
   computed: {
     ...mapState({
       isSearchPanelOpen: state => state.ui.searchpanel,
-      isSidebarOpen: state => state.ui.sidebar,
       isMicrocartOpen: state => state.ui.microcart
     })
   },
