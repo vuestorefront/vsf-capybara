@@ -38,8 +38,6 @@
       </template>
     </SfCallToAction>
 
-    <newsletter-popup v-if="loadNewsletterPopup" />
-
     <SfSection title-heading="Best Sellers" class="section">
       <lazy-hydrate :trigger-hydration="!loading">
         <m-product-carousel :products="newCollection" />
@@ -54,7 +52,6 @@
     >
       <AImagesGrid :images="dummyInstaImages" />
     </SfSection>
-    <Onboard />
   </div>
 </template>
 
@@ -64,13 +61,13 @@ import { mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import Home from '@vue-storefront/core/pages/Home';
-import Onboard from 'theme/components/theme/blocks/Home/Onboard';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-viewed';
-import { Wishlist } from '@vue-storefront/core/modules/wishlist/components/Wishlist';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
+import { ModalList } from 'theme/store/ui/modals'
+
 import {
   SfHero,
   SfButton,
@@ -80,17 +77,10 @@ import {
   SfBanner
 } from '@storefront-ui/vue';
 
-const NewsletterPopup = () =>
-  import(
-    /* webpackChunkName: "vsf-newsletter-modal" */ 'theme/components/core/NewsletterPopup'
-  );
-
 export default {
   name: 'Home',
   components: {
-    Onboard,
     LazyHydrate,
-    NewsletterPopup,
     SfHero,
     SfButton,
     SfSection,
@@ -100,7 +90,7 @@ export default {
     MProductCarousel,
     AImagesGrid
   },
-  mixins: [Home, Wishlist],
+  mixins: [Home],
   data () {
     return {
       loading: true,
@@ -124,8 +114,7 @@ export default {
   },
   methods: {
     showNewsletterPopup () {
-      this.loadNewsletterPopup = true;
-      this.$bus.$emit('modal-show', 'modal-newsletter');
+      this.$store.dispatch('ui/openModal', { name: ModalList.Newsletter })
     },
     createBanners (webpSupported) {
       let banners = this.promotedOffers.mainBanners.map((banner) => {
@@ -186,21 +175,6 @@ export default {
   },
   beforeCreate () {
     registerModule(RecentlyViewedModule);
-  },
-  async beforeMount () {
-    if (this.$store.state.__DEMO_MODE__) {
-      const onboardingClaim = await this.$store.dispatch('claims/check', {
-        claimCode: 'onboardingAccepted'
-      });
-
-      if (!onboardingClaim) {
-        this.$bus.$emit('modal-toggle', 'modal-onboard');
-        this.$store.dispatch('claims/set', {
-          claimCode: 'onboardingAccepted',
-          value: true
-        });
-      }
-    }
   },
   mounted () {
     if (!this.isLoggedIn && localStorage.getItem('redirect')) { this.$bus.$emit('modal-show', 'modal-signup'); }

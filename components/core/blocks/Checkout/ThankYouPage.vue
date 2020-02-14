@@ -126,7 +126,7 @@
 
 <script>
 import Composite from '@vue-storefront/core/mixins/composite';
-import Breadcrumbs from 'theme/components/core/Breadcrumbs';
+import Breadcrumbs from './Breadcrumbs';
 import BaseTextarea from 'theme/components/core/blocks/Form/BaseTextarea';
 import ButtonOutline from 'theme/components/theme/ButtonOutline';
 import VueOfflineMixin from 'vue-offline/mixin';
