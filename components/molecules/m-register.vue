@@ -85,7 +85,8 @@ export default {
   },
   methods: {
     ...mapActions('ui', {
-      openModal: 'openModal'
+      openModal: 'openModal',
+      closeModal: 'closeModal'
     }),
     switchElem (to) {
       this.$v.$reset();
@@ -122,7 +123,7 @@ export default {
               password: this.password
             });
             this.onSuccess(this.$t('You are logged in!'));
-            this.switchElem(null);
+            this.closeModal({name: ModalList.Auth});
           }
         })
         .catch(err => {
