@@ -45,14 +45,13 @@
       subtitle-heading="#YOURLOOK"
       class="section"
     >
-      <AImagesGrid :images="dummyInstaImages" />
+      <AImagesGrid :images="instagramImages" />
     </SfSection>
     <SizeGuide />
   </div>
 </template>
 
 <script>
-import supportsWebP from 'supports-webp';
 import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -69,6 +68,7 @@ import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
+import { checkWebpSupport } from 'theme/helpers'
 
 import { SfSection, SfBanner } from '@storefront-ui/vue';
 
@@ -93,37 +93,13 @@ export default {
       stock: {
         isLoading: false,
         max: 0
-      },
-      dummyInstaImages: [
-        {
-          webp: { url: `/assets/ig/webp/ig01.webp` },
-          fallback: { url: `/assets/ig/jpg/ig01.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig02.webp` },
-          fallback: { url: `/assets/ig/jpg/ig02.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig03.webp` },
-          fallback: { url: `/assets/ig/jpg/ig03.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig04.webp` },
-          fallback: { url: `/assets/ig/jpg/ig04.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig05.webp` },
-          fallback: { url: `/assets/ig/jpg/ig05.jpg` }
-        },
-        {
-          webp: { url: `/assets/ig/webp/ig06.webp` },
-          fallback: { url: `/assets/ig/jpg/ig06.jpg` }
-        }
-      ],
-      banners: []
+      }
     };
   },
   computed: {
+    ...mapState({
+      isWebpSupported: state => state.ui.isWebpSupported
+    }),
     ...mapGetters({
       getCurrentCategory: 'category-next/getCurrentCategory',
       getCurrentProduct: 'product/getCurrentProduct',
@@ -132,7 +108,8 @@ export default {
       getOriginalProduct: 'product/getOriginalProduct',
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
-      promotedOffers: 'promoted/getPromotedOffers'
+      promotedOffers: 'promoted/getPromotedOffers',
+      dummyInstagramImages: 'instagram/getInstagramImages'
     }),
     isOnline () {
       return onlineHelper.isOnline;
@@ -151,6 +128,12 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
+    },
+    banners () {
+      return checkWebpSupport(this.promotedOffers.productBanners, this.isWebpSupported)
+    },
+    instagramImages () {
+      return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
     }
   },
   watch: {
@@ -181,17 +164,12 @@ export default {
     registerModule(ReviewModule);
     registerModule(RecentlyViewedModule);
   },
-  beforeMount () {
-    this.banners = this.promotedOffers.productBanners
-  },
   async mounted () {
-    supportsWebP.then(supported => {
-      this.createBanners(supported)
-    })
     await Promise.all([
       this.$store.dispatch('recently-viewed/addItem', this.getCurrentProduct),
       this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
-      this.$store.dispatch('promoted/updatePromotedOffers')
+      this.$store.dispatch('promoted/updatePromotedOffers'),
+      this.$store.dispatch('instagram/updateInstagramImages')
     ])
   },
   beforeRouteEnter (to, from, next) {
@@ -220,17 +198,6 @@ export default {
       } finally {
         this.stock.isLoading = false;
       }
-    },
-    createBanners (webpSupported) {
-      let banners = this.promotedOffers.productBanners.map((banner) => {
-        if (webpSupported) {
-          banner.image = banner.image.webp
-        } else {
-          banner.image = banner.image.fallback
-        }
-        return banner;
-      });
-      this.banners = banners
     }
   },
   metaInfo () {
