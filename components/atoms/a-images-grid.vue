@@ -2,7 +2,7 @@
   <div class="a-images-grid">
     <div v-for="singleRow in row" :key="singleRow" class="a-images-grid__row">
       <div v-for="singleCol in col" :key="singleCol" class="a-images-grid__col">
-        <APicture
+        <SfImage
           :src="getImage(singleRow, singleCol)"
         />
       </div>
@@ -10,7 +10,9 @@
   </div>
 </template>
 <script>
-import APicture from 'theme/components/atoms/a-picture'
+import {
+  SfImage
+} from '@storefront-ui/vue';
 
 export default {
   name: 'AImagesGrid',
@@ -26,7 +28,7 @@ export default {
     }
   },
   components: {
-    APicture
+    SfImage
   },
   computed: {
     col () {
