@@ -100,9 +100,8 @@
                 :score-rating="product.rating.score"
                 :link="product.link"
                 link-tag="a"
-                :is-on-wishlist="isOnWishlist(product.data)"
+                :wishlist-icon="false"
                 class="products__product-card"
-                @click:wishlist="toggleWishlist(product.data)"
               />
             </div>
           </lazy-hydrate>
@@ -168,7 +167,7 @@ import {
 } from '@vue-storefront/core/helpers';
 import i18n from '@vue-storefront/i18n';
 import onBottomScroll from '@vue-storefront/core/mixins/onBottomScroll';
-import { price, htmlDecode } from '@vue-storefront/core/filters';
+import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
@@ -180,6 +179,7 @@ import {
   formatCategoryLink,
   formatProductLink
 } from '@vue-storefront/core/modules/url/helpers';
+import { getProductPrice } from 'theme/helpers';
 import {
   localizedRoute,
   currentStoreView
@@ -277,8 +277,7 @@ export default {
       getCategories: 'category-next/getCategories',
       categoryList: 'category/getCategories',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
-      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
-      isOnWishlist: 'wishlist/isOnWishlist'
+      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
     }),
     isLazyHydrateEnabled () {
       return config.ssr.lazyHydrateFor.includes('category-next.products');
@@ -407,26 +406,6 @@ export default {
     window.removeEventListener('resize', this.getBrowserWidth);
   },
   methods: {
-    toggleWishlist (product) {
-      const isProductOnWishlist = this.isOnWishlist(product);
-      const message = isProductOnWishlist
-        ? 'Product {productName} has been removed from wishlist!'
-        : 'Product {productName} has been added to wishlist!';
-      const action = isProductOnWishlist
-        ? 'wishlist/removeItem'
-        : 'wishlist/addItem';
-
-      this.$store.dispatch(action, product);
-      this.$store.dispatch(
-        'notification/spawnNotification',
-        {
-          type: 'success',
-          message: i18n.t(message, { productName: htmlDecode(product.name) }),
-          action1: { label: i18n.t('OK') }
-        },
-        { root: true }
-      );
-    },
     getBrowserWidth () {
       return (this.browserWidth = window.innerWidth);
     },
@@ -495,14 +474,14 @@ export default {
               id: category.id,
               name: category.name,
               link: formatCategoryLink(category),
-              count: String(category.product_count),
+              count: category.product_count,
               position: category.position,
               items: this.prepareCategories(subCategory.children_data, [
                 {
                   id: category.id,
                   name: i18n.t('View all'),
                   link: formatCategoryLink(category),
-                  count: String(category.product_count),
+                  count: category.product_count,
                   position: 0
                 }
               ])
@@ -513,7 +492,6 @@ export default {
     },
     prepareCategoryProduct (product) {
       return {
-        data: product,
         id: product.id,
         title: htmlDecode(product.name),
         image: this.getThumbnail(
@@ -522,10 +500,7 @@ export default {
           config.products.thumbnails.height
         ),
         link: formatProductLink(product, currentStoreView().storeCode),
-        price: {
-          regular: price(parseFloat(product.priceInclTax)),
-          special: price(parseFloat(product.specialPriceInclTax))
-        },
+        price: getProductPrice(product),
         rating: {
           max: 5,
           score: 5
@@ -582,17 +557,8 @@ export default {
         }
       ]
       : [];
-    const categoryLocaliedLink = localizedRoute(
-      {
-        name: 'category-amp',
-        params: { slug }
-      },
-      storeView.storeCode
-    );
-    const ampCategoryLink = this.$router.resolve(categoryLocaliedLink).href;
 
     return {
-      link: [{ rel: 'amphtml', href: ampCategoryLink }],
       title: htmlDecode(meta_title || name),
       meta
     };

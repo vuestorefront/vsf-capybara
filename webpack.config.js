@@ -46,24 +46,29 @@ function fixPostCSSPlugins (rules) {
   });
 }
 
-module.exports = function (config) {
-  /**
-   * This webpack config depends on the build type: for development build it is wrapped inside 'default' key
-   * but for production build this 'default' key does not exist. This misconfiguration should be fixed in
-   * Vue Storefront v1.11.1 and then 'hasDefaultKey' will never be true, so all these lines could be then
-   * simplified/removed.
-   */
-
-  const hasDefaultKey = config.default !== undefined; // TODO: remove after Vue Storefront v1.11.1 release
-
+module.exports = function (config, { isClient }) {
+  const clientConfig = isClient ? {
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui|lean-he|vue-lazyload|js-sha3|dayjs|core-js|whatwg-fetch|vuelidate)[\\/]/,
+            name: 'vendor',
+            chunks: 'all'
+          }
+        }
+      }
+    }
+  } : {}
   const mergedConfig = merge(
+    // alias for 'src/modules/client' has to be the first one, because it has to be
+    // handled earlier than already existing aliases in VSF (like general 'src' path)
     { resolve: { alias: { 'src/modules/client': `${themeRoot}/config/modules` } } },
-    hasDefaultKey ? config.default : config // TODO: simplify after Vue Storefront v1.11.1 release
+    config, // default vsf config
+    clientConfig
   );
 
   fixPostCSSPlugins(mergedConfig.module.rules);
 
-  return hasDefaultKey // TODO: simplify after Vue Storefront v1.11.1 release
-    ? { default: mergedConfig }
-    : mergedConfig;
+  return mergedConfig;
 };

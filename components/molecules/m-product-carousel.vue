@@ -9,21 +9,20 @@
         :max-rating="product.rating.max"
         :score-rating="product.rating.score"
         :link="product.link"
+        :wishlist-icon="false"
         link-tag="a"
-        :is-on-wishlist="isOnWishlist(product.data)"
-        @click:wishlist="toggleWishlist(product.data)"
       />
     </SfCarouselItem>
   </SfCarousel>
 </template>
 <script>
-import { mapGetters } from 'vuex';
 import { SfProductCard, SfCarousel } from '@storefront-ui/vue';
-import { price, htmlDecode } from '@vue-storefront/core/filters';
+import { htmlDecode } from '@vue-storefront/core/filters';
 import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { productThumbnailPath } from '@vue-storefront/core/helpers';
+import { getProductPrice } from 'theme/helpers';
 export default {
   name: 'MProductCarousel',
   components: {
@@ -37,13 +36,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      isOnWishlist: 'wishlist/isOnWishlist'
-    }),
     carouselProducts () {
       return this.products.map(product => {
         return {
-          data: product,
           title: htmlDecode(product.name),
           image: this.getThumbnail(
             productThumbnailPath(product),
@@ -51,38 +46,13 @@ export default {
             config.products.thumbnails.height
           ),
           link: formatProductLink(product, currentStoreView().storeCode),
-          price: {
-            regular: price(parseFloat(product.priceInclTax)),
-            special: price(parseFloat(product.specialPriceInclTax))
-          },
+          price: getProductPrice(product),
           rating: {
             max: 5,
             score: 5
           }
         };
       });
-    }
-  },
-  methods: {
-    toggleWishlist (product) {
-      const isProductOnWishlist = this.isOnWishlist(product);
-      const message = isProductOnWishlist
-        ? 'Product {productName} has been removed from wishlist!'
-        : 'Product {productName} has been added to wishlist!';
-      const action = isProductOnWishlist
-        ? 'wishlist/removeItem'
-        : 'wishlist/addItem';
-
-      this.$store.dispatch(action, product);
-      this.$store.dispatch(
-        'notification/spawnNotification',
-        {
-          type: 'success',
-          message: this.$t(message, { productName: product.name }),
-          action1: { label: this.$t('OK') }
-        },
-        { root: true }
-      );
     }
   }
 };

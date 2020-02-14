@@ -86,9 +86,9 @@
 
 <script>
 import SearchPanel from '@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel';
-import ProductTile from 'theme/components/core/ProductTile';
+import ProductTile from './ProductTile';
 import VueOfflineMixin from 'vue-offline/mixin';
-import CategoryPanel from 'theme/components/core/blocks/Category/CategoryPanel';
+import CategoryPanel from './CategoryPanel';
 import { minLength } from 'vuelidate/lib/validators';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
@@ -160,10 +160,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~theme/css/animations/transitions";
-@import "~theme/css/variables/grid";
-@import "~theme/css/variables/typography";
-
 .searchpanel {
   height: 100vh;
   width: 800px;
@@ -183,29 +179,9 @@ export default {
     padding-left: 40px;
     padding-right: 40px;
 
-    @media #{$media-xs} {
+    @media (max-width: 767px) {
       padding-left: 30px;
       padding-right: 30px;
-    }
-  }
-
-  .row {
-    margin-left: -map-get($grid-gutter-widths, lg) / 2;
-    margin-right: -map-get($grid-gutter-widths, lg) / 2;
-
-    @media #{$media-xs} {
-      margin-right: -map-get($grid-gutter-widths, xs) / 2;
-      margin-left: -map-get($grid-gutter-widths, xs) / 2;
-    }
-  }
-
-  .col-md-12 {
-    padding-left: map-get($grid-gutter-widths, lg) / 2;
-    padding-right: map-get($grid-gutter-widths, lg) / 2;
-
-    @media #{$media-xs} {
-      padding-left: map-get($grid-gutter-widths, xs) / 2;
-      padding-right: map-get($grid-gutter-widths, xs) / 2;
     }
   }
 
@@ -216,14 +192,6 @@ export default {
   .product {
     box-sizing: border-box;
     width: 33.33%;
-    padding-left: map-get($grid-gutter-widths, lg) / 2;
-    padding-right: map-get($grid-gutter-widths, lg) / 2;
-
-    @media #{$media-xs} {
-      width: 50%;
-      padding-left: map-get($grid-gutter-widths, xs) / 2;
-      padding-right: map-get($grid-gutter-widths, xs) / 2;
-    }
   }
 
   .close-icon {
@@ -251,9 +219,9 @@ export default {
     border: none;
     outline: 0;
     font-size: 18px;
-    font-family: map-get($font-families, secondary);
+    font-family: 'Roboto';
 
-    @media #{$media-xs} {
+    @media (max-width: 767px) {
       font-size: 16px;
     }
   }
@@ -276,7 +244,7 @@ export default {
   }
 
   button {
-    @media #{$media-xs} {
+    @media (max-width: 767px) {
       width: 100%;
       margin-bottom: 15px;
     }

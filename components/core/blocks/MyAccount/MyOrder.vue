@@ -168,8 +168,8 @@
 <script>
 import Vue from 'vue';
 import MyOrder from '@vue-storefront/core/compatibility/components/blocks/MyAccount/MyOrder';
-import ReturnIcon from 'theme/components/core/blocks/Header/ReturnIcon';
-import ProductImage from 'theme/components/core/ProductImage';
+import ReturnIcon from './ReturnIcon';
+import ProductImage from '../../ProductImage';
 import {
   getThumbnailPath,
   productThumbnailPath
