@@ -22,19 +22,12 @@
         {{ placeholder }}
       </label>
     </div>
-
-    <ValidationMessages v-if="validations" :validations="validations" />
   </div>
 </template>
 
 <script>
-import ValidationMessages from './ValidationMessages';
-
 export default {
   name: 'BaseTextarea',
-  components: {
-    ValidationMessages
-  },
   props: {
     type: {
       type: String,
