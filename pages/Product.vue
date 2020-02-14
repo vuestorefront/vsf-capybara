@@ -61,7 +61,6 @@ import {
 } from '@vue-storefront/core/lib/multistore';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { ReviewModule } from '@vue-storefront/core/modules/review';
-import { RecentlyViewedModule } from '@vue-storefront/core/modules/recently-viewed';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
@@ -75,7 +74,6 @@ import { SfSection, SfBanner } from '@storefront-ui/vue';
 export default {
   components: {
     SizeGuide,
-    // changed
     LazyHydrate,
     MRelatedProducts,
     SfSection,
@@ -162,11 +160,9 @@ export default {
   },
   beforeCreate () {
     registerModule(ReviewModule);
-    registerModule(RecentlyViewedModule);
   },
   async mounted () {
     await Promise.all([
-      this.$store.dispatch('recently-viewed/addItem', this.getCurrentProduct),
       this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
       this.$store.dispatch('promoted/updatePromotedOffers'),
       this.$store.dispatch('instagram/updateInstagramImages')
