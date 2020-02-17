@@ -39,9 +39,10 @@ import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import { mapGetters } from 'vuex';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
+import config from 'config'
 
 export default {
-  name: 'Header',
+  name: 'OHeader',
   components: {
     SfHeader,
     ALogo,
@@ -57,7 +58,8 @@ export default {
     },
     categories () {
       return this.getCategories.filter(
-        category => category.is_active && category.children_count > 0
+        category => (category.level === (config.entities.category.categoriesDynamicPrefetchLevel >= 0 ? config.entities.category.categoriesDynamicPrefetchLevel : 2)) && // display only the root level (level =1 => Default Category), categoriesDynamicPrefetchLevel = 2 by default
+        (category.is_active && category.children_count > 0)
       );
     }
   },
