@@ -6,7 +6,7 @@
         :key="i"
         :title="hero.title"
         :subtitle="hero.subtitle"
-        :image="typeof hero.image === 'string' ? hero.image : ''"
+        :image="hero.image"
       />
     </SfHero>
 
@@ -18,7 +18,7 @@
             :title="banner.title"
             :description="banner.description"
             :button-text="banner.buttonText"
-            :image="typeof banner.image === 'string' ? banner.image : ''"
+            :image="banner.image"
             class="sf-banner--slim"
           />
         </router-link>
@@ -28,7 +28,7 @@
     <SfCallToAction
       title="Subscribe to Newsletters"
       description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      :image="typeof newsletterImage === 'string' ? newsletterImage : ''"
+      :image="newsletterImage"
       class="call-to-action-newsletter"
     >
       <template #button>
