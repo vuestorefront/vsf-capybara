@@ -10,7 +10,7 @@
         :score-rating="product.rating.score"
         :link="product.link"
         :wishlist-icon="false"
-        link-tag="a"
+        link-tag="router-link"
       />
     </SfCarouselItem>
   </SfCarousel>
