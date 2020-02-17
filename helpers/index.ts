@@ -23,9 +23,10 @@ export function createSmoothscroll (from = 0, to = 0, speed = 15) {
 }
 
 export function checkWebpSupport (bannersToTransform, isWebpSupported) {
+  const theSmallestDummyImage = 'data:,'
   return bannersToTransform.map(banner => Object.assign(
     {},
     banner,
-    { image: !isServer && isWebpSupported ? banner.image.webp : banner.image.fallback }
+    { image: isServer ? theSmallestDummyImage : isWebpSupported ? banner.image.webp : banner.image.fallback }
   ))
 }
