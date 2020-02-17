@@ -99,7 +99,7 @@
                 :max-rating="product.rating.max"
                 :score-rating="product.rating.score"
                 :link="product.link"
-                link-tag="a"
+                link-tag="router-link"
                 :wishlist-icon="false"
                 class="products__product-card"
               />
