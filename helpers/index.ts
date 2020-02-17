@@ -23,8 +23,9 @@ export function createSmoothscroll (from = 0, to = 0, speed = 15) {
 }
 
 export function checkWebpSupport (bannersToTransform, isWebpSupported) {
-  return bannersToTransform.map(banner => {
-    if (isServer || isWebpSupported === null) return banner
-    return Object.assign({}, banner, { image: isWebpSupported ? banner.image.webp : banner.image.fallback })
-  })
+  return bannersToTransform.map(banner => Object.assign(
+    {},
+    banner,
+    { image: !isServer && isWebpSupported ? banner.image.webp : banner.image.fallback }
+  ))
 }
