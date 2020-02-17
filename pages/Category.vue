@@ -21,8 +21,7 @@
           <AIconFilter size="15px" styles="margin-right:10px" />
           {{ $t("Filters") }}
         </SfButton>
-        <div class="navbar__sort desktop-only">
-          <span class="navbar__label">{{ $t("Sort By") }}:</span>
+        <div class="navbar__sort">
           <SfSelect
             class="sort-by"
             :selected="sortOrder"
@@ -36,6 +35,19 @@
             >
               {{ option.label }}
             </SfSelectOption>
+            <template #label>
+              <div class="sort-by__label">
+                <span class="sort-by__label-main">{{ $t("Sort By") }}:</span>
+                <div class="sf-select-option desktop-only">
+                  {{ sortLabel }}
+                </div>
+                <AIconSort
+                  class="mobile-only"
+                  size="15px"
+                  styles="margin-left:10px"
+                />
+              </div>
+            </template>
           </SfSelect>
         </div>
         <div class="navbar__counter">
@@ -52,10 +64,6 @@
           <AIconViewGrid size="10px" styles="margin-left:10px" />
           <AIconViewRow size="11px" styles="margin-left:10px" />
         </div>
-        <SfButton class="navbar__filters-button mobile-only">
-          {{ $t("Sort By") }}
-          <AIconSort size="15px" styles="margin-left:10px" />
-        </SfButton>
       </div>
     </div>
     <div class="main section">
@@ -330,6 +338,10 @@ export default {
         const [label, id] = attribute;
         return { id, label };
       });
+    },
+    sortLabel () {
+      const selectedSortOrder = this.sortOptions.find(sortOption => sortOption.id === this.sortOrder) || {}
+      return selectedSortOrder.label || ''
     },
     availableFilters () {
       return Object.entries(this.getAvailableFilters)
@@ -662,8 +674,13 @@ export default {
   &__sort {
     display: flex;
     align-items: center;
-    margin-left: $spacer-extra-big;
-    margin-right: auto;
+    margin: 0;
+    order: 3;
+    @include for-desktop {
+      margin-left: $spacer-extra-big;
+      margin-right: auto;
+      order: 0;
+    }
   }
   &__counter {
     margin: auto;
@@ -724,12 +741,37 @@ export default {
 }
 .sort-by {
   flex: unset;
-  width: 190px;
-  padding: 0 10px;
+  width: auto;
+  margin: 0;
   font-size: inherit;
+  @include for-desktop {
+    width: 190px;
+  }
   &__option {
     padding: 10px;
     font-size: inherit;
+  }
+  ::v-deep .sf-select__selected {
+    display: none;
+  }
+  &__label {
+    display: flex;
+    align-items: center;
+    .sf-select-option {
+      padding: 0 10px;
+      &:hover {
+        background: transparent;
+      }
+    }
+    &-main {
+      text-transform: uppercase;
+      font-weight: 500;
+      @include for-desktop {
+        color: $c-gray-variant;
+        text-transform: none;
+        font-weight: 400;
+      }
+    }
   }
 }
 .filters {
