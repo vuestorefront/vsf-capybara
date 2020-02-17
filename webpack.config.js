@@ -50,12 +50,48 @@ module.exports = function (config, { isClient }) {
   const clientConfig = isClient ? {
     optimization: {
       splitChunks: {
+        minSize: 0,
         cacheGroups: {
           commons: {
-            test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|@storefront-ui|lean-he|vue-lazyload|js-sha3|dayjs|core-js|whatwg-fetch|vuelidate)[\\/]/,
-            name: 'vendor',
-            chunks: 'all'
-          }
+            name: 'commons',
+            chunks: 'all',
+            enforce: true,
+            reuseExistingChunk: true,
+            minChunks: 2,
+            priority: 1
+          },
+          vue: {
+            test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|vue-lazyload)[\\/]/,
+            name: 'vue-common',
+            chunks: 'all',
+            reuseExistingChunk: true,
+            enforce: true,
+            priority: 1
+          },
+          core: {
+            test: /[\\/]core[\\/]/,
+            name: 'core',
+            chunks: 'all',
+            reuseExistingChunk: true,
+            enforce: true,
+            priority: 1
+          },
+          vendor: {
+            chunks: 'all',
+            maxInitialRequests: Infinity,
+            minSize: 50000,
+            test: /[\\/]node_modules[\\/]/,
+            reuseExistingChunk: true,
+            enforce: true,
+            name (module) {
+              // get the name. E.g. node_modules/packageName/not/this/part.js
+              // or node_modules/packageName
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+
+              // npm package names are URL-safe, but some servers don't like @ symbols
+              return `vendor-${packageName.replace('@', '')}`;
+            }
+          },
         }
       }
     }
