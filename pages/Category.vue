@@ -317,14 +317,18 @@ export default {
             position: 0
           };
 
+          const subCategories = category.children_data
+            ? category.children_data
+              .map(subCategory => this.prepareCategoryMenuItem(
+                this.getCategories.find(category => category.id === subCategory.id)
+              ))
+              .filter(Boolean)
+            : [];
+
           return {
             ...this.prepareCategoryMenuItem(category),
             items: [this.prepareCategoryMenuItem(viewAllMenuItem)]
-              .concat(
-                category.children_data.map(childCategory => this.prepareCategoryMenuItem(
-                  this.getCategories.find(category => category.id === childCategory.id)
-                ))
-              )
+              .concat(subCategories)
               .sort((a, b) => a.position - b.position)
           };
         })
