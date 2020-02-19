@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import SizeGuide from 'theme/components/core/blocks/Product/SizeGuide';
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import {
@@ -70,6 +69,11 @@ import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 
 import { SfSection, SfBanner } from '@storefront-ui/vue';
+
+const SizeGuide = () =>
+  import(
+    /* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Product/SizeGuide'
+  );
 
 export default {
   components: {

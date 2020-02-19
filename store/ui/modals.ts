@@ -2,8 +2,8 @@
  * List of modal names
  */
 export enum ModalList {
-  Review = 'm-review-modal',
-  Auth = 'm-authentication-modal',
+  Review = 'm-modal-review',
+  Auth = 'm-modal-authentication',
   AccountBenefits = 'm-modal-account-benefits',
   TermsAndConditions = 'm-modal-terms-and-conditions',
   Newsletter = 'm-modal-newsletter'
@@ -13,11 +13,11 @@ export enum ModalList {
  * List of modal components files
  */
 export const modalComponents = new Map([
-  [ModalList.Review, () => import(/* webpackChunkName: "vsf-modal-review" */ 'theme/components/molecules/modals/m-modal-review.vue')],
-  [ModalList.Auth, () => import(/* webpackChunkName: "vsf-modal-authentication" */ 'theme/components/molecules/modals/m-modal-authentication.vue')],
-  [ModalList.AccountBenefits, () => import(/* webpackChunkName: "vsf-modal-account-benefits" */ 'theme/components/molecules/modals/m-modal-account-benefits.vue')],
-  [ModalList.TermsAndConditions, () => import(/* webpackChunkName: "vsf-modal-terms-and-conditions" */ 'theme/components/molecules/modals/m-modal-terms-and-conditions.vue')],
-  [ModalList.Newsletter, () => import(/* webpackChunkName: "vsf-modal-newsletter" */ 'theme/components/molecules/modals/m-modal-newsletter.vue')]
+  [ModalList.Review, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-review.vue')],
+  [ModalList.Auth, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-authentication.vue')],
+  [ModalList.AccountBenefits, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-account-benefits.vue')],
+  [ModalList.TermsAndConditions, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-terms-and-conditions.vue')],
+  [ModalList.Newsletter, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-newsletter.vue')]
 ])
 
 /**
