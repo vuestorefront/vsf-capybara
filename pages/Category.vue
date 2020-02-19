@@ -179,6 +179,7 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import { getTopLevelCategories } from 'theme/helpers';
 import AIconFilter from 'theme/components/atoms/a-icon-filter';
 import AIconSort from 'theme/components/atoms/a-icon-sort';
 import AIconViewGrid from 'theme/components/atoms/a-icon-view-grid';
@@ -282,8 +283,7 @@ export default {
       getAvailableFilters: 'category-next/getAvailableFilters',
       getCurrentFilters: 'category-next/getCurrentFilters',
       getSystemFilterNames: 'category-next/getSystemFilterNames',
-      getCategories: 'category-next/getCategories',
-      categoryList: 'category/getCategories',
+      getCategories: 'category/getCategories',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
       getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
     }),
@@ -309,7 +309,30 @@ export default {
         });
     },
     categories () {
-      return this.prepareCategories(this.getCategories[0].children_data);
+      return getTopLevelCategories(this.getCategories)
+        .map(category => {
+          const viewAllMenuItem = {
+            ...category,
+            name: i18n.t('View all'),
+            position: 0
+          };
+
+          const subCategories = category.children_data
+            ? category.children_data
+              .map(subCategory => this.prepareCategoryMenuItem(
+                this.getCategories.find(category => category.id === subCategory.id)
+              ))
+              .filter(Boolean)
+            : [];
+
+          return {
+            ...this.prepareCategoryMenuItem(category),
+            items: [this.prepareCategoryMenuItem(viewAllMenuItem)]
+              .concat(subCategories)
+              .sort((a, b) => a.position - b.position)
+          };
+        })
+        .sort((a, b) => a.position - b.position);
     },
     products () {
       // lazy loading is disabled for desktop screen width (>= 1024px)
@@ -470,37 +493,16 @@ export default {
     initPagination () {
       this.currentPage = 1;
     },
-    prepareCategories (categories, firstItem = []) {
-      return categories
-        ? categories
-          .reduce((result, subCategory) => {
-            const category = this.categoryList.find(
-              c => c.id === subCategory.id
-            );
+    prepareCategoryMenuItem (category) {
+      if (!category) return;
 
-            if (!category || !category.is_active) {
-              return result;
-            }
-
-            return result.concat({
-              id: category.id,
-              name: category.name,
-              link: formatCategoryLink(category),
-              count: category.product_count,
-              position: category.position,
-              items: this.prepareCategories(subCategory.children_data, [
-                {
-                  id: category.id,
-                  name: i18n.t('View all'),
-                  link: formatCategoryLink(category),
-                  count: category.product_count,
-                  position: 0
-                }
-              ])
-            });
-          }, firstItem)
-          .sort((a, b) => a.position - b.position)
-        : firstItem;
+      return {
+        id: category.id,
+        name: category.name,
+        link: formatCategoryLink(category),
+        count: category.product_count || '',
+        position: category.position
+      };
     },
     prepareCategoryProduct (product) {
       return {

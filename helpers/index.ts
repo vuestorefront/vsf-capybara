@@ -37,3 +37,14 @@ export function checkWebpSupport (bannersToTransform, isWebpSupported) {
     { image: isServer ? theSmallestDummyImage : isWebpSupported ? banner.image.webp : banner.image.fallback }
   ))
 }
+
+export function getTopLevelCategories (categoryList) {
+  // Display only the root level (level = 1 => Default Category), categoriesDynamicPrefetchLevel = 2 by default
+  const categoryLevel = config.entities.category.categoriesDynamicPrefetchLevel >= 0
+    ? config.entities.category.categoriesDynamicPrefetchLevel
+    : 2
+
+  return categoryList.filter(
+    category => category.level === categoryLevel && category.is_active && category.children_count > 0
+  )
+}
