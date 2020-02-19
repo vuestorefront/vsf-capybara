@@ -8,13 +8,12 @@
 </template>
 
 <script>
+import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 const ModalSwitcher = () =>
   import(
     /* webpackChunkName: "vsf-languages-modal" */ 'theme/components/core/blocks/Switcher/Language'
   );
-
-const { i18n = {} } = currentStoreView();
 
 export default {
   components: {
@@ -27,6 +26,7 @@ export default {
   },
   computed: {
     linkName () {
+      const { i18n = config.i18n } = currentStoreView();
       return `${i18n.defaultCountry} / ${i18n.defaultLanguage} / ${i18n.currencyCode}`;
     }
   },
