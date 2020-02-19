@@ -2,9 +2,10 @@
   <div class="wrapper">
     <div v-if="OnlineOnly" class="row">
       <SfIcon
+        class="icon"
         icon="info_circle"
         size="xxs"
-        color="#8e8e8e"
+        color="#ffffff"
       />
       <span>An error occured while loading the component. </span>
       <div>
@@ -14,9 +15,10 @@
     </div>
     <div v-if="OfflineOnly" class="row">
       <SfIcon
+        class="icon"
         icon="info_circle"
         size="xxs"
-        color="#8e8e8e"
+        color="#ffffff"
       />
       <span>Component couldn't be loaded due to lack of network connectivity.</span>
       <span class="link" @click="close">Close</span>
@@ -58,8 +60,7 @@ export default {
   color: white;
 }
 .icon {
-  font-size: 45px;
-  margin: 5px;
+  margin-right: 5px;
 }
 .link {
   text-decoration: underline;
@@ -68,12 +69,5 @@ export default {
 .row {
   justify-content: center;
   text-align: center;
-}
-div {
-  text-align: center;
-  line-height: 25px;
-  & > * {
-    width: 100%;
-  }
 }
 </style>
