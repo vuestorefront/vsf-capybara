@@ -55,7 +55,7 @@ const SearchPanel = () =>
   );
 const OrderConfirmation = () =>
   import(
-    /* webpackChunkName: "vsf-order-confirmation" */ 'theme/components/core/blocks/Checkout/OrderConfirmation'
+    /* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Checkout/OrderConfirmation'
   );
 
 export default {
