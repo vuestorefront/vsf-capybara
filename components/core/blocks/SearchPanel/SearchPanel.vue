@@ -4,22 +4,24 @@
     data-testid="searchPanel"
   >
     <div class="close-icon-row">
-      <i
-        class="material-icons pointer cl-accent close-icon"
-        data-testid="closeSearchPanel"
+      <SfIcon
+        class="close-icon"
+        icon="cross"
+        size="xxs"
+        color="#4f4f4f"
         @click="closeSearchpanel"
-      >
-        close
-      </i>
+      />
     </div>
     <div class="container">
       <div class="row">
         <div class="col-md-12 end-xs">
-          <label for="search" class="visually-hidden">
-            {{ $t("Search") }}
-          </label>
           <div class="search-input-group">
-            <i class="material-icons search-icon">search</i>
+            <SfIcon
+              class="search-icon"
+              icon="search"
+              size="xxs"
+              color="#4f4f4f"
+            />
             <input
               id="search"
               ref="search"
@@ -91,9 +93,11 @@ import VueOfflineMixin from 'vue-offline/mixin';
 import CategoryPanel from './CategoryPanel';
 import { minLength } from 'vuelidate/lib/validators';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { SfIcon } from '@storefront-ui/vue';
 
 export default {
   components: {
+    SfIcon,
     ProductTile,
     CategoryPanel
   },
@@ -173,6 +177,7 @@ export default {
   .close-icon-row {
     display: flex;
     justify-content: flex-end;
+    padding: 18px;
   }
 
   .container {
@@ -195,20 +200,17 @@ export default {
   }
 
   .close-icon {
-    padding: 18px 8px;
+    cursor: pointer;
   }
 
   .search-input-group {
     display: flex;
+    align-items: center;
     border-bottom: 1px solid #bdbdbd;
   }
 
   .search-icon {
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-right: 18px;
   }
 
   .search-panel-input {
