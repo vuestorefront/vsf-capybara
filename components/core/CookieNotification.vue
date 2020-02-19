@@ -16,16 +16,14 @@
             </router-link>
           </div>
           <div class="col-xs-2 end-xs">
-            <i
-              class="material-icons icon p15 pointer"
-              data-testid="closeCookieButton"
-              tabindex="0"
-              role="button"
+            <SfIcon
+              class="close-icon"
+              icon="cross"
+              size="xxs"
+              color="#bdbdbd"
               @click="accept"
               @keyup.enter="accept"
-            >
-              close
-            </i>
+            />
           </div>
         </div>
       </div>
@@ -35,7 +33,9 @@
 
 <script>
 import i18n from '@vue-storefront/i18n';
+import { SfIcon } from '@storefront-ui/vue';
 export default {
+  components: { SfIcon },
   props: {
     detailsLinkText: {
       type: String,
@@ -94,14 +94,23 @@ export default {
 $color-icon: color(black);
 $bg-icon: color(suva-gray);
 $z-index: map-get($z-index, overlay) - 1;
-
 .cookie {
   z-index: $z-index;
   bottom: 0;
+  padding: 15px 0;
 }
-
 .icon:hover {
   color: $color-icon;
   background-color: $bg-icon;
+}
+.start-xs,
+.end-xs {
+  display: flex;
+}
+.close-icon {
+  cursor: pointer;
+}
+.pr5 {
+  padding-right: 5px;
 }
 </style>

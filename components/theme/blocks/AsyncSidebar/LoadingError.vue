@@ -1,7 +1,11 @@
 <template>
   <div class="wrapper">
     <div v-if="OnlineOnly" class="row">
-      <i class="material-icons icon">error</i>
+      <SfIcon
+        icon="info_circle"
+        size="xxs"
+        color="#8e8e8e"
+      />
       <span>An error occured while loading the component. </span>
       <div>
         <span class="link" @click="reload">Try again</span> /
@@ -9,7 +13,11 @@
       </div>
     </div>
     <div v-if="OfflineOnly" class="row">
-      <i class="material-icons icon">error</i>
+      <SfIcon
+        icon="info_circle"
+        size="xxs"
+        color="#8e8e8e"
+      />
       <span>Component couldn't be loaded due to lack of network connectivity.</span>
       <span class="link" @click="close">Close</span>
     </div>
@@ -18,9 +26,11 @@
 
 <script>
 import VueOfflineMixin from 'vue-offline/mixin';
+import { SfIcon } from '@storefront-ui/vue';
 
 export default {
   name: 'LoadingError',
+  components: { SfIcon },
   mixins: [VueOfflineMixin],
   mounted () {
     this.$on('online', () => {
