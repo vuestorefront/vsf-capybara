@@ -8,7 +8,7 @@
               {{ message }}
             </span>
             <router-link
-              :to="localizedRoute('detailsLink')"
+              :to="localizedRoute(detailsLink)"
               :title="detailsLinkText"
               class="cl-bg-tertiary"
             >
