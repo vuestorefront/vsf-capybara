@@ -178,6 +178,11 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/_variables.scss";
 
+@mixin for-mobile {
+  @media screen and (max-width: $desktop-min) {
+    @content;
+  }
+}
 @mixin for-desktop {
   @media screen and (min-width: $desktop-min) {
     @content;
@@ -251,6 +256,11 @@ export default {
   &__hero-title {
     position: absolute;
     bottom: 20%;
+    h4 {
+      @include for-mobile {
+        font-size: 0.8rem;
+      }
+    }
   }
 }
 </style>
