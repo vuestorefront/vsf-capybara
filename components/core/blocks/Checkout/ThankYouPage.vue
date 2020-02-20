@@ -2,10 +2,13 @@
   <div>
     <header class="thank-you-title bg-cl-secondary py35 pl20">
       <div class="container">
-        <breadcrumbs
-          :with-homepage="true"
-          :active-route="this.$t('Order confirmation')"
-        />
+        <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
+          <template #link="{breadcrumb}">
+            <router-link :to="breadcrumb.route.link">
+              {{ breadcrumb.text }}
+            </router-link>
+          </template>
+        </SfBreadcrumbs>
         <h2 class="category-title">
           {{ $t("Order confirmation") }}
         </h2>
@@ -126,7 +129,6 @@
 
 <script>
 import Composite from '@vue-storefront/core/mixins/composite';
-import Breadcrumbs from './Breadcrumbs';
 import BaseTextarea from 'theme/components/core/blocks/Form/BaseTextarea';
 import ButtonOutline from 'theme/components/theme/ButtonOutline';
 import VueOfflineMixin from 'vue-offline/mixin';
@@ -135,18 +137,34 @@ import { isServer } from '@vue-storefront/core/helpers';
 import config from 'config';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { MailerModule } from '@vue-storefront/core/modules/mailer';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import { SfBreadcrumbs } from '@storefront-ui/vue';
 
 export default {
   name: 'ThankYouPage',
   components: {
     BaseTextarea,
-    Breadcrumbs,
-    ButtonOutline
+    ButtonOutline,
+    SfBreadcrumbs
   },
   mixins: [Composite, VueOfflineMixin, EmailForm],
   data () {
     return {
-      feedback: ''
+      feedback: '',
+      breadcrumbs: [
+        {
+          'text': this.$t('Home'),
+          'route': {
+            'link': localizedRoute('/')
+          }
+        },
+        {
+          'text': this.$t('Order confirmation'),
+          'route': {
+            'link': localizedRoute('/checkout#orderReview')
+          }
+        }
+      ]
     };
   },
   computed: {
@@ -225,6 +243,10 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~@storefront-ui/vue/styles";
+.breadcrumbs {
+  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
+}
 .thank-you-content {
   padding-left: 0;
 
