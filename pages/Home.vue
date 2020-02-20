@@ -4,10 +4,17 @@
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
-        :title="hero.title"
         :subtitle="hero.subtitle"
         :image="hero.image"
-      />
+      >
+        <template v-if="hero.title" #title>
+          <div class="section__hero-title">
+            <h4 v-for="title in hero.title" :key="title">
+              {{ title }}
+            </h4>
+          </div>
+        </template>
+      </SfHeroItem>
     </SfHero>
 
     <SfBannerGrid :banner-grid="1" class="banners section">
@@ -171,6 +178,11 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/_variables.scss";
 
+@mixin for-mobile {
+  @media screen and (max-width: $desktop-min) {
+    @content;
+  }
+}
 @mixin for-desktop {
   @media screen and (min-width: $desktop-min) {
     @content;
@@ -240,6 +252,15 @@ export default {
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
+  }
+  &__hero-title {
+    position: absolute;
+    bottom: 20%;
+    h4 {
+      @include for-mobile {
+        font-size: 0.8rem;
+      }
+    }
   }
 }
 </style>

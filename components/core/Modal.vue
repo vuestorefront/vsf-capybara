@@ -14,14 +14,13 @@
           class="modal-header py25 px65 h1 serif weight-700 bg-cl-secondary"
         >
           <slot name="header" />
-          <i
-            slot="close"
-            class="modal-close material-icons cl-bg-tertiary"
-            data-testid="closeModalButton"
+          <SfIcon
+            class="modal-close"
+            icon="cross"
+            size="xxs"
+            color="#8e8e8e"
             @click="close"
-          >
-            close
-          </i>
+          />
         </header>
         <div
           v-if="$slots.content"
@@ -41,9 +40,11 @@
 import { mapMutations } from 'vuex';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { SfIcon } from '@storefront-ui/vue';
 
 export default {
   name: 'Modal',
+  components: { SfIcon },
   mixins: [onEscapePress],
   props: {
     name: {
