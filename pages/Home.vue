@@ -4,10 +4,17 @@
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
-        :title="hero.title"
         :subtitle="hero.subtitle"
         :image="hero.image"
-      />
+      >
+        <template v-if="hero.title" #title>
+          <div class="section__hero-title">
+            <h4 v-for="title in hero.title" :key="title">
+              {{ title }}
+            </h4>
+          </div>
+        </template>
+      </SfHeroItem>
     </SfHero>
 
     <SfBannerGrid :banner-grid="1" class="banners section">
@@ -240,6 +247,10 @@ export default {
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
+  }
+  &__hero-title {
+    position: absolute;
+    bottom: 20%;
   }
 }
 </style>
