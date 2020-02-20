@@ -98,10 +98,10 @@
           <lazy-hydrate :trigger-hydration="!loading">
             <div class="products__list">
               <SfProductCard
-                v-for="product in products"
+                v-for="(product, index) in products"
                 :key="product.id"
                 :title="product.title"
-                :image="product.image"
+                :image="getBreadcrumbsCurrent === 'Jackets' ? tempImages[index] : product.image"
                 :regular-price="product.price.regular"
                 :special-price="product.price.special"
                 :max-rating="product.rating.max"
@@ -275,6 +275,11 @@ export default {
     };
   },
   computed: {
+    // TEMP
+    tempImages () {
+      return require('theme/assets/images-temp.json').images
+    },
+    //
     ...mapGetters({
       getCurrentSearchQuery: 'category-next/getCurrentSearchQuery',
       getCategoryProducts: 'category-next/getCategoryProducts',
