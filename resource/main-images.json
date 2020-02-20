@@ -1,7 +1,7 @@
 {
   "images": [
     {
-      "title": "Colorful summer dresses are already in store",
+      "title": ["Colorful summer dresses are already in store"],
       "subtitle": "SUMMER COLLECTION 2020",
       "image": {
         "webp": "/assets/banner/webp/full_width_banner.webp",
@@ -9,19 +9,11 @@
       }
     },
     {
-      "title": "Colorful summer dresses are already in store",
+      "title": ["Change your style, change your life, be yourself", "Find clothing that expresses your individuality"],
       "subtitle": "SUMMER COLLECTION 2020",
       "image": {
-        "webp": "/assets/banner/webp/full_width_banner.webp",
-        "fallback": "/assets/banner/png/full_width_banner.png"
-      }
-    },
-    {
-      "title": "Colorful summer dresses are already in store",
-      "subtitle": "SUMMER COLLECTION 2020",
-      "image": {
-        "webp": "/assets/banner/webp/full_width_banner.webp",
-        "fallback": "/assets/banner/png/full_width_banner.png"
+        "webp": "/assets/banner/webp/full_width_banner2.webp",
+        "fallback": "/assets/banner/png/full_width_banner2.png"
       }
     }
   ]
