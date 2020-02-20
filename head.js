@@ -70,7 +70,8 @@ export default {
       href: '/assets/apple_splash_640.png',
       sizes: '640x1136'
     },
-    { rel: 'manifest', href: '/assets/manifest.json' }
+    { rel: 'manifest', href: '/assets/manifest.json' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com/', crossorigin: 'anonymous' }
   ],
   script: [
     {
