@@ -275,9 +275,11 @@ export default {
     };
   },
   computed: {
+    // TEMP
     tempImages () {
       return require('theme/assets/images-temp.json').images
     },
+    //
     ...mapGetters({
       getCurrentSearchQuery: 'category-next/getCurrentSearchQuery',
       getCategoryProducts: 'category-next/getCategoryProducts',
