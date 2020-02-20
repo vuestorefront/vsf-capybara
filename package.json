@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@storefront-ui/vue": "latest",
+    "@storefront-ui/vue": "^0.5.1",
     "body-scroll-lock": "^2.6.4",
     "supports-webp": "^2.0.1",
     "vue": "^2.6.6",
