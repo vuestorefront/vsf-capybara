@@ -57,7 +57,7 @@ module.exports = function (config, { isClient }) {
             chunks: 'all'
           },
           sfui: {
-            test: /[\\/]node_modules[\\/][\\@]storefront[\\-]ui/,
+            test: /[\\/]node_modules[\\/][\\@](storefront[\\-]ui|glidejs)/,
             name: 'sfui',
             chunks: 'all'
           }
