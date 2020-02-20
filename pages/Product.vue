@@ -5,6 +5,13 @@
     itemscope
     itemtype="http://schema.org/Product"
   >
+    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
+      <template #link="{breadcrumb}">
+        <router-link :to="breadcrumb.route.link">
+          {{ breadcrumb.text }}
+        </router-link>
+      </template>
+    </SfBreadcrumbs>
     <OProductDetails
       :product="getCurrentProduct"
       :product-gallery="getProductGallery"
@@ -69,7 +76,7 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 
-import { SfSection, SfBanner } from '@storefront-ui/vue';
+import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
 
 export default {
   components: {
@@ -79,7 +86,8 @@ export default {
     SfSection,
     OProductDetails,
     SfBanner,
-    AImagesGrid
+    AImagesGrid,
+    SfBreadcrumbs
   },
   provide () {
     return {
@@ -107,8 +115,22 @@ export default {
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
       promotedOffers: 'promoted/getPromotedOffers',
-      dummyInstagramImages: 'instagram/getInstagramImages'
+      dummyInstagramImages: 'instagram/getInstagramImages',
+      getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
+      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
     }),
+    breadcrumbs () {
+      return this.getBreadcrumbsRoutes
+        .map(route => ({
+          text: htmlDecode(route.name),
+          route: {
+            link: route.route_link
+          }
+        }))
+        .concat({
+          text: htmlDecode(this.getBreadcrumbsCurrent)
+        });
+    },
     isOnline () {
       return onlineHelper.isOnline;
     },
@@ -223,6 +245,9 @@ export default {
   @media screen and (min-width: $desktop-min) {
     @content;
   }
+}
+.breadcrumbs {
+  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
 }
 .section {
   padding-left: $spacer-big;
