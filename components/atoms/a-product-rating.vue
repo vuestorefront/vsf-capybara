@@ -1,7 +1,7 @@
 <template>
   <div class="a-product-rating">
     <SfRating :score="score" :max="max" @click="$emit('click:stars')" />
-    <ATextAction :text="text" class="action" @click="$emit('click:text')">
+    <ATextAction :text="text" @click="$emit('click:text')">
       <slot />
     </ATextAction>
   </div>
@@ -50,6 +50,7 @@ export default {
 }
 .a-product-rating {
   display: flex;
+  align-items: center;
   margin-top: $spacer-big / 2;
   @include for-desktop {
     margin-left: auto;
@@ -57,12 +58,8 @@ export default {
   ::v-deep .sf-rating {
     cursor: pointer;
   }
-}
-.action {
-  margin: 0;
-  ::v-deep .sf-action {
-    line-height: 1;
-    padding-bottom: 5px;
+  ::v-deep .a-text-action {
+    margin: 0;
   }
 }
 </style>
