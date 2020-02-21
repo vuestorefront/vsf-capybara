@@ -28,6 +28,7 @@
         v-if="loadOrderConfirmation"
         :orders-data="ordersData"
       />
+      <OBottomNavigation />
     </div>
     <vue-progress-bar />
   </div>
@@ -39,6 +40,7 @@ import AsyncSidebar from 'theme/components/theme/blocks/AsyncSidebar/AsyncSideba
 import OHeader from 'theme/components/organisms/o-header';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
+import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
 import Loader from 'theme/components/core/Loader';
 import Notification from 'theme/components/core/Notification';
 import CookieNotification from 'theme/components/core/CookieNotification';
@@ -68,6 +70,7 @@ export default {
     OfflineBadge,
     OMicrocart,
     OrderConfirmation,
+    OBottomNavigation,
     AsyncSidebar,
     SfSidebar,
     OModal

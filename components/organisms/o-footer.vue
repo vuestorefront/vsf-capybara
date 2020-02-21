@@ -51,13 +51,15 @@
         </div>
       </SfFooterColumn>
     </SfFooter>
-    <ABackToTop bottom="20px" right="20px" visibleoffset="200" />
+    <!-- temporarily disabled until we find better UI/UX for it ;)
+      <ABackToTop bottom="20px" right="20px" visibleoffset="200" />
+    -->
   </footer>
 </template>
 
 <script>
 import LanguageSwitcher from 'theme/components/core/blocks/Switcher/LanguageSwitcher';
-import ABackToTop from 'theme/components/atoms/a-back-to-top';
+// import ABackToTop from 'theme/components/atoms/a-back-to-top';
 import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
 import { getPathForStaticPage } from 'theme/helpers';
 import config from 'config';
@@ -67,7 +69,7 @@ export default {
   name: 'MainFooter',
   components: {
     LanguageSwitcher,
-    ABackToTop,
+    // ABackToTop,
     SfFooter,
     SfList,
     SfMenuItem
