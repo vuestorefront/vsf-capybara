@@ -1,15 +1,15 @@
 <template>
   <div class="a-microcart-icon">
     <SfCircleIcon
-      icon="empty_cart"
       icon-size="20px"
-      icon-color="black"
-      class="sf-header__icon"
+      :icon="floatingIcon ? 'add_to_cart' : 'empty_cart'"
+      :icon-color="floatingIcon ? 'white' : 'black'"
+      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__icon'"
       role="button"
       :aria-label="$t('Open microcart')"
       @click="openMicrocart"
     />
-    <SfBadge v-show="totalQuantity" class="badge">
+    <SfBadge v-show="!floatingIcon && totalQuantity" class="badge">
       {{ totalQuantity }}
     </SfBadge>
   </div>
@@ -21,6 +21,12 @@ import { SfCircleIcon, SfBadge } from '@storefront-ui/vue';
 
 export default {
   components: { SfCircleIcon, SfBadge },
+  props: {
+    floatingIcon: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     ...mapGetters({
       totalQuantity: 'cart/getItemsTotalQuantity'
