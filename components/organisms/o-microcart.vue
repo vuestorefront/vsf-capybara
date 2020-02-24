@@ -135,7 +135,7 @@ export default {
       this.closeMicrocartExtend();
     },
     getThumbnailForProductExtend (product) {
-      return getThumbnailForProduct(product);
+      return product.name === 'Inez Full Zip Jacket' ? 'https://shopware-2.vuestorefront.io/media/1c/3e/cb/1575554539/fashion_ZA029207_006_p2_5.jpg.jpg' : getThumbnailForProduct(product);
     },
     getProductPrice (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
