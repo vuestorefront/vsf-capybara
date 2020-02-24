@@ -372,7 +372,7 @@ export default {
       return selectedSortOrder.label || ''
     },
     availableFilters () {
-      return Object.entries(this.getAvailableFilters)
+      return Object.entries(this.getAvailableFilters || {})
         .filter(([filterType, filters]) => {
           return (
             filters.length && !this.getSystemFilterNames.includes(filterType)
