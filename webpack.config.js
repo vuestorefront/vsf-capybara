@@ -47,17 +47,20 @@ function fixPostCSSPlugins (rules) {
 }
 
 module.exports = function (config, { isClient }) {
+  const sfuiCacheGroup = '@storefront-ui|@glidejs';
   const clientConfig = isClient ? {
     optimization: {
       splitChunks: {
         cacheGroups: {
           commons: {
-            test: /[\\/]node_modules[\\/](vue|vuex|vue-router|vue-meta|vue-i18n|vuex-router-sync|localforage|lean-he|vue-lazyload|js-sha3|dayjs|core-js|whatwg-fetch|vuelidate)[\\/]/,
+            // create 'vendor' group from all packages from node_modules except Storefront UI
+            test: new RegExp(`[\\\\/]node_modules[\\\\/](?!(${sfuiCacheGroup}))`),
             name: 'vendor',
             chunks: 'all'
           },
           sfui: {
-            test: /[\\/]node_modules[\\/][\\@](storefront[\\-]ui|glidejs)/,
+            // create 'sfui' group from Storefront UI only
+            test: new RegExp(`[\\\\/]node_modules[\\\\/](${sfuiCacheGroup})`),
             name: 'sfui',
             chunks: 'all'
           }
