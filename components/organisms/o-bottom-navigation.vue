@@ -68,5 +68,8 @@ export default {
   @include for-desktop() {
     display: none;
   }
+  ::v-deep .sf-bottom-navigation {
+    z-index: inherit;
+  }
 }
 </style>
