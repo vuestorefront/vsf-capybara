@@ -47,28 +47,37 @@ function fixPostCSSPlugins (rules) {
 }
 
 module.exports = function (config, { isClient }) {
-  const sfuiCacheGroup = '@storefront-ui|@glidejs';
   const clientConfig = isClient ? {
     optimization: {
       splitChunks: {
+        chunks: 'all',
         cacheGroups: {
-          commons: {
-            // create 'vendor' group from initial packages from node_modules except Storefront UI
-            test: new RegExp(`[\\\\/]node_modules[\\\\/](?!(${sfuiCacheGroup}))`),
-            name: 'vendor-initial',
-            chunks: 'initial'
-          },
-          async: {
-            // create 'vendor' group from async packages from node_modules except Storefront UI
-            test: new RegExp(`[\\\\/]node_modules[\\\\/](?!(${sfuiCacheGroup}))`),
-            name: 'vendor-async',
-            chunks: 'async'
-          },
+          // cache groups are handled basing on priority - given module will belong to the cache group with a higher priority
           sfui: {
             // create 'sfui' group from Storefront UI only
-            test: new RegExp(`[\\\\/]node_modules[\\\\/](${sfuiCacheGroup})`),
+            test: /@storefront-ui|@glidejs/,
             name: 'sfui',
-            chunks: 'all'
+            priority: 2
+          },
+          vendorInitial: {
+            // create 'vendor' group from initial packages from node_modules except Storefront UI
+            test: /node_modules/,
+            name: 'vendor-initial',
+            chunks: 'initial',
+            priority: 1
+          },
+          vendorAsync: {
+            // create 'vendor' group from async packages from node_modules except Storefront UI
+            test: /node_modules/,
+            name: 'vendor-async',
+            chunks: 'async',
+            priority: 1
+          },
+          searchAdapter: {
+            // create one 'vsf-search-adapter' group
+            test: /vsf-search-adapter/,
+            name: 'vsf-search-adapter',
+            priority: 1
           }
         }
       }
