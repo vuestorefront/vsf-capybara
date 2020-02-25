@@ -53,10 +53,16 @@ module.exports = function (config, { isClient }) {
       splitChunks: {
         cacheGroups: {
           commons: {
-            // create 'vendor' group from all packages from node_modules except Storefront UI
+            // create 'vendor' group from initial packages from node_modules except Storefront UI
             test: new RegExp(`[\\\\/]node_modules[\\\\/](?!(${sfuiCacheGroup}))`),
-            name: 'vendor',
-            chunks: 'all'
+            name: 'vendor-initial',
+            chunks: 'initial'
+          },
+          async: {
+            // create 'vendor' group from async packages from node_modules except Storefront UI
+            test: new RegExp(`[\\\\/]node_modules[\\\\/](?!(${sfuiCacheGroup}))`),
+            name: 'vendor-async',
+            chunks: 'async'
           },
           sfui: {
             // create 'sfui' group from Storefront UI only
