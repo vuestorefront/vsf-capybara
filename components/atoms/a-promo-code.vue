@@ -1,10 +1,18 @@
 <template>
   <div class="a-promo-code">
     <SfButton
+      v-if="!isCouponCode"
       class="promo-code__button"
       @click="showPromoCode = !showPromoCode"
     >
       {{ showPromoCode ? "-" : "+" }} {{ $t("Discount code") }}
+    </SfButton>
+    <SfButton
+      v-else
+      class="promo-code__button"
+      @click="removeCoupon"
+    >
+      {{ $t("Delete discount code") }}
     </SfButton>
     <transition name="fade">
       <div v-if="showPromoCode">
@@ -38,9 +46,16 @@ export default {
       showPromoCode: false
     };
   },
+  computed: {
+    isCouponCode () {
+      return this.$store.state.cart.platformTotals.coupon_code
+    }
+  },
   methods: {
-    applyCoupon () {
-      this.$store.dispatch('cart/applyCoupon', this.promoCode);
+    async applyCoupon () {
+      await this.$store.dispatch('cart/applyCoupon', this.promoCode);
+      this.promoCode = ''
+      this.showPromoCode = false
     },
     removeCoupon () {
       this.$store.dispatch('cart/removeCoupon');
