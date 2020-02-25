@@ -1,59 +1,61 @@
 <template>
   <div class="m-register form" key="sign-up">
     <div class="from">
-      <SfInput
-        v-model="email"
-        name="email"
-        :label="$t('Your email')"
-        :required="true"
-        :valid="!$v.email.$error"
-        :error-message="
-          !$v.email.required
-            ? $t('Field is required.')
-            : $t('Please provide valid e-mail address.')
-        "
-        class="form__input"
-      />
-      <SfInput
-        v-model="firstName"
-        name="first-name"
-        :label="$t('First Name')"
-        :required="true"
-        :valid="!$v.firstName.$error"
-        :error-message="$t('Field is required.')"
-        class="form__input"
-      />
-      <SfInput
-        v-model="lastName"
-        name="last-name"
-        :label="$t('Last Name')"
-        :required="true"
-        :valid="!$v.lastName.$error"
-        :error-message="$t('Field is required.')"
-        class="form__input"
-      />
-      <SfInput
-        v-model="password"
-        name="password"
-        :label="$t('Password')"
-        :required="true"
-        :valid="!$v.password.$error"
-        :error-message="$t('Field is required.')"
-        type="password"
-        class="form__input"
-      />
-      <SfCheckbox
-        v-model="createAccount"
-        name="create-account"
-        :label="$t('I want to create an account')"
-        class="form__checkbox"
-      />
-      <SfButton
-        class="sf-button--full-width form__button"
-        @click.native="register"
-      >
-        {{ $t("Create an account") }}
-      </SfButton>
+      <form @submit.prevent="register">
+        <SfInput
+          v-model="email"
+          name="email"
+          :label="$t('Your email')"
+          :required="true"
+          :valid="!$v.email.$error"
+          :error-message="
+            !$v.email.required
+              ? $t('Field is required.')
+              : $t('Please provide valid e-mail address.')
+          "
+          class="form__input"
+        />
+        <SfInput
+          v-model="firstName"
+          name="first-name"
+          :label="$t('First Name')"
+          :required="true"
+          :valid="!$v.firstName.$error"
+          :error-message="$t('Field is required.')"
+          class="form__input"
+        />
+        <SfInput
+          v-model="lastName"
+          name="last-name"
+          :label="$t('Last Name')"
+          :required="true"
+          :valid="!$v.lastName.$error"
+          :error-message="$t('Field is required.')"
+          class="form__input"
+        />
+        <SfInput
+          v-model="password"
+          name="password"
+          :label="$t('Password')"
+          :required="true"
+          :valid="!$v.password.$error"
+          :error-message="$t('Field is required.')"
+          type="password"
+          class="form__input"
+        />
+        <SfCheckbox
+          v-model="createAccount"
+          name="create-account"
+          :label="$t('I want to create an account')"
+          class="form__checkbox"
+        />
+        <SfButton
+          class="sf-button--full-width form__button"
+          @click.native="register"
+        >
+          {{ $t("Create an account") }}
+        </SfButton>
+      </form>
     </div>
     <div class="action">
       {{ $t("or") }}

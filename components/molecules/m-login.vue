@@ -1,38 +1,40 @@
 <template>
   <div class="m-login" key="log-in">
     <div class="form">
-      <SfInput
-        v-model="email"
-        name="email"
-        :label="$t('Your email')"
-        :required="true"
-        :valid="!$v.email.$error"
-        :error-message="
-          !$v.email.required
-            ? $t('Field is required.')
-            : $t('Please provide valid e-mail address.')
-        "
-        class="form__input"
-      />
-      <SfInput
-        v-model="password"
-        name="password"
-        :label="$t('Password')"
-        :required="true"
-        :valid="!$v.password.$error"
-        :error-message="$t('Field is required.')"
-        type="password"
-        class="form__input"
-      />
-      <SfCheckbox
-        v-model="rememberMe"
-        name="remember-me"
-        :label="$t('Remember me')"
-        class="form__checkbox"
-      />
-      <SfButton class="sf-button--full-width form__button" @click.native="login">
-        {{ $t("Login") }}
-      </SfButton>
+      <form @submit.prevent="login">
+        <SfInput
+          v-model="email"
+          name="email"
+          :label="$t('Your email')"
+          :required="true"
+          :valid="!$v.email.$error"
+          :error-message="
+            !$v.email.required
+              ? $t('Field is required.')
+              : $t('Please provide valid e-mail address.')
+          "
+          class="form__input"
+        />
+        <SfInput
+          v-model="password"
+          name="password"
+          :label="$t('Password')"
+          :required="true"
+          :valid="!$v.password.$error"
+          :error-message="$t('Field is required.')"
+          type="password"
+          class="form__input"
+        />
+        <SfCheckbox
+          v-model="rememberMe"
+          name="remember-me"
+          :label="$t('Remember me')"
+          class="form__checkbox"
+        />
+        <SfButton class="sf-button--full-width form__button" @click.native="login">
+          {{ $t("Login") }}
+        </SfButton>
+      </form>
     </div>
     <div class="action">
       <SfButton class="sf-button--text button--muted" @click.native="switchElem('forgot-pass')">
