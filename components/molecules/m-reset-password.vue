@@ -4,22 +4,24 @@
       <p class="form__message">
         {{ $t('Enter your email to receive instructions on how to reset your password.') }}
       </p>
-      <SfInput
-        v-model="email"
-        name="email"
-        :label="$t('Your email')"
-        :required="true"
-        :valid="!$v.email.$error"
-        :error-message="
-          !$v.email.required
-            ? $t('Field is required.')
-            : $t('Please provide valid e-mail address.')
-        "
-        class="form__input"
-      />
-      <SfButton class="sf-button--full-width form__button" @click.native="resetPassword">
-        {{ $t("Reset password") }}
-      </SfButton>
+      <form @submit.prevent="resetPassword">
+        <SfInput
+          v-model="email"
+          name="email"
+          :label="$t('Your email')"
+          :required="true"
+          :valid="!$v.email.$error"
+          :error-message="
+            !$v.email.required
+              ? $t('Field is required.')
+              : $t('Please provide valid e-mail address.')
+          "
+          class="form__input"
+        />
+        <SfButton class="sf-button--full-width form__button" @click.native="resetPassword">
+          {{ $t("Reset password") }}
+        </SfButton>
+      </form>
     </div>
     <div v-else>
       <p class="form__message">
