@@ -83,7 +83,7 @@ const SizeGuide = () =>
   );
 
 export default {
-  name: "Product",
+  name: 'Product',
   components: {
     SizeGuide,
     LazyHydrate,
