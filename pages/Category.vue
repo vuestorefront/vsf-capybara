@@ -76,7 +76,7 @@
           >
             <SfList>
               <SfListItem v-for="item in category.items" :key="item.id">
-                <router-link :to="item.link">
+                <router-link :to="item.link" active-class="sf-menu-item--active">
                   <SfMenuItem :label="item.name" :count="item.count" />
                 </router-link>
               </SfListItem>
@@ -745,6 +745,12 @@ export default {
   flex: 0 0 15%;
   padding: $spacer-extra-big;
   border-right: 1px solid $c-light;
+  .sf-menu-item {
+    font-weight: inherit;
+    &--active {
+      font-weight: bold;
+    }
+  }
 }
 .sort-by {
   flex: unset;
