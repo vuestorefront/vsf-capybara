@@ -28,8 +28,8 @@ New default template theme for [Vue Storefront](https://github.com/DivanteLtd/vu
 </table>
 
 ## 📺 Video demo
+[![See video demo!](http://i3.ytimg.com/vi/x2_w-ZBOfqE/maxresdefault.jpg)](https://www.youtube.com/watch?v=x2_w-ZBOfqE)
 
-<iframe width="1872" height="776" src="https://www.youtube.com/embed/x2_w-ZBOfqE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## ✨  Features
 
