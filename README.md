@@ -6,6 +6,31 @@ New default template theme for [Vue Storefront](https://github.com/DivanteLtd/vu
 
  **🔨  Current status: Developer's preview**
 
+
+## 🚀 See it in action
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="middle">
+        <a href="http://capybara.storefrontcloud.io//">
+          <img
+            src="https://divante.co/open-graph/vuestorefront/GitHub-Readme-Try-Demo.png"
+            alt="B2C Theme demo"
+            style="width: 100px;">
+        </a>
+      </td>
+      <td align="left" valign="top">
+        Try out our open demo and if you like it <strong> first give us some star on Github ★</strong> and then contact us on <a href="https://slack.vuestorefront.io">#shopware-pwa channel @ Vue Storefront Official Slack</a> or via contributors@vuestorefront.io. <br /><br /> This demo site is connected to <a href="https://github.com/shopware/platform">Shopware 6</a>. <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## 📺 Video demo
+
+[![See video demo!](https://divante.com/github/shopware-pwa/shopware-pwa-miniature.png)](https://youtu.be/t2JJgvvxMG8)
+
 ## ✨  Features
 
 Capybara theme provides out of the box ready to use elements, like Cart, Checkout, Modals or Product-related components - to name only a few of them, which all are based on awesome Storefront UI. It provides new look & feel for the Vue Storefront with simpler development experience. You can just grab it and use it, or you can play around to re-design existing components and build something new easily.
