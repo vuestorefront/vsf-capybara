@@ -1,5 +1,5 @@
 <template>
-  <div class="o-notification fixed">
+  <div class="o-notification">
     <SfNotification
       v-for="notification in notifications"
       :key="notification.id"
@@ -7,10 +7,19 @@
       :visible="true"
       :type="notification.type"
       :message="notification.message"
-      :action="prepareActionLabel(notification)"
-      @click:action="executeAction(notification)"
-      @click:close="removeNotification(notification)"
-    />
+      @click:close="removeNotification(notification.id)"
+    >
+      <template #action>
+        <button
+          v-for="action in getActions(notification)"
+          :key="action.label"
+          class="sf-notification__action"
+          @click="executeAction(action.action, notification.id)"
+        >
+          {{ action.label }}
+        </button>
+      </template>
+    </SfNotification>
   </div>
 </template>
 
@@ -23,23 +32,16 @@ export default {
   mixins: [Notification],
   components: { SfNotification },
   methods: {
-    getAction ({ action1, action2 }) {
-      // Get first non-standard action or the first one, if there is only one action
-      return action1.label !== this.$t('OK')
-        ? action1
-        : action2 || action1;
+    getActions ({ action1, action2 }) {
+      return [action1, action2].filter(Boolean);
     },
-    prepareActionLabel (notification) {
-      return this.getAction(notification).label;
-    },
-    executeAction (notification) {
-      const action = this.getAction(notification).action;
+    executeAction (action, id) {
       if (typeof action === 'function') {
         action();
       }
-      this.$store.dispatch('notification/removeNotificationById', notification.id);
+      this.$store.dispatch('notification/removeNotificationById', id);
     },
-    removeNotification ({ id }) {
+    removeNotification (id) {
       this.$store.dispatch('notification/removeNotificationById', id);
     }
   }
@@ -58,6 +60,9 @@ $z-index-notification: map-get($z-index, notification);
 }
 
 .o-notification {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
   top: 100px;
   right: 5%;
   z-index: $z-index-notification;
@@ -71,9 +76,17 @@ $z-index-notification: map-get($z-index, notification);
   &:not(:first-child) {
     margin-top: 1rem;
   }
-  ::v-deep .sf-notification__action {
-    margin: 0 2.25rem 0 1.25rem;
+  .sf-notification__action {
+    margin-left: 1.25rem;
     cursor: pointer;
+    &:last-child {
+      margin-right: 2.25rem;
+    }
   }
+}
+.sf-notification {
+  max-width: none;
+  width: max-content;
+  align-self: end;
 }
 </style>
