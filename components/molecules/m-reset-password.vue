@@ -65,7 +65,7 @@ export default {
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.$store.dispatch('notification/spawnNotification', {
-          type: 'error',
+          type: 'danger',
           message: this.$t('Please fix the validation errors'),
           action1: { label: this.$t('OK') }
         });
@@ -91,7 +91,7 @@ export default {
     },
     onFailure (result) {
       this.$store.dispatch('notification/spawnNotification', {
-        type: 'error',
+        type: 'danger',
         message: this.$t(result.result),
         action1: { label: this.$t('OK') }
       });
