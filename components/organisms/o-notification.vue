@@ -58,11 +58,14 @@ $z-index-notification: map-get($z-index, notification);
     @content;
   }
 }
+@mixin for-desktop {
+  @media screen and (min-width: $desktop-min) {
+    @content;
+  }
+}
 
 .o-notification {
   position: fixed;
-  display: flex;
-  flex-direction: column;
   top: 100px;
   right: 5%;
   z-index: $z-index-notification;
@@ -70,6 +73,10 @@ $z-index-notification: map-get($z-index, notification);
     top: 0;
     left: 0;
     right: 0;
+  }
+  @include for-desktop {
+    display: flex;
+    flex-direction: column;
   }
 }
 .notification {
@@ -84,9 +91,11 @@ $z-index-notification: map-get($z-index, notification);
     }
   }
 }
-.sf-notification {
-  max-width: none;
-  width: max-content;
-  align-self: end;
+@include for-desktop {
+  .sf-notification {
+    max-width: none;
+    width: max-content;
+    align-self: end;
+  }
 }
 </style>
