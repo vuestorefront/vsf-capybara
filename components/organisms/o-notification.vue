@@ -5,7 +5,7 @@
       :key="notification.id"
       class="notification"
       :visible="true"
-      :type="notification.type"
+      :type="getType(notification)"
       :message="notification.message"
       @click:close="removeNotification(notification.id)"
     >
@@ -32,6 +32,9 @@ export default {
   mixins: [Notification],
   components: { SfNotification },
   methods: {
+    getType ({ type }) {
+      return ['secondary', 'info', 'success', 'warning', 'danger'].includes(type) ? type : 'danger';
+    },
     getActions ({ action1, action2 }) {
       return [action1, action2].filter(Boolean);
     },
