@@ -233,7 +233,7 @@ export default {
     },
     onFailure (message) {
       this.$store.dispatch('notification/spawnNotification', {
-        type: 'error',
+        type: 'danger',
         message,
         action1: { label: this.$t('OK') }
       });
