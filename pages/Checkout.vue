@@ -19,7 +19,7 @@
         </transition>
       </div>
     </div>
-    <thank-you-page v-if="isThankYouPage" />
+    <OOrderConfirmation v-if="isThankYouPage" />
   </div>
 </template>
 <script>
@@ -31,8 +31,8 @@ import OShipping from 'theme/components/organisms/o-shipping';
 import OConfirmOrder from 'theme/components/organisms/o-confirm-order';
 import OOrderReview from 'theme/components/organisms/o-order-review';
 import OOrderSummary from 'theme/components/organisms/o-order-summary';
+import OOrderConfirmation from 'theme/components/organisms/o-order-confirmation';
 import OPersonalDetails from 'theme/components/organisms/o-personal-details';
-import ThankYouPage from 'theme/components/core/blocks/Checkout/ThankYouPage';
 
 export default {
   name: 'Checkout',
@@ -44,7 +44,7 @@ export default {
     OOrderSummary,
     OConfirmOrder,
     OPersonalDetails,
-    ThankYouPage
+    OOrderConfirmation
   },
   mixins: [Checkout],
   data () {
