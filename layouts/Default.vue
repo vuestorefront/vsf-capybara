@@ -136,3 +136,8 @@ export default {
 </script>
 
 <style lang="scss" src="theme/css/main.scss"></style>
+<style lang="scss">
+.sf-sidebar--right .sf-sidebar__circle-icon {
+  right: auto;
+}
+</style>
