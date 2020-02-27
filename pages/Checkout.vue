@@ -101,13 +101,13 @@ export default {
     },
     notifyOutStock (p) {
       this.showNotification({
-        type: 'error',
+        type: 'danger',
         message: p.name + this.$t(' is out of stock!')
       });
     },
     notifyNotAvailable () {
       this.showNotification({
-        type: 'error',
+        type: 'danger',
         message: this.$t('Some of the ordered products are not available!')
       });
     },

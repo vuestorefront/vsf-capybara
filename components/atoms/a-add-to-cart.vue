@@ -57,7 +57,7 @@ export default {
       } catch (message) {
         this.$store.dispatch(
           'notification/spawnNotification',
-          notifications.createNotification({ type: 'error', message }),
+          notifications.createNotification({ type: 'danger', message }),
           { root: true }
         );
       }

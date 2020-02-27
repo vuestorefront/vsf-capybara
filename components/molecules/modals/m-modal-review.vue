@@ -132,7 +132,7 @@ export default {
       }
 
       this.$store.dispatch('notification/spawnNotification', {
-        type: 'error',
+        type: 'danger',
         message: this.$t('Something went wrong. Try again in a few seconds.'),
         action1: { label: this.$t('OK') }
       });
