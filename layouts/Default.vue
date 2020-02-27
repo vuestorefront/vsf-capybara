@@ -21,7 +21,7 @@
       <slot />
       <OFooter />
       <OModal />
-      <Notification />
+      <ONotification />
       <CookieNotification />
       <OfflineBadge />
       <OrderConfirmation
@@ -42,7 +42,7 @@ import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
 import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
 import Loader from 'theme/components/core/Loader';
-import Notification from 'theme/components/core/Notification';
+import ONotification from 'theme/components/organisms/o-notification';
 import CookieNotification from 'theme/components/core/CookieNotification';
 import OfflineBadge from 'theme/components/core/OfflineBadge';
 import OMicrocart from 'theme/components/organisms/o-microcart';
@@ -65,7 +65,7 @@ export default {
     OHeader,
     OFooter,
     Loader,
-    Notification,
+    ONotification,
     CookieNotification,
     OfflineBadge,
     OMicrocart,
