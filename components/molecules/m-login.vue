@@ -44,7 +44,7 @@
     <div class="bottom">
       {{ $t("Don't have and account yet?") }}
       <SfButton class="sf-button--text" @click.native="switchElem('register')">
-        {{ $t("Register today?") }}
+        {{ $t("Register today") }}
       </SfButton>
     </div>
   </div>
