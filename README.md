@@ -13,7 +13,7 @@ New default template theme for [Vue Storefront](https://github.com/DivanteLtd/vu
   <tbody>
     <tr>
       <td align="center" valign="middle">
-        <a href="http://capybara.storefrontcloud.io//">
+        <a href="https://capybara.storefrontcloud.io/">
           <img
             src="https://divante.co/open-graph/vuestorefront/GitHub-Readme-Try-Demo.png"
             alt="B2C Theme demo"
@@ -29,7 +29,7 @@ New default template theme for [Vue Storefront](https://github.com/DivanteLtd/vu
 
 ## 📺 Video demo
 
-[![See video demo!](https://divante.com/github/shopware-pwa/shopware-pwa-miniature.png)](https://youtu.be/t2JJgvvxMG8)
+<iframe width="1872" height="776" src="https://www.youtube.com/embed/x2_w-ZBOfqE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## ✨  Features
 
