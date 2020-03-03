@@ -54,7 +54,7 @@
             <span class="sf-checkbox__label">
               {{ $t("I want to create an account") }}
             </span>
-            <a href="#" @click="openAccountBenefitsModal" class="ml20">{{ $t("+info") }}</a>
+            <a @click="openAccountBenefitsModal">{{ $t("+info") }}</a>
           </template>
         </SfCheckbox>
       </div>
@@ -102,13 +102,11 @@
             @blur="$v.acceptConditions.$touch()"
           >
             <template #label>
-              <div class="sf-checkbox__label">
+              <span class="sf-checkbox__label no-flex">
                 {{ $t("I accept ") }}
-              </div>
+              </span>
               &nbsp;
-              <a href="#" @click="openTermsAndConditionsModal">
-                <span>{{ $t("Terms and conditions") }}</span>
-              </a>
+              <a @click="openTermsAndConditionsModal">{{ $t("Terms and conditions") }}</a>
             </template>
           </SfCheckbox>
         </div>
@@ -199,20 +197,16 @@ export default {
       this.openModal({name: ModalList.AccountBenefits})
     },
     openTermsAndConditionsModal () {
-      this.openModal({name: ModalList.AccountBenefits})
+      this.openModal({name: ModalList.TermsAndConditions})
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 .title {
-  margin-bottom: $spacer-extra-big;
+  margin-bottom: var(--spacer-extra-big);
 }
 .form {
   @include for-desktop {
@@ -221,7 +215,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: $spacer-extra-big;
+    margin-bottom: var(--spacer-extra-big);
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -231,7 +225,7 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: $spacer-extra-big;
+          padding-left: var(--spacer-extra-big);
         }
       }
     }
@@ -249,7 +243,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: $spacer-big 0;
+      margin: var(--spacer-big) 0;
       @include for-desktop {
         margin: 0;
         text-align: right;
@@ -258,8 +252,10 @@ export default {
   }
 }
 .info {
-  margin-left: $spacer-big;
-  color: $c-text-muted;
-  text-decoration: none;
+  margin-left: var(--spacer-big);
+  color: var(--c-text-muted);
+}
+.no-flex {
+  flex: unset;
 }
 </style>

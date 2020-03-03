@@ -160,13 +160,11 @@
           @blur="$v.orderReview.terms.$touch()"
         >
           <template #label>
-            <div class="sf-checkbox__label">
+            <span class="sf-checkbox__label no-flex">
               {{ $t("I accept ") }}
-            </div>
+            </span>
             &nbsp;
-            <a href="#" @click="openTermsAndConditionsModal">
-              <span>{{ $t("Terms and conditions") }}</span>
-            </a>
+            <a @click="openTermsAndConditionsModal">{{ $t("Terms and conditions") }}</a>
             *
           </template>
         </SfCheckbox>
@@ -301,32 +299,28 @@ export default {
       });
     },
     openTermsAndConditionsModal () {
-      this.openModal({name: ModalList.AccountBenefits})
+      this.openModal({name: ModalList.TermsAndConditions})
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 .title {
-  margin-bottom: $spacer-extra-big;
+  margin-bottom: var(--spacer-extra-big);
 }
 .table {
-  margin-bottom: $spacer-big;
+  margin-bottom: var(--spacer-big);
   &__header {
-    font-size: $font-size-regular-desktop;
-    font-weight: $body-font-weight-primary;
+    font-size: var(--font-size-regular);
+    font-weight: var(--body-font-weight-primary);
     @include for-desktop {
       text-align: center;
     }
   }
   &__data {
-    font-size: $font-size-small-desktop;
+    font-size: var(--font-size-small);
     text-align: center;
   }
   &__image {
@@ -344,7 +338,7 @@ export default {
   }
 }
 .accordion {
-  margin: 0 0 $spacer-extra-big 0;
+  margin: 0 0 var(--spacer-extra-big) 0;
   &__item {
     display: flex;
     align-items: flex-start;
@@ -357,26 +351,26 @@ export default {
   }
 }
 .summary {
-  background-color: $c-light;
-  margin: 0 -#{$spacer-big};
-  padding: $spacer-big;
+  background-color: var(--c-light);
+  margin: 0 -#{var(--spacer-big)};
+  padding: var(--spacer-big);
   @include for-desktop {
     background-color: transparent;
   }
   &__group {
     @include for-desktop {
       display: flex;
-      margin: 0 0 $spacer-extra-big 0;
+      margin: 0 0 var(--spacer-extra-big) 0;
     }
   }
   &__terms {
     flex: 1;
     order: -1;
-    margin-bottom: $spacer-big;
+    margin-bottom: var(--spacer-big);
   }
   &__total {
-    margin: 0 0 $spacer-extra-big 0;
-    padding: 0 $spacer-big;
+    margin: 0 0 var(--spacer-extra-big) 0;
+    padding: 0 var(--spacer-big);
     flex: 0 0 16.875rem;
     @include for-desktop {
       padding: 0;
@@ -385,7 +379,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: $spacer-big 0;
+      margin: var(--spacer-big) 0;
       @include for-desktop {
         order: -1;
         margin: 0;
@@ -395,12 +389,12 @@ export default {
   }
   &__property-total {
     ::v-deep > * {
-      margin: $spacer-big 0 0 0;
+      margin: var(--spacer-big) 0 0 0;
       text-transform: uppercase;
-      font-size: $font-size-regular-desktop;
+      font-size: var(--font-size-regular);
       line-height: 1.6;
       font-weight: 500;
-      color: $c-text;
+      color: var(--c-text);
     }
   }
 }
@@ -408,9 +402,9 @@ export default {
   cursor: pointer;
 }
 .content {
-  margin: 0 0 $spacer-big 0;
-  color: $c-text;
-  font-size: $font-size-extra-small-desktop;
+  margin: 0 0 var(--spacer-big) 0;
+  color: var(--c-text);
+  font-size: var(--font-size-extra-small);
   font-weight: 300;
   line-height: 1.6;
   &:last-child {
@@ -425,16 +419,19 @@ export default {
   line-height: 1.6;
 }
 .product-sku {
-  color: $c-text-muted;
-  font-size: $font-size-extra-small-desktop;
+  color: var(--c-text-muted);
+  font-size: var(--font-size-extra-small);
 }
 .product-price {
   display: flex;
   flex-direction: column;
-  font-size: $font-size-small-desktop;
+  font-size: var(--font-size-small);
   ::v-deep .sf-price__special {
     order: 1;
-    color: $c-text;
+    color: var(--c-text);
   }
+}
+.no-flex {
+  flex: unset;
 }
 </style>

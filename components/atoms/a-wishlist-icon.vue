@@ -4,7 +4,7 @@
       icon="heart"
       icon-size="20px"
       icon-color="black"
-      class="sf-header__icon"
+      class="sf-header__circle-icon"
       role="button"
       aria-label="wishlist"
       @click="toggleWishlistPanel"

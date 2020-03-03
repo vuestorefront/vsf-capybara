@@ -6,7 +6,7 @@
 @import 'base/global_vars';
 @import 'base/color';
 
-@import "@storefront-ui/vue/styles.scss";
+@import "~@storefront-ui/vue/styles";
 
 // helpers
 @import 'utilities';

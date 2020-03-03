@@ -69,13 +69,13 @@ export default {
   &__button {
     padding: 0;
     background-color: transparent;
-    color: $c-primary;
-    font-size: $font-size-big-desktop;
+    color: var(--c-primary);
+    font-size: var(--font-size-big);
   }
   &__input {
-    margin: $spacer-big 0;
+    margin: var(--spacer-big) 0;
     ::v-deep input {
-      border-color: $c-gray-variant;
+      border-color: var(--c-gray-variant);
     }
   }
 }

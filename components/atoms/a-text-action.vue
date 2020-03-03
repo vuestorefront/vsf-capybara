@@ -21,15 +21,9 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-
 .a-text-action {
   display: flex;
-  margin: $spacer-big 0 ($spacer-big / 2);
+  margin: var(--spacer-big) 0 (var(--spacer-big) / 2);
 }
 /* SfAction or SfButton modifier */
 .sf-action {
@@ -37,15 +31,12 @@ export default {
   border: 0;
   outline: none;
   background-color: transparent;
-  color: $c-text;
-  font-family: $body-font-family-secondary;
-  font-size: $font-size-regular-mobile;
-  font-weight: $body-font-weight-secondary;
+  color: var(--c-text);
+  font-family: var(--body-font-family-secondary);
+  font-size: var(--font-size-regular);
+  font-weight: var(--body-font-weight-secondary);
   line-height: 1.6;
   text-decoration: underline;
   cursor: pointer;
-  @include for-desktop {
-    font-size: $font-size-regular-desktop;
-  }
 }
 </style>

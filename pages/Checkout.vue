@@ -131,16 +131,11 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/_variables.scss";
-@import "~@storefront-ui/shared/styles/helpers/visibility";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+@import "~@storefront-ui/vue/styles";
+
 #checkout {
   box-sizing: border-box;
-  padding: 0 $spacer-big;
+  padding: 0 var(--spacer-big);
   @include for-desktop {
     max-width: 1240px;
     margin: auto;

@@ -99,11 +99,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 .m-product-call-to-action {
   display: flex;
   flex-direction: column;
@@ -111,7 +107,7 @@ export default {
 .add-to-cart {
   margin-top: 1.5rem;
   @include for-desktop {
-    margin-top: $spacer-extra-big;
+    margin-top: var(--spacer-extra-big);
   }
 }
 .add-to-cart-action {

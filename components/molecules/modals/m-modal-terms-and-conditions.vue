@@ -1,6 +1,6 @@
 <template>
   <div class="m-modal-terms-and-conditions">
-    <SfModal :visible="isVisible" @close="closeModal">
+    <SfModal :visible="isVisible" :title="$t('Terms and conditions')" @close="closeModal">
       <SfHeading
         :title="$t('Terms and conditions')"
         class="sf-heading--left sf-heading--no-underline modal__heading"
@@ -89,17 +89,12 @@ export default {
 .modal {
   cursor: default;
   &__heading {
-    margin-bottom: $spacer-extra-big;
+    margin-bottom: var(--spacer-extra-big);
   }
   &__button {
     display: block;
-    margin-top: $spacer-extra-big;
-    margin-bottom: $spacer-extra-big;
-  }
-  ::v-deep .sf-modal__container {
-    max-height: 90%;
-    overflow: auto;
-    border: none;
+    margin-top: var(--spacer-extra-big);
+    margin-bottom: var(--spacer-extra-big);
   }
 }
 </style>

@@ -2,7 +2,7 @@
   <div id="category">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link">
+        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
           {{ breadcrumb.text }}
         </router-link>
       </template>
@@ -15,13 +15,14 @@
       </div>
       <div class="navbar__main">
         <SfButton
-          class="navbar__filters-button"
+          class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
           <AIconFilter size="15px" styles="margin-right:10px" />
           {{ $t("Filters") }}
         </SfButton>
         <div class="navbar__sort">
+          <span class="navbar__label">{{ $t("Sort By") }}:</span>
           <SfSelect
             class="sort-by"
             :selected="sortOrder"
@@ -35,19 +36,6 @@
             >
               {{ option.label }}
             </SfSelectOption>
-            <template #label>
-              <div class="sort-by__label">
-                <span class="sort-by__label-main">{{ $t("Sort By") }}:</span>
-                <div class="sf-select-option desktop-only">
-                  {{ sortLabel }}
-                </div>
-                <AIconSort
-                  class="mobile-only"
-                  size="15px"
-                  styles="margin-left:10px"
-                />
-              </div>
-            </template>
           </SfSelect>
         </div>
         <div class="navbar__counter">
@@ -586,13 +574,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/_variables.scss";
-
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+@import "~@storefront-ui/vue/styles";
 
 #category {
   box-sizing: border-box;
@@ -602,7 +584,7 @@ export default {
   }
 }
 .breadcrumbs {
-  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
+  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
 }
 .main {
   display: flex;
@@ -610,132 +592,148 @@ export default {
 .navbar {
   position: relative;
   display: flex;
+  font: 300 var(--font-size-small) / 1.6 var(--body-font-family-primary);
   @include for-desktop {
-    border-top: 1px solid $c-light;
-    border-bottom: 1px solid $c-light;
+    border-top: 1px solid var(--c-light);
+    border-bottom: 1px solid var(--c-light);
   }
   &::after {
     position: absolute;
     bottom: 0;
-    left: $spacer-big;
-    width: calc(100% - (#{$spacer-big} * 2));
+    left: var(--spacer-big);
+    width: calc(100% - calc(var(--spacer-big) * 2));
     height: 1px;
-    background-color: $c-light;
+    background-color: var(--c-light);
     content: "";
     @include for-desktop {
       content: none;
     }
   }
-  &__aside {
+  &__aside,
+  &__main {
     display: flex;
     align-items: center;
+    padding: var(--spacer-medium) 0;
+    font-size: var(--font-size-small);
+    line-height: 1.6;
+    @include for-desktop {
+      padding: var(--spacer-big) 0;
+    }
+  }
+  &__aside {
     flex: 0 0 15%;
-    padding: $spacer-big $spacer-extra-big;
-    border-right: 1px solid $c-light;
+    padding: var(--spacer-big) var(--spacer-extra-big);
+    border: 1px solid var(--c-light);
+    border-width: 0 1px 0 0;
   }
   &__main {
     flex: 1;
-    display: flex;
-    align-items: center;
-    padding: $spacer-medium 0;
-    font-size: $font-size-small-desktop;
-    @include for-desktop {
-      padding: $spacer-big 0;
-    }
   }
   &__title {
     padding: 0;
-    font-size: $font-size-big-desktop;
-    line-height: 2.23;
+    font-size: var(--font-size-big);
+    font-family: var(--body-font-family-secondary);
+    font-weight: 500;
+    line-height: 1.6;
   }
   &__filters-button {
+    --button-text-decoration: none;
+    --button-font-weight: var(--body-font-weight-secondary);
+    --button-color: var(--c-text);
+    --button-transition: all 150ms linear;
     display: flex;
     align-items: center;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    color: inherit;
-    font-size: inherit;
-    font-weight: 500;
     @include for-desktop {
-      margin: 0 0 0 $spacer-extra-big;
-      font-weight: 400;
-      text-transform: none;
+      margin: 0 0 0 var(--spacer-extra-big);
     }
     svg {
-      fill: $c-dark;
-      @include for-desktop {
-        fill: $c-gray-variant;
-      }
+      fill: var(--c-text-muted);
     }
     &:hover {
-      color: $c-primary;
+      --button-color: var(--c-primary);
       svg {
-        fill: $c-primary;
+        fill: var(--c-primary);
       }
     }
   }
   &__label {
-    color: $c-gray-variant;
+    color: var(--c-text-muted);
   }
   &__sort {
     display: flex;
     align-items: center;
-    margin: 0;
-    order: 3;
-    @include for-desktop {
-      margin-left: $spacer-extra-big;
-      margin-right: auto;
-      order: 0;
+    margin: 0 auto 0 var(--spacer-extra-big);
+    --select-font-size: var(--font-size-small);
+    @include for-mobile {
+      order: 1;
+      margin: 0;
     }
   }
   &__counter {
     margin: auto;
     @include for-desktop {
-      margin-right: 0;
+      margin: auto 0 auto auto;
     }
   }
   &__view {
     display: flex;
     align-items: center;
-    margin: 0 $spacer-extra-big;
+    margin: 0 var(--spacer-extra-big);
+    @include for-desktop {
+      margin: var(--spacer-big);
+    }
     &-icon {
-      margin-left: 10px;
+      margin: 0 0 0 0.625rem;
+      cursor: pointer;
     }
   }
 }
-
 .products {
   box-sizing: border-box;
   flex: 1;
-  margin: 0 -#{$spacer};
+  margin: 0 calc(var(--spacer) * -1);
   @include for-desktop {
-    margin: $spacer-big;
+    margin: var(--spacer-big);
   }
+  &__grid,
   &__list {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 1.875rem - 0.5rem;
   }
   &__product-card {
-    flex: 0 0 50%;
-    padding: $spacer;
+    --product-card-padding: var(--spacer);
+    flex: 1 1 50%;
     @include for-desktop {
-      flex: 0 0 25%;
-      padding: $spacer-big;
+      --product-card-padding: var(--spacer-big);
+      flex: 1 1 25%;
     }
+  }
+  &__product-card-horizontal {
+    --product-card-horizontal-padding: var(--spacer);
+    flex: 0 0 100%;
+    @include for-desktop {
+      --product-card-horizontal-padding: var(--spacer-big);
+    }
+  }
+  &__slide-enter {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  &__slide-enter-active {
+    transition: all 0.2s ease;
+    transition-delay: calc(0.1s * var(--index));
   }
   &__pagination {
     @include for-desktop {
       display: flex;
       justify-content: center;
-      margin-top: $spacer-extra-big;
+      margin: var(--spacer-extra-big) 0 0 0;
     }
   }
 }
 .section {
-  padding-left: $spacer-big;
-  padding-right: $spacer-big;
+  padding-left: var(--spacer-big);
+  padding-right: var(--spacer-big);
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
@@ -743,8 +741,8 @@ export default {
 }
 .sidebar {
   flex: 0 0 15%;
-  padding: $spacer-extra-big;
-  border-right: 1px solid $c-light;
+  padding: var(--spacer-extra-big);
+  border-right: 1px solid var(--c-light);
   .sf-menu-item {
     font-weight: inherit;
     &--active {
@@ -754,58 +752,39 @@ export default {
 }
 .sort-by {
   flex: unset;
-  width: auto;
-  margin: 0;
-  font-size: inherit;
-  @include for-desktop {
-    width: 190px;
-  }
-  &__option {
-    padding: 10px;
-    font-size: inherit;
-  }
-  ::v-deep .sf-select__selected {
-    display: none;
-  }
-  &__label {
-    display: flex;
-    align-items: center;
-    .sf-select-option {
-      padding: 0 10px;
-      &:hover {
-        background: transparent;
-      }
-    }
-    &-main {
-      text-transform: uppercase;
-      font-weight: 500;
-      @include for-desktop {
-        color: $c-gray-variant;
-        text-transform: none;
-        font-weight: 400;
-      }
-    }
+  width: 11.875rem;
+  cursor: pointer;
+  --select-dropdown-z-index: 10;
+  @include for-mobile {
+    width: auto;
   }
 }
 .filters {
+  padding: var(--spacer-big);
   &__title {
-    margin: $spacer-big * 3 0 $spacer-big;
-    font-size: $font-size-big-desktop;
+    margin: calc(var(--spacer-big) * 3) 0 var(--spacer-big) 0;
+    font: 400 var(--font-size-extra-big) / 1.6 var(--body-font-family-secondary);
     line-height: 1.6;
     &:first-child {
-      margin: 0 0 $spacer-big 0;
+      margin: 0 0 var(--spacer-big) 0;
     }
   }
+  &__colors {
+    margin: calc(var(--spacer) * -1);
+  }
+  &__color {
+    margin: var(--spacer);
+  }
   &__item {
-    padding: $spacer-small 0;
+    margin: var(--spacer) 0;
   }
   &__buttons {
-    margin: $spacer-big * 3 0 0 0;
+    margin: calc(var(--spacer-big) * 3) 0 0 0;
   }
   &__button-clear {
-    color: #a3a5ad;
-    margin-top: 10px;
-    background-color: $c-light;
+    --button-background: var(--c-light);
+    --button-color: var(--c-dark-variant);
+    margin: 0.625rem 0 0 0;
   }
 }
 </style>
