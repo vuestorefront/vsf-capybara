@@ -175,12 +175,6 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-
 .o-product-details {
   @include for-desktop {
     display: flex;
@@ -188,9 +182,9 @@ export default {
 }
 .description {
   flex: 1;
-  padding: 0 $spacer-big;
+  padding: 0 var(--spacer-big);
   @include for-desktop {
-    margin-left: $spacer-big * 5;
+    margin-left: calc(var(--spacer-big) * 5);
   }
 }
 .text-action {

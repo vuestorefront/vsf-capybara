@@ -94,11 +94,6 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
 .m-product-options-configurable {
   border-bottom: 1px solid #f1f2f3;
   padding-bottom: 10px;
@@ -108,6 +103,6 @@ export default {
   }
 }
 .attribute {
-  margin-bottom: $spacer-big;
+  margin-bottom: var(--spacer-big);
 }
 </style>

@@ -283,18 +283,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-@mixin for-mobile {
-  @media screen and (max-width: $desktop-min) {
-    @content;
-  }
-}
+
 .title {
-  margin-bottom: $spacer-extra-big;
+  margin-bottom: var(--spacer-extra-big);
 }
 .form {
   @include for-desktop {
@@ -304,7 +295,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: $spacer-extra-big;
+    margin-bottom: var(--spacer-extra-big);
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -314,7 +305,7 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: $spacer-extra-big;
+          padding-left: var(--spacer-extra-big);
         }
       }
     }
@@ -328,7 +319,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: $spacer-big 0;
+      margin: var(--spacer-big) 0;
       @include for-desktop {
         order: -1;
         margin: 0;
@@ -346,7 +337,7 @@ export default {
     margin-bottom: 0;
     &-group {
       flex: 0 0 100%;
-      margin: 0 0 $spacer-extra-big 0;
+      margin: 0 0 var(--spacer-extra-big) 0;
     }
   }
 }
@@ -363,13 +354,13 @@ export default {
 .payment-methods {
   @include for-desktop {
     display: flex;
-    padding: $spacer-big 0;
-    border-top: 1px solid $c-light;
-    border-bottom: 1px solid $c-light;
+    padding: var(--spacer-big) 0;
+    border-top: 1px solid var(--c-light);
+    border-bottom: 1px solid var(--c-light);
   }
 }
 .payment-method {
-  border-top: 1px solid $c-light;
+  border-top: 1px solid var(--c-light);
   @include for-mobile {
     background-color: transparent;
   }
@@ -378,7 +369,7 @@ export default {
     border-radius: 4px;
   }
   &:last-child {
-    border-bottom: 1px solid $c-light;
+    border-bottom: 1px solid var(--c-light);
     @include for-desktop {
       border-bottom: 0;
     }
@@ -389,7 +380,7 @@ export default {
         align-items: center;
       }
       &__content {
-        margin: 0 0 0 $spacer;
+        margin: 0 0 0 var(--spacer);
       }
     }
   }

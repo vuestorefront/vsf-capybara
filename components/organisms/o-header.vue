@@ -2,7 +2,7 @@
   <div class="o-header">
     <SfHeader :active-icon="activeIcon">
       <template #logo>
-        <ALogo width="41px" height="41px" />
+        <ALogo />
       </template>
       <template #navigation>
         <SfHeaderNavigationItem
@@ -40,7 +40,6 @@ import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import { mapGetters } from 'vuex';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import { getTopLevelCategories } from 'theme/helpers';
-import config from 'config'
 
 export default {
   name: 'OHeader',
@@ -70,19 +69,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/_variables.scss";
-
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+@import "~@storefront-ui/vue/styles";
 
 .o-header {
   box-sizing: border-box;
   @include for-desktop {
     max-width: 1240px;
     margin: auto;
+  }
+  @include for-mobile {
+    .sf-header__icons {
+      display: none;
+    }
   }
 }
 .ml-auto {

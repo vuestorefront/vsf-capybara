@@ -5,7 +5,7 @@
       :breadcrumbs="breadcrumbs"
     >
       <template #link="{breadcrumb}">
-        <router-link :to="localizedRoute(breadcrumb.route.link)">
+        <router-link :to="localizedRoute(breadcrumb.route.link)" class="sf-breadcrumbs__link">
           {{ breadcrumb.text }}
         </router-link>
       </template>
@@ -134,11 +134,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 #static {
   box-sizing: border-box;
   display: flex;
@@ -149,7 +145,7 @@ export default {
   }
 }
 .breadcrumbs {
-  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
+  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
 }
 ::v-deep {
   .sf-bar__icon *[role=button] {

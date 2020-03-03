@@ -83,29 +83,20 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-
 .description {
-  margin: $spacer-extra-big 0 ($spacer-big * 3) 0;
-  font-family: $body-font-family-secondary;
-  font-size: $font-size-regular-mobile;
+  margin: var(--spacer-extra-big) 0 calc(var(--spacer-big) * 3) 0;
+  font-family: var(--body-font-family-secondary);
+  font-size: var(--font-size-regular);
   line-height: 1.6;
-  @include for-desktop {
-    font-size: $font-size-regular-desktop;
-  }
 }
 .heading {
-  margin-top: $spacer-big;
+  margin-top: var(--spacer-big);
   ::v-deep .sf-heading__title {
-    font-size: $font-size-big-mobile;
-    font-weight: $body-font-weight-primary;
+    font-size: var(--font-size-big);
+    font-weight: var(--body-font-weight-primary);
     @include for-desktop {
-      font-size: $h1-font-size-desktop;
-      font-weight: $body-font-weight-secondary;
+      font-size: var(--h1-font-size);
+      font-weight: var(--body-font-weight-secondary);
     }
   }
   @include for-desktop {
@@ -126,10 +117,10 @@ export default {
 }
 .sub-price {
   flex-basis: 100%;
-  margin-top: $spacer-big / 4;
+  margin-top: var(--spacer-big) / 4;
   @include for-desktop {
     flex-basis: auto;
-    margin-top: $spacer-big / 2;
+    margin-top: var(--spacer-big) / 2;
   }
 }
 .rating-text {

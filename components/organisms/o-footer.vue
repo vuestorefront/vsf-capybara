@@ -33,7 +33,7 @@
             </router-link>
           </SfListItem>
           <SfListItem>
-            <LanguageSwitcher class="sf-footer__menu-item" />
+            <LanguageSwitcher class="sf-menu-item" />
           </SfListItem>
           <SfListItem class="sf-footer__menu-item">
             {{ getVersionInfo }}
@@ -124,11 +124,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 .o-footer {
   @include for-desktop {
     max-width: 1240px;
@@ -149,5 +145,8 @@ export default {
       margin-right: 1.25rem;
     }
   }
+}
+.sf-footer__menu-item {
+  padding: var(--menu-item-padding, var(--spacer-big));
 }
 </style>

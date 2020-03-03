@@ -164,13 +164,13 @@ export default {
 
 .form {
   &__input {
-    margin-bottom: $spacer-extra-big;
+    margin-bottom: var(--spacer-extra-big);
   }
   &__checkbox {
-    margin-bottom: $spacer-big;
+    margin-bottom: var(--spacer-big);
   }
   &__button {
-    margin-top: $spacer-big;
+    margin-top: var(--spacer-big);
   }
 }
 </style>

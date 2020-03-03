@@ -4,7 +4,7 @@
       icon-size="20px"
       :icon="floatingIcon ? 'add_to_cart' : 'empty_cart'"
       :icon-color="floatingIcon ? 'white' : 'black'"
-      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__icon'"
+      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__circle-icon'"
       role="button"
       :aria-label="$t('Open microcart')"
       @click="openMicrocart"

@@ -10,7 +10,7 @@
         "fallback": "/assets/banner/png/bannerF.png"
       },
       "link": "/women/tops-women/tees-women/tees-25",
-      "slot": "bannerA"
+      "slot": "banner-A"
     },
     {
       "title": "LINEN DRESSES",
@@ -22,7 +22,7 @@
         "fallback": "/assets/banner/png/bannerE.png"
       },
       "link": "/women/tops-women/jackets-women/jackets-23",
-      "slot": "bannerB"
+      "slot": "banner-B"
     },
     {
       "title": "THE OFFICE LIFE",
@@ -32,7 +32,7 @@
         "fallback": "/assets/banner/png/bannerC.png"
       },
       "link": "/men/tops-men/tees-men/tees-16",
-      "slot": "bannerC"
+      "slot": "banner-C"
     },
     {
       "title": "ECO SANDALS",
@@ -42,7 +42,7 @@
         "fallback": "/assets/banner/png/bannerG.png"
       },
       "link": "/gear/gear-3",
-      "slot": "bannerD"
+      "slot": "banner-D"
     }
   ],
   "productBanners": [
