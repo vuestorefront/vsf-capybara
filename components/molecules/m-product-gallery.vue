@@ -70,6 +70,14 @@ export default {
       })
 
       if (!variantImage) {
+        variantImage = this.gallery.find(image => {
+          return typeof image.id.color !== 'undefined' &&
+            typeof this.configuration.color !== 'undefined' &&
+            image.id.color === this.configuration.color.id
+        })
+      }
+
+      if (!variantImage) {
         variantImage = this.gallery[0];
       }
 
