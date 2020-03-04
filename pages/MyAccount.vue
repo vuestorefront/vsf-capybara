@@ -2,7 +2,7 @@
   <div id="my-account">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link">
+        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
           {{ breadcrumb.text }}
         </router-link>
       </template>
@@ -96,13 +96,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/_variables.scss";
-
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+@import "~@storefront-ui/vue/styles";
 
 #my-account {
   box-sizing: border-box;
@@ -113,7 +107,7 @@ export default {
 }
 
 .breadcrumbs {
-  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
+  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
 }
 
 .main {

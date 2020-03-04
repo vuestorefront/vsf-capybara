@@ -1,15 +1,21 @@
 <template>
   <div class="o-bottom-navigation" :style="{'z-index': isBottomNavigationOnTop ? 1 : 0}">
     <SfBottomNavigation>
-      <SfBottomNavigationItem v-for="(item, index) in navigationItems" :key="index">
-        <component :is="item.component" v-bind="item.props" />
-      </SfBottomNavigationItem>
+      <SfBottomNavigationItem
+        v-for="(item, index) in navigationItems"
+        :key="index"
+        :icon="item.icon"
+        :label="item.label"
+        :is-floating="item.isFloating"
+        @click.native="item.onClick"
+      />
     </SfBottomNavigation>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
+import { ModalList } from 'theme/store/ui/modals'
 import AHomeIcon from 'theme/components/atoms/a-home-icon';
 import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
@@ -19,23 +25,20 @@ import { SfBottomNavigation } from '@storefront-ui/vue';
 export default {
   name: 'OBottomNavigation',
   components: {
-    SfBottomNavigation,
-    AHomeIcon,
-    ASearchIcon,
-    AAccountIcon,
-    AMicrocartIcon
+    SfBottomNavigation
   },
   data () {
     return {
       navigationItems: [
-        { component: AHomeIcon },
-        { component: ASearchIcon },
-        { component: AAccountIcon },
-        { component: AMicrocartIcon, props: { floatingIcon: true } }
+        { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
+        { icon: 'search', label: this.$t('Search'), onClick: this.goToSearch },
+        { icon: 'profile', label: this.$t('Profile'), onClick: this.goToAccount },
+        { icon: 'add_to_cart', label: this.$t('Cart'), onClick: this.goToCart, isFloating: true }
       ]
     }
   },
   computed: {
+    ...mapGetters('user', ['isLoggedIn']),
     ...mapState({
       isSidebarVisible: state => state.ui.sidebar,
       isMicrocartVisible: state => state.ui.microcart,
@@ -52,17 +55,33 @@ export default {
         !this.isLoaderVisible &&
         !this.isModalVisible;
     }
+  },
+  methods: {
+    ...mapActions({
+      openModal: 'ui/openModal',
+      openMicrocart: 'ui/toggleMicrocart'
+    }),
+    goToHome () {
+      this.$router.push(this.localizedRoute('/'));
+    },
+    goToSearch () {
+      this.$store.commit('ui/setSearchpanel', !this.isSearchPanelVisible)
+    },
+    goToAccount () {
+      if (this.isLoggedIn) {
+        this.$router.push(this.localizedRoute('/my-account'))
+      } else {
+        this.openModal({name: ModalList.Auth, payload: 'login'})
+      }
+    },
+    goToCart () {
+      this.openMicrocart();
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/_variables.scss";
-
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+@import "~@storefront-ui/vue/styles";
 
 .o-bottom-navigation {
   @include for-desktop() {
@@ -70,6 +89,9 @@ export default {
   }
   ::v-deep .sf-bottom-navigation {
     z-index: inherit;
+    .sf-bottom-navigation-item {
+      cursor: pointer;
+    }
   }
 }
 </style>

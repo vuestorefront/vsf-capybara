@@ -25,25 +25,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-mobile {
-  @media screen and (max-width: $desktop-min) {
-    @content;
-  }
-}
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 .message {
-  margin: 0 0 $spacer-extra-big 0;
-  font-size: $font-size-regular-mobile;
-  font-family: $body-font-family-primary;
-  font-weight: $body-font-weight-primary;
+  margin: 0 0 var(--spacer-extra-big) 0;
+  font-size: var(--font-size-regular);
+  font-family: var(--body-font-family-primary);
+  font-weight: var(--body-font-weight-primary);
   line-height: 1.6;
-  @include for-desktop {
-    font-size: $font-size-regular-desktop;
-  }
 }
 .o-my-account-placeholder {
   @include for-mobile {

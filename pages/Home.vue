@@ -9,7 +9,7 @@
       >
         <template v-if="hero.title" #title>
           <div class="section__hero-title">
-            <h4 v-for="title in hero.title" :key="title">
+            <h4 v-for="title in hero.title" :key="title" class="sf-hero-item__title">
               {{ title }}
             </h4>
           </div>
@@ -176,18 +176,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/_variables.scss";
-
-@mixin for-mobile {
-  @media screen and (max-width: $desktop-min) {
-    @content;
-  }
-}
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+@import "~@storefront-ui/vue/styles";
 
 #home {
   box-sizing: border-box;
@@ -198,10 +187,10 @@ export default {
 }
 
 .call-to-action-newsletter {
-  margin: $spacer-big 0;
+  margin: var(--spacer-big) 0;
   box-sizing: border-box;
   @include for-desktop {
-    margin: $spacer-extra-big * 2 0;
+    margin: calc(var(--spacer-extra-big) * 2) 0;
   }
 }
 
@@ -210,16 +199,16 @@ export default {
 }
 
 .sf-banner-sf-banner-grid {
-  margin: $spacer-big 0;
+  margin: var(--spacer-big) 0;
   @include for-desktop {
-    margin: $spacer-extra-big 0;
+    margin: var(--spacer-extra-big) 0;
   }
 }
 
 .banners {
-  margin: $spacer-big 0;
+  margin: var(--spacer-big) 0;
   @include for-desktop {
-    margin: $spacer-extra-big 0;
+    margin: var(--spacer-extra-big) 0;
   }
 }
 
@@ -233,7 +222,7 @@ export default {
 }
 
 .product-carousel {
-  margin: -20px -#{$spacer-big} -20px 0;
+  margin: -20px var(--spacer-big) -20px 0;
   @include for-desktop {
     margin: -20px 0;
   }
@@ -247,18 +236,20 @@ export default {
 }
 
 .section {
-  padding-left: $spacer-big;
-  padding-right: $spacer-big;
+  padding-left: var(--spacer-big);
+  padding-right: var(--spacer-big);
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
   }
   &__hero-title {
     position: absolute;
-    bottom: 20%;
+    bottom: 15%;
     h4 {
+      --hero-item-title-font-size: 1.15rem;
+      --hero-item-title-margin: 0;
       @include for-mobile {
-        font-size: 0.8rem;
+        --hero-item-title-font-size: 0.8rem;
       }
     }
   }

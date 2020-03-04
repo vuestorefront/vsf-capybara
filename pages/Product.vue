@@ -7,7 +7,7 @@
   >
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link">
+        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
           {{ breadcrumb.text }}
         </router-link>
       </template>
@@ -245,17 +245,12 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
 .breadcrumbs {
-  padding: $spacer-big $spacer-extra-big $spacer-extra-big;
+  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
 }
 .section {
-  padding-left: $spacer-big;
-  padding-right: $spacer-big;
+  padding-left: var(--spacer-big);
+  padding-right: var(--spacer-big);
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
@@ -263,9 +258,9 @@ export default {
 }
 
 .banner {
-  margin: $spacer-big 0;
+  margin: var(--spacer-big) 0;
   @include for-desktop {
-    margin: $spacer-extra-big 0;
+    margin: var(--spacer-extra-big) 0;
   }
 }
 

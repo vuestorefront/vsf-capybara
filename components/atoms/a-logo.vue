@@ -5,10 +5,9 @@
     class="a-logo"
   >
     <SfImage
-      :style="{ width, height }"
       src="/assets/logo.svg"
       :alt="$t(defaultTitle)"
-      class="sf-header__logo no-underline"
+      class="sf-header__logo"
     />
   </router-link>
 </template>
@@ -23,16 +22,6 @@ const storeView = currentStoreView();
 
 export default {
   components: { SfImage },
-  props: {
-    width: {
-      type: [String, Number],
-      required: true
-    },
-    height: {
-      type: [String, Number],
-      required: true
-    }
-  },
   computed: {
     defaultTitle () {
       return get(storeView, 'seo.defaultTitle', config.seo.defaultTitle);
@@ -43,5 +32,9 @@ export default {
 <style lang="scss" scoped>
 .a-logo {
   display: inline-flex;
+  ::v-deep .sf-header__logo {
+    --header-logo-width: 41px;
+    --header-logo-height: 41px;
+  }
 }
 </style>

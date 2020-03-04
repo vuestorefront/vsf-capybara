@@ -54,18 +54,18 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 .property {
-  margin-bottom: $spacer;
+  margin-bottom: var(--spacer);
   ::v-deep .sf-property__name {
-    color: $c-text-muted;
+    color: var(--c-text-muted);
     text-transform: unset;
   }
 }
 .property-total {
-  margin-top: $spacer-extra-big;
-  font-size: $font-size-extra-big-desktop;
+  margin-top: var(--spacer-extra-big);
+  font-size: var(--font-size-extra-big);
   font-weight: 500;
   ::v-deep .sf-property__name {
-    color: $c-text;
+    color: var(--c-text);
   }
 }
 </style>

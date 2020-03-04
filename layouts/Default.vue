@@ -137,7 +137,21 @@ export default {
 
 <style lang="scss" src="theme/css/main.scss"></style>
 <style lang="scss">
-.sf-sidebar--right .sf-sidebar__circle-icon {
-  right: auto;
+@import "~@storefront-ui/vue/styles";
+body {
+  color: var(--c-text);
+  font-size: var(--font-size-regular);
+  font-family: var(--body-font-family-secondary);
+  font-weight: var(--body-font-weight-primary);
+  margin: 0;
+  padding: 0;
+  a {
+    text-decoration: none;
+    color: var(--c-link);
+    cursor: pointer;
+    &:hover {
+      color: var(--c-link-hover);
+    }
+  }
 }
 </style>

@@ -45,17 +45,13 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 .error {
   margin: auto;
   padding: 0 1.25rem;
   &__image,
   &__message {
-    margin: 3 * $spacer-extra-big 0;
+    margin: calc(var(--spacer-extra-big) * 3) 0;
     text-align: center;
   }
   &__image {
@@ -64,7 +60,7 @@ export default {
   }
   &__action {
     max-width: 24rem;
-    margin: $spacer-extra-big auto;
+    margin: var(--spacer-extra-big) auto;
     @include for-desktop {
       display: flex;
     }
@@ -72,7 +68,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: $spacer-big 0;
+      margin: var(--spacer-big) 0;
       @include for-desktop {
         margin: 0;
         text-align: right;

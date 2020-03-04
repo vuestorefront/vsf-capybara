@@ -87,7 +87,7 @@ export default {
   line-height: 1;
 }
 .characteristic {
-  margin-top: $spacer-big;
-  margin-bottom: $spacer-big;
+  margin-top: var(--spacer-big);
+  margin-bottom: var(--spacer-big);
 }
 </style>
