@@ -97,6 +97,9 @@ export default {
 }
 .review-header {
   display: flex;
+  @include for-mobile {
+    align-items: flex-start;
+  }
   ::v-deep {
     .sf-heading {
       flex-shrink: 0;
