@@ -66,7 +66,7 @@ export default {
             selectThis = false
           }
         }
-        return selectThis
+        return selectThis || (image.id && image.id.color === this.configuration.color.id)
       })
 
       if (!variantImage) {
