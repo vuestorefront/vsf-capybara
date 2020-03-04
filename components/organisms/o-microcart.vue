@@ -43,7 +43,7 @@
           <SfPrice :regular="total | price" class="sf-price--big" />
         </template>
       </SfProperty>
-      <SfButton class="sf-button--full-width" @click.native="goToCheckout">
+      <SfButton class="sf-button--full-width cart-action" @click.native="goToCheckout">
         {{ $t("Go to checkout") }}
       </SfButton>
     </div>
@@ -66,7 +66,7 @@
         </p>
       </div>
       <SfButton
-        class="sf-button--full-width color-secondary"
+        class="sf-button--full-width color-secondary cart-action"
         @click.native="startShopping"
       >
         {{ $t("Start shopping") }}
@@ -236,6 +236,11 @@ export default {
   }
   &__description {
     margin-top: var(--spacer-big);
+  }
+}
+@include for-mobile {
+  .cart-action {
+    margin-bottom: var(--spacer-big);
   }
 }
 </style>
