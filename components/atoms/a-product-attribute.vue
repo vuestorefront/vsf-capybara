@@ -20,6 +20,6 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 .a-product-attribute {
-  padding: $spacer-small 0;
+  padding: var(--spacer-small) 0;
 }
 </style>

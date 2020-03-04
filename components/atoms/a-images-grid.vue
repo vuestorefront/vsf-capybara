@@ -45,31 +45,27 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/_variables.scss";
+@import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
 .a-images-grid {
-  margin: auto;
+    max-width: 60rem;
+  margin: 0 auto;
   &__row {
     display: flex;
-    justify-content: space-between;
     & + & {
-      margin-top: $spacer-big / 2;
+      margin: calc(var(--spacer-big) / 2) 0 0 0;
       @include for-desktop {
-        margin-top: $spacer-big;
+        margin: var(--spacer-big) 0 0 0;
       }
     }
   }
   &__col {
+    flex: 1;
     margin: 0;
     & + & {
-      margin-left: $spacer-big / 2;
+      margin: 0 0 0 calc(var(--spacer-big) / 2);
       @include for-desktop {
-        margin-left: $spacer-big;
+        margin: 0 0 0 var(--spacer-big);
       }
     }
   }

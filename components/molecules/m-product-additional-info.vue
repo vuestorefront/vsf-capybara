@@ -83,23 +83,17 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-
 .m-product-additional-info {
-  margin-top: $spacer-big;
+  margin-top: var(--spacer-big);
   @include for-desktop {
-    margin-top: 5 * $spacer-big;
+    margin-top: calc(var(--spacer-big) * 5);
   }
   p {
     margin: 0;
   }
 }
 .properties {
-  margin-top: $spacer-big;
+  margin-top: var(--spacer-big);
 }
 .review-header {
   display: flex;

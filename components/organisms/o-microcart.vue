@@ -175,11 +175,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 #cart {
   box-sizing: border-box;
   @include for-desktop {
@@ -192,25 +188,22 @@ export default {
   display: flex;
   flex-direction: column;
   &__total-items {
-    font-family: $body-font-family-secondary;
-    font-size: $font-size-big-mobile;
-    font-weight: $body-font-weight-secondary;
-    @include for-desktop {
-      font-size: $font-size-big-desktop;
-    }
+    font-family: var(--body-font-family-secondary);
+    font-size: var(--font-size-big);
+    font-weight: var(--body-font-weight-secondary);
   }
   &__total-price {
-    margin-bottom: $spacer-big;
+    margin-bottom: var(--spacer-big);
   }
 }
 .collected-product-list {
   flex: 1;
-  margin: $spacer-big -#{$spacer-big};
+  margin: var(--spacer-big) var(--spacer-big);
 }
 .collected-product {
-  margin: $spacer-big 0;
+  margin: var(--spacer-big) 0;
   &__properties {
-    margin-top: $spacer-big;
+    margin-top: var(--spacer-big);
   }
 }
 .empty-cart {
@@ -238,11 +231,11 @@ export default {
     text-align: center;
   }
   &__label {
-    margin-top: $spacer-extra-big;
-    font-size: $font-size-big-desktop;
+    margin-top: var(--spacer-extra-big);
+    font-size: var(--font-size-big);
   }
   &__description {
-    margin-top: $spacer-big;
+    margin-top: var(--spacer-big);
   }
 }
 </style>

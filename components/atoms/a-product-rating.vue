@@ -43,15 +43,10 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
 .a-product-rating {
   display: flex;
   align-items: center;
-  margin-top: $spacer-big / 2;
+  margin-top: var(--spacer-big) / 2;
   @include for-desktop {
     margin-left: auto;
   }

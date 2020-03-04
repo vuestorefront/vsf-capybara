@@ -105,11 +105,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
+
 .form {
   @include for-desktop {
     display: flex;
@@ -117,7 +113,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: $spacer-extra-big;
+    margin-bottom: var(--spacer-extra-big);
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -127,7 +123,7 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: $spacer-extra-big;
+          padding-left: var(--spacer-extra-big);
         }
       }
     }
@@ -140,16 +136,13 @@ export default {
   }
 }
 .message {
-  font-family: $body-font-family-primary;
-  font-weight: $body-font-weight-primary;
+  font-family: var(--body-font-family-primary);
+  font-weight: var(--body-font-weight-primary);
   line-height: 1.6;
 }
 .message {
-  margin: 0 0 $spacer-extra-big 0;
-  font-size: $font-size-regular-mobile;
-  @include for-desktop {
-    font-size: $font-size-regular-desktop;
-  }
+  margin: 0 0 var(--spacer-extra-big) 0;
+  font-size: var(--font-size-regular);
   &__label {
     font-weight: 400;
   }

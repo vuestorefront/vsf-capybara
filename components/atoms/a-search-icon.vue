@@ -3,7 +3,7 @@
     icon="search"
     icon-size="20px"
     icon-color="black"
-    class="sf-header__icon a-search-icon"
+    class="sf-header__circle-icon a-search-icon"
     role="button"
     :aria-label="$t('Open search panel')"
     @click="toggleSearchpanel"

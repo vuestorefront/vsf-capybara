@@ -64,24 +64,18 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
 
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-
 .record {
-  padding-bottom: $spacer-big;
+  padding-bottom: var(--spacer-big);
   @include for-desktop {
-    padding-bottom: $spacer-extra-big;
-    border-bottom: 1px solid $c-light;
+    padding-bottom: var(--spacer-extra-big);
+    border-bottom: 1px solid var(--c-light);
   }
   & + & {
-    padding-top: $spacer-extra-big;
-    border-top: 1px solid $c-light;
+    padding-top: var(--spacer-extra-big);
+    border-top: 1px solid var(--c-light);
     @include for-desktop {
       border-top: 0;
-      padding-top: $spacer-extra-big;
+      padding-top: var(--spacer-extra-big);
     }
   }
 }

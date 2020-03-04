@@ -56,17 +56,6 @@ export default {
 @import "~theme/css/base/global_vars";
 $z-index-notification: map-get($z-index, notification);
 
-@mixin for-mobile {
-  @media screen and (max-width: $desktop-min) {
-    @content;
-  }
-}
-@mixin for-desktop {
-  @media screen and (min-width: $desktop-min) {
-    @content;
-  }
-}
-
 .o-notification {
   position: fixed;
   top: 100px;
