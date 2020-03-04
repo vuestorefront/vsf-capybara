@@ -139,6 +139,8 @@ export default {
 <style lang="scss">
 @import "~@storefront-ui/vue/styles";
 body {
+  --overlay-z-index: 10;
+  --sidebar-aside-z-index: 11;
   color: var(--c-text);
   font-size: var(--font-size-regular);
   font-family: var(--body-font-family-secondary);

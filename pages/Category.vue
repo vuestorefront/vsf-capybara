@@ -169,7 +169,6 @@ import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/ca
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getTopLevelCategories } from 'theme/helpers';
 import AIconFilter from 'theme/components/atoms/a-icon-filter';
-import AIconSort from 'theme/components/atoms/a-icon-sort';
 import AIconViewGrid from 'theme/components/atoms/a-icon-view-grid';
 import AIconViewRow from 'theme/components/atoms/a-icon-view-row';
 import {
@@ -233,7 +232,6 @@ export default {
   name: 'CategoryPage',
   components: {
     LazyHydrate,
-    AIconSort,
     AIconFilter,
     AIconViewRow,
     AIconViewGrid,
@@ -780,6 +778,9 @@ export default {
   }
   &__buttons {
     margin: calc(var(--spacer-big) * 3) 0 0 0;
+    @include for-mobile {
+      margin: calc(var(--spacer-big) * 3) 0;
+    }
   }
   &__button-clear {
     --button-background: var(--c-light);
