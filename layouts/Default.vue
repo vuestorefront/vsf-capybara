@@ -8,14 +8,24 @@
         class="sf-sidebar--right sidebar__search"
         @close="$store.commit('ui/setSearchpanel')"
       >
-        <component :is="SearchPanel" v-if="isSearchPanelOpen" />
+        <component
+          v-if="isSearchPanelOpen"
+          :is="searchPanelAsyncComponent"
+          @close="$store.commit('ui/setSearchpanel')"
+          @reload="reloadComponent('searchPanelAsyncComponent')"
+        />
       </SfSidebar>
       <SfSidebar
         :visible="isMicrocartOpen"
         class="sf-sidebar--right"
         @close="$store.commit('ui/setMicrocart')"
       >
-        <component :is="OMicrocart" v-if="isMicrocartOpen" />
+        <component
+          v-if="isMicrocartOpen"
+          :is="microcartAsyncComponent"
+          @close="$store.commit('ui/setMicrocart')"
+          @reload="reloadComponent('microcartAsyncComponent')"
+        />
       </SfSidebar>
       <slot />
       <OFooter />
@@ -74,13 +84,13 @@ export default {
     return {
       loadOrderConfirmation: false,
       ordersData: [],
-      OMicrocart: () => ({
+      microcartAsyncComponent: () => ({
         component: OMicrocart(),
         loading: LoadingSpinner,
         error: LoadingError,
         timeout: 3000
       }),
-      SearchPanel: () => ({
+      searchPanelAsyncComponent: () => ({
         component: SearchPanel(),
         loading: LoadingSpinner,
         error: LoadingError,
@@ -130,6 +140,18 @@ export default {
             ? config.entities.category.includeFields
             : null,
         skipCache: isServer
+      });
+    },
+    reloadComponent (componentName) {
+      const components = {
+        microcartAsyncComponent: OMicrocart,
+        searchPanelAsyncComponent: SearchPanel
+      };
+      this[componentName] = () => ({
+        component: components[componentName](),
+        loading: LoadingSpinner,
+        error: LoadingError,
+        timeout: 3000
       });
     }
   },
