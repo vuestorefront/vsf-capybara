@@ -138,9 +138,9 @@ export default {
         ? tempImages
         : this.productGallery
       return productGallery.map(imageObject => ({
-        ...imageObject,
+        id: imageObject.id,
         mobile: {
-          url: imageObject.loading,
+          url: imageObject.src,
           alt: this.product.name
         },
         desktop: {
