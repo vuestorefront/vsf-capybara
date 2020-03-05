@@ -3,15 +3,6 @@
     class="searchpanel fixed mw-100 bg-cl-primary cl-accent"
     data-testid="searchPanel"
   >
-    <div class="close-icon-row">
-      <SfIcon
-        class="close-icon"
-        icon="cross"
-        size="xxs"
-        color="#4f4f4f"
-        @click="closeSearchpanel"
-      />
-    </div>
     <div class="container">
       <div class="row">
         <div class="col-md-12 end-xs">
@@ -61,27 +52,15 @@
           </div>
         </transition>
       </div>
-      <div
+      <SfButton
         v-show="OnlineOnly"
-        v-if="visibleProducts.length >= 18"
-        class="buttons-set align-center py35 mt20 px40"
+        v-if="readMore && visibleProducts.length >= 18"
+        class="sf-button--full-width load-more"
+        type="button"
+        @click="seeMore"
       >
-        <button
-          v-if="readMore"
-          class="no-outline brdr-none py15 px20 bg-cl-mine-shaft :bg-cl-th-secondary cl-white fs-medium-small"
-          type="button"
-          @click="seeMore"
-        >
-          {{ $t("Load more") }}
-        </button>
-        <button
-          class="no-outline brdr-none p15 fs-medium-small close-button"
-          type="button"
-          @click="closeSearchpanel"
-        >
-          {{ $t("Close") }}
-        </button>
-      </div>
+        {{ $t("Load more") }}
+      </SfButton>
     </div>
   </div>
 </template>
@@ -92,14 +71,14 @@ import ProductTile from './ProductTile';
 import VueOfflineMixin from 'vue-offline/mixin';
 import CategoryPanel from './CategoryPanel';
 import { minLength } from 'vuelidate/lib/validators';
-import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
-import { SfIcon } from '@storefront-ui/vue';
+import { SfIcon, SfButton } from '@storefront-ui/vue';
 
 export default {
   components: {
-    SfIcon,
     ProductTile,
-    CategoryPanel
+    CategoryPanel,
+    SfIcon,
+    SfButton
   },
   mixins: [SearchPanel, VueOfflineMixin],
   validations: {
@@ -155,38 +134,31 @@ export default {
   mounted () {
     // add autofocus to search input field
     this.$refs.search.focus();
-    disableBodyScroll(this.$el);
-  },
-  destroyed () {
-    clearAllBodyScrollLocks();
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/vue/styles";
 .searchpanel {
   height: 100vh;
-  width: 800px;
-  top: 0;
   right: 0;
-  z-index: 3;
+  left: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 
-  .close-icon-row {
-    display: flex;
-    justify-content: flex-end;
-    padding: 18px;
+  @include for-desktop {
+    width: 800px;
+    left: auto;
   }
 
   .container {
     padding-left: 40px;
     padding-right: 40px;
-
-    @media (max-width: 767px) {
-      padding-left: 30px;
-      padding-right: 30px;
+    padding-bottom: var(--bar-height, 3.125rem);
+    @include for-mobile {
+      padding-bottom: calc(var(--bar-height, 3.125rem) * 2);
     }
   }
 
@@ -196,11 +168,11 @@ export default {
 
   .product {
     box-sizing: border-box;
-    width: 33.33%;
-  }
-
-  .close-icon {
-    cursor: pointer;
+    width: 50%;
+    padding: 0 1rem;
+    @include for-desktop {
+      width: 33.33%;
+    }
   }
 
   .search-input-group {
@@ -221,11 +193,6 @@ export default {
     border: none;
     outline: 0;
     font-size: 18px;
-    font-family: 'Roboto';
-
-    @media (max-width: 767px) {
-      font-size: 16px;
-    }
   }
 
   .no-results {
@@ -233,23 +200,8 @@ export default {
     width: 100%;
   }
 
-  i {
-    opacity: 0.6;
-  }
-
-  i:hover {
-    opacity: 1;
-  }
-
-  .close-button {
-    background: #fff;
-  }
-
-  button {
-    @media (max-width: 767px) {
-      width: 100%;
-      margin-bottom: 15px;
-    }
+  .load-more {
+    margin: var(--spacer-big) 0;
   }
 }
 </style>

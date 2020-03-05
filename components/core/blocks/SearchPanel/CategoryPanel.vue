@@ -68,6 +68,7 @@ $break-large: 1030px;
   }
 
   &__button {
+    font-family: var(--body-font-family-secondary);
     display: flex;
     align-items: center;
     margin-right: 15px;

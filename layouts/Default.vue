@@ -3,21 +3,20 @@
     <loader />
     <div id="viewport" class="w-100 relative">
       <OHeader />
-      <AsyncSidebar
-        :async-component="SearchPanel"
-        :is-open="isSearchPanelOpen"
+      <SfSidebar
+        :visible="isSearchPanelOpen"
+        class="sf-sidebar--right sidebar__search"
         @close="$store.commit('ui/setSearchpanel')"
-      />
-      <div id="cart" data-testid="microcart">
-        <SfSidebar
-          :visible="isMicrocartOpen"
-          :heading-title="$t('My Cart')"
-          class="sf-sidebar--right"
-          @close="$store.commit('ui/setMicrocart')"
-        >
-          <OMicrocart />
-        </SfSidebar>
-      </div>
+      >
+        <component :is="SearchPanel" v-if="isSearchPanelOpen" />
+      </SfSidebar>
+      <SfSidebar
+        :visible="isMicrocartOpen"
+        class="sf-sidebar--right"
+        @close="$store.commit('ui/setMicrocart')"
+      >
+        <component :is="OMicrocart" v-if="isMicrocartOpen" />
+      </SfSidebar>
       <slot />
       <OFooter />
       <OModal />
@@ -36,7 +35,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import AsyncSidebar from 'theme/components/theme/blocks/AsyncSidebar/AsyncSidebar';
 import OHeader from 'theme/components/organisms/o-header';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
@@ -45,20 +43,19 @@ import Loader from 'theme/components/core/Loader';
 import ONotification from 'theme/components/organisms/o-notification';
 import CookieNotification from 'theme/components/core/CookieNotification';
 import OfflineBadge from 'theme/components/core/OfflineBadge';
-import OMicrocart from 'theme/components/organisms/o-microcart';
 import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
 import { SfSidebar } from '@storefront-ui/vue';
+import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
+import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
 
 const SearchPanel = () =>
-  import(
-    /* webpackChunkName: "vsf-search-panel" */ 'theme/components/core/blocks/SearchPanel/SearchPanel'
-  );
+  import(/* webpackChunkName: "vsf-search-panel" */ 'theme/components/core/blocks/SearchPanel/SearchPanel');
+const OMicrocart = () =>
+  import(/* webpackChunkName: "vsf-microcart" */ 'theme/components/organisms/o-microcart');
 const OrderConfirmation = () =>
-  import(
-    /* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Checkout/OrderConfirmation'
-  );
+  import(/* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Checkout/OrderConfirmation');
 
 export default {
   components: {
@@ -68,10 +65,8 @@ export default {
     ONotification,
     CookieNotification,
     OfflineBadge,
-    OMicrocart,
     OrderConfirmation,
     OBottomNavigation,
-    AsyncSidebar,
     SfSidebar,
     OModal
   },
@@ -79,8 +74,18 @@ export default {
     return {
       loadOrderConfirmation: false,
       ordersData: [],
-      OMicrocart,
-      SearchPanel
+      OMicrocart: () => ({
+        component: OMicrocart(),
+        loading: LoadingSpinner,
+        error: LoadingError,
+        timeout: 3000
+      }),
+      SearchPanel: () => ({
+        component: SearchPanel(),
+        loading: LoadingSpinner,
+        error: LoadingError,
+        timeout: 3000
+      })
     };
   },
   computed: {
@@ -137,10 +142,10 @@ export default {
 
 <style lang="scss" src="theme/css/main.scss"></style>
 <style lang="scss">
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers";
 body {
-  --overlay-z-index: 10;
-  --sidebar-aside-z-index: 11;
+  --overlay-z-index: 1;
+  --sidebar-aside-z-index: 2;
   color: var(--c-text);
   font-size: var(--font-size-regular);
   font-family: var(--body-font-family-secondary);
@@ -153,6 +158,14 @@ body {
     cursor: pointer;
     &:hover {
       color: var(--c-link-hover);
+    }
+  }
+}
+.sidebar__search {
+  --sidebar-content-padding: 0;
+  @include for-desktop {
+    .sf-sidebar__aside {
+      --sidebar-aside-width: 800px;
     }
   }
 }
