@@ -139,7 +139,6 @@ export default {
   @include for-desktop {
     max-width: 1240px;
     margin: auto;
-    padding: 0;
   }
   ::v-deep {
     .sf-steps__header {

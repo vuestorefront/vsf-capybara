@@ -352,7 +352,7 @@ export default {
 }
 .summary {
   background-color: var(--c-light);
-  margin: 0 -#{var(--spacer-big)};
+  margin: 0 -var(--spacer-big);
   padding: var(--spacer-big);
   @include for-desktop {
     background-color: transparent;

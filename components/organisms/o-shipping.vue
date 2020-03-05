@@ -270,7 +270,7 @@ export default {
   }
 }
 .shipping {
-  margin: 0 -#{var(--spacer-big)};
+  margin: 0 -var(--spacer-big);
   &__label {
     display: flex;
     justify-content: space-between;
