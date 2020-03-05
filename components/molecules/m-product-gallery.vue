@@ -20,8 +20,6 @@
 </template>
 <script>
 import { SfGallery, SfImage } from '@storefront-ui/vue';
-import reduce from 'lodash-es/reduce';
-import map from 'lodash-es/map';
 import isEqual from 'lodash-es/isEqual';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import config from 'config'
@@ -57,11 +55,27 @@ export default {
       };
     },
     variantImage () {
-      let variantImage = this.gallery.find(
-        imageObject =>
-          isEqual(imageObject.id, this.option) ||
-          (imageObject.id && imageObject.id.color === this.option.color)
-      );
+      let variantImage = this.gallery.find(image => {
+        let selectThis = true
+        for (const [key, value] of Object.entries(this.configuration)) {
+          if (
+            typeof image.id !== 'undefined' &&
+            typeof image.id[key] !== 'undefined' &&
+            image.id[key] !== value.id
+          ) {
+            selectThis = false
+          }
+        }
+        return selectThis || (image.id && image.id.color === this.configuration.color.id)
+      })
+
+      if (!variantImage) {
+        variantImage = this.gallery.find(image => {
+          return typeof image.id.color !== 'undefined' &&
+            typeof this.configuration.color !== 'undefined' &&
+            image.id.color === this.configuration.color.id
+        })
+      }
 
       if (!variantImage) {
         variantImage = this.gallery[0];
@@ -83,16 +97,6 @@ export default {
       }
 
       return withoutVariantImage;
-    },
-    option () {
-      return reduce(
-        map(this.configuration, 'attribute_code'),
-        (result, attribute) => {
-          result[attribute] = this.configuration[attribute].id;
-          return result;
-        },
-        {}
-      );
     },
     isOnline () {
       return onlineHelper.isOnline;
