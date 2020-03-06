@@ -1,5 +1,5 @@
 <template>
-  <div class="o-bottom-navigation" :style="{'z-index': isBottomNavigationOnTop ? 1 : 0}">
+  <div class="o-bottom-navigation">
     <SfBottomNavigation>
       <SfBottomNavigationItem
         v-for="(item, index) in navigationItems"
@@ -40,21 +40,8 @@ export default {
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
     ...mapState({
-      isSidebarVisible: state => state.ui.sidebar,
-      isMicrocartVisible: state => state.ui.microcart,
-      isSearchPanelVisible: state => state.ui.searchpanel,
-      isOverlayVisible: state => state.ui.overlay,
-      isLoaderVisible: state => state.ui.loader,
-      isModalVisible: state => state.ui.modal.activeModals.length > 0
-    }),
-    isBottomNavigationOnTop () {
-      return !this.isSidebarVisible &&
-        !this.isMicrocartVisible &&
-        !this.isSearchPanelVisible &&
-        !this.isOverlayVisible &&
-        !this.isLoaderVisible &&
-        !this.isModalVisible;
-    }
+      isSearchPanelVisible: state => state.ui.searchpanel
+    })
   },
   methods: {
     ...mapActions({
@@ -81,7 +68,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-bottom-navigation {
   @include for-desktop() {

@@ -117,7 +117,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
 .m-product-gallery {
   flex: 1;
 }

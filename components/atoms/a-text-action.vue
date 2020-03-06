@@ -19,8 +19,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
-
 .a-text-action {
   display: flex;
   margin: var(--spacer-big) 0 (var(--spacer-big) / 2);

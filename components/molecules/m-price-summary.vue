@@ -52,7 +52,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
 .property {
   margin-bottom: var(--spacer);
   ::v-deep .sf-property__name {
