@@ -153,7 +153,7 @@ export default {
   ::v-deep .sf-table {
     &__row,
     &__heading {
-      margin: 0 -#{var(--spacer-big)};
+      margin: 0 -var(--spacer-big);
     }
     &__row:last-child {
       @include for-mobile {
