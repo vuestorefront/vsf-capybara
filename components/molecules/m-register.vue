@@ -172,7 +172,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
 .form {
   &__input {
     margin-bottom: var(--spacer-extra-big);

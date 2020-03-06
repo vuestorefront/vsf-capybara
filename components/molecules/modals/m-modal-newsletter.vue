@@ -38,8 +38,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
-
 .message {
   margin: 0 0 var(--spacer-extra-big) 0;
   font-size: var(--font-size-regular);

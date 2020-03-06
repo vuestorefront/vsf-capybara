@@ -81,7 +81,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .description {
   margin: var(--spacer-extra-big) 0 calc(var(--spacer-big) * 3) 0;

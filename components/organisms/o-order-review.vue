@@ -124,8 +124,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
-
 .highlighted {
   box-sizing: border-box;
   width: 100%;
