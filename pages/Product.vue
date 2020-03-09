@@ -13,6 +13,7 @@
       </template>
     </SfBreadcrumbs>
     <OProductDetails
+      :key="getCurrentProduct.id"
       :product="getCurrentProduct"
       :product-gallery="getProductGallery"
       :product-configuration="getCurrentProductConfiguration"
