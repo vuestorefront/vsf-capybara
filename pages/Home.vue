@@ -138,7 +138,7 @@ export default {
   },
   methods: {
     showNewsletterPopup () {
-      this.$store.dispatch('ui/openModal', { name: ModalList.Newsletter })
+      this.$store.dispatch('ui/openModal', { name: ModalList.FeatureNotImplemented })
     }
   },
   watch: {

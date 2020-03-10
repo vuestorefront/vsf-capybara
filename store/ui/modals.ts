@@ -6,7 +6,7 @@ export enum ModalList {
   Auth = 'm-modal-authentication',
   AccountBenefits = 'm-modal-account-benefits',
   TermsAndConditions = 'm-modal-terms-and-conditions',
-  Newsletter = 'm-modal-newsletter'
+  FeatureNotImplemented = 'm-modal-feature-not-implemented'
 }
 
 /**
@@ -17,7 +17,7 @@ export const modalComponents = new Map([
   [ModalList.Auth, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-authentication.vue')],
   [ModalList.AccountBenefits, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-account-benefits.vue')],
   [ModalList.TermsAndConditions, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-terms-and-conditions.vue')],
-  [ModalList.Newsletter, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-newsletter.vue')]
+  [ModalList.FeatureNotImplemented, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-feature-not-implemented.vue')]
 ])
 
 /**
