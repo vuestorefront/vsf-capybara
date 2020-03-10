@@ -45,10 +45,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .a-images-grid {
-    max-width: 60rem;
+  max-width: 60rem;
   margin: 0 auto;
   &__row {
     display: flex;
