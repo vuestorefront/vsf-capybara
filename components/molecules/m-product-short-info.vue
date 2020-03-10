@@ -16,8 +16,7 @@
             :custom-options="customOptions"
           />
           <AProductRating
-            @click:stars="handleOpenReviewModal"
-            @click:text="handleOpenReviewList"
+            @click="openReviewsTab"
             :reviews="reviews"
           >
             <span class="rating-text desktop-only">
@@ -67,15 +66,11 @@ export default {
     }
   },
   methods: {
-    handleOpenReviewModal () {
-      this.$bus.$emit('modal-show', 'modal-add-review')
-    },
-    handleOpenReviewList () {
+    openReviewsTab () {
+      this.$store.commit('ui/setActiveProductTab', 2);
       const reviewsEl = document.querySelector('#m-product-additional-info')
       if (!reviewsEl) return
-      const currentScroll =
-        document.documentElement.scrollTop || document.body.scrollTop
-      createSmoothscroll(currentScroll, reviewsEl.getBoundingClientRect().top)
+      window.scrollTo(0, reviewsEl.getBoundingClientRect().top)
     }
   }
 };

@@ -1,5 +1,11 @@
 <template>
-  <SfTabs class="m-product-additional-info" :open-tab="openTab" id="m-product-additional-info">
+  <SfTabs
+    class="m-product-additional-info"
+    :open-tab="openTab"
+    :key="openTab"
+    @toggle="onTabChange"
+    id="m-product-additional-info"
+  >
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
       <div class="properties">
@@ -60,12 +66,10 @@ export default {
       default: () => ({})
     }
   },
-  data () {
-    return {
-      openTab: 2
-    };
-  },
   computed: {
+    openTab () {
+      return this.$store.state.ui.activeProductTab
+    },
     reviewsCount () {
       return this.reviews.length
     }
@@ -76,6 +80,15 @@ export default {
     }),
     handleOpenReviewModal () {
       this.openModal({name: ModalList.Review, payload: this.product.id})
+    },
+    onTabChange (index) {
+      let counter = 0
+      this.$children[0].$children.forEach(tab => {
+        counter++
+        if (tab._uid === index) {
+          this.$store.commit('ui/setActiveProductTab', counter);
+        }
+      })
     }
   }
 };
