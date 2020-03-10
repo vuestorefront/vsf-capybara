@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
 import { SfInput, SfButton } from '@storefront-ui/vue';
@@ -92,8 +93,8 @@ export default {
     onFailure (result) {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
-        message: this.$t(result.result),
-        action1: { label: this.$t('OK') }
+        message: i18n.t(result.result),
+        action1: { label: i18n.t('OK') }
       });
     }
   },

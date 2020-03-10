@@ -84,10 +84,19 @@ export default {
     }
   },
   beforeMount () {
-    let currentUser = this.$store.state.user.current;
-    this.firstName = currentUser.firstname
-    this.lastName = currentUser.lastname
-    this.email = currentUser.email
+    // current user may not be available yet in beforeMount hook so vuex watcher is needed
+    const unsubscribeFromStoreWatch = this.$store.watch(
+      state => state.user.current,
+      currentUser => {
+        if (currentUser) {
+          this.firstName = currentUser.firstname;
+          this.lastName = currentUser.lastname;
+          this.email = currentUser.email;
+        }
+      },
+      { immediate: true });
+
+    this.$once('hook:beforeDestroy', unsubscribeFromStoreWatch)
   },
   validations: {
     firstName: {
