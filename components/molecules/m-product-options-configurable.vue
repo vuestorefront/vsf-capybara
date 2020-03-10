@@ -92,7 +92,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .m-product-options-configurable {
   border-bottom: 1px solid #f1f2f3;

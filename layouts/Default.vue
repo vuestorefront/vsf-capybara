@@ -164,7 +164,7 @@ export default {
 
 <style lang="scss" src="theme/css/main.scss"></style>
 <style lang="scss">
-@import "~@storefront-ui/shared/styles/helpers";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 body {
   --overlay-z-index: 1;
   --sidebar-aside-z-index: 2;

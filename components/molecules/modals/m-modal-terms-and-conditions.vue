@@ -85,7 +85,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
 .modal {
   cursor: default;
   &__heading {

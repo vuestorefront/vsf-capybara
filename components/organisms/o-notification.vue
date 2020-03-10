@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 @import "~theme/css/base/global_vars";
 $z-index-notification: map-get($z-index, notification);
 

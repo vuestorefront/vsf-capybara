@@ -245,7 +245,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .breadcrumbs {
   padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
