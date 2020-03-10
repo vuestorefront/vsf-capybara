@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     isCouponCode () {
-      return this.$store.state.cart.platformTotals.coupon_code
+      return this.$store.state.cart.platformTotals ? this.$store.state.cart.platformTotals.coupon_code : false;
     }
   },
   methods: {
