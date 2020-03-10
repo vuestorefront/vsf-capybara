@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
 import { SfInput, SfButton, SfCheckbox } from '@storefront-ui/vue';
@@ -101,7 +102,7 @@ export default {
           if (result.code !== 200) {
             this.onFailure(result);
           } else {
-            this.onSuccess(this.$t('You are logged in!'));
+            this.onSuccess(i18n.t('You are logged in!'));
             this.closeModal({name: ModalList.Auth});
           }
         })
@@ -118,14 +119,14 @@ export default {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'success',
         message: message,
-        action1: { label: this.$t('OK') }
+        action1: { label: i18n.t('OK') }
       });
     },
     onFailure (result) {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
-        message: this.$t(result.result),
-        action1: { label: this.$t('OK') }
+        message: i18n.t(result.result),
+        action1: { label: i18n.t('OK') }
       });
     }
   },
