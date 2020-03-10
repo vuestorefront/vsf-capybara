@@ -10,7 +10,7 @@
           :key="category.id"
         >
           <router-link
-            class="no-underline"
+            :class="{active: isCategoryActive(category)}"
             :to="categoryLink(category)"
           >
             {{ category.name }}
@@ -51,8 +51,11 @@ export default {
     ASearchIcon
   },
   computed: {
-    ...mapGetters('category', ['getCategories']),
-    ...mapGetters('user', ['isLoggedIn']),
+    ...mapGetters({
+      getCategories: 'category/getCategories',
+      getCurrentCategory: 'category-next/getCurrentCategory',
+      isLoggedIn: 'user/isLoggedIn'
+    }),
     activeIcon () {
       return this.isLoggedIn ? 'account' : '';
     },
@@ -63,6 +66,9 @@ export default {
   methods: {
     categoryLink (category) {
       return formatCategoryLink(category);
+    },
+    isCategoryActive (category) {
+      return this.getCurrentCategory.path ? this.getCurrentCategory.path.startsWith(category.path) : false;
     }
   }
 };
@@ -80,6 +86,11 @@ export default {
   @include for-mobile {
     .sf-header__icons {
       display: none;
+    }
+  }
+  a {
+    &.active {
+      font-weight: bold;
     }
   }
 }
