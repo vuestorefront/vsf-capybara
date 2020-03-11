@@ -1,5 +1,5 @@
 <template>
-  <div class="m-modal-newsletter">
+  <div class="m-modal-feature-not-implemented">
     <SfModal :visible="isVisible" @close="$emit('close', modalData.name)">
       <p class="message">
         {{ $t('This feature is not implemented yet! Please take a look at') }}<br>
