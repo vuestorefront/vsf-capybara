@@ -35,12 +35,16 @@
           </SfCollectedProduct>
         </transition-group>
       </div>
-      <SfProperty class="sf-property--full-width o-microcart__total-price">
+      <SfProperty
+        class="sf-property--full-width o-microcart__total-price"
+        v-for="total in totals"
+        :key="total.code"
+      >
         <template #name>
-          <span class="sf-property__name">{{ $t("TOTAL") }}</span>
+          <span class="sf-property__name">{{ total.title }}</span>
         </template>
         <template #value>
-          <SfPrice :regular="total | price" class="sf-price--big" />
+          <SfPrice :regular="total.value | price" class="sf-price--big" />
         </template>
       </SfProperty>
       <SfButton class="sf-button--full-width cart-action" @click.native="goToCheckout">
@@ -104,14 +108,6 @@ export default {
       productsInCart: 'cart/getCartItems',
       totals: 'cart/getTotals'
     }),
-    total () {
-      return this.totals.reduce(
-        (result, total) => total.code === 'subtotal' || total.code === 'tax'
-          ? result + total.value
-          : result,
-        0
-      );
-    },
     totalItems () {
       return this.productsInCart.length;
     },
@@ -193,7 +189,7 @@ export default {
     font-weight: var(--body-font-weight-secondary);
   }
   &__total-price {
-    margin-bottom: var(--spacer-big);
+    margin-bottom: calc(var(--spacer-big) / 2);
   }
 }
 .collected-product-list {
