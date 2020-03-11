@@ -21,16 +21,17 @@
           >
             <template #configuration>
               <div class="collected-product__properties">
+                <SfProperty :name="$t('SKU')" :value="product.sku" />
                 <SfProperty
-                  v-for="(property, key) in product.options"
-                  :key="key"
+                  v-for="property in getProductOptions(product)"
+                  :key="property.label"
                   :name="property.label"
-                  :value="property.value"
-                />
+                >
+                  <template #value>
+                    <span class="sf-property__value" v-html="property.value" />
+                  </template>
+                </SfProperty>
               </div>
-            </template>
-            <template #actions>
-              <div class="hidden" />
             </template>
           </SfCollectedProduct>
         </transition-group>
@@ -138,6 +139,11 @@ export default {
         ? getProductPriceFromTotals(product)
         : getProductPrice(product);
     },
+    getProductOptions (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? product.totals.options
+        : product.options || {};
+    },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });
     },
@@ -198,8 +204,12 @@ export default {
 }
 .collected-product {
   margin: var(--spacer-big) 0;
+  --collected-product-max-width: none;
+  --collected-product-image-background: var(--c-white);
   &__properties {
     margin-top: var(--spacer-big);
+    --property-name-font-size: 0.8rem;
+    --property-value-font-font-size: 0.8rem;
   }
 }
 .empty-cart {

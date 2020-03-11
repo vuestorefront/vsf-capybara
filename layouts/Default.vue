@@ -17,7 +17,7 @@
       </SfSidebar>
       <SfSidebar
         :visible="isMicrocartOpen"
-        class="sf-sidebar--right"
+        class="sf-sidebar--right sidebar__microcart"
         @close="$store.commit('ui/setMicrocart')"
       >
         <component
@@ -183,11 +183,16 @@ body {
     }
   }
 }
-.sidebar__search {
-  --sidebar-content-padding: 0;
-  @include for-desktop {
-    .sf-sidebar__aside {
+.sidebar {
+  &__search {
+    --sidebar-content-padding: 0;
+    @include for-desktop {
       --sidebar-aside-width: 800px;
+    }
+  }
+  @include for-desktop {
+    &__microcart {
+      --sidebar-aside-width: 700px;
     }
   }
 }

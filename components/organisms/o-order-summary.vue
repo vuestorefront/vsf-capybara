@@ -31,24 +31,18 @@
           >
             <template #configuration>
               <div class="product__properties">
+                <SfProperty :name="$t('SKU')" :value="product.sku" />
+                <br>
                 <SfProperty
-                  v-for="property in product.options"
+                  v-for="property in getProductOptions(product)"
                   :key="property.label"
                   :name="property.label"
-                  :value="property.value"
-                  class="product__property"
-                />
-              </div>
-            </template>
-            <template #actions>
-              <div>
-                <div class="product__action">
-                  {{ product.sku }}
-                </div>
-                <div class="product__action">
-                  {{ $t("Quantity") }}:
-                  <span class="product__qty">{{ product.qty }}</span>
-                </div>
+                >
+                  <template #value>
+                    <span class="sf-property__value" v-html="property.value" />
+                    <br>
+                  </template>
+                </SfProperty>
               </div>
             </template>
           </SfCollectedProduct>
@@ -72,6 +66,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import i18n from '@vue-storefront/i18n';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import {
   SfButton,
@@ -147,6 +142,11 @@ export default {
       const price = product.special_price ? product.price_incl_tax : false;
       return price ? this.$options.filters.price(price) : '';
     },
+    getProductOptions (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? product.totals.options
+        : product.options || {};
+    },
     removeProduct (product) {
       this.$store.dispatch('cart/removeItem', { product });
     },
@@ -183,6 +183,7 @@ export default {
   margin: 0 -20px;
 }
 .collected-product {
+  --collected-product-image-background: var(--c-white);
   &:not(:last-child) {
     margin-bottom: var(--spacer-big);
   }
@@ -195,21 +196,13 @@ export default {
 .product {
   &__properties {
     margin: var(--spacer-big) 0 0 0;
-  }
-  &__property,
-  &__action {
-    font-size: var(--font-size-extra-small);
-  }
-  &__action {
-    color: var(--c-gray-variant);
-    font-size: var(--font-size-extra-small);
-    margin: 0 0 var(--spacer-small) 0;
-    &:last-child {
-      margin: 0;
+    --property-name-font-size: 0.8rem;
+    --property-value-font-font-size: 0.8rem;
+    ::v-deep {
+      .sf-property, .sf-property__name {
+        display: inline;
+      }
     }
-  }
-  &__qty {
-    color: var(--c-text);
   }
 }
 </style>
