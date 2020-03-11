@@ -26,7 +26,7 @@
             </SfTableHeader>
             <SfTableHeader>
               <span class="mobile-only">{{ $t('Download') }}</span>
-              <SfButton class="desktop-only orders__download-all">
+              <SfButton @click.native="downloadAll" class="desktop-only orders__download-all">
                 {{ $t('Download all') }}
               </SfButton>
             </SfTableHeader>
@@ -69,6 +69,7 @@
 <script>
 import UserOrder from '@vue-storefront/core/modules/order/components/UserOrdersHistory';
 import { SfTabs, SfTable, SfButton } from '@storefront-ui/vue';
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'OMyAccountOrdersHistory',
@@ -102,6 +103,11 @@ export default {
         })
       })
       return orders
+    }
+  },
+  methods: {
+    downloadAll () {
+      this.$store.dispatch('ui/openModal', { name: ModalList.FeatureNotImplemented })
     }
   }
 }
