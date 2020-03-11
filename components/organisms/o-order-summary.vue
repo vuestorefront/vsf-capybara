@@ -32,6 +32,7 @@
             <template #configuration>
               <div class="product__properties">
                 <SfProperty :name="$t('SKU')" :value="product.sku" />
+                <br>
                 <SfProperty
                   v-for="property in getProductOptions(product)"
                   :key="property.label"
