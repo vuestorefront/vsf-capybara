@@ -20,7 +20,16 @@
         >
           <AIconFilter size="15px" styles="margin-right:10px" />
           {{ $t("Filters") }}
+          <template v-if="activeFiltersCount">
+            ({{ activeFiltersCount }})
+          </template>
         </SfButton>
+        <template v-if="activeFiltersCount">
+          <span>&nbsp;&mdash;&nbsp;</span>
+          <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
+            {{ $t('Clear all') }}
+          </button>
+        </template>
         <div class="navbar__sort">
           <span class="navbar__label">{{ $t("Sort By") }}:</span>
           <SfSelect
@@ -378,6 +387,13 @@ export default {
           return result;
         }, {});
     },
+    activeFiltersCount () {
+      let counter = 0
+      Object.keys(this.getCurrentFilters).forEach(key => {
+        counter += this.getCurrentFilters[key].length
+      })
+      return counter
+    },
     isFilterActive () {
       return filter =>
         castArray(this.getCurrentFilters[filter.type]).find(
@@ -664,6 +680,19 @@ export default {
       svg {
         fill: var(--c-primary);
       }
+    }
+  }
+  &__filters-clear-all {
+    --button-text-decoration: none;
+    --button-font-weight: var(--body-font-weight-secondary);
+    --button-color: var(--c-text);
+    --button-transition: all 150ms linear;
+    background: none;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    &:hover {
+      --button-color: var(--c-primary);
     }
   }
   &__label {
