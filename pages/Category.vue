@@ -64,7 +64,7 @@
           >
             <SfList>
               <SfListItem v-for="item in category.items" :key="item.id">
-                <router-link :to="item.link" active-class="sf-menu-item--active">
+                <router-link :to="item.link" :class="{'sf-menu-item--active': isCategoryActive(item)}">
                   <SfMenuItem :label="item.name" :count="item.count" />
                 </router-link>
               </SfListItem>
@@ -490,6 +490,7 @@ export default {
       return {
         id: category.id,
         name: category.name,
+        path: category.path,
         link: formatCategoryLink(category),
         count: category.product_count || '',
         position: category.position
@@ -543,6 +544,17 @@ export default {
 
           return bucket ? result + bucket.doc_count : result;
         }, 0);
+    },
+    isCategoryActive (category) {
+      if (!this.getCurrentCategory.path) {
+        return false;
+      }
+
+      // The 'View all' sub-category (always at position 0) should be marked as active only if it exactly matches current category path,
+      // but all other sub-categories will be marked as active when current category path belongs to them.
+      return category.position === 0
+        ? this.getCurrentCategory.path === category.path
+        : this.getCurrentCategory.path.startsWith(category.path);
     }
   },
   metaInfo () {
