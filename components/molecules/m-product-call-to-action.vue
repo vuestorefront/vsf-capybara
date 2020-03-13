@@ -17,6 +17,7 @@
           @error="handleQuantityValidationError"
         />
         <AAddToCart
+          :qty="qty"
           :product="product"
           :disabled="isAddToCartDisabled"
         />
