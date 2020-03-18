@@ -1,7 +1,7 @@
 <template>
   <div class="m-menu">
     <SfMegaMenu
-      :title="title"
+      :title="title || currentCategoryTitle"
       :visible="true"
     >
       <SfMegaMenuColumn
@@ -13,9 +13,18 @@
           v-for="item in category.items"
           :key="item.id"
           :to="item.link"
+          class="sf-menu-item"
           active-class="sf-menu-item--active"
+          @click.native="$store.commit('ui/toggleMenu')"
         >
-          <SfMenuItem :label="item.name" />
+          <span class="sf-menu-item__label">{{ item.name }}</span>
+          <SfIcon
+            class="sf-menu-item__mobile-nav-icon"
+            icon="chevron_right"
+            size="xxs"
+            color="black"
+            view-box="0 0 14 14"
+          />
         </router-link>
       </SfMegaMenuColumn>
       <template #aside>
@@ -25,13 +34,13 @@
   </div>
 </template>
 <script>
-import { SfMegaMenu, SfMenuItem } from '@storefront-ui/vue';
+import { SfMegaMenu, SfIcon } from '@storefront-ui/vue';
 import config from 'config'
 import get from 'lodash-es/get'
 import { prepareCategoryMenuItem } from 'theme/helpers';
 import { mapGetters } from 'vuex';
 export default {
-  components: { SfMegaMenu, SfMenuItem },
+  components: { SfMegaMenu, SfIcon },
   props: {
     title: {
       type: String,
@@ -44,7 +53,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getCategories: 'category/getCategories'
+      getCategories: 'category/getCategories',
+      getCurrentCategory: 'category/getCurrentCategory'
     }),
     categories () {
       return this.categoriesIds
@@ -69,6 +79,9 @@ export default {
           };
         })
         .sort((a, b) => a.position - b.position);
+    },
+    currentCategoryTitle () {
+      return this.getCurrentCategory.name || ''
     }
   }
 }
