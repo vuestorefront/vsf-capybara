@@ -159,7 +159,6 @@ import { SearchQuery } from 'storefront-query-builder'
 import { getThumbnailPath, productThumbnailPath } from '@vue-storefront/core/helpers'
 import {
   SfHeading,
-  SfIcon,
   SfArrow,
   SfBadge,
   SfTable,
@@ -170,7 +169,6 @@ export default {
   name: 'OMyAccountOrderDetails',
   components: {
     SfHeading,
-    SfIcon,
     SfArrow,
     SfBadge,
     SfTable,
