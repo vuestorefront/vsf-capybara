@@ -39,7 +39,7 @@
                     :class="{
                       'text-success': data === 'Complete',
                       'text-danger': data === 'Canceled' || data === 'Closed',
-                      'text-warning': data !== 'Complete' && data !== 'Canceled' &&  data !== 'Closed'
+                      'text-warning': data !== 'Complete' && data !== 'Canceled' && data !== 'Closed'
                     }"
                   >{{ data }}</span>
                 </template>
@@ -115,7 +115,7 @@ export default {
     downloadAll () {
       this.$store.dispatch('ui/openModal', { name: ModalList.FeatureNotImplemented })
     },
-    setActiveOrder(order) {
+    setActiveOrder (order) {
       this.activeOrder = order ? this.ordersHistory.find(item => { return order.order_id.endsWith(item.increment_id) }) : null
     }
   }
