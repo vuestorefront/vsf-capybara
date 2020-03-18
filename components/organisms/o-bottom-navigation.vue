@@ -31,7 +31,7 @@ export default {
     return {
       navigationItems: [
         { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
-        { icon: 'search', label: this.$t('Search'), onClick: this.goToSearch },
+        { icon: 'menu', label: this.$t('Menu'), onClick: this.openMenu },
         { icon: 'profile', label: this.$t('Profile'), onClick: this.goToAccount },
         { icon: 'add_to_cart', label: this.$t('Cart'), onClick: this.goToCart, isFloating: true }
       ]
@@ -51,8 +51,8 @@ export default {
     goToHome () {
       this.$router.push(this.localizedRoute('/'));
     },
-    goToSearch () {
-      this.$store.commit('ui/setSearchpanel', !this.isSearchPanelVisible)
+    openMenu () {
+      this.$store.commit('ui/toggleMenu')
     },
     goToAccount () {
       if (this.isLoggedIn) {

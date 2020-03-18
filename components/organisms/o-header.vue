@@ -46,12 +46,25 @@
         </div>
       </template>
     </SfHeader>
+    <SfIcon
+      v-show="isMobileMenu"
+      class="mobile-close-menu"
+      icon="cross"
+      size="xxs"
+      color="black"
+      @click="$store.commit('ui/toggleMenu')"
+    />
+    <MMenu
+      v-show="isMobileMenu"
+      class="mobile-menu"
+      :categories-ids="categories"
+    />
     <SfOverlay :visible="isHoveredMenu" style="position:absolute;z-index:1;" />
   </div>
 </template>
 
 <script>
-import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay, SfButton, SfIcon } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
@@ -71,7 +84,8 @@ export default {
     AMicrocartIcon,
     OSearch,
     MMenu,
-    SfOverlay
+    SfOverlay,
+    SfIcon
   },
   data () {
     return {
@@ -79,14 +93,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      getCategories: 'category/getCategories',
-      getCurrentCategory: 'category-next/getCurrentCategory',
-      isLoggedIn: 'user/isLoggedIn'
-    }),
     ...mapState({
       isSearchPanelVisible: state => state.ui.searchpanel
     }),
+    ...mapState('ui', ['isMobileMenu']),
+    ...mapGetters('category', ['getCategories', 'getCurrentCategory']),
+    ...mapGetters('user', ['isLoggedIn']),
     activeIcon () {
       return this.isLoggedIn ? 'account' : '';
     },
@@ -107,6 +119,18 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.mobile-close-menu {
+  display: none;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 4;
+}
+.sf-header-navigation-item:hover ::v-deep .m-menu {
+  opacity: 1;
+  visibility: visible;
+}
 
 .o-header {
   box-sizing: border-box;
@@ -140,14 +164,21 @@ export default {
     .sf-header__icons {
       display: none;
     }
+    .mobile-menu {
+      opacity: 1;
+      visibility: visible;
+      top: 0;
+      z-index: 3;
+    }
+    .mobile-close-menu {
+      display: flex;
+    }
   }
   .sf-header {
     position: relative;
     z-index: 2;
   }
 }
-<<<<<<< HEAD
-=======
 .ml-auto {
   margin-left: auto;
 }
@@ -155,5 +186,4 @@ export default {
   opacity: 1;
   visibility: visible;
 }
->>>>>>> 0140beb... feature 23: add desktop menu
 </style>
