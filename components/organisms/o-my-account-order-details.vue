@@ -7,7 +7,7 @@
       <template #title="{title}">
         <h2 class="order-details__title">
           <SfArrow class="sf-arrow--transparent order-details__back" @click.native="$emit('close')" />
-          {{title}}
+          {{ title }}
           <SfBadge
             class="order-details__status"
             :class="{
@@ -25,19 +25,35 @@
       <SfTable class="sf-table--bordered">
         <SfTableHeading>
           <SfTableHeader>{{ $t('Thumbnail') }}</SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">{{ $t('Product Name') }}</SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">{{ $t('Price') }}</SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">{{ $t('Quantity') }}</SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">{{ $t('Subtotal') }}</SfTableHeader>
+          <SfTableHeader class="sf-table__header--center">
+            {{ $t('Product Name') }}
+          </SfTableHeader>
+          <SfTableHeader class="sf-table__header--center">
+            {{ $t('Price') }}
+          </SfTableHeader>
+          <SfTableHeader class="sf-table__header--center">
+            {{ $t('Quantity') }}
+          </SfTableHeader>
+          <SfTableHeader class="sf-table__header--center">
+            {{ $t('Subtotal') }}
+          </SfTableHeader>
         </SfTableHeading>
         <SfTableRow v-for="product in products" :key="product.id">
           <SfTableData>
-            <img :src="getThumbnailForProduct(product)" :alt="product.name | htmlDecode" />
+            <img :src="getThumbnailForProduct(product)" :alt="product.name | htmlDecode">
           </SfTableData>
-          <SfTableData class="sf-table__header--center">{{ product.name | htmlDecode }}</SfTableData>
-          <SfTableData class="sf-table__header--center">{{ product.price_incl_tax | price }}</SfTableData>
-          <SfTableData class="sf-table__header--center">{{ product.qty_ordered }}</SfTableData>
-          <SfTableData class="sf-table__header--center">{{ product.row_total_incl_tax | price }}</SfTableData>
+          <SfTableData class="sf-table__header--center">
+            {{ product.name | htmlDecode }}
+          </SfTableData>
+          <SfTableData class="sf-table__header--center">
+            {{ product.price_incl_tax | price }}
+          </SfTableData>
+          <SfTableData class="sf-table__header--center">
+            {{ product.qty_ordered }}
+          </SfTableData>
+          <SfTableData class="sf-table__header--center">
+            {{ product.row_total_incl_tax | price }}
+          </SfTableData>
         </SfTableRow>
       </SfTable>
     </div>
@@ -78,7 +94,9 @@
           class="sf-heading--left sf-heading--no-underline"
         >
           <template #title="{title}">
-            <h3 class="order-details__title">{{title}}</h3>
+            <h3 class="order-details__title">
+              {{ title }}
+            </h3>
           </template>
         </SfHeading>
         <address>
@@ -94,7 +112,9 @@
           class="sf-heading--left sf-heading--no-underline"
         >
           <template #title="{title}">
-            <h3 class="order-details__title">{{title}}</h3>
+            <h3 class="order-details__title">
+              {{ title }}
+            </h3>
           </template>
         </SfHeading>
         <p>{{ order.shipping_description }}</p>
@@ -105,7 +125,9 @@
           class="sf-heading--left sf-heading--no-underline"
         >
           <template #title="{title}">
-            <h3 class="order-details__title">{{title}}</h3>
+            <h3 class="order-details__title">
+              {{ title }}
+            </h3>
           </template>
         </SfHeading>
         <address>
@@ -121,7 +143,9 @@
           class="sf-heading--left sf-heading--no-underline"
         >
           <template #title="{title}">
-            <h3 class="order-details__title">{{title}}</h3>
+            <h3 class="order-details__title">
+              {{ title }}
+            </h3>
           </template>
         </SfHeading>
         <p>{{ paymentMethod }}</p>
