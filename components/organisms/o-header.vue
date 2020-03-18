@@ -12,6 +12,8 @@
         <SfHeaderNavigationItem
           v-for="category in categories"
           :key="category.id"
+          @mouseover="isHoveredMenu = true"
+          @mouseleave="isHoveredMenu = false"
         >
           <router-link
             :class="{active: isCategoryActive(category)}"
@@ -19,6 +21,10 @@
           >
             {{ category.name }}
           </router-link>
+          <MMenu
+            :categories-ids="category.children_data"
+            :title="category.name"
+          />
         </SfHeaderNavigationItem>
       </template>
       <template #search>
@@ -40,16 +46,18 @@
         </div>
       </template>
     </SfHeader>
+    <SfOverlay :visible="isHoveredMenu" style="position:absolute;z-index:1;" />
   </div>
 </template>
 
 <script>
-import { SfHeader, SfButton } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
+import MMenu from 'theme/components/molecules/m-menu';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import { getTopLevelCategories } from 'theme/helpers';
 
@@ -61,7 +69,14 @@ export default {
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
-    OSearch
+    OSearch,
+    MMenu,
+    SfOverlay
+  },
+  data () {
+    return {
+      isHoveredMenu: false
+    }
   },
   computed: {
     ...mapGetters({
@@ -126,5 +141,19 @@ export default {
       display: none;
     }
   }
+  .sf-header {
+    position: relative;
+    z-index: 2;
+  }
 }
+<<<<<<< HEAD
+=======
+.ml-auto {
+  margin-left: auto;
+}
+.sf-header-navigation-item:hover ::v-deep .m-menu {
+  opacity: 1;
+  visibility: visible;
+}
+>>>>>>> 0140beb... feature 23: add desktop menu
 </style>
