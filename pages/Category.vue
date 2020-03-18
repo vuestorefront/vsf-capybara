@@ -171,13 +171,12 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { getTopLevelCategories } from 'theme/helpers';
+import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
 import AIconFilter from 'theme/components/atoms/a-icon-filter';
-import {
-  formatCategoryLink,
-  formatProductLink
-} from '@vue-storefront/core/modules/url/helpers';
-import { prepareCategoryProduct } from 'theme/helpers';
+import AIconViewGrid from 'theme/components/atoms/a-icon-view-grid';
+import AIconViewRow from 'theme/components/atoms/a-icon-view-row';
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
+import { getProductPrice } from 'theme/helpers';
 import {
   localizedRoute,
   currentStoreView
@@ -310,15 +309,15 @@ export default {
 
           const subCategories = category.children_data
             ? category.children_data
-              .map(subCategory => this.prepareCategoryMenuItem(
+              .map(subCategory => prepareCategoryMenuItem(
                 this.getCategories.find(category => category.id === subCategory.id)
               ))
               .filter(Boolean)
             : [];
 
           return {
-            ...this.prepareCategoryMenuItem(category),
-            items: [this.prepareCategoryMenuItem(viewAllMenuItem)]
+            ...prepareCategoryMenuItem(category),
+            items: [prepareCategoryMenuItem(viewAllMenuItem)]
               .concat(subCategories)
               .sort((a, b) => a.position - b.position)
           };
@@ -490,18 +489,6 @@ export default {
     },
     initPagination () {
       this.currentPage = 1;
-    },
-    prepareCategoryMenuItem (category) {
-      if (!category) return;
-
-      return {
-        id: category.id,
-        name: category.name,
-        path: category.path,
-        link: formatCategoryLink(category),
-        count: category.product_count || '',
-        position: category.position
-      };
     },
     changeSortOder (sortOrder) {
       if (this.getCurrentSearchQuery.sort !== sortOrder) {
