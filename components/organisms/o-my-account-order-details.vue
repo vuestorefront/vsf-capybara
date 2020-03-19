@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import { SearchQuery } from 'storefront-query-builder'
+import SearchQuery from '@vue-storefront/core/lib/search/searchQuery';
 import { getThumbnailPath, productThumbnailPath } from '@vue-storefront/core/helpers'
 import {
   SfHeading,
