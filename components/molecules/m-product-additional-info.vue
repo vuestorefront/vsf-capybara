@@ -25,8 +25,7 @@
           class="sf-heading--left"
         />
         <AProductRating
-          @click:stars="handleOpenReviewModal"
-          @click:text="handleOpenReviewModal"
+          @click="handleOpenReviewModal"
           :reviews="reviews"
           :text="$t('Leave me review')"
         />
