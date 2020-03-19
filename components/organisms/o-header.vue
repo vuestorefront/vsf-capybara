@@ -1,5 +1,9 @@
 <template>
   <div class="o-header">
+    <SfOverlay
+      class="overlay"
+      :visible="isHoveredMenu"
+    />
     <SfHeader
       :active-icon="activeIcon"
       :is-sticky="isSearchPanelVisible"
@@ -46,25 +50,16 @@
         </div>
       </template>
     </SfHeader>
-    <SfIcon
-      v-show="isMobileMenu"
-      class="mobile-close-menu"
-      icon="cross"
-      size="xxs"
-      color="black"
-      @click="$store.commit('ui/toggleMenu')"
-    />
     <MMenu
       v-show="isMobileMenu"
       class="mobile-menu"
       :categories-ids="categories"
     />
-    <SfOverlay :visible="isHoveredMenu" style="position:absolute;z-index:1;" />
   </div>
 </template>
 
 <script>
-import { SfHeader, SfOverlay, SfButton, SfIcon } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
@@ -84,8 +79,7 @@ export default {
     AMicrocartIcon,
     OSearch,
     MMenu,
-    SfOverlay,
-    SfIcon
+    SfOverlay
   },
   data () {
     return {
@@ -113,6 +107,15 @@ export default {
     isCategoryActive (category) {
       return this.getCurrentCategory.path ? this.getCurrentCategory.path.startsWith(category.path) : false;
     }
+  },
+  watch: {
+    isMobileMenu () {
+      if (this.isMobileMenu) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+    }
   }
 };
 </script>
@@ -120,18 +123,14 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.mobile-close-menu {
-  display: none;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  z-index: 4;
-}
-.sf-header-navigation-item:hover ::v-deep .m-menu {
+.sf-header-navigation-item:hover .m-menu {
   opacity: 1;
   visibility: visible;
 }
-
+.overlay {
+  position:absolute;
+  z-index:1;
+}
 .o-header {
   box-sizing: border-box;
   ::v-deep {
@@ -165,19 +164,17 @@ export default {
       display: none;
     }
     .mobile-menu {
+      position: fixed;
       opacity: 1;
       visibility: visible;
       top: 0;
-      z-index: 3;
-    }
-    .mobile-close-menu {
-      display: flex;
+      z-index: 1;
     }
   }
-  .sf-header {
-    position: relative;
-    z-index: 2;
-  }
+}
+.sf-header {
+  position: relative;
+  z-index: 1;
 }
 .ml-auto {
   margin-left: auto;

@@ -60,8 +60,11 @@ export const uiStore = {
     setActiveProductTab (state, action) {
       state.activeProductTab = action
     },
-    toggleMenu (state) {
-      state.isMobileMenu = !state.isMobileMenu
+    openMenu (state) {
+      state.isMobileMenu = true
+    },
+    closeMenu (state) {
+      state.isMobileMenu = false
     }
   },
   actions: {
