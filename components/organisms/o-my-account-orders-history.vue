@@ -2,59 +2,62 @@
   <div class="o-my-account-orders-history">
     <SfTabs :open-tab="1">
       <SfTab :title="$t('My orders')">
-        <p class="message">
-          {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
-        </p>
-        <div v-if="orders.length === 0" class="no-orders">
-          <p class="no-orders__title">
-            {{ $t('You currently have no orders') }}
+        <template v-if="!activeOrder">
+          <p class="message">
+            {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
           </p>
-          <p class="no-orders__content">
-            {{ $t('Best get shopping pronto...') }}
-          </p>
-          <SfButton class="no-orders__button">
-            {{ $t('Start shopping') }}
-          </SfButton>
-        </div>
-        <SfTable v-else class="orders">
-          <SfTableHeading>
-            <SfTableHeader
-              v-for="tableHeader in tableHeaders"
-              :key="tableHeader"
-            >
-              {{ $t(tableHeader) }}
-            </SfTableHeader>
-            <SfTableHeader>
-              <span class="mobile-only">{{ $t('Download') }}</span>
-              <SfButton @click.native="downloadAll" class="desktop-only orders__download-all">
-                {{ $t('Download all') }}
-              </SfButton>
-            </SfTableHeader>
-          </SfTableHeading>
-          <SfTableRow v-for="order in orders" :key="order.order_id">
-            <SfTableData v-for="(data, key) in order" :key="key">
-              <template v-if="key === 'status'">
-                <span
-                  :class="{
-                    'text-success': data === 'Complete',
-                    'text-warning': data === 'In process'
-                  }"
-                >{{ data }}</span>
-              </template>
-              <template v-else>
-                {{ data }}
-              </template>
-            </SfTableData>
-            <SfTableData class="orders__view">
-              <SfButton class="sf-button--text mobile-only">
-                {{ $t('Download') }}
-              </SfButton>
-              <SfButton class="sf-button--text desktop-only">
-                {{ $t('VIEW') }}
-              </SfButton>
-            </SfTableData>
-          </SfTableRow>
-        </SfTable>
+          <div v-if="orders.length === 0" class="no-orders">
+            <p class="no-orders__title">
+              {{ $t('You currently have no orders') }}
+            </p>
+            <p class="no-orders__content">
+              {{ $t('Best get shopping pronto...') }}
+            </p>
+            <SfButton class="no-orders__button">
+              {{ $t('Start shopping') }}
+            </SfButton>
+          </div>
+          <SfTable v-else class="orders">
+            <SfTableHeading>
+              <SfTableHeader
+                v-for="tableHeader in tableHeaders"
+                :key="tableHeader"
+              >
+                {{ $t(tableHeader) }}
+              </SfTableHeader>
+              <SfTableHeader>
+                <span class="mobile-only">{{ $t('Download') }}</span>
+                <SfButton @click.native="downloadAll" class="desktop-only orders__download-all">
+                  {{ $t('Download all') }}
+                </SfButton>
+              </SfTableHeader>
+            </SfTableHeading>
+            <SfTableRow v-for="order in orders" :key="order.order_id">
+              <SfTableData v-for="(data, key) in order" :key="key">
+                <template v-if="key === 'status'">
+                  <span
+                    :class="{
+                      'text-success': data === 'Complete',
+                      'text-danger': data === 'Canceled' || data === 'Closed',
+                      'text-warning': data !== 'Complete' && data !== 'Canceled' && data !== 'Closed'
+                    }"
+                  >{{ data }}</span>
+                </template>
+                <template v-else>
+                  {{ data }}
+                </template>
+              </SfTableData>
+              <SfTableData class="orders__view">
+                <SfButton class="sf-button--text" @click.native="setActiveOrder(order)">
+                  {{ $t('VIEW') }}
+                </SfButton>
+              </SfTableData>
+            </SfTableRow>
+          </SfTable>
+        </template>
+        <template v-else>
+          <OMyAccountOrderDetails :order="activeOrder" @close="setActiveOrder(null)" />
+        </template>
       </SfTab>
       <SfTab :title="$t('Returns')">
         <p class="message">
@@ -68,6 +71,7 @@
 
 <script>
 import UserOrder from '@vue-storefront/core/modules/order/components/UserOrdersHistory';
+import OMyAccountOrderDetails from 'theme/components/organisms/o-my-account-order-details'
 import { SfTabs, SfTable, SfButton } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 
@@ -77,7 +81,8 @@ export default {
   components: {
     SfTabs,
     SfTable,
-    SfButton
+    SfButton,
+    OMyAccountOrderDetails
   },
   data () {
     return {
@@ -87,7 +92,8 @@ export default {
         'Payment method',
         'Amount',
         'Status'
-      ]
+      ],
+      activeOrder: null
     };
   },
   computed: {
@@ -108,6 +114,9 @@ export default {
   methods: {
     downloadAll () {
       this.$store.dispatch('ui/openModal', { name: ModalList.FeatureNotImplemented })
+    },
+    setActiveOrder (order) {
+      this.activeOrder = order ? this.ordersHistory.find(item => { return order.order_id.endsWith(item.increment_id) }) : null
     }
   }
 }

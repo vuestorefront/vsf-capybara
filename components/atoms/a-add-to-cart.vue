@@ -27,6 +27,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    qty: {
+      type: Number,
+      default: 1
     }
   },
   computed: {
@@ -45,7 +49,7 @@ export default {
     async addToCart () {
       try {
         const diffLog = await this.$store.dispatch('cart/addItem', {
-          productToAdd: this.product
+          productToAdd: Object.assign({}, this.product, { qty: this.qty })
         });
         diffLog.clientNotifications.forEach(notificationData => {
           this.$store.dispatch(
