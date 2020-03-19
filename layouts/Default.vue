@@ -4,18 +4,6 @@
     <div id="viewport" class="w-100 relative">
       <OHeader />
       <SfSidebar
-        :visible="isSearchPanelOpen"
-        class="sf-sidebar--right sidebar__search"
-        @close="$store.commit('ui/setSearchpanel')"
-      >
-        <component
-          v-if="isSearchPanelOpen"
-          :is="searchPanelAsyncComponent"
-          @close="$store.commit('ui/setSearchpanel')"
-          @reload="reloadComponent('searchPanelAsyncComponent')"
-        />
-      </SfSidebar>
-      <SfSidebar
         :visible="isMicrocartOpen"
         class="sf-sidebar--right sidebar__microcart"
         @close="$store.commit('ui/setMicrocart')"
@@ -24,7 +12,7 @@
           v-if="isMicrocartOpen"
           :is="microcartAsyncComponent"
           @close="$store.commit('ui/setMicrocart')"
-          @reload="reloadComponent('microcartAsyncComponent')"
+          @reload="reloadComponent()"
         />
       </SfSidebar>
       <slot />
@@ -60,8 +48,6 @@ import { SfSidebar } from '@storefront-ui/vue';
 import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
 import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
 
-const SearchPanel = () =>
-  import(/* webpackChunkName: "vsf-search-panel" */ 'theme/components/core/blocks/SearchPanel/SearchPanel');
 const OMicrocart = () =>
   import(/* webpackChunkName: "vsf-microcart" */ 'theme/components/organisms/o-microcart');
 const OrderConfirmation = () =>
@@ -89,18 +75,11 @@ export default {
         loading: LoadingSpinner,
         error: LoadingError,
         timeout: 3000
-      }),
-      searchPanelAsyncComponent: () => ({
-        component: SearchPanel(),
-        loading: LoadingSpinner,
-        error: LoadingError,
-        timeout: 3000
       })
     };
   },
   computed: {
     ...mapState({
-      isSearchPanelOpen: state => state.ui.searchpanel,
       isMicrocartOpen: state => state.ui.microcart
     })
   },
@@ -142,13 +121,9 @@ export default {
         skipCache: isServer
       });
     },
-    reloadComponent (componentName) {
-      const components = {
-        microcartAsyncComponent: OMicrocart,
-        searchPanelAsyncComponent: SearchPanel
-      };
-      this[componentName] = () => ({
-        component: components[componentName](),
+    reloadComponent () {
+      this.microcartAsyncComponent = () => ({
+        component: OMicrocart(),
         loading: LoadingSpinner,
         error: LoadingError,
         timeout: 3000
@@ -183,14 +158,9 @@ body {
     }
   }
 }
-.sidebar {
-  &__search {
-    --sidebar-content-padding: 0;
-    @include for-desktop {
-      --sidebar-aside-width: 800px;
-    }
-  }
-  @include for-desktop {
+
+@include for-desktop {
+  .sidebar {
     &__microcart {
       --sidebar-aside-width: 700px;
     }

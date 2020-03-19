@@ -184,7 +184,7 @@ import {
   formatCategoryLink,
   formatProductLink
 } from '@vue-storefront/core/modules/url/helpers';
-import { getProductPrice } from 'theme/helpers';
+import { prepareCategoryProduct } from 'theme/helpers';
 import {
   localizedRoute,
   currentStoreView
@@ -344,8 +344,8 @@ export default {
           .filter((product, i) => {
             return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
           })
-          .map(this.prepareCategoryProduct)
-        : this.getMoreCategoryProducts.map(this.prepareCategoryProduct);
+          .map(prepareCategoryProduct)
+        : this.getMoreCategoryProducts.map(prepareCategoryProduct);
     },
     totalPages () {
       return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
@@ -510,23 +510,6 @@ export default {
         link: formatCategoryLink(category),
         count: category.product_count || '',
         position: category.position
-      };
-    },
-    prepareCategoryProduct (product) {
-      return {
-        id: product.id,
-        title: htmlDecode(product.name),
-        image: this.getThumbnail(
-          productThumbnailPath(product),
-          config.products.thumbnails.width,
-          config.products.thumbnails.height
-        ),
-        link: formatProductLink(product, currentStoreView().storeCode),
-        price: getProductPrice(product),
-        rating: {
-          max: 5,
-          score: 5
-        }
       };
     },
     changeSortOder (sortOrder) {

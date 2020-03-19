@@ -22,7 +22,7 @@ import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { productThumbnailPath } from '@vue-storefront/core/helpers';
-import { getProductPrice } from 'theme/helpers';
+import { prepareCategoryProduct } from 'theme/helpers';
 export default {
   name: 'MProductCarousel',
   components: {
@@ -37,22 +37,7 @@ export default {
   },
   computed: {
     carouselProducts () {
-      return this.products.map(product => {
-        return {
-          title: htmlDecode(product.name),
-          image: this.getThumbnail(
-            productThumbnailPath(product),
-            config.products.thumbnails.width,
-            config.products.thumbnails.height
-          ),
-          link: formatProductLink(product, currentStoreView().storeCode),
-          price: getProductPrice(product),
-          rating: {
-            max: 5,
-            score: 5
-          }
-        };
-      });
+      return this.products.map(prepareCategoryProduct);
     }
   }
 };
