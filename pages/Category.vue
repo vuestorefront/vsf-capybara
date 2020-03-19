@@ -56,11 +56,6 @@
             {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
           </span>
         </div>
-        <div class="navbar__view desktop-only">
-          <span>{{ $t("View") }} </span>
-          <AIconViewGrid size="10px" styles="margin-left:10px" />
-          <AIconViewRow size="11px" styles="margin-left:10px" />
-        </div>
       </div>
     </div>
     <div class="main section">
@@ -178,8 +173,6 @@ import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/ca
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getTopLevelCategories } from 'theme/helpers';
 import AIconFilter from 'theme/components/atoms/a-icon-filter';
-import AIconViewGrid from 'theme/components/atoms/a-icon-view-grid';
-import AIconViewRow from 'theme/components/atoms/a-icon-view-row';
 import {
   formatCategoryLink,
   formatProductLink
@@ -242,8 +235,6 @@ export default {
   components: {
     LazyHydrate,
     AIconFilter,
-    AIconViewRow,
-    AIconViewGrid,
     SfList,
     SfButton,
     SfSelect,
@@ -695,18 +686,6 @@ export default {
     margin: auto;
     @include for-desktop {
       margin: auto 0 auto auto;
-    }
-  }
-  &__view {
-    display: flex;
-    align-items: center;
-    margin: 0 var(--spacer-extra-big);
-    @include for-desktop {
-      margin: var(--spacer-big);
-    }
-    &-icon {
-      margin: 0 0 0 0.625rem;
-      cursor: pointer;
     }
   }
 }
