@@ -123,21 +123,7 @@ export default {
       };
     },
     gallery () {
-      const tempImages = [
-        'https://shopware-2.vuestorefront.io/media/1c/3e/cb/1575554539/fashion_ZA029207_006_p2_5.jpg.jpg',
-        'https://shopware-2.vuestorefront.io/media/87/4c/37/1575554541/fashion_ZA029207_006_p3_5.jpg.jpg',
-        'https://shopware-2.vuestorefront.io/media/26/78/a3/1575554536/fashion_ZA029207_006_p1_5.jpg.jpg',
-        'https://shopware-2.vuestorefront.io/media/80/01/6a/1575554531/fashion_za029207_008_p.jpg.jpg',
-        'https://shopware-2.vuestorefront.io/media/5a/8e/6e/1575554534/fashion_ZA029207_006_p_5.jpg.jpg'
-      ].map((src, index) => ({
-        id: {color: index, size: index},
-        src,
-        loading: src
-      }))
-      const productGallery = this.product.name === 'Inez Full Zip Jacket'
-        ? tempImages
-        : this.productGallery
-      return productGallery.map(imageObject => ({
+      return this.productGallery.map(imageObject => ({
         id: imageObject.id,
         mobile: {
           url: imageObject.src,

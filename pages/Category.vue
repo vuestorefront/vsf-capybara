@@ -90,10 +90,10 @@
           <lazy-hydrate :trigger-hydration="!loading">
             <div class="products__list">
               <SfProductCard
-                v-for="(product, index) in products"
+                v-for="product in products"
                 :key="product.id"
                 :title="product.title"
-                :image="getBreadcrumbsCurrent === 'Jackets' ? tempImages[index] : product.image"
+                :image="product.image"
                 :regular-price="product.price.regular"
                 :special-price="product.price.special"
                 :max-rating="product.rating.max"
@@ -173,8 +173,6 @@ import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/ca
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
 import AIconFilter from 'theme/components/atoms/a-icon-filter';
-import AIconViewGrid from 'theme/components/atoms/a-icon-view-grid';
-import AIconViewRow from 'theme/components/atoms/a-icon-view-row';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { getProductPrice } from 'theme/helpers';
 import {
@@ -260,11 +258,6 @@ export default {
     };
   },
   computed: {
-    // TEMP
-    tempImages () {
-      return require('theme/assets/images-temp.json').images
-    },
-    //
     ...mapGetters({
       getCurrentSearchQuery: 'category-next/getCurrentSearchQuery',
       getCategoryProducts: 'category-next/getCategoryProducts',
