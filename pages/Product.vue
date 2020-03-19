@@ -192,7 +192,6 @@ export default {
   async mounted () {
     await Promise.all([
       this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
-      this.$store.dispatch('promoted/updatePromotedOffers'),
       this.$store.dispatch('instagram/updateInstagramImages')
     ])
   },

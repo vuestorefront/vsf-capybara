@@ -109,6 +109,7 @@ export default {
 
 .o-bottom-navigation {
   position: relative;
+  z-index: 1;
   @include for-desktop() {
     display: none;
   }

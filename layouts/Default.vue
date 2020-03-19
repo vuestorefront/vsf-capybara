@@ -131,7 +131,10 @@ export default {
     }
   },
   serverPrefetch () {
-    return this.fetchMenuData();
+    return Promise.all([
+      this.$store.dispatch('promoted/updatePromotedOffers'),
+      this.fetchMenuData()
+    ]);
   },
   metaInfo: Head
 };
