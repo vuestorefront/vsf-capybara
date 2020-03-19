@@ -15,7 +15,7 @@
           :to="item.link"
           class="sf-menu-item"
           active-class="sf-menu-item--active"
-          @click.native="$store.commit('ui/toggleMenu')"
+          @click.native="$store.commit('ui/closeMenu')"
         >
           <span class="sf-menu-item__label">{{ item.name }}</span>
           <SfIcon
@@ -28,19 +28,32 @@
         </router-link>
       </SfMegaMenuColumn>
       <template #aside>
-        <!-- <AsidePlaceholder/> -->
+        <div class="aside-menu">
+          <div
+            class="aside-tile"
+            :class="`aside-tile--${banner.type}`"
+            v-for="banner in banners"
+            :key="banner.image"
+          >
+            <h3 class="aside-title">
+              {{ banner.title }}
+            </h3>
+            <SfImage class="aside-image" :src="banner.image" />
+          </div>
+        </div>
       </template>
     </SfMegaMenu>
   </div>
 </template>
 <script>
-import { SfMegaMenu, SfIcon } from '@storefront-ui/vue';
+import { SfMegaMenu, SfIcon, SfImage } from '@storefront-ui/vue';
 import config from 'config'
 import get from 'lodash-es/get'
 import { prepareCategoryMenuItem } from 'theme/helpers';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
+import { checkWebpSupport } from 'theme/helpers'
 export default {
-  components: { SfMegaMenu, SfIcon },
+  components: { SfMegaMenu, SfIcon, SfImage },
   props: {
     title: {
       type: String,
@@ -52,9 +65,13 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      isWebpSupported: state => state.ui.isWebpSupported
+    }),
     ...mapGetters({
       getCategories: 'category/getCategories',
-      getCurrentCategory: 'category/getCurrentCategory'
+      getCurrentCategory: 'category/getCurrentCategory',
+      getPromotedOffers: 'promoted/getPromotedOffers'
     }),
     categories () {
       return this.categoriesIds
@@ -82,11 +99,16 @@ export default {
     },
     currentCategoryTitle () {
       return this.getCurrentCategory.name || ''
+    },
+    banners () {
+      return checkWebpSupport(this.getPromotedOffers.menuAsideBanners, this.isWebpSupported)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+@import "~@storefront-ui/vue/styles";
+
 .m-menu {
   position: absolute;
   left: 0;
@@ -97,7 +119,28 @@ export default {
   visibility: hidden;
   transition: 0.2s;
 }
-::v-deep .sf-mega-menu__menu {
-  --mega-menu-menu-justify-content: flex-start;
+.aside-menu {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.aside-tile {
+  margin-bottom: 1.25rem;
+  &--mobile {
+    display: none;
+    @include for-mobile {
+      display: block;
+    }
+  }
+  &--desktop {
+    display: none;
+    @include for-desktop {
+      display: block;
+    }
+  }
+}
+.aside-title {
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
 }
 </style>

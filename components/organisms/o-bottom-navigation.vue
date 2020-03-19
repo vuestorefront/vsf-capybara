@@ -2,11 +2,12 @@
   <div class="o-bottom-navigation">
     <SfBottomNavigation>
       <SfBottomNavigationItem
-        v-for="(item, index) in navigationItems"
-        :key="index"
+        v-for="item in navigationItems"
+        :key="item.icon"
         :icon="item.icon"
         :label="item.label"
         :is-floating="item.isFloating"
+        :class="{ 'sf-bottom-navigation-item--active':isActive(item.icon)}"
         @click.native="item.onClick"
       />
     </SfBottomNavigation>
@@ -40,8 +41,39 @@ export default {
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
     ...mapState({
-      isSearchPanelVisible: state => state.ui.searchpanel
-    })
+      isSidebarVisible: state => state.ui.sidebar,
+      isMicrocartVisible: state => state.ui.microcart,
+      isSearchPanelVisible: state => state.ui.searchpanel,
+      isOverlayVisible: state => state.ui.overlay,
+      isLoaderVisible: state => state.ui.loader,
+      isModalVisible: state => state.ui.modal.activeModals.length > 0,
+      isMobileMenu: state => state.ui.isMobileMenu
+    }),
+    isBottomNavigationOnTop () {
+      return !this.isSidebarVisible &&
+        !this.isMicrocartVisible &&
+        !this.isSearchPanelVisible &&
+        !this.isOverlayVisible &&
+        !this.isLoaderVisible &&
+        !this.isModalVisible;
+    },
+    isActive () {
+      return (icon) => {
+        switch (icon) {
+          case 'home': {
+            const isHomepage = this.$route.name === this.localizedRoute({name: 'home', path: '/'}).name
+            return isHomepage && !this.isMobileMenu
+          }
+          case 'menu': {
+            return this.isMobileMenu
+          }
+          default: {
+            // we don't need to show active icon for profile and cart, because bottom navigation is below
+            return false
+          }
+        }
+      }
+    }
   },
   methods: {
     ...mapActions({
@@ -49,12 +81,16 @@ export default {
       openMicrocart: 'ui/toggleMicrocart'
     }),
     goToHome () {
+      this.$store.commit('ui/closeMenu')
       this.$router.push(this.localizedRoute('/'));
     },
     openMenu () {
-      this.$store.commit('ui/toggleMenu')
+      this.isMobileMenu
+        ? this.$store.commit('ui/closeMenu')
+        : this.$store.commit('ui/openMenu')
     },
     goToAccount () {
+      this.$store.commit('ui/closeMenu')
       if (this.isLoggedIn) {
         this.$router.push(this.localizedRoute('/my-account'))
       } else {
@@ -62,6 +98,7 @@ export default {
       }
     },
     goToCart () {
+      this.$store.commit('ui/closeMenu')
       this.openMicrocart();
     }
   }
@@ -71,6 +108,7 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-bottom-navigation {
+  position: relative;
   @include for-desktop() {
     display: none;
   }
