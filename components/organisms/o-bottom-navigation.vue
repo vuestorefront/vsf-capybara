@@ -41,22 +41,8 @@ export default {
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
     ...mapState({
-      isSidebarVisible: state => state.ui.sidebar,
-      isMicrocartVisible: state => state.ui.microcart,
-      isSearchPanelVisible: state => state.ui.searchpanel,
-      isOverlayVisible: state => state.ui.overlay,
-      isLoaderVisible: state => state.ui.loader,
-      isModalVisible: state => state.ui.modal.activeModals.length > 0,
       isMobileMenu: state => state.ui.isMobileMenu
     }),
-    isBottomNavigationOnTop () {
-      return !this.isSidebarVisible &&
-        !this.isMicrocartVisible &&
-        !this.isSearchPanelVisible &&
-        !this.isOverlayVisible &&
-        !this.isLoaderVisible &&
-        !this.isModalVisible;
-    },
     isActive () {
       return (icon) => {
         switch (icon) {
