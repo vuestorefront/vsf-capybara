@@ -109,11 +109,12 @@ export default {
     }
   },
   watch: {
-    isMobileMenu () {
+    async isMobileMenu (status) {
       if (this.isMobileMenu) {
-        document.body.style.overflow = 'hidden'
+        // we can't add this style to body because sfui also add/remove overflow to body and there may be conflict
+        document.documentElement.style.overflow = 'hidden'
       } else {
-        document.body.style.overflow = ''
+        document.documentElement.style.overflow = ''
       }
     }
   }
