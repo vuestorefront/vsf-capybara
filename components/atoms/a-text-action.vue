@@ -1,15 +1,19 @@
 <template>
   <div class="a-text-action">
-    <button class="sf-action" @click="$emit('click')">
+    <SfButton class="sf-button--text" @click="$emit('click')">
       <slot>
         {{ text }}
       </slot>
-    </button>
+    </SfButton>
   </div>
 </template>
 <script>
+import { SfButton } from '@storefront-ui/vue';
 export default {
   name: 'ATextAction',
+  components: {
+    SfButton
+  },
   props: {
     text: {
       type: String,
@@ -21,20 +25,9 @@ export default {
 <style lang="scss" scoped>
 .a-text-action {
   display: flex;
-  margin: var(--spacer-big) 0 (var(--spacer-big) / 2);
-}
-/* SfAction or SfButton modifier */
-.sf-action {
-  padding: 0;
-  border: 0;
-  outline: none;
-  background-color: transparent;
-  color: var(--c-text);
-  font-family: var(--body-font-family-secondary);
-  font-size: var(--font-size-regular);
-  font-weight: var(--body-font-weight-secondary);
-  line-height: 1.6;
-  text-decoration: underline;
-  cursor: pointer;
+  .sf-button--text {
+    --button-color: var(--c-text);
+    --button-font-size: var(--font-size-regular);
+  }
 }
 </style>
