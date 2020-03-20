@@ -32,7 +32,8 @@ export default {
     return {
       navigationItems: [
         { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
-        { icon: 'menu', label: this.$t('Menu'), onClick: this.openMenu },
+        { icon: 'menu', label: this.$t('Menu'), onClick: this.goToMenu },
+        { icon: 'search', label: this.$t('Search'), onClick: this.goToSearch },
         { icon: 'profile', label: this.$t('Profile'), onClick: this.goToAccount },
         { icon: 'add_to_cart', label: this.$t('Cart'), onClick: this.goToCart, isFloating: true }
       ]
@@ -41,17 +42,21 @@ export default {
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
     ...mapState({
-      isMobileMenu: state => state.ui.isMobileMenu
+      isMobileMenu: state => state.ui.isMobileMenu,
+      isSearchPanelVisible: state => state.ui.searchpanel
     }),
     isActive () {
       return (icon) => {
         switch (icon) {
           case 'home': {
             const isHomepage = this.$route.name === this.localizedRoute({name: 'home', path: '/'}).name
-            return isHomepage && !this.isMobileMenu
+            return isHomepage && !this.isMobileMenu && !this.isSearchPanelVisible
           }
           case 'menu': {
             return this.isMobileMenu
+          }
+          case 'search': {
+            return this.isSearchPanelVisible
           }
           default: {
             // we don't need to show active icon for profile and cart, because bottom navigation is below
@@ -67,16 +72,24 @@ export default {
       openMicrocart: 'ui/toggleMicrocart'
     }),
     goToHome () {
+      this.$store.commit('ui/setSearchpanel', false)
       this.$store.commit('ui/closeMenu')
+
       this.$router.push(this.localizedRoute('/'));
     },
-    openMenu () {
+    goToMenu () {
+      this.$store.commit('ui/setSearchpanel', false)
+
       this.isMobileMenu
         ? this.$store.commit('ui/closeMenu')
         : this.$store.commit('ui/openMenu')
     },
-    goToAccount () {
+    goToSearch () {
       this.$store.commit('ui/closeMenu')
+
+      this.$store.commit('ui/setSearchpanel', !this.isSearchPanelVisible)
+    },
+    goToAccount () {
       if (this.isLoggedIn) {
         this.$router.push(this.localizedRoute('/my-account'))
       } else {
@@ -84,7 +97,6 @@ export default {
       }
     },
     goToCart () {
-      this.$store.commit('ui/closeMenu')
       this.openMicrocart();
     }
   }
