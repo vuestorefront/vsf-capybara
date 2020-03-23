@@ -64,5 +64,39 @@
       },
       "link": "/men/tops-men/tees-men/tees-16"
     }
+  ],
+  "menuAsideBanners": [
+    {
+      "title": "Last pairs left",
+      "type": "mobile",
+      "image": {
+        "webp": "/assets/banner/webp/bannerSandals-full.webp",
+        "fallback": "/assets/banner/png/bannerSandals-full.png"
+      }
+    },
+    {
+      "title": "Last pairs left",
+      "type": "desktop",
+      "image": {
+        "webp": "/assets/banner/jpg/bannerSandals.jpg",
+        "fallback": "/assets/banner/jpg/bannerSandals.jpg"
+      }
+    },
+    {
+      "title": "Beach bags 2=1",
+      "type": "mobile",
+      "image": {
+        "webp": "/assets/banner/webp/bannerBeachBag-full.webp",
+        "fallback": "/assets/banner/png/bannerBeachBag-full.png"
+      }
+    },
+    {
+      "title": "Beach bags 2=1",
+      "type": "desktop",
+      "image": {
+        "webp": "/assets/banner/jpg/bannerBeachBag.jpg",
+        "fallback": "/assets/banner/jpg/bannerBeachBag.jpg"
+      }
+    }
   ]
 }

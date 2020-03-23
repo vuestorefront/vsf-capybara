@@ -154,7 +154,6 @@ export default {
     await Promise.all([
       store.dispatch('homepage/fetchNewCollection'),
       store.dispatch('promoted/updateHeadImage'),
-      store.dispatch('promoted/updatePromotedOffers'),
       store.dispatch('instagram/updateInstagramImages')
     ]);
   },

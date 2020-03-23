@@ -90,10 +90,10 @@
           <lazy-hydrate :trigger-hydration="!loading">
             <div class="products__list">
               <SfProductCard
-                v-for="(product, index) in products"
+                v-for="product in products"
                 :key="product.id"
                 :title="product.title"
-                :image="getBreadcrumbsCurrent === 'Jackets' ? tempImages[index] : product.image"
+                :image="product.image"
                 :regular-price="product.price.regular"
                 :special-price="product.price.special"
                 :max-rating="product.rating.max"
@@ -171,13 +171,10 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { getTopLevelCategories } from 'theme/helpers';
+import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
 import AIconFilter from 'theme/components/atoms/a-icon-filter';
-import {
-  formatCategoryLink,
-  formatProductLink
-} from '@vue-storefront/core/modules/url/helpers';
-import { prepareCategoryProduct } from 'theme/helpers';
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
+import { getProductPrice } from 'theme/helpers';
 import {
   localizedRoute,
   currentStoreView
@@ -261,11 +258,6 @@ export default {
     };
   },
   computed: {
-    // TEMP
-    tempImages () {
-      return require('theme/assets/images-temp.json').images
-    },
-    //
     ...mapGetters({
       getCurrentSearchQuery: 'category-next/getCurrentSearchQuery',
       getCategoryProducts: 'category-next/getCategoryProducts',
@@ -310,15 +302,15 @@ export default {
 
           const subCategories = category.children_data
             ? category.children_data
-              .map(subCategory => this.prepareCategoryMenuItem(
+              .map(subCategory => prepareCategoryMenuItem(
                 this.getCategories.find(category => category.id === subCategory.id)
               ))
               .filter(Boolean)
             : [];
 
           return {
-            ...this.prepareCategoryMenuItem(category),
-            items: [this.prepareCategoryMenuItem(viewAllMenuItem)]
+            ...prepareCategoryMenuItem(category),
+            items: [prepareCategoryMenuItem(viewAllMenuItem)]
               .concat(subCategories)
               .sort((a, b) => a.position - b.position)
           };
@@ -490,18 +482,6 @@ export default {
     },
     initPagination () {
       this.currentPage = 1;
-    },
-    prepareCategoryMenuItem (category) {
-      if (!category) return;
-
-      return {
-        id: category.id,
-        name: category.name,
-        path: category.path,
-        link: formatCategoryLink(category),
-        count: category.product_count || '',
-        position: category.position
-      };
     },
     changeSortOder (sortOrder) {
       if (this.getCurrentSearchQuery.sort !== sortOrder) {
