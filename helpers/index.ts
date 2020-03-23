@@ -1,3 +1,4 @@
+import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import config from 'config'
 import { currentStoreView } from '@vue-storefront/core/lib/multistore'
 import { productThumbnailPath, getThumbnailPath, isServer } from '@vue-storefront/core/helpers'
@@ -67,5 +68,18 @@ export function prepareCategoryProduct (product) {
       max: 5,
       score: 5
     }
+  }
+}
+
+export function prepareCategoryMenuItem (category) {
+  if (!category) return;
+
+  return {
+    id: category.id,
+    name: category.name,
+    link: formatCategoryLink(category),
+    count: category.product_count || '',
+    position: category.position,
+    path: category.path
   };
 }

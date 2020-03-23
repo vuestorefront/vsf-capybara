@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="o-modal">
     <transition-group name="fade">
       <component
         class="modal"
@@ -43,7 +43,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
-
+.o-modal {
+  position: relative;
+  z-index: 2;
+}
 .modal {
   box-sizing: border-box;
   @include for-desktop {

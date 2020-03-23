@@ -1,5 +1,9 @@
 <template>
   <div class="o-header">
+    <SfOverlay
+      class="overlay"
+      :visible="isHoveredMenu"
+    />
     <SfHeader
       :active-icon="activeIcon"
       :is-sticky="isSearchPanelVisible"
@@ -12,6 +16,8 @@
         <SfHeaderNavigationItem
           v-for="category in categories"
           :key="category.id"
+          @mouseover="isHoveredMenu = true"
+          @mouseleave="isHoveredMenu = false"
         >
           <router-link
             :class="{active: isCategoryActive(category)}"
@@ -19,6 +25,10 @@
           >
             {{ category.name }}
           </router-link>
+          <MMenu
+            :categories-ids="category.children_data"
+            :title="category.name"
+          />
         </SfHeaderNavigationItem>
       </template>
       <template #search>
@@ -40,16 +50,22 @@
         </div>
       </template>
     </SfHeader>
+    <MMenu
+      v-show="isMobileMenu"
+      class="mobile-menu"
+      :categories-ids="categories"
+    />
   </div>
 </template>
 
 <script>
-import { SfHeader, SfButton } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
+import MMenu from 'theme/components/molecules/m-menu';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import { getTopLevelCategories } from 'theme/helpers';
 
@@ -61,17 +77,22 @@ export default {
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
-    OSearch
+    OSearch,
+    MMenu,
+    SfOverlay
+  },
+  data () {
+    return {
+      isHoveredMenu: false
+    }
   },
   computed: {
-    ...mapGetters({
-      getCategories: 'category/getCategories',
-      getCurrentCategory: 'category-next/getCurrentCategory',
-      isLoggedIn: 'user/isLoggedIn'
-    }),
     ...mapState({
       isSearchPanelVisible: state => state.ui.searchpanel
     }),
+    ...mapState('ui', ['isMobileMenu']),
+    ...mapGetters('category', ['getCategories', 'getCurrentCategory']),
+    ...mapGetters('user', ['isLoggedIn']),
     activeIcon () {
       return this.isLoggedIn ? 'account' : '';
     },
@@ -86,6 +107,16 @@ export default {
     isCategoryActive (category) {
       return this.getCurrentCategory.path ? this.getCurrentCategory.path.startsWith(category.path) : false;
     }
+  },
+  watch: {
+    async isMobileMenu (status) {
+      if (this.isMobileMenu) {
+        // we can't add this style to body because sfui also add/remove overflow to body and there may be conflict
+        document.documentElement.style.overflow = 'hidden'
+      } else {
+        document.documentElement.style.overflow = ''
+      }
+    }
   }
 };
 </script>
@@ -93,6 +124,14 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+.sf-header-navigation-item:hover .m-menu {
+  opacity: 1;
+  visibility: visible;
+}
+.overlay {
+  position:absolute;
+  z-index:1;
+}
 .o-header {
   box-sizing: border-box;
   ::v-deep {
@@ -125,6 +164,24 @@ export default {
     .sf-header__icons {
       display: none;
     }
+    .mobile-menu {
+      position: fixed;
+      opacity: 1;
+      visibility: visible;
+      top: 0;
+      z-index: 1;
+    }
   }
+}
+.sf-header {
+  position: relative;
+  z-index: 1;
+}
+.ml-auto {
+  margin-left: auto;
+}
+.sf-header-navigation-item:hover ::v-deep .m-menu {
+  opacity: 1;
+  visibility: visible;
 }
 </style>
