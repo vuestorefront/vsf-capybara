@@ -1,6 +1,6 @@
 <template>
-  <div class="a-static">
-    <SfTabs v-if="showTabs" :open-tab="1">
+  <div v-if="isContentAvailable" class="a-static">
+    <SfTabs v-if="showTabs">
       <SfTab v-for="c in content" :key="c.title" :title="c.title">
         <div v-html="c.message" />
       </SfTab>
@@ -33,6 +33,11 @@ export default {
   computed: {
     showTabs () {
       return Array.isArray(this.content);
+    },
+    isContentAvailable () {
+      return Array.isArray(this.content)
+        ? this.content.length
+        : this.content.title && this.content.message;
     }
   }
 };

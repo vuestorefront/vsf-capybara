@@ -56,7 +56,7 @@
 <script>
 import get from 'lodash-es/get'
 import config from 'config';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { SfSticky } from '@storefront-ui/vue';
 import ATextAction from 'theme/components/atoms/a-text-action';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
@@ -67,6 +67,7 @@ import MProductOptionsConfigurable from 'theme/components/molecules/m-product-op
 import MProductOptionsBundle from 'theme/components/molecules/m-product-options-bundle';
 import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
 import MProductOptionsGroup from 'theme/components/molecules/m-product-options-group';
+import { ModalList } from 'theme/store/ui/modals';
 
 export default {
   components: {
@@ -152,8 +153,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     openSizeGuide () {
-      this.$bus.$emit('modal-show', 'modal-sizeguide');
+      this.openModal({name: ModalList.SizeGuide})
     }
   }
 };

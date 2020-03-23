@@ -4,6 +4,7 @@
 export enum ModalList {
   Review = 'm-modal-review',
   Auth = 'm-modal-authentication',
+  SizeGuide = 'm-modal-size-guide',
   AccountBenefits = 'm-modal-account-benefits',
   TermsAndConditions = 'm-modal-terms-and-conditions',
   FeatureNotImplemented = 'm-modal-feature-not-implemented'
@@ -15,6 +16,7 @@ export enum ModalList {
 export const modalComponents = new Map([
   [ModalList.Review, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-review.vue')],
   [ModalList.Auth, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-authentication.vue')],
+  [ModalList.SizeGuide, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-size-guide.vue')],
   [ModalList.AccountBenefits, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-account-benefits.vue')],
   [ModalList.TermsAndConditions, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-terms-and-conditions.vue')],
   [ModalList.FeatureNotImplemented, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-feature-not-implemented.vue')]

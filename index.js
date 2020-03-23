@@ -12,6 +12,7 @@ import { homepageStore } from 'theme/store/homepage';
 import { uiStore } from 'theme/store/ui';
 import { promotedStore } from 'theme/store/promoted-offers';
 import { instagramStore } from 'theme/store/instagram-images';
+import { defaultContentStore } from 'theme/store/default-content';
 import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
 
 once('__VUE_EXTEND_DROPPOINT_VPB__', () => {
@@ -37,6 +38,7 @@ function initTheme (app, router, store, config) {
   store.registerModule('ui', uiStore);
   store.registerModule('promoted', promotedStore);
   store.registerModule('instagram', instagramStore);
+  store.registerModule('defaultContent', defaultContentStore);
 }
 
 export { themeEntry, initTheme };

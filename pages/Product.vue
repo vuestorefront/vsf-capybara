@@ -55,7 +55,6 @@
     >
       <AImagesGrid :images="instagramImages" />
     </SfSection>
-    <SizeGuide />
   </div>
 </template>
 
@@ -75,18 +74,11 @@ import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
-
 import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
-
-const SizeGuide = () =>
-  import(
-    /* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Product/SizeGuide'
-  );
 
 export default {
   name: 'Product',
   components: {
-    SizeGuide,
     LazyHydrate,
     MRelatedProducts,
     SfSection,
