@@ -10,8 +10,8 @@
     <SfSidebar
       :visible="isSearchPanelVisible"
       :button="false"
+      :overlay="false"
       class="sf-sidebar sidebar__search"
-      @close="$store.commit('ui/setSearchpanel', false)"
     >
       <component
         v-if="search && isSearchPanelVisible"
