@@ -2,7 +2,7 @@
   <div class="m-menu">
     <SfMegaMenu
       :title="title || currentCategoryTitle"
-      :visible="true"
+      :visible="visible"
     >
       <SfMegaMenuColumn
         v-for="category in categories"
@@ -55,6 +55,10 @@ import { checkWebpSupport } from 'theme/helpers'
 export default {
   components: { SfMegaMenu, SfIcon, SfImage },
   props: {
+    visible: {
+      type: Boolean,
+      default: true
+    },
     title: {
       type: String,
       default: ''

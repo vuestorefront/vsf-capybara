@@ -2,7 +2,8 @@
   <div class="o-header">
     <SfOverlay
       class="overlay"
-      :visible="isHoveredMenu"
+      :visible="isHoveredMenu || isSearchPanelVisible"
+      @click="$store.commit('ui/setSearchpanel', false)"
     />
     <SfHeader
       :active-icon="activeIcon"
@@ -26,6 +27,7 @@
             {{ category.name }}
           </router-link>
           <MMenu
+            :visible="isHoveredMenu && !isSearchPanelVisible"
             :categories-ids="category.children_data"
             :title="category.name"
           />
@@ -124,9 +126,14 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.sf-header-navigation-item:hover .m-menu {
-  opacity: 1;
-  visibility: visible;
+.sf-header-navigation-item {
+  &:hover .m-menu {
+    opacity: 1;
+    visibility: visible;
+  }
+  &::after {
+    bottom: 0;
+  }
 }
 .overlay {
   position:absolute;
@@ -170,18 +177,18 @@ export default {
       visibility: visible;
       top: 0;
       z-index: 1;
+      --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
     }
   }
 }
 .sf-header {
   position: relative;
   z-index: 1;
+  ::v-deep &__sticky-container {
+    max-width: 1240px;
+  }
 }
 .ml-auto {
   margin-left: auto;
-}
-.sf-header-navigation-item:hover ::v-deep .m-menu {
-  opacity: 1;
-  visibility: visible;
 }
 </style>
