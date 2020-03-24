@@ -33,7 +33,11 @@
             </router-link>
           </SfListItem>
           <SfListItem>
-            <LanguageSwitcher class="sf-menu-item" />
+            <SfMenuItem
+              @click.native="showLanguageSwitcher"
+              class="sf-footer__menu-item"
+              :label="currentLanguage"
+            />
           </SfListItem>
           <SfListItem class="sf-footer__menu-item">
             {{ getVersionInfo }}
@@ -58,17 +62,18 @@
 </template>
 
 <script>
-import LanguageSwitcher from 'theme/components/core/blocks/Switcher/LanguageSwitcher';
+import { mapActions } from 'vuex';
 // import ABackToTop from 'theme/components/atoms/a-back-to-top';
 import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
+import { ModalList } from 'theme/store/ui/modals'
 import { getPathForStaticPage } from 'theme/helpers';
 import config from 'config';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import get from 'lodash-es/get';
 
 export default {
   name: 'MainFooter',
   components: {
-    LanguageSwitcher,
     // ABackToTop,
     SfFooter,
     SfList,
@@ -117,6 +122,18 @@ export default {
     },
     getVersionInfo () {
       return `v${process.env.__APPVERSION__} ${process.env.__BUILDTIME__}`;
+    },
+    currentLanguage () {
+      const { i18n = config.i18n } = currentStoreView();
+      return `${i18n.defaultCountry} / ${i18n.defaultLanguage} / ${i18n.currencyCode}`;
+    }
+  },
+  methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
+    showLanguageSwitcher () {
+      this.openModal({name: ModalList.LanguageSwitcher})
     }
   }
 };
