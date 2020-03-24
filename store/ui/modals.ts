@@ -7,7 +7,8 @@ export enum ModalList {
   SizeGuide = 'm-modal-size-guide',
   AccountBenefits = 'm-modal-account-benefits',
   TermsAndConditions = 'm-modal-terms-and-conditions',
-  FeatureNotImplemented = 'm-modal-feature-not-implemented'
+  FeatureNotImplemented = 'm-modal-feature-not-implemented',
+  LanguageSwitcher = 'm-modal-language-switcher'
 }
 
 /**
@@ -19,7 +20,8 @@ export const modalComponents = new Map([
   [ModalList.SizeGuide, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-size-guide.vue')],
   [ModalList.AccountBenefits, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-account-benefits.vue')],
   [ModalList.TermsAndConditions, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-terms-and-conditions.vue')],
-  [ModalList.FeatureNotImplemented, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-feature-not-implemented.vue')]
+  [ModalList.FeatureNotImplemented, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-feature-not-implemented.vue')],
+  [ModalList.LanguageSwitcher, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-language-switcher.vue')]
 ])
 
 /**
