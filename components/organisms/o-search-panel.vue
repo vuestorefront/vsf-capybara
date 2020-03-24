@@ -165,7 +165,12 @@ export default {
   overflow-x: hidden;
 
   @include for-mobile {
-    max-height: calc(100vh - var(--header-container-height));
+    max-height: calc(100vh - var(--header-container-height) - var(--bottom-navigation-height));
+  }
+
+  @include for-desktop {
+    max-width: 1240px;
+    margin: auto;
   }
 
   .container {
