@@ -70,6 +70,7 @@ export default {
     return {
       loadOrderConfirmation: false,
       ordersData: [],
+      quicklink: null,
       microcartAsyncComponent: () => ({
         component: OMicrocart(),
         loading: LoadingSpinner,
@@ -91,11 +92,18 @@ export default {
       next();
     });
     this.$router.afterEach(() => {
+      if (!isServer) {
+        this.quicklink.listen();
+      }
       this.$Progress.finish();
     });
     this.$bus.$on('offline-order-confirmation', this.onOrderConfirmation);
   },
   mounted () {
+    if (!isServer) {
+      this.quicklink = require('quicklink');
+      this.quicklink.listen();
+    }
     this.$store.dispatch('ui/checkWebpSupport');
   },
   beforeDestroy () {
