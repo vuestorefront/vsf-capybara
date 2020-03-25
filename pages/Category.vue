@@ -565,20 +565,9 @@ export default {
       ]
       : [];
 
-    const link = []
-    this.products.forEach(product => {
-      link.push(
-        {
-          rel: 'prefetch',
-          href: product.link
-        }
-      )
-    })
-
     return {
       title: htmlDecode(meta_title || name),
-      meta,
-      link
+      meta
     };
   }
 };
