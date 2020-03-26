@@ -15,9 +15,15 @@
         <SfTable class="sf-table--bordered">
           <SfTableHeading>
             <SfTableHeader>{{ $t("Product Name") }}</SfTableHeader>
-            <SfTableHeader class="table-center">{{ $t("Price") }}</SfTableHeader>
-            <SfTableHeader class="table-center">{{ $t("Qty") }}</SfTableHeader>
-            <SfTableHeader class="table-center">{{ $t("Subtotal") }}</SfTableHeader>
+            <SfTableHeader class="table-center">
+              {{ $t("Price") }}
+            </SfTableHeader>
+            <SfTableHeader class="table-center">
+              {{ $t("Qty") }}
+            </SfTableHeader>
+            <SfTableHeader class="table-center">
+              {{ $t("Subtotal") }}
+            </SfTableHeader>
           </SfTableHeading>
           <SfTableRow
             v-for="(product, productKey) in order.products"
@@ -33,9 +39,15 @@
                 <strong>{{ option.label }}: </strong> {{ option.value }}
               </span>
             </SfTableData>
-            <SfTableData class="table-center">{{ product.price_incl_tax | price }}</SfTableData>
-            <SfTableData class="table-center">{{ product.qty }} </SfTableData>
-            <SfTableData class="table-center">{{ (product.price_incl_tax * product.qty) | price }}</SfTableData>
+            <SfTableData class="table-center">
+              {{ product.price_incl_tax | price }}
+            </SfTableData>
+            <SfTableData class="table-center">
+              {{ product.qty }}
+            </SfTableData>
+            <SfTableData class="table-center">
+              {{ (product.price_incl_tax * product.qty) | price }}
+            </SfTableData>
           </SfTableRow>
         </SfTable>
       </div>
