@@ -21,10 +21,6 @@
       <ONotification />
       <CookieNotification />
       <OfflineBadge />
-      <OrderConfirmation
-        v-if="loadOrderConfirmation"
-        :orders-data="ordersData"
-      />
       <OBottomNavigation />
     </div>
     <vue-progress-bar />
@@ -32,7 +28,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import OHeader from 'theme/components/organisms/o-header';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
@@ -47,11 +43,10 @@ import config from 'config';
 import { SfSidebar } from '@storefront-ui/vue';
 import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
 import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
+import { ModalList } from 'theme/store/ui/modals'
 
 const OMicrocart = () =>
   import(/* webpackChunkName: "vsf-microcart" */ 'theme/components/organisms/o-microcart');
-const OrderConfirmation = () =>
-  import(/* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Checkout/OrderConfirmation');
 
 export default {
   components: {
@@ -61,15 +56,12 @@ export default {
     ONotification,
     CookieNotification,
     OfflineBadge,
-    OrderConfirmation,
     OBottomNavigation,
     SfSidebar,
     OModal
   },
   data () {
     return {
-      loadOrderConfirmation: false,
-      ordersData: [],
       quicklink: null,
       microcartAsyncComponent: () => ({
         component: OMicrocart(),
@@ -110,10 +102,12 @@ export default {
     this.$bus.$off('offline-order-confirmation', this.onOrderConfirmation);
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     onOrderConfirmation (payload) {
-      this.loadOrderConfirmation = true;
-      this.ordersData = payload;
-      this.$bus.$emit('modal-show', 'modal-order-confirmation');
+      ;
+      this.openModal({name: ModalList.OrderConfirmation, payload: [payload]})
     },
     fetchMenuData () {
       return this.$store.dispatch('category/list', {
