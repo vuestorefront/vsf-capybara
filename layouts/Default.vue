@@ -105,7 +105,8 @@ export default {
     ...mapActions('ui', {
       openModal: 'openModal'
     }),
-    onOrderConfirmation (payload) {;
+    onOrderConfirmation (payload) {
+      ;
       this.openModal({name: ModalList.OrderConfirmation, payload: [payload]})
     },
     fetchMenuData () {
