@@ -2,7 +2,9 @@
   <div class="m-loader">
     <div class="m-loader--container">
       <SfLoader />
-      <div v-if="message" class="m-loader--message" >{{ message }}</div>
+      <div v-if="message" class="m-loader--message">
+        {{ message }}
+      </div>
     </div>
   </div>
 </template>
