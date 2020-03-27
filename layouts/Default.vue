@@ -20,7 +20,7 @@
       <OModal />
       <ONotification />
       <MCookieNotification />
-      <OfflineBadge />
+      <MOfflineBadge />
       <OBottomNavigation />
     </div>
     <vue-progress-bar />
@@ -36,7 +36,7 @@ import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
 import Loader from 'theme/components/core/Loader';
 import ONotification from 'theme/components/organisms/o-notification';
 import MCookieNotification from 'theme/components/molecules/m-cookie-notification';
-import OfflineBadge from 'theme/components/core/OfflineBadge';
+import MOfflineBadge from 'theme/components/molecules/m-offline-badge';
 import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
@@ -55,7 +55,7 @@ export default {
     Loader,
     ONotification,
     MCookieNotification,
-    OfflineBadge,
+    MOfflineBadge,
     OBottomNavigation,
     SfSidebar,
     OModal
