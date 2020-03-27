@@ -769,6 +769,9 @@ export default {
     --button-background: var(--c-light);
     --button-color: var(--c-dark-variant);
     margin: 0.625rem 0 0 0;
+    &:hover {
+      --button-background: var(--c-light-darken);
+    }
   }
 }
 </style>
