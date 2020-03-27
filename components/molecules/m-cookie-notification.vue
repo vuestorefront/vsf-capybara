@@ -1,6 +1,6 @@
 <template>
   <transition name="fade" appear>
-    <div v-if="isOpen" class="m-cookie-notification">
+    <div v-show="isOpen" class="m-cookie-notification">
       <div class="cookie">
         <div class="cookie__message">
           {{ message }}
@@ -49,7 +49,7 @@ export default {
       isOpen: false
     };
   },
-  created () {
+  beforeMount () {
     this.$store
       .dispatch('claims/check', {
         claimCode: 'cookiesAccepted'
