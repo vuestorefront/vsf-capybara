@@ -6,7 +6,9 @@
       :message="$t('You are offline. Some features might not be available.')"
       type="danger"
     >
-      <template #close>&nbsp;</template>
+      <template #close>
+&nbsp;
+      </template>
     </SfNotification>
   </no-ssr>
 </template>
