@@ -19,7 +19,7 @@
       <OFooter />
       <OModal />
       <ONotification />
-      <CookieNotification />
+      <MCookieNotification />
       <OfflineBadge />
       <OBottomNavigation />
     </div>
@@ -35,7 +35,7 @@ import OModal from 'theme/components/organisms/o-modal';
 import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
 import Loader from 'theme/components/core/Loader';
 import ONotification from 'theme/components/organisms/o-notification';
-import CookieNotification from 'theme/components/core/CookieNotification';
+import MCookieNotification from 'theme/components/molecules/m-cookie-notification';
 import OfflineBadge from 'theme/components/core/OfflineBadge';
 import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
@@ -54,7 +54,7 @@ export default {
     OFooter,
     Loader,
     ONotification,
-    CookieNotification,
+    MCookieNotification,
     OfflineBadge,
     OBottomNavigation,
     SfSidebar,
