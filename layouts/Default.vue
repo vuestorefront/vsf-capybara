@@ -41,8 +41,8 @@ import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
 import { SfSidebar } from '@storefront-ui/vue';
-import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
-import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
+import ALoadingSpinner from 'theme/components/atoms/a-loading-spinner';
+import ALoadingError from 'theme/components/atoms/a-loading-error';
 import { ModalList } from 'theme/store/ui/modals'
 
 const OMicrocart = () =>
@@ -65,8 +65,8 @@ export default {
       quicklink: null,
       microcartAsyncComponent: () => ({
         component: OMicrocart(),
-        loading: LoadingSpinner,
-        error: LoadingError,
+        loading: ALoadingSpinner,
+        error: ALoadingError,
         timeout: 3000
       })
     };
@@ -126,8 +126,8 @@ export default {
     reloadComponent () {
       this.microcartAsyncComponent = () => ({
         component: OMicrocart(),
-        loading: LoadingSpinner,
-        error: LoadingError,
+        loading: ALoadingSpinner,
+        error: ALoadingError,
         timeout: 3000
       });
     }
