@@ -34,13 +34,10 @@ Project structure is quite simple and typical for Vue ecosystem.
 │       └───webp
 ├───components
 │   ├───atoms
-│   ├───core
-│   │   └───blocks
 │   ├───molecules
 │   │   └───modals
 │   ├───organisms
 │   └───theme
-│       ├───blocks
 │       └───directives
 ├───config
 ├───css
@@ -66,8 +63,6 @@ Project structure is quite simple and typical for Vue ecosystem.
 ```
 
 We have `/assets` folder which contains static resources like banners or icons. In addition to standard formats like JPG or PNG, we have also prepared images in WEBP format to speed up loading time in modern browsers even more. The already described `/components` folder contains our components created with Atomic Design rules in mind. The `/config` folder allows us to configure Vue Storefront modules (de)activation - for example the Wishlist module is currently deactivated in Capybara theme. Next, `/css` folder contains some custom and main CSS rules for whole theme. In `/helpers` folder we add general-purpose utility functions to reduce code duplication. In `/layouts` we currently have only one theme layout - the default one. The already described `/pages` folder contain the main building blocks for the whole theme - page implementations. In `/resource` we put translations and other easily customized configurations like links to images from `/assets` folder which are used on Homepage. The `/router` folder contains theme routes and `/store` is our store.  :smirk:
-
-There are also some legacy sub-folders like `/components/core` or `/components/theme` inherited from default Vue Storefront theme, but we are currently working on rewriting them to match our Atomic Design rules. Most of them are already adapted.  :relaxed:
 
 # Component customization
 
