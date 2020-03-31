@@ -156,23 +156,6 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .o-search-panel {
-  position: fixed;
-  background-color: var(--c-white);
-  max-height: calc(66vh - var(--header-container-height));
-  right: 0;
-  left: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  @include for-mobile {
-    max-height: calc(100vh - var(--header-container-height) - var(--bottom-navigation-height));
-  }
-
-  @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
-  }
-
   .container {
     display: flex;
     padding-left: 40px;
