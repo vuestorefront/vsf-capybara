@@ -35,8 +35,8 @@
 import { SfSearchBar, SfSidebar } from '@storefront-ui/vue';
 import { mapState, mapGetters } from 'vuex';
 import SearchPanelMixin from '@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel';
-import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
-import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
+import ALoadingSpinner from 'theme/components/atoms/a-loading-spinner';
+import ALoadingError from 'theme/components/atoms/a-loading-error';
 
 const SearchPanel = () =>
   import(/* webpackChunkName: "vsf-search-panel" */ 'theme/components/organisms/o-search-panel');
@@ -52,8 +52,8 @@ export default {
       size: 16,
       searchPanelAsyncComponent: () => ({
         component: SearchPanel(),
-        loading: LoadingSpinner,
-        error: LoadingError,
+        loading: ALoadingSpinner,
+        error: ALoadingError,
         timeout: 3000
       })
     }
@@ -75,8 +75,8 @@ export default {
     reloadComponent () {
       this.searchPanelAsyncComponent = () => ({
         component: SearchPanel(),
-        loading: LoadingSpinner,
-        error: LoadingError,
+        loading: ALoadingSpinner,
+        error: ALoadingError,
         timeout: 3000
       });
     }
@@ -93,12 +93,29 @@ export default {
     --sidebar-content-padding: 0;
     --sidebar-aside-top: var(--header-container-height);
     --sidebar-aside-width: auto;
-    ::v-deep .sf-overlay {
-      top: var(--header-container-height);
-    }
-
     @include for-mobile {
       --header-container-height: 7rem;
+    }
+    ::v-deep {
+      .sf-sidebar__content {
+        position: fixed;
+        background-color: var(--c-white);
+        height: auto;
+        max-height: calc(66vh - var(--header-container-height));
+        right: 0;
+        left: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        @include for-mobile {
+          max-height: calc(100vh - var(--header-container-height) - var(--bottom-navigation-height));
+        }
+
+        @include for-desktop {
+          max-width: 1240px;
+          margin: auto;
+        }
+      }
     }
   }
 }

@@ -6,7 +6,7 @@ New default template theme for [Vue Storefront](https://github.com/DivanteLtd/vu
 
  **🔨  Current status: Developer's preview**
 
-We have prepared [short introduction](https://github.com/DivanteLtd/vsf-capybara/blob/master/CODING_STANDARDS.md) to our coding standards and conventions we are using in Capybara theme.
+We have prepared [short introduction](https://github.com/DivanteLtd/vsf-capybara/blob/develop/CODING_STANDARDS.md) to our coding standards and conventions we are using in Capybara theme.
 
 ## 🚀 See it in action
 
