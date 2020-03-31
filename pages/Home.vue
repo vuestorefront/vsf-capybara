@@ -32,18 +32,7 @@
       </template>
     </SfBannerGrid>
 
-    <SfCallToAction
-      title="Subscribe to Newsletters"
-      description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      :image="newsletterImage"
-      class="call-to-action-newsletter"
-    >
-      <template #button>
-        <SfButton @click="showNewsletterPopup">
-          {{ $t("Subscribe") }}
-        </SfButton>
-      </template>
-    </SfCallToAction>
+    <ONewsletter />
 
     <SfSection title-heading="Best Sellers" class="section">
       <lazy-hydrate :trigger-hydration="!loading">
@@ -69,16 +58,14 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import Home from '@vue-storefront/core/pages/Home';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
+import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
-import { ModalList } from 'theme/store/ui/modals'
 import { checkWebpSupport } from 'theme/helpers'
 
 import {
   SfHero,
-  SfButton,
   SfSection,
   SfBannerGrid,
-  SfCallToAction,
   SfBanner
 } from '@storefront-ui/vue';
 
@@ -87,12 +74,11 @@ export default {
   components: {
     LazyHydrate,
     SfHero,
-    SfButton,
     SfSection,
     SfBannerGrid,
-    SfCallToAction,
     SfBanner,
     MProductCarousel,
+    ONewsletter,
     AImagesGrid
   },
   mixins: [Home],
@@ -122,23 +108,8 @@ export default {
     heroes () {
       return checkWebpSupport(this.heroImages, this.isWebpSupported)
     },
-    newsletterImage () {
-      return checkWebpSupport([
-        {
-          image: {
-            webp: '/assets/newsletter/webp/newsletter.webp',
-            fallback: '/assets/newsletter/png/newsletter.png'
-          }
-        }
-      ], this.isWebpSupported)[0].image
-    },
     instagramImages () {
       return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
-    }
-  },
-  methods: {
-    showNewsletterPopup () {
-      this.$store.dispatch('ui/openModal', { name: ModalList.FeatureNotImplemented })
     }
   },
   watch: {
@@ -182,14 +153,6 @@ export default {
   @include for-desktop {
     max-width: 1240px;
     margin: auto;
-  }
-}
-
-.call-to-action-newsletter {
-  margin: var(--spacer-big) 0;
-  box-sizing: border-box;
-  @include for-desktop {
-    margin: calc(var(--spacer-extra-big) * 2) 0;
   }
 }
 
