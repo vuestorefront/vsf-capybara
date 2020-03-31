@@ -1,7 +1,7 @@
 <template>
-  <div class="m-loader">
+  <div class="m-loader" v-show="isVisible">
     <div class="m-loader--container">
-      <SfLoader />
+      <SfLoader :loading="true" />
       <div v-if="message" class="m-loader--message">
         {{ message }}
       </div>
