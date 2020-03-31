@@ -1,6 +1,6 @@
 <template>
   <div class="default-layout">
-    <loader />
+    <MLoader />
     <div id="viewport" class="w-100 relative">
       <OHeader />
       <SfSidebar
@@ -33,7 +33,7 @@ import OHeader from 'theme/components/organisms/o-header';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
 import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
-import Loader from 'theme/components/core/Loader';
+import MLoader from 'theme/components/molecules/m-loader';
 import ONotification from 'theme/components/organisms/o-notification';
 import MCookieNotification from 'theme/components/molecules/m-cookie-notification';
 import MOfflineBadge from 'theme/components/molecules/m-offline-badge';
@@ -41,8 +41,8 @@ import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
 import { SfSidebar } from '@storefront-ui/vue';
-import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
-import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
+import ALoadingSpinner from 'theme/components/atoms/a-loading-spinner';
+import ALoadingError from 'theme/components/atoms/a-loading-error';
 import { ModalList } from 'theme/store/ui/modals'
 
 const OMicrocart = () =>
@@ -52,7 +52,7 @@ export default {
   components: {
     OHeader,
     OFooter,
-    Loader,
+    MLoader,
     ONotification,
     MCookieNotification,
     MOfflineBadge,
@@ -65,8 +65,8 @@ export default {
       quicklink: null,
       microcartAsyncComponent: () => ({
         component: OMicrocart(),
-        loading: LoadingSpinner,
-        error: LoadingError,
+        loading: ALoadingSpinner,
+        error: ALoadingError,
         timeout: 3000
       })
     };
@@ -126,8 +126,8 @@ export default {
     reloadComponent () {
       this.microcartAsyncComponent = () => ({
         component: OMicrocart(),
-        loading: LoadingSpinner,
-        error: LoadingError,
+        loading: ALoadingSpinner,
+        error: ALoadingError,
         timeout: 3000
       });
     }
