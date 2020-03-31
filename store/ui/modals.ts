@@ -9,7 +9,8 @@ export enum ModalList {
   TermsAndConditions = 'm-modal-terms-and-conditions',
   FeatureNotImplemented = 'm-modal-feature-not-implemented',
   LanguageSwitcher = 'm-modal-language-switcher',
-  OrderConfirmation = 'm-modal-order-confirmation'
+  OrderConfirmation = 'm-modal-order-confirmation',
+  Newsletter = 'm-modal-newsletter'
 }
 
 /**
@@ -23,7 +24,8 @@ export const modalComponents = new Map([
   [ModalList.TermsAndConditions, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-terms-and-conditions.vue')],
   [ModalList.FeatureNotImplemented, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-feature-not-implemented.vue')],
   [ModalList.LanguageSwitcher, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-language-switcher.vue')],
-  [ModalList.OrderConfirmation, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-order-confirmation.vue')]
+  [ModalList.OrderConfirmation, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-order-confirmation.vue')],
+  [ModalList.Newsletter, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-newsletter.vue')]
 ])
 
 /**
