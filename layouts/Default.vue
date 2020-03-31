@@ -1,6 +1,6 @@
 <template>
   <div class="default-layout">
-    <loader />
+    <MLoader />
     <div id="viewport" class="w-100 relative">
       <OHeader />
       <SfSidebar
@@ -33,7 +33,7 @@ import OHeader from 'theme/components/organisms/o-header';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
 import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
-import Loader from 'theme/components/core/Loader';
+import MLoader from 'theme/components/molecules/m-loader';
 import ONotification from 'theme/components/organisms/o-notification';
 import MCookieNotification from 'theme/components/molecules/m-cookie-notification';
 import MOfflineBadge from 'theme/components/molecules/m-offline-badge';
@@ -52,7 +52,7 @@ export default {
   components: {
     OHeader,
     OFooter,
-    Loader,
+    MLoader,
     ONotification,
     MCookieNotification,
     MOfflineBadge,
