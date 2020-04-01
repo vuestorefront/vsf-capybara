@@ -1,5 +1,11 @@
 <template>
-  <SfCarousel class="m-product-carousel">
+  <SfCarousel
+    class="m-product-carousel"
+    :settings="{
+      animationDuration: 3000,
+      rewindDuration: 3000
+    }"
+  >
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
       <SfProductCard
         :title="product.title"
