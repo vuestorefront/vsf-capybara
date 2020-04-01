@@ -1,6 +1,12 @@
 <template>
   <div id="home">
-    <SfHero class="section">
+    <SfHero
+      class="section"
+      :slider-options="{
+        animationDuration: 3000,
+        rewindDuration: 3000
+      }"
+    >
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
