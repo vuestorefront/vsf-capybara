@@ -88,7 +88,7 @@
       </div>
     </div>
     <div class="order-details__informations">
-      <div>
+      <div v-if="shippingAddress">
         <SfHeading
           :title="$t('Shipping address')"
           class="sf-heading--left sf-heading--no-underline"
@@ -106,7 +106,7 @@
           <p>{{ shippingAddress.country }}</p>
         </address>
       </div>
-      <div>
+      <div v-if="order.shipping_description">
         <SfHeading
           :title="$t('Shipping method')"
           class="sf-heading--left sf-heading--no-underline"
