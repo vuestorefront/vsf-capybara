@@ -53,14 +53,12 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
-@import "~theme/css/base/global_vars";
-$z-index-notification: map-get($z-index, notification);
 
 .o-notification {
   position: fixed;
   top: 100px;
   right: 5%;
-  z-index: $z-index-notification;
+  z-index: 1000;
   @include for-mobile {
     top: 0;
     left: 0;
