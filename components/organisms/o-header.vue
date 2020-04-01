@@ -127,12 +127,18 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .sf-header-navigation-item {
-  &:hover .m-menu {
-    opacity: 1;
-    visibility: visible;
-  }
   &::after {
     bottom: 0;
+    width: 0;
+  }
+  &:hover {
+    .m-menu {
+      opacity: 1;
+      visibility: visible;
+    }
+    &::after {
+      width: 100%;
+    }
   }
 }
 .overlay {
