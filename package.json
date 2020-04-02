@@ -11,7 +11,6 @@
   "license": "MIT",
   "dependencies": {
     "@storefront-ui/vue": "^0.6.0",
-    "body-scroll-lock": "^2.6.4",
     "quicklink": "^2.0.0-alpha",
     "supports-webp": "^2.0.1",
     "vue": "^2.6.6",
