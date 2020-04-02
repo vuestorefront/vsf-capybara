@@ -9,7 +9,6 @@ import { BreadcrumbsModule } from '@vue-storefront/core/modules/breadcrumbs'
 import { UserModule } from '@vue-storefront/core/modules/user'
 import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
-import { GoogleTagManagerModule } from 'src/modules/google-tag-manager'
 import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
 import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-delivery'
 
@@ -27,7 +26,6 @@ export function registerClientModules () {
   registerModule(UserModule) // Trigger on user icon click
   registerModule(CatalogNextModule)
   registerModule(BreadcrumbsModule)
-  registerModule(GoogleTagManagerModule)
   registerModule(CmsModule)
   registerModule(NewsletterModule)
 }
