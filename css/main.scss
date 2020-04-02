@@ -1,13 +1,1 @@
-// clear after all old components are removed
-@import 'vendor/flexboxgrid2';
-@import 'variables/colors';
-@import 'helpers/mixins';
-@import 'helpers/functions';
-@import 'base/global_vars';
-@import 'base/color';
-
 @import "~@storefront-ui/vue/styles";
-
-// helpers
-@import 'utilities';
-@import 'transitions';

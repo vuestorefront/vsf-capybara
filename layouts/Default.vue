@@ -1,7 +1,7 @@
 <template>
   <div class="default-layout">
     <MLoader />
-    <div id="viewport" class="w-100 relative">
+    <div id="viewport">
       <OHeader />
       <SfSidebar
         :visible="isMicrocartOpen"
@@ -164,6 +164,10 @@ body {
       color: var(--c-link-hover);
     }
   }
+}
+
+#viewport {
+  position: relative;
 }
 
 @include for-desktop {
