@@ -32,7 +32,7 @@
               />
             </router-link>
           </SfListItem>
-          <SfListItem>
+          <SfListItem v-if="multistoreEnabled">
             <SfMenuItem
               @click.native="showLanguageSwitcher"
               class="sf-footer__menu-item"
