@@ -42,3 +42,20 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.a-static {
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  table {
+    width: 100%;
+    margin: var(--spacer-extra-big) 0;
+    border-collapse: collapse;
+    th, td {
+      padding: calc(var(--spacer-small) * 2);
+      border: 1px solid var(--_c-light-primary-darken);
+    }
+  }
+}
+</style>
