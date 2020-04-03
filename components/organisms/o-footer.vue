@@ -55,15 +55,13 @@
         </div>
       </SfFooterColumn>
     </SfFooter>
-    <!-- temporarily disabled until we find better UI/UX for it ;)
-      <ABackToTop bottom="20px" right="20px" visibleoffset="200" />
-    -->
+    <ABackToTop bottom="20px" right="20px" visibleoffset="200" />
   </footer>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
-// import ABackToTop from 'theme/components/atoms/a-back-to-top';
+import ABackToTop from 'theme/components/atoms/a-back-to-top';
 import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { getPathForStaticPage } from 'theme/helpers';
@@ -74,7 +72,7 @@ import get from 'lodash-es/get';
 export default {
   name: 'MainFooter',
   components: {
-    // ABackToTop,
+    ABackToTop,
     SfFooter,
     SfList,
     SfMenuItem
