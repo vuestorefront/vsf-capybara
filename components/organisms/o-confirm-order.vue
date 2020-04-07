@@ -171,7 +171,7 @@
       </div>
       <div class="summary__group">
         <SfButton
-          class="sf-button--full-width summary__action-button"
+          class="place-order-btn sf-button--full-width summary__action-button"
           :disabled="$v.orderReview.$invalid || !productsInCart.length"
           @click="placeOrder"
         >
