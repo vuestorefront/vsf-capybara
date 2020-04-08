@@ -3,24 +3,20 @@
     <SfHero
       class="section"
       :slider-options="{
-        animationDuration: 3000,
-        rewindDuration: 3000
+        animationDuration: 2000,
+        rewindDuration: 2000
       }"
     >
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
+        :title="hero.title"
         :subtitle="hero.subtitle"
+        :button-text="hero.buttonText"
+        :background="hero.background"
         :image="hero.image"
-      >
-        <template v-if="hero.title" #title>
-          <div class="section__hero-title">
-            <h4 v-for="title in hero.title" :key="title" class="sf-hero-item__title">
-              {{ title }}
-            </h4>
-          </div>
-        </template>
-      </SfHeroItem>
+        :class="hero.className"
+      ></SfHeroItem>
     </SfHero>
 
     <SfBannerGrid :banner-grid="1" class="banners section">
@@ -209,17 +205,6 @@ export default {
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
-  }
-  &__hero-title {
-    position: absolute;
-    bottom: 15%;
-    h4 {
-      --hero-item-title-font-size: 1.15rem;
-      --hero-item-title-margin: 0;
-      @include for-mobile {
-        --hero-item-title-font-size: 0.8rem;
-      }
-    }
   }
 }
 </style>
