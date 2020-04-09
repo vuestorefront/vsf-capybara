@@ -16,7 +16,7 @@
         :background="hero.background"
         :image="hero.image"
         :class="hero.className"
-      ></SfHeroItem>
+      />
     </SfHero>
 
     <SfBannerGrid :banner-grid="1" class="banners section">
