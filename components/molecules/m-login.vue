@@ -31,7 +31,7 @@
           :label="$t('Remember me')"
           class="form__checkbox"
         />
-        <SfButton class="sf-button--full-width form__button" @click.native="login">
+        <SfButton class="sf-button--full-width form__button">
           {{ $t("Login") }}
         </SfButton>
       </form>
