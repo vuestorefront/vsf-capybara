@@ -49,10 +49,7 @@
           :label="$t('I want to create an account')"
           class="form__checkbox"
         />
-        <SfButton
-          class="sf-button--full-width form__button"
-          @click.native="register"
-        >
+        <SfButton class="sf-button--full-width form__button">
           {{ $t("Create an account") }}
         </SfButton>
       </form>

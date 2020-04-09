@@ -18,7 +18,7 @@
           "
           class="form__input"
         />
-        <SfButton class="sf-button--full-width form__button" @click.native="resetPassword">
+        <SfButton class="sf-button--full-width form__button">
           {{ $t("Reset password") }}
         </SfButton>
       </form>
