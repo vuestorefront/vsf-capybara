@@ -59,12 +59,6 @@ module.exports = function (config, { isClient }) {
             name: 'sfui',
             priority: 2
           },
-          graphQl: {
-            // create 'vsf-graphql' group from GraphQL-related modules to decrease vendor-initial and/or vendor-async sizes
-            test: /graphql|apollo/,
-            name: 'vsf-graphql',
-            priority: 2
-          },
           vendorInitial: {
             // create 'vendor' group from initial packages from node_modules except Storefront UI
             test: /node_modules/,
