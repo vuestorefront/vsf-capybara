@@ -16,5 +16,8 @@
     "category": {
       "categoriesDynamicPrefetch": false
     }
+  },
+  "quicklink": {
+    "enabled": true
   }
 }
