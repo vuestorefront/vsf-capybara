@@ -92,20 +92,20 @@ export default {
 <style lang="scss" scoped>
 .order-confirmation {
   &__order {
-    margin-bottom: var(--spacer-big);
+    margin-bottom: var(--spacer-xl);
     .sf-table__header {
       white-space: nowrap;
     }
     th, td {
-      padding: var(--spacer-small);
+      padding: var(--spacer-sm);
       &.table-center {
         text-align: center;
       }
     }
   }
   &__product-details {
-    margin-top: var(--spacer-small);
-    font-size: var(--font-size-extra-small);
+    margin-top: var(--spacer-sm);
+    font-size: var(--font-xs);
   }
   &__buttons {
     display: flex;
@@ -120,9 +120,9 @@ export default {
     width: auto;
   }
   .order-confirmation__order-title {
-    margin: var(--spacer-big) 0 var(--spacer-medium) 0;
+    margin: var(--spacer-xl) 0 var(--spacer-lg) 0;
     .sf-heading__title {
-      font-size: var(--font-size-regular);
+      font-size: var(--font-base);
     }
   }
 }

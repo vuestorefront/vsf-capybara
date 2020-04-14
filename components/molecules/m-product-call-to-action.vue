@@ -108,7 +108,7 @@ export default {
 .add-to-cart {
   margin-top: 1.5rem;
   @include for-desktop {
-    margin-top: var(--spacer-extra-big);
+    margin-top: var(--spacer-2xl);
   }
 }
 .add-to-cart-action {

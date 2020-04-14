@@ -98,11 +98,11 @@ export default {
     width: auto;
   }
   .sf-footer__container {
-    margin: var(--spacer-big) calc(var(--spacer-medium) * -1);
+    margin: var(--spacer-xl) calc(var(--spacer-lg) * -1);
     padding: 0;
   }
   .sf-footer-column {
-    padding: 0 var(--spacer-medium)
+    padding: 0 var(--spacer-lg)
   }
 }
 </style>

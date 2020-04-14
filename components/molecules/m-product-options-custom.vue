@@ -27,7 +27,7 @@
       </div>
       <div v-if="option.type === 'drop_down' || option.type === 'select'">
         <SfSelect
-          class="sf-select--bordered"
+          class="sf-select--underlined"
           v-model="inputValues[('customOption_' + option.option_id)]"
           @change="optionChanged(option)"
           :required="option.is_require"

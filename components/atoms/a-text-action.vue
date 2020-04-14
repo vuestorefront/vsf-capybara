@@ -27,7 +27,7 @@ export default {
   display: flex;
   .sf-button--text {
     --button-color: var(--c-text);
-    --button-font-size: var(--font-size-regular);
+    --button-font-size: var(--font-base);
   }
 }
 </style>

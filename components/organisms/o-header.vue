@@ -30,6 +30,7 @@
             :visible="isHoveredMenu && !isSearchPanelVisible"
             :categories-ids="category.children_data"
             :title="category.name"
+            @close="isHoveredMenu = false"
           />
         </SfHeaderNavigationItem>
       </template>
@@ -56,6 +57,7 @@
       v-show="isMobileMenu"
       class="mobile-menu"
       :categories-ids="categories"
+      @close="$store.commit('ui/closeMenu')"
     />
   </div>
 </template>
@@ -142,19 +144,11 @@ export default {
   }
 }
 .overlay {
-  position:absolute;
-  z-index:1;
+  position: absolute;
+  z-index: 1;
 }
 .o-header {
   box-sizing: border-box;
-  ::v-deep {
-    .sf-header__container {
-      margin: 0;
-    }
-    .sf-header__navigation {
-      margin: 0;
-    }
-  }
   a {
     &.active {
       font-weight: bold;
@@ -169,14 +163,7 @@ export default {
       width: 100%;
     }
   }
-  @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
-  }
   @include for-mobile {
-    .sf-header__icons {
-      display: none;
-    }
     .mobile-menu {
       position: fixed;
       opacity: 1;
@@ -188,13 +175,15 @@ export default {
   }
 }
 .sf-header {
-  position: relative;
-  z-index: 1;
-  ::v-deep &__sticky-container {
-    max-width: 1240px;
+  @include for-mobile {
+    &__icons {
+      display: none;
+    }
   }
-}
-.ml-auto {
-  margin-left: auto;
+  @include for-desktop {
+    &__icons > :first-child {
+      margin: 0;
+    }
+  }
 }
 </style>

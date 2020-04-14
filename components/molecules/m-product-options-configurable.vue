@@ -12,7 +12,7 @@
       :label="getAttributeLabel(attribute)"
       :value="getActiveOption(attribute)"
       @change="handleChangeOption"
-      class="sf-select--bordered attribute"
+      class="sf-select--underlined attribute"
     >
       <SfSelectOption
         v-for="attributeOption in availableOptions[attribute.attribute_code]"
@@ -103,6 +103,6 @@ export default {
   }
 }
 .attribute {
-  margin-bottom: var(--spacer-big);
+  margin-bottom: var(--spacer-xl);
 }
 </style>

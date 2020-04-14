@@ -46,7 +46,7 @@ export default {
 .a-product-rating {
   display: flex;
   align-items: center;
-  margin-top: var(--spacer-big) / 2;
+  margin-top: var(--spacer-xl) / 2;
   @include for-desktop {
     margin-left: auto;
   }

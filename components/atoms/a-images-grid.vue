@@ -48,14 +48,12 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .a-images-grid {
-  max-width: 60rem;
-  margin: 0 auto;
   &__row {
     display: flex;
     & + & {
-      margin: calc(var(--spacer-big) / 2) 0 0 0;
+      margin: calc(var(--spacer-xl) / 2) 0 0 0;
       @include for-desktop {
-        margin: var(--spacer-big) 0 0 0;
+        margin: var(--spacer-xl) 0 0 0;
       }
     }
   }
@@ -63,9 +61,9 @@ export default {
     flex: 1;
     margin: 0;
     & + & {
-      margin: 0 0 0 calc(var(--spacer-big) / 2);
+      margin: 0 0 0 calc(var(--spacer-xl) / 2);
       @include for-desktop {
-        margin: 0 0 0 var(--spacer-big);
+        margin: 0 0 0 var(--spacer-xl);
       }
     }
   }

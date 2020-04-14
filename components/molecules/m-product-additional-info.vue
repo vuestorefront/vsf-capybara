@@ -96,16 +96,16 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .m-product-additional-info {
-  margin-top: var(--spacer-big);
+  margin-top: var(--spacer-xl);
   @include for-desktop {
-    margin-top: calc(var(--spacer-big) * 5);
+    margin-top: calc(var(--spacer-xl) * 5);
   }
   p {
     margin: 0;
   }
 }
 .properties {
-  margin-top: var(--spacer-big);
+  margin-top: var(--spacer-xl);
 }
 .review-header {
   display: flex;

@@ -145,6 +145,9 @@ export default {
     max-width: 1240px;
     margin: auto;
   }
+  .sf-footer {
+    --footer-width: auto;
+  }
 }
 .social-column {
   flex-basis: auto;
@@ -160,8 +163,5 @@ export default {
       margin-right: 1.25rem;
     }
   }
-}
-.sf-footer__menu-item {
-  padding: var(--menu-item-padding, var(--spacer-big));
 }
 </style>

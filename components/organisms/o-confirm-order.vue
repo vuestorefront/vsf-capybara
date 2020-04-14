@@ -4,7 +4,7 @@
       :title="`${isVirtualCart ? 3 : 4}. ${$t('Review order')}`"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfAccordion first-open class="accordion mobile-only">
+    <SfAccordion :open="$t('Personal Details')" class="accordion mobile-only">
       <SfAccordionItem :header="$t('Personal Details')">
         <div class="accordion__item">
           <div class="accordion__content">
@@ -308,19 +308,19 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .title {
-  margin-bottom: var(--spacer-extra-big);
+  margin-bottom: var(--spacer-2xl);
 }
 .table {
-  margin-bottom: var(--spacer-big);
+  margin-bottom: var(--spacer-xl);
   &__header {
-    font-size: var(--font-size-regular);
-    font-weight: var(--body-font-weight-primary);
+    font-size: var(--font-base);
+    font-weight: var(--font-normal);
     @include for-desktop {
       text-align: center;
     }
   }
   &__data {
-    font-size: var(--font-size-small);
+    font-size: var(--font-sm);
     text-align: center;
   }
   &__image {
@@ -338,7 +338,7 @@ export default {
   }
 }
 .accordion {
-  margin: 0 0 var(--spacer-extra-big) 0;
+  margin: 0 0 var(--spacer-2xl) 0;
   &__item {
     display: flex;
     align-items: flex-start;
@@ -352,25 +352,25 @@ export default {
 }
 .summary {
   background-color: var(--c-light);
-  margin: 0 -var(--spacer-big);
-  padding: var(--spacer-big);
+  margin: 0 -var(--spacer-xl);
+  padding: var(--spacer-xl);
   @include for-desktop {
     background-color: transparent;
   }
   &__group {
     @include for-desktop {
       display: flex;
-      margin: 0 0 var(--spacer-extra-big) 0;
+      margin: 0 0 var(--spacer-2xl) 0;
     }
   }
   &__terms {
     flex: 1;
     order: -1;
-    margin-bottom: var(--spacer-big);
+    margin-bottom: var(--spacer-xl);
   }
   &__total {
-    margin: 0 0 var(--spacer-extra-big) 0;
-    padding: 0 var(--spacer-big);
+    margin: 0 0 var(--spacer-2xl) 0;
+    padding: 0 var(--spacer-xl);
     flex: 0 0 16.875rem;
     @include for-desktop {
       padding: 0;
@@ -379,7 +379,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: var(--spacer-big) 0;
+      margin: var(--spacer-xl) 0;
       @include for-desktop {
         order: -1;
         margin: 0;
@@ -389,9 +389,9 @@ export default {
   }
   &__property-total {
     ::v-deep > * {
-      margin: var(--spacer-big) 0 0 0;
+      margin: var(--spacer-xl) 0 0 0;
       text-transform: uppercase;
-      font-size: var(--font-size-regular);
+      font-size: var(--font-base);
       line-height: 1.6;
       font-weight: 500;
       color: var(--c-text);
@@ -402,9 +402,9 @@ export default {
   cursor: pointer;
 }
 .content {
-  margin: 0 0 var(--spacer-big) 0;
+  margin: 0 0 var(--spacer-xl) 0;
   color: var(--c-text);
-  font-size: var(--font-size-extra-small);
+  font-size: var(--font-xs);
   font-weight: 300;
   line-height: 1.6;
   &:last-child {
@@ -420,12 +420,12 @@ export default {
 }
 .product-sku {
   color: var(--c-text-muted);
-  font-size: var(--font-size-extra-small);
+  font-size: var(--font-xs);
 }
 .product-price {
   display: flex;
   flex-direction: column;
-  font-size: var(--font-size-small);
+  font-size: var(--font-sm);
   ::v-deep .sf-price__special {
     order: 1;
     color: var(--c-text);

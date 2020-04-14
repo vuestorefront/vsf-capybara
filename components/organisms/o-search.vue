@@ -7,32 +7,22 @@
       @input="startSearch"
       @click.native="$store.commit('ui/setSearchpanel', true)"
     />
-    <SfSidebar
-      :visible="isSearchPanelVisible"
-      :button="false"
-      :overlay="false"
-      class="sf-sidebar sidebar__search"
-    >
-      <component
-        v-if="search && isSearchPanelVisible"
-        :is="searchPanelAsyncComponent"
-        :search="search"
-        :page-size="size"
-        :products="products"
-        :read-more="readMore"
-        @see-more="seeMore"
-        @close="$store.commit('ui/setSearchpanel', false)"
-        @reload="reloadComponent()"
-      />
-      <template #modal-bar>
-        <div class="hidden" />
-      </template>
-    </SfSidebar>
+    <component
+      v-if="search && isSearchPanelVisible"
+      :is="searchPanelAsyncComponent"
+      :search="search"
+      :page-size="size"
+      :products="products"
+      :read-more="readMore"
+      @see-more="seeMore"
+      @close="$store.commit('ui/setSearchpanel', false)"
+      @reload="reloadComponent()"
+    />
   </div>
 </template>
 
 <script>
-import { SfSearchBar, SfSidebar } from '@storefront-ui/vue';
+import { SfSearchBar } from '@storefront-ui/vue';
 import { mapState, mapGetters } from 'vuex';
 import SearchPanelMixin from '@vue-storefront/core/compatibility/components/blocks/SearchPanel/SearchPanel';
 import ALoadingSpinner from 'theme/components/atoms/a-loading-spinner';
@@ -44,8 +34,7 @@ const SearchPanel = () =>
 export default {
   name: 'OSearch',
   components: {
-    SfSearchBar,
-    SfSidebar
+    SfSearchBar
   },
   data () {
     return {

@@ -128,8 +128,8 @@ export default {
   box-sizing: border-box;
   width: 100%;
   background-color: #f1f2f3;
-  padding: var(--spacer-extra-big);
-  margin-bottom: var(--spacer-big);
+  padding: var(--spacer-2xl);
+  margin-bottom: var(--spacer-xl);
   &:last-child {
     margin-bottom: 0;
   }
@@ -140,21 +140,21 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacer-big);
+    margin-bottom: var(--spacer-xl);
   }
   &__title {
-    font-family: var(--body-font-family-primary);
-    font-size: var(--font-size-big);
+    font-family: var(--font-family-primary);
+    font-size: var(--font-lg);
     line-height: 1.6;
   }
 }
 .title {
-  margin-bottom: var(--spacer-extra-big);
+  margin-bottom: var(--spacer-2xl);
 }
 .content {
-  margin: 0 0 var(--spacer-big) 0;
+  margin: 0 0 var(--spacer-xl) 0;
   color: var(--c-text);
-  font-size: var(--font-size-extra-small);
+  font-size: var(--font-xs);
   font-weight: 300;
   line-height: 1.6;
   &:last-child {
