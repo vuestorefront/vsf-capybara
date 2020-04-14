@@ -6,11 +6,11 @@
     />
     <SfHeading :level="level" :title="title" :subtitle="subtitle" class="error__message" />
     <div class="error__action">
-      <router-link :to="localizedRoute('/')">
+      <a :href="localizedRoute('/')">
         <SfButton class="sf-button--full-width error__action-button">
           {{ $t("Return to home") }}
         </SfButton>
-      </router-link>
+      </a>
       <SfButton
         class="sf-button--full-width sf-button--text error__action-button error__action-button--secondary"
         @click="$router.back()"
@@ -53,6 +53,7 @@ export default {
   &__message {
     margin: calc(var(--spacer-extra-big) * 3) 0;
     text-align: center;
+    --heading-border: none;
   }
   &__image {
     display: flex;
