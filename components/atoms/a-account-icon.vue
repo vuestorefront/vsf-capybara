@@ -1,24 +1,24 @@
 <template>
-  <SfCircleIcon
+  <SfIcon
     icon="profile"
-    icon-size="20px"
-    icon-color="black"
-    class="sf-header__circle-icon a-account-icon"
+    size="xs"
+    class="sf-header__icon a-account-icon"
+    :class="{
+      'sf-header__icon--is-active': isLoggedIn
+    }"
     role="button"
     aria-label="account"
-    :class="{ 'sf-header__circle-icon--is-active': isLoggedIn }"
-    :aria-pressed="isLoggedIn ? 'true' : 'false'"
     @click="goToAccount"
   />
 </template>
 
 <script>
-import { SfCircleIcon } from '@storefront-ui/vue';
+import { SfIcon } from '@storefront-ui/vue';
 import { mapGetters, mapActions } from 'vuex';
 import { ModalList } from 'theme/store/ui/modals'
 
 export default {
-  components: { SfCircleIcon },
+  components: { SfIcon },
   computed: {
     ...mapGetters('user', ['isLoggedIn'])
   },

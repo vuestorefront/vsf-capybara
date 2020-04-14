@@ -151,9 +151,9 @@ body {
   --bottom-navigation-height: 3.75rem;
   --bar-height: 3.125rem;
   color: var(--c-text);
-  font-size: var(--font-size-regular);
-  font-family: var(--body-font-family-secondary);
-  font-weight: var(--body-font-weight-primary);
+  font-size: var(--font-base);
+  font-family: var(--font-family-secondary);
+  font-weight: var(--font-normal);
   margin: 0;
   padding: 0;
   a {

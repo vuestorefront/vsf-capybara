@@ -65,17 +65,17 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .record {
-  padding-bottom: var(--spacer-big);
+  padding-bottom: var(--spacer-xl);
   @include for-desktop {
-    padding-bottom: var(--spacer-extra-big);
+    padding-bottom: var(--spacer-2xl);
     border-bottom: 1px solid var(--c-light);
   }
   & + & {
-    padding-top: var(--spacer-extra-big);
+    padding-top: var(--spacer-2xl);
     border-top: 1px solid var(--c-light);
     @include for-desktop {
       border-top: 0;
-      padding-top: var(--spacer-extra-big);
+      padding-top: var(--spacer-2xl);
     }
   }
 }

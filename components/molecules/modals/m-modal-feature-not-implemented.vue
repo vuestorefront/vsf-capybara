@@ -39,10 +39,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .message {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  font-size: var(--font-size-regular);
-  font-family: var(--body-font-family-primary);
-  font-weight: var(--body-font-weight-primary);
+  margin: 0 0 var(--spacer-2xl) 0;
+  font-size: var(--font-base);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-normal);
   line-height: 1.6;
 }
 </style>

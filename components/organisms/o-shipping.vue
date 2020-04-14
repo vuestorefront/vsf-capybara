@@ -220,7 +220,7 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .title {
-  margin-bottom: var(--spacer-extra-big);
+  margin-bottom: var(--spacer-2xl);
 }
 .form {
   @include for-desktop {
@@ -229,7 +229,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: var(--spacer-extra-big);
+    margin-bottom: var(--spacer-2xl);
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -239,7 +239,7 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: var(--spacer-extra-big);
+          padding-left: var(--spacer-2xl);
         }
       }
     }
@@ -253,7 +253,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: var(--spacer-big) 0;
+      margin: var(--spacer-xl) 0;
       @include for-desktop {
         order: -1;
         margin: 0;
@@ -265,12 +265,12 @@ export default {
     margin-bottom: 0;
     &-group {
       flex: 0 0 100%;
-      margin: 0 0 var(--spacer-extra-big) 0;
+      margin: 0 0 var(--spacer-2xl) 0;
     }
   }
 }
 .shipping {
-  margin: 0 -var(--spacer-big);
+  margin: 0 -var(--spacer-xl);
   &__label {
     display: flex;
     justify-content: space-between;

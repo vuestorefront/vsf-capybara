@@ -60,8 +60,8 @@ export default {
   }
 }
 .property-total {
-  margin-top: var(--spacer-extra-big);
-  font-size: var(--font-size-extra-big);
+  margin-top: var(--spacer-2xl);
+  font-size: var(--font-xl);
   font-weight: 500;
   ::v-deep .sf-property__name {
     color: var(--c-text);
