@@ -1,5 +1,8 @@
 {
   "theme": "@vue-storefront/theme-capybara",
+  "server": {
+    "api": "api-search-query"
+  },
   "products": {
     "thumbnails": {
       "width": 324,
@@ -15,7 +18,13 @@
   "entities": {
     "category": {
       "categoriesDynamicPrefetch": false
+    },
+    "attribute": {
+      "loadByAttributeMetadata": true
     }
+  },
+  "urlModule": {
+    "enableMapFallbackUrl": true
   },
   "quicklink": {
     "enabled": true

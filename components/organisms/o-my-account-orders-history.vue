@@ -101,9 +101,9 @@ export default {
       let orders = []
       this.ordersHistory.forEach(item => {
         orders.push({
-          'order_id': '#' + item.increment_id,
+          'order_id': item.increment_id,
           'order_date': this.$options.filters.date(item.created_at),
-          'payment_method:': item.payment.additional_information[0],
+          'payment_method': item.payment.additional_information[0],
           'amount': this.$options.filters.price(item.grand_total),
           'status': this.$options.filters.capitalize(item.status)
         })
@@ -169,6 +169,13 @@ export default {
     &__row,
     &__heading {
       margin: 0 -var(--spacer-big);
+      @include for-mobile {
+        padding: 5px;
+      }
+    }
+    &__header,
+    &__data {
+      padding: 5px;
     }
     &__row:last-child {
       @include for-mobile {
