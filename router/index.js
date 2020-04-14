@@ -27,7 +27,7 @@ let routes = [
   { name: 'returns', path: '/returns', component: Static },
   { name: 'contact', path: '/contact', component: Static },
   { name: 'page-not-found', path: '*', component: ErrorPage },
-  { name: 'error', path: '/error', component: ErrorPage },
+  { name: 'error', path: '/error', component: ErrorPage, meta: { layout: 'minimal' } },
   { name: 'virtual-product', path: '/p/:parentSku/:slug', component: Product },
   { name: 'bundle-product', path: '/p/:parentSku/:slug', component: Product },
   { name: 'simple-product', path: '/p/:parentSku/:slug', component: Product },
