@@ -74,7 +74,10 @@ export default {
   computed: {
     ...mapState({
       isMicrocartOpen: state => state.ui.microcart
-    })
+    }),
+    quicklinkEnabled () {
+      return typeof config.quicklink !== 'undefined' && config.quicklink.enabled
+    }
   },
   beforeMount () {
     // Progress bar on top of the page
@@ -84,7 +87,7 @@ export default {
       next();
     });
     this.$router.afterEach(() => {
-      if (!isServer) {
+      if (!isServer && this.quicklinkEnabled) {
         this.quicklink.listen();
       }
       this.$Progress.finish();
@@ -92,7 +95,7 @@ export default {
     this.$bus.$on('offline-order-confirmation', this.onOrderConfirmation);
   },
   mounted () {
-    if (!isServer) {
+    if (!isServer && this.quicklinkEnabled) {
       this.quicklink = require('quicklink');
       this.quicklink.listen();
     }
