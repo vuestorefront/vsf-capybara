@@ -74,7 +74,10 @@ export default {
   computed: {
     ...mapState({
       isMicrocartOpen: state => state.ui.microcart
-    })
+    }),
+    quicklinkEnabled () {
+      return typeof config.quicklink !== 'undefined' && config.quicklink.enabled
+    }
   },
   beforeMount () {
     // Progress bar on top of the page
@@ -84,7 +87,7 @@ export default {
       next();
     });
     this.$router.afterEach(() => {
-      if (!isServer) {
+      if (!isServer && this.quicklinkEnabled) {
         this.quicklink.listen();
       }
       this.$Progress.finish();
@@ -92,7 +95,7 @@ export default {
     this.$bus.$on('offline-order-confirmation', this.onOrderConfirmation);
   },
   mounted () {
-    if (!isServer) {
+    if (!isServer && this.quicklinkEnabled) {
       this.quicklink = require('quicklink');
       this.quicklink.listen();
     }
@@ -141,40 +144,3 @@ export default {
   metaInfo: Head
 };
 </script>
-
-<style lang="scss" src="theme/css/main.scss"></style>
-<style lang="scss">
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
-body {
-  --overlay-z-index: 1;
-  --sidebar-aside-z-index: 2;
-  --bottom-navigation-height: 3.75rem;
-  --bar-height: 3.125rem;
-  color: var(--c-text);
-  font-size: var(--font-base);
-  font-family: var(--font-family-secondary);
-  font-weight: var(--font-normal);
-  margin: 0;
-  padding: 0;
-  a {
-    text-decoration: none;
-    color: var(--c-link);
-    cursor: pointer;
-    &:hover {
-      color: var(--c-link-hover);
-    }
-  }
-}
-
-#viewport {
-  position: relative;
-}
-
-@include for-desktop {
-  .sidebar {
-    &__microcart {
-      --sidebar-aside-width: 700px;
-    }
-  }
-}
-</style>

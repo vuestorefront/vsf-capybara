@@ -3,15 +3,19 @@
     <SfHero
       class="hero"
       :slider-options="{
-        animationDuration: 3000,
-        rewindDuration: 3000
+        animationDuration: 2000,
+        rewindDuration: 2000
       }"
     >
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
         :title="hero.title"
+        :subtitle="hero.subtitle"
+        :button-text="hero.buttonText"
+        :background="hero.background"
         :image="hero.image"
+        :class="hero.className"
       />
     </SfHero>
 
