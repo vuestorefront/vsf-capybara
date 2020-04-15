@@ -25,5 +25,8 @@
   },
   "urlModule": {
     "enableMapFallbackUrl": true
+  },
+  "quicklink": {
+    "enabled": true
   }
 }
