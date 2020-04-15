@@ -126,7 +126,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: var(--spacer-extra-big);
+    margin-bottom: var(--spacer-2xl);
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -136,7 +136,7 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: var(--spacer-extra-big);
+          padding-left: var(--spacer-2xl);
         }
       }
     }
@@ -150,17 +150,17 @@ export default {
 }
 .message,
 .notice {
-  font-family: var(--body-font-family-primary);
-  font-weight: var(--body-font-weight-primary);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-normal);
   line-height: 1.6;
 }
 .message {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  font-size: var(--font-size-regular);
+  margin: 0 0 var(--spacer-2xl) 0;
+  font-size: var(--font-base);
 }
 .notice {
-  margin: var(--spacer-big) 0 0 0;
-  font-size: var(--font-size-extra-small);
+  margin: var(--spacer-xl) 0 0 0;
+  font-size: var(--font-xs);
   @include for-desktop {
     max-width: 70%;
     margin: var(--spacer) 0 0 0;

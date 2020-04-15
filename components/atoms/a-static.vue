@@ -50,10 +50,10 @@ export default {
   font-weight: 400;
   table {
     width: 100%;
-    margin: var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0;
     border-collapse: collapse;
     th, td {
-      padding: calc(var(--spacer-small) * 2);
+      padding: calc(var(--spacer-sm) * 2);
       border: 1px solid var(--_c-light-primary-darken);
     }
   }

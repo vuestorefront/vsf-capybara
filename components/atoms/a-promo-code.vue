@@ -69,10 +69,10 @@ export default {
     padding: 0;
     background-color: transparent;
     color: var(--c-primary);
-    font-size: var(--font-size-big);
+    font-size: var(--font-lg);
   }
   &__input {
-    margin: var(--spacer-big) 0;
+    margin: var(--spacer-xl) 0;
     ::v-deep input {
       border-color: var(--c-gray-variant);
     }

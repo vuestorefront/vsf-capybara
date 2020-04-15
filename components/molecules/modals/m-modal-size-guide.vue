@@ -61,6 +61,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m-modal-size-guide {
-  --modal-width: 700px;
+  .sf-modal {
+    --modal-width: 700px;
+  }
 }
 </style>

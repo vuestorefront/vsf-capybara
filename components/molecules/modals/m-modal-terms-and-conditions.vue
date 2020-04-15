@@ -88,12 +88,12 @@ export default {
 .modal {
   cursor: default;
   &__heading {
-    margin-bottom: var(--spacer-extra-big);
+    margin-bottom: var(--spacer-2xl);
   }
   &__button {
     display: block;
-    margin-top: var(--spacer-extra-big);
-    margin-bottom: var(--spacer-extra-big);
+    margin-top: var(--spacer-2xl);
+    margin-bottom: var(--spacer-2xl);
   }
 }
 </style>

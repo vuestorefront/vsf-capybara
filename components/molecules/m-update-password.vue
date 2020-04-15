@@ -113,7 +113,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: var(--spacer-extra-big);
+    margin-bottom: var(--spacer-2xl);
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -123,7 +123,7 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: var(--spacer-extra-big);
+          padding-left: var(--spacer-2xl);
         }
       }
     }
@@ -136,13 +136,13 @@ export default {
   }
 }
 .message {
-  font-family: var(--body-font-family-primary);
-  font-weight: var(--body-font-weight-primary);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-normal);
   line-height: 1.6;
 }
 .message {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  font-size: var(--font-size-regular);
+  margin: 0 0 var(--spacer-2xl) 0;
+  font-size: var(--font-base);
   &__label {
     font-weight: 400;
   }

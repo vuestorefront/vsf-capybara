@@ -236,13 +236,13 @@ export default {
     margin: 0;
   }
   &__back {
-    margin-right: var(--spacer-medium);
+    margin-right: var(--spacer-lg);
   }
   &__status {
-    margin-left: var(--spacer-medium);
+    margin-left: var(--spacer-lg);
   }
   &__products {
-    margin-top: var(--spacer-extra-big);
+    margin-top: var(--spacer-2xl);
     img {
       display: block;
     }
@@ -251,7 +251,7 @@ export default {
     }
   }
   &__summary {
-    margin-top: var(--spacer-medium);
+    margin-top: var(--spacer-lg);
     display: flex;
     justify-content: flex-end;
   }
@@ -260,12 +260,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     @include for-desktop {
-      margin-top: var(--spacer-extra-big);
+      margin-top: var(--spacer-2xl);
       flex-direction: row;
       justify-content: space-between;
     }
     .sf-heading {
-      margin-top: var(--spacer-extra-big);
+      margin-top: var(--spacer-2xl);
     }
     p {
       margin: var(--spacer) 0 0 0;
@@ -280,8 +280,8 @@ export default {
   }
 }
 .property-total {
-  margin-top: var(--spacer-extra-big);
-  font-size: var(--font-size-extra-big);
+  margin-top: var(--spacer-2xl);
+  font-size: var(--font-xl);
   font-weight: 500;
   ::v-deep .sf-property__name {
     color: var(--c-text);

@@ -172,22 +172,22 @@ export default {
 <style lang="scss" scoped>
 .form {
   &__input {
-    margin-bottom: var(--spacer-extra-big);
+    margin-bottom: var(--spacer-2xl);
   }
   &__checkbox {
-    margin-bottom: var(--spacer-big);
+    margin-bottom: var(--spacer-xl);
   }
   &__button {
-    margin-top: var(--spacer-big);
+    margin-top: var(--spacer-xl);
   }
 }
 .action {
-  margin-top: var(--spacer-big);
+  margin-top: var(--spacer-xl);
   text-align: center;
 }
 .bottom {
-  padding-top: var(--spacer-extra-big);
-  margin-top: var(--spacer-extra-big);
+  padding-top: var(--spacer-2xl);
+  margin-top: var(--spacer-2xl);
   border-top: 1px solid var(--c-light);
   line-height: 1.6;
   text-align: center;

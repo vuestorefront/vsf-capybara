@@ -19,6 +19,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .a-product-attribute {
-  padding: var(--spacer-small) 0;
+  padding: var(--spacer-sm) 0;
 }
 </style>

@@ -9,51 +9,44 @@
         :key="category.id"
         :title="category.name"
       >
-        <router-link
-          v-for="item in category.items"
-          :key="item.id"
-          :to="item.link"
-          class="sf-menu-item"
-          active-class="sf-menu-item--active"
-          @click.native="$store.commit('ui/closeMenu')"
-        >
-          <span class="sf-menu-item__label">{{ item.name }}</span>
-          <SfIcon
-            class="sf-menu-item__mobile-nav-icon"
-            icon="chevron_right"
-            size="xxs"
-            color="black"
-            view-box="0 0 14 14"
-          />
-        </router-link>
+        <SfList>
+          <SfListItem
+            v-for="item in category.items"
+            :key="item.id"
+          >
+            <router-link
+              :to="item.link"
+              @click.native="$emit('close')"
+            >
+              <SfMenuItem :label="item.name" />
+            </router-link>
+          </SfListItem>
+        </SfList>
       </SfMegaMenuColumn>
       <template #aside>
         <div class="aside-menu">
-          <div
-            class="aside-tile"
-            :class="`aside-tile--${banner.type}`"
-            v-for="banner in banners"
-            :key="banner.image"
-          >
-            <h3 class="aside-title">
-              {{ banner.title }}
-            </h3>
-            <SfImage class="aside-image" :src="banner.image" />
-          </div>
+          <SfBanner
+            v-for="(banner, i) in banners"
+            :key="i"
+            :title="banner.title"
+            :image="banner.image"
+            class="aside-banner"
+            :class="`aside-banner--${banner.type}`"
+          />
         </div>
       </template>
     </SfMegaMenu>
   </div>
 </template>
 <script>
-import { SfMegaMenu, SfIcon, SfImage } from '@storefront-ui/vue';
+import { SfMegaMenu, SfList, SfMenuItem, SfBanner } from '@storefront-ui/vue';
 import config from 'config'
 import get from 'lodash-es/get'
 import { prepareCategoryMenuItem } from 'theme/helpers';
 import { mapGetters, mapState } from 'vuex';
 import { checkWebpSupport } from 'theme/helpers'
 export default {
-  components: { SfMegaMenu, SfIcon, SfImage },
+  components: { SfMegaMenu, SfList, SfMenuItem, SfBanner },
   props: {
     visible: {
       type: Boolean,
@@ -111,8 +104,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
-
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .m-menu {
   position: absolute;
   left: 0;
@@ -122,14 +114,19 @@ export default {
   opacity: 0;
   visibility: hidden;
   transition: 0.2s;
+  .router-link-exact-active {
+    --menu-item-font-weight: bold;
+  }
 }
 .aside-menu {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
 }
-.aside-tile {
-  margin-bottom: 1.25rem;
+.aside-banner {
+  margin: 0 1rem;
+  text-transform: uppercase;
+  --banner-height: 300px;
+  --banner-width: 300px;
   &--mobile {
     display: none;
     @include for-mobile {
@@ -142,9 +139,5 @@ export default {
       display: block;
     }
   }
-}
-.aside-title {
-  margin-bottom: 1.25rem;
-  text-transform: uppercase;
 }
 </style>

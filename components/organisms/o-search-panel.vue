@@ -68,6 +68,7 @@ import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { prepareCategoryProduct } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
 import { SfButton, SfList, SfMenuItem, SfProductCard } from '@storefront-ui/vue';
+import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 export default {
   name: 'OSearchPanel',
@@ -149,6 +150,12 @@ export default {
     categories () {
       this.selectedCategoryIds = [];
     }
+  },
+  mounted () {
+    disableBodyScroll(this.$el)
+  },
+  destroyed () {
+    clearAllBodyScrollLocks()
   }
 };
 </script>
@@ -156,10 +163,20 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .o-search-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--header-container-height);
+  background: var(--c-white);
+  overflow: auto;
+  max-height: 66%;
+
   .container {
     display: flex;
     padding-left: 40px;
     padding-right: 40px;
+    max-width: 1240px;
+    margin: auto;
     border-top: 1px solid var(--c-light);
 
     @include for-mobile {
@@ -176,7 +193,7 @@ export default {
 
     &__title {
       padding: 0;
-      font-size: var(--font-size-big);
+      font-size: var(--font-lg);
       font-weight: 500;
       line-height: 3;
     }
@@ -199,7 +216,7 @@ export default {
     width: 100%;
     &__title {
       padding: 0;
-      font-size: var(--font-size-big);
+      font-size: var(--font-lg);
       font-weight: 500;
       line-height: 3;
     }
@@ -228,7 +245,7 @@ export default {
   }
 
   .load-more {
-    margin: var(--spacer-big) 0;
+    margin: var(--spacer-xl) 0;
   }
 }
 </style>

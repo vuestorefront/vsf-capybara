@@ -107,7 +107,7 @@ export default {
 }
 
 .breadcrumbs {
-  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
+  padding: var(--spacer-xl) var(--spacer-2xl) var(--spacer-2xl);
 }
 
 .main {

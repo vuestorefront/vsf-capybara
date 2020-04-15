@@ -88,10 +88,10 @@ export default {
 <style lang="scss" scoped>
 .form {
   &__input {
-    margin-top: var(--spacer-big);
+    margin-top: var(--spacer-xl);
   }
   &__button {
-    margin-top: var(--spacer-extra-big);
+    margin-top: var(--spacer-2xl);
   }
 }
 </style>
