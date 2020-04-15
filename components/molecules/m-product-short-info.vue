@@ -5,7 +5,7 @@
         <SfHeading
           itemprop="name"
           :title="product.name | htmlDecode"
-          :level="1"
+          :level="3"
           class="sf-heading--no-underline sf-heading--left heading"
         />
         <div class="sub">
@@ -79,21 +79,13 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .description {
-  margin: var(--spacer-extra-big) 0 calc(var(--spacer-big) * 3) 0;
-  font-family: var(--body-font-family-secondary);
-  font-size: var(--font-size-regular);
+  margin: var(--spacer-2xl) 0 calc(var(--spacer-xl) * 3) 0;
+  font-family: var(--font-family-secondary);
+  font-size: var(--font-base);
   line-height: 1.6;
 }
 .heading {
-  margin-top: var(--spacer-big);
-  ::v-deep .sf-heading__title {
-    font-size: var(--font-size-big);
-    font-weight: var(--body-font-weight-primary);
-    @include for-desktop {
-      font-size: var(--h1-font-size);
-      font-weight: var(--body-font-weight-secondary);
-    }
-  }
+  margin-top: var(--spacer-xl);
   @include for-desktop {
     margin-top: 0;
   }
@@ -112,10 +104,10 @@ export default {
 }
 .sub-price {
   flex-basis: 100%;
-  margin-top: var(--spacer-big) / 4;
+  margin-top: var(--spacer-xl) / 4;
   @include for-desktop {
     flex-basis: auto;
-    margin-top: var(--spacer-big) / 2;
+    margin-top: var(--spacer-xl) / 2;
   }
 }
 .rating-text {

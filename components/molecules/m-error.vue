@@ -51,7 +51,7 @@ export default {
   padding: 0 1.25rem;
   &__image,
   &__message {
-    margin: calc(var(--spacer-extra-big) * 3) 0;
+    margin: calc(var(--spacer-2xl) * 3) 0;
     text-align: center;
     --heading-border: none;
   }
@@ -61,7 +61,7 @@ export default {
   }
   &__action {
     max-width: 24rem;
-    margin: var(--spacer-extra-big) auto;
+    margin: var(--spacer-2xl) auto;
     @include for-desktop {
       display: flex;
     }
@@ -69,7 +69,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: var(--spacer-big) 0;
+      margin: var(--spacer-xl) 0;
       @include for-desktop {
         margin: 0;
         text-align: right;

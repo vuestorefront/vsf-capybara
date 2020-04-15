@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <SfHero
-      class="section"
+      class="hero"
       :slider-options="{
         animationDuration: 2000,
         rewindDuration: 2000
@@ -19,8 +19,8 @@
       />
     </SfHero>
 
-    <SfBannerGrid :banner-grid="1" class="banners section">
-      <template v-for="(banner, i) in banners" v-slot:[banner.slot]>
+    <SfBannerGrid :banner-grid="1" class="banner-grid">
+      <template v-for="(banner, i) in banners" #[banner.slot]>
         <router-link :key="i" :to="banner.link">
           <SfBanner
             :subtitle="banner.subtitle"
@@ -28,7 +28,6 @@
             :description="banner.description"
             :button-text="banner.buttonText"
             :image="banner.image"
-            class="sf-banner--slim"
           />
         </router-link>
       </template>
@@ -36,7 +35,7 @@
 
     <ONewsletter />
 
-    <SfSection title-heading="Best Sellers" class="section">
+    <SfSection :title-heading="$t('Bestsellers')" class="section">
       <lazy-hydrate :trigger-hydration="!loading">
         <m-product-carousel :products="newCollection" />
       </lazy-hydrate>
@@ -44,7 +43,7 @@
 
     <SfSection
       v-if="isOnline"
-      title-heading="Share Your Look"
+      :title-heading="$t('Share Your Look')"
       subtitle-heading="#YOURLOOK"
       class="section"
     >
@@ -152,56 +151,25 @@ export default {
 
 #home {
   box-sizing: border-box;
+  padding: 0 var(--spacer-sm);
   @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
+    padding: 0 var(--spacer-sm);
+    max-width: 1272px;
+    margin: 0 auto;
   }
 }
-
 .sf-hero-item {
-  background-position: top;
+  --hero-item-height: 14rem;
 }
-
-.sf-banner-sf-banner-grid {
-  margin: var(--spacer-big) 0;
+.banner-grid {
+  margin: var(--spacer-base) 0;
   @include for-desktop {
-    margin: var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0;
   }
 }
-
-.banners {
-  margin: var(--spacer-big) 0;
-  @include for-desktop {
-    margin: var(--spacer-extra-big) 0;
-  }
-}
-
-.product-card {
-  max-width: unset;
-  &:hover {
-    @include for-desktop {
-      box-shadow: 0px 4px 20px rgba(168, 172, 176, 0.19);
-    }
-  }
-}
-
-.product-carousel {
-  margin: -20px var(--spacer-big) -20px 0;
-  @include for-desktop {
-    margin: -20px 0;
-  }
-  ::v-deep .sf-carousel__wrapper {
-    padding: 20px 0;
-    @include for-desktop {
-      padding: 20px;
-      max-width: calc(100% - 216px);
-    }
-  }
-}
-
 .section {
-  padding-left: var(--spacer-big);
-  padding-right: var(--spacer-big);
+  padding-left: var(--spacer-xl);
+  padding-right: var(--spacer-xl);
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;

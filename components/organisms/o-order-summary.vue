@@ -161,8 +161,8 @@ export default {
   box-sizing: border-box;
   width: 100%;
   background-color: #f1f2f3;
-  padding: var(--spacer-extra-big);
-  margin-bottom: var(--spacer-big);
+  padding: var(--spacer-2xl);
+  margin-bottom: var(--spacer-xl);
   &:last-child {
     margin-bottom: 0;
   }
@@ -171,13 +171,13 @@ export default {
   }
 }
 .title {
-  margin-bottom: var(--spacer-extra-big);
+  margin-bottom: var(--spacer-2xl);
 }
 .total-items {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacer-big);
+  margin-bottom: var(--spacer-xl);
 }
 .collected-product-list {
   margin: 0 -20px;
@@ -185,17 +185,17 @@ export default {
 .collected-product {
   --collected-product-image-background: var(--c-white);
   &:not(:last-child) {
-    margin-bottom: var(--spacer-big);
+    margin-bottom: var(--spacer-xl);
   }
 }
 .characteristic {
   &:not(:last-child) {
-    margin-bottom: var(--spacer-big);
+    margin-bottom: var(--spacer-xl);
   }
 }
 .product {
   &__properties {
-    margin: var(--spacer-big) 0 0 0;
+    margin: var(--spacer-xl) 0 0 0;
     --property-name-font-size: 0.8rem;
     --property-value-font-font-size: 0.8rem;
     ::v-deep {

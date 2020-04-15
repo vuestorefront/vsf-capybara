@@ -239,11 +239,11 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .breadcrumbs {
-  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
+  padding: var(--spacer-xl) var(--spacer-2xl) var(--spacer-2xl);
 }
 .section {
-  padding-left: var(--spacer-big);
-  padding-right: var(--spacer-big);
+  padding-left: var(--spacer-xl);
+  padding-right: var(--spacer-xl);
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
@@ -251,9 +251,9 @@ export default {
 }
 
 .banner {
-  margin: var(--spacer-big) 0;
+  margin: var(--spacer-xl) 0;
   @include for-desktop {
-    margin: var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0;
   }
 }
 

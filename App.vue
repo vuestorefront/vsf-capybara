@@ -34,8 +34,8 @@ body {
   --bar-height: 3.125rem;
   color: var(--c-text);
   font-size: var(--font-size-regular);
-  font-family: var(--body-font-family-secondary);
-  font-weight: var(--body-font-weight-primary);
+  font-family: var(--font-family-secondary);
+  font-weight: var(--font-weight-primary);
   margin: 0;
   padding: 0;
   a {

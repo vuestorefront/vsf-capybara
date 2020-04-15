@@ -172,9 +172,9 @@ export default {
 }
 .description {
   flex: 1;
-  padding: 0 var(--spacer-big);
+  padding: 0 var(--spacer-xl);
   @include for-desktop {
-    margin-left: calc(var(--spacer-big) * 5);
+    margin-left: calc(var(--spacer-xl) * 5);
   }
 }
 .text-action {

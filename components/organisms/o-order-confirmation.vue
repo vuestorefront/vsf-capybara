@@ -192,19 +192,19 @@ export default {
 }
 .wrapper {
   max-width: 586px;
-  margin: var(--spacer-extra-big) auto 0;
-  padding: 0 var(--spacer-medium) 0 var(--spacer-medium);
+  margin: var(--spacer-2xl) auto 0;
+  padding: 0 var(--spacer-lg) 0 var(--spacer-lg);
   &__notifications-button {
-    margin: var(--spacer-extra-big) 0 var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0 var(--spacer-2xl) 0;
   }
   &__buttons {
     width: 100%;
     display: flex;
-    margin: var(--spacer-extra-big) 0 var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0 var(--spacer-2xl) 0;
     justify-content: space-between;
     @include for-desktop {
       & > button:not(:last-child) {
-        margin: 0 var(--spacer-medium) 0 0;
+        margin: 0 var(--spacer-lg) 0 0;
       }
     }
     @include for-mobile {
@@ -220,7 +220,7 @@ export default {
 }
 .paragraph {
   line-height: 1.875rem;
-  font-size: var(--font-size-big);
+  font-size: var(--font-lg);
 }
 .feedback {
   box-sizing: border-box;
@@ -228,7 +228,7 @@ export default {
   width: 100%;
   height: 25vh;
   padding: 0.5em;
-  font-family: var(--body-font-family-primary);
+  font-family: var(--font-family-primary);
   resize: vertical;
 }
 </style>

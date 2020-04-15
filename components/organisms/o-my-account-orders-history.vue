@@ -126,25 +126,25 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .message {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  font-size: var(--font-size-regular);
-  font-family: var(--body-font-family-primary);
-  font-weight: var(--body-font-weight-primary);
+  margin: 0 0 var(--spacer-2xl) 0;
+  font-size: var(--font-base);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-normal);
   line-height: 1.6;
 }
 .no-orders {
   &__title,
   &__content {
-    font-family: var(--body-font-family-secondary);
-    font-size: var(--font-size-regular);
+    font-family: var(--font-family-secondary);
+    font-size: var(--font-base);
     line-height: 1.6;
   }
   &__title {
-    margin: 0 0 var(--spacer-big) 0;
+    margin: 0 0 var(--spacer-xl) 0;
     font-weight: 500;
   }
   &__content {
-    margin: 0 0 var(--spacer-extra-big) 0;
+    margin: 0 0 var(--spacer-2xl) 0;
     font-weight: 300;
   }
   &__button {
@@ -168,7 +168,7 @@ export default {
   ::v-deep .sf-table {
     &__row,
     &__heading {
-      margin: 0 -var(--spacer-big);
+      margin: 0 -var(--spacer-xl);
       @include for-mobile {
         padding: 5px;
       }
