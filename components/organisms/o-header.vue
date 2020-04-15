@@ -36,7 +36,7 @@
       </template>
       <template #search>
         <div class="search-container">
-          <OSearch class="sf-search-bar sf-header__search" :class="{'desktop-only': !isSearchPanelVisible}" />
+          <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
           <SfButton
             v-if="isSearchPanelVisible"
             class="sf-button--text form__action-button form__action-button--secondary mobile-only"
@@ -156,8 +156,11 @@ export default {
   }
   .search-container {
     display: flex;
+    .o-search {
+      flex-grow: 1;
+    }
     .sf-button {
-      margin-left: 1rem;
+      margin: 0 var(--spacer-medium);
     }
     @include for-mobile {
       width: 100%;
