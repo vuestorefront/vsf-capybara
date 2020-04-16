@@ -4,6 +4,7 @@
       <div class="banner__info">
         <SfHeading
           :title="OnlineOnly ? $t('It\'s ordered!') : $t('You are offline')"
+          :level="3"
           class="sf-heading--no-underline"
         />
         <p v-if="OnlineOnly && lastOrderConfirmation.orderNumber" class="banner__order-number">
@@ -15,6 +16,7 @@
       <template v-if="OnlineOnly">
         <SfHeading
           :title="$t('You\'ve successfully placed the order')"
+          :level="3"
           class="sf-heading--left"
         />
         <p class="paragraph">
@@ -48,6 +50,7 @@
       </SfButton>
       <SfHeading
         :title="$t('What we can improve?')"
+        :level="3"
         class="sf-heading--left"
       />
       <p class="paragraph">
@@ -170,7 +173,7 @@ export default {
 #o-order-confirmation {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 1272px;
     margin: auto;
   }
 }

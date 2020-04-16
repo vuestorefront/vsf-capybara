@@ -81,7 +81,7 @@
           class="sf-property--full-width property"
         />
         <SfProperty
-          :name="$t('TOTAL')"
+          :name="$t('Total')"
           :value="order.grand_total | price"
           class="sf-property--full-width property-total"
         />

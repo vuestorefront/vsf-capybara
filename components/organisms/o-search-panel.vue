@@ -175,7 +175,7 @@ export default {
     display: flex;
     padding-left: 40px;
     padding-right: 40px;
-    max-width: 1240px;
+    max-width: 1272px;
     margin: auto;
     border-top: 1px solid var(--c-light);
 
