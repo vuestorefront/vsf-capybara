@@ -2,25 +2,23 @@
   <div class="o-payment">
     <SfHeading
       :title="`${isVirtualCart ? 2 : 3}. ${$t('Payment')}`"
+      :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
-      <div v-if="!isVirtualCart" class="form__element form__group">
-        <SfCheckbox
-          v-model="sendToShippingAddress"
-          class="form__checkbox"
-          name="sendToShippingAddress"
-          :label="$t('Copy address data from shipping')"
-        />
-      </div>
-      <div v-if="hasBillingData()" class="form__element form__group">
-        <SfCheckbox
-          v-model="sendToBillingAddress"
-          class="form__checkbox"
-          name="sendToBillingAddress"
-          :label="$t('Use my billing data')"
-        />
-      </div>
+      <SfCheckbox
+        v-if="!isVirtualCart"
+        v-model="sendToShippingAddress"
+        class="form__element form__checkbox"
+        name="sendToShippingAddress"
+        :label="$t('Copy address data from shipping')"
+      />
+      <SfCheckbox
+        v-model="sendToBillingAddress"
+        class="form__element form__checkbox"
+        name="sendToBillingAddress"
+        :label="$t('Use my billing data')"
+      />
       <SfInput
         v-model.trim="payment.firstName"
         class="form__element form__element--half"
@@ -157,6 +155,7 @@
     </div>
     <SfHeading
       :title="$t('Payment method')"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
@@ -168,7 +167,7 @@
           :label="method.title ? method.title : method.name"
           :value="method.code"
           name="payment-method"
-          class="form__element form__radio payment-method"
+          class="form__radio payment-method"
           @input="changePaymentMethod"
         />
       </div>
@@ -195,10 +194,7 @@
 </template>
 <script>
 import { required, minLength } from 'vuelidate/lib/validators';
-import {
-  unicodeAlpha,
-  unicodeAlphaNum
-} from '@vue-storefront/core/helpers/validators';
+import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 import {
   SfInput,
@@ -285,104 +281,64 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .title {
-  margin-bottom: var(--spacer-2xl);
+  --heading-padding: var(--spacer-base) 0;
+  @include for-desktop {
+    --heading-title-font-size: var(--h3-font-size);
+    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    &:last-of-type {
+      --heading-padding: var(--spacer-xs) 0 var(--spacer-base) var(--spacer-xs);
+    }
+  }
 }
 .form {
+  &__checkbox {
+    --checkbox-label-color: var(--c-dark-variant);
+    margin: 0 0 var(--spacer-sm) 0;
+  }
+  &__group {
+    display: flex;
+    align-items: center;
+  }
+  &__action {
+    margin: var(--spacer-base) 0;
+    &-button {
+      &:first-child {
+        --button-height: 4.0625rem;
+      }
+      &--secondary {
+        margin: var(--spacer-base) 0;
+      }
+    }
+  }
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
-  }
-  &__element {
-    margin-bottom: var(--spacer-2xl);
-    @include for-desktop {
+    margin: 0 var(--spacer-2xl) 0 var(--spacer-xs);
+    &__element {
+      padding: 0 0 var(--spacer-xs) 0;
       flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
+      &--half {
         flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding-left: var(--spacer-2xl);
+        &-even {
+          padding: 0 0 0 var(--spacer-xl);
         }
       }
     }
-  }
-  &__action {
-    @include for-desktop {
+    &__action {
       flex: 0 0 100%;
       display: flex;
     }
   }
-  &__action-button {
-    flex: 1;
-    &--secondary {
-      margin: var(--spacer-xl) 0;
-      @include for-desktop {
-        order: -1;
-        margin: 0;
-        text-align: left;
-      }
-    }
-  }
-  &__select {
-    ::v-deep .sf-select__selected {
-      padding: 5px 0;
-    }
-  }
-  &__radio {
-    white-space: nowrap;
-    margin-bottom: 0;
-    &-group {
-      flex: 0 0 100%;
-      margin: 0 0 var(--spacer-2xl) 0;
-    }
-  }
-}
-.payment-image {
-  display: flex;
-  align-items: center;
-  height: 2.125rem;
-  width: auto;
-  ::v-deep > * {
-    width: auto;
-    max-width: unset;
-  }
-}
-.payment-methods {
-  @include for-desktop {
-    display: flex;
-    padding: var(--spacer-xl) 0;
-    border-top: 1px solid var(--c-light);
-    border-bottom: 1px solid var(--c-light);
-  }
 }
 .payment-method {
-  border-top: 1px solid var(--c-light);
-  @include for-mobile {
-    background-color: transparent;
-  }
+  --radio-container-align-items: center;
+  --radio-container-padding: var(--spacer-sm) 0;
+  --ratio-content-margin: 0 0 0 var(--spacer-lg);
+  --radio-background: transparent;
+  white-space: nowrap;
   @include for-desktop {
-    border: 0;
-    border-radius: 4px;
-  }
-  &:last-child {
-    border-bottom: 1px solid var(--c-light);
-    @include for-desktop {
-      border-bottom: 0;
-    }
-  }
-  ::v-deep {
-    .sf-radio {
-      &__container {
-        align-items: center;
-      }
-      &__content {
-        margin: 0 0 0 var(--spacer);
-      }
-    }
+    --radio-container-padding: var(--spacer-sm);
   }
 }
 </style>
