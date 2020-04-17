@@ -1,14 +1,15 @@
 <template>
   <div class="m-modal-order-confirmation">
-    <SfModal :visible="isVisible" @close="closeModal">
+    <SfModal :visible="isVisible" @close="closeModal" class="order-confirmation">
       <SfHeading
         class="sf-heading--left"
         :title="$t('Confirm your order')"
         :subtitle="$t('Please confirm order you placed when you was offline')"
+        :level="3"
       />
       <div v-for="(order, key) in modalData.payload" :key="key" class="order-confirmation__order">
         <SfHeading
-          level="3"
+          :level="3"
           :title="$t('Order #{id}', { id: key + 1 })"
           class="sf-heading--left order-confirmation__order-title"
         />
@@ -52,10 +53,10 @@
         </SfTable>
       </div>
       <div class="order-confirmation__buttons">
-        <SfButton class="color-secondary" @click.native="cancelOrders()">
+        <SfButton class="sf-button sf-button--text color-secondary" @click.native="cancelOrders">
           {{ $t("Cancel") }}
         </SfButton>
-        <SfButton @click.native="confirmOrders()">
+        <SfButton class="sf-button" @click.native="confirmOrders">
           {{ $t("Confirm your order") }}
         </SfButton>
       </div>
@@ -64,11 +65,14 @@
 </template>
 
 <script>
+import { ConfirmOrders } from '@vue-storefront/core/modules/offline-order/components/ConfirmOrders';
+import { CancelOrders } from '@vue-storefront/core/modules/offline-order/components/CancelOrders';
 import { SfModal, SfHeading, SfButton, SfTable } from '@storefront-ui/vue';
 
 export default {
   name: 'MModalOrderConfirmation',
   components: { SfModal, SfHeading, SfButton, SfTable },
+  mixins: [ConfirmOrders, CancelOrders],
   props: {
     isVisible: {
       type: Boolean,
@@ -82,6 +86,14 @@ export default {
     }
   },
   methods: {
+    confirmOrders () {
+      ConfirmOrders.methods.confirmOrders.call(this)
+      this.closeModal();
+    },
+    cancelOrders () {
+      CancelOrders.methods.cancelOrders.call(this)
+      this.closeModal();
+    },
     closeModal () {
       this.$emit('close', this.modalData.name)
     }
@@ -90,16 +102,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .order-confirmation {
+  --_table-column-width: 4;
   &__order {
     margin-bottom: var(--spacer-xl);
     .sf-table__header {
       white-space: nowrap;
     }
     th, td {
-      padding: var(--spacer-sm);
       &.table-center {
         text-align: center;
+      }
+    }
+    &-title {
+      margin: var(--spacer-xl) 0 var(--spacer-lg) 0;
+      .sf-heading__title {
+        font-size: var(--font-base);
       }
     }
   }
@@ -109,21 +129,13 @@ export default {
   }
   &__buttons {
     display: flex;
-    justify-content: space-between;
-  }
-}
-</style>
-
-<style lang="scss">
-.m-modal-order-confirmation {
-  .sf-modal__container {
-    width: auto;
-  }
-  .order-confirmation__order-title {
-    margin: var(--spacer-xl) 0 var(--spacer-lg) 0;
-    .sf-heading__title {
-      font-size: var(--font-base);
+    justify-content: flex-end;
+    .sf-button:not(:first-child) {
+      margin-left: 1rem;
     }
+  }
+  @include for-desktop {
+    --modal-width: 700px;
   }
 }
 </style>

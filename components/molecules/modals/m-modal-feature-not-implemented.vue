@@ -1,12 +1,11 @@
 <template>
-  <div class="m-modal-feature-not-implemented">
-    <SfModal :visible="isVisible" @close="$emit('close', modalData.name)">
-      <p class="message">
-        {{ $t('This feature is not implemented yet! Please take a look at') }}<br>
-        <a href="#">https://github.com/DivanteLtd/vue-storefront/issues {{ $t('for our Roadmap!') }}</a>
-      </p>
-    </SfModal>
-  </div>
+  <SfModal :visible="isVisible" @close="$emit('close', modalData.name)" class="m-modal-feature-not-implemented">
+    <p class="message">
+      {{ $t('This feature is not implemented yet! Please take a look at') }}
+      <a href="#">https://github.com/DivanteLtd/vue-storefront/issues</a>
+      {{ $t('for our Roadmap!') }}
+    </p>
+  </SfModal>
 </template>
 <script>
 import { SfModal } from '@storefront-ui/vue';
@@ -39,10 +38,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .message {
-  margin: 0 0 var(--spacer-2xl) 0;
-  font-size: var(--font-base);
   font-family: var(--font-family-primary);
-  font-weight: var(--font-normal);
   line-height: 1.6;
 }
 </style>

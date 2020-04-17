@@ -1,10 +1,10 @@
 <template>
-  <div class="m-reset-password" key="reset-password">
-    <div class="form" v-if="!passwordSent">
-      <p class="form__message">
+  <div class="m-reset-password modal-content">
+    <template v-if="!passwordSent">
+      <p>
         {{ $t('Enter your email to receive instructions on how to reset your password.') }}
       </p>
-      <form @submit.prevent="resetPassword">
+      <form @submit.prevent="resetPassword" class="form">
         <SfInput
           v-model="email"
           name="email"
@@ -16,24 +16,21 @@
               ? $t('Field is required.')
               : $t('Please provide valid e-mail address.')
           "
-          class="form__input"
+          class="form__element"
         />
-        <SfButton class="sf-button--full-width form__button">
+        <SfButton class="sf-button--full-width form__submit">
           {{ $t("Reset password") }}
         </SfButton>
       </form>
-    </div>
+    </template>
     <div v-else>
-      <p class="form__message">
+      <p>
         {{ $t('We\'ve sent password reset instructions to your email. Check your inbox and follow the link.') }}
       </p>
     </div>
-    <div class="action">
-      {{ $t("or") }}
-      <SfButton class="sf-button--text" @click.native="switchElem('login')">
-        {{ $t("login in to your account") }}
-      </SfButton>
-    </div>
+    <SfButton class="sf-button--text action-button" @click.native="switchElem('login')">
+      {{ `${$t("or")} ${$t("login in to your account")}` }}
+    </SfButton>
   </div>
 </template>
 
@@ -108,33 +105,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .form {
-  &__input {
-    margin-bottom: var(--spacer-2xl);
+  width: 100%;
+  &__element {
+    margin: var(--spacer-base) 0;
   }
-  &__checkbox {
-    margin-bottom: var(--spacer-xl);
-  }
-  &__button {
-    margin-top: var(--spacer-xl);
-  }
-  &__message {
-    margin-bottom: var(--spacer-2xl);
-    font-size: 0.9rem;
+  &__submit {
+    margin: var(--spacer-xl) 0 0 0;
   }
 }
-.action {
-  margin-top: var(--spacer-xl);
-  text-align: center;
-}
-.bottom {
-  padding-top: var(--spacer-2xl);
-  margin-top: var(--spacer-2xl);
-  border-top: 1px solid var(--c-light);
-  line-height: 1.6;
-  text-align: center;
-}
-.sf-button--muted {
-  color: var(--c-text-muted);
+.action-button {
+  margin: var(--spacer-xl) 0;
 }
 </style>
