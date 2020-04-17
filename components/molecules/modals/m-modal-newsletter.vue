@@ -1,12 +1,13 @@
 <template>
-  <div class="m-modal-newsletter">
-    <SfModal :visible="isVisible" @close="closeModal">
-      <SfHeading
-        class="sf-heading--left"
-        :title="$t('Newsletter')"
-        :subtitle="$t('Sign up to our newsletter and receive a coupon for 10% off!')"
-      />
-      <div class="form">
+  <SfModal :visible="isVisible" @close="closeModal" class="m-modal-newsletter">
+    <div class="modal-content">
+      <form @submit.prevent="subscribeExtend" class="form">
+        <SfHeading
+          class="sf-heading--left"
+          :title="$t('Newsletter')"
+          :subtitle="$t('Sign up to our newsletter and receive a coupon for 10% off!')"
+          :level="3"
+        />
         <SfInput
           v-model="email"
           name="email"
@@ -18,14 +19,14 @@
               ? $t('Field is required.')
               : $t('Please provide valid e-mail address.')
           "
-          class="form__input"
+          class="form__element"
         />
-        <SfButton class="sf-button--full-width form__button" @click.native="subscribeExtend">
+        <SfButton class="sf-button--full-width form__submit">
           {{ $t("Subscribe") }}
         </SfButton>
-      </div>
-    </SfModal>
-  </div>
+      </form>
+    </div>
+  </SfModal>
 </template>
 
 <script>
@@ -86,12 +87,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .form {
-  &__input {
-    margin-top: var(--spacer-xl);
+  width: 100%;
+  &__element {
+    margin: var(--spacer-base) 0;
   }
-  &__button {
-    margin-top: var(--spacer-2xl);
+  &__submit {
+    margin: var(--spacer-xl) 0 0 0;
   }
 }
 </style>

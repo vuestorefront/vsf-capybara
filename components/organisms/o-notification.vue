@@ -6,8 +6,7 @@
       class="notification"
       :visible="true"
       :type="getType(notification)"
-      :message="notification.message"
-      @click:close="removeNotification(notification.id)"
+      :message="notification.message | htmlDecode"
     >
       <template #action>
         <button
@@ -19,18 +18,26 @@
           {{ action.label }}
         </button>
       </template>
+      <template #close>
+        <SfIcon
+          class="sf-notification__close"
+          icon="cross"
+          color="white"
+          @click="removeNotification(notification.id)"
+        />
+      </template>
     </SfNotification>
   </div>
 </template>
 
 <script>
 import { Notification } from '@vue-storefront/core/modules/notification/components/Notification';
-import { SfNotification } from '@storefront-ui/vue';
+import { SfNotification, SfIcon } from '@storefront-ui/vue';
 
 export default {
   name: 'ONotification',
   mixins: [Notification],
-  components: { SfNotification },
+  components: { SfNotification, SfIcon },
   methods: {
     getType ({ type }) {
       return ['secondary', 'info', 'success', 'warning', 'danger'].includes(type) ? type : 'danger';
@@ -74,18 +81,16 @@ export default {
     margin-top: 1rem;
   }
   .sf-notification__action {
-    margin-left: 1.25rem;
     cursor: pointer;
-    &:last-child {
-      margin-right: 2.25rem;
-    }
+    margin: 0.3rem 1rem 0 0;
   }
-}
-@include for-desktop {
-  .sf-notification {
-    max-width: none;
-    width: max-content;
+  @include for-desktop {
+    max-width: 32rem;
     align-self: end;
+    .sf-notification__close {
+      position: relative;
+      margin-left: var(--spacer-lg);
+    }
   }
 }
 </style>

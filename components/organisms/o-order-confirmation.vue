@@ -4,6 +4,7 @@
       <div class="banner__info">
         <SfHeading
           :title="OnlineOnly ? $t('It\'s ordered!') : $t('You are offline')"
+          :level="3"
           class="sf-heading--no-underline"
         />
         <p v-if="OnlineOnly && lastOrderConfirmation.orderNumber" class="banner__order-number">
@@ -15,6 +16,7 @@
       <template v-if="OnlineOnly">
         <SfHeading
           :title="$t('You\'ve successfully placed the order')"
+          :level="3"
           class="sf-heading--left"
         />
         <p class="paragraph">
@@ -48,6 +50,7 @@
       </SfButton>
       <SfHeading
         :title="$t('What we can improve?')"
+        :level="3"
         class="sf-heading--left"
       />
       <p class="paragraph">
@@ -77,6 +80,7 @@
 </template>
 
 <script>
+import get from 'lodash-es/get';
 import { mapState } from 'vuex';
 import config from 'config';
 import VueOfflineMixin from 'vue-offline/mixin';
@@ -97,7 +101,7 @@ export default {
   },
   computed: {
     ...mapState({
-      lastOrderConfirmation: state => state.order ? state.order.last_order_confirmation.confirmation : {},
+      lastOrderConfirmation: state => get(state, 'order.last_order_confirmation.confirmation') || {},
       checkoutPersonalEmailAddress: state => state.checkout.personalDetails.emailAddress
     }),
     isNotificationSupported () {
@@ -170,7 +174,7 @@ export default {
 #o-order-confirmation {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 1272px;
     margin: auto;
   }
 }

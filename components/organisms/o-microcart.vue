@@ -181,7 +181,7 @@ export default {
 #cart {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 1272px;
     margin: auto;
   }
 }

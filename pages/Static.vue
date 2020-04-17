@@ -117,7 +117,7 @@ export default {
   display: flex;
   flex-direction: column;
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 1272px;
     margin: auto;
   }
 }

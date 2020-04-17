@@ -135,6 +135,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.m-product-options-custom {
+  margin: 0 var(--spacer-sm);
+  @include for-desktop {
+    margin: 0 var(--spacer-xl);
+  }
+}
 .single-option {
   margin-top: 1.5rem;
 }

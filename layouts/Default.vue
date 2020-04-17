@@ -109,8 +109,7 @@ export default {
       openModal: 'openModal'
     }),
     onOrderConfirmation (payload) {
-      ;
-      this.openModal({name: ModalList.OrderConfirmation, payload: [payload]})
+      this.openModal({name: ModalList.OrderConfirmation, payload});
     },
     fetchMenuData () {
       return this.$store.dispatch('category/list', {

@@ -22,7 +22,7 @@
       </template>
     </SfHeading>
     <div class="order-details__products">
-      <SfTable class="sf-table--bordered">
+      <SfTable class="sf-table--bordered table">
         <SfTableHeading>
           <SfTableHeader>{{ $t('Thumbnail') }}</SfTableHeader>
           <SfTableHeader class="sf-table__header--center">
@@ -39,8 +39,8 @@
           </SfTableHeader>
         </SfTableHeading>
         <SfTableRow v-for="product in products" :key="product.id">
-          <SfTableData>
-            <img :src="getThumbnailForProduct(product)" :alt="product.name | htmlDecode">
+          <SfTableData class="table__image">
+            <SfImage :src="getThumbnailForProduct(product)" :alt="product.name | htmlDecode" />
           </SfTableData>
           <SfTableData class="sf-table__header--center">
             {{ product.name | htmlDecode }}
@@ -81,7 +81,7 @@
           class="sf-property--full-width property"
         />
         <SfProperty
-          :name="$t('TOTAL')"
+          :name="$t('Total')"
           :value="order.grand_total | price"
           class="sf-property--full-width property-total"
         />
@@ -162,7 +162,8 @@ import {
   SfArrow,
   SfBadge,
   SfTable,
-  SfProperty
+  SfProperty,
+  SfImage
 } from '@storefront-ui/vue';
 
 export default {
@@ -172,7 +173,8 @@ export default {
     SfArrow,
     SfBadge,
     SfTable,
-    SfProperty
+    SfProperty,
+    SfImage
   },
   props: {
     order: {
@@ -287,9 +289,6 @@ export default {
     color: var(--c-text);
   }
 }
-</style>
-
-<style lang="scss">
 .order-details__summary {
   .sf-property__name {
     min-width: 100px;
@@ -297,6 +296,12 @@ export default {
   .sf-property__value {
     min-width: 180px;
     text-align: center;
+  }
+}
+.table {
+  --_table-column-width: 5;
+  &__image {
+    --image-width: 5rem;
   }
 }
 </style>

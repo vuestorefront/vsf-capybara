@@ -1,7 +1,7 @@
 <template>
   <div class="m-modal-language-switcher">
     <SfModal :visible="isVisible" @close="closeModal">
-      <SfHeading class="sf-heading--left" :title="$t('Choose your country')" />
+      <SfHeading class="sf-heading--left" :title="$t('Choose your country')" :level="3" />
       <SfFooter :column="columns" :multiple="true">
         <SfFooterColumn :title="$t(fullCountryName)">
           <SfList>
