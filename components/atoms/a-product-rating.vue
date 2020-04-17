@@ -1,18 +1,23 @@
 <template>
   <div class="a-product-rating" @click="$emit('click')">
-    <SfRating :score="score" :max="max" />
-    <ATextAction :text="text">
+    <div class="product__rating">
+      <SfRating :score="score" :max="max" />
+      <a v-if="!!reviews" href="#" class="product__count">
+        ({{ reviews.length }})
+      </a>
+    </div>
+    <SfButton class="sf-button--text desktop-only">
       <slot />
-    </ATextAction>
+    </SfButton>
   </div>
 </template>
+
 <script>
-import { SfRating } from '@storefront-ui/vue';
-import ATextAction from 'theme/components/atoms/a-text-action';
+import { SfRating, SfButton } from '@storefront-ui/vue';
 export default {
   components: {
     SfRating,
-    ATextAction
+    SfButton
   },
   props: {
     reviews: {
@@ -40,21 +45,27 @@ export default {
   }
 };
 </script>
-<style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.a-product-rating {
-  display: flex;
-  align-items: center;
-  margin-top: var(--spacer-xl) / 2;
-  @include for-desktop {
-    margin-left: auto;
+<style lang="scss" scoped>
+@import "~@storefront-ui/vue/styles";
+
+.product {
+  &__rating {
+    display: flex;
+    align-items: center;
+    margin: var(--spacer-xs) 0 0 0;
   }
-  ::v-deep .sf-rating {
-    cursor: pointer;
-  }
-  ::v-deep .a-text-action {
-    margin: 0;
+  &__count {
+    @include font(
+      --count-font,
+      var(--font-normal),
+      var(--font-sm),
+      1.4,
+      var(--font-family-secondary)
+    );
+    color: var(--c-text);
+    text-decoration: none;
+    margin: 0 0 0 var(--spacer-xs);
   }
 }
 </style>

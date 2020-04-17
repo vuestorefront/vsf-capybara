@@ -1,10 +1,5 @@
 <template>
-  <div
-    id="product"
-    class="product"
-    itemscope
-    itemtype="http://schema.org/Product"
-  >
+  <div id="product" itemscope itemtype="http://schema.org/Product">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
         <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
@@ -13,7 +8,6 @@
       </template>
     </SfBreadcrumbs>
     <OProductDetails
-      :key="getCurrentProduct.id"
       :product="getCurrentProduct"
       :product-gallery="getProductGallery"
       :product-configuration="getCurrentProductConfiguration"
@@ -46,7 +40,6 @@
         <MRelatedProducts type="related" />
       </SfSection>
     </lazy-hydrate>
-
     <SfSection
       v-if="isOnline"
       title-heading="Share Your Look"
@@ -238,8 +231,15 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+#product {
+  box-sizing: border-box;
+  @include for-desktop {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+}
 .breadcrumbs {
-  padding: var(--spacer-xl) var(--spacer-2xl) var(--spacer-2xl);
+  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 .section {
   padding-left: var(--spacer-xl);
@@ -249,19 +249,10 @@ export default {
     padding-right: 0;
   }
 }
-
 .banner {
   margin: var(--spacer-xl) 0;
   @include for-desktop {
     margin: var(--spacer-2xl) 0;
-  }
-}
-
-.product {
-  box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
   }
 }
 </style>
