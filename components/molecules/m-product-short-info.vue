@@ -2,7 +2,7 @@
   <div class="m-product-short-info">
     <div class="product__header">
       <SfHeading
-        :title="product.name  | htmlDecode"
+        :title="product.name | htmlDecode"
         :level="3"
         class="sf-heading--no-underline sf-heading--left"
       />
@@ -39,7 +39,7 @@ export default {
   name: 'MProductShortInfo',
   components: {
     SfHeading,
-    SfIcon, 
+    SfIcon,
     SfPrice,
     SfButton,
     AProductRating,
