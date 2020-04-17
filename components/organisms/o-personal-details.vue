@@ -1,7 +1,16 @@
 <template>
   <div class="o-personal-details">
+    <div v-if="!currentUser" class="log-in desktop-only">
+      <SfButton class="log-in__button color-secondary" @click="login">
+        {{ $t('Log in to your account') }}
+      </SfButton>
+      <p class="log-in__info">
+        {{ $t('or fill the details below') }}:
+      </p>
+    </div>
     <SfHeading
-      :title="`1. ${$t('Personal Details')}`"
+      :title="`1. ${$t('Details')}`"
+      :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
@@ -43,73 +52,84 @@
         "
         @blur="$v.personalDetails.emailAddress.$touch()"
       />
-      <div class="form__element form__group">
-        <SfCheckbox
-          v-if="!currentUser"
-          v-model="createAccount"
-          class="form__element--half form__checkbox"
-          name="createAccount"
-        >
-          <template #label>
-            <span class="sf-checkbox__label">
-              {{ $t("I want to create an account") }}
-            </span>
-            <a @click="openAccountBenefitsModal">{{ $t("+info") }}</a>
-          </template>
-        </SfCheckbox>
+      <div class="info">
+        <p class="info__heading">
+          {{ $t('Enjoy these perks with your free account!') }}
+        </p>
+        <SfCharacteristic
+          v-for="({ description, icon }, index) in characteristics"
+          :key="index"
+          :description="description"
+          :icon="icon"
+          size-icon="xxs"
+          class="info__characteristic"
+        />
       </div>
-      <template v-if="createAccount && !currentUser">
-        <SfInput
-          v-model="password"
-          type="password"
-          class="form__element"
-          name="password"
-          :label="$t('Password')"
-          :required="true"
-          :valid="!$v.password.$error"
-          :error-message="
-            !$v.password.required
-              ? $t('Field is required')
-              : !$v.password.minLength
-                ? $t('Password must have at least 8 letters.')
-                : $t(
-                  'Password must contain at least 3 different character classes: lower case, upper case, digits, special characters.'
-                )
-          "
-          @blur="$v.password.$touch()"
-        />
-        <SfInput
-          v-model="rPassword"
-          type="password"
-          class="form__element"
-          name="password-confirm"
-          :label="$t('Repeat password')"
-          :required="true"
-          :valid="!$v.rPassword.$error"
-          :error-message="
-            !$v.rPassword.required
-              ? $t('Field is required')
-              : $t('Passwords must be identical.')
-          "
-          @blur="$v.rPassword.$touch()"
-        />
-        <div class="form__element form__group">
+      <template v-if="!currentUser">
+        <div class="form__element">
           <SfCheckbox
-            v-model="acceptConditions"
-            class="form__element form__checkbox"
-            name="acceptConditions"
-            :required="true"
-            @blur="$v.acceptConditions.$touch()"
-          >
-            <template #label>
-              <span class="sf-checkbox__label no-flex">
-                {{ $t("I accept ") }}
-              </span>
-              &nbsp;
-              <a @click="openTermsAndConditionsModal">{{ $t("Terms and conditions") }}</a>
-            </template>
-          </SfCheckbox>
+            v-model="createAccount"
+            :label="$t('I want to create an account')"
+            class="form__checkbox"
+            name="createAccount"
+          />
         </div>
+        <template v-if="createAccount">
+          <SfInput
+            v-model="password"
+            type="password"
+            class="form__element"
+            name="password"
+            :has-show-password="true"
+            :label="$t('Password')"
+            :required="true"
+            :valid="!$v.password.$error"
+            :error-message="
+              !$v.password.required
+                ? $t('Field is required')
+                : !$v.password.minLength
+                  ? $t('Password must have at least 8 letters.')
+                  : $t(
+                    'Password must contain at least 3 different character classes: lower case, upper case, digits, special characters.'
+                  )
+            "
+            @blur="$v.password.$touch()"
+          />
+          <SfInput
+            v-model="rPassword"
+            type="password"
+            class="form__element"
+            name="password-confirm"
+            :has-show-password="true"
+            :label="$t('Repeat password')"
+            :required="true"
+            :valid="!$v.rPassword.$error"
+            :error-message="
+              !$v.rPassword.required
+                ? $t('Field is required')
+                : $t('Passwords must be identical.')
+            "
+            @blur="$v.rPassword.$touch()"
+          />
+          <div class="form__element form__group">
+            <SfCheckbox
+              v-model="acceptConditions"
+              class="form__element form__checkbox"
+              name="acceptConditions"
+              :required="true"
+              @blur="$v.acceptConditions.$touch()"
+            >
+              <template #label>
+                <span class="sf-checkbox__label no-flex">
+                  {{ $t("I accept ") }}
+                </span>
+                <SfButton class="sf-button sf-button--text terms" @click.prevent="openTermsAndConditionsModal">
+                  {{ $t("Terms and conditions") }}
+                </SfButton>
+              </template>
+            </SfCheckbox>
+          </div>
+        </template>
       </template>
       <div class="form__action">
         <SfButton
@@ -123,7 +143,7 @@
         </SfButton>
         <SfButton
           v-if="!currentUser"
-          class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
+          class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary mobile-only"
           @click="login"
         >
           {{ $t("or login to your account") }}
@@ -135,7 +155,7 @@
 <script>
 import { required, minLength, email, sameAs } from 'vuelidate/lib/validators';
 import { PersonalDetails } from '@vue-storefront/core/modules/checkout/components/PersonalDetails';
-import { SfInput, SfButton, SfHeading, SfCheckbox } from '@storefront-ui/vue';
+import { SfInput, SfButton, SfHeading, SfCheckbox, SfCharacteristic } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { mapActions } from 'vuex';
 
@@ -145,9 +165,32 @@ export default {
     SfInput,
     SfButton,
     SfHeading,
-    SfCheckbox
+    SfCheckbox,
+    SfCharacteristic
   },
   mixins: [PersonalDetails],
+  data () {
+    return {
+      characteristics: [
+        {
+          description: this.$t('Faster checkout'),
+          icon: 'clock'
+        },
+        {
+          description: this.$t('Full rewards program benefits'),
+          icon: 'rewards'
+        },
+        {
+          description: this.$t('Earn credits with every purchase'),
+          icon: 'credits'
+        },
+        {
+          description: this.$t('Manage your wishlist'),
+          icon: 'heart'
+        }
+      ]
+    };
+  },
   validations: {
     personalDetails: {
       firstName: {
@@ -193,9 +236,6 @@ export default {
     login () {
       this.openModal({name: ModalList.Auth, payload: 'login'})
     },
-    openAccountBenefitsModal () {
-      this.openModal({name: ModalList.AccountBenefits})
-    },
     openTermsAndConditionsModal () {
       this.openModal({name: ModalList.TermsAndConditions})
     }
@@ -206,54 +246,88 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .title {
-  margin-bottom: var(--spacer-2xl);
+  --heading-padding: var(--spacer-base) 0;
+  @include for-desktop {
+    --heading-title-font-size: var(--h3-font-size);
+    --heading-padding: 0 0 var(--spacer-base) 0;
+  }
+}
+.log-in {
+  &__info {
+    margin: var(--spacer-lg) 0;
+    color: var(--c-dark-variant);
+    font: var(--font-light) var(--font-base) / 1.6 var(--font-family-primary);
+    @include for-desktop {
+      font-weight: var(--font-normal);
+      font-size: var(--font-sm);
+    }
+  }
+  &__button {
+    margin: var(--spacer-2xl) 0 var(--spacer-xl) 0;
+  }
+}
+.info {
+  margin: 0 0 var(--spacer-xl) 0;
+  &__heading {
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-light);
+  }
+  &__characteristic {
+    --characteristic-description-font-size: var(--font-xs);
+    margin: 0 0 var(--spacer-sm) var(--spacer-2xs);
+  }
+  @include for-desktop {
+    margin: 0;
+    &__heading {
+      margin: 0 0 var(--spacer-sm) 0;
+      font-size: var(--font-xs);
+    }
+    &__characteristic {
+      margin: var(--spacer-base) 0;
+    }
+  }
 }
 .form {
+  &__checkbox {
+    margin: var(--spacer-base) 0;
+  }
+  &__action {
+    margin: var(--spacer-sm) 0;
+    &-button {
+      &:first-child {
+        --button-height: 4.0625rem;
+      }
+      &--secondary {
+        margin: var(--spacer-base) 0;
+      }
+    }
+  }
+  @include for-mobile {
+    &__checkbox {
+      --checkbox-font-family: var(--font-family-primary);
+      --checkbox-font-weight: var(--font-light);
+      --checkbox-font-size: var(--font-sm);
+    }
+  }
   @include for-desktop {
+    margin: 0 var(--spacer-2xl) 0 0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-  }
-  &__element {
-    margin-bottom: var(--spacer-2xl);
-    @include for-desktop {
+    &__element {
+      margin: 0 0 var(--spacer-base) 0;
       flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
+      &--half {
         flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding-left: var(--spacer-2xl);
+        &-even {
+          padding: 0 0 0 var(--spacer-lg);
         }
       }
     }
   }
-  &__group {
-    display: flex;
-    align-items: center;
+  .terms {
+    margin: 0 0 0 0.4em;
   }
-  &__action {
-    @include for-desktop {
-      flex: 0 0 100%;
-      display: flex;
-    }
-  }
-  &__action-button {
-    flex: 1;
-    &--secondary {
-      margin: var(--spacer-xl) 0;
-      @include for-desktop {
-        margin: 0;
-        text-align: right;
-      }
-    }
-  }
-}
-.info {
-  margin-left: var(--spacer-xl);
-  color: var(--c-text-muted);
 }
 .no-flex {
   flex: unset;
