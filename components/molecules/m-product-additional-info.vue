@@ -1,53 +1,35 @@
 <template>
   <SfTabs
-    class="m-product-additional-info"
+    class="m-product-additional-info product__tabs"
     :open-tab="openTab"
     :key="openTab"
     @toggle="onTabChange"
-    id="m-product-additional-info"
   >
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
-      <div class="properties">
-        <AProductAttribute
-          v-for="(attribute, i) in attributes"
-          :key="i"
-          :product="product"
-          :attribute="attribute"
-        />
-      </div>
+      <AProductAttribute
+        v-for="(attribute, i) in attributes"
+        :key="i"
+        :product="product"
+        :attribute="attribute"
+        class="product__property"
+      />
     </SfTab>
     <SfTab :title="$t('Read reviews')">
-      <div class="review-header">
-        <SfHeading
-          :title="$t('{count} Reviews', { count: reviewsCount })"
-          :level="3"
-          class="sf-heading--left"
-        />
-        <AProductRating
-          @click="handleOpenReviewModal"
-          :reviews="reviews"
-          :text="$t('Leave me review')"
-        />
-      </div>
-      <SfDivider v-show="reviewsCount" />
       <MReviewList v-show="reviewsCount" :reviews="reviews" />
     </SfTab>
   </SfTabs>
 </template>
+
 <script>
-import { ModalList } from 'theme/store/ui/modals'
-import { mapActions } from 'vuex'
-import { SfHeading, SfTabs, SfDivider } from '@storefront-ui/vue';
-import AProductRating from 'theme/components/atoms/a-product-rating';
+import { SfTabs } from '@storefront-ui/vue';
 import AProductAttribute from 'theme/components/atoms/a-product-attribute';
 import MReviewList from 'theme/components/molecules/m-review-list';
+
 export default {
+  name: 'MProductAdditionalInfo',
   components: {
-    SfHeading,
     SfTabs,
-    AProductRating,
-    SfDivider,
     AProductAttribute,
     MReviewList
   },
@@ -74,12 +56,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions('ui', {
-      openModal: 'openModal'
-    }),
-    handleOpenReviewModal () {
-      this.openModal({name: ModalList.Review, payload: this.product.id})
-    },
     onTabChange (index) {
       let counter = 0
       this.$children[0].$children.forEach(tab => {
@@ -92,41 +68,24 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.m-product-additional-info {
-  margin-top: var(--spacer-xl);
-  @include for-desktop {
-    margin-top: calc(var(--spacer-xl) * 5);
+.product {
+  &__tabs {
+    margin: var(--spacer-lg) auto var(--spacer-2xl);
+    @include for-desktop {
+      margin-top: var(--spacer-2xl);
+      --tabs-content-tab-padding: 3.5rem 0 0 0;
+    }
   }
-  p {
-    margin: 0;
+  &__property {
+    margin: var(--spacer-base) 0;
   }
 }
-.properties {
-  margin-top: var(--spacer-xl);
-}
-.review-header {
-  display: flex;
-  @include for-mobile {
-    align-items: flex-start;
-  }
-  ::v-deep {
-    .sf-heading {
-      flex-shrink: 0;
-    }
-    .a-product-rating {
-      margin-left: 10px;
-      width: 100%;
-      justify-content: space-between;
-    }
-    .sf-rating {
-      .sf-icon {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
+
+[itemprop="description"] > *:first-child {
+  margin-top: 0;
 }
 </style>

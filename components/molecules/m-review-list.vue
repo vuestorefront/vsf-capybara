@@ -3,7 +3,7 @@
     <SfReview
       v-for="(review, i) in pageReviews"
       :key="i"
-      class="record"
+      class="product__review"
       :author="review.author"
       :date="review.date"
       :message="review.message"
@@ -18,9 +18,11 @@
       :visible="visible"
       :total="total"
       @click="setCurrentPage"
+      class="product__reviews-pagination"
     />
   </div>
 </template>
+
 <script>
 import { SfReview, SfPagination } from '@storefront-ui/vue';
 export default {
@@ -61,22 +63,26 @@ export default {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.record {
-  padding-bottom: var(--spacer-xl);
-  @include for-desktop {
-    padding-bottom: var(--spacer-2xl);
-    border-bottom: 1px solid var(--c-light);
-  }
-  & + & {
-    padding-top: var(--spacer-2xl);
-    border-top: 1px solid var(--c-light);
-    @include for-desktop {
-      border-top: 0;
-      padding-top: var(--spacer-2xl);
+.product {
+  &__review {
+    padding-bottom: 24px;
+    border-bottom: var(--c-light) solid 1px;
+    margin-bottom: var(--spacer-base);
+    &:last-of-type {
+      border: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
     }
+    @include for-desktop {
+      padding-bottom: 0;
+    }
+  }
+  &__reviews-pagination {
+    margin: var(--spacer-lg) 0 0;
   }
 }
 </style>
