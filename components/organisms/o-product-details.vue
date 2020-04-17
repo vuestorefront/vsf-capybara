@@ -163,6 +163,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "~@storefront-ui/shared/styles/helpers/typography";
 
 .product {
   @include for-desktop {
