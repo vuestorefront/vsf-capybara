@@ -1,65 +1,54 @@
 <template>
-  <div class="m-register form" key="sign-up">
-    <div class="from">
-      <form @submit.prevent="register">
-        <SfInput
-          v-model="email"
-          name="email"
-          :label="$t('Your email')"
-          :required="true"
-          :valid="!$v.email.$error"
-          :error-message="
-            !$v.email.required
-              ? $t('Field is required.')
-              : $t('Please provide valid e-mail address.')
-          "
-          class="form__input"
-        />
-        <SfInput
-          v-model="firstName"
-          name="first-name"
-          :label="$t('First Name')"
-          :required="true"
-          :valid="!$v.firstName.$error"
-          :error-message="$t('Field is required.')"
-          class="form__input"
-        />
-        <SfInput
-          v-model="lastName"
-          name="last-name"
-          :label="$t('Last Name')"
-          :required="true"
-          :valid="!$v.lastName.$error"
-          :error-message="$t('Field is required.')"
-          class="form__input"
-        />
-        <SfInput
-          v-model="password"
-          name="password"
-          :label="$t('Password')"
-          :required="true"
-          :valid="!$v.password.$error"
-          :error-message="$t('Field is required.')"
-          type="password"
-          class="form__input"
-        />
-        <SfCheckbox
-          v-model="createAccount"
-          name="create-account"
-          :label="$t('I want to create an account')"
-          class="form__checkbox"
-        />
-        <SfButton class="sf-button--full-width form__button">
-          {{ $t("Create an account") }}
-        </SfButton>
-      </form>
-    </div>
-    <div class="action">
-      {{ $t("or") }}
-      <SfButton class="sf-button--text" @click.native="switchElem('login')">
-        {{ $t("login in to your account") }}
+  <div class="m-register modal-content">
+    <form @submit.prevent="register" class="form">
+      <SfInput
+        v-model="email"
+        name="email"
+        :label="$t('Your email')"
+        :required="true"
+        :valid="!$v.email.$error"
+        :error-message="
+          !$v.email.required
+            ? $t('Field is required.')
+            : $t('Please provide valid e-mail address.')
+        "
+        class="form__element"
+      />
+      <SfInput
+        v-model="firstName"
+        name="first-name"
+        :label="$t('First Name')"
+        :required="true"
+        :valid="!$v.firstName.$error"
+        :error-message="$t('Field is required.')"
+        class="form__element"
+      />
+      <SfInput
+        v-model="lastName"
+        name="last-name"
+        :label="$t('Last Name')"
+        :required="true"
+        :valid="!$v.lastName.$error"
+        :error-message="$t('Field is required.')"
+        class="form__element"
+      />
+      <SfInput
+        v-model="password"
+        name="password"
+        :label="$t('Password')"
+        :required="true"
+        :valid="!$v.password.$error"
+        :error-message="$t('Field is required.')"
+        type="password"
+        class="form__element"
+      />
+      <SfButton class="sf-button--full-width form__submit">
+        {{ $t("Create an account") }}
       </SfButton>
-    </div>
+    </form>
+    <SfButton class="sf-button--text action-button" @click.native="switchElem('login')">
+      {{ `${$t("or")} ${$t("login in to your account")}` }}
+    </SfButton>
   </div>
 </template>
 
@@ -67,18 +56,17 @@
 import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
-import { SfInput, SfButton, SfCheckbox } from '@storefront-ui/vue';
+import { SfInput, SfButton } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { mapActions } from 'vuex';
 
 export default {
   name: 'MRegister',
-  components: { SfInput, SfButton, SfCheckbox },
+  components: { SfInput, SfButton },
   data () {
     return {
       email: '',
       password: '',
-      createAccount: false,
       firstName: '',
       lastName: ''
     };
@@ -127,7 +115,6 @@ export default {
           }
         })
         .catch(err => {
-          // TODO Move to theme
           this.onFailure({
             result:
               'Unexpected authorization error. Check your Network conection.'
@@ -170,29 +157,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .form {
-  &__input {
-    margin-bottom: var(--spacer-2xl);
+  width: 100%;
+  &__element {
+    margin: var(--spacer-base) 0;
   }
-  &__checkbox {
-    margin-bottom: var(--spacer-xl);
-  }
-  &__button {
-    margin-top: var(--spacer-xl);
+  &__submit {
+    margin: var(--spacer-xl) 0 0 0;
   }
 }
-.action {
-  margin-top: var(--spacer-xl);
-  text-align: center;
-}
-.bottom {
-  padding-top: var(--spacer-2xl);
-  margin-top: var(--spacer-2xl);
-  border-top: 1px solid var(--c-light);
-  line-height: 1.6;
-  text-align: center;
-}
-.sf-button--muted {
-  color: var(--c-text-muted);
+.action-button {
+  margin: var(--spacer-xl) 0;
 }
 </style>

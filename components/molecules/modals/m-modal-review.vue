@@ -1,7 +1,7 @@
 <template>
-  <div class="m-modal-review">
+  <div class="m-modal-review modal-content">
     <SfModal :visible="isVisible" @close="closeModal">
-      <div class="form">
+      <form @submit.prevent="submit" class="form">
         <SfInput
           v-model="formData.name"
           name="firstName"
@@ -13,7 +13,7 @@
               ? $t('Field is required.')
               : $t('Name must have at least 2 letters.')
           "
-          class="form__input"
+          class="form__element"
         />
         <SfInput
           v-model="formData.email"
@@ -26,7 +26,7 @@
               ? $t('Field is required.')
               : $t('Please provide valid e-mail address.')
           "
-          class="form__input"
+          class="form__element"
         />
         <SfInput
           v-model="formData.summary"
@@ -35,7 +35,7 @@
           :required="true"
           :valid="!$v.formData.summary.$error"
           :error-message="$t('Field is required.')"
-          class="form__input"
+          class="form__element"
         />
         <SfInput
           v-model="formData.review"
@@ -44,12 +44,12 @@
           :required="true"
           :valid="!$v.formData.review.$error"
           :error-message="$t('Field is required.')"
-          class="form__input"
+          class="form__element"
         />
-        <SfButton class="sf-button--full-width form__button" @click.native="submit">
+        <SfButton class="sf-button--full-width form__submit">
           {{ $t("Add review") }}
         </SfButton>
-      </div>
+      </form>
     </SfModal>
   </div>
 </template>
@@ -160,15 +160,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .form {
-  &__input {
-    margin-bottom: var(--spacer-2xl);
+  width: 100%;
+  &__element {
+    margin: var(--spacer-base) 0;
   }
-  &__checkbox {
-    margin-bottom: var(--spacer-xl);
-  }
-  &__button {
-    margin-top: var(--spacer-xl);
+  &__submit {
+    margin: var(--spacer-xl) 0 0 0;
   }
 }
 </style>
