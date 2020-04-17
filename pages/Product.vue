@@ -17,7 +17,7 @@
     />
     <div class="product__bottom">
       <lazy-hydrate when-idle>
-        <SfSection :title-heading="$t('We found other products you might like')" >
+        <SfSection :title-heading="$t('We found other products you might like')">
           <MRelatedProducts type="upsell" />
         </SfSection>
       </lazy-hydrate>
