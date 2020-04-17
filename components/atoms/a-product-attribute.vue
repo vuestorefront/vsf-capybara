@@ -11,7 +11,7 @@ import { SfProperty } from '@storefront-ui/vue';
 import { ProductAttribute } from '@vue-storefront/core/modules/catalog/components/ProductAttribute';
 
 export default {
-  name: "AProductAttribute",
+  name: 'AProductAttribute',
   mixins: [ProductAttribute],
   components: {
     SfProperty

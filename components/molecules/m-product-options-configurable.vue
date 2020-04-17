@@ -25,7 +25,9 @@
     </div>
     <div v-for="attribute in productAttributes" :key="attribute.id">
       <div v-if="attribute.attribute_code === 'color'" class="product__colors desktop-only">
-        <p class="product__color-label">{{ attribute.label }}:</p>
+        <p class="product__color-label">
+          {{ attribute.label }}:
+        </p>
         <SfColor
           v-for="attributeOption in availableOptions[attribute.attribute_code]"
           :key="attributeOption.id"

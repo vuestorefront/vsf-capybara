@@ -27,7 +27,7 @@ import AProductAttribute from 'theme/components/atoms/a-product-attribute';
 import MReviewList from 'theme/components/molecules/m-review-list';
 
 export default {
-  name: "MProductAdditionalInfo",
+  name: 'MProductAdditionalInfo',
   components: {
     SfTabs,
     AProductAttribute,
