@@ -40,8 +40,8 @@
           v-else-if="product.custom_options && product.custom_options.length > 0"
           :product="product"
         />
-        <MProductCallToAction
-          class="section"
+        <MProductAddToCart
+          class="product__add-to-cart"
           :product="product"
           :stock="productStock"
         />
@@ -61,7 +61,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { SfButton } from '@storefront-ui/vue';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
-import MProductCallToAction from 'theme/components/molecules/m-product-call-to-action';
+import MProductAddToCart from 'theme/components/molecules/m-product-add-to-cart';
 import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
 import MProductOptionsConfigurable from 'theme/components/molecules/m-product-options-configurable';
 import MProductOptionsBundle from 'theme/components/molecules/m-product-options-bundle';
@@ -74,7 +74,7 @@ export default {
     SfButton,
     MProductGallery,
     MProductShortInfo,
-    MProductCallToAction,
+    MProductAddToCart,
     MProductAdditionalInfo,
     MProductOptionsConfigurable,
     MProductOptionsBundle,
@@ -173,6 +173,12 @@ export default {
     @include for-desktop {
       max-width: 32.625rem;
       margin: 0 0 0 7.5rem;
+    }
+  }
+  &__add-to-cart {
+    margin: var(--spacer-base) var(--spacer-sm) 0;
+    @include for-desktop {
+      margin-top: var(--spacer-2xl);
     }
   }
   &__guide,

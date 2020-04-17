@@ -6,31 +6,42 @@
       :message="product.errors | formatProductMessages"
       type="danger"
     />
-    <SfSelect
-      v-for="attribute in productAttributes"
-      :key="attribute.id"
-      :label="getAttributeLabel(attribute)"
-      :value="getActiveOption(attribute)"
-      @change="handleChangeOption"
-      class="sf-select--underlined attribute"
-    >
-      <SfSelectOption
-        v-for="attributeOption in availableOptions[attribute.attribute_code]"
-        :key="attributeOption.id"
-        :value="attributeOption"
+    <div v-for="attribute in productAttributes" :key="attribute.id">
+      <SfSelect
+        v-if="attribute.attribute_code !== 'color'"
+        :label="getAttributeLabel(attribute)"
+        :value="getActiveOption(attribute)"
+        @change="handleChangeOption"
+        class="sf-select--underlined product__select-size"
       >
-        <SfProductOption
-          :label="attributeOption.label"
+        <SfSelectOption
+          v-for="attributeOption in availableOptions[attribute.attribute_code]"
+          :key="attributeOption.id"
+          :value="attributeOption"
+        >
+          <SfProductOption :label="attributeOption.label" />
+        </SfSelectOption>
+      </SfSelect>
+    </div>
+    <div v-for="attribute in productAttributes" :key="attribute.id">
+      <div v-if="attribute.attribute_code === 'color'" class="product__colors desktop-only">
+        <p class="product__color-label">{{ attribute.label }}:</p>
+        <SfColor
+          v-for="attributeOption in availableOptions[attribute.attribute_code]"
+          :key="attributeOption.id"
           :color="getColorValue(attributeOption)"
+          class="product__color"
+          :selected="parseInt(configuration.color.id) === parseInt(attributeOption.id)"
+          @click="handleChangeOption(attributeOption)"
         />
-      </SfSelectOption>
-    </SfSelect>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import get from 'lodash-es/get'
 import config from 'config'
-import { SfAlert, SfSelect, SfProductOption } from '@storefront-ui/vue';
+import { SfAlert, SfSelect, SfProductOption, SfColor } from '@storefront-ui/vue';
 import { getAvailableFiltersByProduct } from '@vue-storefront/core/modules/catalog/helpers/filters'
 export default {
   name: 'MProductOptionsConfigurable',
@@ -40,7 +51,8 @@ export default {
   components: {
     SfAlert,
     SfSelect,
-    SfProductOption
+    SfProductOption,
+    SfColor
   },
   props: {
     product: {
@@ -92,7 +104,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "~@storefront-ui/vue/styles";
 
 .m-product-options-configurable {
   border-bottom: 1px solid #f1f2f3;
@@ -104,5 +116,32 @@ export default {
 }
 .attribute {
   margin-bottom: var(--spacer-xl);
+}
+
+.product {
+  &__select-size {
+    margin: 0 var(--spacer-sm);
+    @include for-desktop {
+      margin: 0;
+    }
+  }
+  &__colors {
+    @include font(
+      --product-color-font,
+      var(--font-normal),
+      var(--font-lg),
+      1.6,
+      var(--font-family-secondary)
+    );
+    display: flex;
+    align-items: center;
+    margin-top: var(--spacer-xl);
+  }
+  &__color-label {
+    margin: 0 var(--spacer-lg) 0 0;
+  }
+  &__color {
+    margin: 0 var(--spacer-2xs);
+  }
 }
 </style>

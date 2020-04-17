@@ -62,7 +62,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .m-product-options-group {
+  margin: 0 var(--spacer-sm);
+  @include for-desktop {
+    margin: 0 var(--spacer-xl);
+  }
   ::v-deep {
     .sf-grouped-product-item__aside {
       display: flex;
