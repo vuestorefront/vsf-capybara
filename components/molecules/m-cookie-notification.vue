@@ -93,7 +93,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 1240px;
+    width: 1272px;
     max-width: 100%;
     height: 3rem;
     &__message-link {
