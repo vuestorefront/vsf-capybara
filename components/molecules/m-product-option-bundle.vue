@@ -55,8 +55,13 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .a-product-option-bundle {
-  margin-top: 1.5rem;
+  margin: var(--spacer-xl) var(--spacer-sm) 0;
+  @include for-desktop {
+    margin: var(--spacer-xl) 0 0;
+  }
 }
 .label {
   display: flex;
@@ -70,6 +75,6 @@ export default {
   }
 }
 .sf-divider {
-  margin-top: 1.5rem;
+  margin-top: var(--spacer-xl);
 }
 </style>
