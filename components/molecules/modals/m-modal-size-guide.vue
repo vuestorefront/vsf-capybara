@@ -1,7 +1,7 @@
 <template>
   <div class="m-modal-size-guide">
     <SfModal :visible="isVisible" @close="closeModal">
-      <SfHeading :title="$t('Size guide')" />
+      <SfHeading :title="$t('Size guide')" :level="3" />
       <AStatic :content="defaultContent" />
       <SfButton
         class="sf-button--full-width color-secondary"

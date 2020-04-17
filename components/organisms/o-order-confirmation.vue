@@ -80,6 +80,7 @@
 </template>
 
 <script>
+import get from 'lodash-es/get';
 import { mapState } from 'vuex';
 import config from 'config';
 import VueOfflineMixin from 'vue-offline/mixin';
@@ -100,7 +101,7 @@ export default {
   },
   computed: {
     ...mapState({
-      lastOrderConfirmation: state => state.order ? state.order.last_order_confirmation.confirmation : {},
+      lastOrderConfirmation: state => get(state, 'order.last_order_confirmation.confirmation') || {},
       checkoutPersonalEmailAddress: state => state.checkout.personalDetails.emailAddress
     }),
     isNotificationSupported () {
