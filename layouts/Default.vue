@@ -3,18 +3,7 @@
     <MLoader />
     <div id="viewport">
       <OHeader />
-      <SfSidebar
-        :visible="isMicrocartOpen"
-        class="sf-sidebar--right sidebar__microcart"
-        @close="$store.commit('ui/setMicrocart')"
-      >
-        <component
-          v-if="isMicrocartOpen"
-          :is="microcartAsyncComponent"
-          @close="$store.commit('ui/setMicrocart')"
-          @reload="reloadComponent()"
-        />
-      </SfSidebar>
+      <OMicrocart />
       <slot />
       <OFooter />
       <OModal />
@@ -28,8 +17,9 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapActions } from 'vuex';
 import OHeader from 'theme/components/organisms/o-header';
+import OMicrocart from 'theme/components/organisms/o-microcart';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
 import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
@@ -40,41 +30,26 @@ import MOfflineBadge from 'theme/components/molecules/m-offline-badge';
 import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
-import { SfSidebar } from '@storefront-ui/vue';
-import ALoadingSpinner from 'theme/components/atoms/a-loading-spinner';
-import ALoadingError from 'theme/components/atoms/a-loading-error';
 import { ModalList } from 'theme/store/ui/modals'
-
-const OMicrocart = () =>
-  import(/* webpackChunkName: "vsf-microcart" */ 'theme/components/organisms/o-microcart');
 
 export default {
   components: {
     OHeader,
+    OMicrocart,
     OFooter,
     MLoader,
     ONotification,
     MCookieNotification,
     MOfflineBadge,
     OBottomNavigation,
-    SfSidebar,
     OModal
   },
   data () {
     return {
-      quicklink: null,
-      microcartAsyncComponent: () => ({
-        component: OMicrocart(),
-        loading: ALoadingSpinner,
-        error: ALoadingError,
-        timeout: 3000
-      })
+      quicklink: null
     };
   },
   computed: {
-    ...mapState({
-      isMicrocartOpen: state => state.ui.microcart
-    }),
     quicklinkEnabled () {
       return typeof config.quicklink !== 'undefined' && config.quicklink.enabled
     }
@@ -123,14 +98,6 @@ export default {
             ? config.entities.category.includeFields
             : null,
         skipCache: isServer
-      });
-    },
-    reloadComponent () {
-      this.microcartAsyncComponent = () => ({
-        component: OMicrocart(),
-        loading: ALoadingSpinner,
-        error: ALoadingError,
-        timeout: 3000
       });
     }
   },
