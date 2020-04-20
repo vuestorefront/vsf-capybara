@@ -7,7 +7,7 @@
         :icon="item.icon"
         :label="item.label"
         :is-floating="item.isFloating"
-        :class="{ 'sf-bottom-navigation-item--active':isActive(item.icon)}"
+        :is-active="isActive(item.icon)"
         @click.native="item.onClick"
       />
     </SfBottomNavigation>

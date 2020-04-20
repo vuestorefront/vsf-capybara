@@ -55,7 +55,7 @@
         </div>
       </SfFooterColumn>
     </SfFooter>
-    <ABackToTop bottom="20px" right="20px" visibleoffset="200" />
+    <ABackToTop bottom="20px" right="20px" visibleoffset="200" class="desktop-only" />
   </footer>
 </template>
 
