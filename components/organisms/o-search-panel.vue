@@ -162,14 +162,24 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .o-search-panel {
+  @include for-mobile {
+    --header-container-height: 6.75rem;
+  }
+
   position: fixed;
   left: 0;
   right: 0;
   top: var(--header-container-height);
   background: var(--c-white);
   overflow: auto;
-  max-height: 66%;
+  max-height: calc(66vh - var(--header-container-height));
+
+  @include for-mobile {
+    top: auto;
+    max-height: calc(100vh - var(--header-container-height) - var(--bottom-navigation-height));
+  }
 
   .container {
     display: flex;
@@ -177,8 +187,9 @@ export default {
     padding-right: 40px;
     max-width: 1272px;
     margin: auto;
-    border-top: 1px solid var(--c-light);
-
+    @include for-desktop {
+      border-top: 1px solid var(--c-light);
+    }
     @include for-mobile {
       flex-direction: column;
     }

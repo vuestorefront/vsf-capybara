@@ -8,7 +8,7 @@
       @click.native="$store.commit('ui/setSearchpanel', true)"
     />
     <component
-      v-if="search && isSearchPanelVisible"
+      v-if="isSearchPanelVisible"
       :is="searchPanelAsyncComponent"
       :search="search"
       :page-size="size"
@@ -72,40 +72,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
-
-.sidebar {
-  &__search {
-    --header-container-height: 5rem;
-    --sidebar-content-padding: 0;
-    --sidebar-aside-top: var(--header-container-height);
-    --sidebar-aside-width: auto;
-    @include for-mobile {
-      --header-container-height: 7rem;
-    }
-    ::v-deep {
-      .sf-sidebar__content {
-        position: fixed;
-        background-color: var(--c-white);
-        height: auto;
-        max-height: calc(66vh - var(--header-container-height));
-        right: 0;
-        left: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        @include for-mobile {
-          max-height: calc(100vh - var(--header-container-height) - var(--bottom-navigation-height));
-        }
-
-        @include for-desktop {
-          max-width: 1272px;
-          margin: auto;
-        }
-      }
-    }
-  }
-}
-</style>

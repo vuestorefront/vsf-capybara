@@ -159,11 +159,12 @@ export default {
     .o-search {
       flex-grow: 1;
     }
-    .sf-button {
-      margin: 0 var(--spacer-medium);
-    }
     @include for-mobile {
       width: 100%;
+      padding: 0 var(--spacer-sm);
+      .sf-button {
+        margin: 0 0 0 var(--spacer-sm);
+      }
     }
   }
   @include for-mobile {
