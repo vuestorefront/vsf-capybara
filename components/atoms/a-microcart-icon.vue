@@ -1,23 +1,25 @@
 <template>
-  <SfIcon
-    size="xs"
-    :icon="floatingIcon ? 'add_to_cart' : 'empty_cart'"
-    :has-badge="!floatingIcon && totalQuantity"
-    :badge-label="totalQuantity"
-    class="sf-header__icon a-microcart-icon"
-    :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__icon'"
-    role="button"
-    :aria-label="$t('Open microcart')"
-    @click="openMicrocart"
-  />
+  <div class="a-microcart-icon">
+    <SfIcon
+      size="xs"
+      :icon="floatingIcon ? 'add_to_cart' : 'empty_cart'"
+      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__icon'"
+      role="button"
+      :aria-label="$t('Open microcart')"
+      @click="openMicrocart"
+    />
+    <SfBadge v-show="!floatingIcon && totalQuantity" class="badge">
+      {{ totalQuantity }}
+    </SfBadge>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { SfIcon } from '@storefront-ui/vue';
+import { SfIcon, SfBadge } from '@storefront-ui/vue';
 
 export default {
-  components: { SfIcon },
+  components: { SfIcon, SfBadge },
   props: {
     floatingIcon: {
       type: Boolean,
