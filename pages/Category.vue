@@ -128,16 +128,30 @@
       <div class="filters">
         <template v-for="(filters, filterType) in availableFilters">
           <SfHeading :level="4" :title="$t(filterType)" :key="filterType" class="filters__title sf-heading--left" />
-          <SfFilter
-            v-for="filter in filters"
-            :key="filter.id"
-            :label="filter.label"
-            :count="filter.count"
-            :color="filter.color"
-            :selected="isFilterActive(filter)"
-            class="filters__item"
-            @change="changeFilter(filter)"
-          />
+          <template v-if="filterType === 'color_filter'">
+            <div class="filters__colors" :key="filterType">
+              <SfColor
+                v-for="filter in filters"
+                :key="filter.id"
+                :color="filter.color"
+                :selected="isFilterActive(filter)"
+                class="filters__color"
+                @click="changeFilter(filter)"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <SfFilter
+              v-for="filter in filters"
+              :key="filter.id"
+              :label="filter.label"
+              :count="filter.count"
+              :color="filter.color"
+              :selected="isFilterActive(filter)"
+              class="filters__item"
+              @change="changeFilter(filter)"
+            />
+          </template>
         </template>
       </div>
       <template #content-bottom>
@@ -186,6 +200,7 @@ import {
 } from '@vue-storefront/core/lib/multistore';
 import {
   SfList,
+  SfColor,
   SfButton,
   SfSelect,
   SfFilter,
@@ -238,6 +253,7 @@ export default {
     LazyHydrate,
     AIconFilter,
     SfList,
+    SfColor,
     SfButton,
     SfSelect,
     SfFilter,
