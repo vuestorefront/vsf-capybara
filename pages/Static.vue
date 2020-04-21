@@ -119,6 +119,13 @@ export default {
     padding: 0 var(--spacer-sm);
     margin: 0 auto;
   }
+  --content-pages-height: auto;
+  ::v-deep {
+    .sf-content-pages__content,
+    .sf-content-pages__sidebar {
+      height: min-content;
+    }
+  }
 }
 .breadcrumbs {
   margin: var(--spacer-base) auto var(--spacer-lg);
