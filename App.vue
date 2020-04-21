@@ -33,10 +33,7 @@ body {
   --bottom-navigation-height: 3.75rem;
   --bar-height: 3.125rem;
   --notification-font-size: var(--font-sm);
-  color: var(--c-text);
-  font-size: var(--font-size-regular);
   font-family: var(--font-family-secondary);
-  font-weight: var(--font-weight-primary);
   margin: 0;
   padding: 0;
   a {
