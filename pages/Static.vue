@@ -114,15 +114,21 @@ export default {
 
 #static {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   @include for-desktop {
     max-width: 1272px;
-    margin: auto;
+    padding: 0 var(--spacer-sm);
+    margin: 0 auto;
+  }
+  --content-pages-height: auto;
+  ::v-deep {
+    .sf-content-pages__content,
+    .sf-content-pages__sidebar {
+      height: min-content;
+    }
   }
 }
 .breadcrumbs {
-  padding: var(--spacer-xl) var(--spacer-2xl) var(--spacer-2xl);
+  margin: var(--spacer-base) auto var(--spacer-lg);
 }
 ::v-deep {
   .sf-bar__icon *[role=button] {
