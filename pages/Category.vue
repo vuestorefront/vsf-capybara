@@ -16,7 +16,7 @@
           class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <AIconFilter size="1rem" styles="margin-right:10px" />
+          <SfIcon size="32px" color="#BEBFC4" icon="filter" />
           {{ $t("Filters") }}
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
@@ -191,7 +191,6 @@ import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
-import AIconFilter from 'theme/components/atoms/a-icon-filter';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { getProductPrice } from 'theme/helpers';
 import {
@@ -199,6 +198,7 @@ import {
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
 import {
+  SfIcon,
   SfList,
   SfColor,
   SfButton,
@@ -251,7 +251,7 @@ export default {
   name: 'CategoryPage',
   components: {
     LazyHydrate,
-    AIconFilter,
+    SfIcon,
     SfList,
     SfColor,
     SfButton,

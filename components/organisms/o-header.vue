@@ -148,6 +148,7 @@ export default {
   z-index: 1;
 }
 .o-header {
+  --header-navigation-item-margin: 0 3rem 0 0;
   box-sizing: border-box;
   a {
     &.active {
