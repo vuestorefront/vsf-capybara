@@ -5,7 +5,7 @@
         <div v-html="c.message" />
       </SfTab>
     </SfTabs>
-    <div v-else>
+    <div v-else class="content">
       <SfHeading :level="1" :title="content.title" />
       <div v-html="content.message" />
     </div>
@@ -43,7 +43,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .a-static {
   font-size: 16px;
   line-height: 1.6;
@@ -56,6 +56,9 @@ export default {
       padding: calc(var(--spacer-sm) * 2);
       border: 1px solid var(--_c-light-primary-darken);
     }
+  }
+  .content {
+    padding: var(--spacer-sm);
   }
 }
 </style>
