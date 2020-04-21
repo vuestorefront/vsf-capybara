@@ -42,7 +42,7 @@
     </div>
     <p class="notice">
       {{ $t('At Brand name, we attach great importance to privacy issues and are committed to protecting the personal data of our users. Learn more about how we care and use your personal data in the') }}
-      <a href="">{{ $t('Privacy Policy') }}</a>.
+      <a :href="localizedRoute('/privacy')">{{ $t('Privacy Policy') }}</a>.
     </p>
   </div>
 </template>
@@ -126,7 +126,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: var(--spacer-2xl);
+    margin: 0 0 var(--spacer-lg) 0;
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -136,34 +136,32 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: var(--spacer-2xl);
+          padding: 0 0 0 var(--spacer-lg);
         }
       }
     }
   }
   &__button {
-    width: 100%;
+    --button-width: 100%;
     @include for-desktop {
-      width: auto;
+      --button-width: auto;
     }
   }
 }
-.message,
-.notice {
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-normal);
-  line-height: 1.6;
-}
 .message {
-  margin: 0 0 var(--spacer-2xl) 0;
-  font-size: var(--font-base);
+  margin: 0 0 var(--spacer-xl) 0;
+  color: var(--c-dark-variant);
 }
 .notice {
-  margin: var(--spacer-xl) 0 0 0;
-  font-size: var(--font-xs);
-  @include for-desktop {
-    max-width: 70%;
-    margin: var(--spacer) 0 0 0;
+  max-width: 31rem;
+  margin: var(--spacer-base) 0 0 0;
+  font-size: var(--font-2xs);
+}
+a {
+  color: var(--c-primary);
+  text-decoration: none;
+  &:hover {
+    color: var(--c-text);
   }
 }
 </style>

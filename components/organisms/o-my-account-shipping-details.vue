@@ -87,7 +87,7 @@
               required
               :valid="!$v.editedAddress.country.$error"
               :error-message="$t('Field is required.')"
-              class="sf-select--underlined form__select form__element form__element--half form__element--half-even"
+              class="sf-select--underlined form__select form__element form__element--half form__select form__element--half-even"
             >
               <SfSelectOption
                 v-for="country in countries"
@@ -103,13 +103,18 @@
               :label="$t('Phone number')"
               class="form__element"
             />
-            <SfButton class="form__button" @click="updateAddress">
+            <SfButton class="action-button" @click="updateAddress">
               {{ $t('Update the address') }}
             </SfButton>
           </div>
         </SfTab>
       </SfTabs>
-      <SfTabs v-else key="address-list" :open-tab="1" class="tab-orphan">
+      <SfTabs
+        v-else
+        key="address-list"
+        :open-tab="1"
+        class="tab-orphan"
+      >
         <SfTab :title="$t('Shipping details')">
           <p class="message">
             {{ $t('Manage all the shipping addresses you want (work place, home address ...) This way you won\'t have to enter the shipping address manually with each order.') }}
@@ -304,6 +309,56 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+.shipping-list {
+  margin: 0 0 var(--spacer-base) 0;
+}
+.shipping {
+  display: flex;
+  padding: var(--spacer-base) 0;
+  border: 1px solid var(--c-light);
+  border-width: 1px 0 0 0;
+  &:last-child {
+    border-width: 1px 0 1px 0;
+  }
+  &__content {
+    flex: 1;
+    color: var(--c-text);
+  }
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    @include for-desktop {
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+  &__button-delete {
+    --button-background: var(--c-light);
+    --button-color: var(--c-dark-variant);
+    &:hover {
+      --button-background: var(--_c-light-primary);
+    }
+    @include for-desktop {
+      margin: 0 0 0 var(--spacer-base);
+    }
+  }
+  &__address {
+    margin: 0 0 var(--spacer-base) 0;
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+.tab-orphan {
+  @include for-mobile {
+    --tabs-content-border-width: 0;
+    --tabs-title-display: none;
+    --tabs-content-padding: 0;
+  }
+}
 .form {
   @include for-desktop {
     display: flex;
@@ -311,7 +366,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: var(--spacer-2xl);
+    margin: 0 0 var(--spacer-base) 0;
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -321,94 +376,22 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: var(--spacer-2xl);
+          padding: 0 0 0 var(--spacer-lg);
         }
       }
     }
   }
   &__select {
-    ::v-deep .sf-select__selected {
-      padding: 5px 0;
-    }
-  }
-  &__button {
-    width: 100%;
-    @include for-desktop {
-      width: auto;
-    }
+    padding-bottom: calc(var(--font-xs) * 1.2);
   }
 }
 .message {
-  margin: 0 0 var(--spacer-2xl) 0;
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-normal);
-  line-height: 1.6;
-  font-size: var(--font-base);
-}
-.shipping-list {
-  margin-bottom: var(--spacer-2xl);
-}
-.shipping {
-  display: flex;
-  padding: var(--spacer-xl) 0;
-  border-top: 1px solid var(--c-light);
-  &:last-child {
-    border-bottom: 1px solid var(--c-light);
-  }
-  &__content {
-    flex: 1;
-    color: var(--c-text);
-    font-size: var(--font-sm);
-    font-weight: 300;
-    line-height: 1.6;
-  }
-  &__actions {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    @include for-desktop {
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-end;
-    }
-  }
-  &__button-delete {
-    background-color: var(--c-light);
-    color: var(--c-text-muted);
-    @include for-desktop {
-      margin-left: var(--spacer-xl);
-    }
-  }
-  &__address {
-    margin: 0 0 var(--spacer-xl) 0;
-    &:last-child {
-      margin: 0;
-    }
-  }
-  &__client-name {
-    font-size: var(--font-base);
-    font-weight: 500;
-  }
+  margin: 0 0 var(--spacer-base) 0;
 }
 .action-button {
-  width: 100%;
+  --button-width: 100%;
   @include for-desktop {
-    width: auto;
-  }
-}
-.tab-orphan {
-  @include for-mobile {
-    ::v-deep .sf-tabs {
-      &__title {
-        display: none;
-      }
-      &__content {
-        border: 0;
-        padding: 0;
-      }
-    }
+    --button-width: auto;
   }
 }
 </style>

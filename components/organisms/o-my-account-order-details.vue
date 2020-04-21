@@ -2,10 +2,11 @@
   <div class="o-my-account-order-details">
     <SfHeading
       :title="$t('Order #') + order.increment_id"
+      :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     >
       <template #title="{title}">
-        <h2 class="order-details__title">
+        <h3 class="order-details__title">
           <SfArrow class="sf-arrow--transparent order-details__back" @click.native="$emit('close')" />
           {{ title }}
           <SfBadge
@@ -18,41 +19,43 @@
           >
             {{ order.status | capitalize }}
           </SfBadge>
-        </h2>
+        </h3>
       </template>
     </SfHeading>
     <div class="order-details__products">
       <SfTable class="sf-table--bordered table">
         <SfTableHeading>
-          <SfTableHeader>{{ $t('Thumbnail') }}</SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">
+          <SfTableHeader class="table__header table__image">
+            {{ $t('Thumbnail') }}
+          </SfTableHeader>
+          <SfTableHeader class="table__header">
             {{ $t('Product Name') }}
           </SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">
-            {{ $t('Price') }}
-          </SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">
+          <SfTableHeader class="table__header">
             {{ $t('Quantity') }}
           </SfTableHeader>
-          <SfTableHeader class="sf-table__header--center">
+          <SfTableHeader class="table__header table__price">
             {{ $t('Subtotal') }}
+          </SfTableHeader>
+          <SfTableHeader class="table__header table__price">
+            {{ $t('Price') }}
           </SfTableHeader>
         </SfTableHeading>
         <SfTableRow v-for="product in products" :key="product.id">
-          <SfTableData class="table__image">
+          <SfTableData class="table__header table__image">
             <SfImage :src="getThumbnailForProduct(product)" :alt="product.name | htmlDecode" />
           </SfTableData>
-          <SfTableData class="sf-table__header--center">
+          <SfTableData class="table__header">
             {{ product.name | htmlDecode }}
           </SfTableData>
-          <SfTableData class="sf-table__header--center">
-            {{ product.price_incl_tax | price }}
-          </SfTableData>
-          <SfTableData class="sf-table__header--center">
+          <SfTableData class="table__header">
             {{ product.qty_ordered }}
           </SfTableData>
-          <SfTableData class="sf-table__header--center">
+          <SfTableData class="table__header table__price">
             {{ product.row_total_incl_tax | price }}
+          </SfTableData>
+          <SfTableData class="table__header table__price">
+            {{ product.price_incl_tax | price }}
           </SfTableData>
         </SfTableRow>
       </SfTable>
@@ -91,14 +94,9 @@
       <div v-if="shippingAddress">
         <SfHeading
           :title="$t('Shipping address')"
+          :level="4"
           class="sf-heading--left sf-heading--no-underline"
-        >
-          <template #title="{title}">
-            <h3 class="order-details__title">
-              {{ title }}
-            </h3>
-          </template>
-        </SfHeading>
+        />
         <address>
           <p>{{ shippingAddress.firstname }} {{ shippingAddress.lastname }}</p>
           <p>{{ shippingAddress.street[0] }} {{ shippingAddress.street[1] }}</p>
@@ -109,27 +107,17 @@
       <div v-if="order.shipping_description">
         <SfHeading
           :title="$t('Shipping method')"
+          :level="4"
           class="sf-heading--left sf-heading--no-underline"
-        >
-          <template #title="{title}">
-            <h3 class="order-details__title">
-              {{ title }}
-            </h3>
-          </template>
-        </SfHeading>
+        />
         <p>{{ order.shipping_description }}</p>
       </div>
       <div>
         <SfHeading
           :title="$t('Billing address')"
+          :level="4"
           class="sf-heading--left sf-heading--no-underline"
-        >
-          <template #title="{title}">
-            <h3 class="order-details__title">
-              {{ title }}
-            </h3>
-          </template>
-        </SfHeading>
+        />
         <address>
           <p>{{ billingAddress.firstname }} {{ billingAddress.lastname }}</p>
           <p>{{ billingAddress.street[0] }} {{ billingAddress.street[1] }}</p>
@@ -140,14 +128,9 @@
       <div>
         <SfHeading
           :title="$t('Payment method')"
+          :level="4"
           class="sf-heading--left sf-heading--no-underline"
-        >
-          <template #title="{title}">
-            <h3 class="order-details__title">
-              {{ title }}
-            </h3>
-          </template>
-        </SfHeading>
+        />
         <p>{{ paymentMethod }}</p>
       </div>
     </div>
@@ -244,7 +227,7 @@ export default {
     margin-left: var(--spacer-lg);
   }
   &__products {
-    margin-top: var(--spacer-2xl);
+    margin-top: var(--spacer-xl);
     img {
       display: block;
     }
@@ -256,18 +239,21 @@ export default {
     margin-top: var(--spacer-lg);
     display: flex;
     justify-content: flex-end;
+    div {
+      width: 10rem;
+    }
   }
   &__informations {
     display: flex;
     flex-direction: column;
     justify-content: center;
     @include for-desktop {
-      margin-top: var(--spacer-2xl);
+      margin-top: var(--spacer-xl);
       flex-direction: row;
       justify-content: space-between;
     }
     .sf-heading {
-      margin-top: var(--spacer-2xl);
+      margin-top: var(--spacer-xl);
     }
     p {
       margin: var(--spacer) 0 0 0;
@@ -275,19 +261,17 @@ export default {
   }
 }
 .property {
-  margin-bottom: var(--spacer);
-  ::v-deep .sf-property__name {
-    color: var(--c-text-muted);
-    text-transform: unset;
+  margin: 0 0 var(--spacer-base) 0;
+  @include for-desktop {
+    margin: 0 0 var(--spacer-sm) 0;
+    &__total {
+      padding: var(--spacer-base) 0 0 0;
+    }
   }
 }
 .property-total {
-  margin-top: var(--spacer-2xl);
-  font-size: var(--font-xl);
-  font-weight: 500;
-  ::v-deep .sf-property__name {
-    color: var(--c-text);
-  }
+  --property-name-font-weight: 500;
+  --property-value-font-weight: 500;
 }
 .order-details__summary {
   .sf-property__name {
@@ -299,9 +283,30 @@ export default {
   }
 }
 .table {
-  --_table-column-width: 5;
+  &__header {
+    text-align: center;
+    &:last-child {
+      text-align: right;
+    }
+  }
   &__image {
-    --image-width: 5rem;
+    --image-width: 5.125rem;
+    text-align: left;
+  }
+  &__price {
+    text-align: right;
+  }
+  @include for-mobile {
+    &__header,
+    &__image,
+    &__price {
+      text-align: left;
+    }
+    &__header {
+      &:last-child {
+        text-align: left;
+      }
+    }
   }
 }
 </style>
