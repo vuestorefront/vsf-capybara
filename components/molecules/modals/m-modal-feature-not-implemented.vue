@@ -2,7 +2,7 @@
   <SfModal :visible="isVisible" @close="$emit('close', modalData.name)" class="m-modal-feature-not-implemented">
     <p class="message">
       {{ $t('This feature is not implemented yet! Please take a look at') }}
-      <a href="#">https://github.com/DivanteLtd/vue-storefront/issues</a>
+      <a href="https://github.com/DivanteLtd/vue-storefront"> https://github.com/DivanteLtd/vue-storefront </a>
       {{ $t('for our Roadmap!') }}
     </p>
   </SfModal>

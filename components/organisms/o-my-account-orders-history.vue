@@ -10,9 +10,6 @@
             <p class="no-orders__title">
               {{ $t('You currently have no orders') }}
             </p>
-            <p class="no-orders__content">
-              {{ $t('Best get shopping pronto...') }}
-            </p>
             <SfButton class="no-orders__button">
               {{ $t('Start shopping') }}
             </SfButton>
@@ -25,9 +22,9 @@
               >
                 {{ $t(tableHeader) }}
               </SfTableHeader>
-              <SfTableHeader>
+              <SfTableHeader class="orders__element--right">
                 <span class="mobile-only">{{ $t('Download') }}</span>
-                <SfButton @click.native="downloadAll" class="desktop-only orders__download-all">
+                <SfButton @click.native="downloadAll" class="desktop-only sf-button--text orders__download-all">
                   {{ $t('Download all') }}
                 </SfButton>
               </SfTableHeader>
@@ -47,8 +44,8 @@
                   {{ data }}
                 </template>
               </SfTableData>
-              <SfTableData class="orders__view">
-                <SfButton class="sf-button--text" @click.native="setActiveOrder(order)">
+              <SfTableData class="orders__view orders__element--right">
+                <SfButton class="sf-button--text color-secondary" @click.native="setActiveOrder(order)">
                   {{ $t('VIEW') }}
                 </SfButton>
               </SfTableData>
@@ -61,8 +58,9 @@
       </SfTab>
       <SfTab :title="$t('Returns')">
         <p class="message">
-          {{ $t('This feature is not implemented yet! Please take a look at') }}<br>
-          <a href="#">https://github.com/DivanteLtd/vue-storefront/issues {{ $t('for our Roadmap!') }}</a>
+          {{ $t('This feature is not implemented yet! Please take a look at') }}
+          <a href="https://github.com/DivanteLtd/vue-storefront"> https://github.com/DivanteLtd/vue-storefront </a>
+          {{ $t('for our Roadmap!') }}
         </p>
       </SfTab>
     </SfTabs>
@@ -125,63 +123,37 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.message {
-  margin: 0 0 var(--spacer-2xl) 0;
-  font-size: var(--font-base);
-  font-family: var(--font-family-primary);
-  font-weight: var(--font-normal);
-  line-height: 1.6;
-}
 .no-orders {
-  &__title,
-  &__content {
-    font-family: var(--font-family-secondary);
-    font-size: var(--font-base);
-    line-height: 1.6;
-  }
   &__title {
-    margin: 0 0 var(--spacer-xl) 0;
-    font-weight: 500;
-  }
-  &__content {
-    margin: 0 0 var(--spacer-2xl) 0;
-    font-weight: 300;
+    margin: 0 0 var(--spacer-base) 0;
   }
   &__button {
-    width: 100%;
+    --button-width: 100%;
+    margin: var(--spacer-2xl) 0 0 0;
     @include for-desktop {
-      width: auto;
+      --button-width: 17.375rem;
     }
   }
 }
 .orders {
-  &__download-all {
-    padding: 10px 1.25rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-  }
-  &__view {
-    @include for-desktop {
-      text-align: center;
-    }
-  }
-  ::v-deep .sf-table {
-    &__row,
-    &__heading {
-      margin: 0 -var(--spacer-xl);
-      @include for-mobile {
-        padding: 5px;
+  @include for-desktop {
+    &__element {
+      &--right {
+        text-align: right;
       }
     }
-    &__header,
-    &__data {
-      padding: 5px;
-    }
-    &__row:last-child {
-      @include for-mobile {
-        border-bottom: 0;
-      }
-    }
+  }
+}
+.message {
+  margin: 0 0 var(--spacer-xl) 0;
+  color: var(--c-dark-variant);
+}
+a {
+  color: var(--c-primary);
+  font-weight: var(--font-medium);
+  text-decoration: none;
+  &:hover {
+    color: var(--c-text);
   }
 }
 </style>
