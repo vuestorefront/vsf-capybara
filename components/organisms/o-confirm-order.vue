@@ -138,7 +138,7 @@
     <SfTable class="sf-table--bordered table desktop-only">
       <SfTableHeading class="table__row">
         <SfTableHeader class="table__header table__image">
-          {{ $t("Item") }}
+          {{ $t('Thumbnail') }}
         </SfTableHeader>
         <SfTableHeader
           v-for="tableHeader in tableHeaders"
