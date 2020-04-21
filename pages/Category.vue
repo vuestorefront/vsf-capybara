@@ -16,7 +16,7 @@
           class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <AIconFilter size="1rem" styles="margin-right:10px" />
+          <SfIcon size="32px" color="#BEBFC4" icon="filter" />
           {{ $t("Filters") }}
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
@@ -128,16 +128,30 @@
       <div class="filters">
         <template v-for="(filters, filterType) in availableFilters">
           <SfHeading :level="4" :title="$t(filterType)" :key="filterType" class="filters__title sf-heading--left" />
-          <SfFilter
-            v-for="filter in filters"
-            :key="filter.id"
-            :label="filter.label"
-            :count="filter.count"
-            :color="filter.color"
-            :selected="isFilterActive(filter)"
-            class="filters__item"
-            @change="changeFilter(filter)"
-          />
+          <template v-if="filterType === 'color_filter'">
+            <div class="filters__colors" :key="filterType">
+              <SfColor
+                v-for="filter in filters"
+                :key="filter.id"
+                :color="filter.color"
+                :selected="isFilterActive(filter)"
+                class="filters__color"
+                @click="changeFilter(filter)"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <SfFilter
+              v-for="filter in filters"
+              :key="filter.id"
+              :label="filter.label"
+              :count="filter.count"
+              :color="filter.color"
+              :selected="isFilterActive(filter)"
+              class="filters__item"
+              @change="changeFilter(filter)"
+            />
+          </template>
         </template>
       </div>
       <template #content-bottom>
@@ -177,7 +191,6 @@ import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
-import AIconFilter from 'theme/components/atoms/a-icon-filter';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { getProductPrice } from 'theme/helpers';
 import {
@@ -185,7 +198,9 @@ import {
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
 import {
+  SfIcon,
   SfList,
+  SfColor,
   SfButton,
   SfSelect,
   SfFilter,
@@ -236,8 +251,9 @@ export default {
   name: 'CategoryPage',
   components: {
     LazyHydrate,
-    AIconFilter,
+    SfIcon,
     SfList,
+    SfColor,
     SfButton,
     SfSelect,
     SfFilter,
