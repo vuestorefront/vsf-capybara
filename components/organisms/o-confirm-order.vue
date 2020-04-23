@@ -251,9 +251,9 @@
             </SfButton>
           </template>
         </SfCheckbox>
-        <APromoCode />
+        <APromoCode :allow-promo-code-removal="false" />
       </div>
-      <MPriceSummary class="totals__element" />
+      <MPriceSummary class="totals__element" :allow-promo-code-removal="true" />
     </div>
     <div class="actions">
       <SfButton

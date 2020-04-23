@@ -268,6 +268,7 @@ export default {
 }
 .info {
   margin: 0 0 var(--spacer-xl) 0;
+  flex: 1;
   &__heading {
     font-family: var(--font-family-primary);
     font-weight: var(--font-light);
