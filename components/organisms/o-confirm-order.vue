@@ -294,6 +294,7 @@ import {
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
+import { createSmoothscroll } from 'theme/helpers';
 
 export default {
   name: 'OConfirmOrder',
@@ -408,6 +409,9 @@ export default {
     openTermsAndConditionsModal () {
       this.openModal({name: ModalList.TermsAndConditions})
     }
+  },
+  mounted () {
+    createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   }
 };
 </script>
