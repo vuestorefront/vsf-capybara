@@ -49,7 +49,7 @@
       <div v-else key="empty-cart" class="empty-cart">
         <div class="empty-cart__banner">
           <SfImage
-            src="@storefront-ui/shared/icons/empty_cart.svg"
+            :src="require('@storefront-ui/shared/icons/empty_cart.svg')"
             :alt="$t('Your bag is empty')"
             class="empty-cart__image"
           />
