@@ -22,6 +22,11 @@
         <p class="paragraph">
           {{ $t('You can check status of your order by using our delivery status feature. You will receive an order confirmation e-mail with details of your order and a link to track its progress.') }}
         </p>
+        <transition name="fade">
+          <p v-if="isPermissionGranted" class="paragraph">
+            {{ $t('You will receive Push notification about the order.') }}
+          </p>
+        </transition>
       </template>
       <template v-else>
         <template v-if="isNotificationSupported">
@@ -96,7 +101,8 @@ export default {
   mixins: [VueOfflineMixin, EmailForm],
   data () {
     return {
-      feedback: ''
+      feedback: '',
+      notificationPermission: ''
     };
   },
   computed: {
@@ -109,8 +115,7 @@ export default {
       return 'Notification' in window;
     },
     isPermissionGranted () {
-      if (isServer || !('Notification' in window)) return false;
-      return Notification.permission === 'granted';
+      return this.isNotificationSupported && this.notificationPermission === 'granted';
     },
     mailerElements () {
       return config.mailer.contactAddress;
@@ -124,9 +129,11 @@ export default {
   },
   methods: {
     requestNotificationPermission () {
-      if (isServer) return false;
-      if ('Notification' in window && Notification.permission !== 'granted') {
-        Notification.requestPermission();
+      if (this.isNotificationSupported && !this.isPermissionGranted) {
+        Notification.requestPermission()
+          .then(permission => {
+            this.notificationPermission = permission;
+          });
       }
     },
     sendFeedback () {
