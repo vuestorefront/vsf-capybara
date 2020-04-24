@@ -15,7 +15,7 @@
       />
     </template>
     <SfButton
-      v-else
+      v-else-if="allowPromoCodeRemoval"
       class="sf-button sf-button--outline promo-code__button"
       @click="removeCoupon"
     >
@@ -34,10 +34,15 @@ export default {
     SfButton,
     SfCircleIcon
   },
+  props: {
+    allowPromoCodeRemoval: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
-      promoCode: '',
-      showPromoCode: false
+      promoCode: ''
     };
   },
   computed: {
@@ -49,7 +54,6 @@ export default {
     async applyCoupon () {
       await this.$store.dispatch('cart/applyCoupon', this.promoCode);
       this.promoCode = ''
-      this.showPromoCode = false
     },
     removeCoupon () {
       this.$store.dispatch('cart/removeCoupon');

@@ -24,13 +24,21 @@
       class="sf-property--full-width property"
       :class="{'sf-property--large': isLarge}"
     />
-    <SfProperty
-      v-if="prices.discount"
-      :name="$t('Discount')"
-      :value="prices.discount | price"
-      class="sf-property--full-width property"
-      :class="{'sf-property--large': isLarge}"
-    />
+    <template v-if="prices.discount">
+      <SfProperty
+        :name="$t('Discount')"
+        :value="prices.discount | price"
+        class="sf-property--full-width property"
+        :class="{'sf-property--large': isLarge}"
+      />
+      <SfButton
+        v-if="allowPromoCodeRemoval"
+        class="sf-button sf-button--outline promo-code__button"
+        @click="removeCoupon"
+      >
+        {{ $t("Delete discount code") }}
+      </SfButton>
+    </template>
     <SfDivider class="divider" />
     <SfProperty
       :name="$t('Total')"
@@ -55,6 +63,10 @@ export default {
     isLarge: {
       type: Boolean,
       default: false
+    },
+    allowPromoCodeRemoval: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -72,6 +84,11 @@ export default {
       return this.productsInCart.reduce((result, product) => {
         return result + product.qty;
       }, 0);
+    }
+  },
+  methods: {
+    removeCoupon () {
+      this.$store.dispatch('cart/removeCoupon');
     }
   }
 };
@@ -92,5 +109,12 @@ export default {
   --divider-border-color: var(--c-white);
   --divider-width: 100%;
   --divider-margin: 0 0 var(--spacer-base) 0;
+}
+.promo-code {
+  &__button {
+    --button-height: 2rem;
+    --button-font-size: 0.6875rem;
+    margin: 1rem 0;
+  }
 }
 </style>
