@@ -42,6 +42,9 @@
                   </SfProperty>
                 </div>
               </template>
+              <template #more-actions>
+                <span />
+              </template>
             </SfCollectedProduct>
           </transition-group>
         </div>
