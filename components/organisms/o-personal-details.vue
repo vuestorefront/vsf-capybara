@@ -249,7 +249,7 @@ export default {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
     --heading-title-font-size: var(--h3-font-size);
-    --heading-padding: 0 0 var(--spacer-base) 0;
+    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
   }
 }
 .log-in {
