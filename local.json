@@ -27,6 +27,6 @@
     "enableMapFallbackUrl": true
   },
   "quicklink": {
-    "enabled": true
+    "enabled": false
   }
 }
