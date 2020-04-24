@@ -204,6 +204,8 @@ import {
   SfHeading,
   SfCheckbox
 } from '@storefront-ui/vue';
+import { createSmoothscroll } from 'theme/helpers';
+
 export default {
   name: 'OPayment',
   components: {
@@ -274,6 +276,9 @@ export default {
           ...rules
         }
       };
+  },
+  mounted () {
+    createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   }
 };
 </script>
