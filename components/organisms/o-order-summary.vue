@@ -5,8 +5,8 @@
       :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <MPriceSummary :is-large="true" />
-    <APromoCode />
+    <MPriceSummary :is-large="true" :allow-promo-code-removal="true" />
+    <APromoCode :allow-promo-code-removal="false" />
     <div class="characteristics">
       <SfCharacteristic
         v-for="characteristic in characteristics"
