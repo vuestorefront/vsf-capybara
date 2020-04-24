@@ -168,6 +168,8 @@ import {
   SfHeading,
   SfCheckbox
 } from '@storefront-ui/vue';
+import { createSmoothscroll } from 'theme/helpers';
+
 export default {
   name: 'OShipping',
   components: {
@@ -211,6 +213,9 @@ export default {
         unicodeAlpha
       }
     }
+  },
+  mounted () {
+    createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   }
 };
 </script>
