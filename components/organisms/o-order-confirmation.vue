@@ -4,6 +4,7 @@
       <div class="banner__info">
         <SfHeading
           :title="OnlineOnly ? $t('It\'s ordered!') : $t('You are offline')"
+          :level="3"
           class="sf-heading--no-underline"
         />
         <p v-if="OnlineOnly && lastOrderConfirmation.orderNumber" class="banner__order-number">
@@ -15,11 +16,17 @@
       <template v-if="OnlineOnly">
         <SfHeading
           :title="$t('You\'ve successfully placed the order')"
+          :level="3"
           class="sf-heading--left"
         />
         <p class="paragraph">
           {{ $t('You can check status of your order by using our delivery status feature. You will receive an order confirmation e-mail with details of your order and a link to track its progress.') }}
         </p>
+        <transition name="fade">
+          <p v-if="isPermissionGranted" class="paragraph">
+            {{ $t('You will receive Push notification about the order.') }}
+          </p>
+        </transition>
       </template>
       <template v-else>
         <template v-if="isNotificationSupported">
@@ -48,6 +55,7 @@
       </SfButton>
       <SfHeading
         :title="$t('What we can improve?')"
+        :level="3"
         class="sf-heading--left"
       />
       <p class="paragraph">
@@ -77,6 +85,7 @@
 </template>
 
 <script>
+import get from 'lodash-es/get';
 import { mapState } from 'vuex';
 import config from 'config';
 import VueOfflineMixin from 'vue-offline/mixin';
@@ -92,12 +101,13 @@ export default {
   mixins: [VueOfflineMixin, EmailForm],
   data () {
     return {
-      feedback: ''
+      feedback: '',
+      notificationPermission: ''
     };
   },
   computed: {
     ...mapState({
-      lastOrderConfirmation: state => state.order ? state.order.last_order_confirmation.confirmation : {},
+      lastOrderConfirmation: state => get(state, 'order.last_order_confirmation.confirmation') || {},
       checkoutPersonalEmailAddress: state => state.checkout.personalDetails.emailAddress
     }),
     isNotificationSupported () {
@@ -105,8 +115,7 @@ export default {
       return 'Notification' in window;
     },
     isPermissionGranted () {
-      if (isServer || !('Notification' in window)) return false;
-      return Notification.permission === 'granted';
+      return this.isNotificationSupported && this.notificationPermission === 'granted';
     },
     mailerElements () {
       return config.mailer.contactAddress;
@@ -120,9 +129,11 @@ export default {
   },
   methods: {
     requestNotificationPermission () {
-      if (isServer) return false;
-      if ('Notification' in window && Notification.permission !== 'granted') {
-        Notification.requestPermission();
+      if (this.isNotificationSupported && !this.isPermissionGranted) {
+        Notification.requestPermission()
+          .then(permission => {
+            this.notificationPermission = permission;
+          });
       }
     },
     sendFeedback () {
@@ -165,12 +176,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #o-order-confirmation {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 1272px;
     margin: auto;
   }
 }
@@ -192,19 +203,19 @@ export default {
 }
 .wrapper {
   max-width: 586px;
-  margin: var(--spacer-extra-big) auto 0;
-  padding: 0 var(--spacer-medium) 0 var(--spacer-medium);
+  margin: var(--spacer-2xl) auto 0;
+  padding: 0 var(--spacer-lg) 0 var(--spacer-lg);
   &__notifications-button {
-    margin: var(--spacer-extra-big) 0 var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0 var(--spacer-2xl) 0;
   }
   &__buttons {
     width: 100%;
     display: flex;
-    margin: var(--spacer-extra-big) 0 var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0 var(--spacer-2xl) 0;
     justify-content: space-between;
     @include for-desktop {
       & > button:not(:last-child) {
-        margin: 0 var(--spacer-medium) 0 0;
+        margin: 0 var(--spacer-lg) 0 0;
       }
     }
     @include for-mobile {
@@ -220,7 +231,7 @@ export default {
 }
 .paragraph {
   line-height: 1.875rem;
-  font-size: var(--font-size-big);
+  font-size: var(--font-lg);
 }
 .feedback {
   box-sizing: border-box;
@@ -228,7 +239,7 @@ export default {
   width: 100%;
   height: 25vh;
   padding: 0.5em;
-  font-family: var(--body-font-family-primary);
+  font-family: var(--font-family-primary);
   resize: vertical;
 }
 </style>

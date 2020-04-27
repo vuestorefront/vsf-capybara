@@ -6,11 +6,11 @@
     />
     <SfHeading :level="level" :title="title" :subtitle="subtitle" class="error__message" />
     <div class="error__action">
-      <router-link :to="localizedRoute('/')">
+      <a :href="localizedRoute('/')">
         <SfButton class="sf-button--full-width error__action-button">
           {{ $t("Return to home") }}
         </SfButton>
-      </router-link>
+      </a>
       <SfButton
         class="sf-button--full-width sf-button--text error__action-button error__action-button--secondary"
         @click="$router.back()"
@@ -44,15 +44,16 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .error {
   margin: auto;
   padding: 0 1.25rem;
   &__image,
   &__message {
-    margin: calc(var(--spacer-extra-big) * 3) 0;
+    margin: calc(var(--spacer-2xl) * 3) 0;
     text-align: center;
+    --heading-border: none;
   }
   &__image {
     display: flex;
@@ -60,7 +61,7 @@ export default {
   }
   &__action {
     max-width: 24rem;
-    margin: var(--spacer-extra-big) auto;
+    margin: var(--spacer-2xl) auto;
     @include for-desktop {
       display: flex;
     }
@@ -68,7 +69,7 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: var(--spacer-big) 0;
+      margin: var(--spacer-xl) 0;
       @include for-desktop {
         margin: 0;
         text-align: right;

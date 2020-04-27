@@ -1,24 +1,26 @@
 <template>
   <div id="home">
-    <SfHero class="section">
+    <SfHero
+      class="hero"
+      :slider-options="{
+        animationDuration: 2000,
+        rewindDuration: 2000
+      }"
+    >
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
+        :title="hero.title"
         :subtitle="hero.subtitle"
+        :button-text="hero.buttonText"
+        :background="hero.background"
         :image="hero.image"
-      >
-        <template v-if="hero.title" #title>
-          <div class="section__hero-title">
-            <h4 v-for="title in hero.title" :key="title" class="sf-hero-item__title">
-              {{ title }}
-            </h4>
-          </div>
-        </template>
-      </SfHeroItem>
+        :class="hero.className"
+      />
     </SfHero>
 
-    <SfBannerGrid :banner-grid="1" class="banners section">
-      <template v-for="(banner, i) in banners" v-slot:[banner.slot]>
+    <SfBannerGrid :banner-grid="1" class="banner-grid">
+      <template v-for="(banner, i) in banners" #[banner.slot]>
         <router-link :key="i" :to="banner.link">
           <SfBanner
             :subtitle="banner.subtitle"
@@ -26,26 +28,14 @@
             :description="banner.description"
             :button-text="banner.buttonText"
             :image="banner.image"
-            class="sf-banner--slim"
           />
         </router-link>
       </template>
     </SfBannerGrid>
 
-    <SfCallToAction
-      title="Subscribe to Newsletters"
-      description="Be aware of upcoming sales and events. Receive gifts and special offers!"
-      :image="newsletterImage"
-      class="call-to-action-newsletter"
-    >
-      <template #button>
-        <SfButton @click="showNewsletterPopup">
-          {{ $t("Subscribe") }}
-        </SfButton>
-      </template>
-    </SfCallToAction>
+    <ONewsletter />
 
-    <SfSection title-heading="Best Sellers" class="section">
+    <SfSection :title-heading="$t('Bestsellers')" class="section">
       <lazy-hydrate :trigger-hydration="!loading">
         <m-product-carousel :products="newCollection" />
       </lazy-hydrate>
@@ -53,7 +43,7 @@
 
     <SfSection
       v-if="isOnline"
-      title-heading="Share Your Look"
+      :title-heading="$t('Share Your Look')"
       subtitle-heading="#YOURLOOK"
       class="section"
     >
@@ -69,16 +59,14 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import Home from '@vue-storefront/core/pages/Home';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
+import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
-import { ModalList } from 'theme/store/ui/modals'
 import { checkWebpSupport } from 'theme/helpers'
 
 import {
   SfHero,
-  SfButton,
   SfSection,
   SfBannerGrid,
-  SfCallToAction,
   SfBanner
 } from '@storefront-ui/vue';
 
@@ -87,12 +75,11 @@ export default {
   components: {
     LazyHydrate,
     SfHero,
-    SfButton,
     SfSection,
     SfBannerGrid,
-    SfCallToAction,
     SfBanner,
     MProductCarousel,
+    ONewsletter,
     AImagesGrid
   },
   mixins: [Home],
@@ -122,23 +109,8 @@ export default {
     heroes () {
       return checkWebpSupport(this.heroImages, this.isWebpSupported)
     },
-    newsletterImage () {
-      return checkWebpSupport([
-        {
-          image: {
-            webp: '/assets/newsletter/webp/newsletter.webp',
-            fallback: '/assets/newsletter/png/newsletter.png'
-          }
-        }
-      ], this.isWebpSupported)[0].image
-    },
     instagramImages () {
       return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
-    }
-  },
-  methods: {
-    showNewsletterPopup () {
-      this.$store.dispatch('ui/openModal', { name: ModalList.Newsletter })
     }
   },
   watch: {
@@ -154,7 +126,6 @@ export default {
     await Promise.all([
       store.dispatch('homepage/fetchNewCollection'),
       store.dispatch('promoted/updateHeadImage'),
-      store.dispatch('promoted/updatePromotedOffers'),
       store.dispatch('instagram/updateInstagramImages')
     ]);
   },
@@ -176,82 +147,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #home {
   box-sizing: border-box;
+  padding: 0 var(--spacer-sm);
   @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
+    padding: 0 var(--spacer-sm);
+    max-width: 1272px;
+    margin: 0 auto;
   }
 }
-
-.call-to-action-newsletter {
-  margin: var(--spacer-big) 0;
-  box-sizing: border-box;
-  @include for-desktop {
-    margin: calc(var(--spacer-extra-big) * 2) 0;
-  }
-}
-
 .sf-hero-item {
-  background-position: top;
+  --hero-item-height: 14rem;
+  height: initial;
 }
-
-.sf-banner-sf-banner-grid {
-  margin: var(--spacer-big) 0;
+.banner-grid {
+  margin: var(--spacer-base) 0;
   @include for-desktop {
-    margin: var(--spacer-extra-big) 0;
+    margin: var(--spacer-2xl) 0;
   }
 }
-
-.banners {
-  margin: var(--spacer-big) 0;
-  @include for-desktop {
-    margin: var(--spacer-extra-big) 0;
-  }
-}
-
-.product-card {
-  max-width: unset;
-  &:hover {
-    @include for-desktop {
-      box-shadow: 0px 4px 20px rgba(168, 172, 176, 0.19);
-    }
-  }
-}
-
-.product-carousel {
-  margin: -20px var(--spacer-big) -20px 0;
-  @include for-desktop {
-    margin: -20px 0;
-  }
-  ::v-deep .sf-carousel__wrapper {
-    padding: 20px 0;
-    @include for-desktop {
-      padding: 20px;
-      max-width: calc(100% - 216px);
-    }
-  }
-}
-
 .section {
-  padding-left: var(--spacer-big);
-  padding-right: var(--spacer-big);
+  padding-left: var(--spacer-xl);
+  padding-right: var(--spacer-xl);
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
-  }
-  &__hero-title {
-    position: absolute;
-    bottom: 15%;
-    h4 {
-      --hero-item-title-font-size: 1.15rem;
-      --hero-item-title-margin: 0;
-      @include for-mobile {
-        --hero-item-title-font-size: 0.8rem;
-      }
-    }
   }
 }
 </style>

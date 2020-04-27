@@ -18,7 +18,9 @@ export const uiStore = {
       depth: false,
       path: []
     },
-    isWebpSupported: true
+    isWebpSupported: true,
+    activeProductTab: 1,
+    isMobileMenu: false
   },
   mutations: {
     setCheckoutMode (state, action) {
@@ -54,6 +56,15 @@ export const uiStore = {
     },
     setWebpSupport (state, action) {
       state.isWebpSupported = action
+    },
+    setActiveProductTab (state, action) {
+      state.activeProductTab = action
+    },
+    openMenu (state) {
+      state.isMobileMenu = true
+    },
+    closeMenu (state) {
+      state.isMobileMenu = false
     }
   },
   actions: {

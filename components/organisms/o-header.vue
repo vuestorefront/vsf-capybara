@@ -1,6 +1,15 @@
 <template>
   <div class="o-header">
-    <SfHeader :active-icon="activeIcon">
+    <SfOverlay
+      class="overlay"
+      :visible="isHoveredMenu || isSearchPanelVisible"
+      @click="$store.commit('ui/setSearchpanel', false)"
+    />
+    <SfHeader
+      :active-icon="activeIcon"
+      :is-sticky="isSearchPanelVisible"
+      :has-mobile-search="isSearchPanelVisible"
+    >
       <template #logo>
         <ALogo />
       </template>
@@ -8,36 +17,59 @@
         <SfHeaderNavigationItem
           v-for="category in categories"
           :key="category.id"
+          @mouseover="isHoveredMenu = true"
+          @mouseleave="isHoveredMenu = false"
         >
           <router-link
-            class="no-underline"
+            :class="{active: isCategoryActive(category)}"
             :to="categoryLink(category)"
           >
             {{ category.name }}
           </router-link>
+          <MMenu
+            :visible="isHoveredMenu && !isSearchPanelVisible"
+            :categories-ids="category.children_data"
+            :title="category.name"
+            @close="isHoveredMenu = false"
+          />
         </SfHeaderNavigationItem>
       </template>
       <template #search>
-        <div class="hidden" />
+        <div class="search-container">
+          <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
+          <SfButton
+            v-if="isSearchPanelVisible"
+            class="sf-button--text form__action-button form__action-button--secondary mobile-only"
+            @click="$store.commit('ui/setSearchpanel', false)"
+          >
+            {{ $t("Cancel") }}
+          </SfButton>
+        </div>
       </template>
       <template #header-icons>
-        <div class="sf-header__icons ml-auto">
-          <ASearchIcon />
+        <div class="sf-header__icons">
           <AAccountIcon />
           <AMicrocartIcon />
         </div>
       </template>
     </SfHeader>
+    <MMenu
+      v-show="isMobileMenu"
+      class="mobile-menu"
+      :categories-ids="categories"
+      @close="$store.commit('ui/closeMenu')"
+    />
   </div>
 </template>
 
 <script>
-import { SfHeader } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
-import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
-import { mapGetters } from 'vuex';
+import OSearch from 'theme/components/organisms/o-search';
+import { mapState, mapGetters } from 'vuex';
+import MMenu from 'theme/components/molecules/m-menu';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import { getTopLevelCategories } from 'theme/helpers';
 
@@ -45,13 +77,25 @@ export default {
   name: 'OHeader',
   components: {
     SfHeader,
+    SfButton,
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
-    ASearchIcon
+    OSearch,
+    MMenu,
+    SfOverlay
+  },
+  data () {
+    return {
+      isHoveredMenu: false
+    }
   },
   computed: {
-    ...mapGetters('category', ['getCategories']),
+    ...mapState({
+      isSearchPanelVisible: state => state.ui.searchpanel
+    }),
+    ...mapState('ui', ['isMobileMenu']),
+    ...mapGetters('category', ['getCategories', 'getCurrentCategory']),
     ...mapGetters('user', ['isLoggedIn']),
     activeIcon () {
       return this.isLoggedIn ? 'account' : '';
@@ -63,27 +107,88 @@ export default {
   methods: {
     categoryLink (category) {
       return formatCategoryLink(category);
+    },
+    isCategoryActive (category) {
+      return this.getCurrentCategory.path ? this.getCurrentCategory.path.startsWith(category.path) : false;
+    }
+  },
+  watch: {
+    async isMobileMenu (status) {
+      if (this.isMobileMenu) {
+        // we can't add this style to body because sfui also add/remove overflow to body and there may be conflict
+        document.documentElement.style.overflow = 'hidden'
+      } else {
+        document.documentElement.style.overflow = ''
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.o-header {
-  box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
+.sf-header-navigation-item {
+  &::after {
+    bottom: 0;
+    width: 0;
   }
-  @include for-mobile {
-    .sf-header__icons {
-      display: none;
+  &:hover {
+    .m-menu {
+      opacity: 1;
+      visibility: visible;
+    }
+    &::after {
+      width: 100%;
     }
   }
 }
-.ml-auto {
-  margin-left: auto;
+.overlay {
+  position: absolute;
+  z-index: 1;
+}
+.o-header {
+  --header-navigation-item-margin: 0 3rem 0 0;
+  box-sizing: border-box;
+  a {
+    &.active {
+      font-weight: bold;
+    }
+  }
+  .search-container {
+    display: flex;
+    .o-search {
+      flex-grow: 1;
+    }
+    @include for-mobile {
+      width: 100%;
+      padding: 0 var(--spacer-sm);
+      .sf-button {
+        margin: 0 0 0 var(--spacer-sm);
+      }
+    }
+  }
+  @include for-mobile {
+    .mobile-menu {
+      position: fixed;
+      opacity: 1;
+      visibility: visible;
+      top: 0;
+      z-index: 1;
+      --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
+    }
+  }
+}
+.sf-header {
+  @include for-mobile {
+    &__icons {
+      display: none;
+    }
+  }
+  @include for-desktop {
+    &__icons > :first-child {
+      margin: 0;
+    }
+  }
 }
 </style>

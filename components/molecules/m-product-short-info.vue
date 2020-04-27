@@ -1,42 +1,37 @@
 <template>
   <div class="m-product-short-info">
-    <div class="mobile-top">
-      <div>
-        <SfHeading
-          itemprop="name"
-          :title="product.name | htmlDecode"
-          :level="1"
-          class="sf-heading--no-underline sf-heading--left heading"
-        />
-        <div class="sub">
-          <AProductPrice
-            v-if="product.type_id !== 'grouped'"
-            class="sf-price--big sub-price"
-            :product="product"
-            :custom-options="customOptions"
-          />
-          <AProductRating
-            @click:stars="handleOpenReviewModal"
-            @click:text="handleOpenReviewList"
-            :reviews="reviews"
-          >
-            <span class="rating-text desktop-only">
-              {{ $t("Read all {count} review", { count: reviewsCount }) }}
-            </span>
-            <span class="rating-text mobile-only">
-              {{ `(${reviewsCount})` }}
-            </span>
-          </AProductRating>
-        </div>
-      </div>
+    <div class="product__header">
+      <SfHeading
+        :title="product.name | htmlDecode"
+        :level="3"
+        class="sf-heading--no-underline sf-heading--left"
+      />
+      <SfIcon
+        icon="drag"
+        size="xl"
+        color="gray-secondary"
+        class="product__drag-icon mobile-only"
+      />
     </div>
-    <div class="description desktop-only" itemprop="sku">
-      {{ $t("SKU: {sku}", { sku: product.sku }) }}
+    <div class="product__price-and-rating">
+      <AProductPrice
+        v-if="product.type_id !== 'grouped'"
+        :product="product"
+        :custom-options="customOptions"
+      />
+      <AProductRating
+        @click="openReviewsTab"
+        :reviews="reviews"
+      >
+        {{ $t("Read all {count} review", { count: reviewsCount }) }}
+      </AProductRating>
     </div>
+    <div class="product__description desktop-only" v-html="product.description" />
   </div>
 </template>
+
 <script>
-import { SfHeading } from '@storefront-ui/vue';
+import { SfHeading, SfIcon, SfPrice, SfButton } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductPrice from 'theme/components/atoms/a-product-price';
 import { createSmoothscroll } from 'theme/helpers'
@@ -44,6 +39,9 @@ export default {
   name: 'MProductShortInfo',
   components: {
     SfHeading,
+    SfIcon,
+    SfPrice,
+    SfButton,
     AProductRating,
     AProductPrice
   },
@@ -67,64 +65,49 @@ export default {
     }
   },
   methods: {
-    handleOpenReviewModal () {
-      this.$bus.$emit('modal-show', 'modal-add-review')
-    },
-    handleOpenReviewList () {
+    openReviewsTab () {
+      this.$store.commit('ui/setActiveProductTab', 2);
       const reviewsEl = document.querySelector('#m-product-additional-info')
       if (!reviewsEl) return
-      const currentScroll =
-        document.documentElement.scrollTop || document.body.scrollTop
-      createSmoothscroll(currentScroll, reviewsEl.getBoundingClientRect().top)
+      window.scrollTo(0, reviewsEl.getBoundingClientRect().top)
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "~@storefront-ui/shared/styles/helpers/typography";
 
-.description {
-  margin: var(--spacer-extra-big) 0 calc(var(--spacer-big) * 3) 0;
-  font-family: var(--body-font-family-secondary);
-  font-size: var(--font-size-regular);
-  line-height: 1.6;
-}
-.heading {
-  margin-top: var(--spacer-big);
-  ::v-deep .sf-heading__title {
-    font-size: var(--font-size-big);
-    font-weight: var(--body-font-weight-primary);
+.product {
+  &__header {
+    margin: 0 var(--spacer-sm);
+    display: flex;
+    justify-content: space-between;
     @include for-desktop {
-      font-size: var(--h1-font-size);
-      font-weight: var(--body-font-weight-secondary);
+      margin: 0 auto;
     }
   }
-  @include for-desktop {
-    margin-top: 0;
+  &__drag-icon {
+    animation: moveicon 1s ease-in-out infinite;
   }
-}
-.mobile-top {
-  display: flex;
-  align-items: center;
-  @include for-desktop {
-    display: block;
+  &__price-and-rating {
+    margin: var(--spacer-xs) var(--spacer-sm) var(--spacer-base);
+    align-items: center;
+    @include for-desktop {
+      display: flex;
+      justify-content: space-between;
+      margin: var(--spacer-sm) 0 var(--spacer-lg) 0;
+    }
   }
-}
-.sub {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.sub-price {
-  flex-basis: 100%;
-  margin-top: var(--spacer-big) / 4;
-  @include for-desktop {
-    flex-basis: auto;
-    margin-top: var(--spacer-big) / 2;
+  &__description {
+    color: var(--c-link);
+    @include font(
+      --product-description-font,
+      var(--font-light),
+      var(--font-base),
+      1.6,
+      var(--font-family-primary)
+    );
   }
-}
-.rating-text {
-  margin-left: 10px;
-  font-size: 0.75rem;
 }
 </style>

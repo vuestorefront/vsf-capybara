@@ -9,22 +9,29 @@
     </SfBreadcrumbs>
     <div class="navbar section">
       <div class="navbar__aside desktop-only">
-        <h1 class="navbar__title">
-          {{ $t("Categories") }}
-        </h1>
+        <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
       </div>
       <div class="navbar__main">
         <SfButton
           class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <AIconFilter size="15px" styles="margin-right:10px" />
+          <SfIcon size="32px" color="#BEBFC4" icon="filter" />
           {{ $t("Filters") }}
+          <template v-if="activeFiltersCount">
+            ({{ activeFiltersCount }})
+          </template>
         </SfButton>
+        <template v-if="activeFiltersCount">
+          <span>&nbsp;&mdash;&nbsp;</span>
+          <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
+            {{ $t('Clear all') }}
+          </button>
+        </template>
         <div class="navbar__sort">
           <span class="navbar__label">{{ $t("Sort By") }}:</span>
           <SfSelect
-            class="sort-by"
+            class="navbar__select sort-by"
             :selected="sortOrder"
             @change="changeSortOder"
           >
@@ -47,11 +54,6 @@
             {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
           </span>
         </div>
-        <div class="navbar__view desktop-only">
-          <span>{{ $t("View") }} </span>
-          <AIconViewGrid size="10px" styles="margin-left:10px" />
-          <AIconViewRow size="11px" styles="margin-left:10px" />
-        </div>
       </div>
     </div>
     <div class="main section">
@@ -62,9 +64,9 @@
             :key="category.id"
             :header="category.name"
           >
-            <SfList>
-              <SfListItem v-for="item in category.items" :key="item.id">
-                <router-link :to="item.link" active-class="sf-menu-item--active">
+            <SfList class="list">
+              <SfListItem v-for="item in category.items" :key="item.id" class="list__item">
+                <router-link :to="item.link" :class="{'sf-menu-item--active': isCategoryActive(item)}">
                   <SfMenuItem :label="item.name" :count="item.count" />
                 </router-link>
               </SfListItem>
@@ -84,12 +86,17 @@
         />
         <template v-else>
           <lazy-hydrate :trigger-hydration="!loading">
-            <div class="products__list">
+            <transition-group
+              appear
+              name="products__slide"
+              tag="div"
+              class="products__grid"
+            >
               <SfProductCard
-                v-for="(product, index) in products"
+                v-for="product in products"
                 :key="product.id"
                 :title="product.title"
-                :image="getBreadcrumbsCurrent === 'Jackets' ? tempImages[index] : product.image"
+                :image="product.image"
                 :regular-price="product.price.regular"
                 :special-price="product.price.special"
                 :max-rating="product.rating.max"
@@ -99,7 +106,7 @@
                 :wishlist-icon="false"
                 class="products__product-card"
               />
-            </div>
+            </transition-group>
           </lazy-hydrate>
           <SfPagination
             v-if="totalPages > 1"
@@ -114,24 +121,40 @@
     </div>
     <SfSidebar
       :visible="isFilterSidebarOpen"
+      :title="$t('Filters')"
+      class="sidebar-filters"
       @close="isFilterSidebarOpen = false"
     >
       <div class="filters">
         <template v-for="(filters, filterType) in availableFilters">
-          <h3 :key="filterType" class="filters__title">
-            {{ $t(filterType) }}
-          </h3>
-          <SfFilter
-            v-for="filter in filters"
-            :key="filter.id"
-            :label="filter.label"
-            :count="filter.count"
-            :color="filter.color"
-            :selected="isFilterActive(filter)"
-            class="filters__item"
-            @change="changeFilter(filter)"
-          />
+          <SfHeading :level="4" :title="$t(filterType)" :key="filterType" class="filters__title sf-heading--left" />
+          <template v-if="filterType === 'color_filter'">
+            <div class="filters__colors" :key="filterType">
+              <SfColor
+                v-for="filter in filters"
+                :key="filter.id"
+                :color="filter.color"
+                :selected="isFilterActive(filter)"
+                class="filters__color"
+                @click="changeFilter(filter)"
+              />
+            </div>
+          </template>
+          <template v-else>
+            <SfFilter
+              v-for="filter in filters"
+              :key="filter.id"
+              :label="filter.label"
+              :count="filter.count"
+              :color="filter.color"
+              :selected="isFilterActive(filter)"
+              class="filters__item"
+              @change="changeFilter(filter)"
+            />
+          </template>
         </template>
+      </div>
+      <template #content-bottom>
         <div class="filters__buttons">
           <SfButton
             class="sf-button--full-width"
@@ -146,7 +169,7 @@
             {{ $t("Clear all") }}
           </SfButton>
         </div>
-      </div>
+      </template>
     </SfSidebar>
   </div>
 </template>
@@ -167,21 +190,17 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { getTopLevelCategories } from 'theme/helpers';
-import AIconFilter from 'theme/components/atoms/a-icon-filter';
-import AIconViewGrid from 'theme/components/atoms/a-icon-view-grid';
-import AIconViewRow from 'theme/components/atoms/a-icon-view-row';
-import {
-  formatCategoryLink,
-  formatProductLink
-} from '@vue-storefront/core/modules/url/helpers';
+import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { getProductPrice } from 'theme/helpers';
 import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
 import {
+  SfIcon,
   SfList,
+  SfColor,
   SfButton,
   SfSelect,
   SfFilter,
@@ -232,10 +251,9 @@ export default {
   name: 'CategoryPage',
   components: {
     LazyHydrate,
-    AIconFilter,
-    AIconViewRow,
-    AIconViewGrid,
+    SfIcon,
     SfList,
+    SfColor,
     SfButton,
     SfSelect,
     SfFilter,
@@ -261,11 +279,6 @@ export default {
     };
   },
   computed: {
-    // TEMP
-    tempImages () {
-      return require('theme/assets/images-temp.json').images
-    },
-    //
     ...mapGetters({
       getCurrentSearchQuery: 'category-next/getCurrentSearchQuery',
       getCategoryProducts: 'category-next/getCategoryProducts',
@@ -310,15 +323,15 @@ export default {
 
           const subCategories = category.children_data
             ? category.children_data
-              .map(subCategory => this.prepareCategoryMenuItem(
+              .map(subCategory => prepareCategoryMenuItem(
                 this.getCategories.find(category => category.id === subCategory.id)
               ))
               .filter(Boolean)
             : [];
 
           return {
-            ...this.prepareCategoryMenuItem(category),
-            items: [this.prepareCategoryMenuItem(viewAllMenuItem)]
+            ...prepareCategoryMenuItem(category),
+            items: [prepareCategoryMenuItem(viewAllMenuItem)]
               .concat(subCategories)
               .sort((a, b) => a.position - b.position)
           };
@@ -335,8 +348,8 @@ export default {
           .filter((product, i) => {
             return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
           })
-          .map(this.prepareCategoryProduct)
-        : this.getMoreCategoryProducts.map(this.prepareCategoryProduct);
+          .map(prepareCategoryProduct)
+        : this.getMoreCategoryProducts.map(prepareCategoryProduct);
     },
     totalPages () {
       return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
@@ -377,6 +390,13 @@ export default {
           }));
           return result;
         }, {});
+    },
+    activeFiltersCount () {
+      let counter = 0
+      Object.keys(this.getCurrentFilters).forEach(key => {
+        counter += this.getCurrentFilters[key].length
+      })
+      return counter
     },
     isFilterActive () {
       return filter =>
@@ -484,34 +504,6 @@ export default {
     initPagination () {
       this.currentPage = 1;
     },
-    prepareCategoryMenuItem (category) {
-      if (!category) return;
-
-      return {
-        id: category.id,
-        name: category.name,
-        link: formatCategoryLink(category),
-        count: category.product_count || '',
-        position: category.position
-      };
-    },
-    prepareCategoryProduct (product) {
-      return {
-        id: product.id,
-        title: htmlDecode(product.name),
-        image: this.getThumbnail(
-          productThumbnailPath(product),
-          config.products.thumbnails.width,
-          config.products.thumbnails.height
-        ),
-        link: formatProductLink(product, currentStoreView().storeCode),
-        price: getProductPrice(product),
-        rating: {
-          max: 5,
-          score: 5
-        }
-      };
-    },
     changeSortOder (sortOrder) {
       if (this.getCurrentSearchQuery.sort !== sortOrder) {
         this.$store.dispatch('category-next/switchSearchFilters', [
@@ -543,6 +535,17 @@ export default {
 
           return bucket ? result + bucket.doc_count : result;
         }, 0);
+    },
+    isCategoryActive (category) {
+      if (!this.getCurrentCategory.path) {
+        return false;
+      }
+
+      // The 'View all' sub-category (always at position 0) should be marked as active only if it exactly matches current category path,
+      // but all other sub-categories will be marked as active when current category path belongs to them.
+      return category.position === 0
+        ? this.getCurrentCategory.path === category.path
+        : this.getCurrentCategory.path.startsWith(category.path);
     }
   },
   metaInfo () {
@@ -572,102 +575,94 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #category {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
+    max-width: 1272px;
+    margin: 0 auto;
+  }
+}
+.main {
+  &.section {
+    padding: var(--spacer-xs);
+    @include for-desktop {
+      padding: 0;
+    }
   }
 }
 .breadcrumbs {
-  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
-}
-.main {
-  display: flex;
+  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 .navbar {
   position: relative;
   display: flex;
-  font: 300 var(--font-size-small) / 1.6 var(--body-font-family-primary);
+  border: 1px solid var(--c-light);
+  border-width: 0 0 1px 0;
   @include for-desktop {
-    border-top: 1px solid var(--c-light);
-    border-bottom: 1px solid var(--c-light);
+    border-width: 1px 0 1px 0;
   }
-  &::after {
-    position: absolute;
-    bottom: 0;
-    left: var(--spacer-big);
-    width: calc(100% - calc(var(--spacer-big) * 2));
-    height: 1px;
-    background-color: var(--c-light);
-    content: "";
+  &.section {
+    padding: var(--spacer-sm);
     @include for-desktop {
-      content: none;
+      padding: 0;
     }
   }
   &__aside,
   &__main {
     display: flex;
     align-items: center;
-    padding: var(--spacer-medium) 0;
-    font-size: var(--font-size-small);
-    line-height: 1.6;
-    @include for-desktop {
-      padding: var(--spacer-big) 0;
-    }
+    padding: var(--spacer-sm) 0;
   }
   &__aside {
     flex: 0 0 15%;
-    padding: var(--spacer-big) var(--spacer-extra-big);
+    padding: var(--spacer-sm) var(--spacer-sm);
     border: 1px solid var(--c-light);
     border-width: 0 1px 0 0;
   }
   &__main {
     flex: 1;
+    padding: 0;
+    @include for-desktop {
+      padding: var(--spacer-xs) var(--spacer-xl);
+    }
   }
   &__title {
-    padding: 0;
-    font-size: var(--font-size-big);
-    font-family: var(--body-font-family-secondary);
-    font-weight: 500;
-    line-height: 1.6;
+    --heading-title-font-weight: var(--font-light);
+    --heading-title-font-size: var(--font-xl);
   }
   &__filters-button {
-    --button-text-decoration: none;
-    --button-font-weight: var(--body-font-weight-secondary);
-    --button-color: var(--c-text);
-    --button-transition: all 150ms linear;
     display: flex;
     align-items: center;
-    @include for-desktop {
-      margin: 0 0 0 var(--spacer-extra-big);
-    }
+    font-size: 1rem;
     svg {
       fill: var(--c-text-muted);
+      transition: fill 150ms ease;
     }
     &:hover {
-      --button-color: var(--c-primary);
       svg {
         fill: var(--c-primary);
       }
     }
   }
   &__label {
+    font-family: var(--font-family-secondary);
+    font-weight: var(--font-normal);
     color: var(--c-text-muted);
+    margin: 0 var(--spacer-2xs) 0 0;
+  }
+  &__select {
+    --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
+    --select-margin: 0;
   }
   &__sort {
     display: flex;
     align-items: center;
-    margin: 0 auto 0 var(--spacer-extra-big);
-    --select-font-size: var(--font-size-small);
-    @include for-mobile {
-      order: 1;
-      margin: 0;
-    }
+    margin: 0 auto 0 var(--spacer-2xl);
   }
   &__counter {
+    font-family: var(--font-family-secondary);
     margin: auto;
     @include for-desktop {
       margin: auto 0 auto auto;
@@ -676,42 +671,75 @@ export default {
   &__view {
     display: flex;
     align-items: center;
-    margin: 0 var(--spacer-extra-big);
+    margin: 0 var(--spacer-xl);
     @include for-desktop {
-      margin: var(--spacer-big);
+      margin: 0 0 0 var(--spacer-2xl);
     }
     &-icon {
-      margin: 0 0 0 0.625rem;
       cursor: pointer;
+    }
+    &-label {
+      margin: 0 var(--spacer-sm) 0 0;
+      font: var(--font-medium) var(--font-xs) / 1.6 var(--font-family-secondary);
+      text-decoration: underline;
+    }
+  }
+}
+.sort-by {
+  --select-dropdown-z-index: 1;
+  flex: unset;
+  ::v-deep {
+    .sf-select__dropdown {
+      min-width: max-content;
+    }
+    .sf-select-option {
+      cursor: pointer;
+    }
+  }
+}
+.main {
+  display: flex;
+}
+.sidebar {
+  flex: 0 0 15%;
+  padding: var(--spacer-sm);
+  border: 1px solid var(--c-light);
+  border-width: 0 1px 0 0;
+}
+.sidebar-filters {
+  --sidebar-title-display: none;
+  --sidebar-top-padding: 0;
+  @include for-desktop {
+    --sidebar-content-padding: 0 var(--spacer-xl);
+    --sidebar-bottom-padding: 0 var(--spacer-xl);
+  }
+}
+.list {
+  --menu-item-font-size: var(--font-sm);
+  &__item {
+    &:not(:last-of-type) {
+      --list-item-margin: 0 0 var(--spacer-sm) 0;
     }
   }
 }
 .products {
   box-sizing: border-box;
   flex: 1;
-  margin: 0 calc(var(--spacer) * -1);
-  @include for-desktop {
-    margin: var(--spacer-big);
-  }
+  margin: 0;
   &__grid,
   &__list {
     display: flex;
     flex-wrap: wrap;
   }
+  &__grid {
+    justify-content: space-between;
+  }
   &__product-card {
-    --product-card-padding: var(--spacer);
+    --product-card-max-width: 50%;
     flex: 1 1 50%;
-    @include for-desktop {
-      --product-card-padding: var(--spacer-big);
-      flex: 1 1 25%;
-    }
   }
   &__product-card-horizontal {
-    --product-card-horizontal-padding: var(--spacer);
     flex: 0 0 100%;
-    @include for-desktop {
-      --product-card-horizontal-padding: var(--spacer-big);
-    }
   }
   &__slide-enter {
     opacity: 0;
@@ -721,71 +749,67 @@ export default {
     transition: all 0.2s ease;
     transition-delay: calc(0.1s * var(--index));
   }
-  &__pagination {
-    @include for-desktop {
+  @include for-desktop {
+    margin: var(--spacer-sm) 0 0 var(--spacer-sm);
+    &__pagination {
       display: flex;
       justify-content: center;
-      margin: var(--spacer-extra-big) 0 0 0;
+      margin: var(--spacer-xl) 0 0 0;
     }
-  }
-}
-.section {
-  padding-left: var(--spacer-big);
-  padding-right: var(--spacer-big);
-  @include for-desktop {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-.sidebar {
-  flex: 0 0 15%;
-  padding: var(--spacer-extra-big);
-  border-right: 1px solid var(--c-light);
-  .sf-menu-item {
-    font-weight: inherit;
-    &--active {
-      font-weight: bold;
+    &__product-card-horizontal {
+      margin: var(--spacer-lg) 0;
     }
-  }
-}
-.sort-by {
-  flex: unset;
-  width: 11.875rem;
-  cursor: pointer;
-  --select-dropdown-z-index: 10;
-  @include for-mobile {
-    width: auto;
+    &__product-card {
+      flex: 1 1 25%;
+    }
+    &__list {
+      margin: 0 0 0 var(--spacer-sm);
+    }
   }
 }
 .filters {
-  padding: var(--spacer-big);
   &__title {
-    margin: calc(var(--spacer-big) * 3) 0 var(--spacer-big) 0;
-    font: 400 var(--font-size-extra-big) / 1.6 var(--body-font-family-secondary);
-    line-height: 1.6;
+    --heading-title-font-size: var(--font-xl);
+    margin: var(--spacer-xl) 0 var(--spacer-base) 0;
     &:first-child {
-      margin: 0 0 var(--spacer-big) 0;
+      margin: calc(var(--spacer-xl) + var(--spacer-base)) 0 var(--spacer-xs) 0;
     }
-  }
-  &__colors {
-    margin: calc(var(--spacer) * -1);
   }
   &__color {
-    margin: var(--spacer);
+    margin: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) 0;
   }
   &__item {
-    margin: var(--spacer) 0;
+    --filter-label-color: var(--c-secondary-variant);
+    --filter-count-color: var(--c-secondary-variant);
+    --checkbox-padding: 0 var(--spacer-sm) 0 var(--spacer-xl);
+    padding: var(--spacer-sm) 0;
+    border-bottom: 1px solid var(--c-light);
+    &:last-child {
+      border-bottom: 0;
+    }
+    @include for-desktop {
+      --checkbox-padding: 0;
+      margin: var(--spacer-sm) 0;
+      border: 0;
+      padding: 0;
+    }
+  }
+  &__accordion-item {
+    --accordion-item-content-padding: 0;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
   }
   &__buttons {
-    margin: calc(var(--spacer-big) * 3) 0 0 0;
-    @include for-mobile {
-      margin: calc(var(--spacer-big) * 3) 0;
-    }
+    margin: var(--spacer-sm) 0;
   }
   &__button-clear {
     --button-background: var(--c-light);
     --button-color: var(--c-dark-variant);
-    margin: 0.625rem 0 0 0;
+    margin: var(--spacer-xs) 0 0 0;
   }
 }
 </style>

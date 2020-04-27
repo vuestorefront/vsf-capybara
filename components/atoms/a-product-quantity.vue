@@ -1,6 +1,7 @@
 <template>
   <SfQuantitySelector
     class="a-product-quantity"
+    :qty="value"
     :value="value"
     :min="1"
     :max="maxQuantity"
@@ -48,7 +49,7 @@ export default {
       return onlineHelper.isOnline;
     },
     disabled () {
-      return this.isOnline ? !this.maxQuantity : false;
+      return this.isOnline && !this.unlimitQuantity ? !this.maxQuantity : false;
     },
     error () {
       const isBelowZero = !this.$v.value.numeric || !this.$v.value.minValue || !this.$v.value.required

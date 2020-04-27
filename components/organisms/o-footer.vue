@@ -32,8 +32,12 @@
               />
             </router-link>
           </SfListItem>
-          <SfListItem>
-            <LanguageSwitcher class="sf-menu-item" />
+          <SfListItem v-if="multistoreEnabled">
+            <SfMenuItem
+              @click.native="showLanguageSwitcher"
+              class="sf-footer__menu-item"
+              :label="currentLanguage"
+            />
           </SfListItem>
           <SfListItem class="sf-footer__menu-item">
             {{ getVersionInfo }}
@@ -51,25 +55,24 @@
         </div>
       </SfFooterColumn>
     </SfFooter>
-    <!-- temporarily disabled until we find better UI/UX for it ;)
-      <ABackToTop bottom="20px" right="20px" visibleoffset="200" />
-    -->
+    <ABackToTop bottom="20px" right="20px" visibleoffset="200" class="desktop-only" />
   </footer>
 </template>
 
 <script>
-import LanguageSwitcher from 'theme/components/core/blocks/Switcher/LanguageSwitcher';
-// import ABackToTop from 'theme/components/atoms/a-back-to-top';
+import { mapActions } from 'vuex';
+import ABackToTop from 'theme/components/atoms/a-back-to-top';
 import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
+import { ModalList } from 'theme/store/ui/modals'
 import { getPathForStaticPage } from 'theme/helpers';
 import config from 'config';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import get from 'lodash-es/get';
 
 export default {
   name: 'MainFooter',
   components: {
-    LanguageSwitcher,
-    // ABackToTop,
+    ABackToTop,
     SfFooter,
     SfList,
     SfMenuItem
@@ -117,18 +120,33 @@ export default {
     },
     getVersionInfo () {
       return `v${process.env.__APPVERSION__} ${process.env.__BUILDTIME__}`;
+    },
+    currentLanguage () {
+      const { i18n = config.i18n } = currentStoreView();
+      return `${i18n.defaultCountry} / ${i18n.defaultLanguage} / ${i18n.currencyCode}`;
+    }
+  },
+  methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
+    showLanguageSwitcher () {
+      this.openModal({name: ModalList.LanguageSwitcher})
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-footer {
   @include for-desktop {
-    max-width: 1240px;
+    max-width: 1272px;
     margin: auto;
+  }
+  .sf-footer {
+    --footer-width: auto;
   }
 }
 .social-column {
@@ -145,8 +163,5 @@ export default {
       margin-right: 1.25rem;
     }
   }
-}
-.sf-footer__menu-item {
-  padding: var(--menu-item-padding, var(--spacer-big));
 }
 </style>

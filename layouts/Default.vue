@@ -1,42 +1,15 @@
 <template>
   <div class="default-layout">
-    <loader />
-    <div id="viewport" class="w-100 relative">
+    <MLoader />
+    <div id="viewport">
       <OHeader />
-      <SfSidebar
-        :visible="isSearchPanelOpen"
-        class="sf-sidebar--right sidebar__search"
-        @close="$store.commit('ui/setSearchpanel')"
-      >
-        <component
-          v-if="isSearchPanelOpen"
-          :is="searchPanelAsyncComponent"
-          @close="$store.commit('ui/setSearchpanel')"
-          @reload="reloadComponent('searchPanelAsyncComponent')"
-        />
-      </SfSidebar>
-      <SfSidebar
-        :visible="isMicrocartOpen"
-        class="sf-sidebar--right"
-        @close="$store.commit('ui/setMicrocart')"
-      >
-        <component
-          v-if="isMicrocartOpen"
-          :is="microcartAsyncComponent"
-          @close="$store.commit('ui/setMicrocart')"
-          @reload="reloadComponent('microcartAsyncComponent')"
-        />
-      </SfSidebar>
+      <OMicrocart />
       <slot />
       <OFooter />
       <OModal />
       <ONotification />
-      <CookieNotification />
-      <OfflineBadge />
-      <OrderConfirmation
-        v-if="loadOrderConfirmation"
-        :orders-data="ordersData"
-      />
+      <MCookieNotification />
+      <MOfflineBadge />
       <OBottomNavigation />
     </div>
     <vue-progress-bar />
@@ -44,65 +17,42 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
 import OHeader from 'theme/components/organisms/o-header';
+import OMicrocart from 'theme/components/organisms/o-microcart';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
 import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
-import Loader from 'theme/components/core/Loader';
+import MLoader from 'theme/components/molecules/m-loader';
 import ONotification from 'theme/components/organisms/o-notification';
-import CookieNotification from 'theme/components/core/CookieNotification';
-import OfflineBadge from 'theme/components/core/OfflineBadge';
+import MCookieNotification from 'theme/components/molecules/m-cookie-notification';
+import MOfflineBadge from 'theme/components/molecules/m-offline-badge';
 import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
-import { SfSidebar } from '@storefront-ui/vue';
-import LoadingSpinner from 'theme/components/theme/blocks/AsyncSidebar/LoadingSpinner';
-import LoadingError from 'theme/components/theme/blocks/AsyncSidebar/LoadingError';
-
-const SearchPanel = () =>
-  import(/* webpackChunkName: "vsf-search-panel" */ 'theme/components/core/blocks/SearchPanel/SearchPanel');
-const OMicrocart = () =>
-  import(/* webpackChunkName: "vsf-microcart" */ 'theme/components/organisms/o-microcart');
-const OrderConfirmation = () =>
-  import(/* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Checkout/OrderConfirmation');
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   components: {
     OHeader,
+    OMicrocart,
     OFooter,
-    Loader,
+    MLoader,
     ONotification,
-    CookieNotification,
-    OfflineBadge,
-    OrderConfirmation,
+    MCookieNotification,
+    MOfflineBadge,
     OBottomNavigation,
-    SfSidebar,
     OModal
   },
   data () {
     return {
-      loadOrderConfirmation: false,
-      ordersData: [],
-      microcartAsyncComponent: () => ({
-        component: OMicrocart(),
-        loading: LoadingSpinner,
-        error: LoadingError,
-        timeout: 3000
-      }),
-      searchPanelAsyncComponent: () => ({
-        component: SearchPanel(),
-        loading: LoadingSpinner,
-        error: LoadingError,
-        timeout: 3000
-      })
+      quicklink: null
     };
   },
   computed: {
-    ...mapState({
-      isSearchPanelOpen: state => state.ui.searchpanel,
-      isMicrocartOpen: state => state.ui.microcart
-    })
+    quicklinkEnabled () {
+      return typeof config.quicklink !== 'undefined' && config.quicklink.enabled
+    }
   },
   beforeMount () {
     // Progress bar on top of the page
@@ -112,21 +62,29 @@ export default {
       next();
     });
     this.$router.afterEach(() => {
+      if (!isServer && this.quicklinkEnabled) {
+        this.quicklink.listen();
+      }
       this.$Progress.finish();
     });
     this.$bus.$on('offline-order-confirmation', this.onOrderConfirmation);
   },
   mounted () {
+    if (!isServer && this.quicklinkEnabled) {
+      this.quicklink = require('quicklink');
+      this.quicklink.listen();
+    }
     this.$store.dispatch('ui/checkWebpSupport');
   },
   beforeDestroy () {
     this.$bus.$off('offline-order-confirmation', this.onOrderConfirmation);
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     onOrderConfirmation (payload) {
-      this.loadOrderConfirmation = true;
-      this.ordersData = payload;
-      this.$bus.$emit('modal-show', 'modal-order-confirmation');
+      this.openModal({name: ModalList.OrderConfirmation, payload});
     },
     fetchMenuData () {
       return this.$store.dispatch('category/list', {
@@ -141,54 +99,14 @@ export default {
             : null,
         skipCache: isServer
       });
-    },
-    reloadComponent (componentName) {
-      const components = {
-        microcartAsyncComponent: OMicrocart,
-        searchPanelAsyncComponent: SearchPanel
-      };
-      this[componentName] = () => ({
-        component: components[componentName](),
-        loading: LoadingSpinner,
-        error: LoadingError,
-        timeout: 3000
-      });
     }
   },
   serverPrefetch () {
-    return this.fetchMenuData();
+    return Promise.all([
+      this.$store.dispatch('promoted/updatePromotedOffers'),
+      this.fetchMenuData()
+    ]);
   },
   metaInfo: Head
 };
 </script>
-
-<style lang="scss" src="theme/css/main.scss"></style>
-<style lang="scss">
-@import "~@storefront-ui/shared/styles/helpers";
-body {
-  --overlay-z-index: 1;
-  --sidebar-aside-z-index: 2;
-  color: var(--c-text);
-  font-size: var(--font-size-regular);
-  font-family: var(--body-font-family-secondary);
-  font-weight: var(--body-font-weight-primary);
-  margin: 0;
-  padding: 0;
-  a {
-    text-decoration: none;
-    color: var(--c-link);
-    cursor: pointer;
-    &:hover {
-      color: var(--c-link-hover);
-    }
-  }
-}
-.sidebar__search {
-  --sidebar-content-padding: 0;
-  @include for-desktop {
-    .sf-sidebar__aside {
-      --sidebar-aside-width: 800px;
-    }
-  }
-}
-</style>

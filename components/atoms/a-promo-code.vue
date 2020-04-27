@@ -1,61 +1,59 @@
 <template>
-  <div class="a-promo-code">
+  <div class="a-promo-code promo-code">
+    <template v-if="!isCouponCode">
+      <SfInput
+        v-model="promoCode"
+        name="promoCode"
+        :placeholder="$t('Add a discount code')"
+        class="sf-input--filled promo-code__input"
+        @keyup.enter="applyCoupon"
+      />
+      <SfCircleIcon
+        class="promo-code__circle-icon"
+        icon="check"
+        @click="applyCoupon"
+      />
+    </template>
     <SfButton
-      v-if="!isCouponCode"
-      class="promo-code__button"
-      @click="showPromoCode = !showPromoCode"
-    >
-      {{ showPromoCode ? "-" : "+" }} {{ $t("Discount code") }}
-    </SfButton>
-    <SfButton
-      v-else
-      class="promo-code__button"
+      v-else-if="allowPromoCodeRemoval"
+      class="sf-button sf-button--outline promo-code__button"
       @click="removeCoupon"
     >
       {{ $t("Delete discount code") }}
     </SfButton>
-    <transition name="fade">
-      <div v-if="showPromoCode">
-        <SfInput
-          v-model="promoCode"
-          name="promoCode"
-          :label="$t('Add a discount code')"
-          class="promo-code__input"
-          @keyup.enter="applyCoupon"
-        />
-        <SfButton class="sf-button--full-width" @click="applyCoupon">
-          {{ $t("Add discount code") }}
-        </SfButton>
-      </div>
-    </transition>
   </div>
 </template>
 
 <script>
-import { SfInput, SfButton } from '@storefront-ui/vue';
+import { SfInput, SfButton, SfCircleIcon } from '@storefront-ui/vue';
 
 export default {
   name: 'APromoCode',
   components: {
     SfInput,
-    SfButton
+    SfButton,
+    SfCircleIcon
+  },
+  props: {
+    allowPromoCodeRemoval: {
+      type: Boolean,
+      default: true
+    }
   },
   data () {
     return {
-      promoCode: '',
-      showPromoCode: false
+      promoCode: ''
     };
   },
   computed: {
     isCouponCode () {
-      return this.$store.state.cart.platformTotals.coupon_code
+      return this.$store.state.cart.platformTotals ? this.$store.state.cart.platformTotals.coupon_code : false;
     }
   },
   methods: {
     async applyCoupon () {
       await this.$store.dispatch('cart/applyCoupon', this.promoCode);
       this.promoCode = ''
-      this.showPromoCode = false
     },
     removeCoupon () {
       this.$store.dispatch('cart/removeCoupon');
@@ -64,19 +62,23 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
 .promo-code {
-  &__button {
-    padding: 0;
-    background-color: transparent;
-    color: var(--c-primary);
-    font-size: var(--font-size-big);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacer-lg) 0 0;
+  &__circle-icon {
+    --button-size: 2rem;
+    --icon-size: 0.6875rem;
   }
   &__input {
-    margin: var(--spacer-big) 0;
-    ::v-deep input {
-      border-color: var(--c-gray-variant);
-    }
+    --input-background: var(--c-white);
+    flex: 1;
+    margin: 0 var(--spacer-lg) 0 0;
+  }
+  &__button {
+    --button-height: 2rem;
+    --button-font-size: 0.6875rem;
   }
 }
 </style>

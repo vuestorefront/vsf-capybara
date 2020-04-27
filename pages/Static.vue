@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import i18n from '@vue-storefront/i18n';
 import {
   SfBreadcrumbs,
@@ -53,42 +54,13 @@ export default {
         { title: i18n.t('Privacy policy'), link: '/privacy' },
         { title: i18n.t('Size guide'), link: '/size-guide' },
         { title: i18n.t('Contact us'), link: '/contact' }
-      ],
-      messages: [
-        {
-          title: 'Privacy Policy',
-          message: `To help us achieve our goal of providing the highest quality products and
-      services, we use information from our interactions with you and other
-      customers, as well as from other parties. Because we respect your privacy,
-      we have implemented procedures to ensure that your personal information is
-      handled in a safe, secure, and responsible manner. We have posted this
-      privacy policy in order to explain our information collection practices
-      and the choices you have about the way information is collected and used.`
-        },
-        {
-          title: 'Security',
-          message: `Personal information provided on the website and online credit card
-      transactions are transmitted through a secure server. We are committed to
-      handling your personal information with high standards of information
-      security. We take appropriate physical, electronic, and administrative
-      steps to maintain the security and accuracy of personally identifiable
-      information we collect, including limiting the number of people who have
-      physical access to our database servers, as well as employing electronic
-      security systems and password protections that guard against unauthorized
-      access.`
-        },
-        {
-          title: 'Additional Information',
-          message: `This website ("website") is operated by Luma Inc., which includes Luma
-      stores, and Luma Private Sales. This privacy policy only covers
-      information collected at this website, and does not cover any information
-      collected offline by Luma. All Luma websites are covered by this privacy
-      policy.`
-        }
       ]
     };
   },
   computed: {
+    ...mapGetters({
+      defaultContent: 'defaultContent/getDefaultContent'
+    }),
     breadcrumbs () {
       return [
         { text: i18n.t('Homepage'), route: { link: this.localizedRoute('/') } },
@@ -106,7 +78,7 @@ export default {
           title: this.$store.state.cmsPage.current.title,
           message: this.$store.state.cmsPage.current.content
         }
-        : this.messages;
+        : this.defaultContent;
     }
   },
   methods: {
@@ -128,24 +100,35 @@ export default {
         }
       }
     }
+  },
+  async mounted () {
+    await Promise.all([
+      this.$store.dispatch('defaultContent/updateDefaultContent')
+    ])
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #static {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
   @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
+    max-width: 1272px;
+    padding: 0 var(--spacer-sm);
+    margin: 0 auto;
+  }
+  --content-pages-height: auto;
+  ::v-deep {
+    .sf-content-pages__content,
+    .sf-content-pages__sidebar {
+      height: min-content;
+    }
   }
 }
 .breadcrumbs {
-  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
+  margin: var(--spacer-base) auto var(--spacer-lg);
 }
 ::v-deep {
   .sf-bar__icon *[role=button] {

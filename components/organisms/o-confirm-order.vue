@@ -1,11 +1,12 @@
 <template>
   <div class="o-confirm-order">
     <SfHeading
-      :title="`${isVirtualCart ? 3 : 4}. ${$t('Review order')}`"
+      :title="`${isVirtualCart ? 3 : 4}. ${$t('Review')}`"
+      :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfAccordion first-open class="accordion mobile-only">
-      <SfAccordionItem :header="$t('Personal Details')">
+    <SfAccordion :open="$t('Details')" class="accordion mobile-only">
+      <SfAccordionItem :header="$t('Details')">
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">
@@ -16,7 +17,7 @@
             </p>
           </div>
           <SfButton
-            class="sf-button--text accordion__edit"
+            class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
           >
             {{ $t("Edit") }}
@@ -42,7 +43,7 @@
             </p>
           </div>
           <SfButton
-            class="sf-button--text accordion__edit"
+            class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'shipping')"
           >
             {{ $t("Edit") }}
@@ -64,7 +65,7 @@
             </p>
           </div>
           <SfButton
-            class="sf-button--text accordion__edit"
+            class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'payment')"
           >
             {{ $t("Edit") }}
@@ -79,23 +80,74 @@
             </p>
           </div>
           <SfButton
-            class="sf-button--text accordion__edit"
+            class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'payment')"
           >
             {{ $t("Edit") }}
           </SfButton>
         </div>
       </SfAccordionItem>
+      <SfAccordionItem :header="$t('Order details')">
+        <div class="accordion__item">
+          <transition name="fade">
+            <div class="accordion__content">
+              <SfCollectedProduct
+                v-for="product in productsInCart"
+                :key="product.id"
+                v-model="product.qty"
+                :image="getThumbnailForProduct(product)"
+                :title="product.name | htmlDecode"
+                :regular-price="getProductRegularPrice(product)"
+                :special-price="getProductSpecialPrice(product)"
+                class="collected-product"
+              >
+                <template #configuration>
+                  <div class="collected-product__properties">
+                    <SfProperty
+                      v-for="property in ['Color', 'Size']"
+                      :key="property"
+                      :name="property"
+                      :value="getProductProperty(product, property)"
+                      class="collected-product__property"
+                    />
+                  </div>
+                </template>
+                <template #actions>
+                  <div>
+                    <div class="collected-product__action">
+                      {{ product.sku }}
+                    </div>
+                    <div class="collected-product__action">
+                      {{ $t('Quantity') }}:
+                      <span class="product__qty">{{ product.qty }}</span>
+                    </div>
+                  </div>
+                </template>
+                <template #input>
+                  <span />
+                </template>
+                <template #more-actions>
+                  <span />
+                </template>
+              </SfCollectedProduct>
+            </div>
+          </transition>
+        </div>
+      </SfAccordionItem>
     </SfAccordion>
     <SfTable class="sf-table--bordered table desktop-only">
       <SfTableHeading class="table__row">
         <SfTableHeader class="table__header table__image">
-          {{ $t("Item") }}
+          {{ $t('Thumbnail') }}
         </SfTableHeader>
         <SfTableHeader
           v-for="tableHeader in tableHeaders"
           :key="tableHeader"
           class="table__header"
+          :class="{
+            table__description: tableHeader === $t('Description'),
+            table__price: tableHeader === $t('Price')
+          }"
         >
           {{ tableHeader }}
         </SfTableHeader>
@@ -109,7 +161,7 @@
         <SfTableData class="table__image">
           <SfImage :src="getThumbnailForProduct(product)" />
         </SfTableData>
-        <SfTableData class="table__data table__data--left">
+        <SfTableData class="table__description">
           <div class="product-title">
             {{ product.name | htmlDecode }}
           </div>
@@ -146,12 +198,13 @@
         </SfTableData>
       </SfTableRow>
     </SfTable>
-    <SfHeading
-      :title="$t('Order details')"
-      class="sf-heading--left sf-heading--no-underline title"
-    />
-    <div class="summary">
-      <div class="summary__group">
+    <div class="summary mobile-only">
+      <div class="summary__content">
+        <SfHeading
+          :title="$t('Totals')"
+          :level="1"
+          class="sf-heading--left sf-heading--no-underline summary__title"
+        />
         <MPriceSummary class="summary__total" />
         <SfCheckbox
           v-model="orderReview.terms"
@@ -163,33 +216,64 @@
             <span class="sf-checkbox__label no-flex">
               {{ $t("I accept ") }}
             </span>
-            &nbsp;
-            <a @click="openTermsAndConditionsModal">{{ $t("Terms and conditions") }}</a>
-            *
+            <SfButton class="sf-button sf-button--text summary__terms--link" @click.prevent="openTermsAndConditionsModal">
+              {{ $t("Terms and conditions") }}
+            </SfButton>
           </template>
         </SfCheckbox>
       </div>
-      <div class="summary__group">
-        <SfButton
-          class="sf-button--full-width summary__action-button"
-          :disabled="$v.orderReview.$invalid || !productsInCart.length"
-          @click="placeOrder"
+    </div>
+    <div class="characteristics mobile-only">
+      <SfCharacteristic
+        v-for="characteristic in characteristics"
+        :key="characteristic.title"
+        :title="characteristic.title"
+        :description="characteristic.description"
+        :icon="characteristic.icon"
+        color-icon="green-primary"
+        class="characteristics__item"
+      />
+    </div>
+    <div class="totals desktop-only">
+      <div class="totals__element">
+        <SfCheckbox
+          v-model="orderReview.terms"
+          class="totals__terms"
+          name="acceptConditions"
+          @blur="$v.orderReview.terms.$touch()"
         >
-          {{ $t("Place the order") }}
-        </SfButton>
-        <SfButton
-          class="sf-button--full-width sf-button--text summary__action-button summary__action-button--secondary"
-          @click="$bus.$emit('checkout-before-edit', 'payment')"
-        >
-          {{ $t("Edit payment") }}
-        </SfButton>
+          <template #label>
+            <span class="sf-checkbox__label no-flex">
+              {{ $t("I accept ") }}
+            </span>
+            <SfButton class="sf-button sf-button--text totals__terms--link" @click.prevent="openTermsAndConditionsModal">
+              {{ $t("Terms and conditions") }}
+            </SfButton>
+          </template>
+        </SfCheckbox>
+        <APromoCode :allow-promo-code-removal="false" />
       </div>
+      <MPriceSummary class="totals__element" :allow-promo-code-removal="true" />
+    </div>
+    <div class="actions">
+      <SfButton
+        class="sf-button--full-width actions__button"
+        :disabled="$v.orderReview.$invalid || !productsInCart.length"
+        @click="placeOrder"
+      >
+        {{ $t("Place the order") }}
+      </SfButton>
+      <SfButton
+        class="sf-button--full-width sf-button--text color-secondary actions__button actions__button--secondary"
+        @click="$bus.$emit('checkout-before-edit', 'payment')"
+      >
+        {{ $t("Edit payment") }}
+      </SfButton>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import i18n from '@vue-storefront/i18n';
 import { required } from 'vuelidate/lib/validators';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { registerModule } from '@vue-storefront/core/lib/modules';
@@ -203,10 +287,14 @@ import {
   SfButton,
   SfHeading,
   SfCheckbox,
-  SfAccordion
+  SfAccordion,
+  SfCharacteristic,
+  SfCollectedProduct
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
+import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
+import { createSmoothscroll } from 'theme/helpers';
 
 export default {
   name: 'OConfirmOrder',
@@ -219,17 +307,37 @@ export default {
     SfHeading,
     SfCheckbox,
     SfAccordion,
+    SfCharacteristic,
+    SfCollectedProduct,
+    APromoCode,
     MPriceSummary
   },
   mixins: [OrderReview],
   data () {
     return {
       tableHeaders: [
-        i18n.t('Description'),
-        i18n.t('Colour'),
-        i18n.t('Size'),
-        i18n.t('Quantity'),
-        i18n.t('Amount')
+        this.$t('Description'),
+        this.$t('Colour'),
+        this.$t('Size'),
+        this.$t('Quantity'),
+        this.$t('Price')
+      ],
+      characteristics: [
+        {
+          title: this.$t('Safety'),
+          description: this.$t('It carefully packaged with a personal touch'),
+          icon: 'safety'
+        },
+        {
+          title: this.$t('Easy shipping'),
+          description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
+          icon: 'shipping'
+        },
+        {
+          title: this.$t('Changed your mind?'),
+          description: this.$t('Rest assured, we offer free returns within 30 days'),
+          icon: 'return'
+        }
       ]
     };
   },
@@ -271,7 +379,7 @@ export default {
       openModal: 'openModal'
     }),
     getThumbnailForProduct (product) {
-      return product.name === 'Inez Full Zip Jacket' ? 'https://shopware-2.vuestorefront.io/media/1c/3e/cb/1575554539/fashion_ZA029207_006_p2_5.jpg.jpg' : getThumbnailForProduct(product);
+      return getThumbnailForProduct(product);
     },
     getProductRegularPrice (product) {
       const price = product.original_price_incl_tax || product.price_incl_tax;
@@ -301,134 +409,185 @@ export default {
     openTermsAndConditionsModal () {
       this.openModal({name: ModalList.TermsAndConditions})
     }
+  },
+  mounted () {
+    createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .title {
-  margin-bottom: var(--spacer-extra-big);
+  --heading-padding: var(--spacer-base) 0;
+  @include for-desktop {
+    --heading-title-font-size: var(--h3-font-size);
+    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
+  }
 }
 .table {
-  margin-bottom: var(--spacer-big);
-  &__header {
-    font-size: var(--font-size-regular);
-    font-weight: var(--body-font-weight-primary);
-    @include for-desktop {
-      text-align: center;
-    }
-  }
-  &__data {
-    font-size: var(--font-size-small);
-    text-align: center;
-  }
-  &__image {
-    @include for-desktop {
-      flex: 0 0 5.125rem;
-    }
-  }
-  &__action {
-    @include for-desktop {
-      flex: 0 0 2.5rem;
-    }
-    display: flex;
+  margin: 0 0 var(--spacer-base) 0;
+  &__row {
+    justify-content: space-between;
     align-items: center;
-    justify-content: flex-end;
   }
-}
-.accordion {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  &__item {
-    display: flex;
-    align-items: flex-start;
-  }
-  &__content {
-    flex: 1;
-  }
-  &__edit {
-    flex: unset;
-  }
-}
-.summary {
-  background-color: var(--c-light);
-  margin: 0 -var(--spacer-big);
-  padding: var(--spacer-big);
   @include for-desktop {
-    background-color: transparent;
-  }
-  &__group {
-    @include for-desktop {
-      display: flex;
-      margin: 0 0 var(--spacer-extra-big) 0;
-    }
-  }
-  &__terms {
-    flex: 1;
-    order: -1;
-    margin-bottom: var(--spacer-big);
-  }
-  &__total {
-    margin: 0 0 var(--spacer-extra-big) 0;
-    padding: 0 var(--spacer-big);
-    flex: 0 0 16.875rem;
-    @include for-desktop {
-      padding: 0;
-    }
-  }
-  &__action-button {
-    flex: 1;
-    &--secondary {
-      margin: var(--spacer-big) 0;
-      @include for-desktop {
-        order: -1;
-        margin: 0;
-        text-align: left;
+    &__header {
+      text-align: center;
+      &:last-child {
+        text-align: right;
       }
     }
-  }
-  &__property-total {
-    ::v-deep > * {
-      margin: var(--spacer-big) 0 0 0;
-      text-transform: uppercase;
-      font-size: var(--font-size-regular);
-      line-height: 1.6;
-      font-weight: 500;
-      color: var(--c-text);
+    &__data {
+      text-align: center;
+    }
+    &__description {
+      text-align: left;
+      flex: 0 0 12rem;
+    }
+    &__image {
+      --image-width: 5.125rem;
+      text-align: left;
+      margin: 0 var(--spacer-xl) 0 0;
+    }
+    &__price {
+      text-align: right;
+    }
+    &__action {
+      display: flex;
+      justify-content: right;
     }
   }
+}
+.product-price {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+.totals {
+  display: flex;
+  justify-content: space-between;
+  &__element {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex: 0 0 18.75rem;
+  }
+  &__terms {
+    &--link {
+      margin: 0 0 0 0.4em;
+    }
+  }
+}
+.product-sku {
+  color: var(--c-text-muted);
 }
 .button {
   cursor: pointer;
 }
-.content {
-  margin: 0 0 var(--spacer-big) 0;
-  color: var(--c-text);
-  font-size: var(--font-size-extra-small);
-  font-weight: 300;
-  line-height: 1.6;
-  &:last-child {
-    margin: 0;
+.property {
+  margin: 0 0 var(--spacer-base) 0;
+  --property-value-font-weight: var(--font-semibold);
+  --property-value-font-size: var(--font-base);
+  @include for-desktop {
+    margin: 0 0 var(--spacer-sm) 0;
+    &__total {
+      padding: var(--spacer-base) 0 0 0;
+    }
   }
+}
+.divider {
+  --divider-border-color: var(--c-white);
+  --divider-width: 100%;
+  --divider-margin: 0 0 var(--spacer-base) 0;
+}
+.characteristics {
+  padding: var(--spacer-sm);
+  &__item {
+    margin: var(--spacer-base) 0;
+  }
+}
+.summary,
+.accordion {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+.accordion {
+  --accordion-item-content-padding: 0;
+  --collected-product-padding: 0;
+  --collected-product-image-background: var(--c-white);
+  --heading-padding: 0;
+  &__item {
+    position: relative;
+  }
+  &__content {
+    flex: 1;
+    padding: var(--spacer-sm);
+  }
+  &__edit {
+    flex: unset;
+    position: absolute;
+    right: var(--spacer-base);
+    top: var(--spacer-base);
+  }
+}
+.collected-product {
+  padding: var(--spacer-sm) 0;
+  &:not(:last-of-type) {
+    border: 1px solid var(--_c-light-primary);
+    border-width: 0 0 1px 0;
+  }
+}
+.summary {
+  background: var(--c-light);
+  &__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--spacer-base) var(--spacer-lg);
+  }
+  &__title {
+    margin: 0 0 var(--spacer-xs) 0;
+  }
+  &__terms {
+    margin: var(--spacer-xs) 0;
+    &--link {
+      margin: 0 0 0 0.4em;
+    }
+  }
+  &__total {
+    width: 100%;
+  }
+}
+.content {
+  margin: 0 0 var(--spacer-base) 0;
+  color: var(--c-text);
   &__label {
     font-weight: 400;
   }
 }
-.product-title,
-.product-sku {
-  line-height: 1.6;
+.actions {
+  margin: var(--spacer-base) 0;
+  &__button {
+    &:first-child {
+      --button-height: 4.0625rem;
+    }
+    &--secondary {
+      margin: var(--spacer-base) 0;
+    }
+  }
+  @include for-desktop {
+    display: flex;
+  }
 }
-.product-sku {
-  color: var(--c-text-muted);
-  font-size: var(--font-size-extra-small);
-}
-.product-price {
-  display: flex;
-  flex-direction: column;
-  font-size: var(--font-size-small);
-  ::v-deep .sf-price__special {
-    order: 1;
-    color: var(--c-text);
+a {
+  color: var(--c-text);
+  &:hover {
+    color: var(--c-primary);
   }
 }
 .no-flex {

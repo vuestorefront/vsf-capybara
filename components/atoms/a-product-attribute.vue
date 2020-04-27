@@ -11,15 +11,10 @@ import { SfProperty } from '@storefront-ui/vue';
 import { ProductAttribute } from '@vue-storefront/core/modules/catalog/components/ProductAttribute';
 
 export default {
+  name: 'AProductAttribute',
   mixins: [ProductAttribute],
   components: {
     SfProperty
   }
 };
 </script>
-<style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
-.a-product-attribute {
-  padding: var(--spacer-small) 0;
-}
-</style>

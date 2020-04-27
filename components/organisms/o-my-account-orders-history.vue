@@ -2,64 +2,65 @@
   <div class="o-my-account-orders-history">
     <SfTabs :open-tab="1">
       <SfTab :title="$t('My orders')">
-        <p class="message">
-          {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
-        </p>
-        <div v-if="orders.length === 0" class="no-orders">
-          <p class="no-orders__title">
-            {{ $t('You currently have no orders') }}
+        <template v-if="!activeOrder">
+          <p class="message">
+            {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
           </p>
-          <p class="no-orders__content">
-            {{ $t('Best get shopping pronto...') }}
-          </p>
-          <SfButton class="no-orders__button">
-            {{ $t('Start shopping') }}
-          </SfButton>
-        </div>
-        <SfTable v-else class="orders">
-          <SfTableHeading>
-            <SfTableHeader
-              v-for="tableHeader in tableHeaders"
-              :key="tableHeader"
-            >
-              {{ $t(tableHeader) }}
-            </SfTableHeader>
-            <SfTableHeader>
-              <span class="mobile-only">{{ $t('Download') }}</span>
-              <SfButton class="desktop-only orders__download-all">
-                {{ $t('Download all') }}
-              </SfButton>
-            </SfTableHeader>
-          </SfTableHeading>
-          <SfTableRow v-for="order in orders" :key="order.order_id">
-            <SfTableData v-for="(data, key) in order" :key="key">
-              <template v-if="key === 'status'">
-                <span
-                  :class="{
-                    'text-success': data === 'Complete',
-                    'text-warning': data === 'In process'
-                  }"
-                >{{ data }}</span>
-              </template>
-              <template v-else>
-                {{ data }}
-              </template>
-            </SfTableData>
-            <SfTableData class="orders__view">
-              <SfButton class="sf-button--text mobile-only">
-                {{ $t('Download') }}
-              </SfButton>
-              <SfButton class="sf-button--text desktop-only">
-                {{ $t('VIEW') }}
-              </SfButton>
-            </SfTableData>
-          </SfTableRow>
-        </SfTable>
+          <div v-if="orders.length === 0" class="no-orders">
+            <p class="no-orders__title">
+              {{ $t('You currently have no orders') }}
+            </p>
+            <SfButton class="no-orders__button">
+              {{ $t('Start shopping') }}
+            </SfButton>
+          </div>
+          <SfTable v-else class="orders">
+            <SfTableHeading>
+              <SfTableHeader
+                v-for="tableHeader in tableHeaders"
+                :key="tableHeader"
+              >
+                {{ $t(tableHeader) }}
+              </SfTableHeader>
+              <SfTableHeader class="orders__element--right">
+                <span class="mobile-only">{{ $t('Download') }}</span>
+                <SfButton @click.native="downloadAll" class="desktop-only sf-button--text orders__download-all">
+                  {{ $t('Download all') }}
+                </SfButton>
+              </SfTableHeader>
+            </SfTableHeading>
+            <SfTableRow v-for="order in orders" :key="order.order_id">
+              <SfTableData v-for="(data, key) in order" :key="key">
+                <template v-if="key === 'status'">
+                  <span
+                    :class="{
+                      'text-success': data === 'Complete',
+                      'text-danger': data === 'Canceled' || data === 'Closed',
+                      'text-warning': data !== 'Complete' && data !== 'Canceled' && data !== 'Closed'
+                    }"
+                  >{{ data }}</span>
+                </template>
+                <template v-else>
+                  {{ data }}
+                </template>
+              </SfTableData>
+              <SfTableData class="orders__view orders__element--right">
+                <SfButton class="sf-button--text color-secondary" @click.native="setActiveOrder(order)">
+                  {{ $t('VIEW') }}
+                </SfButton>
+              </SfTableData>
+            </SfTableRow>
+          </SfTable>
+        </template>
+        <template v-else>
+          <OMyAccountOrderDetails :order="activeOrder" @close="setActiveOrder(null)" />
+        </template>
       </SfTab>
       <SfTab :title="$t('Returns')">
         <p class="message">
-          {{ $t('This feature is not implemented yet! Please take a look at') }}<br>
-          <a href="#">https://github.com/DivanteLtd/vue-storefront/issues {{ $t('for our Roadmap!') }}</a>
+          {{ $t('This feature is not implemented yet! Please take a look at') }}
+          <a href="https://github.com/DivanteLtd/vue-storefront"> https://github.com/DivanteLtd/vue-storefront </a>
+          {{ $t('for our Roadmap!') }}
         </p>
       </SfTab>
     </SfTabs>
@@ -68,7 +69,9 @@
 
 <script>
 import UserOrder from '@vue-storefront/core/modules/order/components/UserOrdersHistory';
+import OMyAccountOrderDetails from 'theme/components/organisms/o-my-account-order-details'
 import { SfTabs, SfTable, SfButton } from '@storefront-ui/vue';
+import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'OMyAccountOrdersHistory',
@@ -76,7 +79,8 @@ export default {
   components: {
     SfTabs,
     SfTable,
-    SfButton
+    SfButton,
+    OMyAccountOrderDetails
   },
   data () {
     return {
@@ -86,7 +90,8 @@ export default {
         'Payment method',
         'Amount',
         'Status'
-      ]
+      ],
+      activeOrder: null
     };
   },
   computed: {
@@ -94,72 +99,61 @@ export default {
       let orders = []
       this.ordersHistory.forEach(item => {
         orders.push({
-          'order_id': '#' + item.increment_id,
+          'order_id': item.increment_id,
           'order_date': this.$options.filters.date(item.created_at),
-          'payment_method:': item.payment.additional_information[0],
+          'payment_method': item.payment.additional_information[0],
           'amount': this.$options.filters.price(item.grand_total),
           'status': this.$options.filters.capitalize(item.status)
         })
       })
       return orders
     }
+  },
+  methods: {
+    downloadAll () {
+      this.$store.dispatch('ui/openModal', { name: ModalList.FeatureNotImplemented })
+    },
+    setActiveOrder (order) {
+      this.activeOrder = order ? this.ordersHistory.find(item => { return order.order_id.endsWith(item.increment_id) }) : null
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.message {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  font-size: var(--font-size-regular);
-  font-family: var(--body-font-family-primary);
-  font-weight: var(--body-font-weight-primary);
-  line-height: 1.6;
-}
 .no-orders {
-  &__title,
-  &__content {
-    font-family: var(--body-font-family-secondary);
-    font-size: var(--font-size-regular);
-    line-height: 1.6;
-  }
   &__title {
-    margin: 0 0 var(--spacer-big) 0;
-    font-weight: 500;
-  }
-  &__content {
-    margin: 0 0 var(--spacer-extra-big) 0;
-    font-weight: 300;
+    margin: 0 0 var(--spacer-base) 0;
   }
   &__button {
-    width: 100%;
+    --button-width: 100%;
+    margin: var(--spacer-2xl) 0 0 0;
     @include for-desktop {
-      width: auto;
+      --button-width: 17.375rem;
     }
   }
 }
 .orders {
-  &__download-all {
-    padding: 10px 1.25rem;
-    font-size: 0.75rem;
-    white-space: nowrap;
-  }
-  &__view {
-    @include for-desktop {
-      text-align: center;
-    }
-  }
-  ::v-deep .sf-table {
-    &__row,
-    &__heading {
-      margin: 0 -var(--spacer-big);
-    }
-    &__row:last-child {
-      @include for-mobile {
-        border-bottom: 0;
+  @include for-desktop {
+    &__element {
+      &--right {
+        text-align: right;
       }
     }
+  }
+}
+.message {
+  margin: 0 0 var(--spacer-xl) 0;
+  color: var(--c-dark-variant);
+}
+a {
+  color: var(--c-primary);
+  font-weight: var(--font-medium);
+  text-decoration: none;
+  &:hover {
+    color: var(--c-text);
   }
 }
 </style>
