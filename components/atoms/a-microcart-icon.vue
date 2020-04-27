@@ -1,10 +1,9 @@
 <template>
   <div class="a-microcart-icon">
-    <SfCircleIcon
-      icon-size="20px"
+    <SfIcon
+      size="xs"
       :icon="floatingIcon ? 'add_to_cart' : 'empty_cart'"
-      :icon-color="floatingIcon ? 'white' : 'black'"
-      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__circle-icon'"
+      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__icon'"
       role="button"
       :aria-label="$t('Open microcart')"
       @click="openMicrocart"
@@ -17,10 +16,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { SfCircleIcon, SfBadge } from '@storefront-ui/vue';
+import { SfIcon, SfBadge } from '@storefront-ui/vue';
 
 export default {
-  components: { SfCircleIcon, SfBadge },
+  components: { SfIcon, SfBadge },
   props: {
     floatingIcon: {
       type: Boolean,

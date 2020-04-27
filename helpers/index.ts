@@ -1,6 +1,10 @@
+import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import config from 'config'
 import { currentStoreView } from '@vue-storefront/core/lib/multistore'
-import { isServer } from '@vue-storefront/core/helpers';
+import { productThumbnailPath, getThumbnailPath, isServer } from '@vue-storefront/core/helpers'
+import { htmlDecode } from '@vue-storefront/core/filters'
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers'
+import { getProductPrice } from './price'
 
 export * from './price'
 
@@ -47,4 +51,35 @@ export function getTopLevelCategories (categoryList) {
   return categoryList.filter(
     category => category.level === categoryLevel && category.is_active && category.children_count > 0
   )
+}
+
+export function prepareCategoryProduct (product) {
+  return {
+    id: product.id,
+    title: htmlDecode(product.name),
+    image: getThumbnailPath(
+      productThumbnailPath(product),
+      config.products.thumbnails.width,
+      config.products.thumbnails.height
+    ),
+    link: formatProductLink(product, currentStoreView().storeCode),
+    price: getProductPrice(product),
+    rating: {
+      max: 5,
+      score: 5
+    }
+  }
+}
+
+export function prepareCategoryMenuItem (category) {
+  if (!category) return;
+
+  return {
+    id: category.id,
+    name: category.name,
+    link: formatCategoryLink(category),
+    count: category.product_count || '',
+    position: category.position,
+    path: category.path
+  };
 }

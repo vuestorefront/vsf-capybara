@@ -2,20 +2,17 @@
   <div class="o-shipping">
     <SfHeading
       :title="`2. ${$t('Shipping')}`"
+      :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
-      <div
+      <SfCheckbox
         v-if="currentUser && hasShippingDetails()"
-        class="form__element form__group"
-      >
-        <SfCheckbox
-          v-model="shipToMyAddress"
-          class="form__checkbox"
-          name="shipToMyAddress"
-          :label="$t('Ship to my default address')"
-        />
-      </div>
+        v-model="shipToMyAddress"
+        class="form__element form__checkbox"
+        name="shipToMyAddress"
+        :label="$t('Ship to my default address')"
+      />
       <SfInput
         v-model.trim="shipping.firstName"
         class="form__element form__element--half"
@@ -117,6 +114,7 @@
     </div>
     <SfHeading
       :title="$t('Shipping method')"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
@@ -127,12 +125,15 @@
           v-model="shipping.shippingMethod"
           :value="method.method_code"
           name="shipping-method"
-          class="form__element form__radio shipping"
+          class="form__radio shipping"
           @input="changeShippingMethod()"
         >
           <template #label>
             <div class="sf-radio__label shipping__label">
-              {{ method.method_title }} | {{ method.amount | price }}
+              <div>{{ method.method_title }}</div>
+              <div class="shipping__label-price">
+                {{ method.amount | price }}
+              </div>
             </div>
           </template>
         </SfRadio>
@@ -149,7 +150,7 @@
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
           @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
         >
-          {{ $t("Edit personal details") }}
+          {{ $t("Edit Details") }}
         </SfButton>
       </div>
     </div>
@@ -157,10 +158,7 @@
 </template>
 <script>
 import { required, minLength } from 'vuelidate/lib/validators';
-import {
-  unicodeAlpha,
-  unicodeAlphaNum
-} from '@vue-storefront/core/helpers/validators';
+import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Shipping } from '@vue-storefront/core/modules/checkout/components/Shipping';
 import {
   SfInput,
@@ -170,6 +168,8 @@ import {
   SfHeading,
   SfCheckbox
 } from '@storefront-ui/vue';
+import { createSmoothscroll } from 'theme/helpers';
+
 export default {
   name: 'OShipping',
   components: {
@@ -213,91 +213,131 @@ export default {
         unicodeAlpha
       }
     }
+  },
+  mounted () {
+    createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   }
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .title {
-  margin-bottom: var(--spacer-extra-big);
+  --heading-padding: var(--spacer-base) 0;
+  @include for-desktop {
+    --heading-title-font-size: var(--h3-font-size);
+    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    &:last-of-type {
+      --heading-padding: var(--spacer-xs) 0 var(--spacer-base) 0;
+    }
+  }
 }
 .form {
+  &__group {
+    display: flex;
+    align-items: center;
+  }
+  &__action {
+    margin: var(--spacer-base) 0;
+    &-button {
+      &:first-child {
+        --button-height: 4.0625rem;
+      }
+      &--secondary {
+        margin: var(--spacer-base) 0;
+      }
+    }
+  }
+  &__button {
+    --button-width: 100%;
+  }
+  &__radio-group {
+    flex: 0 0 100%;
+  }
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-  }
-  &__element {
-    margin-bottom: var(--spacer-extra-big);
-    @include for-desktop {
-      flex: 0 0 100%;
+    margin: 0 var(--spacer-2xl) 0 0;
+    &:last-of-type {
+      margin: 0 calc(var(--spacer-2xl) - var(--spacer-sm)) 0 0;
     }
-    &--half {
-      @include for-desktop {
+    &__element {
+      margin: 0 0 var(--spacer-sm) 0;
+      flex: 0 0 100%;
+      &--half {
         flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding-left: var(--spacer-extra-big);
+        &-even {
+          padding: 0 0 0 var(--spacer-xl);
         }
       }
     }
-  }
-  &__action {
-    @include for-desktop {
+    &__action {
       flex: 0 0 100%;
       display: flex;
     }
-  }
-  &__action-button {
-    flex: 1;
-    &--secondary {
-      margin: var(--spacer-big) 0;
-      @include for-desktop {
-        order: -1;
-        margin: 0;
-        text-align: left;
-      }
+    &__button {
+      --button-width: auto;
+    }
+    &__radio-group {
+      margin: 0 calc(var(--spacer-sm) * -1);
     }
   }
-  &__radio {
-    margin-bottom: 0;
-    &-group {
-      flex: 0 0 100%;
-      margin: 0 0 var(--spacer-extra-big) 0;
+  @include for-mobile {
+    &__radio-group {
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      width: 100vw;
     }
   }
 }
 .shipping {
-  margin: 0 -var(--spacer-big);
+  --radio-container-padding: var(--spacer-sm);
   &__label {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: flex-end;
+    &-price {
+      font-size: var(--font-lg);
+      @include for-mobile {
+        order: -1;
+        margin: 0 var(--spacer-xs) 0 0;
+      }
+    }
   }
   &__description {
-    width: 100%;
-    margin-top: 0;
+    --radio-description-margin: 0;
   }
   &__delivery {
     color: var(--c-text-muted);
+    display: flex;
   }
   &__action {
-    align-items: center;
-    margin-left: var(--spacer);
-    text-decoration: none;
+    @include for-mobile {
+      margin: 0 0 0 var(--spacer-xs);
+    }
     &::before {
       content: "+";
     }
     &--is-active {
-      color: var(--c-primary);
+      --button-color: var(--c-primary);
+      --button-transition: color 150ms linear;
       &::before {
         content: "-";
       }
     }
   }
-  &__info {
-    margin-top: var(--spacer);
+  @include for-desktop {
+    &__label {
+      justify-content: space-between;
+    }
+    &__delivery {
+      justify-content: space-between;
+      max-width: 240px;
+    }
   }
 }
 </style>

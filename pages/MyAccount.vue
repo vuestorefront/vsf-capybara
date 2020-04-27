@@ -65,15 +65,15 @@ export default {
       activePage: this.$t('My profile'),
       breadcrumbs: [
         {
-          'text': this.$t('Home'),
-          'route': {
-            'link': localizedRoute('/')
+          text: this.$t('Home'),
+          route: {
+            link: localizedRoute('/')
           }
         },
         {
-          'text': this.$t('My account'),
-          'route': {
-            'link': localizedRoute('/my-account')
+          text: this.$t('My account'),
+          route: {
+            link: localizedRoute('/my-account')
           }
         }
       ]
@@ -96,21 +96,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #my-account {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
+    max-width: 1272px;
+    padding: 0 var(--spacer-sm);
+    margin: 0 auto;
   }
 }
-
-.breadcrumbs {
-  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
+.my-account {
+  --content-pages-height: auto;
+  ::v-deep {
+    .sf-content-pages__content,
+    .sf-content-pages__sidebar {
+      height: min-content;
+    }
+  }
+  @include for-mobile {
+    --content-pages-sidebar-category-title-font-weight: var(--font-normal);
+    --content-pages-sidebar-category-title-margin: var(--spacer-sm) var(--spacer-sm) var(--spacer-sm) var(--spacer-base);
+  }
+  @include for-desktop {
+    --content-pages-sidebar-category-title-margin: var(--spacer-xl) 0 0 0;
+  }
 }
-
-.main {
-  display: flex;
+.breadcrumbs {
+  padding: var(--spacer-base) 0;
 }
 </style>

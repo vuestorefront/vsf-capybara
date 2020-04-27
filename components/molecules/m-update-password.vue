@@ -104,7 +104,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .form {
   @include for-desktop {
@@ -113,7 +113,7 @@ export default {
     align-items: center;
   }
   &__element {
-    margin-bottom: var(--spacer-extra-big);
+    margin: 0 0 var(--spacer-lg) 0;
     @include for-desktop {
       flex: 0 0 100%;
     }
@@ -123,28 +123,27 @@ export default {
       }
       &-even {
         @include for-desktop {
-          padding-left: var(--spacer-extra-big);
+          padding: 0 0 0 var(--spacer-lg);
         }
       }
     }
   }
   &__button {
-    width: 100%;
+    --button-width: 100%;
     @include for-desktop {
-      width: auto;
+      --button-width: auto;
     }
   }
 }
 .message {
-  font-family: var(--body-font-family-primary);
-  font-weight: var(--body-font-weight-primary);
-  line-height: 1.6;
+  margin: 0 0 var(--spacer-xl) 0;
+  color: var(--c-dark-variant);
 }
-.message {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  font-size: var(--font-size-regular);
-  &__label {
-    font-weight: 400;
+a {
+  color: var(--c-primary);
+  text-decoration: none;
+  &:hover {
+    color: var(--c-text);
   }
 }
 </style>

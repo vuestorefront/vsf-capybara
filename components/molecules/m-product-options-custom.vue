@@ -27,7 +27,7 @@
       </div>
       <div v-if="option.type === 'drop_down' || option.type === 'select'">
         <SfSelect
-          class="sf-select--bordered"
+          class="sf-select--underlined"
           v-model="inputValues[('customOption_' + option.option_id)]"
           @change="optionChanged(option)"
           :required="option.is_require"
@@ -135,6 +135,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.m-product-options-custom {
+  margin: 0 var(--spacer-sm);
+  @include for-desktop {
+    margin: 0 var(--spacer-xl);
+  }
+}
 .single-option {
   margin-top: 1.5rem;
 }

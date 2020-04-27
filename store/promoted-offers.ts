@@ -4,7 +4,8 @@ export default interface PromotedOffersState {
   banners: {
     mainBanners: any[],
     smallBanners: any[],
-    productBanners: any[]
+    productBanners: any[],
+    menuAsideBanners: any[]
   },
   headImage: any[]
 }
@@ -15,7 +16,8 @@ export const promotedStore = {
     banners: {
       mainBanners: [],
       smallBanners: [],
-      productBanners: []
+      productBanners: [],
+      menuAsideBanners: []
     },
     headImage: []
   },

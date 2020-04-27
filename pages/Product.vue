@@ -1,10 +1,5 @@
 <template>
-  <div
-    id="product"
-    class="product"
-    itemscope
-    itemtype="http://schema.org/Product"
-  >
+  <div id="product" itemscope itemtype="http://schema.org/Product">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
         <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
@@ -20,41 +15,37 @@
       :product-attributes="getCustomAttributes"
       :product-stock="stock"
     />
-    <lazy-hydrate when-idle>
+    <div class="product__bottom">
+      <lazy-hydrate when-idle>
+        <SfSection :title-heading="$t('We found other products you might like')">
+          <MRelatedProducts type="upsell" />
+        </SfSection>
+      </lazy-hydrate>
+      <lazy-hydrate when-idle>
+        <SfSection v-show="banners.length">
+          <router-link :key="i" :to="banner.link" v-for="(banner, i) in banners">
+            <SfBanner
+              :subtitle="banner.subtitle"
+              :title="banner.title"
+              :image="banner.image"
+              class="banner sf-banner--slim"
+            />
+          </router-link>
+        </SfSection>
+      </lazy-hydrate>
+      <lazy-hydrate when-idle>
+        <SfSection :title-heading="$t('Similar Products')">
+          <MRelatedProducts type="related" />
+        </SfSection>
+      </lazy-hydrate>
       <SfSection
-        :title-heading="$t('We found other products you might like')"
-        class="section"
+        v-if="isOnline"
+        title-heading="Share Your Look"
+        subtitle-heading="#YOURLOOK"
       >
-        <MRelatedProducts type="upsell" />
+        <AImagesGrid :images="instagramImages" />
       </SfSection>
-    </lazy-hydrate>
-    <lazy-hydrate when-idle>
-      <SfSection class="section" v-show="banners.length">
-        <router-link :key="i" :to="banner.link" v-for="(banner, i) in banners">
-          <SfBanner
-            :subtitle="banner.subtitle"
-            :title="banner.title"
-            :image="banner.image"
-            class="banner sf-banner--slim"
-          />
-        </router-link>
-      </SfSection>
-    </lazy-hydrate>
-    <lazy-hydrate when-idle>
-      <SfSection :title-heading="$t('Similar Products')" class="section">
-        <MRelatedProducts type="related" />
-      </SfSection>
-    </lazy-hydrate>
-
-    <SfSection
-      v-if="isOnline"
-      title-heading="Share Your Look"
-      subtitle-heading="#YOURLOOK"
-      class="section"
-    >
-      <AImagesGrid :images="instagramImages" />
-    </SfSection>
-    <SizeGuide />
+    </div>
   </div>
 </template>
 
@@ -74,18 +65,11 @@ import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
-
 import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
-
-const SizeGuide = () =>
-  import(
-    /* webpackChunkName: "vsf-modals" */ 'theme/components/core/blocks/Product/SizeGuide'
-  );
 
 export default {
   name: 'Product',
   components: {
-    SizeGuide,
     LazyHydrate,
     MRelatedProducts,
     SfSection,
@@ -191,7 +175,6 @@ export default {
   async mounted () {
     await Promise.all([
       this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
-      this.$store.dispatch('promoted/updatePromotedOffers'),
       this.$store.dispatch('instagram/updateInstagramImages')
     ])
   },
@@ -244,32 +227,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+#product {
+  box-sizing: border-box;
+  @include for-desktop {
+    max-width: 1272px;
+    margin: 0 auto;
+  }
+}
+
+.product__bottom {
+  box-sizing: border-box;
+  padding: 0 var(--spacer-sm);
+  @include for-desktop {
+    padding: 0 var(--spacer-sm);
+    max-width: 1272px;
+  }
+}
 
 .breadcrumbs {
-  padding: var(--spacer-big) var(--spacer-extra-big) var(--spacer-extra-big);
-}
-.section {
-  padding-left: var(--spacer-big);
-  padding-right: var(--spacer-big);
-  @include for-desktop {
-    padding-left: 0;
-    padding-right: 0;
-  }
+  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 
 .banner {
-  margin: var(--spacer-big) 0;
+  margin: var(--spacer-xl) 0;
   @include for-desktop {
-    margin: var(--spacer-extra-big) 0;
-  }
-}
-
-.product {
-  box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
+    margin: var(--spacer-2xl) 0;
   }
 }
 </style>

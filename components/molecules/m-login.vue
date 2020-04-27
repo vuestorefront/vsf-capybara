@@ -1,65 +1,66 @@
 <template>
-  <div class="m-login" key="log-in">
-    <div class="form">
-      <form @submit.prevent="login">
-        <SfInput
-          v-model="email"
-          name="email"
-          :label="$t('Your email')"
-          :required="true"
-          :valid="!$v.email.$error"
-          :error-message="
-            !$v.email.required
-              ? $t('Field is required.')
-              : $t('Please provide valid e-mail address.')
-          "
-          class="form__input"
-        />
-        <SfInput
-          v-model="password"
-          name="password"
-          :label="$t('Password')"
-          :required="true"
-          :valid="!$v.password.$error"
-          :error-message="$t('Field is required.')"
-          type="password"
-          class="form__input"
-        />
-        <SfCheckbox
-          v-model="rememberMe"
-          name="remember-me"
-          :label="$t('Remember me')"
-          class="form__checkbox"
-        />
-        <SfButton class="sf-button--full-width form__button" @click.native="login">
-          {{ $t("Login") }}
-        </SfButton>
-      </form>
-    </div>
-    <div class="action">
-      <SfButton class="sf-button--text button--muted" @click.native="switchElem('forgot-pass')">
-        {{ $t("Forgotten password?") }}
+  <div class="m-login modal-content">
+    <form @submit.prevent="login" class="form">
+      <SfInput
+        v-model="email"
+        name="email"
+        :label="$t('Your email')"
+        :required="true"
+        :valid="!$v.email.$error"
+        :error-message="
+          !$v.email.required
+            ? $t('Field is required.')
+            : $t('Please provide valid e-mail address.')
+        "
+        class="form__element"
+      />
+      <SfInput
+        v-model="password"
+        name="password"
+        :label="$t('Password')"
+        :required="true"
+        :valid="!$v.password.$error"
+        :error-message="$t('Field is required.')"
+        type="password"
+        class="form__element"
+      />
+      <SfCheckbox
+        v-model="rememberMe"
+        name="remember-me"
+        :label="$t('Remember me')"
+        class="form__element form__checkbox"
+      />
+      <SfButton class="sf-button--full-width form__submit">
+        {{ $t("Login") }}
       </SfButton>
-    </div>
-    <div class="bottom">
-      {{ $t("Don't have and account yet?") }}
+    </form>
+    <SfButton class="sf-button--text action-button" @click.native="switchElem('forgot-pass')">
+      {{ $t("Forgotten password?") }}
+    </SfButton>
+    <div class="aside">
+      <SfHeading
+        title="Don't have an account yet?"
+        :level="3"
+        class="aside__heading"
+      />
       <SfButton class="sf-button--text" @click.native="switchElem('register')">
-        {{ $t("Register today") }}
+        {{ $t("Register now") }}
       </SfButton>
     </div>
   </div>
 </template>
 
 <script>
+import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
-import { SfInput, SfButton, SfCheckbox } from '@storefront-ui/vue';
+import { SfInput, SfButton, SfCheckbox, SfHeading } from '@storefront-ui/vue';
 import { mapActions } from 'vuex';
 import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'MLogin',
-  components: { SfInput, SfButton, SfCheckbox },
+  components: { SfInput, SfButton, SfCheckbox, SfHeading },
   data () {
     return {
       email: '',
@@ -101,7 +102,7 @@ export default {
           if (result.code !== 200) {
             this.onFailure(result);
           } else {
-            this.onSuccess(this.$t('You are logged in!'));
+            this.onSuccess(i18n.t('You are logged in!'));
             this.closeModal({name: ModalList.Auth});
           }
         })
@@ -118,14 +119,14 @@ export default {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'success',
         message: message,
-        action1: { label: this.$t('OK') }
+        action1: { label: i18n.t('OK') }
       });
     },
     onFailure (result) {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
-        message: this.$t(result.result),
-        action1: { label: this.$t('OK') }
+        message: i18n.t(result.result),
+        action1: { label: i18n.t('OK') }
       });
     }
   },
@@ -142,30 +143,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+.modal-content,
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .form {
-  &__input {
-    margin-bottom: var(--spacer-extra-big);
+  width: 100%;
+  &__element {
+    margin: var(--spacer-base) 0;
   }
   &__checkbox {
-    margin-bottom: var(--spacer-big);
+    margin: var(--spacer-xl) 0 var(--spacer-2xl) 0;
   }
-  &__button {
-    margin-top: var(--spacer-big);
+  &__submit {
+    margin: var(--spacer-xl) 0 0 0;
   }
 }
-.action {
-  margin-top: var(--spacer-big);
-  text-align: center;
+.action-button {
+  margin: var(--spacer-xl) 0;
 }
-.bottom {
-  padding-top: var(--spacer-extra-big);
-  margin-top: var(--spacer-extra-big);
-  border-top: 1px solid var(--c-light);
-  line-height: 1.6;
-  text-align: center;
-}
-.sf-button--muted {
-  color: var(--c-text-muted);
+.aside {
+  margin: 0 0 var(--spacer-xl) 0;
+  &__heading {
+    --heading-title-color: var(--c-primary);
+    margin: 0 0 var(--spacer-sm) 0;
+  }
 }
 </style>

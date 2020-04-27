@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/theme-capybara",
-  "version": "1.11.0",
+  "version": "1.0-rc.1",
   "description": "New theme for Vue Storefront based on Storefront UI",
   "main": "index.js",
   "scripts": {
@@ -10,8 +10,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@storefront-ui/vue": "^0.6.0",
-    "body-scroll-lock": "^2.6.4",
+    "@storefront-ui/vue": "^0.7.4",
+    "body-scroll-lock": "^3.0.1",
+    "quicklink": "^2.0.0-alpha",
+    "storefront-query-builder": "^1.0.0",
     "supports-webp": "^2.0.1",
     "vue": "^2.6.6",
     "vue-lazy-hydration": "^1.0.0-beta.9",
@@ -24,5 +26,9 @@
   "devDependencies": {
     "husky": "^3.1.0",
     "postcss-filter-stream": "^0.0.6"
-  }
+  },
+  "sideEffects": [
+    "*.(sc|sa|c)?ss",
+    "*.vue"
+  ]
 }

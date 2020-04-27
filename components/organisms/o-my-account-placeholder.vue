@@ -1,9 +1,10 @@
 <template>
-  <SfTabs :open-tab="1" class="o-my-account-placeholder">
+  <SfTabs :open-tab="1" class="o-my-account-placeholder tab-orphan">
     <SfTab :title="title">
       <p class="message">
-        {{ $t('This feature is not implemented yet! Please take a look at') }}<br>
-        <a href="#">https://github.com/DivanteLtd/vue-storefront/issues {{ $t('for our Roadmap!') }}</a>
+        {{ $t('This feature is not implemented yet! Please take a look at') }}
+        <a href="https://github.com/DivanteLtd/vue-storefront"> https://github.com/DivanteLtd/vue-storefront </a>
+        {{ $t('for our Roadmap!') }}
       </p>
     </SfTab>
   </SfTabs>
@@ -24,26 +25,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.message {
-  margin: 0 0 var(--spacer-extra-big) 0;
-  font-size: var(--font-size-regular);
-  font-family: var(--body-font-family-primary);
-  font-weight: var(--body-font-weight-primary);
-  line-height: 1.6;
-}
-.o-my-account-placeholder {
+.tab-orphan {
   @include for-mobile {
-    ::v-deep .sf-tabs {
-      &__title {
-        display: none;
-      }
-      &__content {
-        border: 0;
-        padding: 0;
-      }
-    }
+    --tabs-title-display: none;
+    --tabs-content-padding: 0;
+    --tabs-conent-border-width: 0;
+  }
+}
+.message {
+  margin: 0 0 var(--spacer-sm) 0;
+  color: var(--c-dark-variant);
+}
+a {
+  font-weight: var(--font-medium);
+  color: var(--c-primary);
+  text-decoration: none;
+  &:hover {
+    color: var(--c-text);
   }
 }
 </style>

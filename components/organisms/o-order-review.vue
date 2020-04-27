@@ -1,104 +1,130 @@
 <template>
   <div class="o-order-review">
-    <div class="highlighted">
-      <SfHeading
-        :title="$t('Order review')"
-        class="sf-heading--left sf-heading--no-underline title"
+    <SfHeading
+      :title="$t('Order review')"
+      :level="3"
+      class="sf-heading--left sf-heading--no-underline title"
+    />
+    <div class="review__header">
+      <h3 class="review__title">
+        {{ $t("Details") }}
+      </h3>
+      <SfButton
+        class="sf-button--text color-secondary"
+        @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
+      >
+        {{ $t("Edit") }}
+      </SfButton>
+    </div>
+    <p class="content">
+      {{ personalDetails.firstName }} {{ personalDetails.lastName }}
+    </p>
+    <p class="content">
+      {{ personalDetails.emailAddress }}
+    </p>
+    <div class="review__header">
+      <h3 class="review__title">
+        {{ $t("Shipping") }}
+      </h3>
+      <SfButton
+        class="sf-button--text color-secondary"
+        @click="$bus.$emit('checkout-before-edit', 'shipping')"
+      >
+        {{ $t("Edit") }}
+      </SfButton>
+    </div>
+    <p class="content">
+      <span class="content__label">
+        {{ shippingMethod }}
+      </span>
+      <br>
+      {{ shippingDetails.streetAddress }}
+      {{ shippingDetails.apartmentNumber }},
+      {{ shippingDetails.zipCode }}
+      <br>
+      {{ shippingDetails.city }}, {{ shippingDetails.country }}
+    </p>
+    <p class="content">
+      {{ shippingDetails.phoneNumber }}
+    </p>
+    <div class="review__header">
+      <h3 class="review__title">
+        {{ $t("Payment") }}
+      </h3>
+      <SfButton
+        class="sf-button--text color-secondary"
+        @click="$bus.$emit('checkout-before-edit', 'payment')"
+      >
+        {{ $t("Edit") }}
+      </SfButton>
+    </div>
+    <p class="content">
+      {{ paymentDetails.streetAddress }}
+      {{ paymentDetails.apartmentNumber }},
+      {{ paymentDetails.zipCode }}
+      <br>
+      {{ paymentDetails.city }}, {{ paymentDetails.country }}
+    </p>
+    <p class="content">
+      {{ paymentDetails.phoneNumber }}
+    </p>
+    <div class="review__header">
+      <h3 class="review__title">
+        {{ $t("Payment method") }}
+      </h3>
+      <SfButton
+        class="sf-button--text color-secondary"
+        @click="$bus.$emit('checkout-before-edit', 'payment')"
+      >
+        {{ $t("Edit") }}
+      </SfButton>
+    </div>
+    <p class="content">
+      {{ paymentMethod }}
+    </p>
+    <div class="characteristics">
+      <SfCharacteristic
+        v-for="characteristic in characteristics"
+        :key="characteristic.title"
+        :title="characteristic.title"
+        :description="characteristic.description"
+        :icon="characteristic.icon"
+        color-icon="green-primary"
+        class="characteristics__item"
       />
-      <div class="highlighted__header">
-        <h3 class="highlighted__title">
-          {{ $t("Personal Details") }}
-        </h3>
-        <SfButton
-          class="sf-button--text"
-          @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
-        >
-          {{ $t("Edit") }}
-        </SfButton>
-      </div>
-      <p class="content">
-        {{ personalDetails.firstName }} {{ personalDetails.lastName }}
-      </p>
-      <p class="content">
-        {{ personalDetails.emailAddress }}
-      </p>
-    </div>
-    <div class="highlighted">
-      <div class="highlighted__header">
-        <h3 class="highlighted__title">
-          {{ $t("Shipping") }}
-        </h3>
-        <SfButton
-          class="sf-button--text"
-          @click="$bus.$emit('checkout-before-edit', 'shipping')"
-        >
-          {{ $t("Edit") }}
-        </SfButton>
-      </div>
-      <p class="content">
-        <span class="content__label">
-          {{ shippingMethod }}
-        </span>
-        <br>
-        {{ shippingDetails.streetAddress }}
-        {{ shippingDetails.apartmentNumber }},
-        {{ shippingDetails.zipCode }}
-        <br>
-        {{ shippingDetails.city }}, {{ shippingDetails.country }}
-      </p>
-      <p class="content">
-        {{ shippingDetails.phoneNumber }}
-      </p>
-    </div>
-    <div class="highlighted">
-      <div class="highlighted__header">
-        <h3 class="highlighted__title">
-          {{ $t("Payment") }}
-        </h3>
-        <SfButton
-          class="sf-button--text"
-          @click="$bus.$emit('checkout-before-edit', 'payment')"
-        >
-          {{ $t("Edit") }}
-        </SfButton>
-      </div>
-      <p class="content">
-        {{ paymentDetails.streetAddress }}
-        {{ paymentDetails.apartmentNumber }},
-        {{ paymentDetails.zipCode }}
-        <br>
-        {{ paymentDetails.city }}, {{ paymentDetails.country }}
-      </p>
-      <p class="content">
-        {{ paymentDetails.phoneNumber }}
-      </p>
-    </div>
-    <div class="highlighted">
-      <div class="highlighted__header">
-        <h3 class="highlighted__title">
-          {{ $t("Payment method") }}
-        </h3>
-        <SfButton
-          class="sf-button--text"
-          @click="$bus.$emit('checkout-before-edit', 'payment')"
-        >
-          {{ $t("Edit") }}
-        </SfButton>
-      </div>
-      <p class="content">
-        {{ paymentMethod }}
-      </p>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import { SfHeading, SfButton } from '@storefront-ui/vue';
+import { SfHeading, SfButton, SfCharacteristic } from '@storefront-ui/vue';
 export default {
   name: 'OOrderReview',
   components: {
     SfHeading,
-    SfButton
+    SfButton,
+    SfCharacteristic
+  },
+  data () {
+    return {
+      characteristics: [
+        {
+          title: this.$t('Safety'),
+          description: this.$t('It carefully packaged with a personal touch'),
+          icon: 'safety'
+        },
+        {
+          title: this.$t('Easy shipping'),
+          description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
+          icon: 'shipping'
+        },
+        {
+          title: this.$t('Changed your mind?'),
+          description: this.$t('Rest assured, we offer free returns within 30 days'),
+          icon: 'return'
+        }
+      ]
+    };
   },
   computed: {
     ...mapGetters({
@@ -124,46 +150,37 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
-
-.highlighted {
+.title {
+  --heading-title-margin: 0 0 var(--spacer-lg) 0;
+}
+.review {
   box-sizing: border-box;
   width: 100%;
-  background-color: #f1f2f3;
-  padding: var(--spacer-extra-big);
-  margin-bottom: var(--spacer-big);
-  &:last-child {
-    margin-bottom: 0;
-  }
-  &--total {
-    margin-bottom: 1px;
-  }
   &__header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacer-big);
-  }
-  &__title {
-    font-family: var(--body-font-family-primary);
-    font-size: var(--font-size-big);
-    line-height: 1.6;
+    justify-content: space-between;
+    h3 {
+      font: inherit;
+    }
   }
 }
-.title {
-  margin-bottom: var(--spacer-extra-big);
+.characteristics {
+  margin: var(--spacer-xl) 0 0 var(--spacer-xs);
+  &__item {
+    margin: var(--spacer-base) 0;
+  }
 }
 .content {
-  margin: 0 0 var(--spacer-big) 0;
-  color: var(--c-text);
-  font-size: var(--font-size-extra-small);
-  font-weight: 300;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-xs);
   line-height: 1.6;
-  &:last-child {
-    margin: 0;
-  }
+  font-weight: var(--font-light);
+  margin: 0;
+  color: var(--c-dark-variant);
   &__label {
-    font-weight: 400;
+    color: var(--c-text);
+    font-weight: var(--font-normal);
   }
 }
 </style>

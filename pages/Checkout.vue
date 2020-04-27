@@ -14,8 +14,8 @@
       </div>
       <div class="checkout__aside desktop-only">
         <transition name="fade">
-          <OOrderSummary v-if="currentStep <= 2" />
-          <OOrderReview v-else />
+          <OOrderSummary v-if="currentStep <= 2" class="checkout__aside-order" />
+          <OOrderReview v-else class="checkout__aside-order" />
         </transition>
       </div>
     </div>
@@ -23,7 +23,6 @@
   </div>
 </template>
 <script>
-import i18n from '@vue-storefront/i18n';
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
 import OPayment from 'theme/components/organisms/o-payment';
@@ -52,22 +51,22 @@ export default {
       steps: [
         {
           key: 'personalDetails',
-          name: i18n.t('Personal Details'),
+          name: this.$t('Details'),
           component: OPersonalDetails
         },
         {
           key: 'shipping',
-          name: i18n.t('Shipping'),
+          name: this.$t('Shipping'),
           component: OShipping
         },
         {
           key: 'payment',
-          name: i18n.t('Payment'),
+          name: this.$t('Payment'),
           component: OPayment
         },
         {
           key: 'orderReview',
-          name: i18n.t('Review order'),
+          name: this.$t('Review'),
           component: OConfirmOrder
         }
       ]
@@ -131,39 +130,39 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/vue/styles";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #checkout {
   box-sizing: border-box;
-  padding: 0 var(--spacer-big);
   @include for-desktop {
-    max-width: 1240px;
-    margin: auto;
-  }
-  ::v-deep {
-    .sf-steps__header {
-      &-step {
-        cursor: initial;
-      }
-      &-step-done {
-        cursor: pointer;
-      }
-    }
+    padding: 0 var(--spacer-sm);
+    max-width: 1272px;
+    margin: 0 auto;
   }
 }
 .checkout {
+  --steps-content-padding: 0 var(--spacer-sm);
   @include for-desktop {
+    --steps-content-padding: 0;
     display: flex;
   }
   &__main {
     @include for-desktop {
       flex: 1;
+      padding: var(--spacer-xl) 0 0 0;
     }
   }
   &__aside {
     @include for-desktop {
-      flex: 0 0 25.5rem;
-      margin-left: 6.25rem;
+      flex: 0 0 26.8125rem;
+      margin: 0 0 0 var(--spacer-xl);
+    }
+    &-order {
+      box-sizing: border-box;
+      width: 100%;
+      box-shadow: 0px 4px 11px rgba(var(--c-dark-base), 0.1);
+      background: var(--c-light);
+      padding: var(--spacer-xl) calc(var(--spacer-lg) * 2);
     }
   }
 }
