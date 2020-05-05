@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@storefront-ui/vue": "^0.7.4",
+    "@storefront-ui/vue": "^0.7.6",
     "body-scroll-lock": "^3.0.1",
     "quicklink": "^2.0.0-alpha",
     "storefront-query-builder": "^1.0.0",
