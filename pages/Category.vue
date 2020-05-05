@@ -686,7 +686,7 @@ export default {
   }
 }
 .sort-by {
-  --select-dropdown-z-index: 1;
+  --select-dropdown-z-index: 2;
   flex: unset;
   ::v-deep {
     .sf-select__dropdown {
