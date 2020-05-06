@@ -42,6 +42,9 @@ export default {
 <style lang="scss" scoped>
 .a-microcart-icon {
   position: relative;
+  .sf-header__icon {
+    cursor: pointer;
+  }
 }
 .badge {
   position: absolute;

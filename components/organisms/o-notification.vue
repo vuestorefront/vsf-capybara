@@ -9,14 +9,14 @@
       :message="notification.message | htmlDecode"
     >
       <template #action>
-        <button
+        <SfButton
           v-for="action in getActions(notification)"
           :key="action.label"
-          class="sf-notification__action"
+          class="sf-button--pure sf-notification__action"
           @click="executeAction(action.action, notification.id)"
         >
           {{ action.label }}
-        </button>
+        </SfButton>
       </template>
       <template #close>
         <SfIcon
@@ -32,12 +32,12 @@
 
 <script>
 import { Notification } from '@vue-storefront/core/modules/notification/components/Notification';
-import { SfNotification, SfIcon } from '@storefront-ui/vue';
+import { SfNotification, SfIcon, SfButton } from '@storefront-ui/vue';
 
 export default {
   name: 'ONotification',
   mixins: [Notification],
-  components: { SfNotification, SfIcon },
+  components: { SfNotification, SfIcon, SfButton },
   methods: {
     getType ({ type }) {
       return ['secondary', 'info', 'success', 'warning', 'danger'].includes(type) ? type : 'danger';

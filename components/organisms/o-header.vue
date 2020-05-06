@@ -186,6 +186,12 @@ export default {
     }
   }
   @include for-desktop {
+    &__icons {
+      display: flex;
+      .sf-header__icon {
+        cursor: pointer;
+      }
+    }
     &__icons > :first-child {
       margin: 0;
     }
