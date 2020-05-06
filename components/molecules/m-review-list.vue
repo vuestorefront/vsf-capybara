@@ -17,7 +17,7 @@
       :current="currentPage"
       :visible="visible"
       :total="total"
-      @click="setCurrentPage"
+      page-param-name="reviewPage"
       class="product__reviews-pagination"
     />
   </div>
@@ -59,6 +59,16 @@ export default {
   methods: {
     setCurrentPage (newPage) {
       this.currentPage = newPage
+    }
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      handler (to, from) {
+        if (to.query.reviewPage) {
+          this.setCurrentPage(to.query.reviewPage);
+        }
+      }
     }
   }
 }
