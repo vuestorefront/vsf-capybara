@@ -114,7 +114,6 @@
             :current="currentPage"
             :total="totalPages"
             :visible="3"
-            @click="changePage"
           />
         </template>
       </div>
@@ -409,6 +408,14 @@ export default {
     sortOrder () {
       if (this.currentPage > 1) {
         this.changePage();
+      }
+    },
+    $route: {
+      immediate: true,
+      handler (to, from) {
+        if (to.query.page) {
+          this.changePage(to.query.page);
+        }
       }
     }
   },
