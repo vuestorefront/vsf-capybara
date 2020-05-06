@@ -8,9 +8,15 @@
       >
         <SfList>
           <SfListItem v-for="link in linkGroup.children" :key="link.name">
-            <router-link :to="localizedRoute(link.link)" exact>
+            <router-link v-if="link.link" :to="localizedRoute(link.link)" exact>
               <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
             </router-link>
+            <SfMenuItem
+              v-else-if="link.clickHandler"
+              class="sf-footer__menu-item"
+              :label="$t(link.name)"
+              @click="link.clickHandler"
+            />
           </SfListItem>
         </SfList>
       </SfFooterColumn>
@@ -60,7 +66,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import ABackToTop from 'theme/components/atoms/a-back-to-top';
 import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
@@ -70,7 +76,7 @@ import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import get from 'lodash-es/get';
 
 export default {
-  name: 'MainFooter',
+  name: 'OFooter',
   components: {
     ABackToTop,
     SfFooter,
@@ -79,11 +85,32 @@ export default {
   },
   data () {
     return {
-      links: {
+      social: ['facebook', 'pinterest', 'twitter', 'youtube']
+    };
+  },
+  computed: {
+    ...mapGetters('user', ['isLoggedIn']),
+    multistoreEnabled () {
+      return get(config, 'storeViews.multistore', false);
+    },
+    getVersionInfo () {
+      return `v${process.env.__APPVERSION__} ${process.env.__BUILDTIME__}`;
+    },
+    currentLanguage () {
+      const { i18n = config.i18n } = currentStoreView();
+      return `${i18n.defaultCountry} / ${i18n.defaultLanguage} / ${i18n.currencyCode}`;
+    },
+    links () {
+      return {
         orders: {
           name: 'Orders',
           children: [
-            { name: 'My account', link: '/my-account' },
+            {
+              name: 'My account',
+              ...this.isLoggedIn
+                ? {link: '/my-account'}
+                : {clickHandler: () => this.openModal({name: ModalList.Auth, payload: 'login'})}
+            },
             { name: 'Delivery', link: '/delivery' },
             { name: 'Return policy', link: '/returns' }
           ]
@@ -110,20 +137,7 @@ export default {
             { name: 'Store locator', link: '/store-locator' }
           ]
         }
-      },
-      social: ['facebook', 'pinterest', 'twitter', 'youtube']
-    };
-  },
-  computed: {
-    multistoreEnabled () {
-      return get(config, 'storeViews.multistore', false);
-    },
-    getVersionInfo () {
-      return `v${process.env.__APPVERSION__} ${process.env.__BUILDTIME__}`;
-    },
-    currentLanguage () {
-      const { i18n = config.i18n } = currentStoreView();
-      return `${i18n.defaultCountry} / ${i18n.defaultLanguage} / ${i18n.currencyCode}`;
+      };
     }
   },
   methods: {
