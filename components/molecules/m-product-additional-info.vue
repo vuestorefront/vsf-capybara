@@ -54,7 +54,7 @@ export default {
       return this.reviews.length
     }
   },
-  destroyed () {
+  beforeDestroy () {
     this.$store.commit('ui/setActiveProductTab', 1);
   }
 };
