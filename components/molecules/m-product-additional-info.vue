@@ -2,8 +2,7 @@
   <SfTabs
     class="m-product-additional-info product__tabs"
     :open-tab="openTab"
-    :key="openTab"
-    @toggle="onTabChange"
+    :key="product.id"
   >
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
@@ -55,16 +54,8 @@ export default {
       return this.reviews.length
     }
   },
-  methods: {
-    onTabChange (index) {
-      let counter = 0
-      this.$children[0].$children.forEach(tab => {
-        counter++
-        if (tab._uid === index) {
-          this.$store.commit('ui/setActiveProductTab', counter);
-        }
-      })
-    }
+  destroyed () {
+    this.$store.commit('ui/setActiveProductTab', 1);
   }
 };
 </script>
