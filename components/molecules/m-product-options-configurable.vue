@@ -6,8 +6,9 @@
       :message="product.errors | formatProductMessages"
       type="danger"
     />
-    <div v-for="attribute in productAttributes" :key="attribute.id">
+    <template v-for="attribute in productAttributes">
       <SfSelect
+        :key="attribute.id"
         v-if="attribute.attribute_code !== 'color'"
         :label="getAttributeLabel(attribute)"
         :value="getActiveOption(attribute)"
@@ -22,9 +23,7 @@
           <SfProductOption :label="attributeOption.label" />
         </SfSelectOption>
       </SfSelect>
-    </div>
-    <div v-for="attribute in productAttributes" :key="attribute.id">
-      <div v-if="attribute.attribute_code === 'color'" class="product__colors desktop-only">
+      <div v-else :key="attribute.id" class="product__colors">
         <p class="product__color-label">
           {{ attribute.label }}:
         </p>
@@ -33,11 +32,11 @@
           :key="attributeOption.id"
           :color="getColorValue(attributeOption)"
           class="product__color"
-          :selected="parseInt(configuration.color.id) === parseInt(attributeOption.id)"
+          :selected="isColorSelected(attributeOption)"
           @click="handleChangeOption(attributeOption)"
         />
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <script>
@@ -93,6 +92,9 @@ export default {
       return (option) => option.type === 'color'
         ? get(config.products.colorMappings, option.label, option.label)
         : undefined
+    },
+    isColorSelected () {
+      return attributeOption => this.configuration.color && parseInt(this.configuration.color.id) === parseInt(attributeOption.id);
     }
   },
   methods: {
@@ -107,11 +109,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
-@import "~@storefront-ui/shared/styles/helpers/typography";
 
 .m-product-options-configurable {
   border-bottom: 1px solid #f1f2f3;
   padding-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
   @include for-desktop {
     border: 0;
     padding-bottom: 0;
@@ -123,22 +126,21 @@ export default {
 
 .product {
   &__select-size {
+    flex: 100%;
     margin: 0 var(--spacer-sm);
     @include for-desktop {
       margin: 0;
     }
   }
   &__colors {
-    @include font(
-      --product-color-font,
-      var(--font-normal),
-      var(--font-lg),
-      1.6,
-      var(--font-family-secondary)
-    );
     display: flex;
+    flex: 100%;
+    order: 1;
     align-items: center;
-    margin-top: var(--spacer-xl);
+    margin: var(--spacer-xl) var(--spacer-sm) 0;
+    @include for-desktop {
+      margin: var(--spacer-xl) 0 0;
+    }
   }
   &__color-label {
     margin: 0 var(--spacer-lg) 0 0;
