@@ -111,4 +111,16 @@ export default {
     );
   }
 }
+
+@keyframes moveicon {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 30%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
 </style>
