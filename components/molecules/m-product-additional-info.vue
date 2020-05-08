@@ -4,6 +4,7 @@
     :open-tab="openTab"
     :key="openTab"
     @toggle="onTabChange"
+    id="m-product-additional-info"
   >
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
@@ -16,20 +17,40 @@
       />
     </SfTab>
     <SfTab :title="$t('Read reviews')">
+      <div class="review-header">
+        <SfHeading
+          :title="$t('{count} Reviews', { count: reviewsCount })"
+          :level="3"
+          class="sf-heading--left"
+        />
+        <AProductRating
+          @click="handleOpenReviewModal"
+          :reviews="reviews"
+        >
+          {{ $t('Leave me review') }}
+        </AProductRating>
+      </div>
+      <SfDivider v-show="reviewsCount" />
       <MReviewList v-show="reviewsCount" :reviews="reviews" />
     </SfTab>
   </SfTabs>
 </template>
 
 <script>
-import { SfTabs } from '@storefront-ui/vue';
+import { ModalList } from 'theme/store/ui/modals';
+import { mapActions } from 'vuex';
+import { SfHeading, SfTabs, SfDivider } from '@storefront-ui/vue';
+import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductAttribute from 'theme/components/atoms/a-product-attribute';
 import MReviewList from 'theme/components/molecules/m-review-list';
 
 export default {
   name: 'MProductAdditionalInfo',
   components: {
+    SfHeading,
     SfTabs,
+    AProductRating,
+    SfDivider,
     AProductAttribute,
     MReviewList
   },
@@ -56,6 +77,12 @@ export default {
     }
   },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
+    handleOpenReviewModal () {
+      this.openModal({name: ModalList.Review, payload: this.product.id})
+    },
     onTabChange (index) {
       let counter = 0
       this.$children[0].$children.forEach(tab => {
@@ -87,5 +114,10 @@ export default {
 
 [itemprop="description"] > *:first-child {
   margin-top: 0;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
