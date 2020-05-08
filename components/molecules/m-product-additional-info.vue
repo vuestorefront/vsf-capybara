@@ -2,8 +2,7 @@
   <SfTabs
     class="m-product-additional-info product__tabs"
     :open-tab="openTab"
-    :key="openTab"
-    @toggle="onTabChange"
+    :key="product.id"
     id="m-product-additional-info"
   >
     <SfTab :title="$t('Description')">
@@ -76,21 +75,15 @@ export default {
       return this.reviews.length
     }
   },
+  beforeDestroy () {
+    this.$store.commit('ui/setActiveProductTab', 1);
+  },
   methods: {
     ...mapActions('ui', {
       openModal: 'openModal'
     }),
     handleOpenReviewModal () {
       this.openModal({name: ModalList.Review, payload: this.product.id})
-    },
-    onTabChange (index) {
-      let counter = 0
-      this.$children[0].$children.forEach(tab => {
-        counter++
-        if (tab._uid === index) {
-          this.$store.commit('ui/setActiveProductTab', counter);
-        }
-      })
     }
   }
 };
