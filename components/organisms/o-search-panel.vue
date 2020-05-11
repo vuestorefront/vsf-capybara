@@ -164,21 +164,17 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-search-panel {
-  @include for-mobile {
-    --header-container-height: 6.75rem;
-  }
-
   position: fixed;
   left: 0;
   right: 0;
-  top: var(--header-container-height);
+  top: var(--_header-height);
   background: var(--c-white);
   overflow: auto;
-  max-height: calc(66vh - var(--header-container-height));
+  max-height: calc(66vh - var(--_header-height));
 
   @include for-mobile {
     top: auto;
-    max-height: calc(100vh - var(--header-container-height) - var(--bottom-navigation-height));
+    max-height: calc(100vh - var(--_header-height) - var(--bottom-navigation-height));
   }
 
   .container {

@@ -2,7 +2,7 @@
   <div id="category">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
+        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
           {{ breadcrumb.text }}
         </router-link>
       </template>
@@ -414,7 +414,7 @@ export default {
       immediate: true,
       handler (to, from) {
         if (to.query.page) {
-          this.changePage(to.query.page);
+          this.changePage(parseInt(to.query.page) || 1);
         }
       }
     }
@@ -662,6 +662,7 @@ export default {
   &__select {
     --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
     --select-margin: 0;
+    --select-selected-padding: 0 var(--spacer-xl) 0 0;
   }
   &__sort {
     display: flex;
