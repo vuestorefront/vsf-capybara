@@ -40,8 +40,6 @@ export default {
   components: {
     SfHeading,
     SfIcon,
-    SfPrice,
-    SfButton,
     AProductRating,
     AProductPrice
   },
@@ -67,9 +65,12 @@ export default {
   methods: {
     openReviewsTab () {
       this.$store.commit('ui/setActiveProductTab', 2);
-      const reviewsEl = document.querySelector('#m-product-additional-info')
-      if (!reviewsEl) return
-      window.scrollTo(0, reviewsEl.getBoundingClientRect().top)
+
+      const reviewsEl = document.querySelector('#m-product-additional-info');
+      if (!reviewsEl) return;
+
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      createSmoothscroll(scrollTop, scrollTop + reviewsEl.getBoundingClientRect().top);
     }
   }
 };
@@ -108,6 +109,18 @@ export default {
       1.6,
       var(--font-family-primary)
     );
+  }
+}
+
+@keyframes moveicon {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 30%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
   }
 }
 </style>

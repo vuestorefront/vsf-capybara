@@ -16,7 +16,7 @@
         :reviews="reviews"
       />
       <SfButton
-        v-if="sizeOption"
+        v-show="sizeOption"
         @click.native="openSizeGuide"
         class="sf-button--text desktop-only product__guide"
       >
@@ -163,7 +163,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
-@import "~@storefront-ui/shared/styles/helpers/typography";
 
 .product {
   @include for-desktop {
