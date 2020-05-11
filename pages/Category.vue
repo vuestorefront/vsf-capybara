@@ -114,7 +114,6 @@
             :current="currentPage"
             :total="totalPages"
             :visible="3"
-            @click="changePage"
           />
         </template>
       </div>
@@ -410,6 +409,14 @@ export default {
       if (this.currentPage > 1) {
         this.changePage();
       }
+    },
+    $route: {
+      immediate: true,
+      handler (to, from) {
+        if (to.query.page) {
+          this.changePage(to.query.page);
+        }
+      }
     }
   },
   async asyncData ({ store, route }) {
@@ -686,7 +693,7 @@ export default {
   }
 }
 .sort-by {
-  --select-dropdown-z-index: 1;
+  --select-dropdown-z-index: 2;
   flex: unset;
   ::v-deep {
     .sf-select__dropdown {
