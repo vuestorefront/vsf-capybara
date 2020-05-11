@@ -7,8 +7,11 @@
     />
     <SfHeader
       :active-icon="activeIcon"
-      :is-sticky="isSearchPanelVisible"
-      :has-mobile-search="isSearchPanelVisible"
+      :class="{
+        'sf-header--has-mobile-search': isSearchPanelVisible,
+        'sf-header--is-sticky': isSearchPanelVisible
+      }"
+      :style="{'z-index': isHoveredMenu ? 2 : 1}"
     >
       <template #logo>
         <ALogo />
@@ -48,8 +51,8 @@
       </template>
       <template #header-icons>
         <div class="sf-header__icons">
-          <AAccountIcon />
-          <AMicrocartIcon />
+          <AAccountIcon class="sf-header__action" />
+          <AMicrocartIcon class="sf-header__action" />
         </div>
       </template>
     </SfHeader>
@@ -148,7 +151,7 @@ export default {
   z-index: 1;
 }
 .o-header {
-  --header-navigation-item-margin: 0 3rem 0 0;
+  --header-navigation-item-margin: 0 2rem 0 0;
   box-sizing: border-box;
   a {
     &.active {
@@ -191,9 +194,6 @@ export default {
       .sf-header__icon {
         cursor: pointer;
       }
-    }
-    &__icons > :first-child {
-      margin: 0;
     }
   }
 }

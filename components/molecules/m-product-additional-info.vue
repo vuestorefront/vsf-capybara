@@ -1,9 +1,9 @@
 <template>
   <SfTabs
     class="m-product-additional-info product__tabs"
-    :open-tab="openTab"
-    :key="product.id"
     id="m-product-additional-info"
+    ref="productTabs"
+    @toggle="onToggle"
   >
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
@@ -15,7 +15,7 @@
         class="product__property"
       />
     </SfTab>
-    <SfTab :title="$t('Read reviews')">
+    <SfTab :title="$t('Read reviews')" ref="reviewTab">
       <div class="review-header">
         <SfHeading
           :title="$t('{count} Reviews', { count: reviewsCount })"
@@ -37,7 +37,7 @@
 
 <script>
 import { ModalList } from 'theme/store/ui/modals';
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { SfHeading, SfTabs, SfDivider } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductAttribute from 'theme/components/atoms/a-product-attribute';
@@ -68,22 +68,32 @@ export default {
     }
   },
   computed: {
-    openTab () {
-      return this.$store.state.ui.activeProductTab
-    },
+    ...mapState({
+      isReviewProductTab: state => state.ui.isReviewProductTab
+    }),
     reviewsCount () {
-      return this.reviews.length
+      return this.reviews.length;
+    }
+  },
+  watch: {
+    isReviewProductTab (value) {
+      if (value && !this.$refs.reviewTab.isActive) {
+        this.$refs.productTabs.toggle(this.$refs.reviewTab._uid);
+      }
     }
   },
   beforeDestroy () {
-    this.$store.commit('ui/setActiveProductTab', 1);
+    this.$store.commit('ui/setReviewProductTab', false);
   },
   methods: {
     ...mapActions('ui', {
       openModal: 'openModal'
     }),
     handleOpenReviewModal () {
-      this.openModal({name: ModalList.Review, payload: this.product.id})
+      this.openModal({ name: ModalList.Review, payload: this.product.id })
+    },
+    onToggle (id) {
+      this.$store.commit('ui/setReviewProductTab', id === this.$refs.reviewTab._uid);
     }
   }
 };
