@@ -2,7 +2,7 @@
   <div id="my-account">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
+        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
           {{ breadcrumb.text }}
         </router-link>
       </template>

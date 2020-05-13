@@ -2,7 +2,7 @@
   <div id="product" itemscope itemtype="http://schema.org/Product">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__link">
+        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
           {{ breadcrumb.text }}
         </router-link>
       </template>

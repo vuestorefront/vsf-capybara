@@ -5,7 +5,7 @@
       :breadcrumbs="breadcrumbs"
     >
       <template #link="{breadcrumb}">
-        <router-link :to="localizedRoute(breadcrumb.route.link)" class="sf-breadcrumbs__link">
+        <router-link :to="localizedRoute(breadcrumb.route.link)" class="sf-breadcrumbs__breadcrumb">
           {{ breadcrumb.text }}
         </router-link>
       </template>
