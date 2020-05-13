@@ -19,7 +19,7 @@ export const uiStore = {
       path: []
     },
     isWebpSupported: true,
-    activeProductTab: 1,
+    isReviewProductTab: false,
     isMobileMenu: false
   },
   mutations: {
@@ -57,8 +57,8 @@ export const uiStore = {
     setWebpSupport (state, action) {
       state.isWebpSupported = action
     },
-    setActiveProductTab (state, action) {
-      state.activeProductTab = action
+    setReviewProductTab (state, action) {
+      state.isReviewProductTab = action
     },
     openMenu (state) {
       state.isMobileMenu = true

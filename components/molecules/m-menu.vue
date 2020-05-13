@@ -1,5 +1,5 @@
 <template>
-  <div class="m-menu">
+  <div class="m-menu sf-mega-menu">
     <SfMegaMenu
       :title="title || currentCategoryTitle"
       :visible="visible"
@@ -106,6 +106,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .m-menu {
+  padding: 0;
   position: absolute;
   left: 0;
   width: 100%;
