@@ -223,6 +223,7 @@
         </SfCheckbox>
       </div>
     </div>
+    <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
     <div class="characteristics mobile-only">
       <SfCharacteristic
         v-for="characteristic in characteristics"
@@ -253,7 +254,7 @@
         </SfCheckbox>
         <APromoCode :allow-promo-code-removal="false" />
       </div>
-      <MPriceSummary class="totals__element" :allow-promo-code-removal="true" />
+      <MPriceSummary class="totals__element" />
     </div>
     <div class="actions">
       <SfButton
@@ -407,7 +408,7 @@ export default {
       });
     },
     openTermsAndConditionsModal () {
-      this.openModal({name: ModalList.TermsAndConditions})
+      this.openModal({ name: ModalList.TermsAndConditions })
     }
   },
   mounted () {
@@ -592,5 +593,11 @@ a {
 }
 .no-flex {
   flex: unset;
+}
+.promo-code {
+  &.mobile-only {
+    max-width: 100%;
+    width: 20rem;
+  }
 }
 </style>

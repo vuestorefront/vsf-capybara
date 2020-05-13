@@ -66,7 +66,7 @@ export default {
       immediate: true,
       handler (to, from) {
         if (to.query.reviewPage) {
-          this.setCurrentPage(to.query.reviewPage);
+          this.setCurrentPage(parseInt(to.query.reviewPage) || 1);
         }
       }
     }

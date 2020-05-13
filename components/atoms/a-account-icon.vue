@@ -1,24 +1,26 @@
 <template>
-  <SfIcon
-    icon="profile"
-    size="xs"
-    class="sf-header__icon a-account-icon"
-    :class="{
-      'sf-header__icon--is-active': isLoggedIn
-    }"
-    role="button"
-    aria-label="account"
+  <SfButton
+    class="sf-button--pure a-account-icon"
     @click="goToAccount"
-  />
+  >
+    <SfIcon
+      icon="account"
+      size="xs"
+      class="sf-header__icon"
+      :class="{
+        'sf-header__icon--is-active': isLoggedIn
+      }"
+    />
+  </SfButton>
 </template>
 
 <script>
-import { SfIcon } from '@storefront-ui/vue';
+import { SfIcon, SfButton } from '@storefront-ui/vue';
 import { mapGetters, mapActions } from 'vuex';
 import { ModalList } from 'theme/store/ui/modals'
 
 export default {
-  components: { SfIcon },
+  components: { SfIcon, SfButton },
   computed: {
     ...mapGetters('user', ['isLoggedIn'])
   },
@@ -30,7 +32,7 @@ export default {
       if (this.isLoggedIn) {
         this.$router.push(this.localizedRoute('/my-account'))
       } else {
-        this.openModal({name: ModalList.Auth, payload: 'login'})
+        this.openModal({ name: ModalList.Auth, payload: 'login' })
       }
     }
   }

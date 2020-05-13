@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support for Storefront UI v0.7.8
+- Support for Storefront UI v0.7.10 (#360)
 
 ### Changed / Improved
 
@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show login modal for my account link in footer (#325)
 - Tabs on the product page are not reset properly (#228)
 - Add changelog (#345)
+- Support discount coupons in mobile view (#361)
 
 ## [1.0.0-rc.1] - 2020-04-27
 
