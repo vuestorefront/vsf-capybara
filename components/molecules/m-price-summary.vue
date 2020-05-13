@@ -32,7 +32,6 @@
         :class="{'sf-property--large': isLarge}"
       />
       <SfButton
-        v-if="allowPromoCodeRemoval"
         class="sf-button sf-button--outline promo-code__button"
         @click="removeCoupon"
       >
@@ -61,10 +60,6 @@ export default {
   },
   props: {
     isLarge: {
-      type: Boolean,
-      default: false
-    },
-    allowPromoCodeRemoval: {
       type: Boolean,
       default: false
     }
