@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed / Improved
 
 - Support theme configuration via CLI (#369)
+- Update types for `getBundleOptionsValues` (#371)
 
 ## [1.0.0-rc.2] - 2020-05-13
 
