@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/theme-capybara",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "New theme for Vue Storefront based on Storefront UI",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "@storefront-ui/vue": "0.7.10",
     "body-scroll-lock": "^3.0.1",
     "quicklink": "^2.0.0-alpha",
-    "storefront-query-builder": "^1.0.0",
+    "storefront-query-builder": "https://github.com/DivanteLtd/storefront-query-builder.git",
     "supports-webp": "^2.0.1",
     "vue": "^2.6.6",
     "vue-lazy-hydration": "^1.0.0-beta.9",
