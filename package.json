@@ -12,7 +12,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@storefront-ui/vue": "0.7.10",
+    "@storefront-ui/vue": "0.7.11",
+    "@storefront-ui/shared": "0.7.11",
     "body-scroll-lock": "^3.0.1",
     "quicklink": "^2.0.0-alpha",
     "storefront-query-builder": "https://github.com/DivanteLtd/storefront-query-builder.git",
