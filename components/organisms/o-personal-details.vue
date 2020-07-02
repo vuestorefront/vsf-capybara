@@ -234,10 +234,10 @@ export default {
       openModal: 'openModal'
     }),
     login () {
-      this.openModal({name: ModalList.Auth, payload: 'login'})
+      this.openModal({ name: ModalList.Auth, payload: 'login' })
     },
     openTermsAndConditionsModal () {
-      this.openModal({name: ModalList.TermsAndConditions})
+      this.openModal({ name: ModalList.TermsAndConditions })
     }
   }
 };

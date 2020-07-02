@@ -15,7 +15,7 @@ export const instagramStore = {
     }
   },
   actions: {
-    async updateInstagramImages ({commit, rootState}, data) {
+    async updateInstagramImages ({ commit, rootState }, data) {
       let mainImageResource = rootState.storeView && rootState.storeView.storeCode ? `banners/${rootState.storeView.storeCode}_instagram-images` : `instagram-images`
       try {
         // Workaround to get jest --watch to work so don't change the import sting to a template string

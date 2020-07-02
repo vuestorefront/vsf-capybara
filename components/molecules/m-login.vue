@@ -75,7 +75,7 @@ export default {
     }),
     switchElem (to) {
       this.$v.$reset();
-      this.openModal({name: ModalList.Auth, payload: to})
+      this.openModal({ name: ModalList.Auth, payload: to })
     },
     login () {
       this.$v.$touch();
@@ -103,7 +103,7 @@ export default {
             this.onFailure(result);
           } else {
             this.onSuccess(i18n.t('You are logged in!'));
-            this.closeModal({name: ModalList.Auth});
+            this.closeModal({ name: ModalList.Auth });
           }
         })
         .catch(err => {
