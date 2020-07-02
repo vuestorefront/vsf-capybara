@@ -7,7 +7,7 @@ function calculateBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || []
   const selectedBundleOptions = Object.values(get(product, 'product_option.extension_attributes.bundle_options', {}))
   const price = getBundleOptionPrice(
-    getBundleOptionsValues(selectedBundleOptions, allBundleOptions)
+    getBundleOptionsValues(selectedBundleOptions as any[], allBundleOptions)
   )
 
   return price.priceInclTax
