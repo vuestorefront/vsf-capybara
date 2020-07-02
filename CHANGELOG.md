@@ -7,19 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - UNRELEASED
 
-
 ### Added
 ### Changed / Improved
 
 - Update sfui version to 0.7.11
 - Improved the background of MegaMenu (#401)
-
-## [1.0.1] - 2020.06.02
-
-### Added
-### Changed / Improved
-
-- Update sfui version to 0.7.11
 
 ## [1.0.1] - 2020.06.02
 
