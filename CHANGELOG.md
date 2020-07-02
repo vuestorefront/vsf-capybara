@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed / Improved
 
 - Update sfui version to 0.7.11
+- Changed the banner links to correct path (#379)
 - Improved the background of MegaMenu (#401)
 
 ## [1.0.1] - 2020.06.02
