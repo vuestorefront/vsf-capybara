@@ -156,7 +156,7 @@ export default {
   },
   methods: {
     closeMicrocartExtend () {
-      this.$store.dispatch('ui/toggleMicrocart');
+      this.$store.dispatch('ui/closeMicrocart')
     },
     onEscapePress () {
       this.closeMicrocartExtend();

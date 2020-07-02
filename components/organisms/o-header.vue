@@ -98,7 +98,10 @@ export default {
       isSearchPanelVisible: state => state.ui.searchpanel
     }),
     ...mapState('ui', ['isMobileMenu']),
-    ...mapGetters('category', ['getCategories', 'getCurrentCategory']),
+    ...mapGetters('category', ['getCurrentCategory']),
+    ...mapGetters({
+      getCategories: 'category-next/getMenuCategories'
+    }),
     ...mapGetters('user', ['isLoggedIn']),
     activeIcon () {
       return this.isLoggedIn ? 'account' : '';
