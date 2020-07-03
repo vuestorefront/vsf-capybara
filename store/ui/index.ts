@@ -75,6 +75,12 @@ export const uiStore = {
       supportsWebP.then(isWebpSupported => {
         commit('setWebpSupport', isWebpSupported);
       })
+    },
+    closeMicrocart ({ commit, state }) {
+      if (state.microcart) commit('setMicrocart', false)
+    },
+    closeWishlist ({ commit, state }) {
+      if (state.wishlist) commit('setWishlist', false)
     }
   }
 };

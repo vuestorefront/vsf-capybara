@@ -128,7 +128,7 @@
         <template v-for="(filters, filterType) in availableFilters">
           <SfHeading :level="4" :title="$t(filterType)" :key="filterType" class="filters__title sf-heading--left" />
           <template v-if="filterType === 'color_filter'">
-            <div class="filters__colors" :key="filterType">
+            <div class="filters__colors" :key="filterType + 'filter'">
               <SfColor
                 v-for="filter in filters"
                 :key="filter.id"
@@ -286,7 +286,7 @@ export default {
       getAvailableFilters: 'category-next/getAvailableFilters',
       getCurrentFilters: 'category-next/getCurrentFilters',
       getSystemFilterNames: 'category-next/getSystemFilterNames',
-      getCategories: 'category/getCategories',
+      getCategories: 'category-next/getMenuCategories',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
       getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
     }),
@@ -419,8 +419,9 @@ export default {
       }
     }
   },
-  async asyncData ({ store, route }) {
+  async asyncData ({ store, route, context }) {
     // this is for SSR purposes to prefetch data - and it's always executed before parent component methods
+    if (context) context.output.cacheTags.add('category')
     await composeInitialPageState(store, route);
   },
   async beforeRouteEnter (to, from, next) {

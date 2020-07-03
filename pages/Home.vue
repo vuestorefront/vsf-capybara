@@ -56,7 +56,6 @@
 import { mapState, mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
-import Home from '@vue-storefront/core/pages/Home';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
@@ -82,7 +81,6 @@ export default {
     ONewsletter,
     AImagesGrid
   },
-  mixins: [Home],
   data () {
     return {
       loading: true,
@@ -120,8 +118,9 @@ export default {
       localStorage.removeItem('redirect');
     }
   },
-  async asyncData ({ store }) {
+  async asyncData ({ store, context }) {
     Logger.info('Calling asyncData in Home (theme)')();
+    if (context) context.output.cacheTags.add(`home`)
 
     await Promise.all([
       store.dispatch('homepage/fetchNewCollection'),
@@ -141,6 +140,12 @@ export default {
       });
     } else {
       next();
+    }
+  },
+  metaInfo () {
+    return {
+      title: this.$route.meta.title || this.$i18n.t('Home Page'),
+      meta: this.$route.meta.description ? [{ vmid: 'description', name: 'description', content: this.$route.meta.description }] : []
     }
   }
 };
