@@ -66,18 +66,16 @@ export default {
       }
       let relatedProductsQuery = prepareRelatedQuery(key, sku);
 
-      const { items } = await this.$store.dispatch('product/findProducts', {
+      const response = await this.$store.dispatch('product/list', {
         query: relatedProductsQuery,
         size: 8,
-        options: {
-          populateRequestCacheTags: false,
-          prefetchGroupProducts: false
-        }
+        prefetchGroupProducts: false,
+        updateState: false
       });
-      if (items.length) {
+      if (response) {
         this.$store.dispatch('product/related', {
           key: this.type,
-          items
+          items: response.items
         });
         this.$forceUpdate();
       }

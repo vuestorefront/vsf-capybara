@@ -101,6 +101,7 @@ export default {
       getCurrentProduct: 'product/getCurrentProduct',
       getProductGallery: 'product/getProductGallery',
       getCurrentProductConfiguration: 'product/getCurrentProductConfiguration',
+      getOriginalProduct: 'product/getOriginalProduct',
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
       promotedOffers: 'promoted/getPromotedOffers',
@@ -175,7 +176,7 @@ export default {
   },
   async mounted () {
     await Promise.all([
-      this.$store.dispatch('review/list', { productId: this.getCurrentProduct.id }),
+      this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
       this.$store.dispatch('instagram/updateInstagramImages')
     ])
   },

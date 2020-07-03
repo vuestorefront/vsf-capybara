@@ -66,7 +66,7 @@ export default {
       isWebpSupported: state => state.ui.isWebpSupported
     }),
     ...mapGetters({
-      getCategories: 'category-next/getMenuCategories',
+      getCategories: 'category/getCategories',
       getCurrentCategory: 'category/getCurrentCategory',
       getPromotedOffers: 'promoted/getPromotedOffers'
     }),
