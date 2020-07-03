@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 03.07.2020
+
+### Added
+### Changed / Improved
+
+- Update sfui version to 0.7.11
+- Changed the banner links to correct path (#379)
+- Improved the background of MegaMenu (#401)
+- fix problem with changing product color - should be changed product image
+  fix close sidebar when push esc button
+  add cacheTags to pages
+  remove Home page mixin - (#410)
+
 ## [1.0.1] - 2020.06.02
 
 ### Added

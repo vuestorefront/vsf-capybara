@@ -108,8 +108,8 @@ export default {
             {
               name: 'My account',
               ...this.isLoggedIn
-                ? {link: '/my-account'}
-                : {clickHandler: () => this.openModal({name: ModalList.Auth, payload: 'login'})}
+                ? { link: '/my-account' }
+                : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
             },
             { name: 'Delivery', link: '/delivery' },
             { name: 'Return policy', link: '/returns' }
@@ -145,7 +145,7 @@ export default {
       openModal: 'openModal'
     }),
     showLanguageSwitcher () {
-      this.openModal({name: ModalList.LanguageSwitcher})
+      this.openModal({ name: ModalList.LanguageSwitcher })
     }
   }
 };
