@@ -84,7 +84,7 @@ export default {
       openModal: 'openModal'
     }),
     onOrderConfirmation (payload) {
-      this.openModal({name: ModalList.OrderConfirmation, payload});
+      this.openModal({ name: ModalList.OrderConfirmation, payload });
     },
     fetchMenuData () {
       return this.$store.dispatch('category/list', {
@@ -98,7 +98,7 @@ export default {
             ? config.entities.category.includeFields
             : null,
         skipCache: isServer
-      });
+      })
     }
   },
   serverPrefetch () {

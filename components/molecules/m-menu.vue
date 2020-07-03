@@ -1,5 +1,5 @@
 <template>
-  <div class="m-menu sf-mega-menu">
+  <div class="m-menu sf-mega-menu bg-white">
     <SfMegaMenu
       :title="title || currentCategoryTitle"
       :visible="visible"

@@ -49,7 +49,6 @@ export default {
   },
   mixins: [SearchPanelMixin],
   computed: {
-    ...mapGetters('category', ['getCategories']),
     ...mapGetters('user', ['isLoggedIn']),
     ...mapState({
       isSearchPanelVisible: state => state.ui.searchpanel

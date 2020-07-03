@@ -12,7 +12,7 @@ export const defaultContentStore = {
     }))
   },
   actions: {
-    async updateDefaultContent ({commit, rootState}, data) {
+    async updateDefaultContent ({ commit, rootState }, data) {
       let defaultContentResource = rootState.storeView && rootState.storeView.storeCode
         ? `${rootState.storeView.storeCode}_default-content`
         : `default-content`

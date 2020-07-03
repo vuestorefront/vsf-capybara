@@ -78,7 +78,7 @@ export default {
     }),
     switchElem (to) {
       this.$v.$reset();
-      this.openModal({name: ModalList.Auth, payload: to})
+      this.openModal({ name: ModalList.Auth, payload: to })
     },
     register () {
       this.$v.$touch();
@@ -111,7 +111,7 @@ export default {
               password: this.password
             });
             this.onSuccess(i18n.t('You are logged in!'));
-            this.closeModal({name: ModalList.Auth});
+            this.closeModal({ name: ModalList.Auth });
           }
         })
         .catch(err => {

@@ -9,7 +9,7 @@
         "webp": "/assets/banner/webp/bannerF.webp",
         "fallback": "/assets/banner/png/bannerF.png"
       },
-      "link": "/women/tops-women/tees-women/tees-25",
+      "link": "/women.html",
       "slot": "banner-A"
     },
     {
@@ -21,7 +21,7 @@
         "webp": "/assets/banner/webp/bannerE.webp",
         "fallback": "/assets/banner/png/bannerE.png"
       },
-      "link": "/women/tops-women/jackets-women/jackets-23",
+      "link": "/men.html",
       "slot": "banner-B"
     },
     {
@@ -31,7 +31,7 @@
         "webp": "/assets/banner/webp/bannerC.webp",
         "fallback": "/assets/banner/png/bannerC.png"
       },
-      "link": "/men/tops-men/tees-men/tees-16",
+      "link": "/gear.html",
       "slot": "banner-C"
     },
     {
@@ -41,7 +41,7 @@
         "webp": "/assets/banner/webp/bannerG.webp",
         "fallback": "/assets/banner/png/bannerG.png"
       },
-      "link": "/gear/gear-3",
+      "link": "/gear.html",
       "slot": "banner-D"
     }
   ],

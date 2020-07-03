@@ -57,7 +57,7 @@ export default {
     }),
     switchElem (to) {
       this.$v.$reset();
-      this.openModal({name: ModalList.Auth, payload: to})
+      this.openModal({ name: ModalList.Auth, payload: to })
     },
     resetPassword () {
       this.$v.$touch();

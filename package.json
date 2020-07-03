@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/theme-capybara",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "New theme for Vue Storefront based on Storefront UI",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "vue-no-ssr": "^0.2.2",
     "vue-offline": "^1.0.8",
     "vue-progressbar": "^0.7.5",
-    "vuelidate": "^0.6.2",
+    "vuelidate": "0.6.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
