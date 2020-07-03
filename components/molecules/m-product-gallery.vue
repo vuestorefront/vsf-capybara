@@ -53,14 +53,14 @@ export default {
             selectThis = false
           }
         }
-        return selectThis || (image.id && image.id.color === this.configuration.color.id)
+        return selectThis || (image.id && image.id.color && String(image.id.color) === String(this.configuration.color.id))
       })
 
       if (!variantImage) {
         variantImage = this.gallery.find(image => {
           return typeof image.id.color !== 'undefined' &&
             typeof this.configuration.color !== 'undefined' &&
-            image.id.color === this.configuration.color.id
+            String(image.id.color) === String(this.configuration.color.id)
         })
       }
 

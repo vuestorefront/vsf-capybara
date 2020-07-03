@@ -1,5 +1,5 @@
 <template>
-  <div class="m-menu sf-mega-menu">
+  <div class="m-menu sf-mega-menu bg-white">
     <SfMegaMenu
       :title="title || currentCategoryTitle"
       :visible="visible"
@@ -66,7 +66,7 @@ export default {
       isWebpSupported: state => state.ui.isWebpSupported
     }),
     ...mapGetters({
-      getCategories: 'category/getCategories',
+      getCategories: 'category-next/getMenuCategories',
       getCurrentCategory: 'category/getCurrentCategory',
       getPromotedOffers: 'promoted/getPromotedOffers'
     }),

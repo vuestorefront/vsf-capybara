@@ -45,7 +45,7 @@ export default {
       openModal: 'openModal'
     }),
     showNewsletterPopup () {
-      this.openModal({name: ModalList.Newsletter})
+      this.openModal({ name: ModalList.Newsletter })
     }
   }
 }
