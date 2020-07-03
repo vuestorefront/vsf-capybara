@@ -13,9 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update sfui version to 0.7.11
 - Changed the banner links to correct path (#379)
 - Improved the background of MegaMenu (#401)
-- use product/findProducts instead of product/list
-  use category-next/fetchMenuCategories instead of category/list
-  fix problem with changing product color - should be changed product image
+- fix problem with changing product color - should be changed product image
   fix close sidebar when push esc button
   add cacheTags to pages
   remove Home page mixin - (#410)
