@@ -66,6 +66,7 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
+import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
 
 export default {
   name: 'Product',
@@ -154,7 +155,8 @@ export default {
       }
     }
   },
-  async asyncData ({ store, route }) {
+  async asyncData ({ store, route, context }) {
+    if (context) context.output.cacheTags.add('product')
     const product = await store.dispatch('product/loadProduct', {
       parentSku: route.params.parentSku,
       childSku:
@@ -188,8 +190,9 @@ export default {
     }
   },
   methods: {
-    configurableOptionCallback (variant) {
-      this.$bus.$emit('filter-changed-product', variant)
+    async configurableOptionCallback (variant) {
+      const selectedConfiguration = Object.assign({ attribute_code: variant.type }, variant)
+      await filterChangedProduct(selectedConfiguration, this.$store, this.$router)
       this.getQuantity();
     },
     async getQuantity () {

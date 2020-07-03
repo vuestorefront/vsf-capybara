@@ -156,7 +156,7 @@ export default {
       openModal: 'openModal'
     }),
     openSizeGuide () {
-      this.openModal({name: ModalList.SizeGuide})
+      this.openModal({ name: ModalList.SizeGuide })
     }
   }
 };

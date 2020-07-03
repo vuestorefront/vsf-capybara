@@ -49,7 +49,7 @@ export default {
       return (icon) => {
         switch (icon) {
           case 'home': {
-            const isHomepage = this.$route.name === this.localizedRoute({name: 'home', path: '/'}).name
+            const isHomepage = this.$route.name === this.localizedRoute({ name: 'home', path: '/' }).name
             return isHomepage && !this.isMobileMenu && !this.isSearchPanelVisible
           }
           case 'menu': {
@@ -93,7 +93,7 @@ export default {
       if (this.isLoggedIn) {
         this.$router.push(this.localizedRoute('/my-account'))
       } else {
-        this.openModal({name: ModalList.Auth, payload: 'login'})
+        this.openModal({ name: ModalList.Auth, payload: 'login' })
       }
     },
     goToCart () {
