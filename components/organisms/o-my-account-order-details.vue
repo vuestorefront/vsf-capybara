@@ -193,7 +193,7 @@ export default {
 
       let searchQuery = new SearchQuery()
       searchQuery = searchQuery.applyFilter({ key: 'configurable_children.sku', value: { 'in': arrayOfSKUs } })
-      this.$store.dispatch('product/list', { query: searchQuery, start: 0, size: this.order.items.length, updateState: false }, { root: true }).then((resp) => {
+      this.$store.dispatch('product/findProducts', { query: searchQuery, start: 0, size: this.order.items.length, updateState: false }, { root: true }).then((resp) => {
         resp.items.forEach(responseItem => {
           let relatedProduct = this.order.items.find(item => { return item.product_id === responseItem.id })
           this.products.push(Object.assign({}, relatedProduct, responseItem))
