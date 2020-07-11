@@ -8,8 +8,8 @@
 
 <script>
 import get from 'lodash-es/get'
-import DefaultLayout from './layouts/Default'
-import MinimalLayout from './layouts/Minimal'
+const DefaultLayout = () => import(/* webpackChunkName: "vsf-layout-default" */ './layouts/Default')
+const MinimalLayout = () => import(/* webpackChunkName: "vsf-layout-minimal" */ './layouts/Minimal')
 
 export default {
   components: {
