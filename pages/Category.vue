@@ -16,7 +16,7 @@
           class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <SfIcon size="32px" color="#BEBFC4" icon="filter" />
+          <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
           {{ $t("Filters") }}
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
@@ -654,6 +654,9 @@ export default {
       }
     }
   }
+  &__filters-icon {
+    margin: 0 var(--spacer-sm) 0 0;
+  }
   &__label {
     font-family: var(--font-family-secondary);
     font-weight: var(--font-normal);
@@ -661,9 +664,10 @@ export default {
     margin: 0 var(--spacer-2xs) 0 0;
   }
   &__select {
-    --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
+    --select-width: 220px;
     --select-margin: 0;
-    --select-selected-padding: 0 var(--spacer-xl) 0 0;
+    --select-padding: 0;
+    --select-selected-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
   }
   &__sort {
     display: flex;
@@ -784,8 +788,13 @@ export default {
       margin: calc(var(--spacer-xl) + var(--spacer-base)) 0 var(--spacer-xs) 0;
     }
   }
+  &__colors {
+    display: flex;
+    flex-wrap: wrap;
+  }
   &__color {
-    margin: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) 0;
+    --color-size: 2rem;
+    margin: var(--spacer-xs) var(--spacer-sm) var(--spacer-xs) 0;
   }
   &__item {
     --filter-label-color: var(--c-secondary-variant);
