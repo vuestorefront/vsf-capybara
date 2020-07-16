@@ -25,7 +25,7 @@
       <SfDivider v-show="reviewsCount" />
       <MReviewList v-show="reviewsCount" :reviews="reviews" />
     </SfTab>
-    <SfTab v-if="attributes.length" :title="$t('Attribute')">
+    <SfTab v-if="attributes.length" :title="$t('Additional Information')">
       <AProductAttribute
         v-for="(attribute, i) in attributes"
         :key="i"
