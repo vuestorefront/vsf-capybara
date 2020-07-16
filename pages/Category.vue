@@ -664,10 +664,12 @@ export default {
     margin: 0 var(--spacer-2xs) 0 0;
   }
   &__select {
-    --select-width: 220px;
     --select-margin: 0;
     --select-padding: 0;
     --select-selected-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
+    @include for-desktop {
+      --select-width: 220px;
+    }
   }
   &__sort {
     display: flex;
