@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed / Improved
 
 - Adjusted the error page (#398)
+- Use short description in PDP top section (#393)
 - Fixed `isAddToCartDisabled` computed property (#377)
 - Update filters bar on category page (#381)
 
