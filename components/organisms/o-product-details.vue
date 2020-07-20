@@ -176,9 +176,11 @@ export default {
     }
   }
   &__add-to-cart {
-    margin: var(--spacer-base) var(--spacer-sm) 0;
+    @include for-mobile {
+      margin: var(--spacer-sm) var(--spacer-sm) 0;
+    }
     @include for-desktop {
-      margin-top: var(--spacer-2xl);
+      margin-top: var(--spacer-sm);
     }
   }
   &__guide,
