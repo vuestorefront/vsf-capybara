@@ -61,12 +61,22 @@
               :error-message="$t('Field is required.')"
               class="form__element form__element--half"
             />
-            <SfInput
+            <SfSelect
               v-model="editedAddress.state"
               name="state"
               :label="$t('State/Province')"
-              class="form__element form__element--half form__element--half-even"
-            />
+              required
+              :error-message="$t('Field is required.')"
+              class="sf-select--underlined form__select form__element form__element--half form__select form__element--half-even"
+            >
+              <SfSelectOption
+                v-for="state in stateOptions"
+                :key="state.code"
+                :value="state.name"
+              >
+                {{ state.name }}
+              </SfSelectOption>
+            </SfSelect>
             <SfInput
               v-model="editedAddress.postcode"
               name="postcode"
@@ -170,7 +180,9 @@
 import { required, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { SfTabs, SfInput, SfButton, SfSelect, SfIcon } from '@storefront-ui/vue';
+import config from 'config';
 const Countries = require('@vue-storefront/i18n/resource/countries.json')
+const States = require('@vue-storefront/i18n/resource/states.json')
 
 export default {
   name: 'OMyAccountShippingDetails',
@@ -190,12 +202,21 @@ export default {
         country: '',
         telephone: ''
       },
-      countries: Countries
+      countries: Countries,
+      states: States
     }
   },
   computed: {
     addresses () {
       return this.$store.state.user.current.addresses
+    },
+    stateOptions () {
+      let countryCode = this.editedAddress.country ? this.countries.find(country => country.name === this.editedAddress.country).code : config.i18n.defaultCountry
+      if (this.states[countryCode] !== null) {
+        return this.states[countryCode]
+      } else {
+        return []
+      }
     }
   },
   methods: {
@@ -248,7 +269,8 @@ export default {
         lastname: this.editedAddress.lastname,
         street: [this.editedAddress.streetName, this.editedAddress.apartment],
         city: this.editedAddress.city,
-        ...(this.editedAddress.state ? { region: { region: this.editedAddress.state } } : {}),
+        ...(this.editedAddress.state && this.stateOptions ? { region: { region: this.editedAddress.state, region_id: this.stateOptions.find(state => state.name === this.editedAddress.state).code || this.editedAddress.state, region_code: this.stateOptions.find(state => state.name === this.editedAddress.state).code || this.editedAddress.state } } : {}),
+        ...(this.stateOptions ? { region_id: this.stateOptions.find(state => state.name === this.editedAddress.state).code || this.editedAddress.state } : {}),
         country_id: this.countries.find(country => country.name === this.editedAddress.country).code || this.editedAddress.country,
         postcode: this.editedAddress.postcode,
         ...(this.editedAddress.telephone ? { telephone: this.editedAddress.telephone } : {})
@@ -297,6 +319,9 @@ export default {
       postcode: {
         required,
         minLength: minLength(3)
+      },
+      state: {
+        required
       },
       country: {
         required

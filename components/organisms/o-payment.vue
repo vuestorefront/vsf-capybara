@@ -73,12 +73,20 @@
         :error-message="$t('Field is required')"
         @blur="$v.payment.city.$touch()"
       />
-      <SfInput
+      <SfSelect
         v-model.trim="payment.state"
         class="form__element form__element--half form__element--half-even"
         name="state"
         :label="$t('State / Province')"
-      />
+      >
+        <SfSelectOption
+          v-for="state in stateOptions"
+          :key="state.code"
+          :value="state.code"
+        >
+          {{ state.name }}
+        </SfSelectOption>
+      </SfSelect>
       <SfInput
         v-model.trim="payment.zipCode"
         class="form__element form__element--half"
@@ -196,6 +204,7 @@
 import { required, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
+import config from 'config';
 import {
   SfInput,
   SfRadio,
@@ -205,9 +214,15 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+const States = require('@vue-storefront/i18n/resource/states.json')
 
 export default {
   name: 'OPayment',
+  data () {
+    return {
+      states: States
+    }
+  },
   components: {
     SfInput,
     SfRadio,
@@ -279,6 +294,16 @@ export default {
   },
   mounted () {
     createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
+  },
+  computed: {
+    stateOptions () {
+      let countryCode = this.payment.country ? this.payment.country : config.i18n.defaultCountry
+      if (this.states[countryCode] !== null) {
+        return this.states[countryCode]
+      } else {
+        return []
+      }
+    }
   }
 };
 </script>
