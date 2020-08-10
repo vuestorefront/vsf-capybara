@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use short description in PDP top section (#393)
 - Fixed `isAddToCartDisabled` computed property (#377)
 - Update filters bar on category page (#381)
+- Use i18n wrapper for the login title (#438)
 
 ## [1.0.2] - 03.07.2020
 
