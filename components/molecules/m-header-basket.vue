@@ -27,7 +27,7 @@ export default
   box-sizing: border-box;
   height: 64px;
   width: 62px;
-   border: 2px solid #EFEFEF;
+  border: 2px solid #EFEFEF;
   border-radius: 3px;
   background-color: #FFFFFF;
 } 

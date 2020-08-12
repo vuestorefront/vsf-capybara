@@ -1,9 +1,13 @@
 <template>
   <div class="o-header-minimal">
     <ALogo />
-     <div class="search"></div>
-    <div class="rectangle"> <MHeaderCompte /></div>
-    <div class="rectangle"> <MHeaderBasket /></div>
+    <div class="search"></div>
+     <MHeaderCompte /> 
+     <MHeaderBasket />
+    <AHeaderContact />
+    <MHeaderDrill />
+    
+    
   </div>
 </template>
 
@@ -11,11 +15,14 @@
 import ALogo from 'theme/components/atoms/a-logo'; 
 import MHeaderCompte from 'theme/components/molecules/m-header-compte'; 
 import MHeaderBasket from 'theme/components/molecules/m-header-basket'; 
+import AHeaderContact from 'theme/components/atoms/a-header-contact'; 
+import MHeaderDrill from 'theme/components/molecules/m-header-drill'; 
 
+import { SfImage } from '@storefront-ui/vue';
 
 export default {
   name: 'OHeaderMinimal',
-  components: { ALogo , MHeaderCompte , MHeaderBasket }
+  components: { ALogo , MHeaderCompte , MHeaderBasket , AHeaderContact , MHeaderDrill }
 };
 </script>
 
@@ -26,13 +33,7 @@ export default {
   .a-logo 
   {
     margin: 20px;
-  }  
-
-  .rectangle
-  {
-    margin: 20px;
-  }
-
+  }   
   .search 
   {
   box-sizing: border-box;
@@ -43,7 +44,6 @@ export default {
   background-color: #FFFFFF;
   margin: 20px;
 }
-
 }  
   
 </style>
