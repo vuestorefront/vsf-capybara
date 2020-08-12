@@ -43,7 +43,7 @@
 
     <SfSection
       v-if="isOnline"
-      :title-heading="$t('Share Your Look')"
+      :title-heading="$t('Share your look')"
       subtitle-heading="#YOURLOOK"
       class="section"
     >
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+ 
 import { mapState, mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -63,6 +64,7 @@ import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 
 import {
+  SfProperty,
   SfHero,
   SfSection,
   SfBannerGrid,
@@ -72,6 +74,7 @@ import {
 export default {
   name: 'Home',
   components: {
+    SfProperty,
     LazyHydrate,
     SfHero,
     SfSection,

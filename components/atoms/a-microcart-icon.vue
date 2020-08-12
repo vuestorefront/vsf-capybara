@@ -6,7 +6,7 @@
     <SfIcon
       size="xs"
       :icon="floatingIcon ? 'add_to_cart' : 'empty_cart'"
-      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon' : 'sf-header__icon'"
+      :class="floatingIcon ? 'sf-bottom-navigation__floating-icon icon-size' : 'sf-header__icon icon-size'"
       :aria-label="$t('Open microcart')"
     >
       <template #badge>
@@ -49,5 +49,9 @@ export default {
   .sf-header__icon {
     cursor: pointer;
   }
+  .icon-size
+{
+ --icon-size: 2rem;
+}
 }
 </style>

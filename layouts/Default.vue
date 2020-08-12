@@ -2,7 +2,7 @@
   <div class="default-layout">
     <MLoader />
     <div id="viewport">
-      <OHeader />
+      <OHeaderMinimal />
       <OMicrocart />
       <slot />
       <OFooter />
@@ -19,6 +19,7 @@
 <script>
 import { mapActions } from 'vuex';
 import OHeader from 'theme/components/organisms/o-header';
+import OHeaderMinimal from 'theme/components/organisms/o-header-minimal';
 import OMicrocart from 'theme/components/organisms/o-microcart';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
@@ -35,6 +36,7 @@ import { ModalList } from 'theme/store/ui/modals'
 export default {
   components: {
     OHeader,
+    OHeaderMinimal,
     OMicrocart,
     OFooter,
     MLoader,
