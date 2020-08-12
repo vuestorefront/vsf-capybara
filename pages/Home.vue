@@ -10,50 +10,47 @@
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
-        :title="hero.title"
-        :subtitle="hero.subtitle"
-        :button-text="hero.buttonText"
-        :background="hero.background"
         :image="hero.image"
         :class="hero.className"
       />
     </SfHero>
+    <div class="container">
+      <SfBannerGrid :banner-grid="1" class="banner-grid">
+        <template v-for="(banner, i) in banners" #[banner.slot]>
+          <router-link :key="i" :to="banner.link">
+            <SfBanner
+              :subtitle="banner.subtitle"
+              :title="banner.title"
+              :description="banner.description"
+              :button-text="banner.buttonText"
+              :image="banner.image"
+            />
+          </router-link>
+        </template>
+      </SfBannerGrid>
 
-    <SfBannerGrid :banner-grid="1" class="banner-grid">
-      <template v-for="(banner, i) in banners" #[banner.slot]>
-        <router-link :key="i" :to="banner.link">
-          <SfBanner
-            :subtitle="banner.subtitle"
-            :title="banner.title"
-            :description="banner.description"
-            :button-text="banner.buttonText"
-            :image="banner.image"
-          />
-        </router-link>
-      </template>
-    </SfBannerGrid>
+      <ONewsletter />
 
-    <ONewsletter />
+      <SfSection :title-heading="$t('Bestsellers')" class="section">
+        <lazy-hydrate :trigger-hydration="!loading">
+          <m-product-carousel :products="newCollection" />
+        </lazy-hydrate>
+      </SfSection>
 
-    <SfSection :title-heading="$t('Bestsellers')" class="section">
-      <lazy-hydrate :trigger-hydration="!loading">
-        <m-product-carousel :products="newCollection" />
-      </lazy-hydrate>
-    </SfSection>
-
-    <SfSection
-      v-if="isOnline"
-      :title-heading="$t('Share your look')"
-      subtitle-heading="#YOURLOOK"
-      class="section"
-    >
-      <AImagesGrid :images="instagramImages" />
-    </SfSection>
+      <SfSection
+        v-if="isOnline"
+        :title-heading="$t('Share your look')"
+        subtitle-heading="#YOURLOOK"
+        class="section"
+      >
+        <AImagesGrid :images="instagramImages" />
+      </SfSection>
+    </div>  
   </div>
 </template>
 
 <script>
- 
+
 import { mapState, mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -159,15 +156,15 @@ export default {
 
 #home {
   box-sizing: border-box;
-  padding: 0 var(--spacer-sm);
-  @include for-desktop {
-    padding: 0 var(--spacer-sm);
-    max-width: 1272px;
-    margin: 0 auto;
-  }
+  padding: 0;
+  margin: 0 auto;
+}
+.container{
+  max-width: 1270px;
+  margin: 0 auto;
 }
 .sf-hero-item {
-  --hero-item-height: 14rem;
+  --hero-item-height: 25rem;
   height: initial;
 }
 .banner-grid {
