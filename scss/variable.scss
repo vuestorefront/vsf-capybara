@@ -1,0 +1,107 @@
+:root {
+    --c-black: #1d1f22;
+    --c-black-base: 29, 31, 34;
+    --c-black-lighten: #292c30;
+    --c-black-darken: #111214;
+    --c-white: #ffffff;
+    --_c-green-primary: #254E91;
+    --_c-green-primary-base: 37, 78, 145;
+    --_c-green-primary-lighten: #3B78DD;
+    --_c-green-primary-darken: #2D415A;
+    --_c-green-secondary: #9ee2b0;
+    --_c-green-secondary-base: 158, 226, 176;
+    --_c-green-secondary-lighten: #b2e8c0;
+    --_c-green-secondary-darken: #8adca0;
+    --_c-dark-primary: #1d1f22;
+    --_c-dark-primary-base: 29, 31, 34;
+    --_c-dark-primary-lighten: #292c30;
+    --_c-dark-primary-darken: #111214;
+    --_c-dark-secondary: #43464E;
+    --_c-dark-secondary-base: 67, 70, 78;
+    --_c-dark-secondary-lighten: #4f525c;
+    --_c-dark-secondary-darken: #373a40;
+    --_c-gray-primary: #72757E;
+    --_c-gray-primary-base: 114, 117, 126;
+    --_c-gray-primary-lighten: #7f828b;
+    --_c-gray-primary-darken: #666971;
+    --_c-gray-secondary: #8D8F9A;
+    --_c-gray-secondary-base: 141, 143, 154;
+    --_c-gray-secondary-lighten: #9b9ca6;
+    --_c-gray-secondary-darken: #7f828e;
+    --_c-gray-accent: #e0e0e1;
+    --_c-gray-accent-base: 224, 224, 225;
+    --_c-gray-accent-lighten: #ededee;
+    --_c-gray-accent-darken: #d3d3d4;
+    --_c-light-primary: #f1f2f3;
+    --_c-light-primary-base: 241, 242, 243;
+    --_c-light-primary-lighten: white;
+    --_c-light-primary-darken: #e3e5e7;
+    --_c-light-secondary: #ffffff;
+    --_c-light-secondary-base: 255, 255, 255;
+    --_c-light-secondary-lighten: white;
+    --_c-light-secondary-darken: #f2f2f2;
+    --_c-red-primary: #d12727;
+    --_c-red-primary-base: 209, 39, 39;
+    --_c-red-primary-lighten: #da3838;
+    --_c-red-primary-darken: #bc2323;
+    --_c-red-secondary: #fcede8;
+    --_c-red-secondary-base: 252, 237, 232;
+    --_c-red-secondary-lighten: white;
+    --_c-red-secondary-darken: #f9dbd1;
+    --_c-yellow-primary: #ecc713;
+}
+
+@font-face{
+    font-family: 'Poppins-Regular';
+    src: url('../font/Poppins-Regular.ttf')  format('truetype');
+}
+
+@font-face{
+    font-family: 'Poppins-Medium';
+    src: url('../font/Poppins-Medium.ttf')  format('truetype');
+}
+
+@font-face{
+    font-family: 'Poppins-Bold';
+    src: url('../font/Poppins-Bold.ttf')  format('truetype');
+}
+
+:root {
+    // font-family
+    --font-family-primary: 'Poppins-Regular', serif;
+    --font-family-secondary: 'Poppins-Regular', sans-serif;
+
+    --font-family-medium: 'Poppins-Medium', serif;
+    --font-family-medium: 'Poppins-Bold', serif;
+    
+    // font-weight
+    --font-light: 300;
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    --font-extra-bold: 800;
+    --font-black: 900;
+    // font-size
+    --font-2xs: 0.625rem; //10px
+    --font-xs: 0.75rem; //12px
+    --font-sm: 0.875rem; //14px
+    --font-base: 1rem; //16px
+    --font-lg: 1.125rem; //18px
+    --font-xl: 1.5rem; //24px
+    // heading font-size
+    --h1-font-size: 1.375rem; //22px
+    --h2-font-size: 1.375rem; //22px
+    --h3-font-size: 1rem; //16px
+    --h4-font-size: 0.875rem; //14px
+    --h5-font-size: 0.75rem; //12px
+    --h6-font-size: 0.75rem; //12px
+    @include for-desktop {
+      --h1-font-size: 2.625rem; //42px
+      --h2-font-size: 2.625rem; //42px
+      --h3-font-size: 1.625rem; //26px
+      --h4-font-size: 1.125rem; //18px
+      --h5-font-size: 0.875rem; //14px
+      --h6-font-size: 0.625rem; //10px
+    }
+  }
