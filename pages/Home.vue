@@ -19,36 +19,13 @@
       />
     </SfHero>
 
-    <SfBannerGrid :banner-grid="1" class="banner-grid">
-      <template v-for="(banner, i) in banners" #[banner.slot]>
-        <router-link :key="i" :to="banner.link">
-          <SfBanner
-            :subtitle="banner.subtitle"
-            :title="banner.title"
-            :description="banner.description"
-            :button-text="banner.buttonText"
-            :image="banner.image"
-          />
-        </router-link>
-      </template>
-    </SfBannerGrid>
-
-    <ONewsletter />
-
-    <SfSection :title-heading="$t('Bestsellers')" class="section">
-      <lazy-hydrate :trigger-hydration="!loading">
-        <m-product-carousel :products="newCollection" />
-      </lazy-hydrate>
-    </SfSection>
-
-    <SfSection
-      v-if="isOnline"
-      :title-heading="$t('Share your look')"
-      subtitle-heading="#YOURLOOK"
-      class="section"
-    >
-      <AImagesGrid :images="instagramImages" />
-    </SfSection>
+      <div class="container">
+        <SfSection :title-heading="$t('Bestsellers')" class="section">
+          <lazy-hydrate :trigger-hydration="!loading">
+            <m-product-carousel :products="newCollection" />
+          </lazy-hydrate>
+        </SfSection>
+      </div>
   </div>
 </template>
 
@@ -159,15 +136,16 @@ export default {
 
 #home {
   box-sizing: border-box;
-  padding: 0 var(--spacer-sm);
-  @include for-desktop {
-    padding: 0 var(--spacer-sm);
-    max-width: 1272px;
-    margin: 0 auto;
-  }
+  padding: 0;
+}
+
+.container{
+   max-width: 1270px;
+   margin: 0 auto;
+   padding: 10px 0;
 }
 .sf-hero-item {
-  --hero-item-height: 14rem;
+  --hero-item-height: 25rem;
   height: initial;
 }
 .banner-grid {
