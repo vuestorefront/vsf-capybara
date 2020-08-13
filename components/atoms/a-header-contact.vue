@@ -1,12 +1,15 @@
 <template>
   <div class="rectangle_contact">
-    <div class="text_upper">0808 280 8029</div>  
-    <div class="text_lower">Call Weekdays Until 5 PM</div>   
-  </div>  
+    <div class="text_upper">
+      0808 280 8029
+    </div>
+    <div class="text_lower">
+      Call Weekdays Until 5 PM
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-
 
 .text_upper {
   height: 25px;

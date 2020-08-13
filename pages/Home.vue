@@ -10,27 +10,24 @@
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
-        :title="hero.title"
-        :subtitle="hero.subtitle"
-        :button-text="hero.buttonText"
         :background="hero.background"
         :image="hero.image"
         :class="hero.className"
       />
     </SfHero>
 
-      <div class="container">
-        <SfSection :title-heading="$t('Bestsellers')" class="section">
-          <lazy-hydrate :trigger-hydration="!loading">
-            <m-product-carousel :products="newCollection" />
-          </lazy-hydrate>
-        </SfSection>
-      </div>
+    <div class="container">
+      <SfSection :title-heading="$t('Bestsellers')" class="section">
+        <lazy-hydrate :trigger-hydration="!loading">
+          <m-product-carousel :products="newCollection" />
+        </lazy-hydrate>
+      </SfSection>
+    </div>
   </div>
 </template>
 
 <script>
- 
+
 import { mapState, mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';

@@ -1,0 +1,51 @@
+header{
+    &.o-header-minimal{
+        border-bottom: 3px solid var(--_c-green-primary-lighten);
+    } 
+    .header-content{
+        .d-flex{
+            padding: 20px;
+        }
+    }
+    .icon-button{
+        margin: 0 15px;
+        button{
+            display: flex;
+            flex-direction: column;
+            padding: 4px 10px;
+            border-radius: 3px;
+            border: 2px solid transparent;
+            small{
+                color: $primary-color;
+                font-size: 10px;
+                --font-family-primary: 'Poppins-Regular';
+            }
+            &:hover{
+                border: 2px solid var(--_c-gray-accent);
+            }
+        }
+    }
+    .avis-banner{
+        position: relative;
+        width: 350px;
+        padding: 0 20px;
+        padding-left: 35px;
+        background-image: url('/assets/images/icon_drill.png');
+        background-repeat: no-repeat;
+        background-size: 35%;
+        background-position: right;
+        .avis-background{
+            display: block;
+            position: absolute;
+            width: 125%;
+            height: 100%;
+            background-color: var(--_c-green-primary); 
+            background-image: linear-gradient(180deg, var(--_c-green-primary) 0%, var(--_c-green-primary-lighten) 100%);
+            z-index: -1;
+            top: 0;
+            left: 0; 
+            transform: skewX(-15deg);
+        }
+    }
+}
+

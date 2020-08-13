@@ -28,7 +28,7 @@
     --_c-gray-secondary-base: 141, 143, 154;
     --_c-gray-secondary-lighten: #9b9ca6;
     --_c-gray-secondary-darken: #7f828e;
-    --_c-gray-accent: #e0e0e1;
+    --_c-gray-accent: #efefef;
     --_c-gray-accent-base: 224, 224, 225;
     --_c-gray-accent-lighten: #ededee;
     --_c-gray-accent-darken: #d3d3d4;
@@ -52,7 +52,7 @@
 }
 
 @font-face{
-    font-family: 'Poppins-Regular';
+    --font-family-primary: 'Poppins-Regular';
     src: url('../font/Poppins-Regular.ttf')  format('truetype');
 }
 
@@ -105,3 +105,16 @@
       --h6-font-size: 0.625rem; //10px
     }
   }
+
+  :root {
+    --spacer-2xs: 0.25rem; // 4px
+    --spacer-xs: 0.5rem; // 8px
+    --spacer-sm: 1rem; // 16px
+    --spacer-base: 1.5rem; // 24px
+    --spacer-lg: 2rem; // 32px
+    --spacer-xl: 2.5rem; // 40px 
+    --spacer-2xl: 5rem; // 80px
+    --spacer-3xl: 10rem; // 160px
+  }
+
+  $primary-color: var(--_c-green-primary);

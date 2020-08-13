@@ -1,0 +1,55 @@
+.d-flex{
+    display: flex;
+    
+    /* --------------  align items  ------------------ */
+    
+    &.align-start{
+        align-items: flex-start;
+    }
+    &.align-center{
+        align-items: center;
+    }
+    &.align-end{
+        align-items: flex-end;
+    }
+     
+    /* --------------  Justify Content  ------------------ */
+    
+    &.justify-start{
+        justify-content: flex-start;
+    }
+    &.justify-center{
+        justify-content: center;
+    }
+    &.justify-end{
+        justify-content: flex-end;
+    }
+    
+    /*  ----------------- wrap ----------------*/
+
+    &.wrap{
+        flex-wrap: wrap;
+    }
+
+    &.no-wrap{
+        flex-wrap: nowrap;
+    }
+
+    /* ---------------- Directions ------------ */
+
+    &.row{
+        flex-direction: row;
+    }
+
+    &.row-reverse{
+        flex-direction: row-reverse;
+    }
+
+    &.col{
+        flex-direction: column;
+    }
+
+    &.col-reverse{
+        flex-direction: column-reverse;
+    }
+}

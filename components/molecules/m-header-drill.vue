@@ -1,58 +1,39 @@
 <template>
-  
-    <SfBanner
-      :class="customClass"
-      :title="title"
-      :subtitle="subtitle"
-      :description="description"
-      :button-text="buttonText"
-      :image="image"
-      :background="background"
-    >
-    <template #subtitle >
-      <div class="text_upper" >
-        We are specialized in DIY and gardening tools
-      </div>
-    </template>
-    <template #description >
-       <AHeaderAvisIcon />
-     
-    </template>
-    </SfBanner> 
+      <div class="avis-banner">
+          <div class="avis-background"></div>
+          <p class="text_upper">
+            We are specialized in DIY and gardening tools
+          </p>
+          <AHeaderAvisIcon />
+     </div>
+ 
 </template>
 <script>
-import { SfBanner } from "@storefront-ui/vue";
-import AHeaderAvisIcon from 'theme/components/atoms/a-header-avis-icon'; 
+
+import AHeaderAvisIcon from 'theme/components/atoms/a-header-avis-icon';
 
 export default {
   components: {
-    SfBanner,
-    AHeaderAvisIcon,
+    AHeaderAvisIcon
   },
-  data() {
+  data () {
     return {
-      title: "",
-      subtitle: "We are specialized in DIY and gardening tools",
+      title: '',
+      subtitle: 'We are specialized in DIY and gardening tools',
       description:
-        "",
-      buttonText: "",
+        '',
+      buttonText: '',
       image: {
-        mobile: "/assets/images/icon_drill.png",
-        desktop: "/assets/images/icon_drill.png",
+        mobile: '/assets/images/icon_drill.png',
+        desktop: '/assets/images/icon_drill.png'
       },
-      background: "#3B78DD",
     };
-  },
+  }
 };
- 
+
 </script>
 <style  lang="scss" scoped>
-.sf-banner 
-{
-   --banner-width : 349px;
-   --banner-height : 117px;   
-     
-  .text_upper 
+  .text_upper
   {
     height: 42px;
     width: 196px;
@@ -62,9 +43,7 @@ export default {
     font-weight: 500;
     letter-spacing: 0;
     line-height: 23px;
-    text-shadow: 0 2px 9px 0 rgba(0,0,0,0.5); 
-  } 
- 
-}
+    text-shadow: 0 2px 9px 0 rgba(0,0,0,0.5);
+  }
 
 </style>

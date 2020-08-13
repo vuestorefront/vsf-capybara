@@ -1,23 +1,21 @@
 <template>
-  <div class="rectangle_compte"> 
-    <AAccountIcon/>
-      <div class="text_compte">Compte
-      </div>
+  <div class="icon-button">
+    <AAccountIcon />
   </div>
 </template>
 <script>
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
- 
+
 export default
- {
-  components: 
+{
+  components:
   {
-    AAccountIcon,
+    AAccountIcon
   },
 
-  data() {
+  data () {
     return {};
-  },
+  }
 };
 </script>
 <style  lang="scss" scoped>
@@ -30,9 +28,8 @@ export default
   border-radius: 3px;
   background-color: #FFFFFF;
 }
- 
 
- .text_compte 
+ .text_compte
  {
   height: 15px;
   width: 42px;

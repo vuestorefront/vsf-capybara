@@ -31,10 +31,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .a-logo {
-  display: inline-flex;
   ::v-deep .sf-header__logo {
     --header-logo-width: 303px;
     --header-logo-height: 66px;
+    margin: 0;
   }
 }
 </style>
