@@ -10,8 +10,13 @@
         <div class="input_rectangle">
           <div class="input_email">Enter your email </div>
         </div>
-        <div class="button_rectangle"><span class="button_text">S'inscrire</span></div>
-       </div>
+         <SfButton
+          class="button_text"
+          :disabled="disabled"
+          :nativeButton="nativeButton"
+          :link="link">S'inscrire
+        </SfButton>
+        </div>
         
     </div> 
    
@@ -92,19 +97,13 @@
   letter-spacing: 0;
   line-height: 18px;
   margin-left: 15px;
-}
+} 
 
-.button_rectangle
-{
+.button_text {
   height: 40px;
   width: 127px;
   border-radius: 3px;
   background-color: #3B78DD;
-}
-
-.button_text {
-  height: 17px;
-  width: 57px;
   color: #FFFFFF;
   font-family: Poppins;
   font-size: 12px;
@@ -112,6 +111,7 @@
   letter-spacing: 0;
   line-height: 18px;
   text-align: center;
+  margin-left: 20px;
 }
   
 </style>
