@@ -21,7 +21,6 @@
   width: 420px;
   border-radius: 2px;
   background-color: #FFFFFF;
-  border: 9px solid #EFEFEF;
   box-shadow: 0 5px 35px 0 rgba(240, 10, 10, 0.1);
 }
 
