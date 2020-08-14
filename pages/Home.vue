@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <AHeaderMenu/>
     <SfHero
       class="hero"
       :slider-options="{
@@ -40,6 +41,7 @@ import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
+import AHeaderMenu from 'theme/components/atoms/a-header-menu';
 import AFooterTopSection from 'theme/components/atoms/a-footer-top-section';
 
 import {
@@ -62,6 +64,7 @@ export default {
     MProductCarousel,
     ONewsletter,
     AImagesGrid,
+    AHeaderMenu,
     AFooterTopSection
   },
   data () {
