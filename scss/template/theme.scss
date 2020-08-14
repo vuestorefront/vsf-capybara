@@ -1,3 +1,7 @@
 *, a, span, small, p, div{
     --font-family-primary: 'Poppins-Regular'; 
 }
+
+.text-primary{
+    color: $primary-color;
+}

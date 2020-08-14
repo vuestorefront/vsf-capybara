@@ -1,5 +1,5 @@
 <template>
-  <div class="rectangle_menu">
+  <div class="rectangle_menu d-flex align-center justify-center">
     <SfLink target="_blank" link="/" class="menu_gardening menu_general_style">
       Gardening
     </SfLink>
@@ -39,71 +39,18 @@ export default
 <style lang="scss" scoped>
 .rectangle_menu
 {
-  height: 50px;
-  width: 1920px;
-  display: flex;
   background-color: #254E91;
-}
-
-.menu_gardening
-{
-  height: 20px;
-  width: 77px;
-  margin-left: 506px;
-}
-
-.menu_power_tools
-{
-  height: 20px;
-  width: 86px;
-  margin-left: 48px;
-}
-
-.menu_hand_tools
-{
-  height: 20px;
-  width: 80px;
-  margin-left: 47px;
-}
-
-.menu_generators
-{
-  height: 20px;
-  width: 82px;
-  margin-left: 47px;
-}
-
-.menu_pressure_washers
-{
-  height: 20px;
-  width: 130px;
-  margin-left: 48px;
-}
-
-.menu_water_pumps
-{
-  height: 20px;
-  width: 98px;
-  margin-left: 44px;
-}
-
-.menu_workshop
-{
-  height: 20px;
-  width: 74px;
-  margin-left: 46px;
+  padding: 15px;
 }
 
 .menu_general_style
 {
   --link-color: #FFFFFF;
   --link-font-line-height: 21px;
-  --link-font-family : Poppins;
-  --link-font-weight : bold;
+  font-family: 'Poppins-Bold';
   --link-font-size : 14px;
   --link-text-decoration:none;
-  margin-top: 15px;
-  letter-spacing: 0;
+  margin: 0 12px;
 }
 
 </style>

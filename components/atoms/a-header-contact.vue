@@ -1,8 +1,8 @@
 <template>
   <div class="rectangle_contact">
-    <div class="text_upper">
+    <a href="tel:+08082808029" class="text_upper">
       0808 280 8029
-    </div>
+    </a>
     <div class="text_lower">
       Call Weekdays Until 5 PM
     </div>
@@ -10,9 +10,12 @@
 </template>
 
 <style lang="scss" scoped>
-
+.rectangle_contact{
+  margin: 0 15px;
+}
 .text_upper {
   height: 25px;
+  display: block;
   width: 132px;
   color: #484848;
   font-family: Poppins;

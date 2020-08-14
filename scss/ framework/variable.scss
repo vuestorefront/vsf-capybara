@@ -52,6 +52,7 @@
 }
 
 @font-face{
+    font-family: 'Poppins-Regular';
     --font-family-primary: 'Poppins-Regular';
     src: url('../font/Poppins-Regular.ttf')  format('truetype');
 }
@@ -117,4 +118,6 @@
     --spacer-3xl: 10rem; // 160px
   }
 
-  $primary-color: var(--_c-green-primary);
+  $primary-color:   var(--_c-green-primary-lighten);
+  $white-color:   #fff;
+  $black-color:   #000; 
