@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <AHeaderMenu />
     <SfHero
       class="hero"
       :slider-options="{
@@ -23,6 +24,7 @@
         </lazy-hydrate>
       </SfSection>
     </div>
+    <AFooterTopSection />
   </div>
 </template>
 
@@ -36,6 +38,8 @@ import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
+import AHeaderMenu from 'theme/components/atoms/a-header-menu';
+import AFooterTopSection from 'theme/components/atoms/a-footer-top-section';
 
 import {
   SfProperty,
@@ -56,7 +60,9 @@ export default {
     SfBanner,
     MProductCarousel,
     ONewsletter,
-    AImagesGrid
+    AImagesGrid,
+    AHeaderMenu,
+    AFooterTopSection
   },
   data () {
     return {

@@ -1,12 +1,11 @@
 <template>
-      <div class="avis-banner">
-          <div class="avis-background"></div>
-          <p class="text_upper">
-            We are specialized in DIY and gardening tools
-          </p>
-          <AHeaderAvisIcon />
-     </div>
- 
+  <div class="avis-banner">
+    <div class="avis-background" />
+    <p class="text_upper">
+      We are specialized in DIY and gardening tools
+    </p>
+    <AHeaderAvisIcon />
+  </div>
 </template>
 <script>
 
@@ -26,7 +25,7 @@ export default {
       image: {
         mobile: '/assets/images/icon_drill.png',
         desktop: '/assets/images/icon_drill.png'
-      },
+      }
     };
   }
 };

@@ -1,5 +1,4 @@
 <template>
-
   <div class="o-header">
     <SfOverlay
       class="overlay"

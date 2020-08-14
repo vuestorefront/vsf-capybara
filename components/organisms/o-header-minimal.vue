@@ -1,16 +1,15 @@
 <template>
   <header class="o-header-minimal">
-      <div class="header-content d-flex">
-        <div class="d-flex align-center">
-          <ALogo />
-          <MHeaderSearchbar/>
-          <MHeaderCompte />
-          <MHeaderBasket />
-          <AHeaderContact />
-        </div>
-        <MHeaderDrill />
-        
+    <div class="header-content d-flex">
+      <div class="d-flex align-center">
+        <ALogo />
+        <MHeaderSearchbar />
+        <MHeaderCompte />
+        <MHeaderBasket />
+        <AHeaderContact />
       </div>
+      <MHeaderDrill />
+    </div>
   </header>
 </template>
 
@@ -33,7 +32,7 @@ export default {
 <style lang="scss" scoped>
 .o-header-minimal
 {
- 
+
 }
 
 </style>
