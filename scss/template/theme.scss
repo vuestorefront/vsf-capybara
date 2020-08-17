@@ -2,6 +2,18 @@
     --font-family-primary: 'Poppins-Regular'; 
 }
 
+.container{
+    max-width: 1270px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px 0;
+ }
+
+
 .text-primary{
     color: $primary-color;
+}
+
+.text-center{
+    text-align: center;
 }

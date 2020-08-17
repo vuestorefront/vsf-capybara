@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <section id="home">
     <AHeaderMenu />
     <SfHero
       class="hero"
@@ -24,8 +24,8 @@
         </lazy-hydrate>
       </SfSection>
     </div>
-    <AFooterTopSection />
-  </div>
+    <AAboutUs />
+  </section>
 </template>
 
 <script>
@@ -39,7 +39,7 @@ import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 import AHeaderMenu from 'theme/components/atoms/a-header-menu';
-import AFooterTopSection from 'theme/components/atoms/a-footer-top-section';
+import AAboutUs from 'theme/components/atoms/a-about-us';
 
 import {
   SfProperty,
@@ -62,7 +62,7 @@ export default {
     ONewsletter,
     AImagesGrid,
     AHeaderMenu,
-    AFooterTopSection
+    AAboutUs
   },
   data () {
     return {
@@ -142,11 +142,6 @@ export default {
   padding: 0;
 }
 
-.container{
-   max-width: 1270px;
-   margin: 0 auto;
-   padding: 10px 0;
-}
 .sf-hero-item {
   --hero-item-height: 25rem;
   height: initial;
