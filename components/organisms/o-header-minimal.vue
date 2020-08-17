@@ -3,7 +3,7 @@
     <div class="header-content d-flex">
       <div class="d-flex align-center">
         <ALogo />
-        <MHeaderSearchbar />
+        <MHeaderSearchbar class="desktop-only"/>
         <MHeaderCompte />
         <MHeaderBasket />
         <AHeaderContact />

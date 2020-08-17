@@ -1,5 +1,5 @@
 <template>
-  <div class="rectangle_menu d-flex align-center justify-center">
+  <div class="rectangle_menu d-flex align-center justify-center desktop-only">
     <SfLink target="_blank" link="/" class="menu_gardening menu_general_style">
       Gardening
     </SfLink>

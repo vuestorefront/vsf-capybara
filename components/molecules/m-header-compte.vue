@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-button">
+  <div class="icon-button desktop-only">
     <AAccountIcon />
   </div>
 </template>

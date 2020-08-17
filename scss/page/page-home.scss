@@ -3,14 +3,21 @@
         .sf-call-to-action{
             .sf-call-to-action__text-container{
                 margin: 0 auto;
+                width: 100%;
                 .content{
                     padding: 60px 0;
                     align-items: center;
+                    @include for-tablet {
+                        flex-direction: column;
+                    }
+                    @include for-mobile {
+                        flex-direction: column;
+                    }
                     img{
                         max-width: 370px;
                         width: 100%;
                         height: auto;
-                        margin:  0 60px;
+                        margin:  0 3vw;
                     }
                     .content_right{
                         max-width: 620px;

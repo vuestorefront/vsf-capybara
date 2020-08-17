@@ -41,8 +41,6 @@ export default {
     font-size: 15px;
     font-weight: 500;
     letter-spacing: 0;
-    line-height: 23px;
-    text-shadow: 0 2px 9px 0 rgba(0,0,0,0.5);
   }
 
 </style>

@@ -3,6 +3,19 @@ header{
         border-bottom: 3px solid var(--_c-green-primary-lighten);
     } 
     .header-content{
+        @include for-desktop {
+            overflow: hidden;
+        }
+        @include for-tablet {
+            overflow: hidden;
+        }
+        @include for-mobile{
+            flex-direction: column;
+            border-bottom: 0;
+            .d-flex{
+                padding: 10px 20px!important;
+            }
+        }
         .d-flex{
             padding: 20px;
         }
@@ -10,7 +23,10 @@ header{
 
     .sf-search-bar{
         --search-bar-width: 44rem;
-        margin: 0 25px;
+        margin: 0 1.5vw;
+        @media screen and (max-width: 1380px){
+            --search-bar-width: 30rem;
+        }
         input{
             border-bottom: 0;
             text-indent: 15px;
@@ -92,6 +108,24 @@ header{
         background-repeat: no-repeat;
         background-size: 35%;
         background-position: right;
+        @include for-mobile{
+            padding: 8px 10px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .text_upper{
+                font-size: 11px;
+                margin: 0;
+            }
+            p, .group-3{
+                width: 50%!important;
+                height: auto;
+                img{
+                    width: 120px;
+                }
+            }
+        }
         .avis-background{
             display: block;
             position: absolute;
@@ -103,6 +137,10 @@ header{
             top: 0;
             left: 0; 
             transform: skewX(-15deg);
+            @include for-mobile{
+                transform: none;
+                width: 100%;
+            }
         }
     }
 }
