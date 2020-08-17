@@ -1,8 +1,26 @@
 #footer{
-    background-color: var(--_c-green-primary-darken);
+    background-color: var(--_c-green-primary);
+    @include for-tablet {
+        padding-top: 30px;
+    }
+    @include for-mobile {
+        padding-top: 30px;
+    }
     p{
         color: var(--c-white);
         font-size: 12px;
+    }
+    .sf-footer-column{
+        .sf-footer-column__title{
+            @include for-tablet {
+                padding-bottom: 0;
+                background-color: transparent;
+            }
+            @include for-mobile {
+                padding-bottom: 0;
+                background-color: transparent;
+            }
+        }
     }
     @include for-desktop {
         .overflow-y{
@@ -30,6 +48,9 @@
             background-color: var(--c-white);
             border-radius: 3px;
             box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.1);
+            @include for-mobile {
+                padding: 20px;
+            }
             p{
                 color: var(--c-black);
                 font-size: 12px;
@@ -40,11 +61,27 @@
                 }
             }
             &.newsletter{
+                @include for-mobile {
+                    flex-direction: column;
+                    .d-flex{
+                        flex-direction: column;
+                    }
+                    button{
+                        width: 100%;
+                    }
+                }
                 .content_left{
                     margin-right: 20px;
+                    @include for-mobile {
+                        text-align: center;
+                        margin: 0;
+                    }
                 }
                 .content_right{
                     width: 100%;
+                    button{
+                        text-transform: none;
+                    }
                 }
                 .sf-input{
                     margin-right: 10px;
@@ -106,6 +143,9 @@
             a{
                 margin: 0 10px;
                 display: block;
+                @include for-mobile {
+                    margin: 0 7px;
+                }
             }
         }
     }
@@ -118,6 +158,13 @@
         margin-top: 20px;
         position: relative;
         max-width: 650px;
+        @include for-mobile {
+            flex-direction: column;
+            align-items: flex-start;
+            p{
+                margin: 20px 0!important;
+            }
+        }
         p{
             margin: 0 20px;
         }
