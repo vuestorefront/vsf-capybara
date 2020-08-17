@@ -4,11 +4,30 @@
 
 .container{
     max-width: 1270px;
-    width: 100%;
     margin: 0 auto;
-    padding: 10px 0;
+    padding: 0 10px;
+    @media screen and(max-width: 1320px){
+         max-width: 1024px;
+    }
+    @media screen and(max-width: 1080px){
+        max-width: 990px;
+    }
+    @media screen and(max-width: 1024px){
+        max-width: 767px;
+    }
+    
  }
 
+.btn-primary{
+    background-color: $primary-color;
+    color: var(--c-white);
+    font-family: 'Poppins-Bold';
+    border-radius: 3px;
+    padding: 10px 15px;
+    display: block;
+    width: auto;
+    font-size: 14px;
+}
 
 .text-primary{
     color: $primary-color;

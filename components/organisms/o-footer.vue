@@ -1,56 +1,56 @@
 <template>
-  <footer class="o-footer">
-    <div style="display:flex">
-      <MFooterNewsletterSection />
-      <AFooterPaymentSection />
-    </div>
-    <SfFooter :column="5" :multiple="true">
-      <SfFooterColumn
-        v-for="linkGroup in links"
-        :key="linkGroup.name"
-        :title="$t(linkGroup.name)"
-      >
-        <SfList>
-          <SfListItem v-for="link in linkGroup.children" :key="link.name">
-            <router-link v-if="link.link" :to="localizedRoute(link.link)" exact>
-              <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
-            </router-link>
-            <SfMenuItem
-              v-else-if="link.clickHandler"
-              class="sf-footer__menu-item"
-              :label="$t(link.name)"
-              @click="link.clickHandler"
-            />
-          </SfListItem>
-        </SfList>
-      </SfFooterColumn>
-      <div>
-        <div style="display:flex">
-          <SfButton
-            class="button_new"
-            :disabled="disabled"
-            :native-button="nativeButton"
-            :link="link"
-          >
-            New
-          </SfButton>
-          <p class="text_1">
-            Lets stay in touch!
-          </p>
-          <img :src="'/assets/images/facebook_icon.png'" class="icon_facebook">
-          <img :src="'/assets/images/youtube_icon.png'" class="icon_youtube">
-          <img :src="'/assets/images/insta_icon.png'" class="icon_instagram">
+  <footer id="footer" class="o-footer">
+    <div class="container">
+        <div class="d-flex footer-overlay justify-between">
+          <MFooterNewsletterSection />
+          <AFooterPaymentSection />
         </div>
-        <div class="rectangle_blog">
+        <SfFooter :column="4" :multiple="true">
+          <SfFooterColumn
+            v-for="linkGroup in links"
+            :key="linkGroup.name"
+            :title="$t(linkGroup.name)"
+          >
+            <SfList>
+              <SfListItem v-for="link in linkGroup.children" :key="link.name">
+                <router-link v-if="link.link" :to="localizedRoute(link.link)" exact>
+                  <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
+                </router-link>
+                <SfMenuItem
+                  v-else-if="link.clickHandler"
+                  class="sf-footer__menu-item"
+                  :label="$t(link.name)"
+                  @click="link.clickHandler"
+                />
+              </SfListItem>
+            </SfList>
+          </SfFooterColumn>
+        </SfFooter>
+        <div class="social-links d-flex align-center">
+          <h4>
+            Lets stay in touch!
+          </h4>
+          <div class="item d-flex">
+            <a href="">
+              <img :src="'/assets/images/facebook_icon.png'" class="icon_facebook"/>
+            </a>
+            <a href="">
+              <img :src="'/assets/images/youtube_icon.png'" class="icon_youtube"/>
+            </a>
+            <a href="">  
+              <img :src="'/assets/images/insta_icon.png'" class="icon_instagram"/>
+            </a>
+          </div>
+        </div>
+
+        <div class="blog d-flex align-center">
+          <label>New</label>
           <img :src="'/assets/images/footer_blog.png'" class="image_blog_size">
           <p class="footer_blog_text">
-            Ut nonumes noluisse nec, in impetus integre sea.
-            <br>Nec no elitr ignota aeterno. Qui etiam assentior
-            <br>complectitur no. in impetus integre sea. Nec no elitr
-            <br> ignota aeterno.
+            Ut nonumes noluisse nec, in impetus integre sea. Nec no elitr ignota aeterno. Qui etiam assentior complectitur no. in impetus integre sea. Nec no elitr ignota aeterno.
           </p>
           <SfButton
-            class="button_see_more"
+            class="see-more btn-primary"
             :disabled="disabled"
             :native-button="nativeButton"
             :link="link"
@@ -58,11 +58,10 @@
             See more
           </SfButton>
         </div>
-      </div>
-    </SfFooter>
+    </div>
     <ABackToTop bottom="20px" right="20px" visibleoffset="200" class="desktop-only" />
-    <div class="rectangle_copyright">
-      <p class="text_copyright">
+    <div class="copyrights text-center">
+      <p>
         1999-2020 Capitools. All Rights Reserved. Third party trademarks are hereby acknowledged.
       </p>
     </div>
@@ -178,154 +177,10 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-footer {
-  @include for-desktop {
-
-        height: 684px;
-  width: 1920px;
-  background-color: #254E91;
-
-  }
   .sf-footer {
     --footer-width: auto;
-    margin-left: 380px;
     --footer-padding : 0px;
-
   }
-}
-.social-column {
-  flex-basis: auto;
-}
-.social-icon {
-  padding: 20px 40px;
-  @include for-desktop {
-    padding: 6px 0;
-  }
-  &__img {
-    height: 1.75rem;
-    &:not(:last-child) {
-      margin-right: 1.25rem;
-    }
-  }
-}
-
-.rectangle_copyright
-{
-  height: 40px;
-  width: 1920px;
-  background-color: #2D415A;
-}
-
-.text_copyright
-{
-  height: 20px;
-  width: 625px;
-  color: #FFFFFF;
-  font-family: Poppins;
-  font-size: 14px;
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 21px;
-  margin-left: 663px;
-  margin-top: 10px;
-}
-
-.text_1
-{
-  height: 25px;
-  width: 168px;
-  color: #FFFFFF;
-  font-family: Poppins;
-  font-size: 18px;
-  font-weight: bold;
-  letter-spacing: 0;
-  line-height: 27px;
-}
-
-.icon_facebook
-{
-  height: 35px;
-  width: 35px;
-}
-
-.icon_youtube
-{
-  height: 35px;
-  width: 35px;
-}
-
-.icon_instagram
-{
-  height: 35px;
-  width: 35px;
-}
-
-.rectangle_blog
-{
-  height: 110px;
-  width: 651px;
-  border-radius: 3px;
-  background-color: #2D415A;
-  display: flex;
-}
-
-.image_blog_size
-{
-  height: 40px;
-  width: 145px;
-  margin-top: 35px;
-  margin-left: 13px;
-}
-
-.footer_blog_text
-{
-  height: 68px;
-  width: 310px;
-  color: #FFFFFF;
-  font-family: Poppins;
-  font-size: 12px;
-  letter-spacing: 0;
-  line-height: 18px;
-  margin-left: 28px;
-  margin-top: 21px;
-}
-
-.button_new
-{
-  height: 26px;
-  width: 69px;
-  border-radius: 12.5px;
-  background-color: #FF9843;
-  color: #FFFFFF;
-  font-family: Montserrat;
-  font-size: 16px;
-  font-weight: bold;
-  letter-spacing: 0;
-  line-height: 19px;
-}
-
-.button_see_more
-{
-  height: 34px;
-  width: 98px;
-  border-radius: 2px;
-  background-color: #3B78DD;
-  margin-left: 27px;
-  margin-top: 38px;
-  font-family: Poppins;
-  font-size: 14px;
-  font-weight: bold;
-  letter-spacing: 0;
-  line-height: 21px;
-}
-
-.newsletter_rectangle
-{
-  margin-left: 380px;
-}
-
-.payment_rectangle
-{
-  margin-left: 30px;
 }
 
 </style>
