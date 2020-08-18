@@ -1,0 +1,32 @@
+.sf-product-card{
+    a{
+        .sf-image{
+            margin: 0 auto;
+            display: block;
+        }
+        .sf-product-card__title{
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+    }
+    .sf-price{
+        font-family: 'Poppins-Bold';
+        flex-direction: column;
+        align-items: flex-start;
+        &__regular{
+            font-family: 'Poppins-Bold';
+            font-size: 18px;
+        } 
+        &__old{
+            color: var(--_c-dark-secondary);
+            font-family: 'Poppins-Regular';
+            display: block;
+            font-size: 12px;
+        }
+        &__special{
+            font-family: 'Poppins-Bold';
+            color: var(--_c-orange-primary);
+        }
+    }
+}

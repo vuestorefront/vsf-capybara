@@ -7,57 +7,14 @@
         </router-link>
       </template>
     </SfBreadcrumbs>
-    <div class="navbar section">
-      <div class="navbar__aside desktop-only">
-        <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
-      </div>
-      <div class="navbar__main">
-        <SfButton
-          class="sf-button--text navbar__filters-button"
-          @click="isFilterSidebarOpen = true"
-        >
-          <SfIcon size="32px" color="#BEBFC4" icon="filter" />
-          {{ $t("Filters") }}
-          <template v-if="activeFiltersCount">
-            ({{ activeFiltersCount }})
-          </template>
-        </SfButton>
-        <template v-if="activeFiltersCount">
-          <span>&nbsp;&mdash;&nbsp;</span>
-          <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
-            {{ $t('Clear all') }}
-          </button>
-        </template>
-        <div class="navbar__sort">
-          <span class="navbar__label">{{ $t("Sort By") }}:</span>
-          <SfSelect
-            class="navbar__select sort-by"
-            :selected="sortOrder"
-            @change="changeSortOder"
-          >
-            <SfSelectOption
-              v-for="option in sortOptions"
-              :key="option.id"
-              :value="option.id"
-              class="sort-by__option"
-            >
-              {{ option.label }}
-            </SfSelectOption>
-          </SfSelect>
-        </div>
-        <div class="navbar__counter">
-          <span class="navbar__label desktop-only">
-            {{ $t("Products found") }}:
-          </span>
-          <strong class="desktop-only">{{ getCategoryProductsTotal }}</strong>
-          <span class="navbar__label mobile-only">
-            {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
-          </span>
-        </div>
-      </div>
-    </div>
+    
+   
+
     <div class="main section">
       <div class="sidebar desktop-only">
+         <div class="navbar__aside desktop-only">
+          <SfHeading :level="3" :title="$t('Categories')" class="navbar__title text-primary" />
+        </div>
         <SfAccordion :show-chevron="false">
           <SfAccordionItem
             v-for="category in categories"
@@ -75,6 +32,54 @@
         </SfAccordion>
       </div>
       <div class="products">
+         <div class="navbar section">
+            
+              <div class="navbar__main">
+                <SfButton
+                  class="sf-button--text navbar__filters-button"
+                  @click="isFilterSidebarOpen = true"
+                >
+                  <span>
+                    {{ $t("Filters") }}
+                  </span>
+                  <template v-if="activeFiltersCount">
+                    ({{ activeFiltersCount }})
+                  </template>
+                </SfButton>
+                <template v-if="activeFiltersCount">
+                  <span>&nbsp;&mdash;&nbsp;</span>
+                  <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
+                    {{ $t('Clear all') }}
+                  </button>
+                </template>
+                <div class="navbar__sort">
+                  <span class="navbar__label">{{ $t("Sort By") }}:</span>
+                  <SfSelect
+                    class="navbar__select sort-by"
+                    :selected="sortOrder"
+                    @change="changeSortOder"
+                  >
+                    <SfSelectOption
+                      v-for="option in sortOptions"
+                      :key="option.id"
+                      :value="option.id"
+                      class="sort-by__option"
+                    >
+                      {{ option.label }}
+                    </SfSelectOption>
+                  </SfSelect>
+                </div>
+                <div class="navbar__counter">
+                  <span class="navbar__label desktop-only">
+                    {{ $t("Products found") }}:
+                  </span>
+                  <strong class="desktop-only">{{ getCategoryProductsTotal }}</strong>
+                  <span class="navbar__label mobile-only">
+                    {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
+                  </span>
+                </div>
+            </div>
+        </div>  
         <SfHeading
           v-if="isCategoryEmpty"
           :title="$t('No products found!')"
@@ -97,13 +102,21 @@
                 :key="product.id"
                 :title="product.title"
                 :image="product.image"
-                :regular-price="product.price.regular"
-                :special-price="product.price.special"
                 :max-rating="product.rating.max"
                 :score-rating="product.rating.score"
+                :regular-price="product.price.regular"
+                :special-price="product.price.special"
                 :link="product.link"
                 link-tag="router-link"
-                :wishlist-icon="false"
+                :wishlist-icon="wishlistIcon"
+                :is-on-wishlist-icon="isOnWishlistIcon"
+                :is-on-wishlist="isOnWishlist"
+                :show-add-to-cart-button="showAddToCartButton"
+                :add-to-cart-disabled="addToCartDisabled"
+                :is-added-to-cart="isAddedToCart"
+                @click:is-added-to-cart="alert('@click:is-added-to-cart')"
+                @click:wishlist="alert('@click:wishlist')"
+                @click:reviews="alert('@click:reviews')"
                 class="products__product-card"
               />
             </transition-group>
@@ -274,7 +287,13 @@ export default {
       browserWidth: 0,
       isFilterSidebarOpen: false,
       unsubscribeFromStoreAction: null,
-      aggregations: null
+      aggregations: null,
+      wishlistIcon: "heart",
+      isOnWishlistIcon: "heart_fill",
+      isOnWishlist: false,
+      showAddToCartButton: true,
+      isAddedToCart: false,
+      addToCartDisabled: false
     };
   },
   computed: {
@@ -588,7 +607,7 @@ export default {
 #category {
   box-sizing: border-box;
   @include for-desktop {
-    max-width: 1272px;
+    max-width: 1700px;
     margin: 0 auto;
   }
 }
@@ -597,6 +616,7 @@ export default {
     padding: var(--spacer-xs);
     @include for-desktop {
       padding: 0;
+      margin-bottom: 120px;
     }
   }
 }
@@ -607,10 +627,8 @@ export default {
   position: relative;
   display: flex;
   border: 1px solid var(--c-light);
-  border-width: 0 0 1px 0;
-  @include for-desktop {
-    border-width: 1px 0 1px 0;
-  }
+  border-radius: 5px;
+  margin-bottom: var(--spacer-lg);
   &.section {
     padding: var(--spacer-sm);
     @include for-desktop {
@@ -625,15 +643,19 @@ export default {
   }
   &__aside {
     flex: 0 0 15%;
-    padding: var(--spacer-sm) var(--spacer-sm);
-    border: 1px solid var(--c-light);
-    border-width: 0 1px 0 0;
   }
   &__main {
     flex: 1;
     padding: 0;
+    *{
+      font-size: 13px!important;
+    }
+    span{
+        font-family: 'Poppins-Bold';
+        color: var(--_c-dark-primary);
+    }
     @include for-desktop {
-      padding: var(--spacer-xs) var(--spacer-xl);
+      padding: var(--spacer-xs) var(--spacer-sm);
     }
   }
   &__title {
@@ -661,14 +683,20 @@ export default {
     margin: 0 var(--spacer-2xs) 0 0;
   }
   &__select {
-    --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
+    --select-padding: 0;
     --select-margin: 0;
-    --select-selected-padding: 0 var(--spacer-xl) 0 0;
+    --select-selected-padding: 0;
+    font-size: 13px!important;
+    border: 1px solid var(--c-light);
+    border-radius: 3px;
   }
   &__sort {
     display: flex;
     align-items: center;
     margin: 0 auto 0 var(--spacer-2xl);
+    .sf-select__selected.sf-select-option{
+      font-size: 13px!important;
+    }
   }
   &__counter {
     font-family: var(--font-family-secondary);
@@ -712,8 +740,6 @@ export default {
 .sidebar {
   flex: 0 0 15%;
   padding: var(--spacer-sm);
-  border: 1px solid var(--c-light);
-  border-width: 0 1px 0 0;
 }
 .sidebar-filters {
   --sidebar-title-display: none;
@@ -745,7 +771,10 @@ export default {
   }
   &__product-card {
     --product-card-max-width: 50%;
-    flex: 1 1 50%;
+    flex: 1 1 44%;
+    border: 1px solid var(--c-light);
+    border-radius: 3px;
+    margin: 10px;
   }
   &__product-card-horizontal {
     flex: 0 0 100%;
@@ -769,7 +798,7 @@ export default {
       margin: var(--spacer-lg) 0;
     }
     &__product-card {
-      flex: 1 1 25%;
+      flex: 1 1 23%;
     }
     &__list {
       margin: 0 0 0 var(--spacer-sm);

@@ -29,6 +29,10 @@
     font-size: 14px;
 }
 
+.sf-rating__icon {
+    --icon-color: var(--_c-orange-primary);
+}
+
 .text-primary{
     color: $primary-color;
 }

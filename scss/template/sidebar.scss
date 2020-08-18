@@ -1,0 +1,31 @@
+.sidebar{
+    header{
+        .sf-heading__title{
+            color: $primary-color;
+        }
+    }
+    .sf-accordion{
+        padding: 15px;
+        border: 1px solid var(--c-light);
+        border-radius: 5px;
+        .sf-accordion-item{
+            button{
+                font-size: 16px;
+            }
+            &__content{
+                border: 1px solid var(--c-light);
+                border-width: 1px 0 1px 0;
+                padding: 10px;
+                .sf-list{
+                    &__item{
+                        .sf-menu-item{
+                            &__count{
+                                color: $primary-color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

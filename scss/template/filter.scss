@@ -1,0 +1,35 @@
+.navbar__filters-button{
+    text-decoration: none;
+    font-size: 13px!important;
+    background-color: var(--_c-green-primary-lighten);
+    color: var(--c-white)!important;
+    width: 110px;
+    border-radius: 3px;
+    padding: 10px;
+    background-image: url('/assets/icons/filter-icon.png');
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: 12px 8px;
+    justify-content: flex-end;
+    span{
+        color: var(--c-white)!important;
+        margin: 0 5px;
+    }
+}
+
+.navbar__main{
+    .navbar__sort{
+        .sort-by{
+            #sfSelect{
+                min-height: 28px;
+                min-width: 150px;
+                padding-left: 10px;
+                font-size: 13px;
+            }
+            .sf-chevron{
+                transform: scale(0.7);
+                top: 4px;
+            }
+        }   
+    }
+}
