@@ -1,5 +1,6 @@
 <template>
   <div id="category">
+    
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
         <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
@@ -99,13 +100,8 @@
             >
               <SfProductCard
                 v-for="product in products"
-                :key="product.id"
-                :title="product.title"
-                :image="product.image"
-                :max-rating="product.rating.max"
-                :score-rating="product.rating.score"
-                :regular-price="product.price.regular"
-                :special-price="product.price.special"
+                :key="product.id" 
+                :image="product.image"  
                 :link="product.link"
                 link-tag="router-link"
                 :wishlist-icon="wishlistIcon"
@@ -117,8 +113,39 @@
                 @click:is-added-to-cart="alert('@click:is-added-to-cart')"
                 @click:wishlist="alert('@click:wishlist')"
                 @click:reviews="alert('@click:reviews')"
-                class="products__product-card"
-              />
+                class="products__product-card">
+                <template #title>
+                  <h3 class="sf-product-card__title">
+                      {{ product.title }}
+                  </h3>
+                   <SfRating
+                    class="sf-product-card__rating"
+                    :max="product.rating.max"
+                    :score="product.rating.score"
+                  />
+                   <SfPrice
+                  class="sf-product-card__price"
+                  :regular="product.price.regular"
+                  :special="product.price.special"
+                />  
+                </template> 
+                <!-- 
+                    <template #reviews>
+                        <SfRating
+                        class="sf-product-card__rating"
+                        :max="product.rating.max"
+                        :score="product.rating.score"
+                      />
+                    </template> 
+                    <template #price>
+                    <SfPrice
+                      class="sf-product-card__price"
+                      :regular="product.price.regular"
+                      :special="product.price.special"
+                    /> 
+                  </template>
+               -->
+              </SfProductCard>
             </transition-group>
           </lazy-hydrate>
           <SfPagination
@@ -183,6 +210,7 @@
         </div>
       </template>
     </SfSidebar>
+    
   </div>
 </template>
 
@@ -222,7 +250,9 @@ import {
   SfAccordion,
   SfPagination,
   SfBreadcrumbs,
-  SfProductCard
+  SfProductCard,
+  SfRating,
+  SfPrice,
 } from '@storefront-ui/vue';
 
 const THEME_PAGE_SIZE = 12;
@@ -275,7 +305,9 @@ export default {
     SfAccordion,
     SfPagination,
     SfBreadcrumbs,
-    SfProductCard
+    SfProductCard,
+    SfRating,
+    SfPrice,
   },
   mixins: [onBottomScroll],
   data () {
@@ -604,6 +636,8 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+
+ 
 #category {
   box-sizing: border-box;
   @include for-desktop {
@@ -757,6 +791,8 @@ export default {
     }
   }
 }
+  
+
 .products {
   box-sizing: border-box;
   flex: 1;
@@ -774,8 +810,12 @@ export default {
     flex: 1 1 44%;
     border: 1px solid var(--c-light);
     border-radius: 3px;
-    margin: 10px;
+    margin: 10px;  
+ 
   }
+
+
+ 
   &__product-card-horizontal {
     flex: 0 0 100%;
   }
@@ -849,5 +889,7 @@ export default {
     --button-color: var(--c-dark-variant);
     margin: var(--spacer-xs) 0 0 0;
   }
-}
+} 
+
+
 </style>
