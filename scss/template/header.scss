@@ -109,7 +109,7 @@ header{
         background-size: 35%;
         background-position: right;
         @include for-mobile{
-            padding: 8px 10px;
+            padding: 8px 0;
             width: 100%;
             display: flex;
             align-items: center;
@@ -117,6 +117,7 @@ header{
             .text_upper{
                 font-size: 11px;
                 margin: 0;
+                padding-left: 12px;
             }
             p, .group-3{
                 width: 50%!important;

@@ -20,31 +20,30 @@ nav.sf-pagination{
             display: flex;
             align-items: center;
             justify-content: center;
+            &:before{
+                content: '';
+                display: block;
+                border: 1px solid var(--c-light);
+                border-width: 2px 2px 0 0px;
+                transform: rotate(45deg);
+                width: 12px;
+                height: 12px;
+                position: absolute;
+            }
             a{
-                .sf-icon{
-                    border: 1px solid var(--c-light);
-                    border-width: 2px 2px 0 0px;
-                    transform: rotate(45deg);
-                    width: 12px;
-                    height: 12px;
-                }
                 svg{
                     display: none;
                 }
             }
             &:hover{
-                a{
-                    .sf-icon{
-                        border-color: var(--c-white);
-                    }
+               &:before{
+                    border-color: var(--c-white);
                 }
             }
         }
         &--prev{
-            a{
-                .sf-icon{
-                    border-width: 0 0 2px 2px ;
-                }
+            &:before{
+                border-width: 0 0 2px 2px ;
             }
         }
     }

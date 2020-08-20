@@ -1,4 +1,10 @@
 .sf-product-card{
+    border: 1px solid var(--c-light);
+    border-radius: 3px;
+    margin: 10px;
+    @include for-mobile {
+        margin: 5px;
+    }
     a{
         .sf-image{
             margin: 0 auto;
