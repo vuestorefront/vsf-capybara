@@ -16,6 +16,11 @@
       :product-stock="stock"
     />
     <div class="product__bottom">
+     <MProductAdditionalInfo
+        :product="product"
+        :reviews="reviews"
+        :attributes="productAttributes"
+      />
       <lazy-hydrate when-idle>
         <SfSection :title-heading="$t('We found other products you might like')">
           <MRelatedProducts type="upsell" />
@@ -50,6 +55,8 @@
 </template>
 
 <script>
+import get from 'lodash-es/get'
+import config from 'config';
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import {
@@ -62,17 +69,19 @@ import { registerModule } from '@vue-storefront/core/lib/modules';
 import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
+import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
-import { checkWebpSupport } from 'theme/helpers'
+import { checkWebpSupport } from 'theme/helpers';
 import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
-import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
+import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 
 export default {
   name: 'Product',
   components: {
     LazyHydrate,
     MRelatedProducts,
+    MProductAdditionalInfo,
     SfSection,
     OProductDetails,
     SfBanner,
@@ -144,6 +153,22 @@ export default {
     },
     instagramImages () {
       return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
+    },
+    reviews () {
+      const baseReviews = get(this.$store.state.review, 'items.items', [])
+      return baseReviews.map((review) => ({
+        author: review.nickname,
+        date: review.created_at,
+        message: `${review.title}: ${review.detail}`,
+        rating: 1 // TODO: remove hardcode
+      }))
+    },
+
+     availability () {
+      return this.product.stock && this.product.stock.is_in_stock ? 'InStock' : 'OutOfStock'
+    },
+    sizeOption () {
+      return get(this.productConfiguration, 'size', false)
     }
   },
   watch: {
@@ -209,6 +234,33 @@ export default {
       }
     }
   },
+  props: {
+    product: {
+      type: Object,
+      default: () => ({})
+    },
+    productGallery: {
+      type: Array,
+      default: () => []
+    },
+    productConfiguration: {
+      type: Object,
+      default: () => ({})
+    },
+    productCustomOptions: {
+      type: Object,
+      default: () => ({})
+    },
+    productAttributes: {
+      type: Array,
+      default: () => []
+    },
+    productStock: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+
   metaInfo () {
     const storeView = currentStoreView();
     return {

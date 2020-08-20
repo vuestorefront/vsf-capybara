@@ -46,11 +46,6 @@
           :stock="productStock"
         />
       </div>
-      <MProductAdditionalInfo
-        :product="product"
-        :reviews="reviews"
-        :attributes="productAttributes"
-      />
     </div>
   </div>
 </template>
@@ -62,7 +57,6 @@ import { SfButton } from '@storefront-ui/vue';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
 import MProductAddToCart from 'theme/components/molecules/m-product-add-to-cart';
-import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
 import MProductOptionsConfigurable from 'theme/components/molecules/m-product-options-configurable';
 import MProductOptionsBundle from 'theme/components/molecules/m-product-options-bundle';
 import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
@@ -75,7 +69,6 @@ export default {
     MProductGallery,
     MProductShortInfo,
     MProductAddToCart,
-    MProductAdditionalInfo,
     MProductOptionsConfigurable,
     MProductOptionsBundle,
     MProductOptionsCustom,
