@@ -1,5 +1,18 @@
 #footer{
     background-color: var(--_c-green-primary);
+    @include for-desktop {
+        margin-top: 90px;
+        .overflow-y{
+            margin-top: -60px;
+        }
+        .newsletter{
+            width: 58%;
+            margin-right: 30px;
+        }
+        .payment{
+            width: 38%;
+        }
+    }
     @include for-tablet {
         padding-top: 30px;
     }
@@ -22,18 +35,7 @@
             }
         }
     }
-    @include for-desktop {
-        .overflow-y{
-            margin-top: -60px;
-        }
-        .newsletter{
-            width: 58%;
-            margin-right: 30px;
-        }
-        .payment{
-            width: 38%;
-        }
-    }
+
     .footer-overlay{
         @include for-tablet {
             flex-direction: column;
