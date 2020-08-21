@@ -16,6 +16,7 @@
         />
       </template>
       <template #quantity-select-input>
+        <label>Quantité :</label>
         <AProductQuantity
           class="sf-add-to-cart__select-quantity"
           v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"
@@ -103,5 +104,9 @@ export default {
 <style lang="scss" scoped>
 .alert {
   margin-bottom: var(--spacer-base)
+}
+
+.sf-add-to-cart{
+  flex-direction: column; 
 }
 </style>

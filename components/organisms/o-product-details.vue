@@ -10,6 +10,8 @@
       :configuration="productConfiguration"
     />
     <div class="product__info">
+    <div class="d-flex">
+    <div>
       <MProductShortInfo
         :product="product"
         :custom-options="productCustomOptions"
@@ -22,7 +24,9 @@
       >
         {{ $t('Size guide') }}
       </SfButton>
-      <div>
+      </div>
+      <div class="quantity-section">
+      
         <MProductOptionsConfigurable
           v-if="product.type_id =='configurable'"
           :product="product"
@@ -40,11 +44,13 @@
           v-else-if="product.custom_options && product.custom_options.length > 0"
           :product="product"
         />
+      
         <MProductAddToCart
           class="product__add-to-cart"
           :product="product"
           :stock="productStock"
         />
+        </div>
       </div>
     </div>
   </div>
@@ -164,14 +170,14 @@ export default {
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
     @include for-desktop {
-      max-width: 32.625rem;
-      margin: 0 0 0 7.5rem;
+      max-width: 50%;
+      margin: 0 ;
     }
   }
   &__add-to-cart {
-    margin: var(--spacer-base) var(--spacer-sm) 0;
+    margin:  0;
     @include for-desktop {
-      margin-top: var(--spacer-2xl);
+      
     }
   }
   &__guide,
@@ -181,6 +187,15 @@ export default {
     margin: var(--spacer-xl) 0 var(--spacer-base) auto;
   }
 }
+
+.quantity-section{
+    min-width: 260px;
+    width: 100%;
+    margin: 0 15px;
+    padding: 15px;
+    border: 1px solid var(--_c-green-primary-lighten);
+    border-radius: 3px;
+  }
 
 .section {
   border-bottom: 1px solid #f1f2f3;
