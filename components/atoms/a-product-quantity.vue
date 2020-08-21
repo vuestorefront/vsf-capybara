@@ -1,6 +1,6 @@
 <template>
   <SfQuantitySelector
-    class="a-product-quantity"
+    class="a-product-quantity sf-quantity-selector--secondary"
     :qty="value"
     :value="value"
     :min="1"
