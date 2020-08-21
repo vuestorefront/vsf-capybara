@@ -1,8 +1,9 @@
 header{
     &.o-header-minimal{
-        border-bottom: 3px solid var(--c-light);
+        box-shadow: 0px 2px 2px var(--_c-gray-accent);
     } 
     .header-content{
+        border-bottom: 3px solid var(--c-light);
         @include for-desktop {
             overflow: hidden;
         }

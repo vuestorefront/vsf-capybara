@@ -10,6 +10,7 @@
       </div>
       <MHeaderDrill />
     </div>
+        <AHeaderMenu />
   </header>
 </template>
 
@@ -20,12 +21,12 @@ import MHeaderCompte from 'theme/components/molecules/m-header-compte';
 import MHeaderBasket from 'theme/components/molecules/m-header-basket';
 import AHeaderContact from 'theme/components/atoms/a-header-contact';
 import MHeaderDrill from 'theme/components/molecules/m-header-drill';
-
+import AHeaderMenu from 'theme/components/atoms/a-header-menu';
 import { SfImage } from '@storefront-ui/vue';
 
 export default {
   name: 'OHeaderMinimal',
-  components: { ALogo, MHeaderSearchbar, MHeaderCompte, MHeaderBasket, AHeaderContact, MHeaderDrill }
+  components: { ALogo, MHeaderSearchbar, MHeaderCompte, MHeaderBasket, AHeaderContact, AHeaderMenu, MHeaderDrill }
 };
 </script>
 

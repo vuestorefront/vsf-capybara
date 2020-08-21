@@ -1,6 +1,5 @@
 <template>
   <section id="home">
-    <AHeaderMenu />
     <SfHero
       class="hero"
       :slider-options="{
@@ -40,7 +39,6 @@ import MAssurance from 'theme/components/molecules/m-assurance';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
-import AHeaderMenu from 'theme/components/atoms/a-header-menu';
 import AAboutUs from 'theme/components/atoms/a-about-us';
 
 import {
@@ -63,7 +61,6 @@ export default {
     MProductCarousel,
     ONewsletter,
     AImagesGrid,
-    AHeaderMenu,
     AAboutUs,
      MAssurance
   },
