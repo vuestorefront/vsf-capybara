@@ -16,7 +16,7 @@
         :class="hero.className"
       />
     </SfHero>
-
+    <MAssurance/>
     <div class="container">
       <SfSection :title-heading="$t('Bestsellers')" class="section">
         <lazy-hydrate :trigger-hydration="!loading">
@@ -24,6 +24,7 @@
         </lazy-hydrate>
       </SfSection>
     </div>
+     <MAssurance/>
     <AAboutUs />
   </section>
 </template>
@@ -35,6 +36,7 @@ import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
+import MAssurance from 'theme/components/molecules/m-assurance';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
@@ -62,7 +64,8 @@ export default {
     ONewsletter,
     AImagesGrid,
     AHeaderMenu,
-    AAboutUs
+    AAboutUs,
+     MAssurance
   },
   data () {
     return {

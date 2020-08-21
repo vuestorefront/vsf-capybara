@@ -1,7 +1,6 @@
 #footer{
     background-color: var(--_c-green-primary);
     @include for-desktop {
-        margin-top: 90px;
         .overflow-y{
             margin-top: -60px;
         }

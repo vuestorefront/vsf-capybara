@@ -16,7 +16,7 @@
     --_c-dark-primary-base: 29, 31, 34;
     --_c-dark-primary-lighten: #292c30;
     --_c-dark-primary-darken: #111214;
-    --_c-dark-secondary: #43464E;
+    --_c-dark-secondary: #484848;
     --_c-dark-secondary-base: 67, 70, 78;
     --_c-dark-secondary-lighten: #4f525c;
     --_c-dark-secondary-darken: #373a40;
@@ -32,7 +32,7 @@
     --_c-gray-accent-base: 224, 224, 225;
     --_c-gray-accent-lighten: #ededee;
     --_c-gray-accent-darken: #d3d3d4;
-    --_c-light-primary: #f1f2f3;
+    --_c-light-primary: #F9F8F8;
     --_c-light-primary-base: 241, 242, 243;
     --_c-light-primary-lighten: white;
     --_c-light-primary-darken: #e3e5e7;
@@ -68,6 +68,11 @@
 @font-face{
     font-family: 'Poppins-Bold';
     src: url('../font/Poppins-Bold.ttf')  format('truetype');
+}
+
+@font-face{
+  font-family: 'Poppins-Light';
+  src: url('../font/Poppins-Light.ttf')  format('truetype');
 }
 
 :root {

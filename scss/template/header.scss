@@ -1,6 +1,6 @@
 header{
     &.o-header-minimal{
-        border-bottom: 3px solid var(--_c-green-primary-lighten);
+        border-bottom: 3px solid var(--c-light);
     } 
     .header-content{
         @include for-desktop {

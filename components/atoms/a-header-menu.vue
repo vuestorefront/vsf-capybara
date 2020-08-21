@@ -39,15 +39,14 @@ export default
 <style lang="scss" scoped>
 .rectangle_menu
 {
-  background-color: #254E91;
   padding: 15px;
-}
+} 
 
 .menu_general_style
 {
-  --link-color: #FFFFFF;
+  --link-color: var(--_c-dark-secondary);
   --link-font-line-height: 21px;
-  font-family: 'Poppins-Bold';
+  font-family: 'Poppins-Regular';
   --link-font-size : 14px;
   --link-text-decoration:none;
   margin: 0 12px;
