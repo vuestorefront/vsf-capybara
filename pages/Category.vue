@@ -1,6 +1,5 @@
 <template>
   <div id="category">
-    
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
       <template #link="{breadcrumb}">
         <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
@@ -8,9 +7,6 @@
         </router-link>
       </template>
     </SfBreadcrumbs>
-    
-   
-
     <div class="main section">
       <div class="sidebar desktop-only">
          <div class="navbar__aside desktop-only">
@@ -34,7 +30,6 @@
       </div>
       <div class="products">
          <div class="navbar section">
-            
               <div class="navbar__main">
                 <SfButton
                   class="sf-button--text navbar__filters-button"
@@ -53,22 +48,30 @@
                     {{ $t('Clear all') }}
                   </button>
                 </template>
-                <div class="navbar__sort">
-                  <span class="navbar__label">{{ $t("Sort By") }}:</span>
-                  <SfSelect
-                    class="navbar__select sort-by"
-                    :selected="sortOrder"
-                    @change="changeSortOder"
-                  >
-                    <SfSelectOption
-                      v-for="option in sortOptions"
-                      :key="option.id"
-                      :value="option.id"
-                      class="sort-by__option"
+                <!--
+                  <div class="navbar__sort">
+                    <span class="navbar__label">{{ $t("Sort By") }}:</span>
+                    <SfSelect
+                      class="navbar__select sort-by"
+                      :selected="sortOrder"
+                      @change="changeSortOder"
                     >
-                      {{ option.label }}
-                    </SfSelectOption>
-                  </SfSelect>
+                      <SfSelectOption
+                        v-for="option in sortOptions"
+                        :key="option.id"
+                        :value="option.id"
+                        class="sort-by__option"
+                      >
+                        {{ option.label }}
+                      </SfSelectOption>
+                    </SfSelect>
+                  </div>  
+                -->
+                <div class="navbar__sort"> 
+                  <SfButton class="sf-button--text" @click="OrderProducthHightoLow">High to Low</SfButton>
+                 </div>
+                <div class="navbar__sort"> 
+                   <SfButton class="sf-button--text" @click="OrderProducthLowtoHigh">Low to High</SfButton>
                 </div>
                 <div class="navbar__counter">
                   <span class="navbar__label desktop-only">
@@ -590,6 +593,18 @@ export default {
     },
     initPagination () {
       this.currentPage = 1;
+    },
+    OrderProducthHightoLow ()
+    {
+      this.$store.dispatch('category-next/switchSearchFilters', [
+        { id: "final_price:desc", type: 'sort' }
+      ]);
+    },
+    OrderProducthLowtoHigh ()
+    {
+      this.$store.dispatch('category-next/switchSearchFilters', [
+        { id: "final_price", type: 'sort' }
+      ]);
     },
     changeSortOder (sortOrder) {
       if (this.getCurrentSearchQuery.sort !== sortOrder) {
