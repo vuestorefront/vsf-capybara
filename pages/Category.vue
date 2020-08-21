@@ -100,7 +100,7 @@
             >
               <SfProductCard
                 v-for="product in products"
-                :key="product.id" 
+                :key="product.id"  
                 :image="product.image"  
                 :link="product.link"
                 link-tag="router-link"
@@ -116,19 +116,30 @@
                 class="products__product-card">
                 <template #title>
                   <h3 class="sf-product-card__title">
-                      {{ product.title }}
+                      {{ product.title }} 
                   </h3>
-                   <SfRating
+                  <SfRating
                     class="sf-product-card__rating"
                     :max="product.rating.max"
                     :score="product.rating.score"
-                  />
-                   <SfPrice
-                  class="sf-product-card__price"
-                  :regular="product.price.regular"
-                  :special="product.price.special"
-                />  
+                    :tips="product.rating.tips"
+                  /> 
+                  <SfPrice
+                    class="sf-product-card__price"
+                    :regular="product.price.regular"
+                    :special="product.price.special" 
+                  />  
+                  
                 </template> 
+                 <template #price>
+                    <AAddToCart
+                    class="sf-add-to-cart__button"
+                    :qty="qty"
+                    :product="product.obj_product"
+                    :disabled="addToCartDisabled"
+                  />  
+                  </template>
+                
                 <!-- 
                     <template #reviews>
                         <SfRating
@@ -233,6 +244,8 @@ import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next
 import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { getProductPrice } from 'theme/helpers';
+import AAddToCart from 'theme/components/atoms/a-add-to-cart';
+
 import {
   localizedRoute,
   currentStoreView
@@ -308,6 +321,14 @@ export default {
     SfProductCard,
     SfRating,
     SfPrice,
+    AAddToCart,
+  },
+  props: 
+  {
+    qty: {
+      type: Number,
+      default: 1
+    }
   },
   mixins: [onBottomScroll],
   data () {
@@ -324,7 +345,7 @@ export default {
       isOnWishlistIcon: "heart_fill",
       isOnWishlist: false,
       showAddToCartButton: true,
-      isAddedToCart: false,
+      isAddedToCart: true,
       addToCartDisabled: false
     };
   },
@@ -339,7 +360,8 @@ export default {
       getSystemFilterNames: 'category-next/getSystemFilterNames',
       getCategories: 'category/getCategories',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
-      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
+      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
+       getCurrentProduct: 'product/getCurrentProduct',
     }),
     isLazyHydrateEnabled () {
       return config.ssr.lazyHydrateFor.includes('category-next.products');
@@ -393,13 +415,13 @@ export default {
       // so products from store have to be filtered out because there could
       // be more than THEME_PAGE_SIZE of them - they could be fetched earlier
       // when lazy loading was enabled
-      return this.isLazyLoadingEnabled || this.currentPage === 1
+      return  this.isLazyLoadingEnabled || this.currentPage === 1
         ? this.getCategoryProducts
           .filter((product, i) => {
             return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
           })
           .map(prepareCategoryProduct)
-        : this.getMoreCategoryProducts.map(prepareCategoryProduct);
+        : this.getMoreCategoryProducts.map(prepareCategoryProduct); 
     },
     totalPages () {
       return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
@@ -511,6 +533,12 @@ export default {
     window.removeEventListener('resize', this.getBrowserWidth);
   },
   methods: {
+      addToCartcustom()
+    {
+       console.info("called");
+        
+       
+     },
     getBrowserWidth () {
       return (this.browserWidth = window.innerWidth);
     },
