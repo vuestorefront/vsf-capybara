@@ -24,6 +24,7 @@
       </SfSection>
     </div>
      <MAssurance/>
+     <MSupportBlock/>
     <AAboutUs />
   </section>
 </template>
@@ -36,6 +37,7 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import MAssurance from 'theme/components/molecules/m-assurance';
+import MSupportBlock from 'theme/components/molecules/m-support-block';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
@@ -62,7 +64,8 @@ export default {
     ONewsletter,
     AImagesGrid,
     AAboutUs,
-     MAssurance
+    MAssurance,
+    MSupportBlock
   },
   data () {
     return {
