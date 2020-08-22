@@ -1,0 +1,31 @@
+.sf-breadcrumbs {
+    &__list{
+        &-item{
+            &:first-child,
+            .sf-breadcrumbs__breadcrumb--current{
+                &:before{
+                    display: none;
+                }
+                width: 40px;
+                height: 25px;
+                display: inline-block;
+                color: transparent!important;
+                overflow: hidden;
+                background-image: url('/assets/icons/home-icon.png');
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+            &:before{
+                content: ''!important;
+                width: 6px;
+                height: 6px;
+                display: inline-block;
+                border-right: 2px solid var(--_c-dark-secondary);
+                border-top: 2px solid var(--_c-dark-secondary);
+                transform: rotate(45deg);
+                padding: 0!important;
+                margin: 0 15px;
+            }
+        }
+    }
+}

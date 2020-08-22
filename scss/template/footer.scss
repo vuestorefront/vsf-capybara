@@ -14,9 +14,11 @@
     }
     @include for-tablet {
         padding-top: 30px;
+        padding-bottom: 60px;
     }
     @include for-mobile {
         padding-top: 30px;
+        padding-bottom: 60px;
     }
     p{
         color: var(--c-white);
