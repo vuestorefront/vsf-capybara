@@ -27,6 +27,7 @@
           <OMyAccountPlaceholder :title="$t('My newsletter')" />
         </SfContentPage>
       </SfContentCategory>
+      <SfContentPage :title="$t('Log out')" />
       <SfContentCategory :title="$t('Order details')">
         <SfContentPage :title="$t('Order history')">
           <OMyAccountOrdersHistory />
@@ -35,7 +36,6 @@
           <OMyAccountPlaceholder :title="$t('My reviews')" />
         </SfContentPage>
       </SfContentCategory>
-      <SfContentPage :title="$t('Log out')" />
     </SfContentPages>
   </div>
 </template>
