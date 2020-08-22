@@ -62,7 +62,7 @@
     <ABackToTop bottom="20px" right="20px" visibleoffset="200" class="desktop-only" />
     <div class="copyrights text-center">
       <p>
-        1999-2020 Capitools. All Rights Reserved. Third party trademarks are hereby acknowledged.
+        <span>&copy;</span>1999-2020 Capitools. All Rights Reserved. Third party trademarks are hereby acknowledged.
       </p>
     </div>
   </footer>

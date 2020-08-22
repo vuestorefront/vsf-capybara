@@ -15,7 +15,7 @@
         :class="hero.className"
       />
     </SfHero>
-    <MAssurance/>
+    <MAssurance/> 
     <div class="container">
       <SfSection :title-heading="$t('Bestsellers')" class="section">
         <lazy-hydrate :trigger-hydration="!loading">
