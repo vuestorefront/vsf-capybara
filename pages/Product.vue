@@ -253,6 +253,12 @@ export default {
   padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 
+::v-deep {
+  .product__colors button {
+      border: 1px solid var(--c-light);
+  }
+}
+
 .banner {
   margin: var(--spacer-xl) 0;
   @include for-desktop {
