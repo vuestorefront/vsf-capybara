@@ -121,12 +121,17 @@
                   <h3 class="sf-product-card__title">
                       {{ product.title }} 
                   </h3>
-                  <SfRating
+                   <AProductRating
+                    @click="openReviewsTab"
+                    :reviews="reviews"
+                    >
+                  </AProductRating>
+                  <!-- <SfRating
                     class="sf-product-card__rating"
                     :max="product.rating.max"
                     :score="product.rating.score"
-                    :tips="product.rating.tips"
-                  /> 
+                    
+                  />   -->
                   <SfPrice
                     class="sf-product-card__price"
                     :regular="product.price.regular"
@@ -248,6 +253,8 @@ import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct 
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { getProductPrice } from 'theme/helpers';
 import AAddToCart from 'theme/components/atoms/a-add-to-cart';
+import AProductRating from 'theme/components/atoms/a-product-rating';
+
 
 import {
   localizedRoute,
@@ -325,6 +332,7 @@ export default {
     SfRating,
     SfPrice,
     AAddToCart,
+    AProductRating,
   },
   props: 
   {

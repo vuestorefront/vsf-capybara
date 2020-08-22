@@ -16,7 +16,14 @@
         />
       </template>
       <template #quantity-select-input>
-        <label>Quantité :</label>
+        <label>Price :
+          <AProductPrice
+              v-if="product.type_id !== 'grouped'"
+              :product="product"
+              :custom-options="customOptions"
+          />
+         </label>
+         <label>Quantité :</label>
         <AProductQuantity
           class="sf-add-to-cart__select-quantity"
           v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"
@@ -34,16 +41,21 @@
 </template>
 <script>
 import { onlineHelper } from '@vue-storefront/core/helpers';
-import { SfAddToCart, SfAlert } from '@storefront-ui/vue';
+import { SfAddToCart, SfAlert, SfPrice } from '@storefront-ui/vue';
 import AProductQuantity from 'theme/components/atoms/a-product-quantity';
 import AAddToCart from 'theme/components/atoms/a-add-to-cart';
+import AProductPrice from 'theme/components/atoms/a-product-price';
+
+ 
 export default {
   name: 'MProductAddToCart',
   components: {
     SfAddToCart,
     SfAlert,
     AProductQuantity,
-    AAddToCart
+    AAddToCart,
+    SfPrice,
+    AProductPrice
   },
   data () {
     return {
