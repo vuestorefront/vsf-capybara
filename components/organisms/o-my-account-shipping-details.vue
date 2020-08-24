@@ -409,6 +409,7 @@ export default {
   &__select {
     padding-bottom: calc(var(--font-xs) * 1.2);
   }
+  --select-dropdown-position: relative;
 }
 .message {
   margin: 0 0 var(--spacer-base) 0;

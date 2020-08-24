@@ -26,7 +26,10 @@
         {{ $t("Read all {count} review", { count: reviewsCount }) }}
       </AProductRating>
     </div>
-    <div class="product__description desktop-only" v-html="product.description" />
+    <div
+      class="product__description desktop-only"
+      v-html="product.short_description || product.description"
+    />
   </div>
 </template>
 

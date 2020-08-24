@@ -69,7 +69,7 @@ export default {
       return !!this.qtyValidationError || this.stock.isLoading || !this.isAvailable
     },
     isAvailable () {
-      return this.isOnline && !!this.stock.max && this.isSimpleOrConfigurable
+      return !this.isOnline || !!this.stock.max || !this.stock.manageQuantity || !this.isSimpleOrConfigurable
     },
     isSimpleOrConfigurable () {
       return ['simple', 'configurable'].includes(
