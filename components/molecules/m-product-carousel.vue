@@ -2,8 +2,8 @@
   <SfCarousel
     class="m-product-carousel"
     :settings="{
-      animationDuration: 3000,
-      rewindDuration: 3000
+      animationDuration: 2000,
+      rewindDuration: 2000
     }"
   >
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
