@@ -298,11 +298,7 @@ export default {
   computed: {
     stateOptions () {
       let countryCode = this.payment.country ? this.payment.country : config.i18n.defaultCountry
-      if (this.states[countryCode] !== null) {
-        return this.states[countryCode]
-      } else {
-        return []
-      }
+      return this.states[countryCode] ? this.states[countryCode] : []
     }
   }
 };
