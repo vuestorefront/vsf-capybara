@@ -119,8 +119,11 @@
                 class="products__product-card">
                 <template #title>
                   <h3 class="sf-product-card__title">
-                      {{ product.title }} 
+                      {{ product.title }}
                   </h3>
+                  <p>
+                     Ref : {{ product.sku }}
+                  </p>
                    <AProductRating
                     @click="openReviewsTab"
                     :reviews="reviews"
@@ -374,6 +377,7 @@ export default {
       getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
        getCurrentProduct: 'product/getCurrentProduct',
     }),
+    
     isLazyHydrateEnabled () {
       return config.ssr.lazyHydrateFor.includes('category-next.products');
     },
@@ -543,13 +547,7 @@ export default {
     this.$bus.$off('product-after-list', this.initPagination);
     window.removeEventListener('resize', this.getBrowserWidth);
   },
-  methods: {
-      addToCartcustom()
-    {
-       console.info("called");
-        
-       
-     },
+  methods: { 
     getBrowserWidth () {
       return (this.browserWidth = window.innerWidth);
     },

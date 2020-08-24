@@ -54,7 +54,6 @@ export function getTopLevelCategories (categoryList) {
 }
 
 export function prepareCategoryProduct (product) {
-  
   return {
     id: product.id, 
     title: htmlDecode(product.name),
@@ -69,7 +68,8 @@ export function prepareCategoryProduct (product) {
       max: 5,
       score: 5
     },
-    obj_product:product
+    obj_product:product,
+    sku:product.sku
   }
 }
 
