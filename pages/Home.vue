@@ -16,6 +16,8 @@
       />
     </SfHero>
     <MAssurance/> 
+    <MPromoProductBlock />
+    <MCodePromotionBlock/>
     <div class="container">
       <SfSection :title-heading="$t('Bestsellers')" class="section">
         <lazy-hydrate :trigger-hydration="!loading">
@@ -37,6 +39,8 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import MAssurance from 'theme/components/molecules/m-assurance';
+import MPromoProductBlock from 'theme/components/molecules/m-promo-product-block';
+import MCodePromotionBlock from 'theme/components/molecules/m-code-promotion-block';
 import MSupportBlock from 'theme/components/molecules/m-support-block';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
@@ -65,7 +69,9 @@ export default {
     AImagesGrid,
     AAboutUs,
     MAssurance,
-    MSupportBlock
+    MSupportBlock,
+    MPromoProductBlock,
+    MCodePromotionBlock
   },
   data () {
     return {
