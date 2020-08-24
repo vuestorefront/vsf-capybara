@@ -40,8 +40,9 @@
   </div>
 </template>
 <script>
-import get from 'lodash-es/get'
 import config from 'config'
+import { mapGetters } from 'vuex';
+import get from 'lodash-es/get'
 import { SfAlert, SfSelect, SfProductOption, SfColor } from '@storefront-ui/vue';
 import { getAvailableFiltersByProduct } from '@vue-storefront/core/modules/catalog/helpers/filters'
 export default {
@@ -66,13 +67,18 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      getCurrentProductOptions: 'product/getCurrentProductOptions'
+    }),
     getActiveOption () {
       return (attribute) => get(this.configuration, `${attribute.attribute_code}.id`, attribute.id)
     },
     getAttributeLabel () {
       return (attribute) => {
         const configName = attribute.attribute_code ? attribute.attribute_code : attribute.label.toLowerCase()
-        return this.configuration[configName] ? this.configuration[configName].label : configName
+        const optionId = this.configuration[configName] ? this.configuration[configName].id : ''
+        const option = this.getCurrentProductOptions[configName].find(o => o.id === optionId)
+        return option.hasOwnProperty('label') ? option.label : ''
       }
     },
     productAttributes () {
