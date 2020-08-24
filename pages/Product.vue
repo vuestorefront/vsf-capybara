@@ -18,7 +18,7 @@
     <div class="product__bottom">
      <MAssurance/>
      <MProductAdditionalInfo
-        :product="product"
+        :product="getCurrentProduct"
         :reviews="reviews"
         :attributes="productAttributes"
       />
@@ -174,7 +174,7 @@ export default {
         route && route.params && route.params.childSku
           ? route.params.childSku
           : null
-    });
+    });  
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',
       { product }
