@@ -16,6 +16,7 @@
       :product-stock="stock"
     />
     <div class="product__bottom">
+     <MAssurance/>
      <MProductAdditionalInfo
         :product="product"
         :reviews="reviews"
@@ -26,30 +27,13 @@
           <MRelatedProducts type="upsell" />
         </SfSection>
       </lazy-hydrate>
-      <lazy-hydrate when-idle>
-        <SfSection v-show="banners.length">
-          <router-link :key="i" :to="banner.link" v-for="(banner, i) in banners">
-            <SfBanner
-              :subtitle="banner.subtitle"
-              :title="banner.title"
-              :image="banner.image"
-              class="banner sf-banner--slim"
-            />
-          </router-link>
-        </SfSection>
-      </lazy-hydrate>
+
       <lazy-hydrate when-idle>
         <SfSection :title-heading="$t('Similar Products')">
           <MRelatedProducts type="related" />
         </SfSection>
       </lazy-hydrate>
-      <SfSection
-        v-if="isOnline"
-        title-heading="Share Your Look"
-        subtitle-heading="#YOURLOOK"
-      >
-        <AImagesGrid :images="instagramImages" />
-      </SfSection>
+
     </div>
   </div>
 </template>
@@ -70,6 +54,7 @@ import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
+import MAssurance from 'theme/components/molecules/m-assurance';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers';
@@ -84,6 +69,7 @@ export default {
     MProductAdditionalInfo,
     SfSection,
     OProductDetails,
+    MAssurance,
     SfBanner,
     AImagesGrid,
     SfBreadcrumbs
