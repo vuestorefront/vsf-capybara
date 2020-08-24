@@ -19,32 +19,49 @@
 
     <MPromoProductBlock />
 
-    <div class="container">
-      <SfSection class="section">
-        <lazy-hydrate :trigger-hydration="!loading">
-          <m-product-carousel :products="newCollection" />
-        </lazy-hydrate>
-      </SfSection>
+    <div class="product-slider">
+      <div class="container">
+        <div class="d-flex slider-content">
+          <SfImage
+              src="assets/images/jardin.jpg"
+              class="slider-banner"
+            />
+            <lazy-hydrate :trigger-hydration="!loading">
+              <m-product-carousel :products="newCollection" />
+            </lazy-hydrate>
+          </div>
+      </div>
     </div>
 
     <MCodePromotionBlock />
 
-    <div class="container">
-      <SfSection class="section">
-        <lazy-hydrate :trigger-hydration="!loading">
-          <m-product-carousel :products="newCollection" />
-        </lazy-hydrate>
-      </SfSection>
+    <div class="product-slider">
+      <div class="container">
+        <div class="d-flex slider-content">
+          <SfImage
+              src="assets/images/hyundai-groupe-electrogene-inverter.jpg"
+              class="slider-banner"
+            />
+            <lazy-hydrate :trigger-hydration="!loading">
+              <m-product-carousel :products="newCollection" />
+            </lazy-hydrate>
+          </div>
+      </div>
     </div>
 
     <MSupportBlock />
-
-    <div class="container">
-      <SfSection class="section">
-        <lazy-hydrate :trigger-hydration="!loading">
-          <m-product-carousel :products="newCollection" />
-        </lazy-hydrate>
-      </SfSection>
+    <div class="product-slider">
+      <div class="container">
+        <div class="d-flex slider-content">
+          <SfImage
+              src="assets/images/outillage.jpg"
+              class="slider-banner"
+            />
+            <lazy-hydrate :trigger-hydration="!loading">
+              <m-product-carousel :products="newCollection" />
+            </lazy-hydrate>
+          </div>
+      </div>
     </div>
 
     <MAssurance />
@@ -73,7 +90,8 @@ import {
   SfHero,
   SfSection,
   SfBannerGrid,
-  SfBanner
+  SfBanner,
+  SfImage
 } from '@storefront-ui/vue';
 
 export default {
@@ -84,6 +102,7 @@ export default {
     SfHero,
     SfSection,
     SfBannerGrid,
+    SfImage,
     SfBanner,
     MProductCarousel,
     ONewsletter,
