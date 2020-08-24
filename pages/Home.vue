@@ -23,8 +23,8 @@
         </lazy-hydrate>
       </SfSection>
     </div>
-     <MAssurance/>
      <MSupportBlock/>
+     <MAssurance/>
     <AAboutUs />
   </section>
 </template>
