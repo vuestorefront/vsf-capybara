@@ -7,10 +7,10 @@
           <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
           <SfButton
             v-if="isSearchPanelVisible"
-            class="sf-button--text form__action-button form__action-button--secondary mobile-only"
+            class="sf-button--text form__action-button form__action-button--secondary "
             @click="$store.commit('ui/setSearchpanel', false)"
           >
-            {{ $t("Cancel") }}
+            {{ $t("X") }}
           </SfButton>
         </div>
         <MHeaderCompte />
@@ -19,7 +19,7 @@
       </div>
       <MHeaderDrill />
     </div>
-        <AHeaderMenu />
+    <AHeaderMenu />
   </header>
 </template>
 
@@ -52,7 +52,12 @@ export default {
     OSearch,
     MMenu,
     SfOverlay,
-    ALogo, MHeaderSearchbar, MHeaderCompte, MHeaderBasket, AHeaderContact, AHeaderMenu, MHeaderDrill
+    MHeaderSearchbar,
+    MHeaderCompte,
+    MHeaderBasket,
+    AHeaderContact,
+    AHeaderMenu,
+    MHeaderDrill
   },
   data () {
     return {
@@ -164,4 +169,3 @@ export default {
   }
 }
 </style>
-
