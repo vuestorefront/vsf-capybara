@@ -15,18 +15,39 @@
         :class="hero.className"
       />
     </SfHero>
-    <MAssurance/> 
+    <MAssurance />
+
     <MPromoProductBlock />
-    <MCodePromotionBlock/>
+
     <div class="container">
-      <SfSection :title-heading="$t('Bestsellers')" class="section">
+      <SfSection class="section">
         <lazy-hydrate :trigger-hydration="!loading">
           <m-product-carousel :products="newCollection" />
         </lazy-hydrate>
       </SfSection>
     </div>
-     <MSupportBlock/>
-     <MAssurance/>
+
+    <MCodePromotionBlock />
+
+    <div class="container">
+      <SfSection class="section">
+        <lazy-hydrate :trigger-hydration="!loading">
+          <m-product-carousel :products="newCollection" />
+        </lazy-hydrate>
+      </SfSection>
+    </div>
+
+    <MSupportBlock />
+
+    <div class="container">
+      <SfSection class="section">
+        <lazy-hydrate :trigger-hydration="!loading">
+          <m-product-carousel :products="newCollection" />
+        </lazy-hydrate>
+      </SfSection>
+    </div>
+
+    <MAssurance />
     <AAboutUs />
   </section>
 </template>
