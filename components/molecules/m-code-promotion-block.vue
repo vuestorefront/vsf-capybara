@@ -30,8 +30,10 @@ export default { components: { SfImage } };
         a{
             width: 50%;
             margin: 0 15px;
-            img{
-                border-radius: 5px;
+            .sf-image{
+              img{
+                  border-radius: 5px;
+              }
             }
         }
     }

@@ -42,4 +42,31 @@
         }
 
     }
+
+    .sf-section.section{
+        margin: 80px 0;
+    }
+
+    .product-slider{
+        margin: 70px 0;
+        .slider-content{
+            background-color: var(--c-white);
+            border-radius: 5px;
+            overflow: hidden;
+            .slider-banner{
+                display: block;
+                width: 360px;
+            }
+            .sf-carousel{
+                width: calc(100% - 380px);
+                &__wrapper{
+                    max-width: 100%;
+                }
+                &__controls{
+                    top: auto;
+                    bottom: 0;
+                }
+            }
+        }
+    }
 }
