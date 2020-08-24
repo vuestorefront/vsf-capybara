@@ -29,6 +29,14 @@
     font-size: 14px;
 }
 
+.btn-primary-outline-gray{
+    background-color: transparent;
+    text-transform: none;
+    border: 1px solid var(--c-light);
+    border-radius: 3px;
+    color: $primary-color;
+}
+
 .sf-rating__icon {
     --icon-color: var(--_c-orange-primary);
 }
