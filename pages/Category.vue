@@ -824,6 +824,7 @@ export default {
   }
   &__color {
     margin: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) 0;
+    border: 1px solid var(--c-light);
   }
   &__item {
     --filter-label-color: var(--c-secondary-variant);
