@@ -1,6 +1,6 @@
 <template>
-  <div class="search-container">
-    <div class="rectangle_menu d-flex align-center justify-center desktop-only">
+  <div class="search-container header-menu">
+    <div class="menu-list d-flex align-center justify-center desktop-only">
         <SfHeaderNavigationItem
           v-for="category in categories"
           :key="category.id"
@@ -149,12 +149,6 @@ export default {
   }
 }
  
-
- .rectangle_menu
-{
-  padding: 15px;
-} 
-
 .menu_general_style
 {
   --link-color: var(--_c-dark-secondary);

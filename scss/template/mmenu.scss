@@ -1,0 +1,26 @@
+.header-menu{
+    .sf-mega-menu{
+        box-shadow: 0px 100vh 0 100vh rgba(0, 0, 0, 0.7);
+    }
+    .sf-header-navigation-item{
+        width: 200px;
+        flex: inherit;
+        a{
+            border: 0;
+            padding: 12px;
+            display: block;
+            margin: 0 auto;
+            font-family: 'Poppins-Regular';
+            text-transform: none;
+            font-weight: normal;
+            &:hover{
+                color: var(--_c-green-primary-lighten);
+            }
+            &.router-link-active{
+                background-color: var(--_c-green-primary-lighten);
+                color: var(--c-white);
+                font-family: 'Poppins-Bold';
+            }
+        }
+    }
+}
