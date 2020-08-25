@@ -67,11 +67,10 @@
                     </SfSelect>
                   </div>  
                 -->
-                <div class="navbar__sort"> 
+                <div class="navbar__sort d-flex"> 
+                  <p><b>Tri:</b></p>
                   <SfButton class="sf-button--text" @click="OrderProducthHightoLow">High to Low</SfButton>
-                 </div>
-                <div class="navbar__sort"> 
-                   <SfButton class="sf-button--text" @click="OrderProducthLowtoHigh">Low to High</SfButton>
+                  <SfButton class="sf-button--text" @click="OrderProducthLowtoHigh">Low to High</SfButton>
                 </div>
                 <div class="navbar__counter">
                   <span class="navbar__label desktop-only">
@@ -776,17 +775,14 @@ export default {
   &__sort {
     display: flex;
     align-items: center;
-    margin: 0 auto 0 var(--spacer-2xl);
+    margin: 0 auto;
     .sf-select__selected.sf-select-option{
       font-size: 13px!important;
     }
   }
   &__counter {
     font-family: var(--font-family-secondary);
-    margin: auto;
-    @include for-desktop {
-      margin: auto 0 auto auto;
-    }
+    margin: 0;
   }
   &__view {
     display: flex;
