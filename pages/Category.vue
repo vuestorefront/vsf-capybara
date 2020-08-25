@@ -121,7 +121,7 @@
                   <h3 class="sf-product-card__title">
                       {{ product.title }}
                   </h3>
-                  <p>
+                  <p class="reference">
                      Ref : {{ product.sku }}
                   </p>
                    <AProductRating

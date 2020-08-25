@@ -52,7 +52,9 @@ export default {
   &__count {
     color: var(--c-text);
     text-decoration: none;
-    margin: 0 0 0 var(--spacer-xs);
+    margin: 0 10px;
+    font-size: 13px;
+    padding: 0;
   }
 }
 </style>
