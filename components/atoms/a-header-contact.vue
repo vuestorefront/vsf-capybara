@@ -18,9 +18,8 @@
   display: block;
   width: 132px;
   color: #484848;
-  font-family: Poppins;
+  font-family: 'Poppins-Bold';
   font-size: 18px;
-  font-weight: bold;
   letter-spacing: 0;
   line-height: 27px;
   text-align: center;
@@ -30,7 +29,7 @@
   height: 15px;
   width: 123px;
   color: #3B78DD;
-  font-family: Poppins;
+  font-family: 'Poppins-Regular';
   font-size: 10px;
   letter-spacing: 0;
   line-height: 16px;

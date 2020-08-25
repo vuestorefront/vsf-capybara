@@ -37,7 +37,7 @@ export default {
     height: 42px;
     width: 196px;
     color: #FFFFFF;
-    font-family: Poppins;
+    font-family: 'Poppins-Medium';
     font-size: 15px;
     font-weight: 500;
     letter-spacing: 0;
