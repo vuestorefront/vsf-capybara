@@ -358,7 +358,7 @@ export default {
       wishlistIcon: "heart",
       isOnWishlistIcon: "heart_fill",
       isOnWishlist: false,
-      showAddToCartButton: true,
+      showAddToCartButton: false,
       isAddedToCart: true,
       addToCartDisabled: false
     };
