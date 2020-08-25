@@ -32,9 +32,12 @@ export default {
 <style lang="scss" scoped>
 .a-logo {
   ::v-deep .sf-header__logo {
-    max-width: 300px;
+    min-width: 200px;  
     --header-logo-height: 66px;
     margin: 0;
+    @media screen and (max-width: 767px){
+       min-width: auto;
+    }
     img{
         width: 100%;
         height: 100%;

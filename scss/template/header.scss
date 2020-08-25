@@ -13,65 +13,20 @@ header{
         @include for-mobile{
             flex-direction: column;
             border-bottom: 0;
-            .d-flex{
-                padding: 10px 20px!important;
-            }
         }
-        .d-flex{
+        > .d-flex{
             padding: 20px;
-        }
-    }
-    .sf-search-bar{
-        --search-bar-width: 44rem;
-        margin: 0 1.5vw;
-        height: auto;
-        @media screen and (max-width: 1380px){
-            --search-bar-width: 30rem;
-        }
-        input{
-            border-bottom: 0;
-            text-indent: 15px;
-            height: 50px;
-            border: 1px solid var(--_c-gray-accent);
-            border-radius: 3px;
-            box-shadow: 0px 0px 0px 6px var(--_c-gray-accent);
-            &:focus{
-                outline: none;
-                border-color: var(--_c-green-primary-lighten);
+            &.align-center{
+                width: calc(100% - 350px);
+                @media screen and (min-width: 1024px) and (max-width: 1400px){
+                    width: 100%;
+                }
+                @media screen and (max-width: 767px){
+                    width: fit-content;
+                    padding: 10px;
+                    justify-content: space-between;
+                }
             }
-        }
-        .sf-search-bar__icon{
-            background-color: var(--_c-green-primary-lighten);
-            height: 44px;
-            display: flex;
-            align-items: center;
-            top: 3px;
-            padding:  0 5px;
-            border-radius: 3px;
-            right: 3px;
-            padding: 0 10px;
-            border-radius: 3px;
-            svg{
-                fill: $white-color; 
-            }
-        }  
-        + .o-search-panel{
-            top: 115px;
-            z-index: 2;
-            box-shadow: 0px 100vh 0 100vh rgba(0, 0, 0, 0.7);
-        }
-    }
-
-    .search-container{
-        position: relative;
-        .sf-button{
-            position: absolute;
-            right: 75px;
-            top: 17px;
-            font-size: 14px;
-            text-decoration: none;
-            font-family: 'Poppins-Bold';
-            color: var(--_c-green-primary-lighten);
         }
     }
 
@@ -127,6 +82,9 @@ header{
         background-repeat: no-repeat;
         background-size: 35%;
         background-position: right;
+        @media screen and (min-width: 1024px) and (max-width: 1400px){
+            width: auto;
+        }
         @include for-mobile{
             padding: 8px 0;
             width: 100%;

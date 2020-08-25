@@ -50,6 +50,9 @@
         }
         &:nth-child(2){
           margin: 0 30px;
+          @include for-mobile{
+            margin: 0 auto;
+          }
         }
     }
   }
