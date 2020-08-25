@@ -19,17 +19,16 @@
 
 .navbar__main{
     .navbar__sort{
-        .sort-by{
-            #sfSelect{
-                min-height: 28px;
-                min-width: 150px;
-                padding-left: 10px;
-                font-size: 13px;
+        p{
+            
+            margin-right: 10px;
+            b{
+                font-family: 'Poppins-Bold';
             }
-            .sf-chevron{
-                transform: scale(0.7);
-                top: 4px;
-            }
-        }   
+        } 
+        button{
+            text-decoration: none;
+            margin: 0 10px;
+        }
     }
 }

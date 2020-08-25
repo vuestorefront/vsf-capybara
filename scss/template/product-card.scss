@@ -2,24 +2,52 @@
     border: 1px solid var(--c-light);
     border-radius: 3px;
     margin: 10px;
+    padding: 0;
     @include for-mobile {
         margin: 5px;
     }
     a{
+        padding: 0 15px;
+        margin-bottom: 10px;
         .sf-image{
             margin: 0 auto;
             display: block;
+            &:after{
+                display: none;
+            }
+            img{
+                position: relative;
+                top: 0;
+                left: 0;
+                transform: none;
+            }
         }
         .sf-product-card__title{
-            margin: 10px 0;
+            margin: 0;
             font-size: 14px;
+            height: 44px;
+            overflow: hidden;
         }
-        
+        .reference{
+            margin: 10px 0;
+            line-height: normal;
+            font-size: 14px;
+            color: var(--_c-gray-secondary-lighten);
+        }
+    }
+    &__image-wrapper{
+        + .sf-product-card__link{
+            border-bottom: 1px solid var(--c-light);
+        }
+        .sf-circle-icon{
+            display: none;
+        }
     }
     .sf-price{
         font-family: 'Poppins-Bold';
         flex-direction: column;
         align-items: flex-start;
+        height: 48px;
         &__regular{
             font-family: 'Poppins-Bold';
             font-size: 18px;
@@ -33,6 +61,26 @@
         &__special{
             font-family: 'Poppins-Bold';
             color: var(--_c-orange-primary);
+        }
+    }
+    .a-add-to-cart{
+        max-width: 94%;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        background-color: transparent;
+        color: var(--_c-dark-secondary);
+        text-transform: none;
+        box-shadow: none;
+        border: 1px solid var(--c-light);
+        border-radius: 3px; 
+        font-size: 13px;
+        font-family: 'Poppins-Medium';
+        padding: 10px;
+        font-weight: 500;
+        &:hover{
+            color: var(--c-white);
+            background-color: var(--_c-green-primary-lighten);
+            border-color: var(--_c-green-primary-lighten);
         }
     }
 }
