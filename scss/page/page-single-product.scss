@@ -16,6 +16,10 @@
                     margin: 10px 0;
                 }
                 .product__description{
+                    font-size: 14px;
+                    line-height: normal;
+                    height: 80px;
+                    overflow: hidden;
                     p, ul li{
                         font-size: 14px;
                         line-height: normal;
@@ -26,11 +30,34 @@
                 p{
                     font-size: 13px;
                 }
-                .sf-price{
-                    height: auto;
-                    + p{
-                        margin: 0;
-                        font-size: 9px;
+                .sf-add-to-cart{
+                    .sf-price{
+                        height: auto;
+                        + p{
+                            margin: 0;
+                            font-size: 9px;
+                        }
+                    }
+                    .coupon-code{
+                        background-color: var(--_c-gray-accent);
+                        border-radius: 3px;
+                        padding: 10px;
+                        margin: 10px 0;
+                        p{
+                            font-size: 10px;
+                            margin: 0; 
+                            span{
+                                color: var(--c-white);
+                                background-color: var(--_c-green-primary-lighten);
+                                padding: 2px;
+                                font-size: 8px;
+                                border-radius: 50%;
+                                display: inline-block;
+                                width: 12px;
+                                text-align: center;
+                                vertical-align: middle;
+                            }
+                        }
                     }
                 }
                 .a-add-to-cart{

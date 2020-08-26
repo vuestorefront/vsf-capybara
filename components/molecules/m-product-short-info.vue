@@ -25,7 +25,9 @@
         {{ $t("Read all {count} review", { count: reviewsCount }) }}
       </AProductRating>
     </div>
+    <hr>
     <div class="product__description desktop-only" v-html="product.description" />
+    <AMesAdvantage />
   </div>
 </template>
 
@@ -33,6 +35,7 @@
 import { SfHeading, SfIcon, SfPrice, SfButton } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductPrice from 'theme/components/atoms/a-product-price';
+import AMesAdvantage from 'theme/components/atoms/a-mes-advantage';
 import { createSmoothscroll } from 'theme/helpers'
 export default {
   name: 'MProductShortInfo',
@@ -40,7 +43,8 @@ export default {
     SfHeading,
     SfIcon,
     AProductRating,
-    AProductPrice
+    AProductPrice,
+    AMesAdvantage
   },
   props: {
     product: {

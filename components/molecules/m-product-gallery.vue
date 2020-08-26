@@ -87,6 +87,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .m-product-gallery {
+  max-width: 550px;
+  width: 100%;
+  margin-right: 15px;
   flex: 1;
 }
 </style>

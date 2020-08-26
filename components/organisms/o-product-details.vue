@@ -170,8 +170,8 @@ export default {
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
     @include for-desktop {
-      max-width: 50%;
       margin: 0 ;
+      max-width: calc(100% - 550px);
     }
   }
   &__add-to-cart {

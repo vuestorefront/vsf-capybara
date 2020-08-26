@@ -22,6 +22,9 @@
               :custom-options="customOptions"
           />
           <p>Dont 2.08€ d'eco part.</p>
+          <div class="coupon-code">
+            <p>Comment utiliser ce code <span>?</span></p>
+          </div>
           <AQuantityInfo /> 
           <div class="quantity d-flex align-center">
               <label>Quantité :</label>
