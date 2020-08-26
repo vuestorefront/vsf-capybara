@@ -1,0 +1,60 @@
+#product{
+    .product{
+        &__info{
+            .m-product-short-info{
+                .product__header{
+                    h3{
+                        font-family: 'Poppins-Bold';
+                        font-size: 24px;
+                    }
+                }
+                .reference{
+                    font-size: 12px;
+                    color: var(--c-black);
+                }
+                .product__price-and-rating{
+                    margin: 10px 0;
+                }
+                .product__description{
+                    p, ul li{
+                        font-size: 14px;
+                        line-height: normal;
+                    }
+                }
+            }
+            .quantity-section{
+                p{
+                    font-size: 13px;
+                }
+                .sf-price{
+                    height: auto;
+                    + p{
+                        margin: 0;
+                        font-size: 9px;
+                    }
+                }
+                .a-add-to-cart{
+                    max-width: 100%;
+                    color: var(--c-white);
+                    background-color: var(--_c-green-primary-lighten);
+                    border-color: var(--_c-green-primary-lighten);
+                }
+                .payment-security{
+                    .sf-image{
+                        margin-right: 10px;
+                        img{
+                            width: 21px;
+                            height: 21px;
+                            object-fit: contain;
+                        }
+                    }
+                    p{
+                        font-size: 12px;
+                        margin: 0;
+                    }
+                }
+            }
+        }
+        
+    }
+}

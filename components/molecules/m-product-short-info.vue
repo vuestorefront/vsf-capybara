@@ -13,15 +13,14 @@
         class="product__drag-icon mobile-only"
       />
     </div>
+    <p class="reference">
+      <b>Référence</b> {{ product.sku }}
+    </p>
     <div class="product__price-and-rating">
-      <AProductPrice
-        v-if="product.type_id !== 'grouped'"
-        :product="product"
-        :custom-options="customOptions"
-      />
       <AProductRating
         @click="openReviewsTab"
         :reviews="reviews"
+        class="d-flex"
       >
         {{ $t("Read all {count} review", { count: reviewsCount }) }}
       </AProductRating>

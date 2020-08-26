@@ -16,33 +16,44 @@
         />
       </template>
       <template #quantity-select-input>
-        <label>Price :
           <AProductPrice
               v-if="product.type_id !== 'grouped'"
               :product="product"
               :custom-options="customOptions"
           />
-         </label>
-         <label>Quantité :</label>
-        <AProductQuantity
-          class="sf-add-to-cart__select-quantity"
-          v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"
-          v-model="qty"
-          :max-quantity="stock.max"
-          :loading="stock.isLoading"
-          :unlimit-quantity="!isSimpleOrConfigurable"
-          @input="$emit('input', $event)"
-          @error="handleQuantityValidationError"
-        />
-        <span v-else>&nbsp;</span>
+          <p>Dont 2.08€ d'eco part.</p>
+          <AQuantityInfo /> 
+          <div class="quantity d-flex align-center">
+              <label>Quantité :</label>
+              <AProductQuantity
+                class="sf-add-to-cart__select-quantity"
+                v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"
+                v-model="qty"
+                :max-quantity="stock.max"
+                :loading="stock.isLoading"
+                :unlimit-quantity="!isSimpleOrConfigurable"
+                @input="$emit('input', $event)"
+                @error="handleQuantityValidationError"
+              />
+              <span v-else>&nbsp;</span>
+            </div>
       </template>
     </SfAddToCart>
+     <div class="payment-security d-flex align-center justify-center"> 
+        <SfImage
+            src="/assets/icons/paiement-securise-icon.png"
+            :alt="$t(defaultTitle)"
+            class="icon"
+            />
+        <p>Paiement 100% sécurisé</p>
+    </div>
   </div>
 </template>
 <script>
 import { onlineHelper } from '@vue-storefront/core/helpers';
-import { SfAddToCart, SfAlert, SfPrice } from '@storefront-ui/vue';
+import { SfAddToCart, SfAlert, SfPrice, SfImage } from '@storefront-ui/vue';
 import AProductQuantity from 'theme/components/atoms/a-product-quantity';
+import AQuantityInfo from 'theme/components/atoms/a-quantity-info';
 import AAddToCart from 'theme/components/atoms/a-add-to-cart';
 import AProductPrice from 'theme/components/atoms/a-product-price';
 
@@ -53,8 +64,10 @@ export default {
     SfAddToCart,
     SfAlert,
     AProductQuantity,
+    AQuantityInfo,
     AAddToCart,
     SfPrice,
+    SfImage,
     AProductPrice
   },
   data () {

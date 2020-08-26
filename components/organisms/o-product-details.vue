@@ -10,7 +10,7 @@
       :configuration="productConfiguration"
     />
     <div class="product__info">
-    <div class="d-flex">
+    <div class="d-flex align-start">
     <div>
       <MProductShortInfo
         :product="product"
