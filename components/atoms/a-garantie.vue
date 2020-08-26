@@ -1,49 +1,50 @@
 <template>
-  <div class="mes-advantage d-flex">
+  <div class="garantie-product d-flex">
             <SfImage
-            src="/assets/images/SWAP-Video.png"
+            src="/assets/images/garantie-icon.png"
             :alt="$t(defaultTitle)"
             class="sf-heade"
              />
         <div class="description">
             <p class="text-primary">
-              <b>Mes avantages Capitools inclus</b>
+              <b>Garantie du produit</b>
             </p>
-            <p>INSTALLATION / RÉPARATION / PIÈCES
-                DÉTACHÉES : UN VRAI SAVOIR-FAIRE
-            </p>
-            <SfButton class="btn-primary-outline-gray" :disabled="disabled" :link="link">
-                Voir les détails
-            </SfButton>
+            <p>Ce produit est sous garantie pendant les deux ans à compter de la date d'achat.</p>
+            <SfLink target="_blank" :link="link">
+                En savoir plus
+            </SfLink>
         </div>
   </div>
 </template>
 
 <script>
-import { SfButton, SfImage } from "@storefront-ui/vue";
+import { SfLink, SfImage } from "@storefront-ui/vue";
 export default {
   components: {
-    SfButton,
+    SfLink,
     SfImage,
   },
   data() {
     return {
-      default: "Shop now",
-      disabled: false,
-      link: "https://services.swap-europe.com/marketplaces-services",
+      link: "#",
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-    .mes-advantage{
+    .garantie-product{
         padding: 15px;
         border: 1px solid var(--_c-gray-accent);
         border-radius: 5px;
         margin: 15px 0;
         .sf-image{
             min-width: 120px;
+            img{
+                width: 81px;
+                margin: 0 auto;
+                display: block;
+            }
         }
         p{
             margin: 0;
@@ -55,11 +56,13 @@ export default {
         }
         .description{
             margin: 0 15px;
-            button{
-                padding: 7px 10px;
-                color: var(--_c-dark-secondary);
-                font-size: 12px;
-                font-family: 'Poppins-Bold';
+            a{
+               font-family: 'Poppins-Light';
+               font-style: italic;
+               font-size: 12px; 
+               color: var(--_c-green-primary-lighten)!important;
+               text-decoration: none;
+                font-weight: 600;
             }
         }
     }

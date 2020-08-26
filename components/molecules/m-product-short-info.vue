@@ -28,6 +28,7 @@
     <hr>
     <div class="product__description desktop-only" v-html="product.description" />
     <AMesAdvantage />
+    <AGarantie />
   </div>
 </template>
 
@@ -36,6 +37,7 @@ import { SfHeading, SfIcon, SfPrice, SfButton } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductPrice from 'theme/components/atoms/a-product-price';
 import AMesAdvantage from 'theme/components/atoms/a-mes-advantage';
+import AGarantie from 'theme/components/atoms/a-garantie';
 import { createSmoothscroll } from 'theme/helpers'
 export default {
   name: 'MProductShortInfo',
@@ -44,7 +46,8 @@ export default {
     SfIcon,
     AProductRating,
     AProductPrice,
-    AMesAdvantage
+    AMesAdvantage,
+    AGarantie
   },
   props: {
     product: {
