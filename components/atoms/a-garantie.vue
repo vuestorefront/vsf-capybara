@@ -2,7 +2,7 @@
   <div class="garantie-product d-flex">
             <SfImage
             src="/assets/images/garantie-icon.png"
-            :alt="$t(defaultTitle)"
+            :alt="garantie-icon"
             class="sf-heade"
              />
         <div class="description">
@@ -39,12 +39,7 @@ export default {
         border-radius: 5px;
         margin: 15px 0;
         .sf-image{
-            min-width: 120px;
-            img{
-                width: 81px;
-                margin: 0 auto;
-                display: block;
-            }
+            min-width: 120px;           
         }
         p{
             margin: 0;

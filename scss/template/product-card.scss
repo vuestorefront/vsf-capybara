@@ -6,6 +6,9 @@
     @include for-mobile {
         margin: 5px;
     }
+    &__image-wrapper{
+        height: 226px;
+    }
     a{
         padding: 0 15px;
         margin-bottom: 10px;

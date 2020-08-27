@@ -1,0 +1,30 @@
+.m-product-gallery {
+    max-width: 550px;
+    width: 100%;
+    margin-right: 15px;
+    flex: 1;
+    .sf-gallery{
+       &__thumbs{
+           max-width: 70px;
+           height: fit-content;
+           button{
+             width: 70px;
+             max-height: 70px;
+             border: 1px solid var(--_c-gray-accent);
+             border-radius: 2px;
+             .sf-image{
+               height: 70px;
+             }
+           }
+       }
+       &__stage{
+         .glide{
+            &__slide{
+                .sf-image{ 
+                  height: 420px;
+                }
+            }
+         }
+       }
+    }
+  }
