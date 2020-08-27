@@ -1,5 +1,17 @@
 *, a, span, small, p, div{
     --font-family-primary: 'Poppins-Regular'; 
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+     
+    &::-webkit-scrollbar-track {
+        border-radius: 10px;
+    }
+     
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background-color: var(--_c-green-primary-lighten);
+    }
 }
 
 p{
