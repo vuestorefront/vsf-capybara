@@ -81,7 +81,7 @@
             </template>
           </SfProperty>
           <SfButton
-            class="sf-button--full-width color-secondary"
+            class="sf-button--full-width btn-secondary"
             @click.native="goToCheckout"
           >
             {{ $t("Go to checkout") }}
@@ -89,7 +89,7 @@
         </div>
         <div v-else>
           <SfButton
-            class="sf-button--full-width color-primary"
+            class="sf-button--full-width btn-primary"
             @click.native="startShopping"
           >
             {{ $t("Start shopping") }}
@@ -254,9 +254,11 @@ export default {
 .collected-product-list {
   flex: 1;
 }
+
 .collected-product {
   --collected-product-image-background: var(--c-white);
   margin: 0 0 var(--spacer-sm) 0;
+  border: 1px solid var(--c-light);
   &__properties {
     margin: var(--spacer-xs) 0 0 0;
   }
@@ -270,5 +272,6 @@ export default {
   &:hover {
     --cp-actions-opacity: 1;
   }
+
 }
 </style>
