@@ -59,21 +59,36 @@ export default {
         background-color: var(--c-white);
         .support-block--content{
             padding: 30px 0;
-            @include for-mobile{
-                flex-direction: column;
+            @media screen and (max-width: 1320px){
+                flex-wrap: wrap;
             }
+             @include for-mobile{
+                 flex-direction: column;
+             }
             .support-block--item{
                 padding: 0 30px;
-                @include for-mobile{
-                    flex-direction: column;
+                width: 33%;
+                @media screen and (max-width: 1320px){
+                    width: 42%;
+                }
+                @media screen and (max-width: 1024px){
                     margin-bottom: 20px;
-                    text-align: center;
+                    max-width: 100%;
+                    width: 100%;
+                    padding: 0;
+                }
+                @media screen and (max-width: 600px){
+                    flex-direction: column;
+                    justify-content: center;
                 }
                 &:nth-child(2){
                     border-left: 2px solid var(--c-light);
                     border-right: 2px solid var(--c-light);
                     @include for-mobile{
+                        padding: 20px 0;
                         border: 0;
+                        border-top: 2px solid var(--c-light);
+                        border-bottom: 2px solid var(--c-light);
                     }
                 }
                 img{
@@ -82,7 +97,6 @@ export default {
                     width: 145px;
                     @include for-mobile{
                         display: block;
-                        margin: 15px auto;
                     }
                 }
                 h3, p{
@@ -104,9 +118,6 @@ export default {
                 .btn-primary-outline-gray{
                     padding: 10px 18px;
                     font-size: 14px;
-                    @include for-mobile{
-                        margin: 0 auto;
-                    }
                 }
             }
         }

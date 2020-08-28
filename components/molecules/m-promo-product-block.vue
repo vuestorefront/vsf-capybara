@@ -36,17 +36,18 @@
   marging: 30px 0;
   .static-block-type{
     justify-content: space-between;
-    @include for-mobile{
+    @media screen and (max-width: 600px){
       flex-direction: column;
     }
-    .sf-image{
+    .sf-image{ 
       width: 100%;
     }
     a{
        display: block;
         width: 33%;
-        @media screen and (max-width: 480px){
+        @media screen and (max-width: 600px){
           width: 100%;
+          text-align: center;
         }
         &:nth-child(2){
           margin: 0 30px;
@@ -57,5 +58,5 @@
     }
   }
 }
-
+ 
 </style>
