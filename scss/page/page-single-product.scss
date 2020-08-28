@@ -1,13 +1,34 @@
 #product{
     .product{
         &__info{
+            > .d-flex.align-start{
+                @include for-tablet{
+                    flex-direction: column;
+                }
+                @include for-mobile{
+                    flex-direction: column;
+                    padding: 0 15px;
+                }
+            }
             .m-product-short-info{
+                margin: 0 7px;
+                @include for-mobile{
+                    padding: 0;
+                    margin: 0;
+                    width: -webkit-fill-available;
+                }
                 .product__header{
+                    @include for-mobile{
+                        margin: 0;
+                    }
                     h3{
                         font-family: 'Poppins-Bold';
                         font-size: 24px;
                         line-height: normal;
                     }
+                }
+                hr{
+                    border-color: var(--_c-gray-accent);
                 }
                 .reference{
                     font-size: 12px;
@@ -37,6 +58,7 @@
                 }
             }
             .quantity-section{
+                margin: 0 7px;
                 p{
                     font-size: 13px;
                 }

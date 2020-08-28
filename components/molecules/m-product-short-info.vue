@@ -26,7 +26,14 @@
       </AProductRating>
     </div>
     <hr>
-    <div class="product__description desktop-only" v-html="product.description" />
+    <div class="product__description desktop-only" v-html="product.description"> </div>
+      <SfButton
+        v-show="sizeOption"
+        @click.native="openSizeGuide"
+        class="sf-button--text desktop-only product__guide"
+      >
+        {{ $t('Size guide') }}
+      </SfButton>
     <AMesAdvantage />
     <AGarantie />
   </div>
@@ -87,7 +94,6 @@ export default {
 
 .product {
   &__header {
-    margin: 0 var(--spacer-sm);
     display: flex;
     justify-content: space-between;
     @include for-desktop {

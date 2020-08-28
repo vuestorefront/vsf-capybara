@@ -37,13 +37,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
     .mes-advantage{
         padding: 15px;
         border: 1px solid var(--_c-gray-accent);
         border-radius: 5px;
+        width: fit-content;
         margin: 15px 0;
+       
+        @include for-mobile{
+          display: inline-flex;
+          width: 42vw;
+          margin: 15px;
+          margin-left: 0;
+          align-items: center;
+          vertical-align: top;
+        }
+        @media screen and (max-width: 767px){
+             width: auto;
+            display: flex;
+            margin: 15px 0;
+        }
         .sf-image{
-            min-width: 120px;
+            min-width: auto;
+            width: 175px;           
+            @include for-desktop{
+               min-width: 120px;
+            }
         }
         p{
             margin: 0;
