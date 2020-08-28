@@ -15,17 +15,14 @@
           <SfInput
               v-model="value"
               :type="type"
-              :label="label"
               :name="name"
               :valid="valid"
               :error-message="errorMessage"
-              :class="customClass"
               :placeholder="placeholder"
             />
           <SfButton 
             class="btn-primary"
-            :native-button="nativeButton"
-            :link="link"
+            link="#"
           >
             S'inscrire
           </SfButton>
