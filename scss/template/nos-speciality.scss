@@ -1,0 +1,78 @@
+.nos-specialities{
+    margin-bottom: 40px;
+    .content{
+        border-radius: 6px;
+        background-color: var(--c-white);
+        overflow: hidden;
+        @media screen and (max-width: 767px) {
+            flex-direction: column;
+        }
+        .banner{
+            max-width: 280px;
+            width: 100%;
+            background-image: url(/assets/images/nos-specialities.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            padding: 20px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            flex-direction: column;
+            @media screen and (max-width: 767px) {
+                max-width: 100%;
+                width: auto;
+            }
+            h1, p{
+                color: var(--c-white);
+            }
+            h1{
+                font-size: 48px;
+                font-family: 'Poppins-Medium';
+                margin: 0; 
+                margin-bottom: 10px;
+                line-height: 1;
+                font-weight: 400;
+                text-shadow: 2px 3px 2px var(--c-black);
+            }
+            p{
+                margin: 0;
+                font-size: 12px;
+                font-family: 'Poppins-Regular';
+            }
+        }
+        .category-list{
+            padding: 20px 5vw;
+            .category-item{
+                padding: 10px 15px;
+                width: 29%;
+                @media screen and (max-width: 1440px) {
+                    width: 42%;
+                }
+                @media screen and (max-width: 1130px) {
+                    width: 100%;
+                }
+                @media screen and (max-width: 767px) {
+                    width: 42%;
+                }
+                @media screen and (max-width: 480px) {
+                    width: 100%;
+                }
+                .category-icon{
+                    width: 40px;
+                    height: 40px;
+                    margin-right: 12px;
+                }
+                p{
+                    font-size: 14px;
+                    font-family: 'Poppins-Medium';
+                }
+                &:hover{
+                    background-color: var(--_c-light-primary);
+                    border-radius: 2px;
+                }
+            }
+        }
+
+    }
+}

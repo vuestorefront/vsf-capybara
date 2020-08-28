@@ -16,7 +16,7 @@
       />
     </SfHero>
     <MAssurance />
-
+    <MNosSpecialities />
     <MPromoProductBlock />
 
     <div class="product-slider">
@@ -75,6 +75,7 @@ import { mapState, mapGetters } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
+import MNosSpecialities from 'theme/components/molecules/m-nos-specialities';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import MAssurance from 'theme/components/molecules/m-assurance';
 import MPromoProductBlock from 'theme/components/molecules/m-promo-product-block';
@@ -104,6 +105,7 @@ export default {
     SfBannerGrid,
     SfImage,
     SfBanner,
+    MNosSpecialities,
     MProductCarousel,
     ONewsletter,
     AImagesGrid,
