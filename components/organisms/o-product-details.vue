@@ -11,20 +11,13 @@
     />
     <div class="product__info">
     <div class="d-flex align-start">
-    <div>
+
       <MProductShortInfo
         :product="product"
         :custom-options="productCustomOptions"
         :reviews="reviews"
       />
-      <SfButton
-        v-show="sizeOption"
-        @click.native="openSizeGuide"
-        class="sf-button--text desktop-only product__guide"
-      >
-        {{ $t('Size guide') }}
-      </SfButton>
-      </div>
+
       <div class="quantity-section">
       
         <MProductOptionsConfigurable
@@ -164,8 +157,10 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .product {
+  flex-direction: column;
   @include for-desktop {
     display: flex;
+    flex-direction: row;
   }
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
@@ -195,6 +190,9 @@ export default {
     padding: 15px;
     border: 1px solid var(--_c-green-primary-lighten);
     border-radius: 3px;
+    @include for-mobile{
+      width: -webkit-fill-available;
+    }
   }
 
 .section {

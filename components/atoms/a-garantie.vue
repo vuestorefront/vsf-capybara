@@ -33,13 +33,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
     .garantie-product{
         padding: 15px;
         border: 1px solid var(--_c-gray-accent);
         border-radius: 5px;
-        margin: 15px 0;
+        width: fit-content;
+        @include for-mobile{
+          display: inline-flex;
+          width: 43vw;
+          margin: 15px 0;
+          align-items: center;
+          vertical-align: text-bottom;
+        }
+        @media screen and (max-width: 767px){
+             width: auto;
+            display: flex;
+        }
         .sf-image{
-            min-width: 120px;           
+            min-width: auto;
+            width: 160px;
+           
+            @include for-desktop{
+               min-width: 120px;
+            }
         }
         p{
             margin: 0;

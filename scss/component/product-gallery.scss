@@ -1,23 +1,33 @@
 .m-product-gallery {
+   @include for-desktop{
     max-width: 550px;
+   }
     width: 100%;
     margin-right: 15px;
     flex: 1;
     .sf-gallery{
        &__thumbs{
-           max-width: 70px;
-           height: fit-content;
-           button{
-             width: 70px;
-             max-height: 70px;
-             border: 1px solid var(--_c-gray-accent);
-             border-radius: 2px;
-             .sf-image{
-               height: 70px;
-             }
-           }
+         justify-content: center;
+         button{
+            border: 1px solid var(--_c-gray-accent);
+            border-radius: 2px;
+         }
+        @include for-desktop{
+          max-width: 70px;
+          height: fit-content;
+          button{
+            width: 70px;
+            max-height: 70px;
+            .sf-image{
+              height: 70px;
+            }
+          }
+         }
        }
        &__stage{
+         @include for-tablet{
+           margin: 20px auto;
+         }
          .glide{
             &__slide{
                 .sf-image{ 
