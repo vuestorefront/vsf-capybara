@@ -51,9 +51,7 @@
           </p>
           <SfButton
             class="see-more btn-primary"
-            :disabled="disabled"
-            :native-button="nativeButton"
-            :link="link"
+            :link="seeMoreLink"
           >
             See more
           </SfButton>
@@ -71,7 +69,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ABackToTop from 'theme/components/atoms/a-back-to-top';
-import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
+import { SfFooter, SfList, SfMenuItem , SfButton } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { getPathForStaticPage } from 'theme/helpers';
 import config from 'config';
@@ -87,11 +85,13 @@ export default {
     SfFooter,
     SfList,
     SfMenuItem,
+    SfButton,
     AFooterPaymentSection,
     MFooterNewsletterSection
   },
   data () {
     return {
+      seeMoreLink:"#",
       social: ['facebook', 'pinterest', 'twitter', 'youtube']
     };
   },
