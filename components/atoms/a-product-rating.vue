@@ -4,6 +4,7 @@
       <SfRating :score="score" :max="max" />
       <a v-if="!!reviews" href="#" class="product__count">
         ({{ reviews.length }})
+      <span>Avis client</span>
       </a>
     </div>
     <SfButton class="sf-button--text">
