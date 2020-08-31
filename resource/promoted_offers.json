@@ -67,7 +67,6 @@
   ],
   "menuAsideBanners": [
     {
-      "title": "Last pairs left",
       "type": "mobile",
       "image": {
         "webp": "/assets/banner/webp/bannerSandals-full.webp",
@@ -75,27 +74,10 @@
       }
     },
     {
-      "title": "Last pairs left",
       "type": "desktop",
       "image": {
-        "webp": "/assets/banner/webp/bannerSandals.webp",
-        "fallback": "/assets/banner/png/bannerSandals.png"
-      }
-    },
-    {
-      "title": "Beach bags 2=1",
-      "type": "mobile",
-      "image": {
-        "webp": "/assets/banner/webp/bannerBeachBag-full.webp",
-        "fallback": "/assets/banner/png/bannerBeachBag-full.png"
-      }
-    },
-    {
-      "title": "Beach bags 2=1",
-      "type": "desktop",
-      "image": {
-        "webp": "/assets/banner/webp/bannerBeachBag.webp",
-        "fallback": "/assets/banner/png/bannerBeachBag.png"
+        "webp": "/assets/banner/webp/jardinage-menu-banner.webp",
+        "fallback": "/assets/banner/png/jardinage-menu-banner.jpg"
       }
     }
   ]

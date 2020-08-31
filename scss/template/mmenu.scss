@@ -25,9 +25,12 @@
         }
         .m-menu{
             border-top: 1px solid var(--_c-green-primary-lighten);
+            .sf-mega-menu,
+            .aside-menu{
+                min-height: 300px;
+            }
             .sf-mega-menu{
                 &__menu{
-                    width: 75%;
                     flex-wrap: wrap;
                     a, p, span{
                         font-size: 12px;
@@ -69,6 +72,20 @@
                         margin-bottom: 15px;
                         width: 30%;
                     }
+                }
+                &__content{
+                    max-width: 800px;
+                    width: 100%;
+                    padding: 40px 0;
+                }
+            }
+            .aside-menu{
+                position: absolute;
+                top: 0;
+                right: 0;
+                .aside-banner{
+                    padding: 0;
+                    margin: 0;
                 }
             }
         }

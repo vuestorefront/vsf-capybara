@@ -23,7 +23,8 @@
           </SfListItem>
         </SfList>
       </SfMegaMenuColumn>
-      <template #aside>
+     
+    </SfMegaMenu>
         <div class="aside-menu">
           <SfBanner
             v-for="(banner, i) in banners"
@@ -34,8 +35,6 @@
             :class="`aside-banner--${banner.type}`"
           />
         </div>
-      </template>
-    </SfMegaMenu>
   </div>
 </template>
 <script>
