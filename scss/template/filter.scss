@@ -32,3 +32,16 @@
         }
     }
 }
+
+.sf-sidebar{
+    &__bottom{
+        border-top: 1px solid var(--c-light);
+        .btn-primary{
+            width: 100%;
+            text-transform: none;
+        }
+        .a-add-to-cart{
+            max-width: 100%;
+        }
+    }
+}

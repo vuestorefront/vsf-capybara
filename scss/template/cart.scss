@@ -1,0 +1,12 @@
+.o-microcart-panel{
+    .a-add-to-cart{
+        color: var(--c-white);
+        background-color: var(--_c-green-primary-lighten);
+        border-color: var(--_c-green-primary-lighten);
+        &:hover{
+            background-color: transparent;
+            color: var(--_c-green-primary-lighten);
+            border: 1px solid var(--_c-green-primary-lighten);
+        }
+    }
+}

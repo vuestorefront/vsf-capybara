@@ -31,6 +31,7 @@
             }
             .sf-mega-menu{
                 &__menu{
+                    width: 100%;
                     flex-wrap: wrap;
                     a, p, span{
                         font-size: 12px;

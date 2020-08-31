@@ -8,6 +8,17 @@
     }
     &__image-wrapper{
         height: 226px;
+        a{
+            display: block;
+            height: 100%;
+            .sf-image{
+                height: 100%;
+                img{
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
+        }
     }
     a{
         padding: 0 15px;

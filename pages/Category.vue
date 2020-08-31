@@ -217,13 +217,13 @@
       <template #content-bottom>
         <div class="filters__buttons">
           <SfButton
-            class="sf-button--full-width"
+            class="sf-button--full-width btn-primary"
             @click="isFilterSidebarOpen = false"
           >
             {{ $t("Done") }}
           </SfButton>
           <SfButton
-            class="sf-button--full-width filters__button-clear"
+            class="sf-button--full-width filters__button-clear a-add-to-cart"
             @click="clearAllFilters"
           >
             {{ $t("Clear all") }}
