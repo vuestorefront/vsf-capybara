@@ -1,25 +1,69 @@
 <template>
-  <header class="o-header-minimal">
-    <div class="header-content d-flex">
-      <div class="d-flex align-center">
-        <ALogo />
-        <div class="search-container">
-          <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
-          <SfButton
-            v-if="isSearchPanelVisible"
-            class="sf-button--text form__action-button form__action-button--secondary "
-            @click="$store.commit('ui/setSearchpanel', false)"
+  <header class="o-header">
+
+     <div class="header-content d-flex">
+            <div  class="d-flex align-center">
+              <SfHeader 
+              :active-icon="false"
+              :isNavVisible="false"
+              :account-icon="false"
+              :cart-icon="false"
+              :wishlist-icon="false"
+              :cart-items-qty="false">
+                <template #logo>
+                  <ALogo />
+                </template>
+
+                <template #search>
+                  <div class="search-container">
+                    <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
+                    <SfButton
+                      v-if="isSearchPanelVisible"
+                      class="sf-button--text form__action-button form__action-button--secondary "
+                      @click="$store.commit('ui/setSearchpanel', false)"
+                    >
+                      {{ $t("X") }}
+                    </SfButton>
+                  </div>
+                </template>
+              </SfHeader>   
+              <MHeaderCompte />
+              <MHeaderBasket />
+              <AHeaderContact />    
+            </div>  
+           <MHeaderDrill />
+      </div>   
+
+      <div class="search-container header-menu menu-list d-flex align-center justify-center desktop-only">
+
+          <SfHeaderNavigationItem
+            v-for="category in categories"
+            :key="category.id"
+            @mouseover="isHoveredMenu = true"
+            @mouseleave="isHoveredMenu = false"
           >
-            {{ $t("X") }}
-          </SfButton>
-        </div>
-        <MHeaderCompte />
-        <MHeaderBasket />
-        <AHeaderContact />
+            <router-link
+              :class="{active: isCategoryActive(category)}"
+              :to="categoryLink(category)"
+            >
+              {{ category.name }}
+            </router-link>
+            <MMenu
+              :visible="isHoveredMenu && !isSearchPanelVisible"
+              :categories-ids="category.children_data"
+              :title="category.name"
+              @close="isHoveredMenu = false"
+            />
+          </SfHeaderNavigationItem>
+
       </div>
-      <MHeaderDrill />
-    </div>
-    <AHeaderMenu />
+
+      <MMenu
+        v-show="isMobileMenu"
+        class="mobile-menu"
+        :categories-ids="categories"
+        @close="$store.commit('ui/closeMenu')"
+      />
   </header>
 </template>
 
@@ -29,12 +73,9 @@ import MHeaderCompte from 'theme/components/molecules/m-header-compte';
 import MHeaderBasket from 'theme/components/molecules/m-header-basket';
 import AHeaderContact from 'theme/components/atoms/a-header-contact';
 import MHeaderDrill from 'theme/components/molecules/m-header-drill';
-import AHeaderMenu from 'theme/components/atoms/a-header-menu';
-import { SfImage } from '@storefront-ui/vue';
-import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
+
+import { SfHeader, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
-import AAccountIcon from 'theme/components/atoms/a-account-icon';
-import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
@@ -42,21 +83,17 @@ import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import { getTopLevelCategories } from 'theme/helpers';
 
 export default {
-  name: 'OHeaderMinimal',
+  name: 'OHeader',
   components: {
     SfHeader,
     SfButton,
     ALogo,
-    AAccountIcon,
-    AMicrocartIcon,
     OSearch,
     MMenu,
-    SfOverlay,
     MHeaderSearchbar,
     MHeaderCompte,
     MHeaderBasket,
     AHeaderContact,
-    AHeaderMenu,
     MHeaderDrill
   },
   data () {

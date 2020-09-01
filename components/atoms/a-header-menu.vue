@@ -1,6 +1,6 @@
 <template>
   <div class="search-container header-menu">
-    <div class="menu-list d-flex align-center justify-center desktop-only">
+    <div class="menu-list d-flex align-center justify-center">
         <SfHeaderNavigationItem
           v-for="category in categories"
           :key="category.id"
@@ -19,8 +19,14 @@
             :title="category.name"
             @close="isHoveredMenu = false"
           />
-        </SfHeaderNavigationItem>
+        </SfHeaderNavigationItem> 
     </div>
+     <MMenu
+      v-show="isMobileMenu"
+      class="mobile-menu"
+      :categories-ids="categories"
+      @close="$store.commit('ui/closeMenu')"
+    />
   </div>
 </template>
 

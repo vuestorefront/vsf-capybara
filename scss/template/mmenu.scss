@@ -28,6 +28,9 @@
             .sf-mega-menu,
             .aside-menu{
                 min-height: 300px;
+                @media screen and (max-width: 1024px){
+                    height: auto;
+                }
             }
             .sf-mega-menu{
                 &__menu{
