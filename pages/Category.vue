@@ -73,10 +73,10 @@
                   <SfButton class="sf-button--text" @click="OrderProducthLowtoHigh">Low to High</SfButton>
                 </div>
                 <div class="navbar__counter">
-                  <span class="navbar__label desktop-only">
-                    {{ $t("Products found") }}:
-                  </span>
-                  <strong class="desktop-only">{{ getCategoryProductsTotal }}</strong>
+                   <span class="navbar__label desktop-only">
+                      {{ getProductDisplayString( getCategoryProductsTotal )}}
+                      <strong class="desktop-only">{{ getCategoryProductsTotal }}<span>{{ $t(" products)")}}</span></strong>
+                   </span>
                   <span class="navbar__label mobile-only">
                     {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
                   </span>
@@ -122,8 +122,10 @@
                   </h3>
                   <p class="reference">
                      Ref : {{ product.sku }}
-                  </p>
-                   <AProductRating
+                  </p> 
+                  <p v-if="product.is_in_stock">En stock</p>
+                  <p v-else>En ruputure de stock</p> 
+                  <AProductRating
                     @click="openReviewsTab"
                     :reviews="reviews"
                     >
@@ -139,7 +141,6 @@
                     :regular="product.price.regular"
                     :special="product.price.special" 
                   />  
-                  
                 </template> 
                  <template #price>
                     <AAddToCart
@@ -149,7 +150,6 @@
                     :disabled="addToCartDisabled"
                   />  
                   </template>
-                
                 <!-- 
                     <template #reviews>
                         <SfRating
@@ -231,7 +231,6 @@
         </div>
       </template>
     </SfSidebar>
-    
   </div>
 </template>
 
@@ -549,6 +548,32 @@ export default {
   methods: { 
     getBrowserWidth () {
       return (this.browserWidth = window.innerWidth);
+    },
+    getProductDisplayString( getCategoryProductsTotal )
+    {
+      if( getCategoryProductsTotal == 0 ) // No Products
+      {
+        return "(Resultats 0 - "+getCategoryProductsTotal+" of ";
+      }
+      else if( getCategoryProductsTotal <= THEME_PAGE_SIZE ) // Product count less than theme_page_size ( 12 )
+      {
+        return "(Resultats 1 - "+getCategoryProductsTotal+" of ";
+      }
+      else // Product count above theme page size
+      {
+        if( ( this.currentPage * THEME_PAGE_SIZE ) < getCategoryProductsTotal )
+        {
+          const ending_count = this.currentPage * THEME_PAGE_SIZE;
+          const starting_count = ending_count - ( THEME_PAGE_SIZE - 1 );
+          return "(Resultats "+starting_count+" - "+ending_count+" of ";
+        }
+        else
+        {
+          const starting_count = ( ( THEME_PAGE_SIZE * ( this.currentPage - 1 ) ) + 1 );
+          return "(Resultats "+starting_count+" - "+getCategoryProductsTotal+" of ";
+        }
+      }
+       return "";
     },
     async onBottomScroll () {
       if (!this.isLazyLoadingEnabled || this.loadingProducts) {

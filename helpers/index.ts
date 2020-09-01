@@ -69,7 +69,8 @@ export function prepareCategoryProduct (product) {
       score: 5
     },
     obj_product:product,
-    sku:product.sku
+    sku:product.sku,
+    is_in_stock:product.stock.is_in_stock
   }
 }
 
