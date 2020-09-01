@@ -5,7 +5,7 @@ header{
             position: relative;
             max-width: 800px;
             width: 100%;
-            .sf-button{
+            .sf-button.form__action-button{
                 position: absolute;
                 right: 60px;
                 top: 25px;
@@ -22,18 +22,24 @@ header{
                 max-width: 100%;
                 width: 100%;
                 margin: 0;
-                padding: 0;
+                padding: 0!important;
                 transition: all 0.5s ease-in-out;
                 .o-search{
                     background-color: var(--c-white);
                     padding: 15px;
                 }
                 .sf-button{
-                    top: 40px;
-                    right: 75px;
-                }
+                    top: 40px!important;
+                    right: 75px!important;
+                } 
                 .o-search-panel{
                     top: 96px;
+                    @media screen and (max-width: 767px){
+                        height: calc(100vh - 97px);
+                        .container{
+                            height: 100%;
+                        }
+                    }
                     .no-results{
                         height: auto;
                         line-height: normal;
@@ -42,7 +48,6 @@ header{
                     .container{
                         padding: 0 20px;
                         flex-direction: revert;
-                        height: 50vh;
                         .products{
                             &__listing{
                                 overflow: auto; 
@@ -55,7 +60,6 @@ header{
                 .o-search-panel{
                     .container{
                         flex-direction: column;
-                        height: calc(100vh - 100px);
                         overflow: scroll;
                     }
                 }
@@ -97,7 +101,7 @@ header{
             }
         }  
         + .o-search-panel{
-            top: 115px;
+            top: 110px;
             z-index: 2;
             box-shadow: 0px 100vh 0 100vh rgba(0, 0, 0, 0.7);
         }
