@@ -34,7 +34,7 @@ let routes = [
   { name: 'configurable-product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'category', path: '/c/:slug', component: Category },
-  { name: 'cms-page', path: '/pages/:slug', component: Static }, 
+  { name: 'cms-page', path: '/pages/:slug', component: Static }
 ];
 
 export default routes;

@@ -112,51 +112,51 @@ export default {
         about: {
           name: 'About us',
           children: [
-            { name: 'Who We Are?', link: '/about-us' },
-            { name: 'Our products', link: '/our-products.html' },
-            { name: 'Our expertise', link: '/our-expertise' },
-            { name: 'Our partner brands', link: '/capitools-brands-and-partners' },
-            { name: 'Our guarantee', link: '/our-guarantee' },
-            { name: 'Promotions', link: '/deals-promos' },
-            { name: 'New products', link: '/new-products' },
-            { name: 'Contact us', link: '/contact-capitools' },
-            { name: 'sitemap', link: '/sitemap' },
-            { name: 'We are hiring', link: '/we-are-hiring' }
+            { name: 'Who We Are?', link: '/pages/about-us' },
+            { name: 'Our products', link: '/pages/our-products.html' },
+            { name: 'Our expertise', link: '/pages/our-expertise' },
+            { name: 'Our partner brands', link: '/pages/capitools-brands-and-partners' },
+            { name: 'Our guarantee', link: '/pages/our-guarantee' },
+            { name: 'Promotions', link: '/pages/deals-promos' },
+            { name: 'New products', link: '/pages/new-products' },
+            { name: 'Contact us', link: '/pages/contact-capitools' },
+            { name: 'sitemap', link: '/pages/sitemap' },
+            { name: 'We are hiring', link: '/pages/we-are-hiring' }
           ]
         },
         product: {
           name: 'The Products',
           children: [
-            { name: 'Secure payment', link: '/secure-payment' },
-            { name: 'Terms of Sales', link: '/terms-of-sales' },
-            { name: 'Legal Notice', link: '/legal-information' },
-            { name: 'Payment methods', link: '/payment-info' },
-            { name: 'Satisfied or refunded', link: '/satisfied-or-refunded' },
-            { name: 'Partners', link: '/partners' },
-            { name: 'Cyber ​​Security', link: '/cyber-security' },
-            { name: 'Cookie notice information', link: '/cookie-notice-information' }
+            { name: 'Secure payment', link: '/pages/secure-payment' },
+            { name: 'Terms of Sales', link: '/pages/terms-of-sales' },
+            { name: 'Legal Notice', link: '/pages/legal-information' },
+            { name: 'Payment methods', link: '/pages/payment-info' },
+            { name: 'Satisfied or refunded', link: '/pages/satisfied-or-refunded' },
+            { name: 'Partners', link: '/pages/partners' },
+            { name: 'Cyber ​​Security', link: '/pages/cyber-security' },
+            { name: 'Cookie notice information', link: '/pages/cookie-notice-information' }
           ]
         },
         help: {
           name: 'Help & Services',
           children: [
-            { name: 'My orders', link: '/my-capitools-order' },
-            { name: 'My assets', link: '/my-assets' },
-            { name: 'My adresses', link: '/my-address' },
-            { name: 'My personal information', link: '/my-personal-details' },
-            { name: 'My coupons', link: '/my-coupons' },
-            { name: 'Logout', link: '/' }
+            { name: 'My orders', link: '/pages/my-capitools-order' },
+            { name: 'My assets', link: '/pages/my-assets' },
+            { name: 'My adresses', link: '/pages/my-address' },
+            { name: 'My personal information', link: '/pages/my-personal-details' },
+            { name: 'My coupons', link: '/pages/my-coupons' },
+            { name: 'Logout', link: '/pages/' }
           ]
         },
         legal: {
           name: 'Legal Information',
           children: [
-            { name: 'FAQ', link: '/f-a-q-frequently-asked-questions' },
-            { name: 'After-sales service & customer relations', link: '/after-sales-service-and-customer-relations' },
-            { name: 'Payment in 3 installments', link: '/payment-in-three-installments' },
-            { name: 'Product delivery', link: '/delivery' },
-            { name: 'Return Policy', link: '/return-policy' },
-            { name: 'The SWAP Europe Guarantee network', link: '/swap-europe-network-warranty' }
+            { name: 'FAQ', link: '/pages/f-a-q-frequently-asked-questions' },
+            { name: 'After-sales service & customer relations', link: '/pages/after-sales-service-and-customer-relations' },
+            { name: 'Payment in 3 installments', link: '/pages/payment-in-three-installments' },
+            { name: 'Product delivery', link: '/pages/delivery' },
+            { name: 'Return Policy', link: '/pages/return-policy' },
+            { name: 'The SWAP Europe Guarantee network', link: '/pages/swap-europe-network-warranty' }
           ]
         }
       };
