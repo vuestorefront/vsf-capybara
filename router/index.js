@@ -19,11 +19,9 @@ let routes = [
   { name: 'legal', path: '/legal', component: Static },
   { name: 'privacy', path: '/privacy', component: Static },
   { name: 'my-account', path: '/my-account', component: MyAccount },
-  { name: 'about-us', path: '/about-us', component: Static },
   { name: 'customer-service', path: '/customer-service', component: Static },
   { name: 'store-locator', path: '/store-locator', component: Static },
   { name: 'size-guide', path: '/size-guide', component: Static },
-  { name: 'delivery', path: '/delivery', component: Static },
   { name: 'returns', path: '/returns', component: Static },
   { name: 'contact', path: '/contact', component: Static },
   { name: 'page-not-found', path: '*', component: ErrorPage },
@@ -36,7 +34,7 @@ let routes = [
   { name: 'configurable-product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'category', path: '/c/:slug', component: Category },
-  { name: 'cms-page', path: '/i/:slug', component: Static }
+  { name: 'cms-page', path: '/:slug', component: Static }
 ];
 
 export default routes;

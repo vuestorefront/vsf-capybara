@@ -1,6 +1,6 @@
 <template>
   <div id="static">
-    <SfBreadcrumbs
+   <!-- <SfBreadcrumbs
       class="breadcrumbs desktop-only"
       :breadcrumbs="breadcrumbs"
     >
@@ -9,7 +9,7 @@
           {{ breadcrumb.text }}
         </router-link>
       </template>
-    </SfBreadcrumbs>
+    </SfBreadcrumbs> -->
     <SfContentPages
       :active="currentRoute.title"
       :title="currentRoute.title"
@@ -44,7 +44,35 @@ export default {
   data () {
     return {
       navigation: [
-        { title: i18n.t('About us (Magento CMS)'), link: getPathForStaticPage('/about-us'), isCms: true },
+        { title: i18n.t('Who We Are?'), link: '/about-us', isCms: true },
+        { title: i18n.t('Our Products'), link: '/our-products.html', isCms: true },
+        { title: i18n.t('Our Expertise'), link: '/our-expertise', isCms: true },
+        { title: i18n.t('Our Brands & Partners'), link: '/capitools-brands-and-partners', isCms: true },
+        { title: i18n.t('Our Guarantee'), link: '/our-guarantee', isCms: true },
+        { title: i18n.t('Promotions'), link: '/deals-promos', isCms: true },
+        { title: i18n.t('New Products'), link: '/new-products', isCms: true },
+        { title: i18n.t('Contact Us'), link: '/contact-capitools', isCms: true },
+        { title: i18n.t('Sitemap'), link: '/sitemap', isCms: true },
+        { title: i18n.t('We are hiring'), link: '/we-are-hiring', isCms: true },
+        { title: i18n.t('Secure Payment'), link: '/secure-payment', isCms: true },
+        { title: i18n.t('Terms of Sales'), link: '/terms-of-sales', isCms: true },
+        { title: i18n.t('Legal Information'), link: '/legal-information', isCms: true },
+        { title: i18n.t('Payment methods'), link: '/payment-info', isCms: true },
+        { title: i18n.t('Satisfied or refunded'), link: '/satisfied-or-refunded', isCms: true },
+        { title: i18n.t('Partners'), link: '/partners', isCms: true },
+        { title: i18n.t('Cyber Security'), link: '/cyber-security', isCms: true },
+        { title: i18n.t('Cookie notice information'), link: '/cookie-notice-information', isCms: true },
+        { title: i18n.t('My orders'), link: '/my-capitools-order', isCms: true },
+        { title: i18n.t('My assets'), link: '/my-assets', isCms: true },
+        { title: i18n.t('My Address'), link: '/my-address', isCms: true },
+        { title: i18n.t('My Personal details'), link: '/my-personal-details', isCms: true },
+        { title: i18n.t('My coupons'), link: '/my-coupons', isCms: true },
+        { title: i18n.t('FAQ (Frequently Asked Questions)'), link: '/f-a-q-frequently-asked-questions', isCms: true },
+        { title: i18n.t('After-sales service & customer relations'), link: '/after-sales-service-and-customer-relations', isCms: true },
+        { title: i18n.t('Payment in 3 installments'), link: '/payment-in-three-installments', isCms: true }, 
+        { title: i18n.t('Delivery'), link: '/delivery', isCms: true },
+        { title: i18n.t('Return Policy'), link: '/return-policy', isCms: true },
+        { title: i18n.t('Swap Europe Network Warranty'), link: '/swap-europe-network-warranty', isCms: true },
         { title: i18n.t('Customer service (Magento CMS)'), link: getPathForStaticPage('/customer-service'), isCms: true },
         { title: i18n.t('Customer service'), link: '/customer-service' },
         { title: i18n.t('Legal notice'), link: '/legal' },
@@ -121,9 +149,13 @@ export default {
   }
   --content-pages-height: auto;
   ::v-deep {
-    .sf-content-pages__content,
-    .sf-content-pages__sidebar {
+    .sf-content-pages__content
+    {
       height: min-content;
+    }
+    .sf-content-pages__sidebar 
+    {
+      display: none;
     }
   }
 }

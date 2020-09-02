@@ -112,51 +112,51 @@ export default {
         about: {
           name: 'About us',
           children: [
-            { name: 'Qui sommes-nous ?', link: '/' },
-            { name: 'Nos produits', link: '/' },
-            { name: 'Notre expertise', link: '/' },
-            { name: 'Nos marques partenaires', link: '/' },
-            { name: 'Notre garantie', link: '/' },
-            { name: 'Promotions', link: '/' },
-            { name: 'Nouveaux produits', link: '/' },
-            { name: 'Contactez-nous', link: '/' },
-            { name: 'sitemap', link: '/' },
-            { name: 'Nous recrutons', link: '/' }
+            { name: 'Who We Are?', link: '/about-us' },
+            { name: 'Our products', link: '/our-products.html' },
+            { name: 'Our expertise', link: '/our-expertise' },
+            { name: 'Our partner brands', link: '/capitools-brands-and-partners' },
+            { name: 'Our guarantee', link: '/our-guarantee' },
+            { name: 'Promotions', link: '/deals-promos' },
+            { name: 'New products', link: '/new-products' },
+            { name: 'Contact us', link: '/contact-capitools' },
+            { name: 'sitemap', link: '/sitemap' },
+            { name: 'We are hiring', link: '/we-are-hiring' }
           ]
         },
         product: {
           name: 'The Products',
           children: [
-            { name: 'Paiement Sécurisé', link: '/' },
-            { name: 'Conditions Générales de Vente', link: '/' },
-            { name: 'Mentions Légales', link: '/' },
-            { name: 'Modes de paiement', link: '/' },
-            { name: 'Satisfait ou remboursé', link: '/' },
-            { name: 'Partenaires', link: '/' },
-            { name: 'Cyber Sécurité', link: '/' },
-            { name: 'Cookie notice information', link: '/' }
+            { name: 'Secure payment', link: '/secure-payment' },
+            { name: 'Terms of Sales', link: '/terms-of-sales' },
+            { name: 'Legal Notice', link: '/legal-information' },
+            { name: 'Payment methods', link: '/payment-info' },
+            { name: 'Satisfied or refunded', link: '/satisfied-or-refunded' },
+            { name: 'Partners', link: '/partners' },
+            { name: 'Cyber ​​Security', link: '/cyber-security' },
+            { name: 'Cookie notice information', link: '/cookie-notice-information' }
           ]
         },
         help: {
           name: 'Help & Services',
           children: [
-            { name: 'Mes commandes', link: '/' },
-            { name: 'Mes avoirs', link: '/' },
-            { name: 'Mes adresses', link: '/' },
-            { name: 'Mes informations personnelles', link: '/' },
-            { name: 'Mes bons de réduction', link: '/' },
-            { name: 'Déconnexion', link: '/' }
+            { name: 'My orders', link: '/my-capitools-order' },
+            { name: 'My assets', link: '/my-assets' },
+            { name: 'My adresses', link: '/my-address' },
+            { name: 'My personal information', link: '/my-personal-details' },
+            { name: 'My coupons', link: '/my-coupons' },
+            { name: 'Logout', link: '/' }
           ]
         },
         legal: {
           name: 'Legal Information',
           children: [
-            { name: 'FAQ', link: '/' },
-            { name: 'SAV & Relation client', link: '/' },
-            { name: 'Paiement en 3 fois', link: '/' },
-            { name: 'Livraison produits', link: '/' },
-            { name: 'Politique de retour des articles', link: '/' },
-            { name: 'Le réseau de Garantie SWAP Europe', link: '/' }
+            { name: 'FAQ', link: '/f-a-q-frequently-asked-questions' },
+            { name: 'After-sales service & customer relations', link: '/after-sales-service-and-customer-relations' },
+            { name: 'Payment in 3 installments', link: '/payment-in-three-installments' },
+            { name: 'Product delivery', link: '/delivery' },
+            { name: 'Return Policy', link: '/return-policy' },
+            { name: 'The SWAP Europe Guarantee network', link: '/swap-europe-network-warranty' }
           ]
         }
       };
