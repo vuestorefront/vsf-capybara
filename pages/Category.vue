@@ -73,15 +73,12 @@
                   <SfButton class="sf-button--text" @click="OrderProducthLowtoHigh">Low to High</SfButton>
                 </div>
                 <div class="navbar__counter">
-                   <span class="navbar__label desktop-only">
+                   <span class="navbar__label">
                       {{ getProductDisplayString( getCategoryProductsTotal )}}
-                      <strong class="desktop-only">{{ getCategoryProductsTotal }}<span>{{ $t(" products)")}}</span></strong>
+                      <strong >{{ getCategoryProductsTotal }}<span>{{ $t(" products)")}}</span></strong>
                    </span>
-                  <span class="navbar__label mobile-only">
-                    {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
-                  </span>
                 </div>
-            </div>
+            </div> 
         </div>  
         <SfHeading
           v-if="isCategoryEmpty"

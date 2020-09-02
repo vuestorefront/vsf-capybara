@@ -131,6 +131,14 @@ p{
         left: -12px;
         top: 0;
     }
+    @media screen and (max-width: 600px) {
+        line-height: 1;
+        padding-left: 12px;
+        &:before{
+            top: -5px;
+            left: 0;
+        }
+    }
 }
 
 .stock{

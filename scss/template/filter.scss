@@ -18,6 +18,9 @@
 }
 
 .navbar__main{
+    @media screen and (max-width: 600px){
+        flex-direction: column;
+    }
     .navbar__sort{
         p{
             
@@ -29,6 +32,11 @@
         button{
             text-decoration: none;
             margin: 0 10px;
+            @media screen and (max-width: 600px){
+                justify-content: start;
+                width: 100%;
+                padding-left: 35px;
+            }
         }
     }
 }
