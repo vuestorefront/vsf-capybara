@@ -124,11 +124,7 @@
                      Ref : {{ product.sku }}
                   </p> 
                   
-                  <AProductRating
-                    @click="openReviewsTab"
-                    :reviews="reviews"
-                    >
-                  </AProductRating>
+                  <AProductRating />
                   <!-- <SfRating
                     class="sf-product-card__rating"
                     :max="product.rating.max"
