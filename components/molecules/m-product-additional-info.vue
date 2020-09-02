@@ -30,7 +30,7 @@
         </AProductRating>
       </div>
       <SfDivider v-show="reviewsCount" />
-      <MReviewList v-show="reviewsCount" :reviews="reviews" />
+      <MReviewList v-show="reviewsCount" :reviews="reviews" :visible=10 />
     </SfTab>
   </SfTabs>
 </template>
