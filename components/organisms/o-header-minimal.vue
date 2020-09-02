@@ -4,12 +4,11 @@
      <div class="header-content d-flex">
             <div  class="d-flex align-center">
               <SfHeader 
-              :active-icon="false"
+              :active-icon="activeIcon"
               :isNavVisible="false"
               :account-icon="false"
               :cart-icon="false"
-              :wishlist-icon="false"
-              :cart-items-qty="false">
+              :wishlist-icon="false">
                 <template #logo>
                   <ALogo />
                 </template>
