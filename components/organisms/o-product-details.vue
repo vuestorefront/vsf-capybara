@@ -52,7 +52,6 @@
 import get from 'lodash-es/get'
 import config from 'config';
 import { mapGetters, mapActions } from 'vuex';
-import { SfButton } from '@storefront-ui/vue';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
 import MProductAddToCart from 'theme/components/molecules/m-product-add-to-cart';
@@ -64,7 +63,6 @@ import { ModalList } from 'theme/store/ui/modals';
 
 export default {
   components: {
-    SfButton,
     MProductGallery,
     MProductShortInfo,
     MProductAddToCart,

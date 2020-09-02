@@ -55,18 +55,14 @@
 </template>
 <script>
 import { SfFooter } from '@storefront-ui/vue';
-import { SfHeader } from '@storefront-ui/vue';
 import { SfList } from '@storefront-ui/vue';
-import { SfImage } from '@storefront-ui/vue';
 import { SfButton } from '@storefront-ui/vue';
 import { SfMenuItem } from '@storefront-ui/vue';
 import {} from '@storefront-ui/vue';
 export default {
   components: {
     SfFooter,
-    SfHeader,
     SfList,
-    SfImage,
     SfButton,
     SfMenuItem
   },

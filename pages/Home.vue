@@ -23,13 +23,13 @@
       <div class="container">
         <div class="d-flex slider-content">
           <SfImage
-              src="assets/images/jardin.jpg"
-              class="slider-banner"
-            />
-            <lazy-hydrate :trigger-hydration="!loading">
-              <m-product-carousel :products="newCollection" />
-            </lazy-hydrate>
-          </div>
+            src="assets/images/jardin.jpg"
+            class="slider-banner"
+          />
+          <lazy-hydrate :trigger-hydration="!loading">
+            <m-product-carousel :products="newCollection" />
+          </lazy-hydrate>
+        </div>
       </div>
     </div>
 
@@ -39,13 +39,13 @@
       <div class="container">
         <div class="d-flex slider-content">
           <SfImage
-              src="assets/images/hyundai-groupe-electrogene-inverter.jpg"
-              class="slider-banner"
-            />
-            <lazy-hydrate :trigger-hydration="!loading">
-              <m-product-carousel :products="newCollection" />
-            </lazy-hydrate>
-          </div>
+            src="assets/images/hyundai-groupe-electrogene-inverter.jpg"
+            class="slider-banner"
+          />
+          <lazy-hydrate :trigger-hydration="!loading">
+            <m-product-carousel :products="newCollection" />
+          </lazy-hydrate>
+        </div>
       </div>
     </div>
 
@@ -54,13 +54,13 @@
       <div class="container">
         <div class="d-flex slider-content">
           <SfImage
-              src="assets/images/outillage.jpg"
-              class="slider-banner"
-            />
-            <lazy-hydrate :trigger-hydration="!loading">
-              <m-product-carousel :products="newCollection" />
-            </lazy-hydrate>
-          </div>
+            src="assets/images/outillage.jpg"
+            class="slider-banner"
+          />
+          <lazy-hydrate :trigger-hydration="!loading">
+            <m-product-carousel :products="newCollection" />
+          </lazy-hydrate>
+        </div>
       </div>
     </div>
 
@@ -81,34 +81,22 @@ import MAssurance from 'theme/components/molecules/m-assurance';
 import MPromoProductBlock from 'theme/components/molecules/m-promo-product-block';
 import MCodePromotionBlock from 'theme/components/molecules/m-code-promotion-block';
 import MSupportBlock from 'theme/components/molecules/m-support-block';
-import ONewsletter from 'theme/components/organisms/o-newsletter';
-import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 import AAboutUs from 'theme/components/atoms/a-about-us';
 
 import {
-  SfProperty,
   SfHero,
-  SfSection,
-  SfBannerGrid,
-  SfBanner,
   SfImage
 } from '@storefront-ui/vue';
 
 export default {
   name: 'Home',
   components: {
-    SfProperty,
     LazyHydrate,
     SfHero,
-    SfSection,
-    SfBannerGrid,
     SfImage,
-    SfBanner,
     MNosSpecialities,
     MProductCarousel,
-    ONewsletter,
-    AImagesGrid,
     AAboutUs,
     MAssurance,
     MSupportBlock,

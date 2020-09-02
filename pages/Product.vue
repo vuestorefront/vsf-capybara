@@ -16,8 +16,8 @@
       :product-stock="stock"
     />
     <div class="product__bottom">
-     <MAssurance/>
-     <MProductAdditionalInfo
+      <MAssurance />
+      <MProductAdditionalInfo
         :product="getCurrentProduct"
         :reviews="reviews"
         :attributes="productAttributes"
@@ -33,7 +33,6 @@
           <MRelatedProducts type="related" />
         </SfSection>
       </lazy-hydrate>
-
     </div>
   </div>
 </template>
@@ -56,9 +55,8 @@ import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
 import MAssurance from 'theme/components/molecules/m-assurance';
 import OProductDetails from 'theme/components/organisms/o-product-details';
-import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers';
-import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
+import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 
 export default {
@@ -70,8 +68,6 @@ export default {
     SfSection,
     OProductDetails,
     MAssurance,
-    SfBanner,
-    AImagesGrid,
     SfBreadcrumbs
   },
   provide () {
@@ -150,7 +146,7 @@ export default {
       }))
     },
 
-     availability () {
+    availability () {
       return this.product.stock && this.product.stock.is_in_stock ? 'InStock' : 'OutOfStock'
     },
     sizeOption () {
@@ -174,7 +170,7 @@ export default {
         route && route.params && route.params.childSku
           ? route.params.childSku
           : null
-    });  
+    });
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',
       { product }

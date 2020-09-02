@@ -36,7 +36,7 @@
 
       <div class="search-container header-menu menu-list d-flex align-center justify-center desktop-only">
 
-          <SfHeaderNavigationItem
+          <div class="sf-header-navigation-item"
             v-for="category in categories"
             :key="category.id"
             @mouseover="isHoveredMenu = true"
@@ -54,7 +54,7 @@
               :title="category.name"
               @close="isHoveredMenu = false"
             />
-          </SfHeaderNavigationItem>
+          </div>
 
       </div>
 
@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import MHeaderSearchbar from 'theme/components/molecules/m-searchbar';
 import MHeaderCompte from 'theme/components/molecules/m-header-compte';
 import MHeaderBasket from 'theme/components/molecules/m-header-basket';
 import AHeaderContact from 'theme/components/atoms/a-header-contact';
@@ -90,7 +89,6 @@ export default {
     ALogo,
     OSearch,
     MMenu,
-    MHeaderSearchbar,
     MHeaderCompte,
     MHeaderBasket,
     AHeaderContact,

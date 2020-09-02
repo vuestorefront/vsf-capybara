@@ -116,3 +116,31 @@ p{
 .sf-rating__icon {
     --icon-color: var(--_c-orange-primary);
 }
+
+.stock,
+.out-of-stock{
+    color: var(--_c-gray-secondary-lighten);
+    font-size: 12px;
+    position: relative;
+    &:before {
+        content: '\2022';
+        display: inline-block;
+        font-size: 24px;
+        margin-right: 4px;
+        position: absolute;
+        left: -12px;
+        top: 0;
+    }
+}
+
+.stock{
+    &:before {
+        color: var(--_c-green-secondary);
+    }
+}
+
+.out-of-stock{
+    &:before {
+        color: var(--_c-red-primary);
+    }
+}

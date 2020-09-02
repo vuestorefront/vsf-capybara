@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
  import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
@@ -40,10 +39,7 @@ import { getTopLevelCategories } from 'theme/helpers';
 export default {
   name: 'AHeaderMenu',
   components: {
-    SfHeader,
-    SfButton,
-    MMenu,
-    SfOverlay
+    MMenu
   },
   data () {
     return {

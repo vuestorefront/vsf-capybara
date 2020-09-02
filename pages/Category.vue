@@ -123,8 +123,7 @@
                   <p class="reference">
                      Ref : {{ product.sku }}
                   </p> 
-                  <p v-if="product.is_in_stock">En stock</p>
-                  <p v-else>En ruputure de stock</p> 
+                  
                   <AProductRating
                     @click="openReviewsTab"
                     :reviews="reviews"
@@ -136,11 +135,15 @@
                     :score="product.rating.score"
                     
                   />   -->
-                  <SfPrice
-                    class="sf-product-card__price"
-                    :regular="product.price.regular"
-                    :special="product.price.special" 
-                  />  
+                  <div class="d-flex align-start justify-between">
+                      <SfPrice
+                        class="sf-product-card__price"
+                        :regular="product.price.regular"
+                        :special="product.price.special" 
+                      />  
+                      <p class="stock" v-if="product.is_in_stock">En stock</p>
+                      <p class="out-of-stock" v-else>En ruputure de stock</p> 
+                  </div>
                 </template> 
                  <template #price>
                     <AAddToCart
@@ -262,11 +265,9 @@ import {
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
 import {
-  SfIcon,
   SfList,
   SfColor,
   SfButton,
-  SfSelect,
   SfFilter,
   SfSidebar,
   SfHeading,
@@ -275,7 +276,6 @@ import {
   SfPagination,
   SfBreadcrumbs,
   SfProductCard,
-  SfRating,
   SfPrice,
 } from '@storefront-ui/vue';
 
@@ -317,11 +317,9 @@ export default {
   name: 'CategoryPage',
   components: {
     LazyHydrate,
-    SfIcon,
     SfList,
     SfColor,
     SfButton,
-    SfSelect,
     SfFilter,
     SfSidebar,
     SfHeading,
@@ -330,7 +328,6 @@ export default {
     SfPagination,
     SfBreadcrumbs,
     SfProductCard,
-    SfRating,
     SfPrice,
     AAddToCart,
     AProductRating,
@@ -551,16 +548,16 @@ export default {
     },
     getProductDisplayString( getCategoryProductsTotal )
     {
-      if( getCategoryProductsTotal == 0 ) // No Products
-      {
+      if( getCategoryProductsTotal === 0 ) {
+      // No Products
         return "(Resultats 0 - "+getCategoryProductsTotal+" of ";
       }
-      else if( getCategoryProductsTotal <= THEME_PAGE_SIZE ) // Product count less than theme_page_size ( 12 )
-      {
+      else if( getCategoryProductsTotal <= THEME_PAGE_SIZE ) {
+      // Product count less than theme_page_size ( 12 )
+
         return "(Resultats 1 - "+getCategoryProductsTotal+" of ";
-      }
-      else // Product count above theme page size
-      {
+      } else {
+      // Product count above theme page size
         if( ( this.currentPage * THEME_PAGE_SIZE ) < getCategoryProductsTotal )
         {
           const ending_count = this.currentPage * THEME_PAGE_SIZE;
@@ -573,7 +570,6 @@ export default {
           return "(Resultats "+starting_count+" - "+getCategoryProductsTotal+" of ";
         }
       }
-       return "";
     },
     async onBottomScroll () {
       if (!this.isLazyLoadingEnabled || this.loadingProducts) {
