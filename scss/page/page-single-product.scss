@@ -97,6 +97,9 @@
                     color: var(--c-white);
                     background-color: var(--_c-green-primary-lighten);
                     border-color: var(--_c-green-primary-lighten);
+                    &[disabled='disabled']{
+                        opacity: 0.3;
+                    }
                 }
                 .payment-security{
                     .sf-image{
