@@ -1,82 +1,16 @@
 {
-  "mainBanners": [
-    {
-      "title": "COCKTAIL PARTY",
-      "subtitle": "Dresses",
-      "description": "Find stunning women's cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.",
-      "buttonText": "SHOP NOW",
-      "image": {
-        "webp": "/assets/banner/webp/bannerF.webp",
-        "fallback": "/assets/banner/png/bannerF.png"
-      },
-      "link": "/women.html",
-      "slot": "banner-A"
-    },
-    {
-      "title": "LINEN DRESSES",
-      "subtitle": "Dresses",
-      "description": "Find stunning women's cocktail dresses and party dresses. Stand out in lace and metallic cocktail dresses from all your favorite brands.",
-      "buttonText": "SHOP NOW",
-      "image": {
-        "webp": "/assets/banner/webp/bannerE.webp",
-        "fallback": "/assets/banner/png/bannerE.png"
-      },
-      "link": "/men.html",
-      "slot": "banner-B"
-    },
-    {
-      "title": "THE OFFICE LIFE",
-      "subtitle": "T-Shirts",
-      "image": {
-        "webp": "/assets/banner/webp/bannerC.webp",
-        "fallback": "/assets/banner/png/bannerC.png"
-      },
-      "link": "/gear.html",
-      "slot": "banner-C"
-    },
-    {
-      "title": "ECO SANDALS",
-      "subtitle": "Summer shoes",
-      "image": {
-        "webp": "/assets/banner/webp/bannerG.webp",
-        "fallback": "/assets/banner/png/bannerG.png"
-      },
-      "link": "/gear.html",
-      "slot": "banner-D"
-    }
-  ],
-  "productBanners": [
-    {
-      "title": "ECO SANDALS",
-      "subtitle": "Summer shoes",
-      "image": {
-        "webp": "/assets/banner/webp/bannerK.webp",
-        "fallback": "/assets/banner/png/bannerK.png"
-      },
-      "link": "/gear/gear-3"
-    },
-    {
-      "title": "THE OFFICE LIFE",
-      "subtitle": "T-Shirts",
-      "image": {
-        "webp": "/assets/banner/webp/bannerC.webp",
-        "fallback": "/assets/banner/png/bannerC.png"
-      },
-      "link": "/men/tops-men/tees-men/tees-16"
-    }
-  ],
   "menuAsideBanners": [
     {
       "type": "mobile",
       "image": {
-        "webp": "/assets/banner/webp/bannerSandals-full.webp",
-        "fallback": "/assets/banner/png/bannerSandals-full.png"
+        "webp": "/assets/banner/png/jardinage-menu-banner.jpg",
+        "fallback": "/assets/banner/png/jardinage-menu-banner.jpg"
       }
     },
     {
       "type": "desktop",
       "image": {
-        "webp": "/assets/banner/webp/jardinage-menu-banner.webp",
+        "webp": "/assets/banner/png/jardinage-menu-banner.jpg",
         "fallback": "/assets/banner/png/jardinage-menu-banner.jpg"
       }
     }

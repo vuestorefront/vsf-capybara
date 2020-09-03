@@ -10,7 +10,6 @@
       <SfHeroItem
         v-for="(hero, i) in heroes"
         :key="i"
-        :background="hero.background"
         :image="hero.image"
         :class="hero.className"
       />
