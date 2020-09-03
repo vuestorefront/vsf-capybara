@@ -5,6 +5,7 @@
       <div v-if="message" class="m-loader--message">
         {{ message }}
       </div>
+      <div class="animate"></div> 
     </div>
   </div>
 </template>
@@ -76,6 +77,9 @@ export default {
 .m-loader {
   .sf-loader__overlay {
     background-color: transparent;
+  }
+  &--container{
+    text-align: center;
   }
 }
 </style>

@@ -1,0 +1,57 @@
+ .sf-loader  {
+     width: 50px!important;
+     height: 50px!important;
+     position: relative;
+     text-align: center;
+    .sf-loader{
+        &__overlay{
+            background-image: url('/assets/logo.png');
+            background-size: contain;
+            background-repeat: no-repeat; 
+            svg{
+                display: none;
+            }
+        }
+    }
+ }
+
+
+ .animate {
+	border-radius: 50%;
+	box-shadow: 0 1em 0 -.2em #fff;
+	position: relative;
+	animation: loader-14 0.8s ease-in-out alternate infinite;
+    animation-delay: 0.32s;
+    display: inline-block; 
+	width: 1em;
+	height: 1em;
+	vertical-align: middle;
+	pointer-events: none;
+	&:after,
+	&:before {
+		content: '';
+		position: absolute;
+		width: inherit;
+		height: inherit;
+		border-radius: inherit;
+		box-shadow: inherit;
+		animation: inherit;
+	}
+	&:before {
+		left: -1em;
+		animation-delay: 0.48s;
+	}
+	&:after {
+		right: -1em;
+		animation-delay: 0.16s;
+	}
+}
+
+@keyframes loader-14 {
+	0% {
+		box-shadow: 0 2em 0 -.2em #fff;
+	}
+	100% {
+		box-shadow: 0 1em 0 -.2em #fff;
+	}
+}
