@@ -143,7 +143,7 @@
                     class="sf-add-to-cart__button"
                     :qty="qty"
                     :product="product.obj_product"
-                    :disabled="addToCartDisabled"
+                    :disabled="isProductDisabled(product)"
                   />  
                   </template>
                 <!-- 
@@ -538,6 +538,9 @@ export default {
   methods: { 
     getBrowserWidth () {
       return (this.browserWidth = window.innerWidth);
+    },
+    isProductDisabled ( product ) {
+      return product.is_in_stock ? false : true ;
     },
     getProductDisplayString( getCategoryProductsTotal )
     {

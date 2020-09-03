@@ -12,16 +12,29 @@
             :title="$t(linkGroup.name)"
           >
             <SfList>
-              <SfListItem v-for="link in linkGroup.children" :key="link.name">
-                <router-link v-if="link.link" :to="localizedRoute(link.link)" exact>
-                  <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
-                </router-link>
-                <SfMenuItem
-                  v-else-if="link.clickHandler"
-                  class="sf-footer__menu-item"
-                  :label="$t(link.name)"
-                  @click="link.clickHandler"
-                />
+               <SfListItem v-for="link in linkGroup.children" :key="link.name">
+                <template v-if="link.name === 'Logout'">
+                  <router-link v-if="link.link" v-on:click.native="changeActivePage" :to="localizedRoute(link.link)" exact>
+                    <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
+                  </router-link>
+                  <SfMenuItem
+                      v-else-if="link.clickHandler"
+                      class="sf-footer__menu-item"
+                      :label="$t(link.name)"
+                      @click="link.clickHandler"
+                  />
+                </template>
+                <template v-else>
+                  <router-link v-if="link.link" :to="localizedRoute(link.link)" exact>
+                    <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
+                  </router-link>
+                  <SfMenuItem
+                    v-else-if="link.clickHandler"
+                    class="sf-footer__menu-item"
+                    :label="$t(link.name)"
+                    @click="link.clickHandler"
+                  />
+                </template>
               </SfListItem>
             </SfList>
           </SfFooterColumn>
@@ -163,6 +176,14 @@ export default {
     }
   },
   methods: {
+    changeActivePage () {
+        this.logout();
+        return;
+    },
+    async logout () {
+      await this.$store.dispatch('user/logout', {});
+      this.$router.push(this.localizedRoute('/'));
+    },
     ...mapActions('ui', {
       openModal: 'openModal'
     }),

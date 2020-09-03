@@ -31,7 +31,7 @@
                           Fast delivery in less than 72 hours!
                         </p>
                         <p>
-                          From <a>generators</a> to <a>mowers</a>, including <a>power tools</a> or <a>even storage</a> and <a>accessories</a>, make your life
+                         From <a href="/generators">generators</a> to <a href="/gardening/lawn-mowers">mowers</a>, including <a href="/power-tools">power tools</a> or <a href="/">even storage</a> and <a href="/gardening/gardening-accessories">accessories</a>, make your life
                           easier with Capitools!
                         </p>
                         <p>
@@ -39,7 +39,7 @@
                           sustainable development.</b>
                         </p>
                         <p>
-                          An advice? A question? Do not hesitate to <a>call us</a>!
+                          An advice? A question? Do not hesitate to <a href="/pages/contact-capitools">call us</a>!
                         </p>
                       </div>
                 </div>
