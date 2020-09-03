@@ -31,7 +31,7 @@
                           Fast delivery in less than 72 hours!
                         </p>
                         <p>
-                         From <a href="/generators">generators</a> to <a href="/gardening/lawn-mowers">mowers</a>, including <a href="/power-tools">power tools</a> or <a href="/gardening/garden-sheds">even storage</a> and <a href="/gardening/gardening-accessories">accessories</a>, make your life
+                         From <a href="/generators">generators</a> to <a href="/gardening/lawn-mowers">mowers</a>, including <a href="/power-tools">power tools</a> or even <a href="/gardening/garden-sheds">storage</a> and <a href="/gardening/gardening-accessories">accessories</a>, make your life
                           easier with Capitools!
                         </p>
                         <p>

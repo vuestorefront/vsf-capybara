@@ -73,7 +73,7 @@
     <ABackToTop bottom="20px" right="20px" visibleoffset="200" class="desktop-only" />
     <div class="copyrights text-center">
       <p>
-        <span>&copy;</span>1999-2020 Capitools. All Rights Reserved. Third party trademarks are hereby acknowledged.
+        <span>&copy;1999  -</span>{{currentDate.getFullYear()}}<span> All Rights Reserved. Third party trademarks are hereby acknowledged.</span>
       </p>
     </div>
   </footer>
@@ -105,7 +105,8 @@ export default {
   data () {
     return {
       seeMoreLink:"#",
-      social: ['facebook', 'pinterest', 'twitter', 'youtube']
+      social: ['facebook', 'pinterest', 'twitter', 'youtube'],
+      currentDate: new Date
     };
   },
   computed: {
@@ -158,7 +159,7 @@ export default {
             { name: 'My adresses', link: '/pages/my-address' },
             { name: 'My personal information', link: '/pages/my-personal-details' },
             { name: 'My coupons', link: '/pages/my-coupons' },
-            { name: 'Logout', link: '/pages/' }
+            { name: 'Logout', link: '/' }
           ]
         },
         legal: {
