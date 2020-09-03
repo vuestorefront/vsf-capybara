@@ -44,13 +44,13 @@
             Lets stay in touch!
           </h4>
           <div class="item d-flex">
-           <a href="https://www.facebook.com/Capitools-UK-105699067744679" target="_blank">
+           <a href="https://www.facebook.com/CapitoolsUK/" target="_blank">
               <img :src="'/assets/images/facebook_icon.png'" class="icon_facebook"/>
             </a>
             <a href="https://www.youtube.com/channel/UCi6MvXNjvI_Oy02TzXThOMg" target="_blank">
               <img :src="'/assets/images/youtube_icon.png'" class="icon_youtube"/>
             </a>
-            <a href="">
+            <a href="https://www.instagram.com/capitoolsuk/" target="_blank">
               <img :src="'/assets/images/insta_icon.png'" class="icon_instagram"/>
             </a>
           </div>
