@@ -1,0 +1,31 @@
+.sf-modal{
+    .sf-overlay{
+        background-image: radial-gradient(#0575E6 0%, #021B79 100%);
+    }
+    .modal-content{
+        .sf-image{
+            margin: 35px 0;
+            width: 200px;
+            margin-bottom: 0;
+        }
+        h1{
+            margin-bottom: 0;
+        }
+        .sf-input{
+            input{
+              font-size: 14px;
+            }
+            &__wrapper{
+                &:focus{
+                    outline: none;
+                }
+            }
+        }
+        .sf-button{
+            max-width: 230px;
+            width: 100%;
+            margin: 5px auto;
+            font-weight: normal;
+        }
+    }
+}

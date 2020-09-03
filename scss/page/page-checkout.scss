@@ -45,7 +45,17 @@
                                 .sf-select__options{
                                     overflow: auto;
                                 }
+                                &__dropdown{
+                                    z-index: 2;
+                                }
                             }
+                        }
+                        .log-in__button{
+                            text-transform: none;
+                            padding: 10px;
+                            height: auto;
+                            border-radius: 3px;
+                            font-size: 13px;
                         }
                     }
                 }
@@ -98,9 +108,11 @@
             &__action{
                 align-items: center;
                 button{
-                    margin: 0 15px;
-                    &:first-child{
-                        margin-left: 0;
+                    @media screen and (min-width: 1024px){
+                        margin: 0 15px;
+                        &:first-child{
+                            margin-left: 0;
+                        }
                     }
                 }
             }

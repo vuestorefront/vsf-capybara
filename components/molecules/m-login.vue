@@ -1,5 +1,10 @@
 <template>
   <div class="m-login modal-content">
+     <SfImage
+      src="/assets/images/capitools-uk-logo.png"
+      class="capitools-logo"
+    />
+    <h1 class="text-primary text-center">Log In</h1>
     <form @submit.prevent="login" class="form">
       <SfInput
         v-model="email"
@@ -30,7 +35,7 @@
         :label="$t('Remember me')"
         class="form__element form__checkbox"
       />
-      <SfButton class="sf-button--full-width form__submit">
+      <SfButton class="sf-button--full-width form__submit btn-primary">
         {{ $t("Login") }}
       </SfButton>
     </form>
@@ -40,7 +45,7 @@
     <div class="aside">
       <SfHeading
         title="Don't have an account yet?"
-        :level="3"
+        :level="4"
         class="aside__heading"
       />
       <SfButton class="sf-button--text" @click.native="switchElem('register')">
@@ -54,13 +59,13 @@
 import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
-import { SfInput, SfButton, SfCheckbox, SfHeading } from '@storefront-ui/vue';
+import { SfInput, SfButton, SfImage, SfCheckbox, SfHeading } from '@storefront-ui/vue';
 import { mapActions } from 'vuex';
 import { ModalList } from 'theme/store/ui/modals'
 
 export default {
   name: 'MLogin',
-  components: { SfInput, SfButton, SfCheckbox, SfHeading },
+  components: { SfInput, SfImage, SfButton, SfCheckbox, SfHeading },
   data () {
     return {
       email: '',
@@ -152,17 +157,15 @@ export default {
 .form {
   width: 100%;
   &__element {
-    margin: var(--spacer-base) 0;
+    margin: 15px 0; 
   }
-  &__checkbox {
-    margin: var(--spacer-xl) 0 var(--spacer-2xl) 0;
-  }
+  
   &__submit {
     margin: var(--spacer-xl) 0 0 0;
   }
 }
 .action-button {
-  margin: var(--spacer-xl) 0;
+  margin: 15px 0;
 }
 .aside {
   margin: 0 0 var(--spacer-xl) 0;

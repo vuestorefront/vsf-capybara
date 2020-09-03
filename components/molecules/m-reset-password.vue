@@ -1,5 +1,10 @@
 <template>
   <div class="m-reset-password modal-content">
+    <SfImage
+      src="/assets/images/capitools-uk-logo.png"
+      class="capitools-logo"
+    />
+    <h1 class="text-primary text-center">Reset Password</h1>
     <template v-if="!passwordSent">
       <p>
         {{ $t('Enter your email to receive instructions on how to reset your password.') }}
@@ -18,7 +23,7 @@
           "
           class="form__element"
         />
-        <SfButton class="sf-button--full-width form__submit">
+        <SfButton class="sf-button--full-width form__submit btn-primary">
           {{ $t("Reset password") }}
         </SfButton>
       </form>
@@ -38,13 +43,13 @@
 import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
-import { SfInput, SfButton } from '@storefront-ui/vue';
+import { SfInput, SfButton, SfImage } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { mapActions } from 'vuex';
 
 export default {
   name: 'MResetPassword',
-  components: { SfInput, SfButton },
+  components: { SfInput, SfButton, SfImage },
   data () {
     return {
       email: '',

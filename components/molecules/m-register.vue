@@ -1,5 +1,10 @@
 <template>
   <div class="m-register modal-content">
+     <SfImage
+      src="/assets/images/capitools-uk-logo.png"
+      class="capitools-logo"
+    />
+    <h1 class="text-primary text-center">Register</h1>
     <form @submit.prevent="register" class="form">
       <SfInput
         v-model="email"
@@ -42,7 +47,7 @@
         type="password"
         class="form__element"
       />
-      <SfButton class="sf-button--full-width form__submit">
+      <SfButton class="sf-button--full-width btn-primary form__submit">
         {{ $t("Create an account") }}
       </SfButton>
     </form>
@@ -56,13 +61,13 @@
 import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
-import { SfInput, SfButton } from '@storefront-ui/vue';
+import { SfInput, SfButton, SfImage } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { mapActions } from 'vuex';
 
 export default {
   name: 'MRegister',
-  components: { SfInput, SfButton },
+  components: { SfInput, SfButton, SfImage },
   data () {
     return {
       email: '',
@@ -165,7 +170,7 @@ export default {
 .form {
   width: 100%;
   &__element {
-    margin: var(--spacer-base) 0;
+    margin: 15px 0;
   }
   &__submit {
     margin: var(--spacer-xl) 0 0 0;
