@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <div class="blog d-flex align-center">
+        <!--  <div class="blog d-flex align-center">
           <label>New</label>
           <img :src="'/assets/images/footer_blog.png'" class="image_blog_size">
           <p class="footer_blog_text">
@@ -68,7 +68,7 @@
           >
             See more
           </SfButton>
-        </div>
+        </div> -->
     </div>
     <ABackToTop bottom="20px" right="20px" visibleoffset="200" class="desktop-only" />
     <div class="copyrights text-center">
