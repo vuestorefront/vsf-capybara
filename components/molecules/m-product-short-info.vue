@@ -22,7 +22,7 @@
         :reviews="reviews"
         class="d-flex"
       >
-        {{ $t("Read all {count} review", { count: reviewsCount }) }}
+        <!-- {{ $t("Read all {count} review", { count: reviewsCount }) }} -->
       </AProductRating>
     </div>
     <hr>

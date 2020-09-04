@@ -11,13 +11,18 @@
       <div class="sidebar desktop-only">
          <div class="navbar__aside desktop-only">
           <SfHeading :level="3" :title="$t('Categories')" class="navbar__title text-primary" />
-        </div>
-        <SfAccordion :show-chevron="false">
+        </div> 
+        <SfAccordion :show-chevron="false" :open="getParentCategoryName">
           <SfAccordionItem
             v-for="category in categories"
             :key="category.id"
             :header="category.name"
           >
+            <template #header>
+             <router-link  :to="category.link">
+                {{ category.name }}  
+              </router-link>  
+            </template>  
             <SfList class="list">
               <SfListItem v-for="item in category.items" :key="item.id" class="list__item">
                 <router-link :to="item.link" :class="{'sf-menu-item--active': isCategoryActive(item)}">
@@ -343,7 +348,37 @@ export default {
       getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
        getCurrentProduct: 'product/getCurrentProduct',
     }),
-    
+    getParentCategoryName(){ 
+      const string = this.getCurrentCategory.url_path;
+      const gardening = "gardening/";
+      const hand_tools = "gardening-hand-tools";
+      const power_tools = "power-tools";
+      const generators = "generators";
+      const workshop = "workshop";
+      const brands = "brands";
+      
+      if( string.includes(gardening)){
+        return "Gardening";
+      } 
+      else if( string.includes(hand_tools)){
+        return "Hand Tools";
+      } 
+      else if( string.includes(power_tools)){
+        return "Power Tools";
+      } 
+      else if( string.includes(generators)){
+        return "Generators";
+      } 
+      else if( string.includes(workshop)){
+        return "Workshop";
+      } 
+      else if( string.includes(brands)){
+        return "Brands";
+      } 
+      else{
+        return "Gardening";
+      }
+    },
     isLazyHydrateEnabled () {
       return config.ssr.lazyHydrateFor.includes('category-next.products');
     },
@@ -374,6 +409,8 @@ export default {
             position: 0
           };
 
+        
+
           const subCategories = category.children_data
             ? category.children_data
               .map(subCategory => prepareCategoryMenuItem(
@@ -383,10 +420,8 @@ export default {
             : [];
 
           return {
-            ...prepareCategoryMenuItem(category),
-            items: [prepareCategoryMenuItem(viewAllMenuItem)]
-              .concat(subCategories)
-              .sort((a, b) => a.position - b.position)
+           ...prepareCategoryMenuItem(category),
+            items: [...subCategories]
           };
         })
         .sort((a, b) => a.position - b.position);
