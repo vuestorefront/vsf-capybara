@@ -23,6 +23,7 @@
           <SfButton 
             class="btn-primary"
             link="#"
+            @click="subscribe"
           >
             S'inscrire
           </SfButton>
@@ -33,9 +34,10 @@
 </template>
 
 <script>
-import { SfInput } from "@storefront-ui/vue";
-import { SfButton } from "@storefront-ui/vue";
+import { SfInput,  SfButton } from "@storefront-ui/vue";
+import { Newsletter } from '@vue-storefront/core/modules/newsletter/components/Newsletter'
 export default {
+  mixins: [Newsletter],
   components: {
     SfInput, SfButton
   },
