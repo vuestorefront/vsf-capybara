@@ -2,14 +2,6 @@
     <div class="quantity-info">
         <div class="d-flex align-center"> 
              <SfImage
-                src="/assets/icons/3x-icon.png"
-                :alt="$t(defaultTitle)"
-                class="icon"
-                />
-             <p>Paiement en 3x par CB Details</p>
-        </div>
-        <div class="d-flex align-center"> 
-             <SfImage
                 src="/assets/icons/livraisonGratuite-Icon.png"
                 :alt="$t(defaultTitle)"
                 class="icon"

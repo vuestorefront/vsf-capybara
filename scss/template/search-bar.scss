@@ -106,4 +106,30 @@ header{
             box-shadow: 0px 100vh 0 100vh rgba(0, 0, 0, 0.7);
         }
     }
+    .o-search-panel{
+        .products{
+            &__listing{
+                .sf-product-card{
+                    display: flex;
+                    flex-direction: column;
+                    &__image-wrapper{
+                        order: 1;
+                    }
+                    &__link{
+                        order: 2;
+                        border: 0;
+                    }
+                    &__price{
+                        order: 4;
+                        padding: 0 15px;
+                        height: auto;
+                    }
+                    &__reviews{
+                        order: 3;
+                        padding: 0 15px;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -122,12 +122,6 @@
                   </p> 
                   
                   <AProductRating />
-                  <!-- <SfRating
-                    class="sf-product-card__rating"
-                    :max="product.rating.max"
-                    :score="product.rating.score"
-                    
-                  />   -->
                   <div class="d-flex align-start justify-between">
                       <SfPrice
                         class="sf-product-card__price"
@@ -146,22 +140,6 @@
                     :disabled="isProductDisabled(product)"
                   />  
                   </template>
-                <!-- 
-                    <template #reviews>
-                        <SfRating
-                        class="sf-product-card__rating"
-                        :max="product.rating.max"
-                        :score="product.rating.score"
-                      />
-                    </template> 
-                    <template #price>
-                    <SfPrice
-                      class="sf-product-card__price"
-                      :regular="product.price.regular"
-                      :special="product.price.special"
-                    /> 
-                  </template>
-               -->
               </SfProductCard>
             </transition-group>
           </lazy-hydrate>
