@@ -6,9 +6,13 @@
     >
       <SfMegaMenuColumn
         v-for="category in categories"
-        :key="category.id"
-        :title="category.name"
+        :key="category.id" 
       >
+        <template #title>
+          <router-link  :to="category.link" @click.native="$emit('close')">
+            {{ category.name }}
+          </router-link>  
+        </template> 
         <SfList>
           <SfListItem
             v-for="item in category.items"
@@ -88,7 +92,7 @@ export default {
 
           return {
             ...prepareCategoryMenuItem(category),
-            items: [viewAllMenuItem, ...subCategories]
+            items: [...subCategories]
           };
         })
         .sort((a, b) => a.position - b.position);

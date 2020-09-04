@@ -82,7 +82,7 @@ export function prepareCategoryMenuItem (category) {
     name: category.name,
     link: formatCategoryLink(category),
     count: category.product_count || '',
-    position: category.position,
+    position: category.position-1,
     path: category.path
   };
 }
