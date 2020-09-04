@@ -21,9 +21,6 @@
               :product="product"
               :custom-options="customOptions"
           />
-          <div class="coupon-code">
-            <p>Comment utiliser ce code <span>?</span></p>
-          </div>
           <AQuantityInfo /> 
           <div class="quantity d-flex align-center">
               <label>Quantité :</label>
