@@ -53,18 +53,87 @@
             background-color: var(--c-white);
             border-radius: 5px;
             overflow: hidden;
+            @media screen and (max-width: 767px){
+                flex-direction: column;
+            }
             .slider-banner{
                 display: block;
                 width: 360px;
+                @media screen and (max-width: 767px){
+                    width: 100%;
+                    img{
+                        width: 100%;
+                    }
+                }
             }
             .sf-carousel{
-                width: calc(100% - 380px);
+                width: calc(100% - 360px);
+                @media screen and (max-width: 767px){
+                    width: 100%;
+                }
                 &__wrapper{
                     max-width: 100%;
+                    .glide{
+                        .glide{
+                            &__track{
+                                ul{
+                                    li{
+                                        width: 303px!important;
+                                        .sf-product-card{
+                                            max-width: -webkit-fill-available;
+                                            width: 100%;
+                                            margin: 0!important;
+                                            border-radius: 0;
+                                            border-left: 0;
+                                            &__image-wrapper{
+                                                height: 170px;
+                                                text-align: center;
+                                            }
+                                            .a-product-rating{
+                                                .product__rating{
+                                                    flex-direction: row;
+                                                    .product__count{
+                                                        margin: 0;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 &__controls{
                     top: auto;
-                    bottom: 0;
+                    bottom: -10px;
+                    @media screen and (max-width: 1024px){
+                        display: flex;
+                    }
+                    @media screen and (max-width: 767px){
+                       bottom: auto;
+                       top: -18px;
+                       display: flex;
+                       z-index: 1;
+                       button{
+                           background-color: var(--_c-green-primary-lighten);
+                           .sf-icon{
+                               svg{
+                                   fill: var(--c-white);
+                               }
+                           }
+                       }
+                    }
+                    .sf-arrow{
+                        .sf-icon{
+                            svg{
+                                display: block;
+                            }
+                            &:before{
+                                display: none;
+                            }
+                        }
+                    }
                 }
             }
         }
