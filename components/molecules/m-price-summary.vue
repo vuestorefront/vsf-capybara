@@ -50,13 +50,14 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { SfProperty, SfDivider } from '@storefront-ui/vue';
+import { SfProperty, SfDivider, SfButton } from '@storefront-ui/vue';
 
 export default {
   name: 'MPriceSummary',
   components: {
     SfProperty,
-    SfDivider
+    SfDivider,
+    SfButton
   },
   props: {
     isLarge: {
