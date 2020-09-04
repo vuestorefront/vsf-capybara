@@ -256,9 +256,9 @@
       </div>
       <MPriceSummary class="totals__element" />
     </div>
-    <div class="actions">
+    <div class="actions align-center">
       <SfButton
-        class="sf-button--full-width actions__button"
+        class="sf-button--full-width actions__button btn-primary"
         :disabled="$v.orderReview.$invalid || !productsInCart.length"
         @click="placeOrder"
       >
@@ -426,6 +426,13 @@ export default {
     --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
   }
 }
+
+  .sf-table{
+      &__header{
+          font-family: 'Poppins-Bold';
+      }
+  }
+
 .table {
   margin: 0 0 var(--spacer-base) 0;
   &__row {

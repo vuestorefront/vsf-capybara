@@ -48,7 +48,7 @@
       </template>
       <SfButton
         v-if="!isPermissionGranted && isNotificationSupported"
-        class="wrapper__notifications-button"
+        class="wrapper__notifications-button btn-primary"
         @click.native="requestNotificationPermission()"
       >
         {{ $t('Allow order notifications') }}
@@ -68,13 +68,13 @@
       />
       <div class="wrapper__buttons">
         <SfButton
-          class="color-secondary sf-button--full-width"
+          class="color-secondary sf-button--full-width btn-primary"
           @click="sendFeedback"
         >
           {{ $t('Send my feedback') }}
         </SfButton>
         <SfButton
-          class="sf-button--outline sf-button--full-width"
+          class="sf-button--outline sf-button--full-width btn-primary-outline-gray"
           @click="$router.push(localizedRoute('/'))"
         >
           {{ $t('Back to shop') }}

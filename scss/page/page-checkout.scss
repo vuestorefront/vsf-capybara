@@ -57,6 +57,91 @@
                             border-radius: 3px;
                             font-size: 13px;
                         }
+                        .o-confirm-order{
+                            margin-top: 40px;
+                            table{
+                                .sf-table__heading{
+                                    background-color: var(--_c-green-primary-lighten);
+                                    border: 0;
+                                }
+                                .sf-table__header{
+                                    font-family: 'Poppins-Bold';
+                                    text-align: center;
+                                    font-size: 12px;
+                                    color: var(--c-white);
+                                }
+                                .sf-table__row{
+                                   td{
+                                       &:last-child{
+                                           .button{
+                                               margin: 0 auto;
+                                           }
+                                       }
+                                       &:nth-last-child(2){
+                                           .product-price{
+                                               height: auto;
+                                           } 
+                                       }
+                                   } 
+                                }
+                            }
+                            .actions{
+                                button{
+                                    height: fit-content;
+                                    text-transform: none;
+                                    margin: 0;
+                                }
+                            }
+                            .totals{
+                                .totals{
+                                    &__element{
+                                        .sf-divider{
+                                            border-color: var(--_c-gray-accent);
+                                            + .sf-property{
+                                                span{
+                                                    font-family: 'Poppins-Bold';
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .summary{
+                                &__total{
+                                    .sf-divider{
+                                        border-color: var(--_c-green-primary-lighten);
+                                        + .sf-property{
+                                            span{
+                                                font-family: 'Poppins-Bold';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            .sf-accordion{
+                                .sf-accordion-item{
+                                    .sf-accordion-item{
+                                        &__content{
+                                            .sf-collected-product{
+                                                &__title{
+                                                    font-size: 14px;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .sf-characteristic{
+            .sf-characteristic{
+                &__icon{
+                    .sf-icon{
+                        width: 30px;
+                        height: 30px;
                     }
                 }
             }
