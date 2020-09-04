@@ -21,7 +21,6 @@
                 Ref : {{ product.sku }}
             </p>
             <AProductRating
-              @click="openReviewsTab"
               :reviews="reviews"
               >
             </AProductRating> 
@@ -66,6 +65,10 @@ export default {
   },
   props: {
     products: {
+      type: Array,
+      default: () => []
+    },
+    reviews: {
       type: Array,
       default: () => []
     },
