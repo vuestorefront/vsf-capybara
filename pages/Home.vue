@@ -26,7 +26,7 @@
             class="slider-banner"
           />
           <lazy-hydrate :trigger-hydration="!loading">
-            <m-product-carousel :products="newCollection" />
+            <m-product-carousel :products="blockoneproduct" />
           </lazy-hydrate>
         </div>
       </div>
@@ -117,7 +117,8 @@ export default {
       heroImages: 'promoted/getHeadImage',
       promotedOffers: 'promoted/getPromotedOffers',
       newCollection: 'homepage/getEverythingNewCollection',
-      dummyInstagramImages: 'instagram/getInstagramImages'
+      dummyInstagramImages: 'instagram/getInstagramImages',      
+      blockoneproduct: 'homepage/getBlockOneProducts',
     }),
     isOnline () {
       return onlineHelper.isOnline;
@@ -144,7 +145,10 @@ export default {
     if (context) context.output.cacheTags.add(`home`)
 
     await Promise.all([
-      store.dispatch('homepage/fetchNewCollection'),
+       store.dispatch('homepage/blockOneProducts'),
+        // store.dispatch('homepage/blockTwoProducts'),
+        // store.dispatch('homepage/blockThreeProducts'),
+        //store.dispatch('homepage/fetchNewCollection'),
       store.dispatch('promoted/updateHeadImage'),
       store.dispatch('instagram/updateInstagramImages')
     ]);
@@ -155,9 +159,9 @@ export default {
   beforeRouteEnter (to, from, next) {
     if (!isServer && !from.name) {
       next(vm => {
-        vm.$store.dispatch('homepage/fetchNewCollection').then(() => {
-          vm.loading = false;
-        });
+        vm.$store.dispatch('homepage/blockOneProducts').then(() => {
+           vm.loading = false;
+       });
       });
     } else {
       next();
