@@ -236,3 +236,29 @@
         }
     }
 }
+.o-footer{
+    .sf-footer{
+        .sf-footer{
+            &-column{
+                &__chevron{
+                    .sf-chevron{
+                        span{
+                            &::after{
+                                background-color: var(--c-white);
+                            }
+                        }
+                    }
+                }
+                &__content{
+                    ul{
+                        li{
+                            .sf-icon{
+                                display: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
