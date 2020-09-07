@@ -106,7 +106,19 @@
                 }
                 &__controls{
                     top: auto;
-                    bottom: -10px;
+                    bottom: 0;
+                    button{
+                        height: 25px;
+                        border-radius: 2px;
+                        margin: 0 15px;
+                        &:hover{
+                            background-color: var(--c-light );
+                            box-shadow: none;
+                            svg{
+                                fill: var(--_c-dark-primary);
+                            }
+                        }
+                    }
                     @media screen and (max-width: 1024px){
                         display: flex;
                     }
