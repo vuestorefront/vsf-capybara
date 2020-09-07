@@ -72,7 +72,12 @@ export default {
   data () {
     return {
       qty: 1,
-      qtyValidationError: ''
+      qtyValidationError: '',
+      customOptions: {
+      type: Object,
+      default: () => ({})
+    },
+      defaultTitle: ''
     };
   },
   props: {
