@@ -8,8 +8,7 @@
   >
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
       <SfProductCard 
-        :image="product.image"  
-        :link="product.link"
+         :link="product.link"
         :wishlist-icon="false"
         link-tag="router-link"
       >
@@ -38,6 +37,11 @@
               :disabled="addToCartDisabled"
             />  
           </template>
+           <template #image>
+            <div class="sf-image sf-product-card__image sf-image--has-size" data-loaded="true" style="--_image-width:216;--_image-height:326;">
+              <img width="216" height="326" alt="" style="" :src="product.image" @error="$event.target.src='assets/placeholder.jpg'"/> 
+            </div>
+           </template>
        </SfProductCard>
     </SfCarouselItem>
   </SfCarousel>
