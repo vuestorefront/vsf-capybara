@@ -25,7 +25,7 @@
             link="#"
             @click="subscribe"
           >
-            S'inscrire
+            Register
           </SfButton>
         </template>
       </div>

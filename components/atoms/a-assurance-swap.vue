@@ -5,8 +5,8 @@
       class="image_swap"
     />
     <div class="text-center">
-        <h6>Fournisseur de garantie</h6>
-        <p>1er réseau européen de garantie</p>
+        <h6>Guarantee provider</h6>
+        <p>1st European guarantee network</p>
     </div>
     </div>
 </template>

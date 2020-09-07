@@ -5,8 +5,8 @@
         class="image_delivery"
         />
         <div class="text-center">
-            <h6>Livraison gratuite</h6>
-            <p>À partir de 99 euros d’achat</p>
+            <h6>Free delivery</h6>
+            <p>From 99 euros of purchase</p>
         </div>
     </div>
 </template>

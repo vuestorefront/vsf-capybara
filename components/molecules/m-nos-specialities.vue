@@ -3,8 +3,8 @@
     <div class="container">
         <div class="d-flex content">
             <div class="banner">
-                <h1>Nos spécialités</h1>
-                <p>Depuis 2014, Capitools permet de simplifier toutes vos envies de bricolage et jardinage.</p>
+                <h1>Our specialties</h1>
+                <p>Since 2014, Capitools has made it possible to simplify all your DIY and gardening desires.</p>
             </div>
             <div class="category-list d-flex align-center wrap">
                  <a class="d-flex align-center category-item">
@@ -12,35 +12,35 @@
                         src="/assets/icons/energie-menu-icon.png"
                         class="category-icon"
                         />
-                        <p>Groupes électrogènes</p>
+                        <p>Generators</p>
                 </a>
                  <a class="d-flex align-center category-item">
                       <SfImage
                         src="/assets/icons/jardin-menu-icon.png"
                         class="category-icon"
                         />
-                        <p>Jardin</p>
+                        <p>Garden</p>
                 </a>
                  <a class="d-flex align-center category-item">
                       <SfImage
                         src="/assets/icons/bricolage-menu-icon.png"
                         class="category-icon"
                         />
-                        <p>Outillage</p>
+                        <p>Tools</p>
                 </a>
                  <a class="d-flex align-center category-item">
                       <SfImage
                         src="/assets/icons/equipement-maison-icon.png"
                         class="category-icon"
                         />
-                        <p>Équipement de la maison</p>
+                        <p>House equipment</p>
                 </a>
                  <a class="d-flex align-center category-item">
                       <SfImage
                         src="/assets/icons/peinture-icon.png"
                         class="category-icon"
                         />
-                        <p>Peinture</p>
+                        <p>Painting</p>
                 </a>
             </div>
         </div>

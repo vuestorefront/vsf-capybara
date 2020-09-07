@@ -5,7 +5,7 @@
         class="image_payment"
         />
         <div class="text-center">
-            <h6>Paiement 100% sécurisé</h6>
+            <h6>100% secure payment</h6>
         </div>
     </div>
 </template>
