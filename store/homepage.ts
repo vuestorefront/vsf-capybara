@@ -36,7 +36,10 @@ export const homepageStore = {
     },
     async blockOneProducts({ commit, dispatch }) {
       const response = await dispatch('product/findProducts', {
-        query: prepareQuery({ filters: { key: "id", value: { 'in': [6705, 1122, 984] } } }),
+        // query: prepareQuery({ filters: { 
+        //   key: "category_ids",
+        //    value: { 'in': [4374, 4395, 4396, 4397, 4412, 4401, 4402, 4404, 4405, 4406, 4407, 4411, 4408, 4409, 4410, 4413, 4414, 4415, 4416, 4417, 4418, 4419, 4420, 4421, 4436, 4651, 4665, 4666, 4660, 4661]
+        //    } } }),
         size: 8,
         sort: 'created_at:desc'
       }, { root: true })
