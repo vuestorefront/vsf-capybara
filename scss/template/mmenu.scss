@@ -38,6 +38,7 @@
                     flex-wrap: wrap;
                     a, p, span{
                         font-size: 12px;
+                        padding: 0;
                     }
                     h3{
                         font-family: 'Poppins-Bold';
@@ -91,6 +92,17 @@
                     padding: 0;
                     margin: 0;
                 }
+            }
+        }
+    }
+}
+
+.mobile-menu{
+    .sf-mega-menu{
+        &__menu{
+            h3{
+                font-family: 'Poppins-Bold';
+                color: var(--_c-green-primary-lighten);
             }
         }
     }
