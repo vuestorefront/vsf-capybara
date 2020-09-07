@@ -42,7 +42,7 @@
             class="slider-banner"
           />
           <lazy-hydrate :trigger-hydration="!loading">
-            <m-product-carousel :products="newCollection" />
+            <m-product-carousel :products="blockoneproduct" />
           </lazy-hydrate>
         </div>
       </div>
@@ -57,7 +57,7 @@
             class="slider-banner"
           />
           <lazy-hydrate :trigger-hydration="!loading">
-            <m-product-carousel :products="newCollection" />
+            <m-product-carousel :products="blockoneproduct" />
           </lazy-hydrate>
         </div>
       </div>
