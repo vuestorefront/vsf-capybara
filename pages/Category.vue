@@ -20,7 +20,7 @@
           >
             <template #header>
              <router-link  :to="category.link">
-                {{ category.name }}  
+                {{ category.name }}
               </router-link>  
             </template>  
             <SfList class="list">
@@ -347,37 +347,33 @@ export default {
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
       getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
        getCurrentProduct: 'product/getCurrentProduct',
-    }),
+    }), 
     getParentCategoryName(){ 
-      const string = this.getCurrentCategory.url_path;
-      const gardening = "gardening/";
-      const hand_tools = "gardening-hand-tools";
-      const power_tools = "power-tools";
-      const generators = "generators";
-      const workshop = "workshop";
-      const brands = "brands";
-      
-      if( string.includes(gardening)){
+      const categoryUrl = this.getCurrentCategory.url_path;      
+      if( categoryUrl.includes("gardening/")){
         return "Gardening";
       } 
-      else if( string.includes(hand_tools)){
+
+      if( categoryUrl.includes("gardening-hand-tools")){
         return "Hand Tools";
       } 
-      else if( string.includes(power_tools)){
+
+      if( categoryUrl.includes("power-tools")){
         return "Power Tools";
       } 
-      else if( string.includes(generators)){
+
+      if( categoryUrl.includes("generators")){
         return "Generators";
       } 
-      else if( string.includes(workshop)){
+      
+      if( categoryUrl.includes("workshop")){
         return "Workshop";
       } 
-      else if( string.includes(brands)){
+      
+      if( categoryUrl.includes("brands")){
         return "Brands";
       } 
-      else{
-        return "Gardening";
-      }
+      return "Gardening";
     },
     isLazyHydrateEnabled () {
       return config.ssr.lazyHydrateFor.includes('category-next.products');

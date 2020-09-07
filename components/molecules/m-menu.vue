@@ -7,10 +7,11 @@
       <SfMegaMenuColumn
         v-for="category in categories"
         :key="category.id" 
+        :title="category.name"
       >
         <template #title>
-          <router-link  :to="category.link" @click.native="$emit('close')">
-            {{ category.name }}
+          <router-link  style="background-color:#FFFFFF" :to="category.link" @click.native="$emit('close')">
+            <h3 class="sf-mega-menu-column__title">{{ category.name }}</h3>
           </router-link>  
         </template> 
         <SfList>
