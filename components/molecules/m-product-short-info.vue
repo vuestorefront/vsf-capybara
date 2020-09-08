@@ -14,7 +14,7 @@
       />
     </div>
     <p class="reference">
-      <b>Reference</b> {{ product.sku }}
+      <b>Reference : </b> {{ product.sku }}
     </p>
     <div class="product__price-and-rating">
       <AProductRating

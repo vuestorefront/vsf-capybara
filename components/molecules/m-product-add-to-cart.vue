@@ -23,7 +23,7 @@
           />
           <AQuantityInfo /> 
           <div class="quantity d-flex align-center">
-              <label>Amount :</label>
+              <label>Quantity :</label>
               <AProductQuantity
                 class="sf-add-to-cart__select-quantity"
                 v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"

@@ -133,8 +133,8 @@
                         :regular="product.price.regular"
                         :special="product.price.special" 
                       />  
-                      <p class="stock" v-if="product.is_in_stock">En stock</p>
-                      <p class="out-of-stock" v-else>En ruputure de stock</p> 
+                      <p class="stock" v-if="product.is_in_stock">In stock</p>
+                      <p class="out-of-stock" v-else>Out of stock</p> 
                   </div>
                 </template> 
                  <template #price>
