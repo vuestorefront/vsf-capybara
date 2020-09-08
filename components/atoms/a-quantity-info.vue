@@ -6,7 +6,7 @@
                 :alt="$t(defaultTitle)"
                 class="icon"
                 />
-             <p>Livraison gratuite</p>
+             <p>Free delivery</p>
         </div>
         <div class="d-flex align-center"> 
              <SfImage
@@ -14,7 +14,7 @@
                 :alt="$t(defaultTitle)"
                 class="icon"
                 />
-             <p>Livraison sous 10 jours</p>
+             <p>Delivery within 10 days</p>
         </div>
     </div>
 </template>

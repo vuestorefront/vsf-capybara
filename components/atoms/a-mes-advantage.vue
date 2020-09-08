@@ -7,13 +7,13 @@
              />
         <div class="description">
             <p class="text-primary">
-              <b>Mes avantages Capitools inclus</b>
+              <b>My Capitools benefits included</b>
             </p>
-            <p>INSTALLATION / RÉPARATION / PIÈCES
-                DÉTACHÉES : UN VRAI SAVOIR-FAIRE
+            <p>INSTALLATION / REPAIR / PARTS
+               DETACHED: A TRUE KNOW-HOW
             </p>
             <SfButton class="btn-primary-outline-gray" :disabled="disabled" :link="link">
-                Voir les détails
+                See the details
             </SfButton>
         </div>
   </div>

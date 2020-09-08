@@ -23,7 +23,7 @@
           />
           <AQuantityInfo /> 
           <div class="quantity d-flex align-center">
-              <label>Quantité :</label>
+              <label>Amount :</label>
               <AProductQuantity
                 class="sf-add-to-cart__select-quantity"
                 v-if="product.type_id !== 'grouped' && product.type_id !== 'bundle'"
@@ -44,7 +44,7 @@
             :alt="$t(defaultTitle)"
             class="icon"
             />
-        <p>Paiement 100% sécurisé</p>
+        <p>100% secure payment</p>
     </div>
   </div>
 </template>

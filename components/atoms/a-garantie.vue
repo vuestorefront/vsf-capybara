@@ -7,11 +7,11 @@
              />
         <div class="description">
             <p class="text-primary">
-              <b>Garantie du produit</b>
+              <b>Product warranty</b>
             </p>
-            <p>Ce produit est sous garantie pendant les deux ans à compter de la date d'achat.</p>
+            <p>This product is under warranty for two years from the date of purchase.</p>
             <SfLink target="_blank" :link="link">
-                En savoir plus
+                Learn more
             </SfLink>
         </div>
   </div>

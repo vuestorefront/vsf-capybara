@@ -15,7 +15,7 @@
         </SfBadge>
       </template>
     </SfIcon>
-    <small>Panier</small>
+    <small>Basket</small>
   </SfButton>
 </template>
 

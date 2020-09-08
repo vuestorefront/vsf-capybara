@@ -560,24 +560,24 @@ export default {
     {
       if( getCategoryProductsTotal === 0 ) {
       // No Products
-        return "(Resultats 0 - "+getCategoryProductsTotal+" of ";
+        return "(Results 0 - "+getCategoryProductsTotal+" of ";
       }
       else if( getCategoryProductsTotal <= THEME_PAGE_SIZE ) {
       // Product count less than theme_page_size ( 12 )
 
-        return "(Resultats 1 - "+getCategoryProductsTotal+" of ";
+        return "(Results 1 - "+getCategoryProductsTotal+" of ";
       } else {
       // Product count above theme page size
         if( ( this.currentPage * THEME_PAGE_SIZE ) < getCategoryProductsTotal )
         {
           const ending_count = this.currentPage * THEME_PAGE_SIZE;
           const starting_count = ending_count - ( THEME_PAGE_SIZE - 1 );
-          return "(Resultats "+starting_count+" - "+ending_count+" of ";
+          return "(Results "+starting_count+" - "+ending_count+" of ";
         }
         else
         {
           const starting_count = ( ( THEME_PAGE_SIZE * ( this.currentPage - 1 ) ) + 1 );
-          return "(Resultats "+starting_count+" - "+getCategoryProductsTotal+" of ";
+          return "(Results "+starting_count+" - "+getCategoryProductsTotal+" of ";
         }
       }
     },

@@ -11,7 +11,7 @@
         'sf-header__icon--is-active': isLoggedIn
       }"
     />
-    <small>Compte</small>
+    <small>Account</small>
   </SfButton>
 </template>
 
