@@ -26,16 +26,20 @@
       </AProductRating>
     </div>
     <hr>
-    <div class="product__description desktop-only" v-html="product.description"> </div>
-      <SfButton
-        v-show="sizeOption"
-        @click.native="openSizeGuide"
-        class="sf-button--text desktop-only product__guide"
-      >
-        {{ $t('Size guide') }}
-      </SfButton>
-      <div v-if="showOrHideBlocksBasedOnBFTG(product)"><AMesAdvantage /></div>
-      <div v-else><AGarantie /></div>
+    <div class="product__description desktop-only" v-html="product.description" />
+    <SfButton
+      v-show="sizeOption"
+      @click.native="openSizeGuide"
+      class="sf-button--text desktop-only product__guide"
+    >
+      {{ $t('Size guide') }}
+    </SfButton>
+    <div v-if="showOrHideBlocksBasedOnBFTG(product)">
+      <AMesAdvantage />
+    </div>
+    <div v-else>
+      <AGarantie />
+    </div>
   </div>
 </template>
 
@@ -86,10 +90,10 @@ export default {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       createSmoothscroll(scrollTop, scrollTop + reviewsEl.getBoundingClientRect().top);
     },
-    showOrHideBlocksBasedOnBFTG(product){
+    showOrHideBlocksBasedOnBFTG (product) {
       const availableManufactures = config.availableManufactures;
       return availableManufactures.includes(product.manufacturer);
-   }
+    }
   }
 };
 </script>
