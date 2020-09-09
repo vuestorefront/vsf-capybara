@@ -153,6 +153,35 @@
         </p>
       </template>
     </div>
+
+    <template>
+       <div class="row fs16 mb35">
+    <div class="col-xs-12 h4">
+         
+        <div class="col-xs-12">
+            <h4>{{ $t('Payment method') }}</h4>
+        </div>
+         <div class="col-xs-12">
+            <payment-stripe/>
+        </div>
+       <!-- <div class="col-md-6 mb15">
+            <label class="radioStyled"> {{ getPaymentMethod().title }}
+            <input type="radio" value="" checked disabled name="chosen-payment-method">
+            <span class="checkmark" />
+            </label> 
+        </div>  -->
+        </div>
+    </div>
+    
+    <!-- The stripe method integration 
+    <div class="row mb35 stripe-container" v-if="paymentDetails.paymentMethod === 'stripe_payments'">
+        <div class="col-xs-12">
+            <payment-stripe/>
+        </div>
+    </div> -->
+   
+    </template>
+    
     <SfHeading
       :title="$t('Payment method')"
       :level="3"
@@ -196,6 +225,8 @@
 import { required, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
+import { mapGetters } from 'vuex';
+import PaymentStripe from 'src/modules/payment-stripe/components/PaymentStripe';
 import {
   SfInput,
   SfRadio,
@@ -214,9 +245,15 @@ export default {
     SfButton,
     SfSelect,
     SfHeading,
-    SfCheckbox
+    SfCheckbox,
+    PaymentStripe
   },
   mixins: [Payment],
+   computed: {
+    ...mapGetters({
+      paymentDetails: 'checkout/getPaymentDetails'
+    })
+  },
   validations () {
     const rules = {
       firstName: {
