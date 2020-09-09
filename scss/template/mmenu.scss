@@ -36,6 +36,7 @@
                 &__menu{
                     width: 100%;
                     flex-wrap: wrap;
+                    height: 220px;
                     a, p, span{
                         font-size: 12px;
                         padding: 0;
@@ -79,7 +80,7 @@
                     }
                 }
                 &__content{
-                    max-width: 1200px;
+                    max-width: 1080px;
                     width: 100%;
                     padding: 40px 0;
                 }
