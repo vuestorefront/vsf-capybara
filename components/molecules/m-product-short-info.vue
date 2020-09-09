@@ -34,12 +34,13 @@
       >
         {{ $t('Size guide') }}
       </SfButton>
-    <AMesAdvantage />
-    <AGarantie />
+      <div v-if="showOrHideBlocksBasedOnBFTG(product)"><AMesAdvantage /></div>
+      <div v-else><AGarantie /></div>
   </div>
 </template>
 
 <script>
+import config from 'config';
 import { SfHeading, SfIcon, SfPrice, SfButton } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductPrice from 'theme/components/atoms/a-product-price';
@@ -84,7 +85,11 @@ export default {
 
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
       createSmoothscroll(scrollTop, scrollTop + reviewsEl.getBoundingClientRect().top);
-    }
+    },
+    showOrHideBlocksBasedOnBFTG(product){
+      const availableManufactures = config.availableManufactures;
+      return availableManufactures.includes(product.manufacturer);
+   }
   }
 };
 </script>
