@@ -121,13 +121,13 @@ export default {
 }
 .aside-menu {
   display: flex;
-  justify-content: space-between;
+  justify-content: stretch;
+  flex-wrap: wrap;
 }
 .aside-banner {
-  margin: 0 1rem;
+  margin-bottom: var(--spacer-sm);
   text-transform: uppercase;
   --banner-height: 300px;
-  --banner-width: 300px;
   &--mobile {
     display: none;
     @include for-mobile {
@@ -135,6 +135,7 @@ export default {
     }
   }
   &--desktop {
+    --banner-width: 300px;
     display: none;
     @include for-desktop {
       display: block;
