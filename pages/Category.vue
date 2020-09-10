@@ -21,15 +21,15 @@
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
           </template>
+          <template v-if="activeFiltersCount" class="desktop-only">
+            <span>&nbsp;&mdash;&nbsp;</span>
+            <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
+              {{ $t('Clear all') }}
+            </button>
+          </template>
         </SfButton>
-        <template v-if="activeFiltersCount">
-          <span>&nbsp;&mdash;&nbsp;</span>
-          <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
-            {{ $t('Clear all') }}
-          </button>
-        </template>
         <div class="navbar__sort">
-          <span class="navbar__label">{{ $t("Sort By") }}:</span>
+          <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
           <SfSelect
             class="navbar__select sort-by"
             :selected="sortOrder"
@@ -617,39 +617,33 @@ export default {
       padding: 0;
     }
   }
-  &__aside,
-  &__main {
-    display: flex;
-    align-items: center;
-    padding: var(--spacer-sm) 0;
-  }
   &__aside {
+    align-items: center;
+    display: flex;
     flex: 0 0 15%;
     padding: var(--spacer-sm) var(--spacer-sm);
     border: 1px solid var(--c-light);
     border-width: 0 1px 0 0;
   }
   &__main {
+    align-items: center;
+    display: grid;
     flex: 1;
-    padding: 0;
+    grid-template-columns: 1fr 1fr 1fr;
     @include for-desktop {
+      grid-column-gap: var(--spacer-2xl);
+      grid-template-columns: max-content max-content auto;
       padding: var(--spacer-xs) var(--spacer-xl);
     }
-  }
-  &__title {
-    --heading-title-font-weight: var(--font-light);
-    --heading-title-font-size: var(--font-xl);
   }
   &__filters-button {
     display: flex;
     align-items: center;
     font-size: 1rem;
-    svg {
-      fill: var(--c-text-muted);
-      transition: fill 150ms ease;
-    }
+    grid-column: 1;
+    justify-self: start;
     &:hover {
-      svg {
+      .sf-icon {
         fill: var(--c-primary);
       }
     }
@@ -660,22 +654,16 @@ export default {
     color: var(--c-text-muted);
     margin: 0 var(--spacer-2xs) 0 0;
   }
-  &__select {
-    --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
-    --select-margin: 0;
-    --select-selected-padding: 0 var(--spacer-xl) 0 0;
-  }
   &__sort {
     display: flex;
     align-items: center;
-    margin: 0 auto 0 var(--spacer-2xl);
+    grid-column: 2;
+    justify-self: center;
   }
   &__counter {
     font-family: var(--font-family-secondary);
-    margin: auto;
-    @include for-desktop {
-      margin: auto 0 auto auto;
-    }
+    grid-column: 3;
+    justify-self: end;
   }
   &__view {
     display: flex;
@@ -697,6 +685,7 @@ export default {
 .sort-by {
   --select-dropdown-z-index: 2;
   flex: unset;
+  padding: 0px;
   ::v-deep {
     .sf-select__dropdown {
       min-width: max-content;
