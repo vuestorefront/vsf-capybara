@@ -123,6 +123,9 @@ export default {
   display: flex;
   justify-content: stretch;
   flex-wrap: wrap;
+  @include for-desktop {
+     justify-content: space-between;
+  }
 }
 .aside-banner {
   margin-bottom: var(--spacer-sm);
