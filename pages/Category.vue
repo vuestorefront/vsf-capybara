@@ -629,7 +629,7 @@ export default {
     align-items: center;
     display: grid;
     flex: 1;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr minmax( auto, max-content) 1fr;
     @include for-desktop {
       grid-column-gap: var(--spacer-2xl);
       grid-template-columns: max-content max-content auto;
@@ -685,7 +685,7 @@ export default {
 .sort-by {
   --select-dropdown-z-index: 2;
   flex: unset;
-  padding: 0px;
+  padding: 0;
   ::v-deep {
     .sf-select__dropdown {
       min-width: max-content;
