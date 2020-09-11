@@ -83,6 +83,13 @@
                       <strong >{{ getCategoryProductsTotal }}<span>{{ $t(" products)")}}</span></strong>
                    </span>
                 </div>
+
+                <div class="product-view d-flex">
+                    <SfButton class="sf-button--text product-grid">
+                    </SfButton>
+                    <SfButton class="sf-button--text product-list">
+                    </SfButton>
+                </div>
             </div> 
         </div>  
         <SfHeading
@@ -153,6 +160,65 @@
               </SfProductCard>
             </transition-group>
           </lazy-hydrate>
+
+          <lazy-hydrate :trigger-hydration="!loading">
+            <transition-group
+              appear
+              name="products__slide"
+              tag="div"
+              class="products-list"
+            >
+                <SfProductCardHorizontal
+                     v-for="product in products"
+                    :key="product.id"  
+                    :image="product.image"  
+                    :title="product.title"
+                    :link="product.link"
+                    :link-tag="router-link"
+                    :regular-price="regularPrice"
+                    :special-price="specialPrice"
+                    :score-rating="scoreRating"
+                    :max-rating="maxRating"
+                    :reviews-count="reviewsCount"
+                    :description="product.description"
+                  >
+                  <template #image>
+                      <div class="sf-image sf-product-card__image sf-image--has-size" data-loaded="true" style="--_image-width:216;--_image-height:326;">
+                        <img width="216" height="326" alt="" style="" :src="product.image" @error="$event.target.src='assets/placeholder.jpg'"/> 
+                      </div>
+                  </template>
+                  <template #title>
+                    <h3 class="sf-product-card__title">
+                        {{ product.title }}
+                    </h3>
+                    <p class="reference">
+                      Ref : {{ product.sku }}
+                    </p> 
+                    
+                    <AProductRating />
+                    <div class="product__description " v-html="product.description" />
+                  </template> 
+                 <template #price>
+                      <p class="stock" v-if="product.is_in_stock">In stock</p>
+                      <p class="out-of-stock" v-else>Out of stock</p> 
+                      <SfPrice
+                        class="sf-product-card__price"
+                        :regular="product.price.regular"
+                        :special="product.price.special" 
+                      />  
+                    
+                      <AAddToCart
+                      class="sf-add-to-cart__button"
+                      :qty="qty"
+                      :product="product.obj_product"
+                      :disabled="isProductDisabled(product)"
+                    />  
+                  </template>
+                    
+                  </SfProductCardHorizontal>
+            </transition-group>
+          </lazy-hydrate>
+
           <SfPagination
             v-if="totalPages > 1"
             class="products__pagination desktop-only"
@@ -249,6 +315,7 @@ import {
   SfList,
   SfColor,
   SfButton,
+  SfIcon,
   SfFilter,
   SfSidebar,
   SfHeading,
@@ -257,6 +324,7 @@ import {
   SfPagination,
   SfBreadcrumbs,
   SfProductCard,
+  SfProductCardHorizontal,
   SfPrice,
 } from '@storefront-ui/vue';
 
@@ -301,6 +369,7 @@ export default {
     SfList,
     SfColor,
     SfButton,
+    SfIcon,
     SfFilter,
     SfSidebar,
     SfHeading,
@@ -309,6 +378,7 @@ export default {
     SfPagination,
     SfBreadcrumbs,
     SfProductCard,
+    SfProductCardHorizontal,
     SfPrice,
     AAddToCart,
     AProductRating,

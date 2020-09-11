@@ -74,3 +74,47 @@
         display: none;
     }
 }
+
+.products-list{
+    .sf-product-card-horizontal{
+        border: 1px solid var(--c-light);
+        border-radius: 3px;
+        margin: 10px;
+        padding: 0;
+        &__main{
+            justify-content: space-between;
+            padding: 15px;
+        }
+        &__add-to-cart{
+            display: none;
+        }
+        &__link--image{
+            min-width: 200px;
+            padding: 10px;
+        } 
+        &__details{
+            width: calc(100% - 300px);
+        }
+        &__actions-wrapper{
+            max-width: 300px;
+            padding: 10px;
+            .sf-price{
+                width: 100%;
+            }
+            .out-of-stock,
+            .stock{
+                width: 100%;
+                &::before{
+                    position: relative;
+                    left: 0;
+                    top: 0;
+                    vertical-align: middle;
+                }
+            }
+            .a-add-to-cart{
+                max-width: 100%;
+            }
+        }
+
+    }
+}

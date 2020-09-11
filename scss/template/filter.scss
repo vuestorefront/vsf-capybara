@@ -53,3 +53,22 @@
         }
     }
 }
+
+.product-view {
+    margin: 0 15px;
+    .product-grid,
+    .product-list{
+        width: 30px;
+        height: 30px;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        background-position: center;
+        margin: 0 5px;
+    } 
+    .product-grid{
+        background-image: url(/assets/icons/grid.svg);
+    }
+    .product-list{
+        background-image: url(/assets/icons/list.svg);
+    }
+}
