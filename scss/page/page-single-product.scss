@@ -95,8 +95,8 @@
                 .a-add-to-cart{
                     max-width: 100%;
                     color: var(--c-white);
-                    background-color: var(--_c-green-primary-lighten);
-                    border-color: var(--_c-green-primary-lighten);
+                    background-color: var(--_c-green-secondary);
+                    border-color: var(--_c-green-secondary);
                     &[disabled='disabled']{
                         opacity: 0.3;
                     }
