@@ -6,9 +6,9 @@
     @toggle="onToggle"
   >
     <SfTab :title="$t('Description')">
-      <span style="white-space: pre;">
-        <div itemprop="description" v-html="product.description" />
-      </span>
+      <div class="description">
+        <p itemprop="description" v-html="product.description"> </p>
+      </div>
      <!-- <div itemprop="description" v-html="product.description" /> -->
       <AProductAttribute
         v-for="(attribute, i) in attributes"

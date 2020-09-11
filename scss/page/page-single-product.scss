@@ -116,7 +116,19 @@
                     }
                 }
             }
+        }   
+    }
+    .product__bottom{
+        .sf-tabs{
+            &__content{
+                &__tab{
+                    .description{
+                        p{
+                            white-space: break-spaces;
+                        }
+                    }
+                }
+            }
         }
-        
     }
 }
