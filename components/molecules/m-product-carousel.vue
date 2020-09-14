@@ -19,22 +19,23 @@
             <p class="reference">
                 Ref : {{ product.sku }}
             </p>
-            <AProductRating
-              :reviews="reviews"
-              >
-            </AProductRating> 
-            <SfPrice
-              class="sf-product-card__price"
-              :regular="product.price.regular"
-              :special="product.price.special" 
-            />     
+            <AProductRating />
+             <div class="d-flex align-start justify-between">
+                <SfPrice
+                  class="sf-product-card__price"
+                  :regular="product.price.regular"
+                  :special="product.price.special" 
+                />  
+                <p class="stock" v-if="product.is_in_stock">In stock</p>
+                <p class="out-of-stock" v-else>Out of stock</p> 
+             </div>
           </template> 
           <template #price>
             <AAddToCart
               class="sf-add-to-cart__button"
               :qty="qty"
               :product="product.obj_product"
-              :disabled="addToCartDisabled"
+              :disabled="isProductDisabled(product)"
             />  
           </template>
            <template #image>
@@ -85,6 +86,11 @@ export default {
     carouselProducts () {
       return this.products.map(prepareCategoryProduct);
     }
+  },
+  methods: {  
+    isProductDisabled ( product ) {
+      return product.is_in_stock ? false : true ;
+    },
   }
 };
 </script>

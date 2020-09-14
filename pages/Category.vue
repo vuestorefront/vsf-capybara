@@ -85,10 +85,10 @@
                 </div>
 
                 <div class="product-view d-flex">
-                    <SfButton class="sf-button--text product-grid">
+                    <SfButton @click="toggleCategoryListing(true)" class="sf-button--text product-grid">
                     </SfButton>
-                    <SfButton class="sf-button--text product-list">
-                    </SfButton>
+                    <SfButton @click="toggleCategoryListing(false)" class="sf-button--text product-list">
+                    </SfButton> 
                 </div>
             </div> 
         </div>  
@@ -108,6 +108,7 @@
               name="products__slide"
               tag="div"
               class="products__grid"
+              v-if="isShowGrid"
             >
               <SfProductCard
                 v-for="product in products"
@@ -167,6 +168,7 @@
               name="products__slide"
               tag="div"
               class="products-list"
+              v-if="isShowList"
             >
                 <SfProductCardHorizontal
                      v-for="product in products"
@@ -179,8 +181,7 @@
                     :special-price="specialPrice"
                     :score-rating="scoreRating"
                     :max-rating="maxRating"
-                    :reviews-count="reviewsCount"
-                    :description="product.description"
+                    :reviews-count="reviewsCount" 
                   >
                   <template #image>
                       <div class="sf-image sf-product-card__image sf-image--has-size" data-loaded="true" style="--_image-width:216;--_image-height:326;">
@@ -196,7 +197,7 @@
                     </p> 
                     
                     <AProductRating />
-                    <div class="product__description " v-html="product.description" />
+                    <div class="product__description" v-html="product.description" />
                   </template> 
                  <template #price>
                       <p class="stock" v-if="product.is_in_stock">In stock</p>
@@ -407,7 +408,9 @@ export default {
       isOnWishlist: false,
       showAddToCartButton: false,
       isAddedToCart: true,
-      addToCartDisabled: false
+      addToCartDisabled: false, 
+      isShowGrid:true,
+      isShowList:false
     };
   },
   computed: {
@@ -712,6 +715,16 @@ export default {
       this.$store.dispatch('category-next/switchSearchFilters', [
         { id: "final_price", type: 'sort' }
       ]);
+    },
+    toggleCategoryListing(togglevalue){
+      if(togglevalue){
+        this.isShowGrid = true;
+        this.isShowList = false;
+      }
+      else{
+        this.isShowGrid = false;
+        this.isShowList = true;
+      }
     },
     changeSortOder (sortOrder) {
       if (this.getCurrentSearchQuery.sort !== sortOrder) {
