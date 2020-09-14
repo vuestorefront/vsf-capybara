@@ -311,6 +311,7 @@ import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
+import ASortIcon from 'theme/components/atoms/a-sort-icon';
 import {
   SfList,
   SfColor,
@@ -858,12 +859,25 @@ export default {
         fill: var(--c-primary);
       }
     }
+    @include for-mobile {
+      --button-text-transform: uppercase;
+      font-size: var(--font-xs);
+      &.sort-by__button {
+        order: 1;
+      }
+    }
+  }
+  &__filters-icon {
+    margin: 0 var(--spacer-sm) 0 0;
   }
   &__label {
     font-family: var(--font-family-secondary);
     font-weight: var(--font-normal);
     color: var(--c-text-muted);
     margin: 0 var(--spacer-2xs) 0 0;
+    @include for-mobile {
+      font-size: var(--font-xs);
+    }
   }
   &__select {
     --select-padding: 0;
@@ -876,7 +890,18 @@ export default {
   &__sort {
     display: flex;
     align-items: center;
-    margin: 0 auto;
+    margin: 0 auto 0 var(--spacer-2xl);
+    @include for-mobile {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      --select-dropdown-z-index: 2;
+      ::v-deep .sf-select__cancel {
+        margin: 16px;
+        box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
+        --button-width: calc(100% - 32px);
+      }
     .sf-select__selected.sf-select-option{
       font-size: 13px!important;
     }

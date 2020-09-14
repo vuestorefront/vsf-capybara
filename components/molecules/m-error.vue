@@ -51,7 +51,7 @@ export default {
   padding: 0 1.25rem;
   &__image,
   &__message {
-    margin: calc(var(--spacer-2xl) * 3) 0;
+    margin: calc(var(--spacer-xl) * 2) 0;
     text-align: center;
     --heading-border: none;
   }

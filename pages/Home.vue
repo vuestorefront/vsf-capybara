@@ -195,8 +195,6 @@ export default {
   }
 }
 .section {
-  padding-left: var(--spacer-xl);
-  padding-right: var(--spacer-xl);
   @include for-desktop {
     padding-left: 0;
     padding-right: 0;
