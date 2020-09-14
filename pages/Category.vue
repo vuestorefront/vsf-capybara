@@ -795,6 +795,7 @@ export default {
     margin: 0 auto;
   }
 }
+
 .main {
   &.section {
     padding: var(--spacer-xs);
@@ -808,122 +809,123 @@ export default {
   padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 .navbar {
-  position: relative;
-  display: flex;
-  border: 1px solid var(--c-light);
-  border-radius: 5px;
-  margin-bottom: var(--spacer-lg);
-  &.section {
-    padding: var(--spacer-sm);
-    @include for-desktop {
-      padding: 0;
-    }
-  }
-  &__aside,
-  &__main {
+    position: relative;
     display: flex;
-    align-items: center;
-    padding: var(--spacer-sm) 0;
-  }
-  &__aside {
-    flex: 0 0 15%;
-  }
-  &__main {
-    flex: 1;
-    padding: 0;
-    *{
-      font-size: 13px!important;
-    }
-    span{
-        font-family: 'Poppins-Bold';
-        color: var(--_c-dark-primary);
-    }
-    @include for-desktop {
-      padding: var(--spacer-xs) var(--spacer-sm);
-    }
-  }
-  &__title {
-    --heading-title-font-weight: var(--font-light);
-    --heading-title-font-size: var(--font-xl);
-  }
-  &__filters-button {
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
-    svg {
-      fill: var(--c-text-muted);
-      transition: fill 150ms ease;
-    }
-    &:hover {
-      svg {
-        fill: var(--c-primary);
-      }
-    }
-    @include for-mobile {
-      --button-text-transform: uppercase;
-      font-size: var(--font-xs);
-      &.sort-by__button {
-        order: 1;
-      }
-    }
-  }
-  &__filters-icon {
-    margin: 0 var(--spacer-sm) 0 0;
-  }
-  &__label {
-    font-family: var(--font-family-secondary);
-    font-weight: var(--font-normal);
-    color: var(--c-text-muted);
-    margin: 0 var(--spacer-2xs) 0 0;
-    @include for-mobile {
-      font-size: var(--font-xs);
-    }
-  }
-  &__select {
-    --select-padding: 0;
-    --select-margin: 0;
-    --select-selected-padding: 0;
-    font-size: 13px!important;
     border: 1px solid var(--c-light);
-    border-radius: 3px;
-  }
-  &__sort {
-    display: flex;
-    align-items: center;
-    margin: 0 auto 0 var(--spacer-2xl);
-    @include for-mobile {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-      --select-dropdown-z-index: 2;
-      ::v-deep .sf-select__cancel {
-        margin: 16px;
-        box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
-        --button-width: calc(100% - 32px);
+    border-radius: 5px;
+    margin-bottom: var(--spacer-lg);
+    &.section {
+      padding: var(--spacer-sm);
+      @include for-desktop {
+        padding: 0;
       }
-    .sf-select__selected.sf-select-option{
-      font-size: 13px!important;
     }
-  }
-  &__counter {
-    font-family: var(--font-family-secondary);
-    margin: 0;
-  }
-  &__view {
-    display: flex;
-    align-items: center;
-    margin: 0 var(--spacer-xl);
-    @include for-desktop {
-      margin: 0 0 0 var(--spacer-2xl);
+    &__aside,
+    &__main {
+      display: flex;
+      align-items: center;
+      padding: var(--spacer-sm) 0;
     }
-    &-icon {
-      cursor: pointer;
+    &__aside {
+      flex: 0 0 15%;
     }
-    &-label {
+    &__main {
+      flex: 1;
+      padding: 0;
+      *{
+        font-size: 13px!important;
+      }
+      span{
+          font-family: 'Poppins-Bold';
+          color: var(--_c-dark-primary);
+      }
+      @include for-desktop {
+        padding: var(--spacer-xs) var(--spacer-sm);
+      }
+    }
+    &__title {
+      --heading-title-font-weight: var(--font-light);
+      --heading-title-font-size: var(--font-xl);
+    }
+    &__filters-button {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      svg {
+        fill: var(--c-text-muted);
+        transition: fill 150ms ease;
+      }
+      &:hover {
+        svg {
+          fill: var(--c-primary);
+        }
+      }
+      @include for-mobile {
+        --button-text-transform: uppercase;
+        font-size: var(--font-xs);
+        &.sort-by__button {
+          order: 1;
+        }
+      }
+    }
+    &__filters-icon {
       margin: 0 var(--spacer-sm) 0 0;
-      font: var(--font-medium) var(--font-xs) / 1.6 var(--font-family-secondary);
-      text-decoration: underline;
+    }
+    &__label {
+      font-family: var(--font-family-secondary);
+      font-weight: var(--font-normal);
+      color: var(--c-text-muted);
+      margin: 0 var(--spacer-2xs) 0 0;
+      @include for-mobile {
+        font-size: var(--font-xs);
+      }
+    }
+    &__select {
+      --select-padding: 0;
+      --select-margin: 0;
+      --select-selected-padding: 0;
+      font-size: 13px!important;
+      border: 1px solid var(--c-light);
+      border-radius: 3px;
+    }
+    &__sort {
+      display: flex;
+      align-items: center;
+      margin: 0 auto 0 var(--spacer-2xl);
+      @include for-mobile {
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        --select-dropdown-z-index: 2;
+        ::v-deep .sf-select__cancel {
+          margin: 16px;
+          box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
+          --button-width: calc(100% - 32px);
+        }
+      .sf-select__selected.sf-select-option{
+        font-size: 13px!important;
+      }
+    }
+    &__counter {
+      font-family: var(--font-family-secondary);
+      margin: 0;
+    }
+    &__view {
+      display: flex;
+      align-items: center;
+      margin: 0 var(--spacer-xl);
+      @include for-desktop {
+        margin: 0 0 0 var(--spacer-2xl);
+      }
+      &-icon {
+        cursor: pointer;
+      }
+      &-label {
+        margin: 0 var(--spacer-sm) 0 0;
+        font: var(--font-medium) var(--font-xs) / 1.6 var(--font-family-secondary);
+        text-decoration: underline;
+      }
     }
   }
 }
