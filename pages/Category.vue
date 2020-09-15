@@ -636,10 +636,6 @@ export default {
       padding: var(--spacer-xs) var(--spacer-xl);
     }
   }
-  &__title {
-    --heading-title-font-weight: var(--font-light);
-    --heading-title-font-size: var(--font-xl);
-  }
   &__filters-button {
     display: flex;
     align-items: center;
