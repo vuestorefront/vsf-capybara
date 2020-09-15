@@ -174,7 +174,8 @@ export default {
 
   @include for-mobile {
     top: auto;
-    max-height: calc(100vh - var(--_header-height) - var(--bottom-navigation-height));
+    height: calc(100vh - var(--_header-height) - var(--bottom-navigation-height));
+    max-height: none;
   }
 
   .container {
