@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added attribute tab on product page (#386)
 - Used sku instead of product_id while preparing order line items product (#415)
 - Replaced deprecated action product/list call with findProducts (#417)
+- Fixed body scroll issue when open micro cart (#482)
 
 ## [1.0.2] - 03.07.2020
 
