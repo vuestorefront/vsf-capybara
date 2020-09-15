@@ -197,7 +197,9 @@
                     </p> 
                     
                     <AProductRating />
-                    <div class="product__description" v-html="product.description" />
+                     <div class="description" style="white-space: break-spaces">
+                      <p itemprop="description" v-html="product.description"> </p>
+                    </div> 
                   </template> 
                  <template #price>
                       <p class="stock" v-if="product.is_in_stock">In stock</p>
@@ -238,7 +240,7 @@
     >
       <div class="filters">
         <template v-for="(filters, filterType) in availableFilters">
-          <SfHeading :level="4" :title="$t(filterType)" :key="filterType" class="filters__title sf-heading--left" />
+          <SfHeading :level="4" :title="getFilterDisplayString(filterType)" :key="filterType" class="filters__title sf-heading--left" />
           <template v-if="filterType === 'color_filter'">
             <div class="filters__colors" :key="filterType + 'filter'">
               <SfColor
@@ -630,8 +632,18 @@ export default {
     isProductDisabled ( product ) {
       return product.is_in_stock ? false : true ;
     },
-    getProductDisplayString( getCategoryProductsTotal )
-    {
+    getFilterDisplayString(filtertype){
+      if(filtertype === 'manufacturer_filter'){
+        return "Manufacturer";
+      }
+      if(filtertype === 'product_type_filter'){
+        return "Product Type";
+      }
+      if(filtertype === 'price_filter'){
+        return "Price";
+      } 
+    },
+    getProductDisplayString( getCategoryProductsTotal ){
       if( getCategoryProductsTotal === 0 ) {
       // No Products
         return "(Results 0 - "+getCategoryProductsTotal+" of ";

@@ -5,12 +5,11 @@
     ref="productTabs"
     @toggle="onToggle"
   >
-    <SfTab :title="$t('Description')">
-      <nl2br tag="p" :text="product.description"/>
-      <!-- <div class="description">
+    <SfTab :title="$t('Description')"> 
+      <div class="description" >
         <p itemprop="description" v-html="product.description"> </p>
       </div>
-      <div itemprop="description" v-html="product.description" /> -->
+     <!--  <div itemprop="description" v-html="product.description" /> -->
       <AProductAttribute
         v-for="(attribute, i) in attributes"
         :key="i"
@@ -45,8 +44,7 @@ import { mapState, mapActions } from 'vuex';
 import { SfHeading, SfTabs, SfDivider } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductAttribute from 'theme/components/atoms/a-product-attribute';
-import MReviewList from 'theme/components/molecules/m-review-list';
-import Nl2br from 'vue-nl2br/src/main';
+import MReviewList from 'theme/components/molecules/m-review-list'; 
 
 export default {
   name: 'MProductAdditionalInfo',
@@ -56,8 +54,7 @@ export default {
     AProductRating,
     SfDivider,
     AProductAttribute,
-    MReviewList,
-    Nl2br
+    MReviewList
   },
   props: {
     reviews: {
