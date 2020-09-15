@@ -81,7 +81,6 @@ export default {
 
 .product {
   &__header {
-    margin: 0 var(--spacer-sm);
     display: flex;
     justify-content: space-between;
     @include for-desktop {
@@ -92,7 +91,7 @@ export default {
     animation: moveicon 1s ease-in-out infinite;
   }
   &__price-and-rating {
-    margin: var(--spacer-xs) var(--spacer-sm) var(--spacer-base);
+    margin: var(--spacer-xs) 0 var(--spacer-base);
     align-items: center;
     @include for-desktop {
       display: flex;

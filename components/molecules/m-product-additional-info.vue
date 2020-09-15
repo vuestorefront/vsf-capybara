@@ -107,7 +107,7 @@ export default {
     margin: var(--spacer-lg) auto var(--spacer-2xl);
     @include for-desktop {
       margin-top: var(--spacer-2xl);
-      --tabs-content-tab-padding: 3.5rem 0 0 0;
+      --tabs-content-tab-padding: var(--spacer-base) 0 0 0;
     }
   }
   &__property {

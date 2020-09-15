@@ -127,7 +127,6 @@ export default {
 .product {
   &__select-size {
     flex: 100%;
-    margin: 0 var(--spacer-sm);
     @include for-desktop {
       margin: 0;
     }
@@ -137,13 +136,13 @@ export default {
     flex: 100%;
     order: 1;
     align-items: center;
-    margin: var(--spacer-xl) var(--spacer-sm) 0;
+    margin: var(--spacer-xl) 0 0;
     @include for-desktop {
       margin: var(--spacer-xl) 0 0;
     }
   }
   &__color-label {
-    margin: 0 var(--spacer-lg) 0 0;
+    margin: 0 var(--spacer-base) 0 0;
   }
   &__color {
     margin: 0 var(--spacer-2xs);
