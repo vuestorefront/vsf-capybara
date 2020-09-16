@@ -177,7 +177,7 @@ export default {
     }
   }
   &__add-to-cart {
-    margin: var(--spacer-base) 0;
+    margin: var(--spacer-base) 0 0;
     @include for-desktop {
       margin-top: var(--spacer-2xl);
     }
