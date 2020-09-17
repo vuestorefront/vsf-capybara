@@ -24,10 +24,22 @@
               :special-price="getProductPrice(product).special"
               :stock="10"
               :qty="product.qty"
-              class="collected-product"
+              class="collected-product" 
               @click:remove="removeHandler(product)"
               @input="changeQuantity(product, $event)"
             >
+              <template #remove="{ removeHandler }">
+                <SfCircleIcon
+                 class="sf-button sf-circle-icon sf-circle-icon--small sf-collected-product__remove sf-collected-product__remove--circle-icon"
+                 :icon="icon"
+                 :has-badge="hasBadge"
+                 :badge-label="badgeLabel"
+                 aria-label="Go to Home"
+                 :disabled="disabled"
+                 @click="removeHandler" 
+                 :style="{ margin: '.5rem' }" 
+                /> 
+              </template>
               <template #configuration>
                 <div class="collected-product__properties">
                   <SfProperty :name="$t('SKU')" :value="product.sku" />
@@ -108,7 +120,7 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
-
+ 
 import {
   SfButton,
   SfCollectedProduct,
@@ -116,7 +128,8 @@ import {
   SfPrice,
   SfImage,
   SfHeading,
-  SfSidebar
+  SfSidebar,
+  SfCircleIcon
 } from '@storefront-ui/vue';
 
 export default {
@@ -127,12 +140,17 @@ export default {
     SfPrice,
     SfImage,
     SfHeading,
-    SfSidebar
+    SfSidebar,
+    SfCircleIcon
   },
   mixins: [VueOfflineMixin, onEscapePress],
   data () {
     return {
-      isMicrocartVisible: false
+      isMicrocartVisible: false,
+      icon: "cross",
+      hasBadge: false,
+      badgeLabel: "99",
+      disabled: false
     };
   },
   computed: {
