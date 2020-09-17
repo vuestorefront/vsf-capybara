@@ -85,10 +85,10 @@
                 </div>
 
                 <div class="product-view d-flex">
-                    <SfButton class="sf-button--text product-grid">
+                    <SfButton @click="toggleCategoryListing(true)" class="sf-button--text product-grid">
                     </SfButton>
-                    <SfButton class="sf-button--text product-list">
-                    </SfButton>
+                    <SfButton @click="toggleCategoryListing(false)" class="sf-button--text product-list">
+                    </SfButton> 
                 </div>
             </div> 
         </div>  
@@ -108,6 +108,7 @@
               name="products__slide"
               tag="div"
               class="products__grid"
+              v-if="isShowGrid"
             >
               <SfProductCard
                 v-for="product in products"
@@ -167,6 +168,7 @@
               name="products__slide"
               tag="div"
               class="products-list"
+              v-if="isShowList"
             >
                 <SfProductCardHorizontal
                      v-for="product in products"
@@ -179,8 +181,7 @@
                     :special-price="specialPrice"
                     :score-rating="scoreRating"
                     :max-rating="maxRating"
-                    :reviews-count="reviewsCount"
-                    :description="product.description"
+                    :reviews-count="reviewsCount" 
                   >
                   <template #image>
                       <div class="sf-image sf-product-card__image sf-image--has-size" data-loaded="true" style="--_image-width:216;--_image-height:326;">
@@ -196,7 +197,9 @@
                     </p> 
                     
                     <AProductRating />
-                    <div class="product__description " v-html="product.description" />
+                     <div class="description" style="white-space: break-spaces">
+                      <p itemprop="description" v-html="product.description"> </p>
+                    </div> 
                   </template> 
                  <template #price>
                       <p class="stock" v-if="product.is_in_stock">In stock</p>
@@ -237,7 +240,7 @@
     >
       <div class="filters">
         <template v-for="(filters, filterType) in availableFilters">
-          <SfHeading :level="4" :title="$t(filterType)" :key="filterType" class="filters__title sf-heading--left" />
+          <SfHeading :level="4" :title="getFilterDisplayString(filterType)" :key="filterType" class="filters__title sf-heading--left" />
           <template v-if="filterType === 'color_filter'">
             <div class="filters__colors" :key="filterType + 'filter'">
               <SfColor
@@ -407,7 +410,9 @@ export default {
       isOnWishlist: false,
       showAddToCartButton: false,
       isAddedToCart: true,
-      addToCartDisabled: false
+      addToCartDisabled: false, 
+      isShowGrid:true,
+      isShowList:false
     };
   },
   computed: {
@@ -627,8 +632,18 @@ export default {
     isProductDisabled ( product ) {
       return product.is_in_stock ? false : true ;
     },
-    getProductDisplayString( getCategoryProductsTotal )
-    {
+    getFilterDisplayString(filtertype){
+      if(filtertype === 'manufacturer_filter'){
+        return "Manufacturer";
+      }
+      if(filtertype === 'product_type_filter'){
+        return "Product Type";
+      }
+      if(filtertype === 'price_filter'){
+        return "Price";
+      } 
+    },
+    getProductDisplayString( getCategoryProductsTotal ){
       if( getCategoryProductsTotal === 0 ) {
       // No Products
         return "(Results 0 - "+getCategoryProductsTotal+" of ";
@@ -712,6 +727,16 @@ export default {
       this.$store.dispatch('category-next/switchSearchFilters', [
         { id: "final_price", type: 'sort' }
       ]);
+    },
+    toggleCategoryListing(togglevalue){
+      if(togglevalue){
+        this.isShowGrid = true;
+        this.isShowList = false;
+      }
+      else{
+        this.isShowGrid = false;
+        this.isShowList = true;
+      }
     },
     changeSortOder (sortOrder) {
       if (this.getCurrentSearchQuery.sort !== sortOrder) {

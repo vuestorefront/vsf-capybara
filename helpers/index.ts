@@ -70,7 +70,8 @@ export function prepareCategoryProduct (product) {
     },
     obj_product:product,
     sku:product.sku,
-    is_in_stock:product.stock.is_in_stock
+    is_in_stock:product.stock.is_in_stock,
+    description:product.description
   }
 }
 
