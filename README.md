@@ -4,7 +4,7 @@
 
 New default template theme for [Vue Storefront](https://github.com/DivanteLtd/vue-storefront), based on [Storefront UI](https://storefrontui.io/). 90% of the Capybara code is closed in the [Storefront UI library](https://github.com/DivanteLtd/storefront-ui). Thanks to it, Capybara can maintain its flexibility, but minimize the risk of errors.
 
- **🔨  Current status: Developer's preview**
+ **🔨  Current status: Production Ready**
 
 We have prepared [short introduction](https://github.com/DivanteLtd/vsf-capybara/blob/develop/CODING_STANDARDS.md) to our coding standards and conventions we are using in Capybara theme.
 
@@ -72,7 +72,10 @@ To be able to use new Capybara theme in your Vue Storefront installation, you ne
    ```
    git submodule update --init --remote
    ```
-
+1. Generate `local.json` file from script `generate-local-config.js`:
+   ```
+   node src/themes/vsf-capybara/scripts/generate-local-config.js
+   ```
 1. Update Vue Storefront configuration by copying `local.json` file from `vsf-capybara` to root `config` directory.
 1. Update TypeScript compiler option in `tsconfig.json` in root directory: change value for `compilerOptions`**.**`paths`**.**`theme/*` from default theme `["src/themes/default/*"]` to brand new Capybara theme: `["src/themes/capybara/*"]`.
 1. Download all dependencies and start development server:
