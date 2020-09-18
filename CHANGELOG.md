@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / Improved
 
+- Removed: Overridden logo height (#490)
+
 ## [1.0.3] - 20.09.2020
 
 ### Added
