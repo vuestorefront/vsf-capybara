@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - UNRELEASED
+
+### Added
+
+### Changed / Improved
+
+## [1.0.3] - 20.09.2020
+
+### Added
+### Changed / Improved
+
+- Adjusted the error page (#398)
+- Use short description in PDP top section (#393)
+- Fixed `isAddToCartDisabled` computed property (#377)
+- Update filters bar on category page (#381)
+- Use i18n wrapper for the login title (#438)
+- Corrected displayed the selected size option on product page (#436)
+- Styling around color selector on filters in category page (#443)
+- Styling around color filters (#442)
+- Carousel time in product carousel (#444)
+- Position of logout (#448)
+- Fixed Dropdown in adding shipping address (#441)
+- Added attribute tab on product page (#386)
+- Used sku instead of product_id while preparing order line items product (#415)
+- Replaced deprecated action product/list call with findProducts (#417)
+
 ## [1.0.2] - 03.07.2020
 
 ### Added
