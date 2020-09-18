@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed / Improved
+- Improved spacing of elements of product page (#481)
 
 ## [1.0.3] - 20.09.2020
 
