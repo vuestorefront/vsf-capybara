@@ -10,7 +10,7 @@ export const homepageStore = {
     async fetchNewCollection ({ commit, dispatch }) {
       const newProductsQuery = prepareQuery({ queryConfig: 'newProducts' })
 
-      const newProductsResult = await dispatch('product/list', {
+      const newProductsResult = await dispatch('product/findProducts', {
         query: newProductsQuery,
         size: 8,
         sort: 'created_at:desc'
@@ -22,7 +22,7 @@ export const homepageStore = {
       commit('SET_NEW_COLLECTION', configuredProducts)
     },
     async loadBestsellers ({ commit, dispatch }) {
-      const response = await dispatch('product/list', {
+      const response = await dispatch('product/findProducts', {
         query: prepareQuery({ queryConfig: 'bestSellers' }),
         size: 8,
         sort: 'created_at:desc'

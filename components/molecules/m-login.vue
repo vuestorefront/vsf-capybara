@@ -39,7 +39,7 @@
     </SfButton>
     <div class="aside">
       <SfHeading
-        title="Don't have an account yet?"
+        :title="$t('Don\'t have an account yet?')"
         :level="3"
         class="aside__heading"
       />
