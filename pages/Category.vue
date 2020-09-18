@@ -16,7 +16,7 @@
           class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <SfIcon size="32px" icon="filter" />
+          <SfIcon size="18px" class="navbar__filters-icon" icon="filter" />
           {{ $t("Filters") }}
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
@@ -29,9 +29,10 @@
           </button>
         </template>
         <div class="navbar__sort">
-          <span class="navbar__label">{{ $t("Sort By") }}:</span>
+          <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
           <SfSelect
             class="navbar__select sort-by"
+            ref="SortBy"
             :selected="sortOrder"
             @change="changeSortOder"
           >
@@ -45,6 +46,13 @@
             </SfSelectOption>
           </SfSelect>
         </div>
+        <SfButton
+          class="sf-button--text navbar__filters-button sort-by__button mobile-only"
+          @click="$refs.SortBy.toggle()"
+        >
+          {{ $t('Sort by') }}
+          <ASortIcon />
+        </SfButton>
         <div class="navbar__counter">
           <span class="navbar__label desktop-only">
             {{ $t("Products found") }}:
@@ -196,6 +204,7 @@ import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
+import ASortIcon from 'theme/components/atoms/a-sort-icon';
 import {
   SfIcon,
   SfList,
@@ -250,6 +259,7 @@ export default {
   name: 'CategoryPage',
   components: {
     LazyHydrate,
+    ASortIcon,
     SfIcon,
     SfList,
     SfColor,
@@ -654,12 +664,25 @@ export default {
         --icon-color: var(--c-light);
       }
     }
+    @include for-mobile {
+      --button-text-transform: uppercase;
+      font-size: var(--font-xs);
+      &.sort-by__button {
+        order: 1;
+      }
+    }
+  }
+  &__filters-icon {
+    margin: 0 var(--spacer-sm) 0 0;
   }
   &__label {
     font-family: var(--font-family-secondary);
     font-weight: var(--font-normal);
     color: var(--c-text-muted);
     margin: 0 var(--spacer-2xs) 0 0;
+    @include for-mobile {
+      font-size: var(--font-xs);
+    }
   }
   &__select {
     --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
@@ -670,6 +693,21 @@ export default {
     display: flex;
     align-items: center;
     margin: 0 auto 0 var(--spacer-2xl);
+
+    // This is needed to hide SfSelect main element on mobile view.
+    // This code can be removed when SfSelect supports better customization.
+    @include for-mobile {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      --select-dropdown-z-index: 2;
+      ::v-deep .sf-select__cancel {
+        margin: 16px;
+        box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
+        --button-width: calc(100% - 32px);
+      }
+    }
   }
   &__counter {
     font-family: var(--font-family-secondary);
@@ -787,6 +825,7 @@ export default {
   }
   &__color {
     margin: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) 0;
+    border: 1px solid var(--c-light);
   }
   &__item {
     --filter-label-color: var(--c-secondary-variant);
