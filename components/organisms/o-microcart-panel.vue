@@ -28,6 +28,11 @@
               @click:remove="removeHandler(product)"
               @input="changeQuantity(product, $event)"
             >
+              <template #image>
+                <div class="sf-image sf-collected-product__image sf-image--has-size" data-loaded="true" style="--_image-width:140; --_image-height:200;">
+                  <img width="140" height="200" alt="" style="" :src="getThumbnailForProductExtend(product)" @error="$event.target.src=placeholder"/> 
+                </div> 
+              </template>
               <template #remove="{ removeHandler }">
                 <SfCircleIcon
                  class="sf-button sf-circle-icon sf-circle-icon--small sf-collected-product__remove sf-collected-product__remove--circle-icon"
@@ -150,7 +155,8 @@ export default {
       icon: "cross",
       hasBadge: false,
       badgeLabel: "99",
-      disabled: false
+      disabled: false,
+      placeholder: '/assets/placeholder.jpg'
     };
   },
   computed: {
