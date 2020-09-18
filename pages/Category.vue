@@ -16,7 +16,7 @@
           class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <SfIcon size="32px" color="#BEBFC4" icon="filter" />
+          <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
           {{ $t("Filters") }}
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
@@ -32,6 +32,7 @@
           <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
           <SfSelect
             class="navbar__select sort-by"
+            ref="SortBy"
             :selected="sortOrder"
             @change="changeSortOder"
           >
@@ -45,6 +46,13 @@
             </SfSelectOption>
           </SfSelect>
         </div>
+        <SfButton
+          class="sf-button--text navbar__filters-button sort-by__button mobile-only"
+          @click="$refs.SortBy.toggle()"
+        >
+          {{ $t('Sort by') }}
+          <ASortIcon />
+        </SfButton>
         <div class="navbar__counter">
           <span class="navbar__label desktop-only">
             {{ $t("Products found") }}:
@@ -196,6 +204,7 @@ import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
+import ASortIcon from 'theme/components/atoms/a-sort-icon';
 import {
   SfIcon,
   SfList,
@@ -250,6 +259,7 @@ export default {
   name: 'CategoryPage',
   components: {
     LazyHydrate,
+    ASortIcon,
     SfIcon,
     SfList,
     SfColor,
@@ -647,12 +657,25 @@ export default {
         fill: var(--c-primary);
       }
     }
+    @include for-mobile {
+      --button-text-transform: uppercase;
+      font-size: var(--font-xs);
+      &.sort-by__button {
+        order: 1;
+      }
+    }
+  }
+  &__filters-icon {
+    margin: 0 var(--spacer-sm) 0 0;
   }
   &__label {
     font-family: var(--font-family-secondary);
     font-weight: var(--font-normal);
     color: var(--c-text-muted);
     margin: 0 var(--spacer-2xs) 0 0;
+    @include for-mobile {
+      font-size: var(--font-xs);
+    }
   }
   &__sort {
     display: flex;
@@ -775,6 +798,7 @@ export default {
   }
   &__color {
     margin: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) 0;
+    border: 1px solid var(--c-light);
   }
   &__item {
     --filter-label-color: var(--c-secondary-variant);
