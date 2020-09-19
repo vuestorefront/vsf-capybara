@@ -199,9 +199,6 @@ export default {
       padding: 0;
       line-height: 3;
       margin-top: var(--spacer-base);
-      @include for-desktop {
-        margin-top: 0;
-      }
       justify-content: start;
     }
     &__listing {
