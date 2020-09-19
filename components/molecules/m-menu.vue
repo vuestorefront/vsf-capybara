@@ -140,6 +140,7 @@ export default {
   &--desktop {
     --banner-width: 300px;
     display: none;
+    margin: 0 var(--spacer-sm);
     @include for-desktop {
       display: block;
     }
