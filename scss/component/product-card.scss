@@ -94,6 +94,19 @@
         } 
         &__details{
             width: calc(100% - 300px);
+            .sf-link{
+                .description{
+                    p{
+                        font-size: 12px;
+                        height: 100px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;  
+                        -webkit-line-clamp: 6;                        
+                    }
+                }
+            }
         }
         &__actions-wrapper{
             max-width: 300px;
