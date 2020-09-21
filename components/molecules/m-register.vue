@@ -47,6 +47,15 @@
         type="password"
         class="form__element"
       />
+      <SfCheckbox
+          v-model="checked"
+          class="form__element form__checkbox"
+          :label="label"
+          :required="required"
+          :valid="valid"
+          :disabled="$v.email.$invalid" 
+          @change="subscribeEmail"
+        />
       <SfButton class="sf-button--full-width btn-primary form__submit">
         {{ $t("Create an account") }}
       </SfButton>
@@ -61,19 +70,26 @@
 import i18n from '@vue-storefront/i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { required, email } from 'vuelidate/lib/validators';
-import { SfInput, SfButton, SfImage } from '@storefront-ui/vue';
+import { SfInput, SfButton, SfImage, SfCheckbox } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { mapActions } from 'vuex';
+import Subscribe from '@vue-storefront/core/modules/newsletter/mixins/Subscribe';
 
 export default {
   name: 'MRegister',
-  components: { SfInput, SfButton, SfImage },
+  mixins: [Subscribe],
+  components: { SfInput, SfButton, SfImage, SfCheckbox },
   data () {
     return {
       email: '',
       password: '',
       firstName: '',
-      lastName: ''
+      lastName: '',
+      checked: false, 
+      label: "Click to join Mailing List", 
+      required: false, 
+      valid: true, 
+      disabled: false,
     };
   },
   methods: {
@@ -141,6 +157,20 @@ export default {
         message: i18n.t(result.result),
         action1: { label: i18n.t('OK') }
       });
+    },
+    subscribeEmail () {
+      if(this.checked){
+          this.subscribe(this.onSuccesfulSubmission);
+      }
+    },
+    onSuccesfulSubmission (isSubscribed) {
+      if (isSubscribed) {
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'success',
+          message: i18n.t('You have been successfully subscribed to our newsletter!'),
+          action1: { label: i18n.t('OK') }
+        })
+      } 
     }
   },
   validations: {

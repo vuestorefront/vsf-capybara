@@ -52,6 +52,15 @@
         "
         @blur="$v.personalDetails.emailAddress.$touch()"
       />
+      <SfCheckbox
+        v-model="checked"
+        class="form__element form__checkbox"
+        :label="label"
+        :required="required"
+        :valid="valid"
+        :disabled="$v.personalDetails.emailAddress.$invalid" 
+        @change="subscribeEmail"
+      />
       <div class="info">
         <p class="info__heading">
           {{ $t('Enjoy these perks with your free account!') }}
@@ -158,6 +167,8 @@ import { PersonalDetails } from '@vue-storefront/core/modules/checkout/component
 import { SfInput, SfButton, SfHeading, SfCheckbox, SfCharacteristic } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { mapActions } from 'vuex';
+import i18n from '@vue-storefront/i18n';
+import Subscribe from '@vue-storefront/core/modules/newsletter/mixins/Subscribe';
 
 export default {
   name: 'OPersonalDetails',
@@ -168,7 +179,7 @@ export default {
     SfCheckbox,
     SfCharacteristic
   },
-  mixins: [PersonalDetails],
+  mixins: [PersonalDetails,Subscribe],
   data () {
     return {
       characteristics: [
@@ -188,7 +199,13 @@ export default {
           description: this.$t('Manage your wishlist'),
           icon: 'heart'
         }
-      ]
+      ],
+      checked: false, 
+      label: "Click to join Mailing List", 
+      required: false, 
+      valid: true, 
+      disabled: false,
+      email: '',
     };
   },
   validations: {
@@ -238,7 +255,22 @@ export default {
     },
     openTermsAndConditionsModal () {
       this.openModal({ name: ModalList.TermsAndConditions })
-    }
+    },
+    subscribeEmail () {
+       if(this.checked){
+         this.email = this.personalDetails.emailAddress;
+         this.subscribe(this.onSuccesfulSubmission);
+      }
+    },
+    onSuccesfulSubmission (isSubscribed) {
+      if (isSubscribed) {
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'success',
+          message: i18n.t('You have been successfully subscribed to our newsletter!'),
+          action1: { label: i18n.t('OK') }
+        })
+      } 
+    },
   }
 };
 </script>
