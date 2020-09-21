@@ -12,24 +12,24 @@
         <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
       </div>
       <div class="navbar__main">
-        <SfButton
-          class="sf-button--text navbar__filters-button"
-          @click="isFilterSidebarOpen = true"
-        >
-          <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
-          {{ $t("Filters") }}
+        <div class="navbar__filter">
+          <SfButton
+            class="sf-button--text navbar__filters-button"
+            @click="isFilterSidebarOpen = true"
+          >
+            <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
+            {{ $t("Filters") }}
+          </SfButton>
           <template v-if="activeFiltersCount">
-            ({{ activeFiltersCount }})
-          </template>
-          <template v-if="activeFiltersCount" class="desktop-only">
-            <span>&nbsp;&mdash;&nbsp;</span>
-            <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
+            <span class="desktop-only">({{ activeFiltersCount }}) &nbsp;&mdash;&nbsp;</span>
+            <button @click="clearAllFilters" class="desktop-only sf-button sf-button--text navbar__filters-clear-all">
               {{ $t('Clear all') }}
             </button>
           </template>
-        </SfButton>
+        </div>
         <div class="navbar__sort">
           <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
+          <ASortIcon class="mobile-only" />
           <SfSelect
             class="navbar__select sort-by"
             ref="SortBy"
@@ -46,13 +46,13 @@
             </SfSelectOption>
           </SfSelect>
         </div>
-        <SfButton
+        <!--<SfButton
           class="sf-button--text navbar__filters-button sort-by__button mobile-only"
           @click="$refs.SortBy.toggle()"
         >
           {{ $t('Sort by') }}
           <ASortIcon />
-        </SfButton>
+        </SfButton> -->
         <div class="navbar__counter">
           <span class="navbar__label desktop-only">
             {{ $t("Products found") }}:
@@ -640,7 +640,9 @@ export default {
     display: grid;
     flex: 1;
     grid-template-columns: 1fr minmax( auto, max-content) 1fr;
+    grid-template-areas:'filter counter sort';
     @include for-desktop {
+      grid-template-areas:'filter sort counter';
       grid-column-gap: var(--spacer-2xl);
       grid-template-columns: max-content max-content auto;
       padding: var(--spacer-xs) var(--spacer-xl);
@@ -665,6 +667,10 @@ export default {
       }
     }
   }
+  &__filter {
+    display: flex;
+    grid-area: filter;
+  }
   &__filters-icon {
     margin: 0 var(--spacer-sm) 0 0;
   }
@@ -680,13 +686,17 @@ export default {
   &__sort {
     display: flex;
     align-items: center;
-    grid-column: 2;
-    justify-self: center;
+    justify-self: end;
+    grid-area: sort;
+    @include for-desktop {
+      justify-self: center;
+    }
   }
   &__counter {
     font-family: var(--font-family-secondary);
     grid-column: 3;
     justify-self: end;
+    grid-area: counter;
   }
   &__view {
     display: flex;
