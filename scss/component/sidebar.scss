@@ -9,18 +9,31 @@
         border: 1px solid var(--c-light);
         border-radius: 5px;
         .sf-accordion-item{
+            margin-bottom: 10px;
             button{
                 font-size: 16px;
+            }
+            .router-link-exact-active{
+                font-weight: bold;
             }
             &__content{
                 border: 1px solid var(--c-light);
                 border-width: 1px 0 1px 0;
                 padding: 10px;
+                margin-top: 12px;
                 .sf-list{
                     &__item{
+                        margin-bottom: 10px;
                         .sf-menu-item{
                             &__count{
                                 color: $primary-color;
+                            }
+                        }
+                        .router-link-exact-active{
+                            .sf-menu-item{
+                                &__label{
+                                    color: $primary-color;
+                                }
                             }
                         }
                     }
