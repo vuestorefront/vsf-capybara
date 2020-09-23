@@ -157,28 +157,15 @@
     <template>
        <div class="row fs16 mb35">
     <div class="col-xs-12 h4">
-         
         <div class="col-xs-12">
             <h4>{{ $t('Payment method') }}</h4>
         </div>
-         <div class="col-xs-12">
-            <payment-stripe/>
-        </div>
-       <!-- <div class="col-md-6 mb15">
-            <label class="radioStyled"> {{ getPaymentMethod().title }}
-            <input type="radio" value="" checked disabled name="chosen-payment-method">
-            <span class="checkmark" />
-            </label> 
-        </div>  -->
         </div>
     </div>
-    
-    <!-- The stripe method integration 
-    <div class="row mb35 stripe-container" v-if="paymentDetails.paymentMethod === 'stripe_payments'">
-        <div class="col-xs-12">
-            <payment-stripe/>
-        </div>
-    </div> -->
+    <!-- The stripe method integration  -->
+     <div class="col-xs-12" v-if="paymentDetails.paymentMethod === 'stripe_payments'">
+        <payment-stripe/>
+     </div>
    
     </template>
     

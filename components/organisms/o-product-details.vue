@@ -8,6 +8,7 @@
       :offline-image="offlineImage"
       :gallery="gallery"
       :configuration="productConfiguration"
+      :product="product"
     />
     <div class="product__info">
     <div class="d-flex align-start">

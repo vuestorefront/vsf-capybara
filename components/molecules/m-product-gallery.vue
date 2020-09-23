@@ -8,24 +8,70 @@
       ref="gallery"
       :images="gallery"
       :enable-zoom="enableZoom"
-    />
+    >
+    <template #thumbs="{ images, active: activeIndex, go }"  v-if="isShowVideoTabThumbInGallery" >
+       <SfButton
+          v-for="(image, index) in images"
+          :key="'img-' + index"
+          class="sf-button--pure sf-gallery__item"
+          :class="{ 'sf-gallery__item--selected': index === activeIndex }"
+          @click="go(index)"
+        >
+          <SfImage
+            class="sf-gallery__thumb"
+            :src="image.mobile.url"
+            :alt="image.alt"
+            :width="thumbWidth"
+            :height="thumbHeight"
+          />
+        </SfButton>
+        <SfButton
+          v-for="(image, index) in videoThumbImages"
+          :key="'img-' + index"
+          class="sf-button--pure sf-gallery__item"
+          :class="{ 'sf-gallery__item--selected': index === activeIndex }"
+          v-on:click="openVideosTab()"
+        >
+          <SfImage
+            class="sf-gallery__thumb"
+            :src="image.mobile.url"
+            :alt="image.alt"
+            :width="thumbWidth"
+            :height="thumbHeight"
+          />
+        </SfButton>
+    </template>
+    </SfGallery> 
   </div>
 </template>
 
 <script>
 import isEqual from 'lodash-es/isEqual';
-import { SfGallery, SfImage } from '@storefront-ui/vue';
+import { SfGallery, SfImage, SfButton } from '@storefront-ui/vue';
 import { onlineHelper } from '@vue-storefront/core/helpers';
+import { createSmoothscroll } from 'theme/helpers'
+import Vue from 'vue'
+import VueYoutube from 'vue-youtube'
+Vue.use(VueYoutube)
 
 export default {
   name: 'MProductGallery',
   components: {
     SfGallery,
-    SfImage
+    SfImage,
+    SfButton
   },
-  data(){
-    return{
+  data() {
+    return { 
       enableZoom: true,
+      videoThumbImages: [
+        {
+          alt: "Video Thumb",
+          mobile: { url: "assets/placeholder.jpg" },
+          desktop: { url: "assets/placeholder.jpg" },
+          zoom: { url: "assets/placeholder.jpg" },
+        },
+      ],
     };
   },
   props: {
@@ -41,7 +87,27 @@ export default {
       type: Object,
       required: false,
       default: () => ({})
-    }
+    },
+    product: {
+      type: Object,
+      default: () => ({})
+    },
+    imageWidth: {
+      type: [Number, String],
+      default: 422,
+    }, 
+    imageHeight: {
+      type: [Number, String],
+      default: 664,
+    },
+    thumbWidth: {
+      type: [Number, String],
+      default: 160,
+    }, 
+    thumbHeight: {
+      type: [Number, String],
+      default: 160,
+    },
   },
   computed: {
     isOnline () {
@@ -82,11 +148,26 @@ export default {
       );
 
       return index === -1 ? 0 : index;
+    },
+     isShowVideoTabThumbInGallery(){
+      return this.product.youtube_video_code_one != null || this.product.youtube_video_code_two != null || this.product.youtube_video_code_three != null  ? true : false ;
     }
   },
   watch: {
     currentIndex () {
       this.$refs.gallery.go(this.currentIndex)
+    }
+  },
+   methods:{
+    openVideosTab() {
+      this.$store.commit('ui/setReviewProductTab', false);
+      this.$store.commit('ui/setVideoProductTab', true);
+      
+      const reviewsEl = document.querySelector('#m-product-additional-info');
+      if (!reviewsEl) return;
+
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      createSmoothscroll(scrollTop, scrollTop + reviewsEl.getBoundingClientRect().top);
     }
   }
 };

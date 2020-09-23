@@ -2,7 +2,7 @@
   <SfTabs
     class="m-product-additional-info product__tabs"
     id="m-product-additional-info"
-    ref="productTabs"
+    ref="productTabs"  
     @toggle="onToggle"
   >
     <SfTab :title="$t('Description')"> 
@@ -35,6 +35,11 @@
       <SfDivider v-show="reviewsCount" />
       <MReviewList v-show="reviewsCount" :reviews="reviews" :visible=10 />
     </SfTab>
+    <SfTab :title="$t('Video')" v-if="isShowVideoTab" ref="videoTab"> 
+      <youtube v-if="product.youtube_video_code_one"   :video-id="productVideoIdOne" :player-vars="playerVars" @playing="playing"></youtube>
+      <youtube v-if="product.youtube_video_code_two"   :video-id="productVideoIdTwo"></youtube>
+      <youtube v-if="product.youtube_video_code_three" :video-id="productVideoIdThree"></youtube>
+    </SfTab>
   </SfTabs>
 </template>
 
@@ -45,6 +50,9 @@ import { SfHeading, SfTabs, SfDivider } from '@storefront-ui/vue';
 import AProductRating from 'theme/components/atoms/a-product-rating';
 import AProductAttribute from 'theme/components/atoms/a-product-attribute';
 import MReviewList from 'theme/components/molecules/m-review-list'; 
+import Vue from 'vue'
+import VueYoutube from 'vue-youtube'
+Vue.use(VueYoutube)
 
 export default {
   name: 'MProductAdditionalInfo',
@@ -56,6 +64,17 @@ export default {
     AProductAttribute,
     MReviewList
   },
+  data() {
+   return {
+      productVideoIdOne: '',
+      productVideoIdTwo: '',
+      productVideoIdThree: '',
+      playerVars: {
+        autoplay: 1
+      }
+    }
+   },
+   
   props: {
     reviews: {
       type: Array,
@@ -72,22 +91,40 @@ export default {
   },
   computed: {
     ...mapState({
-      isReviewProductTab: state => state.ui.isReviewProductTab
+      isReviewProductTab: state => state.ui.isReviewProductTab,
+      isVideoProductTab: state => state.ui.isVideoProductTab
     }),
     reviewsCount () {
       return this.reviews.length;
+    },
+    setYoutubeVideoId(){
+       this.productVideoIdOne   = this.$youtube.getIdFromUrl(this.product.youtube_video_code_one);
+       this.productVideoIdTwo   = this.$youtube.getIdFromUrl(this.product.youtube_video_code_two);
+       this.productVideoIdThree = this.$youtube.getIdFromUrl(this.product.youtube_video_code_three);
+    },
+    isShowVideoTab(){
+      return this.product.youtube_video_code_one != null || this.product.youtube_video_code_two != null || this.product.youtube_video_code_three != null  ? true : false ;
     }
+  },
+  mounted () {
+    this.setYoutubeVideoId();  
   },
   watch: {
     isReviewProductTab (value) {
       if (value && !this.$refs.reviewTab.isActive) {
         this.$refs.productTabs.toggle(this.$refs.reviewTab._uid);
       }
+    },
+     isVideoProductTab (value) {
+      if (value && !this.$refs.videoTab.isActive) {
+        this.$refs.productTabs.toggle(this.$refs.videoTab._uid);
+      }
     }
   },
   beforeDestroy () {
     this.$store.commit('ui/setReviewProductTab', false);
-  },
+    this.$store.commit('ui/setVideoProductTab', false);
+  }, 
   methods: {
     ...mapActions('ui', {
       openModal: 'openModal'
@@ -95,9 +132,10 @@ export default {
     handleOpenReviewModal () {
       this.openModal({ name: ModalList.Review, payload: this.product.id })
     },
-    onToggle (id) {
+    onToggle (id) { 
       this.$store.commit('ui/setReviewProductTab', id === this.$refs.reviewTab._uid);
-    }
+      this.$store.commit('ui/setVideoProductTab', id === this.$refs.videoTab._uid);
+    }, 
   }
 };
 </script>

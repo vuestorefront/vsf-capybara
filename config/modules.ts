@@ -13,6 +13,7 @@ import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods
 import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-delivery'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
+import { PaymentStripeModule } from 'src/modules/payment-stripe'
 
 // TODO:distributed across proper pages BEFORE 1.11
 export function registerClientModules () {
@@ -28,6 +29,7 @@ export function registerClientModules () {
   registerModule(BreadcrumbsModule)
   registerModule(CmsModule)
   registerModule(NewsletterModule)
+  registerModule(PaymentStripeModule)
 }
 
 // Deprecated API, will be removed in 2.0

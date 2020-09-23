@@ -186,18 +186,6 @@ export default {
         {
           description: this.$t('Faster checkout'),
           icon: 'clock'
-        },
-        {
-          description: this.$t('Full rewards program benefits'),
-          icon: 'rewards'
-        },
-        {
-          description: this.$t('Earn credits with every purchase'),
-          icon: 'credits'
-        },
-        {
-          description: this.$t('Manage your wishlist'),
-          icon: 'heart'
         }
       ],
       checked: false, 
