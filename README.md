@@ -85,3 +85,7 @@ To be able to use new Capybara theme in your Vue Storefront installation, you ne
    ```
 
 1. That’s all! Now after opening your development server (http://localhost:3000 by default) you should see Vue Storefront with Capybara theme!  🎉
+
+## Design customization
+
+If you want to customize the Capybara designs you can start with [this amazing Figma file](https://www.figma.com/community/file/883240116671776403) by Aditya Patel from HotWax Commerce.
