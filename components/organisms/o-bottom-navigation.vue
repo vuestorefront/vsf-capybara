@@ -111,8 +111,11 @@ export default {
   @include for-desktop() {
     display: none;
   }
+  --bottom-navigation-height : auto;
+
   ::v-deep .sf-bottom-navigation {
     z-index: inherit;
+    padding-bottom: env(safe-area-inset-bottom);
     .sf-bottom-navigation-item {
       cursor: pointer;
     }
