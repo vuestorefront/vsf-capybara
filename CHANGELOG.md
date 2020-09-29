@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Used sku instead of product_id while preparing order line items product (#415)
 - Replaced deprecated action product/list call with findProducts (#417)
 - Fixed body scroll issue when open micro cart (#482)
+- Fix hydration errors with fresh installtion (#462)
 
 ## [1.0.2] - 03.07.2020
 
