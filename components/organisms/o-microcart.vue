@@ -11,7 +11,7 @@
 import { mapState } from 'vuex';
 import ALoadingSpinner from 'theme/components/atoms/a-loading-spinner';
 import ALoadingError from 'theme/components/atoms/a-loading-error';
-import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 
 const OMicrocartPanel = () =>
   import(/* webpackChunkName: "vsf-microcart" */ 'theme/components/organisms/o-microcart-panel');
@@ -40,10 +40,10 @@ export default {
     isMicrocartOpen (state) {
       if (state) {
         this.$nextTick(() => {
-          disableBodyScroll()
+          disableBodyScroll(this.$el)
         })
       } else {
-        clearAllBodyScrollLocks()
+        enableBodyScroll(this.$el)
       }
     }
   },
