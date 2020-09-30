@@ -18,7 +18,7 @@
     "quicklink": "^2.0.0-alpha",
     "storefront-query-builder": "https://github.com/DivanteLtd/storefront-query-builder.git",
     "supports-webp": "^2.0.1",
-    "vue": "^2.6.6",
+    "vue": "^2.6.11",
     "vue-lazy-hydration": "^1.0.0-beta.9",
     "vue-no-ssr": "^0.2.2",
     "vue-offline": "^1.0.8",
