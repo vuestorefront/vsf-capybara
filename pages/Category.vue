@@ -16,7 +16,11 @@
           class="sf-button--text navbar__filters-button"
           @click="isFilterSidebarOpen = true"
         >
-          <SfIcon size="18px" class="navbar__filters-icon" icon="filter" />
+          <SfIcon 
+            size="18px" 
+            class="navbar__filters-icon" 
+            icon="filter" 
+          />
           {{ $t("Filters") }}
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
@@ -661,7 +665,6 @@ export default {
     &:hover {
       .sf-icon {
         fill: var(--c-primary);
-        --icon-color: var(--c-light);
       }
     }
     @include for-mobile {
