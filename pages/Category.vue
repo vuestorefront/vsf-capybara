@@ -21,15 +21,15 @@
             {{ $t("Filters") }}
           </SfButton>
           <template v-if="activeFiltersCount">
-            <span class="desktop-only">({{ activeFiltersCount }}) &nbsp;&mdash;&nbsp;</span>
-            <button @click="clearAllFilters" class="desktop-only sf-button sf-button--text navbar__filters-clear-all">
+            ({{ activeFiltersCount }})
+            <span> &nbsp;&mdash;&nbsp;</span>
+            <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
               {{ $t('Clear all') }}
             </button>
           </template>
         </div>
         <div class="navbar__sort">
           <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
-          <ASortIcon class="mobile-only" />
           <SfSelect
             class="navbar__select sort-by"
             ref="SortBy"
@@ -45,14 +45,14 @@
               {{ option.label }}
             </SfSelectOption>
           </SfSelect>
+          <SfButton
+            class="sf-button--text navbar__filters-button sort-by__button mobile-only"
+            @click="$refs.SortBy.toggle()"
+          >
+            {{ $t('Sort By') }}
+            <ASortIcon />
+          </SfButton>
         </div>
-        <!--<SfButton
-          class="sf-button--text navbar__filters-button sort-by__button mobile-only"
-          @click="$refs.SortBy.toggle()"
-        >
-          {{ $t('Sort By') }}
-          <ASortIcon />
-        </SfButton> -->
         <div class="navbar__counter">
           <span class="navbar__label desktop-only">
             {{ $t("Products found") }}:
@@ -725,6 +725,20 @@ export default {
     }
     .sf-select-option {
       cursor: pointer;
+    }
+  }
+  // This is needed to hide SfSelect main element on mobile view.
+  // This code can be removed when SfSelect supports better customization.
+  @include for-mobile {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    --select-dropdown-z-index: 2;
+    ::v-deep .sf-select__cancel {
+      margin: 16px;
+      box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
+      --button-width: calc(100% - 32px);
     }
   }
 }
