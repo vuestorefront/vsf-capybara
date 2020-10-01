@@ -726,6 +726,9 @@ export default {
     .sf-select-option {
       cursor: pointer;
     }
+    .sf-select__chevron {
+      top: 60%;
+    }
   }
   // This is needed to hide SfSelect main element on mobile view.
   // This code can be removed when SfSelect supports better customization.
