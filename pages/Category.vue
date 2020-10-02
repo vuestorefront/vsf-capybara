@@ -628,6 +628,7 @@ export default {
     }
   }
   &__aside {
+    align-items: center;
     display: flex;
     flex: 0 0 15%;
     padding: var(--spacer-sm) var(--spacer-sm);
