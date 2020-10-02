@@ -176,8 +176,7 @@ export default {
 
   .container {
     display: flex;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding: 0 var(--spacer-sm);
     max-width: 1272px;
     margin: auto;
     @include for-desktop {
@@ -185,6 +184,7 @@ export default {
     }
     @include for-mobile {
       flex-direction: column;
+      padding: 0 var(--spacer-xl);
     }
   }
 
@@ -197,7 +197,6 @@ export default {
 
     &__title {
       padding: 0;
-      line-height: 3;
       margin-top: var(--spacer-base);
       justify-content: start;
     }
@@ -220,8 +219,8 @@ export default {
     width: 100%;
     &__title {
       padding: 0;
-      line-height: 3;
       justify-content: start;
+      margin-top: var(--spacer-base);
     }
     &__listing {
       display: flex;
