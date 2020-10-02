@@ -628,7 +628,6 @@ export default {
     }
   }
   &__aside {
-    align-items: center;
     display: flex;
     flex: 0 0 15%;
     padding: var(--spacer-sm) var(--spacer-sm);
@@ -683,6 +682,11 @@ export default {
       font-size: var(--font-xs);
     }
   }
+  &__select {
+    --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
+    --select-margin: 0;
+    --select-selected-padding: 0 var(--spacer-xl) 0 0;
+  }
   &__sort {
     display: flex;
     align-items: center;
@@ -725,9 +729,6 @@ export default {
     }
     .sf-select-option {
       cursor: pointer;
-    }
-    .sf-select__chevron {
-      top: 60%;
     }
   }
   // This is needed to hide SfSelect main element on mobile view.
