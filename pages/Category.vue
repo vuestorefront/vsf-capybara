@@ -19,6 +19,7 @@
           <SfIcon 
             size="18px" 
             class="navbar__filters-icon" 
+            color="#BEBFC4"
             icon="filter" 
           />
           {{ $t("Filters") }}
