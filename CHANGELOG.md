@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced deprecated action product/list call with findProducts (#417)
 - Fix hydration errors with fresh installtion (#462)
 - Fixed console warning related to  value of key 'Sort by' is not a string (#476)
+- Added phone number validation in shipping and payment (#4767)
 
 ## [1.0.2] - 03.07.2020
 
