@@ -78,7 +78,7 @@ export default {
         });
         return;
       }
-      let updatedProfile = pick(JSON.parse(JSON.stringify(this.$store.state.user.current)), [...config.users.allowModification, 'default_billing'])
+      let updatedProfile = pick(JSON.parse(JSON.stringify(this.$store.state.user.current)), config.users.allowModification)
       updatedProfile.firstname = this.firstName
       updatedProfile.lastname = this.lastName
       updatedProfile.email = this.email
