@@ -116,7 +116,7 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
-        :required="true"
+        required
         :valid="!$v.payment.phoneNumber.$error"
         :error-message="$t('Please provide valid phone number')"
         @blur="$v.payment.phoneNumber.$touch()"

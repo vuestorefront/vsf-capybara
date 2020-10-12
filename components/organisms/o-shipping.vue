@@ -110,7 +110,7 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
-        :required="true"
+        required
         :valid="!$v.shipping.phoneNumber.$error"
         :error-message="$t('Please provide valid phone number')"
         @blur="$v.shipping.phoneNumber.$touch()"
