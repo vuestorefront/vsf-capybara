@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix hydration errors with fresh installtion (#462)
 - Fixed console warning related to  value of key 'Sort by' is not a string (#476)
 - Added phone number validation in shipping and payment (#4767)
+- Update pwacompat to avoid loading multiple favicons (https://github.com/DivanteLtd/vue-storefront/issues/4559)
 
 ## [1.0.2] - 03.07.2020
 
