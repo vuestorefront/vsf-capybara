@@ -17,6 +17,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use i18n wrapper for the login title (#438)
 - Corrected displayed the selected size option on product page (#436)
 - Fixed memory leak (#419)
+- Styling around color selector on filters in category page (#443)
+- Styling around color filters (#442)
+- Carousel time in product carousel (#444)
+- Position of logout (#448)
+- Fixed Dropdown in adding shipping address (#441)
+- Added attribute tab on product page (#386)
+- Used sku instead of product_id while preparing order line items product (#415)
+- Replaced deprecated action product/list call with findProducts (#417)
+- Fix hydration errors with fresh installation (#462)
+- Fixed console warning related to  value of key 'Sort by' is not a string (#476)
+- Update pwacompat to avoid loading multiple favicons (https://github.com/DivanteLtd/vue-storefront/issues/4559)
+- Fixed changing and deleting shipping details on MyAccount (#4499)
 
 ## [1.0.2] - 03.07.2020
 
