@@ -74,9 +74,9 @@ To be able to use new Capybara theme in your Vue Storefront installation, you ne
    ```
 1. Generate `local.json` file from script `generate-local-config.js`:
    ```
-   node src/themes/vsf-capybara/scripts/generate-local-config.js
+   node src/themes/capybara/scripts/generate-local-config.js
    ```
-1. Update Vue Storefront configuration by copying `local.json` file from `vsf-capybara` to root `config` directory.
+1. Update Vue Storefront configuration by copying `local.json` file from `src/themes/capybara` to root `config` directory.
 1. Update TypeScript compiler option in `tsconfig.json` in root directory: change value for `compilerOptions`**.**`paths`**.**`theme/*` from default theme `["src/themes/default/*"]` to brand new Capybara theme: `["src/themes/capybara/*"]`.
 1. Download all dependencies and start development server:
 
@@ -85,3 +85,7 @@ To be able to use new Capybara theme in your Vue Storefront installation, you ne
    ```
 
 1. That’s all! Now after opening your development server (http://localhost:3000 by default) you should see Vue Storefront with Capybara theme!  🎉
+
+## Design customization
+
+If you want to customize the Capybara designs you can start with [this amazing Figma file](https://www.figma.com/community/file/883240116671776403) by Aditya Patel from HotWax Commerce.

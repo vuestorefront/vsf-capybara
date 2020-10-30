@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import config from 'config';
+import pick from 'lodash-es/pick';
 import { SfInput, SfButton } from '@storefront-ui/vue';
 import { required, minLength, email } from 'vuelidate/lib/validators';
 import { unicodeAlpha } from '@vue-storefront/core/helpers/validators';
@@ -76,7 +78,7 @@ export default {
         });
         return;
       }
-      let updatedProfile = JSON.parse(JSON.stringify(this.$store.state.user.current))
+      let updatedProfile = pick(JSON.parse(JSON.stringify(this.$store.state.user.current)), config.users.allowModification)
       updatedProfile.firstname = this.firstName
       updatedProfile.lastname = this.lastName
       updatedProfile.email = this.email

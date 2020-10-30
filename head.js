@@ -75,10 +75,8 @@ export default {
   ],
   script: [
     {
-      src: 'https://cdn.jsdelivr.net/npm/pwacompat@2.0.10/pwacompat.min.js',
+      src: 'https://cdn.jsdelivr.net/npm/pwacompat@2.0.17/pwacompat.min.js',
       async: true,
-      integrity:
-        'sha384-I1iiXcTSM6j2xczpDckV+qhhbqiip6FyD6R5CpuqNaWXvyDUvXN5ZhIiyLQ7uuTh',
       crossorigin: 'anonymous'
     }
   ]
