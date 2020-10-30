@@ -16,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update filters bar on category page (#381)
 - Use i18n wrapper for the login title (#438)
 - Corrected displayed the selected size option on product page (#436)
-- Corrected displayed price when choosing configurable product second time(#493)
 - Styling around color selector on filters in category page (#443)
 - Styling around color filters (#442)
 - Carousel time in product carousel (#444)
@@ -25,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added attribute tab on product page (#386)
 - Used sku instead of product_id while preparing order line items product (#415)
 - Replaced deprecated action product/list call with findProducts (#417)
+- Corrected displayed price when choosing configurable product second time (#493)
 
 ## [1.0.2] - 03.07.2020
 
@@ -90,4 +90,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inform about registering for Push Notification (#332)
 - Fixed layout for buttons in checkout (#331)
 - Disable quicklink by default (#343)
-
