@@ -68,19 +68,23 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ABackToTop from 'theme/components/atoms/a-back-to-top';
-import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { getPathForStaticPage } from 'theme/helpers';
 import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import get from 'lodash-es/get';
+import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
+import SfFooterColumn from "@storefront-ui/vue/src/components/organisms/SfFooter/_internal/SfFooterColumn";
+import SfListItem from "@storefront-ui/vue/src/components/organisms/SfList/_internal/SfListItem";
 
 export default {
   name: 'OFooter',
   components: {
     ABackToTop,
     SfFooter,
+    SfFooterColumn,
     SfList,
+    SfListItem,
     SfMenuItem
   },
   data () {

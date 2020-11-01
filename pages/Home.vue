@@ -68,12 +68,14 @@ import {
   SfBannerGrid,
   SfBanner
 } from '@storefront-ui/vue';
+import SfHeroItem from '@storefront-ui/vue/src/components/organisms/SfHero/_internal/SfHeroItem';
 
 export default {
   name: 'Home',
   components: {
     LazyHydrate,
     SfHero,
+    SfHeroItem,
     SfSection,
     SfBannerGrid,
     SfBanner,

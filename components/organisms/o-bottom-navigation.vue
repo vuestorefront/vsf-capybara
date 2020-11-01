@@ -22,11 +22,13 @@ import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import { SfBottomNavigation } from '@storefront-ui/vue';
+import SfBottomNavigationItem from "@storefront-ui/vue/src/components/organisms/SfBottomNavigation/_internal/SfBottomNavigationItem";
 
 export default {
   name: 'OBottomNavigation',
   components: {
-    SfBottomNavigation
+    SfBottomNavigation,
+    SfBottomNavigationItem
   },
   data () {
     return {

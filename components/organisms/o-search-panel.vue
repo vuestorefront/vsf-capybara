@@ -67,14 +67,16 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { prepareCategoryProduct } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
-import { SfButton, SfList, SfMenuItem, SfProductCard } from '@storefront-ui/vue';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+import { SfButton, SfList, SfMenuItem, SfProductCard } from '@storefront-ui/vue';
+import SfListItem from "@storefront-ui/vue/src/components/organisms/SfList/_internal/SfListItem";
 
 export default {
   name: 'OSearchPanel',
   components: {
     SfButton,
     SfList,
+    SfListItem,
     SfMenuItem,
     SfProductCard
   },
