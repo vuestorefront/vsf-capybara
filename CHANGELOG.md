@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.3] - UNRELEASED
 
 ### Added
+
+- Preconnect with cdn.jsdelivr.net & fonts.googleapis.com - @Fifciu
+
 ### Changed / Improved
 
 - Adjusted the error page (#398)
