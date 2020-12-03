@@ -4,14 +4,23 @@
       v-if="!isOnline"
       :src="offlineImage"
     />
-    <SfGallery
-      ref="gallery"
-      :images="gallery"
-    />
+    <div v-if="config.products.gallery.mergeConfigurableChildren">
+      <SfGallery
+        ref="gallery"
+        :images="gallery"
+      />
+    </div>
+    <div v-else :key="currentIndex">
+      <SfGallery
+        ref="gallery"
+        :images="gallery"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import config from 'config'
 import isEqual from 'lodash-es/isEqual';
 import { SfGallery, SfImage } from '@storefront-ui/vue';
 import { onlineHelper } from '@vue-storefront/core/helpers';
@@ -21,6 +30,11 @@ export default {
   components: {
     SfGallery,
     SfImage
+  },
+  data () {
+    return {
+      config
+    }
   },
   props: {
     gallery: {
@@ -68,11 +82,15 @@ export default {
         variantImage = this.gallery[0];
       }
 
+      if (!config.products.gallery.mergeConfigurableChildren) {
+        variantImage = this.gallery[this.gallery.length - 1]
+      }
+
       return variantImage;
     },
     currentIndex () {
       const index = this.gallery.findIndex(imageObject =>
-        isEqual(imageObject.id, this.variantImage.id)
+        config.products.gallery.mergeConfigurableChildren ? isEqual(imageObject.id, this.variantImage.id) : isEqual(imageObject.desktop.url, this.variantImage.desktop.url)
       );
 
       return index === -1 ? 0 : index;
