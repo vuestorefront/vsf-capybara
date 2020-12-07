@@ -141,7 +141,7 @@ export default {
         author: review.nickname,
         date: review.created_at,
         message: `${review.title}: ${review.detail}`,
-        rating: 1 // TODO: remove hardcode
+        rating: review.ratings.length > 0 ? review.ratings[0].value : 1
       }))
     },
     availability () {
