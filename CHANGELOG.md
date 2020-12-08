@@ -11,11 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / Improved
 
+- Fixed Broken tiles of mega menu on mobile (#465)
+
+- Removed: Overridden logo height (#490)
 - Fixed: duplicate image issue in offine mode (#498)
 
 ## [1.0.3] - 20.09.2020
 
 ### Added
+
+- Preconnect with cdn.jsdelivr.net & fonts.googleapis.com - @Fifciu
+
 ### Changed / Improved
 
 - Adjusted the error page (#398)
@@ -32,6 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added attribute tab on product page (#386)
 - Used sku instead of product_id while preparing order line items product (#415)
 - Replaced deprecated action product/list call with findProducts (#417)
+- Fix hydration errors with fresh installation (#462)
+- Fixed console warning related to  value of key 'Sort by' is not a string (#476)
+- Added phone number validation in shipping and payment (#4767)
+- Update pwacompat to avoid loading multiple favicons (https://github.com/DivanteLtd/vue-storefront/issues/4559)
+- Fixed changing and deleting shipping details on MyAccount (#4499)
+- Corrected displayed price when choosing configurable product second time (#493)
 
 ## [1.0.2] - 03.07.2020
 
