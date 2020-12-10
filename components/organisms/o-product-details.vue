@@ -5,7 +5,6 @@
     <meta itemprop="availability" :content="availability">
     <meta itemprop="url" :content="product.url_path">
     <MProductGallery
-      :offline-image="offlineImage"
       :gallery="gallery"
       :configuration="productConfiguration"
     />
@@ -108,20 +107,6 @@ export default {
     }
   },
   computed: {
-    offlineImage () {
-      const width = config.products.thumbnails.width;
-      const height = config.products.thumbnails.height;
-      return {
-        mobile: {
-          url: this.getThumbnail(this.product.image, width, height),
-          alt: this.product.name
-        },
-        desktop: {
-          url: this.getThumbnail(this.product.image, width, height),
-          alt: this.product.name
-        }
-      };
-    },
     gallery () {
       return this.productGallery.map(imageObject => ({
         id: imageObject.id,

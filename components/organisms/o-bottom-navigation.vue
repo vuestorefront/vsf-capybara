@@ -90,6 +90,7 @@ export default {
       this.$store.commit('ui/setSearchpanel', !this.isSearchPanelVisible)
     },
     goToAccount () {
+      this.$store.commit('ui/closeMenu')
       if (this.isLoggedIn) {
         this.$router.push(this.localizedRoute('/my-account'))
       } else {
