@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed: Overridden logo height (#490)
 - Fixed: duplicate image issue in offine mode (#498)
+- Improved z-index of dropdown (#536)
 
 ## [1.0.3] - 20.09.2020
 
