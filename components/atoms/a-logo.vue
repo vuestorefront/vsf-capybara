@@ -32,9 +32,5 @@ export default {
 <style lang="scss" scoped>
 .a-logo {
   display: inline-flex;
-  ::v-deep .sf-header__logo {
-    --header-logo-width: 41px;
-    --header-logo-height: 41px;
-  }
 }
 </style>
