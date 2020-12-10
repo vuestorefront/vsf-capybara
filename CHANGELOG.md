@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed / Improved
-
+- Improved styling around notification (#540)
 - Fixed Broken tiles of mega menu on mobile (#465)
 
 - Removed: Overridden logo height (#490)
