@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed: Overridden logo height (#490)
 - Fixed: duplicate image issue in offine mode (#498)
+- Correct console errors when you select "Use my billing data" in checkout(#556)
 
 ## [1.0.3] - 20.09.2020
 
