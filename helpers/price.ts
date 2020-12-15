@@ -43,7 +43,7 @@ export function getProductPrice (product, customOptions = {}) {
 
   const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
-  const regular = calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const regular = product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
 
   return {
     regular: isSpecialPrice ? formatPrice(original) : formatPrice(regular),
