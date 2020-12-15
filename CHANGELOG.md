@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed / Improved
+- Improved navbar layout (#467)
+
+## [1.0.3] - 20.09.2020
+
+### Added
+
+### Changed / Improved
 
 - Fixed Broken tiles of mega menu on mobile (#465)
 
