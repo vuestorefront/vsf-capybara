@@ -449,6 +449,7 @@ export default {
       // Pure CSR, with no initial category state
       next(async vm => {
         vm.loading = true;
+        await composeInitialPageState(vm.$store, to, true);
         vm.$store.dispatch('category-next/cacheProducts', { route: to });
         vm.loading = false;
       });
