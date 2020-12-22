@@ -167,6 +167,8 @@
 </template>
 
 <script>
+import config from 'config';
+import pick from 'lodash-es/pick';
 import { required, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { SfTabs, SfInput, SfButton, SfSelect, SfIcon } from '@storefront-ui/vue';
@@ -242,7 +244,7 @@ export default {
         return;
       }
 
-      let userDataToUpdate = this.$store.state.user.current;
+      let userDataToUpdate = pick(JSON.parse(JSON.stringify(this.$store.state.user.current)), config.users.allowModification);
       let addressToUpdate = {
         firstname: this.editedAddress.firstname,
         lastname: this.editedAddress.lastname,
@@ -267,7 +269,7 @@ export default {
       })
     },
     deleteAddress (index) {
-      let userDataToUpdate = this.$store.state.user.current;
+      let userDataToUpdate = pick(JSON.parse(JSON.stringify(this.$store.state.user.current)), config.users.allowModification);
       userDataToUpdate.addresses.splice(index, 1)
       this.$store.dispatch('user/update', { customer: userDataToUpdate })
     }
