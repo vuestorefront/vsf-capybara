@@ -116,6 +116,10 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        required
+        :valid="!$v.payment.phoneNumber.$error"
+        :error-message="$t('Please provide valid phone number')"
+        @blur="$v.payment.phoneNumber.$touch()"
       />
       <SfCheckbox
         v-model="generateInvoice"
@@ -194,7 +198,7 @@
 </template>
 <script>
 import { required, minLength } from 'vuelidate/lib/validators';
-import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
+import { unicodeAlpha, unicodeAlphaNum, phoneNum } from '@vue-storefront/core/helpers/validators';
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 import {
   SfInput,
@@ -250,6 +254,10 @@ export default {
       },
       paymentMethod: {
         required
+      },
+      phoneNumber: {
+        required,
+        phoneNum
       }
     };
 
