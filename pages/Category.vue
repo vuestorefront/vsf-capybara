@@ -223,6 +223,8 @@ import {
 
 const THEME_PAGE_SIZE = 12;
 const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
+var unsubscribeFromStoreAction = ''
+var aggs = ''
 
 const composeInitialPageState = async (store, route, forceLoad = false) => {
   try {
@@ -432,6 +434,11 @@ export default {
   async asyncData ({ store, route, context }) {
     // this is for SSR purposes to prefetch data - and it's always executed before parent component methods
     if (context) context.output.cacheTags.add('category')
+    unsubscribeFromStoreAction = store.subscribeAction(action => {
+      if (action.type === 'category-next/loadAvailableFiltersFrom') {
+        aggs = action.payload.aggregations;
+      }
+    });
     await composeInitialPageState(store, route);
   },
   async beforeRouteEnter (to, from, next) {
@@ -449,24 +456,18 @@ export default {
       // Pure CSR, with no initial category state
       next(async vm => {
         vm.loading = true;
-        await composeInitialPageState(vm.$store, to, true);
         vm.$store.dispatch('category-next/cacheProducts', { route: to });
         vm.loading = false;
       });
     }
   },
   mounted () {
-    this.unsubscribeFromStoreAction = this.$store.subscribeAction(action => {
-      if (action.type === 'category-next/loadAvailableFiltersFrom') {
-        this.aggregations = action.payload.aggregations;
-      }
-    });
     this.$bus.$on('product-after-list', this.initPagination);
     window.addEventListener('resize', this.getBrowserWidth);
     this.getBrowserWidth();
   },
   beforeDestroy () {
-    this.unsubscribeFromStoreAction();
+    unsubscribeFromStoreAction();
     this.$bus.$off('product-after-list', this.initPagination);
     window.removeEventListener('resize', this.getBrowserWidth);
   },
@@ -546,9 +547,9 @@ export default {
       return aggregations
         .reduce((result, aggregation) => {
           const bucket =
-            this.aggregations &&
-            this.aggregations[aggregation] &&
-            this.aggregations[aggregation].buckets.find(
+            aggs &&
+            aggs[aggregation] &&
+            aggs[aggregation].buckets.find(
               bucket => String(bucket.key) === String(filter.id)
             );
 
