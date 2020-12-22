@@ -1,9 +1,5 @@
 <template>
   <div class="m-product-gallery">
-    <SfImage
-      v-if="!isOnline"
-      :src="offlineImage"
-    />
     <SfGallery
       ref="gallery"
       :images="gallery"
@@ -13,14 +9,12 @@
 
 <script>
 import isEqual from 'lodash-es/isEqual';
-import { SfGallery, SfImage } from '@storefront-ui/vue';
-import { onlineHelper } from '@vue-storefront/core/helpers';
+import { SfGallery } from '@storefront-ui/vue';
 
 export default {
   name: 'MProductGallery',
   components: {
-    SfGallery,
-    SfImage
+    SfGallery
   },
   props: {
     gallery: {
@@ -30,17 +24,9 @@ export default {
     configuration: {
       type: Object,
       required: true
-    },
-    offlineImage: {
-      type: Object,
-      required: false,
-      default: () => ({})
     }
   },
   computed: {
-    isOnline () {
-      return onlineHelper.isOnline;
-    },
     variantImage () {
       let variantImage = this.gallery.find(image => {
         let selectThis = true
