@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed / Improved
+- Improved spacing around product carousal on home page(#471)
 - Improved navbar layout (#467)
 - Removed font overide on category navbar(#488)
+- Improved heading in search panel (#478)
 
 ## [1.0.3] - 20.09.2020
 
