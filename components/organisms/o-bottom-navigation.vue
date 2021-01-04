@@ -58,6 +58,10 @@ export default {
           case 'search': {
             return this.isSearchPanelVisible
           }
+          case 'profile': {
+            const isProfile = this.$route.name === this.localizedRoute({ name: 'my-account', path: 'my-account' }).name
+            return isProfile && !this.isMobileMenu
+          }
           default: {
             // we don't need to show active icon for profile and cart, because bottom navigation is below
             return false

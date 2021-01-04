@@ -20,8 +20,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / Improved
 
-- Fixed Broken tiles of mega menu on mobile (#465)
-
+- Fixed broken tiles of mega menu on mobile (#465)
+- Improved: Consistency of profile icon (#553)
+- Improved: Z-index for dropdowns(#536)
+- Improved Error page spacings (#537)
+- Improved styling around notification (#540)
+- Added active state for the profile in bottom navigation (#541)
+- Z-index for sidebar (#501)
+- Added safe are in bottom elements (#499)
+- Added safe are in bottom elements (#499)
+- Used spacer variable for footer icons (#484)
+- Improved spacing of elements of product page (#481)
 - Removed: Overridden logo height (#490)
 - Fixed: duplicate image issue in offine mode (#498)
 - Fixed: Blank prices field on checkout in offline mode (#513)
