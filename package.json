@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/theme-capybara",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "New theme for Vue Storefront based on Storefront UI",
   "main": "index.js",
   "scripts": {
