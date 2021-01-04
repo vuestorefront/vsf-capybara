@@ -62,6 +62,7 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-notification {
+  --notification-max-width: 100%;
   position: fixed;
   top: 100px;
   right: 5%;
