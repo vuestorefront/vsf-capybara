@@ -155,15 +155,15 @@ export default {
   }
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
+    padding: 0 var(--spacer-sm);
     @include for-desktop {
       max-width: 32.625rem;
       margin: 0 0 0 7.5rem;
+      padding: 0;
     }
   }
   &__add-to-cart {
-    @include for-mobile {
-      margin: var(--spacer-sm) var(--spacer-sm) 0;
-    }
+    margin: var(--spacer-base) 0 0;
     @include for-desktop {
       margin-top: var(--spacer-sm);
     }
