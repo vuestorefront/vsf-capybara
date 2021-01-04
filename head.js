@@ -71,14 +71,14 @@ export default {
       sizes: '640x1136'
     },
     { rel: 'manifest', href: '/assets/manifest.json' },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com/', crossorigin: 'anonymous' }
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com/', crossorigin: 'anonymous' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com/', crossorigin: 'anonymous' },
+    { rel: 'preconnect', href: 'https://cdn.jsdelivr.net/', crossorigin: 'anonymous' }
   ],
   script: [
     {
-      src: 'https://cdn.jsdelivr.net/npm/pwacompat@2.0.10/pwacompat.min.js',
+      src: 'https://cdn.jsdelivr.net/npm/pwacompat@2.0.17/pwacompat.min.js',
       async: true,
-      integrity:
-        'sha384-I1iiXcTSM6j2xczpDckV+qhhbqiip6FyD6R5CpuqNaWXvyDUvXN5ZhIiyLQ7uuTh',
       crossorigin: 'anonymous'
     }
   ]
