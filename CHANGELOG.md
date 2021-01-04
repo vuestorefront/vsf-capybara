@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.4] - UNRELEASED
+## [1.0.4] - 04.01.2020
 
 ### Added
 
@@ -13,13 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved spacing around product carousal on home page(#471)
 - Improved navbar layout (#467)
 - Improved heading in search panel (#478)
-
-## [1.0.3] - 20.09.2020
-
-### Added
-
-### Changed / Improved
-
 - Fixed broken tiles of mega menu on mobile (#465)
 - Improved: Consistency of profile icon (#553)
 - Improved: Z-index for dropdowns(#536)
