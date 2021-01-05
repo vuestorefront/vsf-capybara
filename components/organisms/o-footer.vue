@@ -167,14 +167,14 @@ export default {
   flex-basis: auto;
 }
 .social-icon {
-  padding: 20px 40px;
+  padding: var(--spacer-sm) var(--spacer-xl);
   @include for-desktop {
-    padding: 6px 0;
+    padding: var(--spacer-xs) 0;
   }
   &__img {
     height: 1.75rem;
     &:not(:last-child) {
-      margin-right: 1.25rem;
+      margin-right: var(--spacer-base);
     }
   }
 }
