@@ -12,22 +12,22 @@
         <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
       </div>
       <div class="navbar__main">
-        <SfButton
-          class="sf-button--text navbar__filters-button"
-          @click="isFilterSidebarOpen = true"
-        >
-          <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
-          {{ $t("Filters") }}
+        <div class="navbar__filter">
+          <SfButton
+            class="sf-button--text navbar__filters-button"
+            @click="isFilterSidebarOpen = true"
+          >
+            <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
+            {{ $t("Filters") }}
+          </SfButton>
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
+            <span> &nbsp;&mdash;&nbsp;</span>
+            <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
+              {{ $t('Clear all') }}
+            </button>
           </template>
-        </SfButton>
-        <template v-if="activeFiltersCount">
-          <span>&nbsp;&mdash;&nbsp;</span>
-          <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
-            {{ $t('Clear all') }}
-          </button>
-        </template>
+        </div>
         <div class="navbar__sort">
           <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
           <SfSelect
@@ -45,14 +45,14 @@
               {{ option.label }}
             </SfSelectOption>
           </SfSelect>
+          <SfButton
+            class="sf-button--text navbar__filters-button sort-by__button mobile-only"
+            @click="$refs.SortBy.toggle()"
+          >
+            {{ $t('Sort By') }}
+            <ASortIcon />
+          </SfButton>
         </div>
-        <SfButton
-          class="sf-button--text navbar__filters-button sort-by__button mobile-only"
-          @click="$refs.SortBy.toggle()"
-        >
-          {{ $t('Sort By') }}
-          <ASortIcon />
-        </SfButton>
         <div class="navbar__counter">
           <span class="navbar__label desktop-only">
             {{ $t("Products found") }}:
@@ -627,39 +627,35 @@ export default {
       padding: 0;
     }
   }
-  &__aside,
-  &__main {
-    display: flex;
-    align-items: center;
-    padding: var(--spacer-sm) 0;
-  }
   &__aside {
+    align-items: center;
+    display: flex;
     flex: 0 0 15%;
     padding: var(--spacer-sm) var(--spacer-sm);
     border: 1px solid var(--c-light);
     border-width: 0 1px 0 0;
   }
   &__main {
+    align-items: center;
+    display: grid;
     flex: 1;
-    padding: 0;
+    grid-template-columns: 1fr minmax( auto, max-content) 1fr;
+    grid-template-areas:'filter counter sort';
     @include for-desktop {
+      grid-template-areas:'filter sort counter';
+      grid-column-gap: var(--spacer-2xl);
+      grid-template-columns: max-content max-content auto;
       padding: var(--spacer-xs) var(--spacer-xl);
     }
-  }
-  &__title {
-    --heading-title-font-weight: var(--font-light);
-    --heading-title-font-size: var(--font-xl);
   }
   &__filters-button {
     display: flex;
     align-items: center;
     font-size: 1rem;
-    svg {
-      fill: var(--c-text-muted);
-      transition: fill 150ms ease;
-    }
+    grid-column: 1;
+    justify-self: start;
     &:hover {
-      svg {
+      .sf-icon {
         fill: var(--c-primary);
       }
     }
@@ -670,6 +666,10 @@ export default {
         order: 1;
       }
     }
+  }
+  &__filter {
+    display: flex;
+    grid-area: filter;
   }
   &__filters-icon {
     margin: 0 var(--spacer-sm) 0 0;
@@ -691,29 +691,17 @@ export default {
   &__sort {
     display: flex;
     align-items: center;
-    margin: 0 auto 0 var(--spacer-2xl);
-
-    // This is needed to hide SfSelect main element on mobile view.
-    // This code can be removed when SfSelect supports better customization.
-    @include for-mobile {
-      position: absolute;
-      width: 0;
-      height: 0;
-      overflow: hidden;
-      --select-dropdown-z-index: 2;
-      ::v-deep .sf-select__cancel {
-        margin: 16px;
-        box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
-        --button-width: calc(100% - 32px);
-      }
+    justify-self: end;
+    grid-area: sort;
+    @include for-desktop {
+      justify-self: center;
     }
   }
   &__counter {
     font-family: var(--font-family-secondary);
-    margin: auto;
-    @include for-desktop {
-      margin: auto 0 auto auto;
-    }
+    grid-column: 3;
+    justify-self: end;
+    grid-area: counter;
   }
   &__view {
     display: flex;
@@ -735,12 +723,27 @@ export default {
 .sort-by {
   --select-dropdown-z-index: 2;
   flex: unset;
+  padding: 0;
   ::v-deep {
     .sf-select__dropdown {
       min-width: max-content;
     }
     .sf-select-option {
       cursor: pointer;
+    }
+  }
+  // This is needed to hide SfSelect main element on mobile view.
+  // This code can be removed when SfSelect supports better customization.
+  @include for-mobile {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    --select-dropdown-z-index: 2;
+    ::v-deep .sf-select__cancel {
+      margin: 16px;
+      box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
+      --button-width: calc(100% - 32px);
     }
   }
 }
