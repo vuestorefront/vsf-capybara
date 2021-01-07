@@ -1,6 +1,7 @@
 <template>
   <div class="m-product-gallery">
     <SfGallery
+      :key="gallery.length"
       ref="gallery"
       :images="gallery"
     />
