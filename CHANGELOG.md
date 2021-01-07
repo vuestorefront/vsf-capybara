@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed / Improved
+- Improved: the code to fix the error of undefined on the product page (#549)
 - Updated: the code to render the images properly when using the mergeConfigurableChildren to false (#551)
 - Improved: code to add the overflow-wrap property on the SfProperty value (#555)
 - Improved: code to apply the filter on all tha category pages (#561)
