@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed / Improved
 - Updated: the code to render the images properly when using the mergeConfigurableChildren to false (#551)
 - Improved: code to add the overflow-wrap property on the SfProperty value (#555)
+- Updated: code to change the category from any category page (#563)
 
 ## [1.0.4] - 04.01.2020
 
