@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved: code to add the overflow-wrap property on the SfProperty value (#555)
 - Improved: code to apply the filter on all tha category pages (#561)
 - Updated: code to change the category from any category page (#563)
+- Improved z-index of dropdown (#536)
 
 ## [1.0.4] - 04.01.2020
 
