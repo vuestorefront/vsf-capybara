@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved: code to apply the filter on all tha category pages (#561)
 - Updated: code to change the category from any category page (#563)
 - Improved z-index of dropdown (#536)
+- Added safe are in bottom elements (#499)
 
 ## [1.0.4] - 04.01.2020
 
@@ -32,8 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved styling around notification (#540)
 - Added active state for the profile in bottom navigation (#541)
 - Z-index for sidebar (#501)
-- Added safe are in bottom elements (#499)
-- Added safe are in bottom elements (#499)
 - Used spacer variable for footer icons (#484)
 - Improved spacing of elements of product page (#481)
 - Removed: Overridden logo height (#490)
