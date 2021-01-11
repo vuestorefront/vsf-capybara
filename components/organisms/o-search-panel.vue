@@ -228,9 +228,7 @@ export default {
       flex-wrap: wrap;
     }
     &__product-card {
-      --product-card-max-width: 200px;
-      flex: 0 1 25%;
-      min-width: calc(var(--product-card-max-width) * 0.8);
+      flex: 0 1 50%;
     }
 
     @include for-desktop {
