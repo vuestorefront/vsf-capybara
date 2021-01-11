@@ -223,8 +223,6 @@ import {
 
 const THEME_PAGE_SIZE = 12;
 const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
-var unsubscribeFromStoreAction = ''
-var aggs = ''
 
 const composeInitialPageState = async (store, route, forceLoad = false) => {
   try {
@@ -284,9 +282,7 @@ export default {
       currentPage: 1,
       getMoreCategoryProducts: [],
       browserWidth: 0,
-      isFilterSidebarOpen: false,
-      unsubscribeFromStoreAction: null,
-      aggregations: null
+      isFilterSidebarOpen: false
     };
   },
   computed: {
@@ -298,6 +294,7 @@ export default {
       getAvailableFilters: 'category-next/getAvailableFilters',
       getCurrentFilters: 'category-next/getCurrentFilters',
       getSystemFilterNames: 'category-next/getSystemFilterNames',
+      getAggregations: 'category-next/getAggregations',
       getCategories: 'category/getCategories',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
       getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
@@ -391,7 +388,7 @@ export default {
         .reduce((result, [filterType, filters]) => {
           result[`${filterType}_filter`] = filters.map(filter => ({
             ...filter,
-            count: this.getFilterCount(filter) || '',
+            count: this.getFilterCount(filter) || '0',
             color:
               filterType === 'color'
                 ? (config.products.colorMappings &&
@@ -434,11 +431,6 @@ export default {
   async asyncData ({ store, route, context }) {
     // this is for SSR purposes to prefetch data - and it's always executed before parent component methods
     if (context) context.output.cacheTags.add('category')
-    unsubscribeFromStoreAction = store.subscribeAction(action => {
-      if (action.type === 'category-next/loadAvailableFiltersFrom') {
-        aggs = action.payload.aggregations;
-      }
-    });
     await composeInitialPageState(store, route);
   },
   async beforeRouteEnter (to, from, next) {
@@ -467,7 +459,6 @@ export default {
     this.getBrowserWidth();
   },
   beforeDestroy () {
-    unsubscribeFromStoreAction();
     this.$bus.$off('product-after-list', this.initPagination);
     window.removeEventListener('resize', this.getBrowserWidth);
   },
@@ -547,9 +538,9 @@ export default {
       return aggregations
         .reduce((result, aggregation) => {
           const bucket =
-            aggs &&
-            aggs[aggregation] &&
-            aggs[aggregation].buckets.find(
+            this.getAggregations &&
+            this.getAggregations[aggregation] &&
+            this.getAggregations[aggregation].buckets.find(
               bucket => String(bucket.key) === String(filter.id)
             );
 
