@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - UNRELEASED
+
+### Added
+
+### Changed / Improved
+- Showing prices from product's object, not from product.totals to prevent whole cart discount bug ([#4460](https://github.com/vuestorefront/vue-storefront/issues/4460))
+
 ## [1.0.4] - 04.01.2020
 
 ### Added

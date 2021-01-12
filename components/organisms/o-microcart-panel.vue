@@ -168,11 +168,7 @@ export default {
     getThumbnailForProductExtend (product) {
       return getThumbnailForProduct(product);
     },
-    getProductPrice (product) {
-      return onlineHelper.isOnline && product.totals && product.totals.options
-        ? getProductPriceFromTotals(product)
-        : getProductPrice(product);
-    },
+    getProductPrice,
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
         ? product.totals.options
