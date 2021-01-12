@@ -530,7 +530,6 @@ export default {
       }
     },
     changeFilter (filter) {
-      delete this.$route.query.page
       this.$store.dispatch('category-next/switchSearchFilters', [filter]);
     },
     clearAllFilters () {
