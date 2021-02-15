@@ -1,0 +1,32 @@
+{
+  "theme": "@vue-storefront/theme-capybara",
+  "products": {
+    "thumbnails": {
+      "width": 324,
+      "height": 489
+    }
+  },
+  "cart": {
+    "thumbnails": {
+      "width": 210,
+      "height": 300
+    }
+  },
+  "entities": {
+    "category": {
+      "categoriesDynamicPrefetch": false
+    },
+    "attribute": {
+      "loadByAttributeMetadata": true
+    }
+  },
+  "quicklink": {
+    "enabled": false
+  },
+  "server": {
+    "api": "api-search-query"
+  },
+  "urlModule": {
+    "enableMapFallbackUrl": true
+  }
+}
