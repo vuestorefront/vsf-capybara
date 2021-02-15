@@ -83,3 +83,46 @@ export function prepareCategoryMenuItem (category) {
     path: category.path
   };
 }
+
+const formatChildrenData = children_data => {
+  let tempArray = [];
+  children_data.map(value => {
+    tempArray.push({ id: value.id });
+    if (value.children_data) {
+      value.children_data.map(subChildren => {
+        tempArray.push({ id: subChildren.id });
+      })
+    }
+  })
+  tempArray = tempArray.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+  return tempArray;
+}
+
+export const formatFiltersOptions = (categories, products) => {
+  if (!categories || !products) return;
+  const resp = products.map(value => value.category_ids).flat();
+  const firstBase = categories.filter(category => resp.some(o2 => category.id === o2)).map(value => {
+    return {
+      ...prepareCategoryMenuItem(value),
+      parent_id: value.parent_id
+    }
+  })
+  const secondBase = categories.filter(category => firstBase.some(o2 => category.id === o2.parent_id)).map(value => {
+    const subCategory = firstBase.filter(sb => sb.parent_id === value.id);
+    return {
+      ...prepareCategoryMenuItem(value),
+      items: subCategory,
+      parent_id: value.parent_id,
+      children_data: !!value.children_data && value.children_data
+    }
+  })
+  const thirdBase = categories.filter(category => secondBase.some(o2 => category.id === o2.parent_id)).map(value => {
+    const subCategory = secondBase.filter(sb => sb.parent_id === value.id);
+    return {
+      ...prepareCategoryMenuItem(value),
+      items: subCategory,
+      children_data: !!value.children_data && formatChildrenData(value.children_data)
+    }
+  })
+  return thirdBase;
+}

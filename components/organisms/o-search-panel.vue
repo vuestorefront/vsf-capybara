@@ -9,17 +9,45 @@
     <div v-else class="container">
       <div class="categories">
         <SfHeading :level="3" :title="$t('Categories')" class="categories__title sf-heading--left" />
-        <SfList v-if="visibleProducts.length && categories.length > 1" class="categories__listing">
+        <SfList v-if="visibleProducts.length && categories.length > 0" class="categories__listing">
           <SfListItem
             v-for="category in categories"
             :key="category.category_id"
           >
-            <SfMenuItem
-              :class="{'selected': isCategorySelected(category)}"
-              :label="category.name"
-              icon=""
-              @click="toggleCategory(category)"
-            />
+            <div class="filter_parent">
+              <SfFilter
+                :key="category.category_id"
+                :selected="isCategorySelected(category)"
+                @change="toggleCategory(category)"
+              />
+              <div>
+                <SfMenuItem :label="category.name" />
+                <div v-for="(item, index) in category.items" :key="index">
+                  <div class="child_container">
+                    <SfFilter
+                      :key="index"
+                      :selected="isCategorySelected(item)"
+                      @change="toggleCategory(item)"
+                    />
+                    <router-link :to="item.link">
+                      <SfMenuItem :label="item.name" />
+                    </router-link>
+                  </div>
+                  <div v-for="(subitem, i) in item.items" :key="i">
+                    <div class="sub_child_container">
+                      <SfFilter
+                        :key="i"
+                        :selected="isCategorySelected(subitem)"
+                        @change="toggleCategory(subitem)"
+                      />
+                      <router-link :to="subitem.link">
+                        <SfMenuItem :label="subitem.name" />
+                      </router-link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </SfListItem>
         </SfList>
       </div>
@@ -61,9 +89,11 @@ import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { productThumbnailPath } from '@vue-storefront/core/helpers';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
-import { prepareCategoryProduct } from 'theme/helpers';
+import { prepareCategoryProduct, formatFiltersOptions } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
-import { SfHeading, SfButton, SfList, SfMenuItem, SfProductCard } from '@storefront-ui/vue';
+import { mapGetters } from 'vuex';
+import i18n from '@vue-storefront/i18n';
+import { SfHeading, SfButton, SfList, SfMenuItem, SfProductCard, SfFilter } from '@storefront-ui/vue';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 export default {
@@ -73,7 +103,8 @@ export default {
     SfList,
     SfMenuItem,
     SfProductCard,
-    SfHeading
+    SfHeading,
+    SfFilter
   },
   mixins: [VueOfflineMixin],
   data () {
@@ -104,6 +135,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      getCategories: 'category/getCategories'
+    }),
     visibleProducts () {
       const productList = this.selectedCategoryIds.length
         ? this.products.filter(product => product.category_ids.some(categoryId => this.selectedCategoryIds.includes(categoryId)))
@@ -112,16 +146,8 @@ export default {
       return productList.map(product => prepareCategoryProduct(product));
     },
     categories () {
-      const distinctCategories = this.products
-        .filter(product => product.category)
-        .map(product => product.category)
-        .flat()
-        .reduce((result, category) => {
-          result[category.category_id] = category;
-          return result;
-        }, {});
-
-      return Object.values(distinctCategories);
+      console.log('Your getCategories user are here =+++++++++>', this.getCategories);
+      return formatFiltersOptions(this.getCategories, this.products);
     },
     noResultsMessage () {
       return this.search.length < 3
@@ -133,13 +159,23 @@ export default {
   },
   methods: {
     isCategorySelected (category) {
-      return this.selectedCategoryIds.includes(category.category_id);
+      return this.selectedCategoryIds.includes(category.id);
     },
     toggleCategory (category) {
       if (this.isCategorySelected(category)) {
-        this.selectedCategoryIds = this.selectedCategoryIds.filter(categoryId => categoryId !== category.category_id);
+        if (category.children_data) {
+          category.children_data.map(value => {
+            this.selectedCategoryIds = this.selectedCategoryIds.filter(categoryId => categoryId !== value.id);
+          })
+        }
+        this.selectedCategoryIds = this.selectedCategoryIds.filter(categoryId => categoryId !== category.id);
       } else {
-        this.selectedCategoryIds.push(category.category_id);
+        if (category.children_data) {
+          category.children_data.map(value => {
+            this.selectedCategoryIds.push(value.id);
+          })
+        }
+        this.selectedCategoryIds.push(category.id);
       }
     }
   },
@@ -247,6 +283,22 @@ export default {
 
   .load-more {
     margin: var(--spacer-xl) 0;
+  }
+  .child_container{
+    display: flex;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+  .sub_child_container{
+    display: flex;
+    margin-left: 40px;
+    margin-top: 10px;
+  }
+  .filter_parent{
+    display: flex;
+  }
+  .sf-filter{
+    width: auto;
   }
 }
 </style>

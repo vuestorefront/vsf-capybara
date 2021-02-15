@@ -75,7 +75,7 @@
             <SfList class="list">
               <SfListItem v-for="item in category.items" :key="item.id" class="list__item">
                 <router-link :to="item.link" :class="{'sf-menu-item--active': isCategoryActive(item)}">
-                  <SfMenuItem :label="item.name" :count="item.count" />
+                  <SfMenuItem :label="'- ' + item.name" :count="item.count" />
                 </router-link>
               </SfListItem>
             </SfList>
@@ -765,6 +765,7 @@ export default {
   }
 }
 .list {
+  margin-left: 10px;
   --menu-item-font-size: var(--font-sm);
   &__item {
     &:not(:last-of-type) {
