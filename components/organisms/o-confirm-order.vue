@@ -223,7 +223,8 @@
         </SfCheckbox>
       </div>
     </div>
-    <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
+    <!-- Not to use in V2 -->
+    <!-- <APromoCode class="mobile-only" :allow-promo-code-removal="false" /> -->
     <div class="characteristics mobile-only">
       <SfCharacteristic
         v-for="characteristic in characteristics"
@@ -252,7 +253,8 @@
             </SfButton>
           </template>
         </SfCheckbox>
-        <APromoCode :allow-promo-code-removal="false" />
+       <!-- Not to use in V2 -->
+       <!-- <APromoCode :allow-promo-code-removal="false" /> -->
       </div>
       <MPriceSummary class="totals__element" />
     </div>
@@ -328,17 +330,18 @@ export default {
           title: this.$t('Safety'),
           description: this.$t('It carefully packaged with a personal touch'),
           icon: 'safety'
-        },
-        {
-          title: this.$t('Easy shipping'),
-          description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
-          icon: 'shipping'
-        },
-        {
-          title: this.$t('Changed your mind?'),
-          description: this.$t('Rest assured, we offer free returns within 30 days'),
-          icon: 'return'
         }
+        // Not to use in V2
+        // {
+        //   title: this.$t('Easy shipping'),
+        //   description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
+        //   icon: 'shipping'
+        // },
+        // {
+        //   title: this.$t('Changed your mind?'),
+        //   description: this.$t('Rest assured, we offer free returns within 30 days'),
+        //   icon: 'return'
+        // }
       ]
     };
   },

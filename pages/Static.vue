@@ -44,13 +44,15 @@ export default {
   data () {
     return {
       navigation: [
+        
         { title: i18n.t('About us (Magento CMS)'), link: getPathForStaticPage('/about-us'), isCms: true },
-        { title: i18n.t('Customer service (Magento CMS)'), link: getPathForStaticPage('/customer-service'), isCms: true },
-        { title: i18n.t('Customer service'), link: '/customer-service' },
-        { title: i18n.t('Legal notice'), link: '/legal' },
+        // Not to use in V2
+        // { title: i18n.t('Customer service (Magento CMS)'), link: getPathForStaticPage('/customer-service'), isCms: true },
+        // { title: i18n.t('Customer service'), link: '/customer-service' },
+        // { title: i18n.t('Legal notice'), link: '/legal' },
         { title: i18n.t('Store locator'), link: '/store-locator' },
-        { title: i18n.t('Delivery'), link: '/delivery' },
-        { title: i18n.t('Return policy'), link: '/returns' },
+        // { title: i18n.t('Delivery'), link: '/delivery' },
+        // { title: i18n.t('Return policy'), link: '/returns' },
         { title: i18n.t('Privacy policy'), link: '/privacy' },
         { title: i18n.t('Size guide'), link: '/size-guide' },
         { title: i18n.t('Contact us'), link: '/contact' }

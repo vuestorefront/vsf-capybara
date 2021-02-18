@@ -22,14 +22,15 @@
       </SfFooterColumn>
       <SfFooterColumn :title="$t('Others')">
         <SfList>
-          <SfListItem>
+          <!-- Not to use in V2 -->
+          <!-- <SfListItem>
             <router-link to="/legal" exact>
               <SfMenuItem
                 class="sf-footer__menu-item"
                 :label="$t('Legal notice')"
               />
             </router-link>
-          </SfListItem>
+          </SfListItem> -->
           <SfListItem>
             <router-link to="/privacy" exact>
               <SfMenuItem
@@ -102,23 +103,25 @@ export default {
     },
     links () {
       return {
-        orders: {
-          name: 'Orders',
-          children: [
-            {
-              name: 'My account',
-              ...this.isLoggedIn
-                ? { link: '/my-account' }
-                : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
-            },
-            { name: 'Delivery', link: '/delivery' },
-            { name: 'Return policy', link: '/returns' }
-          ]
-        },
+        // Not to use in V2
+        //orders: {
+          //name: 'Orders',
+          //children: [
+            // {
+            //   name: 'My account',
+            //   ...this.isLoggedIn
+            //     ? { link: '/my-account' }
+            //     : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
+            // },
+            //{ name: 'Delivery', link: '/delivery' }
+            // { name: 'Return policy', link: '/returns' }
+          //]
+        //},
         help: {
           name: 'Help',
           children: [
-            { name: 'Customer service', link: '/customer-service' },
+            // Not to use in V2
+            // { name: 'Customer service', link: '/customer-service' },
             { name: 'Size guide', link: '/size-guide' },
             { name: 'Contact us', link: '/contact' }
           ]
@@ -130,10 +133,11 @@ export default {
               name: 'About us',
               link: getPathForStaticPage('/about-us')
             },
-            {
-              name: 'Customer service',
-              link: getPathForStaticPage('/customer-service')
-            },
+            // Not to use in V2
+            // {
+            //   name: 'Customer service',
+            //   link: getPathForStaticPage('/customer-service')
+            // },
             { name: 'Store locator', link: '/store-locator' }
           ]
         }

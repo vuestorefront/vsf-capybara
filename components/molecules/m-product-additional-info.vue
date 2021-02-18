@@ -8,7 +8,8 @@
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
     </SfTab>
-    <SfTab :title="$t('Read reviews')" ref="reviewTab">
+    <!-- Not to use in V2 -->
+    <!-- <SfTab :title="$t('Read reviews')" ref="reviewTab">
       <div class="review-header">
         <SfHeading
           :title="$t('{count} Reviews', { count: reviewsCount })"
@@ -24,7 +25,7 @@
       </div>
       <SfDivider v-show="reviewsCount" />
       <MReviewList v-show="reviewsCount" :reviews="reviews" />
-    </SfTab>
+    </SfTab> -->
     <SfTab v-if="attributes.length" :title="$t('Additional Information')">
       <AProductAttribute
         v-for="(attribute, i) in attributes"

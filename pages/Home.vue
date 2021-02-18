@@ -32,8 +32,9 @@
         </router-link>
       </template>
     </SfBannerGrid>
-
-    <ONewsletter />
+    
+    <!-- Not to use in V2 -->
+    <!-- <ONewsletter /> -->
 
     <SfSection :title-heading="$t('Bestsellers')" class="section">
       <lazy-hydrate :trigger-hydration="!loading">

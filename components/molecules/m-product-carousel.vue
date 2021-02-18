@@ -6,14 +6,17 @@
       rewindDuration: 2000
     }"
   >
+    <!--
+      Not to use in V2, can be implemented in another version
+        :max-rating="product.rating.max"
+        :score-rating="product.rating.score" 
+    -->
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
       <SfProductCard
         :title="product.title"
         :image="product.image"
         :regular-price="product.price.regular"
         :special-price="product.price.special"
-        :max-rating="product.rating.max"
-        :score-rating="product.rating.score"
         :link="product.link"
         :wishlist-icon="false"
         link-tag="router-link"

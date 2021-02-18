@@ -1,13 +1,14 @@
 <template>
   <div class="o-personal-details">
-    <div v-if="!currentUser" class="log-in desktop-only">
+    <!-- Not to use in V2 -->
+    <!-- <div v-if="!currentUser" class="log-in desktop-only">
       <SfButton class="log-in__button color-secondary" @click="login">
         {{ $t('Log in to your account') }}
       </SfButton>
       <p class="log-in__info">
         {{ $t('or fill the details below') }}:
       </p>
-    </div>
+    </div> -->
     <SfHeading
       :title="`1. ${$t('Details')}`"
       :level="2"
@@ -52,7 +53,8 @@
         "
         @blur="$v.personalDetails.emailAddress.$touch()"
       />
-      <div class="info">
+      <!-- Not to use in V2 -->
+      <!-- <div class="info">
         <p class="info__heading">
           {{ $t('Enjoy these perks with your free account!') }}
         </p>
@@ -64,8 +66,9 @@
           size-icon="xxs"
           class="info__characteristic"
         />
-      </div>
-      <template v-if="!currentUser">
+      </div> -->
+      <!-- Not to use in V2 -->
+      <!-- <template v-if="!currentUser">
         <div class="form__element">
           <SfCheckbox
             v-model="createAccount"
@@ -130,7 +133,7 @@
             </SfCheckbox>
           </div>
         </template>
-      </template>
+      </template> -->
       <div class="form__action">
         <SfButton
           class="sf-button--full-width form__action-button"
@@ -141,13 +144,14 @@
             $t(isVirtualCart ? "Continue to payment" : "Continue to shipping")
           }}
         </SfButton>
-        <SfButton
+        <!-- Not to use in V2 -->
+        <!-- <SfButton
           v-if="!currentUser"
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary mobile-only"
           @click="login"
         >
           {{ $t("or login to your account") }}
-        </SfButton>
+        </SfButton> -->
       </div>
     </div>
   </div>
@@ -171,24 +175,25 @@ export default {
   mixins: [PersonalDetails],
   data () {
     return {
-      characteristics: [
-        {
-          description: this.$t('Faster checkout'),
-          icon: 'clock'
-        },
-        {
-          description: this.$t('Full rewards program benefits'),
-          icon: 'rewards'
-        },
-        {
-          description: this.$t('Earn credits with every purchase'),
-          icon: 'credits'
-        },
-        {
-          description: this.$t('Manage your wishlist'),
-          icon: 'heart'
-        }
-      ]
+      //Not to use in V2
+      // characteristics: [
+      //   {
+      //     description: this.$t('Faster checkout'),
+      //     icon: 'clock'
+      //   },
+      //   {
+      //     description: this.$t('Full rewards program benefits'),
+      //     icon: 'rewards'
+      //   },
+      //   {
+      //     description: this.$t('Earn credits with every purchase'),
+      //     icon: 'credits'
+      //   },
+      //   {
+      //     description: this.$t('Manage your wishlist'),
+      //     icon: 'heart'
+      //   }
+      // ]
     };
   },
   validations: {
