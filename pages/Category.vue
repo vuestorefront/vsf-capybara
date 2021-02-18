@@ -100,6 +100,11 @@
               tag="div"
               class="products__grid"
             >
+            <!--
+              Not to use in V2, can be implemented in another version
+                :max-rating="product.rating.max"
+                :score-rating="product.rating.score" 
+            -->
               <SfProductCard
                 v-for="product in products"
                 :key="product.id"
@@ -107,8 +112,6 @@
                 :image="product.image"
                 :regular-price="product.price.regular"
                 :special-price="product.price.special"
-                :max-rating="product.rating.max"
-                :score-rating="product.rating.score"
                 :link="product.link"
                 link-tag="router-link"
                 :wishlist-icon="false"

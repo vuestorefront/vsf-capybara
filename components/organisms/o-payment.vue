@@ -117,7 +117,8 @@
         name="phone"
         :label="$t('Phone Number')"
       />
-      <SfCheckbox
+      <!-- Not to use in V2 -->
+      <!-- <SfCheckbox
         v-model="generateInvoice"
         class="form__element form__checkbox"
         name="generateInvoice"
@@ -151,7 +152,7 @@
         <p class="mb40 mt0">
           {{ $t("We will send you the invoice to given e-mail address") }}
         </p>
-      </template>
+      </template> -->
     </div>
     <SfHeading
       :title="$t('Payment method')"

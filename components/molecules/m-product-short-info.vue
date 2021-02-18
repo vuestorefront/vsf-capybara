@@ -19,12 +19,13 @@
         :product="product"
         :custom-options="customOptions"
       />
-      <AProductRating
+       <!-- Not to use in V2 -->
+      <!-- <AProductRating
         @click="openReviewsTab"
         :reviews="reviews"
       >
         {{ $t("Read all {count} review", { count: reviewsCount }) }}
-      </AProductRating>
+      </AProductRating> -->
     </div>
     <div
       class="product__description desktop-only"

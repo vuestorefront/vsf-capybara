@@ -51,7 +51,8 @@
       </template>
       <template #header-icons>
         <div class="sf-header__icons">
-          <AAccountIcon class="sf-header__action" />
+          <!-- Not to use in V2 -->
+          <!-- <AAccountIcon class="sf-header__action" /> -->
           <AMicrocartIcon class="sf-header__action" />
         </div>
       </template>

@@ -19,16 +19,18 @@
           :level="3"
           class="sf-heading--left"
         />
-        <p class="paragraph">
+        <!-- Not to use in V2 -->
+        <!-- <p class="paragraph">
           {{ $t('You can check status of your order by using our delivery status feature. You will receive an order confirmation e-mail with details of your order and a link to track its progress.') }}
         </p>
         <transition name="fade">
           <p v-if="isPermissionGranted" class="paragraph">
             {{ $t('You will receive Push notification about the order.') }}
           </p>
-        </transition>
+        </transition> -->
       </template>
-      <template v-else>
+      <!-- Not to use in V2 -->
+      <!-- <template v-else>
         <template v-if="isNotificationSupported">
           <p v-if="isPermissionGranted" class="paragraph">
             <strong>{{ $t('You will receive Push notification after coming back online. You can confirm the order by clicking on it') }}</strong>
@@ -52,7 +54,7 @@
         @click.native="requestNotificationPermission()"
       >
         {{ $t('Allow order notifications') }}
-      </SfButton>
+      </SfButton> -->
       <SfHeading
         :title="$t('What we can improve?')"
         :level="3"

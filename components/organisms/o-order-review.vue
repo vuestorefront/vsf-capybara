@@ -112,17 +112,18 @@ export default {
           title: this.$t('Safety'),
           description: this.$t('It carefully packaged with a personal touch'),
           icon: 'safety'
-        },
-        {
-          title: this.$t('Easy shipping'),
-          description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
-          icon: 'shipping'
-        },
-        {
-          title: this.$t('Changed your mind?'),
-          description: this.$t('Rest assured, we offer free returns within 30 days'),
-          icon: 'return'
         }
+        // Not to use in V2
+        // {
+        //   title: this.$t('Easy shipping'),
+        //   description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
+        //   icon: 'shipping'
+        // },
+        // {
+        //   title: this.$t('Changed your mind?'),
+        //   description: this.$t('Rest assured, we offer free returns within 30 days'),
+        //   icon: 'return'
+        // }
       ]
     };
   },

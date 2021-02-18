@@ -34,7 +34,8 @@ export default {
         { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
         { icon: 'menu', label: this.$t('Menu'), onClick: this.goToMenu },
         { icon: 'search', label: this.$t('Search'), onClick: this.goToSearch },
-        { icon: 'account', label: this.$t('Profile'), onClick: this.goToAccount },
+        // Not to use in V2
+        //{ icon: 'account', label: this.$t('Profile'), onClick: this.goToAccount },
         { icon: 'add_to_cart', label: this.$t('Cart'), onClick: this.goToCart, isFloating: true }
       ]
     }
