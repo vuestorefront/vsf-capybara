@@ -540,6 +540,7 @@ export default {
           const bucket =
             this.getAggregations &&
             this.getAggregations[aggregation] &&
+            Array.isArray(this.getAggregations[aggregation].buckets) &&
             this.getAggregations[aggregation].buckets.find(
               bucket => String(bucket.key) === String(filter.id)
             );
