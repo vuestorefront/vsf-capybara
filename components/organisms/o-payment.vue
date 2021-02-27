@@ -89,7 +89,7 @@
         :error-message="
           !$v.payment.zipCode.required
             ? $t('Field is required')
-            : $t('Name must have at least 3 letters.')
+            : $t('Zip-code must have at least 3 letters.')
         "
         @blur="$v.payment.zipCode.$touch()"
       />
