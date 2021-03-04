@@ -9,9 +9,9 @@
       :active-icon="activeIcon"
       :class="{
         'sf-header--has-mobile-search': isSearchPanelVisible,
-        'sf-header--is-sticky': isSearchPanelVisible
+        'sf-header--is-sticky': isSearchPanelVisible,
       }"
-      :style="{'z-index': isHoveredMenu ? 2 : 1}"
+      :style="{ 'z-index': isHoveredMenu ? 2 : 1 }"
     >
       <template #logo>
         <ALogo />
@@ -24,7 +24,7 @@
           @mouseleave="isHoveredMenu = false"
         >
           <router-link
-            :class="{active: isCategoryActive(category)}"
+            :class="{ active: isCategoryActive(category) }"
             :to="categoryLink(category)"
           >
             {{ category.name }}
@@ -39,7 +39,7 @@
       </template>
       <template #search>
         <div class="search-container">
-          <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
+          <OSearch :class="{ 'desktop-only': !isSearchPanelVisible }" />
           <SfButton
             v-if="isSearchPanelVisible"
             class="sf-button--text form__action-button form__action-button--secondary mobile-only"
@@ -51,6 +51,7 @@
       </template>
       <template #header-icons>
         <div class="sf-header__icons">
+          <AheaderLanguageSwitcher class="sf-header__action" />
           <AAccountIcon class="sf-header__action" />
           <AMicrocartIcon class="sf-header__action" />
         </div>
@@ -75,6 +76,7 @@ import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
 import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
 import { getTopLevelCategories } from 'theme/helpers';
+import AheaderLanguageSwitcher from 'theme/components/atoms/a-header-language-switcher';
 
 export default {
   name: 'OHeader',
@@ -86,16 +88,17 @@ export default {
     AMicrocartIcon,
     OSearch,
     MMenu,
-    SfOverlay
+    SfOverlay,
+    AheaderLanguageSwitcher
   },
   data () {
     return {
       isHoveredMenu: false
-    }
+    };
   },
   computed: {
     ...mapState({
-      isSearchPanelVisible: state => state.ui.searchpanel
+      isSearchPanelVisible: (state) => state.ui.searchpanel
     }),
     ...mapState('ui', ['isMobileMenu']),
     ...mapGetters('category', ['getCategories', 'getCurrentCategory']),
@@ -112,16 +115,18 @@ export default {
       return formatCategoryLink(category);
     },
     isCategoryActive (category) {
-      return this.getCurrentCategory.path ? this.getCurrentCategory.path.startsWith(category.path) : false;
+      return this.getCurrentCategory.path
+        ? this.getCurrentCategory.path.startsWith(category.path)
+        : false;
     }
   },
   watch: {
     async isMobileMenu (status) {
       if (this.isMobileMenu) {
         // we can't add this style to body because sfui also add/remove overflow to body and there may be conflict
-        document.documentElement.style.overflow = 'hidden'
+        document.documentElement.style.overflow = 'hidden';
       } else {
-        document.documentElement.style.overflow = ''
+        document.documentElement.style.overflow = '';
       }
     }
   }
@@ -177,7 +182,9 @@ export default {
       visibility: visible;
       top: 0;
       z-index: 1;
-      --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
+      --mega-menu-aside-menu-height: calc(
+        100vh - var(--bottom-navigation-height) - var(--bar-height)
+      );
     }
   }
 }

@@ -1,0 +1,23 @@
+{
+  "images": [
+    {
+      "title": "Colorful summer dresses are already in store",
+      "subtitle": "SUMMER COLLECTION 2020",
+      "background": "#F0F5F3",
+      "image": {
+        "webp": "/assets/banner/webp/full_width_banner.webp",
+        "fallback": "/assets/banner/png/full_width_banner.png"
+      }
+    },
+    {
+      "title": "Find clothing that expresses your individuality",
+      "subtitle": "SUMMER COLLECTION 2020",
+      "background": "#F0F5F3",
+      "className": "sf-hero-item--position-bg-top-left sf-hero-item--align-right",
+      "image": {
+        "webp": "/assets/banner/webp/full_width_banner2.webp",
+        "fallback": "/assets/banner/png/full_width_banner2.png"
+      }
+    }
+  ]
+}
