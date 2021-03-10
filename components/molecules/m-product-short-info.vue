@@ -19,7 +19,7 @@
         :product="product"
         :custom-options="customOptions"
       />
-       <!-- Not to use in V2 -->
+      <!-- Not to use in V2 -->
       <!-- <AProductRating
         @click="openReviewsTab"
         :reviews="reviews"

@@ -100,10 +100,10 @@
               tag="div"
               class="products__grid"
             >
-            <!--
+              <!--
               Not to use in V2, can be implemented in another version
                 :max-rating="product.rating.max"
-                :score-rating="product.rating.score" 
+                :score-rating="product.rating.score"
             -->
               <SfProductCard
                 v-for="product in products"

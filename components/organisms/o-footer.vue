@@ -104,19 +104,19 @@ export default {
     links () {
       return {
         // Not to use in V2
-        //orders: {
-          //name: 'Orders',
-          //children: [
-            // {
-            //   name: 'My account',
-            //   ...this.isLoggedIn
-            //     ? { link: '/my-account' }
-            //     : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
-            // },
-            //{ name: 'Delivery', link: '/delivery' }
-            // { name: 'Return policy', link: '/returns' }
-          //]
-        //},
+        // orders: {
+        // name: 'Orders',
+        // children: [
+        // {
+        //   name: 'My account',
+        //   ...this.isLoggedIn
+        //     ? { link: '/my-account' }
+        //     : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
+        // },
+        // { name: 'Delivery', link: '/delivery' }
+        // { name: 'Return policy', link: '/returns' }
+        // ]
+        // },
         help: {
           name: 'Help',
           children: [

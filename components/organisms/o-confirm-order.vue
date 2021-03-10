@@ -253,12 +253,13 @@
             </SfButton>
           </template>
         </SfCheckbox>
-       <!-- Not to use in V2 -->
-       <!-- <APromoCode :allow-promo-code-removal="false" /> -->
+        <!-- Not to use in V2 -->
+        <!-- <APromoCode :allow-promo-code-removal="false" /> -->
       </div>
       <MPriceSummary class="totals__element" />
     </div>
     <div class="actions">
+      <paypal-button :styling="{ color: 'black' }" />
       <SfButton
         class="sf-button--full-width actions__button"
         :disabled="$v.orderReview.$invalid || !productsInCart.length"
@@ -296,8 +297,11 @@ import {
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
-import { ModalList } from 'theme/store/ui/modals'
+import { ModalList } from 'theme/store/ui/modals';
 import { createSmoothscroll } from 'theme/helpers';
+import PaypalButton from '@develodesign/vsf-payment-paypal/components/Button';
+import { OrderService } from '../../../../../core/data-resolver/OrderService';
+import { Order } from '@vue-storefront/core/modules/order/types/Order';
 
 export default {
   name: 'OConfirmOrder',
@@ -313,7 +317,8 @@ export default {
     SfCharacteristic,
     SfCollectedProduct,
     APromoCode,
-    MPriceSummary
+    MPriceSummary,
+    PaypalButton
   },
   mixins: [OrderReview],
   data () {
@@ -412,6 +417,13 @@ export default {
     },
     openTermsAndConditionsModal () {
       this.openModal({ name: ModalList.TermsAndConditions })
+    },
+    placeOrder () {
+      console.log('Hello world');
+      console.log('Products in Cart', this.productsInCart);
+      // order = new Order();
+      // order.name = "asdasd";
+      // OrderService.placeOrder(order);
     }
   },
   mounted () {
