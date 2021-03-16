@@ -300,7 +300,6 @@ import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals';
 import { createSmoothscroll } from 'theme/helpers';
 import PaypalButton from '@develodesign/vsf-payment-paypal/components/Button';
-import { OrderService } from '../../../../../core/data-resolver/OrderService';
 import { Order } from '@vue-storefront/core/modules/order/types/Order';
 
 export default {
@@ -365,7 +364,8 @@ export default {
       shippingMethods: 'checkout/getShippingMethods',
       paymentDetails: 'checkout/getPaymentDetails',
       paymentMethods: 'checkout/getPaymentMethods',
-      personalDetails: 'checkout/getPersonalDetails'
+      personalDetails: 'checkout/getPersonalDetails',
+      totals: 'cart/getTotals'
     }),
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
@@ -377,7 +377,7 @@ export default {
       const paymentMethod = this.paymentMethods.find(
         method => this.paymentDetails.paymentMethod === method.code
       );
-      return paymentMethod ? paymentMethod.title : '';
+      return paymentMethod ? paymentMethod.code : '';
     }
   },
   beforeCreate () {
@@ -419,11 +419,36 @@ export default {
       this.openModal({ name: ModalList.TermsAndConditions })
     },
     placeOrder () {
-      console.log('Hello world');
-      console.log('Products in Cart', this.productsInCart);
-      // order = new Order();
-      // order.name = "asdasd";
-      // OrderService.placeOrder(order);
+      // Please do not delete this logs until VSF is more stable
+      console.log('PRODUCTS IN CART', this.productsInCart);
+
+      console.group();
+      console.log('SHIPPING DETAILS', this.shippingDetails);
+      console.log('SHIPPING METHODS', this.shippingMethods);
+      console.log('Shipping Method solito', this.shippingMethod);
+      console.groupEnd();
+
+      console.group();
+      console.log('PAYMENT DETAILS', this.paymentDetails);
+      console.log('PAYMENT METHODS', this.paymentMethods);
+      console.log('Payment Method solito', this.paymentMethod);
+      console.groupEnd();
+
+      console.log('Totals', this.totals);
+
+      // Create the body of the order
+      this.$store.dispatch('order/placeOrder', {
+        products: this.productsInCart,
+        shippingAddress: this.shippingDetails,
+        shippingMethod: this.shippingMethod,
+        paymentMethod: this.paymentMethod,
+        email: this.personalDetails.emailAddress,
+        amount: {
+          subTotal: this.totals[0].value,
+          shippingCharge: this.totals[3].value,
+          total: this.totals[1].value
+        }
+      });
     }
   },
   mounted () {
