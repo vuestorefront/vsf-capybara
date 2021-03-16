@@ -5,12 +5,24 @@
       <OHeader />
       <OMicrocart />
       <slot />
-      <OFooter />
-      <OModal />
-      <ONotification />
-      <MCookieNotification />
-      <MOfflineBadge />
-      <OBottomNavigation />
+      <LazyHydrate when-visible>
+        <OFooter />
+      </LazyHydrate>
+      <LazyHydrate when-idle>
+        <OModal />
+      </LazyHydrate>
+      <LazyHydrate when-idle>
+        <ONotification />
+      </LazyHydrate>
+      <LazyHydrate when-idle>
+        <MCookieNotification />
+      </LazyHydrate>
+      <LazyHydrate when-idle>
+        <MOfflineBadge />
+      </LazyHydrate>
+      <LazyHydrate when-visible>
+        <OBottomNavigation />
+      </LazyHydrate>
     </div>
     <vue-progress-bar />
   </div>
@@ -21,16 +33,12 @@ import { mapActions } from 'vuex';
 import OHeader from 'theme/components/organisms/o-header';
 import OMicrocart from 'theme/components/organisms/o-microcart';
 import OFooter from 'theme/components/organisms/o-footer';
-import OModal from 'theme/components/organisms/o-modal';
-import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
 import MLoader from 'theme/components/molecules/m-loader';
-import ONotification from 'theme/components/organisms/o-notification';
-import MCookieNotification from 'theme/components/molecules/m-cookie-notification';
-import MOfflineBadge from 'theme/components/molecules/m-offline-badge';
 import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
 import { ModalList } from 'theme/store/ui/modals'
+import LazyHydrate from 'vue-lazy-hydration'
 
 export default {
   components: {
@@ -38,11 +46,12 @@ export default {
     OMicrocart,
     OFooter,
     MLoader,
-    ONotification,
-    MCookieNotification,
-    MOfflineBadge,
-    OBottomNavigation,
-    OModal
+    ONotification: () => import('theme/components/organisms/o-notification'),
+    MCookieNotification: () => import('theme/components/molecules/m-cookie-notification'),
+    MOfflineBadge: () => import('theme/components/molecules/m-offline-badge'),
+    OBottomNavigation: () => import('theme/components/molecules/m-offline-badge'),
+    OModal: () => import('theme/components/organisms/o-modal'),
+    LazyHydrate
   },
   data () {
     return {
