@@ -3,19 +3,22 @@
     <div id="viewport">
       <OHeaderMinimal />
       <slot />
-      <OFooter />
+      <LazyHydrate when-visible>
+        <OFooter />
+      </LazyHydrate>
     </div>
   </div>
 </template>
 
 <script>
 import OHeaderMinimal from 'theme/components/organisms/o-header-minimal';
-import OFooter from 'theme/components/organisms/o-footer';
+import LazyHydrate from 'vue-lazy-hydration'
 
 export default {
   components: {
     OHeaderMinimal,
-    OFooter
+    OFooter: () => import('theme/components/organisms/o-footer'),
+    LazyHydrate
   }
 }
 </script>
