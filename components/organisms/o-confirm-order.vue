@@ -360,12 +360,12 @@ export default {
     ...mapGetters({
       productsInCart: 'cart/getCartItems',
       isVirtualCart: 'cart/isVirtualCart',
+      totals: 'cart/getTotals',
       shippingDetails: 'checkout/getShippingDetails',
       shippingMethods: 'checkout/getShippingMethods',
       paymentDetails: 'checkout/getPaymentDetails',
       paymentMethods: 'checkout/getPaymentMethods',
-      personalDetails: 'checkout/getPersonalDetails',
-      totals: 'cart/getTotals'
+      personalDetails: 'checkout/getPersonalDetails'
     }),
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
@@ -420,21 +420,21 @@ export default {
     },
     placeOrder () {
       // Please do not delete this logs until VSF is more stable
-      console.log('PRODUCTS IN CART', this.productsInCart);
+        // console.log('PRODUCTS IN CART', this.productsInCart);
 
-      console.group();
-      console.log('SHIPPING DETAILS', this.shippingDetails);
-      console.log('SHIPPING METHODS', this.shippingMethods);
-      console.log('Shipping Method solito', this.shippingMethod);
-      console.groupEnd();
+        // console.group();
+        // console.log('SHIPPING DETAILS', this.shippingDetails);
+        // console.log('SHIPPING METHODS', this.shippingMethods);
+        // console.log('Shipping Method', this.shippingMethod);
+        // console.groupEnd();
 
-      console.group();
-      console.log('PAYMENT DETAILS', this.paymentDetails);
-      console.log('PAYMENT METHODS', this.paymentMethods);
-      console.log('Payment Method solito', this.paymentMethod);
-      console.groupEnd();
+        // console.group();
+        // console.log('PAYMENT DETAILS', this.paymentDetails);
+        // console.log('PAYMENT METHODS', this.paymentMethods);
+        // console.log('Payment Method', this.paymentMethod);
+        // console.groupEnd();
 
-      console.log('Totals', this.totals);
+        // console.log('Totals', this.totals);
 
       // Create the body of the order
       this.$store.dispatch('order/placeOrder', {
