@@ -9,7 +9,7 @@
     <!--
       Not to use in V2, can be implemented in another version
         :max-rating="product.rating.max"
-        :score-rating="product.rating.score" 
+        :score-rating="product.rating.score"
     -->
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
       <SfProductCard

@@ -175,7 +175,7 @@ export default {
   mixins: [PersonalDetails],
   data () {
     return {
-      //Not to use in V2
+      // Not to use in V2
       // characteristics: [
       //   {
       //     description: this.$t('Faster checkout'),

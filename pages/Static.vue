@@ -44,7 +44,7 @@ export default {
   data () {
     return {
       navigation: [
-        
+
         { title: i18n.t('About us (Magento CMS)'), link: getPathForStaticPage('/about-us'), isCms: true },
         // Not to use in V2
         // { title: i18n.t('Customer service (Magento CMS)'), link: getPathForStaticPage('/customer-service'), isCms: true },

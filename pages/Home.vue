@@ -32,7 +32,7 @@
         </router-link>
       </template>
     </SfBannerGrid>
-    
+
     <!-- Not to use in V2 -->
     <!-- <ONewsletter /> -->
 

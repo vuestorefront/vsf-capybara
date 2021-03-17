@@ -253,12 +253,13 @@
             </SfButton>
           </template>
         </SfCheckbox>
-       <!-- Not to use in V2 -->
-       <!-- <APromoCode :allow-promo-code-removal="false" /> -->
+        <!-- Not to use in V2 -->
+        <!-- <APromoCode :allow-promo-code-removal="false" /> -->
       </div>
       <MPriceSummary class="totals__element" />
     </div>
     <div class="actions">
+      <paypal-button :styling="{ color: 'black' }" />
       <SfButton
         class="sf-button--full-width actions__button"
         :disabled="$v.orderReview.$invalid || !productsInCart.length"
@@ -296,8 +297,10 @@ import {
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
-import { ModalList } from 'theme/store/ui/modals'
+import { ModalList } from 'theme/store/ui/modals';
 import { createSmoothscroll } from 'theme/helpers';
+import PaypalButton from '@develodesign/vsf-payment-paypal/components/Button';
+import { Order } from '@vue-storefront/core/modules/order/types/Order';
 
 export default {
   name: 'OConfirmOrder',
@@ -313,7 +316,8 @@ export default {
     SfCharacteristic,
     SfCollectedProduct,
     APromoCode,
-    MPriceSummary
+    MPriceSummary,
+    PaypalButton
   },
   mixins: [OrderReview],
   data () {
@@ -356,6 +360,7 @@ export default {
     ...mapGetters({
       productsInCart: 'cart/getCartItems',
       isVirtualCart: 'cart/isVirtualCart',
+      totals: 'cart/getTotals',
       shippingDetails: 'checkout/getShippingDetails',
       shippingMethods: 'checkout/getShippingMethods',
       paymentDetails: 'checkout/getPaymentDetails',
@@ -372,7 +377,7 @@ export default {
       const paymentMethod = this.paymentMethods.find(
         method => this.paymentDetails.paymentMethod === method.code
       );
-      return paymentMethod ? paymentMethod.title : '';
+      return paymentMethod ? paymentMethod.code : '';
     }
   },
   beforeCreate () {
@@ -412,6 +417,38 @@ export default {
     },
     openTermsAndConditionsModal () {
       this.openModal({ name: ModalList.TermsAndConditions })
+    },
+    placeOrder () {
+      // Please do not delete this logs until VSF is more stable
+      // console.log('PRODUCTS IN CART', this.productsInCart);
+
+      // console.group();
+      // console.log('SHIPPING DETAILS', this.shippingDetails);
+      // console.log('SHIPPING METHODS', this.shippingMethods);
+      // console.log('Shipping Method', this.shippingMethod);
+      // console.groupEnd();
+
+      // console.group();
+      // console.log('PAYMENT DETAILS', this.paymentDetails);
+      // console.log('PAYMENT METHODS', this.paymentMethods);
+      // console.log('Payment Method', this.paymentMethod);
+      // console.groupEnd();
+
+      // console.log('Totals', this.totals);
+
+      // Create the body of the order
+      this.$store.dispatch('order/placeOrder', {
+        products: this.productsInCart,
+        shippingAddress: this.shippingDetails,
+        shippingMethod: this.shippingMethod,
+        paymentMethod: this.paymentMethod,
+        email: this.personalDetails.emailAddress,
+        amount: {
+          subTotal: this.totals[0].value,
+          shippingCharge: this.totals[3].value,
+          total: this.totals[1].value
+        }
+      });
     }
   },
   mounted () {
