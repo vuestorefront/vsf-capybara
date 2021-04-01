@@ -40,7 +40,7 @@ export const instagramStore = {
         // query the api for banner images
         let url = config.images.baseUrl + 'instagram'
         const images = await getImages(url)
-        commit('SET_INSTAGRAM_IMAGES', images)
+        commit('SET_INSTAGRAM_IMAGES', images.instagramImages)
       } catch (err) {
         Logger.debug('Unable to load instagramImages' + err)()
       }
