@@ -13,7 +13,6 @@ export default interface PromotedOffersState {
 }
 
 const getImages = async (url): Promise<any> => {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
   try {
     const task = await TaskQueue.execute({ url,
       payload: {
