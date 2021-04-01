@@ -12,17 +12,17 @@ export default interface PromotedOffersState {
   headImage: any[]
 }
 
-const getImages = async(url): Promise<any> => {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED="0"
+const getImages = async (url): Promise<any> => {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
   try {
     const task = await TaskQueue.execute({ url,
       payload: {
         method: 'GET',
         headers: {
-         'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         mode: 'cors'
-      },
+      }
     })
     return task.result;
   } catch (err) {
@@ -48,12 +48,10 @@ export const promotedStore = {
     getHeadImage: state => state.headImage
   },
   actions: {
-    async updatePromotedOffers ({ commit, rootState }) {
-      let promotedBannersResource = rootState.storeView && rootState.storeView.storeCode ? `banners/${rootState.storeView.storeCode}_promoted_offers` : `promoted_offers`
+    async updatePromotedOffers ({ commit }) {
       try {
         // query the api for promoted images
-        console.log('storeview: ',rootState.storeView)
-        let url = config.images.baseUrl+"promoted"
+        let url = config.images.baseUrl + 'promoted'
         const images = await getImages(url)
         commit('updatePromotedOffers', images)
       } catch (err) {
@@ -63,7 +61,7 @@ export const promotedStore = {
     async updateHeadImage ({ commit }) {
       try {
         // query the api for banner images
-        let url = config.images.baseUrl+"head"
+        let url = config.images.baseUrl + 'head'
         const images = await getImages(url)
         commit('SET_HEAD_IMAGE', images.images)
       } catch (err) {
