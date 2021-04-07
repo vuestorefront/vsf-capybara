@@ -1,4 +1,24 @@
 import { prepareQuery } from '@vue-storefront/core/modules/catalog/queries/common'
+import { TaskQueue } from '@vue-storefront/core/lib/sync'
+import config from 'config';
+
+export const getSocialLinks = async (): Promise<string> => {
+  let url = config.api.url + '/api/social'
+  try {
+    const task = await TaskQueue.execute({ url,
+      payload: {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors'
+      }
+    })
+    return task.result;
+  } catch (err) {
+    console.error('error', err)
+  }
+}
 
 export const homepageStore = {
   namespaced: true,

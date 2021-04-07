@@ -52,13 +52,14 @@
         </SfList>
       </SfFooterColumn>
       <SfFooterColumn :title="$t('Social')" class="social-column">
-        <div class="social-icon">
-          <img
-            v-for="item in social"
-            :key="item"
-            :src="'/assets/icons/' + item + '.svg'"
+        <div v-for="item in social" :key="item.site" class="social-icon">
+          <a :href="item.link">
+            <img
+            :key="item.site"
+            :src="'/assets/icons/' + item.site + '.svg'"
             class="social-icon__img"
           >
+          </a>
         </div>
       </SfFooterColumn>
     </SfFooter>
@@ -75,19 +76,22 @@ import { getPathForStaticPage } from 'theme/helpers';
 import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import get from 'lodash-es/get';
+import { getSocialLinks } from 'theme/store/homepage'
+import { Logger } from '@vue-storefront/core/lib/logger'
 
 export default {
   name: 'OFooter',
+  social: [],
   components: {
     ABackToTop,
     SfFooter,
     SfList,
     SfMenuItem
   },
-  data () {
+  data() {
     return {
-      social: ['facebook', 'pinterest', 'twitter', 'youtube']
-    };
+      social: this.getLinks()
+    };      
   },
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
@@ -150,6 +154,14 @@ export default {
     }),
     showLanguageSwitcher () {
       this.openModal({ name: ModalList.LanguageSwitcher })
+    },
+    async getLinks() {
+      try{
+        this.social = await getSocialLinks()
+        return this.social
+      } catch (err) {
+          Logger.debug('Unable to load links' + err)()
+      }      
     }
   }
 };
