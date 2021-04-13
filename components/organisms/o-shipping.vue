@@ -110,10 +110,6 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
-        required
-        :valid="!$v.shipping.phoneNumber.$error"
-        :error-message="$t('Please provide valid phone number')"
-        @blur="$v.shipping.phoneNumber.$touch()"
       />
     </div>
     <SfHeading
@@ -162,7 +158,7 @@
 </template>
 <script>
 import { required, minLength } from 'vuelidate/lib/validators';
-import { unicodeAlpha, unicodeAlphaNum, phoneNum } from '@vue-storefront/core/helpers/validators';
+import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Shipping } from '@vue-storefront/core/modules/checkout/components/Shipping';
 import {
   SfInput,
@@ -215,10 +211,6 @@ export default {
       city: {
         required,
         unicodeAlpha
-      },
-      phoneNumber: {
-        required,
-        phoneNum
       }
     }
   },

@@ -95,4 +95,7 @@ export default {
     margin: var(--spacer-lg) 0 0;
   }
 }
+.m-review-list {
+  margin-top: var(--spacer-base);
+}
 </style>
