@@ -165,7 +165,6 @@ export default {
     }
     @include for-mobile {
       width: 100%;
-      padding: 0 var(--spacer-sm);
       .sf-button {
         margin: 0 0 0 var(--spacer-sm);
       }

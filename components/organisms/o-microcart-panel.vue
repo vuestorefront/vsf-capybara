@@ -271,4 +271,9 @@ export default {
     --cp-actions-opacity: 1;
   }
 }
+::v-deep {
+  .sf-property__value {
+    overflow-wrap: anywhere;
+  }
+}
 </style>

@@ -8,9 +8,7 @@
     </div>
     <div v-else class="container">
       <div class="categories">
-        <h1 class="categories__title">
-          {{ $t("Categories") }}
-        </h1>
+        <SfHeading :level="3" :title="$t('Categories')" class="categories__title sf-heading--left" />
         <SfList v-if="visibleProducts.length && categories.length > 1" class="categories__listing">
           <SfListItem
             v-for="category in categories"
@@ -26,9 +24,7 @@
         </SfList>
       </div>
       <div class="products">
-        <h1 class="products__title">
-          {{ $t("Product suggestions") }}
-        </h1>
+        <SfHeading :level="3" :title="$t('Product suggestions')" class="products__title sf-heading--left" />
         <div class="products__listing">
           <SfProductCard
             v-for="product in visibleProducts"
@@ -67,7 +63,7 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { prepareCategoryProduct } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
-import { SfButton, SfList, SfMenuItem, SfProductCard } from '@storefront-ui/vue';
+import { SfHeading, SfButton, SfList, SfMenuItem, SfProductCard } from '@storefront-ui/vue';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 export default {
@@ -76,7 +72,8 @@ export default {
     SfButton,
     SfList,
     SfMenuItem,
-    SfProductCard
+    SfProductCard,
+    SfHeading
   },
   mixins: [VueOfflineMixin],
   data () {
@@ -179,8 +176,7 @@ export default {
 
   .container {
     display: flex;
-    padding-left: 40px;
-    padding-right: 40px;
+    padding: 0 var(--spacer-sm);
     max-width: 1272px;
     margin: auto;
     @include for-desktop {
@@ -188,6 +184,7 @@ export default {
     }
     @include for-mobile {
       flex-direction: column;
+      padding: 0 var(--spacer-xl);
     }
   }
 
@@ -200,9 +197,8 @@ export default {
 
     &__title {
       padding: 0;
-      font-size: var(--font-lg);
-      font-weight: 500;
-      line-height: 3;
+      margin-top: var(--spacer-base);
+      justify-content: start;
     }
     &__listing {
       @include for-desktop {
@@ -223,15 +219,13 @@ export default {
     width: 100%;
     &__title {
       padding: 0;
-      font-size: var(--font-lg);
-      font-weight: 500;
-      line-height: 3;
+      justify-content: start;
+      margin-top: var(--spacer-base);
     }
     &__listing {
       display: flex;
       flex: 0 1 auto;
       flex-wrap: wrap;
-      margin: -1rem -1rem 0;
     }
     &__product-card {
       --product-card-max-width: 200px;
