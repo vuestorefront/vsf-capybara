@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.5] - UNRELEASED
 
+### Added
+- Added `VueObserveVisibility` and `VueLazyload` dependency
+
 ### Changed / Improved
 - Improved: the error message for the zip-code field on shipping and payment page(#589)
 
