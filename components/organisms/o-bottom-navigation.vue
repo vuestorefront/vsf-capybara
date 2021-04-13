@@ -34,7 +34,7 @@ export default {
         { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
         { icon: 'menu', label: this.$t('Menu'), onClick: this.goToMenu },
         { icon: 'search', label: this.$t('Search'), onClick: this.goToSearch },
-        { icon: 'profile', label: this.$t('Profile'), onClick: this.goToAccount },
+        { icon: 'account', label: this.$t('Profile'), onClick: this.goToAccount },
         { icon: 'add_to_cart', label: this.$t('Cart'), onClick: this.goToCart, isFloating: true }
       ]
     }
@@ -57,6 +57,10 @@ export default {
           }
           case 'search': {
             return this.isSearchPanelVisible
+          }
+          case 'profile': {
+            const isProfile = this.$route.name === this.localizedRoute({ name: 'my-account', path: 'my-account' }).name
+            return isProfile && !this.isMobileMenu
           }
           default: {
             // we don't need to show active icon for profile and cart, because bottom navigation is below
@@ -90,6 +94,7 @@ export default {
       this.$store.commit('ui/setSearchpanel', !this.isSearchPanelVisible)
     },
     goToAccount () {
+      this.$store.commit('ui/closeMenu')
       if (this.isLoggedIn) {
         this.$router.push(this.localizedRoute('/my-account'))
       } else {

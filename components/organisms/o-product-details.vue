@@ -5,7 +5,6 @@
     <meta itemprop="availability" :content="availability">
     <meta itemprop="url" :content="product.url_path">
     <MProductGallery
-      :offline-image="offlineImage"
       :gallery="gallery"
       :configuration="productConfiguration"
     />
@@ -108,20 +107,6 @@ export default {
     }
   },
   computed: {
-    offlineImage () {
-      const width = config.products.thumbnails.width;
-      const height = config.products.thumbnails.height;
-      return {
-        mobile: {
-          url: this.getThumbnail(this.product.image, width, height),
-          alt: this.product.name
-        },
-        desktop: {
-          url: this.getThumbnail(this.product.image, width, height),
-          alt: this.product.name
-        }
-      };
-    },
     gallery () {
       return this.productGallery.map(imageObject => ({
         id: imageObject.id,
@@ -170,15 +155,15 @@ export default {
   }
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
+    padding: 0 var(--spacer-sm);
     @include for-desktop {
       max-width: 32.625rem;
       margin: 0 0 0 7.5rem;
+      padding: 0;
     }
   }
   &__add-to-cart {
-    @include for-mobile {
-      margin: var(--spacer-sm) var(--spacer-sm) 0;
-    }
+    margin: var(--spacer-base) 0 0;
     @include for-desktop {
       margin-top: var(--spacer-sm);
     }

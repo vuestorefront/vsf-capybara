@@ -47,21 +47,15 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .error {
-  margin: auto;
-  padding: 0 1.25rem;
-  &__image,
-  &__message {
-    margin: calc(var(--spacer-xl) * 2) 0;
-    text-align: center;
-    --heading-border: none;
-  }
-  &__image {
-    display: flex;
-    justify-content: center;
-  }
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+
   &__action {
-    max-width: 24rem;
-    margin: var(--spacer-2xl) auto;
+    margin-top: var(--spacer-2xl);
     @include for-desktop {
       display: flex;
     }
@@ -69,10 +63,9 @@ export default {
   &__action-button {
     flex: 1;
     &--secondary {
-      margin: var(--spacer-xl) 0;
+      margin-top: var(--spacer-xl);
       @include for-desktop {
-        margin: 0;
-        text-align: right;
+        margin: auto var(--spacer-2xl);
       }
     }
   }
