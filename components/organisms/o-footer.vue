@@ -32,7 +32,7 @@
             </router-link>
           </SfListItem> -->
           <SfListItem>
-            <router-link to="/privacy" exact>
+            <router-link to="/legal" exact>
               <SfMenuItem
                 class="sf-footer__menu-item"
                 :label="$t('Privacy policy')"
@@ -55,10 +55,10 @@
         <div v-for="item in social" :key="item.site" class="social-icon">
           <a :href="item.link">
             <img
-            :key="item.site"
-            :src="'/assets/icons/' + item.site + '.svg'"
-            class="social-icon__img"
-          >
+              :key="item.site"
+              :src="'/assets/icons/' + item.site + '.svg'"
+              class="social-icon__img"
+            >
           </a>
         </div>
       </SfFooterColumn>
@@ -88,10 +88,10 @@ export default {
     SfList,
     SfMenuItem
   },
-  data() {
+  data () {
     return {
       social: this.getLinks()
-    };      
+    };
   },
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
@@ -126,8 +126,8 @@ export default {
           children: [
             // Not to use in V2
             // { name: 'Customer service', link: '/customer-service' },
-            { name: 'Size guide', link: '/size-guide' },
-            { name: 'Contact us', link: '/contact' }
+            { name: 'Resources', link: '/legal' },
+            { name: 'Contact us', link: getPathForStaticPage('/contact') }
           ]
         },
         about: {
@@ -142,7 +142,7 @@ export default {
             //   name: 'Customer service',
             //   link: getPathForStaticPage('/customer-service')
             // },
-            { name: 'Store locator', link: '/store-locator' }
+            { name: 'Store locator', link: getPathForStaticPage('/store-locator') }
           ]
         }
       };
@@ -155,13 +155,14 @@ export default {
     showLanguageSwitcher () {
       this.openModal({ name: ModalList.LanguageSwitcher })
     },
-    async getLinks() {
-      try{
+    async getLinks () {
+      try {
         this.social = await getSocialLinks()
+        this.social = this.social.links
         return this.social
       } catch (err) {
-          Logger.debug('Unable to load links' + err)()
-      }      
+        Logger.debug('Unable to load links' + err)()
+      }
     }
   }
 };
