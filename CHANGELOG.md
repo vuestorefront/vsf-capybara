@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.5] - ???
 
 ### Added
+- Correct console errors when you select "Use my billing data" in checkout(#556)
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
 ## [1.0.4] - 04.01.2020
