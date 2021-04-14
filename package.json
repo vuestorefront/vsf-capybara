@@ -24,7 +24,9 @@
     "vue-offline": "^1.0.8",
     "vue-progressbar": "^0.7.5",
     "vuelidate": "0.6.2",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vue-lazyload": "^1.3.3",
+    "vue-observe-visibility": "^0.4.1"
   },
   "devDependencies": {
     "husky": "^3.1.0",

@@ -1,6 +1,7 @@
 <template>
   <div class="m-product-gallery">
     <SfGallery
+      :key="gallery.length"
       ref="gallery"
       :images="gallery"
     />
@@ -39,7 +40,7 @@ export default {
             selectThis = false
           }
         }
-        return selectThis || (image.id && image.id.color && String(image.id.color) === String(this.configuration.color.id))
+        return this.configuration.color ? selectThis || (image.id && image.id.color && String(image.id.color) === String(this.configuration.color.id)) : false
       })
 
       if (!variantImage) {

@@ -423,8 +423,10 @@ export default {
     $route: {
       immediate: true,
       handler (to, from) {
-        if (to.query.page) {
+        if (to.query.page && to.path === from.path) {
           this.changePage(parseInt(to.query.page) || 1);
+        } else {
+          this.initPagination()
         }
       }
     }
