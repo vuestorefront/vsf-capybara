@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed / Improved
+- Correct console errors when you select "Use my billing data" in checkout(#556)
 - Improved spacing around product carousal on home page(#471)
 - Improved navbar layout (#467)
 - Improved heading in search panel (#478)
@@ -27,7 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed: Overridden logo height (#490)
 - Fixed: duplicate image issue in offine mode (#498)
 - Fixed: Blank prices field on checkout in offline mode (#513)
-- Correct console errors when you select "Use my billing data" in checkout(#556)
 
 ## [1.0.3] - 20.09.2020
 
