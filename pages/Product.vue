@@ -216,7 +216,6 @@ export default {
     async phrase () {
       try {
         this.social = await getSocialLinks()
-        // this.phrase = this.phrase.phrase
         return this.social
       } catch (err) {
         Logger.debug('Unable to load phrase' + err)()
