@@ -40,8 +40,8 @@
       </lazy-hydrate>
       <SfSection
         v-if="isOnline"
-        title-heading="Share Your Look"
-        subtitle-heading="#YOURLOOK"
+        :title-heading="social.phrase"
+        :subtitle-heading="social.hashtag"
       >
         <AImagesGrid :images="instagramImages" />
       </SfSection>
@@ -67,6 +67,8 @@ import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
+import { getSocialLinks } from 'theme/store/homepage'
+import { Logger } from '@vue-storefront/core/lib/logger';
 
 export default {
   name: 'Product',
@@ -90,7 +92,8 @@ export default {
         isLoading: false,
         max: 0,
         manageQuantity: true
-      }
+      },
+      social: this.phrase()
     };
   },
   computed: {
@@ -208,6 +211,14 @@ export default {
         this.stock.max = res.isManageStock ? res.qty : null;
       } finally {
         this.stock.isLoading = false;
+      }
+    },
+    async phrase () {
+      try {
+        this.social = await getSocialLinks()
+        return this.social
+      } catch (err) {
+        Logger.debug('Unable to load phrase' + err)()
       }
     }
   },
