@@ -89,7 +89,9 @@
           />
           <br>
           <br>
-          <SfButton @click.stop="isOpen = true">Choose your item</SfButton>
+          <SfButton @click.stop="isOpen = true">
+            Choose your item
+          </SfButton>
           <SfDropdown :is-open="isOpen" title="Available Items" @click:close="isOpen = false">
             <SfList>
               <SfListItem>First item</SfListItem>
@@ -105,17 +107,35 @@
             :required="true"
             style="max-width: 30rem"
           >
-            <SfSelectOption value="amaranth">amaranth</SfSelectOption>
-            <SfSelectOption value="amber">amber</SfSelectOption>
-            <SfSelectOption value="arctic-lime">arctic-lime</SfSelectOption>
-            <SfSelectOption value="bluetiful">bluetiful</SfSelectOption>
+            <SfSelectOption value="amaranth">
+              amaranth
+            </SfSelectOption>
+            <SfSelectOption value="amber">
+              amber
+            </SfSelectOption>
+            <SfSelectOption value="arctic-lime">
+              arctic-lime
+            </SfSelectOption>
+            <SfSelectOption value="bluetiful">
+              bluetiful
+            </SfSelectOption>
           </SfSelect>
           <br>
-          <SfButton class="_typography-form-button color-primary">Primary</SfButton>
-          <SfButton class="_typography-form-button color-secondary">Secondary</SfButton>
-          <SfButton class="_typography-form-button color-light">Light</SfButton>
-          <SfButton class="_typography-form-button color-warning">Outlined</SfButton>
-          <SfButton class="_typography-form-button color-info" disabled>Disabled</SfButton>
+          <SfButton class="_typography-form-button color-primary">
+            Primary
+          </SfButton>
+          <SfButton class="_typography-form-button color-secondary">
+            Secondary
+          </SfButton>
+          <SfButton class="_typography-form-button color-light">
+            Light
+          </SfButton>
+          <SfButton class="_typography-form-button color-warning">
+            Outlined
+          </SfButton>
+          <SfButton class="_typography-form-button color-info" disabled>
+            Disabled
+          </SfButton>
         </form>
       </SfContentPage>
 
