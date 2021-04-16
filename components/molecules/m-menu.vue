@@ -103,7 +103,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .m-menu {
   padding: 0;
@@ -117,6 +117,12 @@ export default {
   transition: 0.2s;
   .router-link-exact-active {
     --menu-item-font-weight: bold;
+  }
+  .sf-mega-menu__menu {
+    @include for-desktop {
+      flex-wrap: wrap;
+      flex: 0 1 auto;
+    }
   }
 }
 .aside-menu {

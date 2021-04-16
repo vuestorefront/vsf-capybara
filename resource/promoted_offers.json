@@ -89,14 +89,6 @@
         "webp": "/assets/banner/webp/bannerBeachBag-full.webp",
         "fallback": "/assets/banner/png/bannerBeachBag-full.png"
       }
-    },
-    {
-      "title": "Beach bags 2=1",
-      "type": "desktop",
-      "image": {
-        "webp": "/assets/banner/webp/bannerBeachBag.webp",
-        "fallback": "/assets/banner/png/bannerBeachBag.png"
-      }
     }
   ]
 }

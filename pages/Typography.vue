@@ -1,0 +1,302 @@
+<template>
+  <div class="page-typography">
+    <SfBreadcrumbs
+      class="breadcrumbs desktop-only"
+      :breadcrumbs="breadcrumbs"
+    >
+      <template #link="{breadcrumb}">
+        <router-link :to="localizedRoute(breadcrumb.route.link)" class="sf-breadcrumbs__breadcrumb">
+          {{ breadcrumb.text }}
+        </router-link>
+      </template>
+    </SfBreadcrumbs>
+    <SfContentPages
+      :active="currentRoute.title"
+      :title="currentRoute.title"
+      @click:change="updateRoute"
+    >
+      <SfContentPage :title="navigation[0].title">
+        <SfHeading title="Store Front Heading" subtitle="with default level" />
+        <h1>Heading H1</h1>
+        <h2>Heading H2</h2>
+        <h3>Heading H3</h3>
+        <h4>Heading H4</h4>
+        <h5>Heading H5</h5>
+        <h6>Heading H6</h6>
+        <p>Lorem ipsum dolor sit amet, <i>consectetur adipiscing elit.</i> <b>Ut laoreet elementum elit ac mollis.</b> <u>Praesent</u> luctus libero augue. In sit amet vestibulum elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Proin hendrerit, tellus quis mollis venenatis, tellus mauris imperdiet libero, interdum consequat dui diam.</p>
+        <SfDivider />
+        <h4>Icons</h4>
+        <div>Small mail icon <SfIcon icon="mail" size="sm" /></div>
+        <div>Medium mail icon <SfIcon icon="mail" size="md" /></div>
+        <div>Large mail icon <SfIcon icon="mail" size="lg" /></div>
+        <SfDivider />
+        <h4>Lists</h4>
+        <SfList>
+          <SfListItem>Marked list component</SfListItem>
+          <SfListItem>Lorem ipsum</SfListItem>
+          <SfListItem>Dolor sit amet</SfListItem>
+        </SfList>
+        <ul>
+          <li>Marked list</li>
+          <li>Lorem ipsum</li>
+          <li>Dolor sit amet</li>
+        </ul>
+        <ol>
+          <li>Numered list</li>
+          <li>Lorem ipsum</li>
+          <li>Dolor sit amet</li>
+        </ol>
+        <SfDivider />
+        <h4>Images</h4>
+        <SfImage src="/assets/banner/webp/bannerE.webp" height="200" width="150" />
+        <SfImage src="/assets/banner/webp/bannerE.webp" height="150" width="150" />
+        <SfImage src="/assets/banner/webp/bannerE.webp" height="100" width="150" />
+      </SfContentPage>
+
+      <SfContentPage :title="navigation[1].title">
+        <h4>Form elements</h4>
+        <form>
+          <SfInput v-model="email" name="email" label="Your email" :required="true" :valid="true" />
+          <SfInput v-model="firstname" name="firstname" label="Your Firstname" :required="true" :valid="false" error-message="Field is required." />
+          <SfInput name="name" label="Disabled Field" :required="true" :valid="true" disabled />
+          <br>
+          <SfCheckbox
+            class="_typography-form-checkbox"
+            v-model="options"
+            name="options"
+            label="label1"
+            value="value1"
+            required="required"
+            :valid="true"
+          />
+          <SfCheckbox
+            class="_typography-form-checkbox"
+            v-model="options"
+            name="options"
+            label="label2"
+            value="value2"
+            required="required"
+            disabled
+            :valid="true"
+          />
+          <SfCheckbox
+            class="_typography-form-checkbox"
+            v-model="options"
+            name="options"
+            value="value3"
+            required="required"
+            :valid="true"
+          />
+          <br>
+          <br>
+          <SfButton @click.stop="isOpen = true">Choose your item</SfButton>
+          <SfDropdown :is-open="isOpen" title="Available Items" @click:close="isOpen = false">
+            <SfList>
+              <SfListItem>First item</SfListItem>
+              <SfListItem>Second item</SfListItem>
+              <SfListItem>Third item</SfListItem>
+            </SfList>
+          </SfDropdown>
+          <br>
+          <SfSelect
+            v-model="select"
+            label="Select element"
+            :size="4"
+            :required="true"
+            style="max-width: 30rem"
+          >
+            <SfSelectOption value="amaranth">amaranth</SfSelectOption>
+            <SfSelectOption value="amber">amber</SfSelectOption>
+            <SfSelectOption value="arctic-lime">arctic-lime</SfSelectOption>
+            <SfSelectOption value="bluetiful">bluetiful</SfSelectOption>
+          </SfSelect>
+          <br>
+          <SfButton class="_typography-form-button color-primary">Primary</SfButton>
+          <SfButton class="_typography-form-button color-secondary">Secondary</SfButton>
+          <SfButton class="_typography-form-button color-light">Light</SfButton>
+          <SfButton class="_typography-form-button color-warning">Outlined</SfButton>
+          <SfButton class="_typography-form-button color-info" disabled>Disabled</SfButton>
+        </form>
+      </SfContentPage>
+
+      <SfContentPage :title="navigation[2].title">
+        <h4>Table</h4>
+        <SfTable>
+          <SfTableHeading><SfTableHeader>Column</SfTableHeader><SfTableHeader>Column</SfTableHeader><SfTableHeader>Column</SfTableHeader></SfTableHeading>
+          <SfTableRow><SfTableData>Cell</SfTableData><SfTableData>Cell</SfTableData><SfTableData>Cell</SfTableData></SfTableRow>
+          <SfTableRow><SfTableData>Cell</SfTableData><SfTableData>Cell</SfTableData><SfTableData>Cell</SfTableData></SfTableRow>
+        </SfTable>
+        <h4>Notifications</h4>
+        <SfNotification :visible="true" title="Notification title" message="You are offline. Some features might not be available." type="info" action="Click" />
+        <br>
+        <SfNotification :visible="true" title="Notification title" message="You are offline. Some features might not be available." type="success" action="Click" />
+        <br>
+        <SfNotification :visible="true" title="Notification title" message="You are offline. Some features might not be available." type="warning" action="Click" />
+        <br>
+        <SfNotification :visible="true" title="Notification title" message="You are offline. Some features might not be available." type="danger" action="Click" />
+        <h4>Gallery</h4>
+        <SfGallery :images="images" />
+      </SfContentPage>
+    </SfContentPages>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from 'vuex';
+import i18n from '@vue-storefront/i18n';
+import {
+  SfBreadcrumbs,
+  SfContentPages,
+  SfHeading,
+  SfIcon,
+  SfDivider,
+  SfTable,
+  SfNotification,
+  SfList,
+  SfImage,
+  SfGallery,
+  SfInput,
+  SfButton,
+  SfCheckbox,
+  SfDropdown,
+  SfSelect
+} from '@storefront-ui/vue';
+
+export default {
+  name: 'Typography',
+  components: {
+    SfBreadcrumbs,
+    SfContentPages,
+    SfHeading,
+    SfIcon,
+    SfDivider,
+    SfTable,
+    SfNotification,
+    SfList,
+    SfImage,
+    SfGallery,
+    SfInput,
+    SfButton,
+    SfCheckbox,
+    SfDropdown,
+    SfSelect
+  },
+  metaInfo () {
+    return {
+      title: this.currentRoute.title,
+      meta: []
+    }
+  },
+  data () {
+    return {
+      navigation: [
+        { title: i18n.t('Text components'), link: '/typography-text' },
+        { title: i18n.t('Form components'), link: '/typography-form' },
+        { title: i18n.t('Other components'), link: '/typography-other' }
+      ],
+      email: '',
+      firstname: '',
+      options: ['value1'],
+      select: '',
+      isOpen: false
+    };
+  },
+  computed: {
+    ...mapGetters({
+      defaultContent: 'defaultContent/getDefaultContent'
+    }),
+    images () {
+      return [
+        {
+          alt: 'Product A',
+          mobile: { url: '/assets/banner/webp/bannerF.webp' },
+          desktop: { url: '/assets/banner/webp/bannerF.webp' },
+          zoom: { url: '/assets/banner/webp/bannerF.webp' }
+        },
+        {
+          alt: 'Product B',
+          mobile: { url: '/assets/banner/webp/bannerE.webp' },
+          desktop: { url: '/assets/banner/webp/bannerE.webp' },
+          zoom: { url: '/assets/banner/webp/bannerE.webp' }
+        },
+        {
+          alt: 'Product C',
+          mobile: { url: '/assets/banner/webp/bannerC.webp' },
+          desktop: { url: '/assets/banner/webp/bannerC.webp' },
+          zoom: { url: '/assets/banner/webp/bannerC.webp' }
+        },
+        {
+          alt: 'Product D',
+          mobile: { url: '/assets/banner/webp/bannerG.webp' },
+          desktop: { url: '/assets/banner/webp/bannerG.webp' },
+          zoom: { url: '/assets/banner/webp/bannerG.webp' }
+        }
+      ]
+    },
+    breadcrumbs () {
+      return [
+        { text: i18n.t('Homepage'), route: { link: this.localizedRoute('/') } },
+        { text: this.currentRoute.title }
+      ];
+    },
+    currentRoute () {
+      return {
+        ...this.navigation.find(navigation => this.localizedRoute(navigation.link) === this.$route.path)
+      };
+    }
+  },
+  methods: {
+    updateRoute (title) {
+      /**
+       * On mobile view clicking the "back" icon in SfContentPages emits click:change
+       * event but without an argument. Unfortunately the same event is also used for
+       * "normal" page changes so it has to be checked explicitly if it comes from "back"
+       * icon or not. Currently this is the only way to do that.
+       */
+      if (title === undefined) {
+        // "Back" icon was clicked in SfContentPages
+        this.$router.back();
+      } else {
+        // "Normal" navigation to next page - if it exists
+        const nextRoute = this.navigation.find(navigation => navigation.title === title);
+        if (nextRoute) {
+          this.$router.push(nextRoute.link);
+        }
+      }
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.page-typography {
+  box-sizing: border-box;
+
+  ._typography-form-button, ._typography-form-checkbox {
+    display: inline-block;
+    margin-right: 1em;
+    margin-top: 0.5em;
+  }
+
+  @include for-desktop {
+    max-width: 1272px;
+    padding: 0 var(--spacer-sm);
+    margin: 0 auto;
+  }
+
+  --content-pages-height: auto;
+
+  ::v-deep {
+    .sf-content-pages__content,
+    .sf-content-pages__sidebar {
+      height: min-content;
+    }
+  }
+}
+
+.breadcrumbs {
+    margin: var(--spacer-base) auto var(--spacer-lg);
+  }
+</style>

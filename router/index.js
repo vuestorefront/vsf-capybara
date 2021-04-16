@@ -4,6 +4,8 @@ const ErrorPage = () =>
   import(/* webpackChunkName: "vsf-error" */ 'theme/pages/Error');
 const Product = () =>
   import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Product');
+const Typography = () =>
+  import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Typography');
 const Category = () =>
   import(/* webpackChunkName: "vsf-category" */ 'theme/pages/Category');
 const Checkout = () =>
@@ -26,6 +28,9 @@ let routes = [
   { name: 'delivery', path: '/delivery', component: Static },
   { name: 'returns', path: '/returns', component: Static },
   { name: 'contact', path: '/contact', component: Static },
+  { name: 'typography-text', path: '/typography-text', component: Typography },
+  { name: 'typography-form', path: '/typography-form', component: Typography },
+  { name: 'typography-other', path: '/typography-other', component: Typography },
   { name: 'page-not-found', path: '*', component: ErrorPage },
   { name: 'error', path: '/error', component: ErrorPage, meta: { layout: 'minimal' } },
   { name: 'virtual-product', path: '/p/:parentSku/:slug', component: Product },
@@ -34,6 +39,8 @@ let routes = [
   { name: 'downloadable-product', path: '/p/:parentSku/:slug', component: Product },
   { name: 'grouped-product', path: '/p/:parentSku/:slug', component: Product },
   { name: 'configurable-product', path: '/p/:parentSku/:slug/:childSku', component: Product },
+  { name: 'plushToyAccessory-product', path: '/p/:parentSku/:slug', component: Product },
+  { name: 'petsiesStarProduct-product', path: '/p/:parentSku/:slug', component: Product },
   { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'category', path: '/c/:slug', component: Category },
   { name: 'cms-page', path: '/i/:slug', component: Static }

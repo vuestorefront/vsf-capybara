@@ -120,7 +120,8 @@ export default {
           children: [
             { name: 'Customer service', link: '/customer-service' },
             { name: 'Size guide', link: '/size-guide' },
-            { name: 'Contact us', link: '/contact' }
+            { name: 'Contact us', link: '/contact' },
+            { name: 'Typography', link: '/typography-text' }
           ]
         },
         about: {
