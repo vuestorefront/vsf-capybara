@@ -1,15 +1,12 @@
-<template>
+<template functional>
   <div class="o-header-minimal">
     <ALogo />
   </div>
 </template>
 
 <script>
-import ALogo from 'theme/components/atoms/a-logo';
-
 export default {
-  name: 'OHeaderMinimal',
-  components: { ALogo }
+  name: 'OHeaderMinimal'
 };
 </script>
 
