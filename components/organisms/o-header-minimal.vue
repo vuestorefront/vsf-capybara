@@ -5,11 +5,6 @@
 </template>
 
 <script>
-import ALogo from 'theme/components/atoms/a-logo';
-import Vue from 'vue'
-
-Vue.component('ALogo', ALogo)
-
 export default {
   name: 'OHeaderMinimal'
 };

@@ -9,13 +9,15 @@
 </template>
 
 <script>
+import ALogo from 'theme/components/atoms/a-logo';
 import OHeaderMinimal from 'theme/components/organisms/o-header-minimal';
 import OFooter from 'theme/components/organisms/o-footer';
 
 export default {
   components: {
     OHeaderMinimal,
-    OFooter
+    OFooter,
+    ALogo
   }
 }
 </script>
