@@ -88,18 +88,6 @@
             :valid="true"
           />
           <br>
-          <br>
-          <SfButton @click.stop="isOpen = true">
-            Choose your item
-          </SfButton>
-          <SfDropdown :is-open="isOpen" title="Available Items" @click:close="isOpen = false">
-            <SfList>
-              <SfListItem>First item</SfListItem>
-              <SfListItem>Second item</SfListItem>
-              <SfListItem>Third item</SfListItem>
-            </SfList>
-          </SfDropdown>
-          <br>
           <SfSelect
             v-model="select"
             label="Select element"
@@ -120,6 +108,49 @@
               bluetiful
             </SfSelectOption>
           </SfSelect>
+          <div>
+            <SfRadio
+              label="Radio Label"
+              value="radio1"
+              v-model="radio"
+            >
+              <template #description>
+                Description
+              </template>
+            </SfRadio>
+            <SfRadio
+              label="Radio Label"
+              value="radio2"
+              v-model="radio"
+            >
+              <template #description>
+                Description
+              </template>
+            </SfRadio>
+          </div>
+          <br>
+          <div style="position: relative; display: inline-block;">
+            <SfButton @click.stop.prevent="isOpen = true">
+              Choose your item
+            </SfButton>
+            <SfDropdown :is-open="isOpen" title="Available Items" @click:close="isOpen = false">
+              <SfList>
+                <br>
+                <SfListItem>
+                  First item
+                </SfListItem>
+                <br>
+                <SfListItem>
+                  Second item
+                </SfListItem>
+                <br>
+                <SfListItem>
+                  Third item
+                </SfListItem>
+              </SfList>
+            </SfDropdown>
+          </div>
+          <br>
           <br>
           <SfButton class="_typography-form-button color-primary">
             Primary
@@ -179,7 +210,9 @@ import {
   SfButton,
   SfCheckbox,
   SfDropdown,
-  SfSelect
+  SfSelect,
+  SfRadio
+
 } from '@storefront-ui/vue';
 
 export default {
@@ -199,7 +232,8 @@ export default {
     SfButton,
     SfCheckbox,
     SfDropdown,
-    SfSelect
+    SfSelect,
+    SfRadio
   },
   metaInfo () {
     return {
@@ -217,6 +251,7 @@ export default {
       email: '',
       firstname: '',
       options: ['value1'],
+      radio: '',
       select: '',
       isOpen: false
     };
