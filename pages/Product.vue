@@ -67,8 +67,9 @@ import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
-import { getSocialLinks } from 'theme/store/homepage'
+import { getContent } from 'theme/store/homepage'
 import { Logger } from '@vue-storefront/core/lib/logger';
+import config from 'config';
 
 export default {
   name: 'Product',
@@ -215,7 +216,8 @@ export default {
     },
     async phrase () {
       try {
-        this.social = await getSocialLinks()
+        let url = config.api.url + '/api/social'
+        this.social = await getContent(url)
         return this.social
       } catch (err) {
         Logger.debug('Unable to load phrase' + err)()

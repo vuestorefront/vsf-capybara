@@ -1,23 +1,7 @@
 import { Logger } from '@vue-storefront/core/lib/logger'
 import { TaskQueue } from '@vue-storefront/core/lib/sync'
 import config from 'config';
-
-const getContent = async (url): Promise<any> => {
-  try {
-    const task = await TaskQueue.execute({ url,
-      payload: {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        mode: 'cors'
-      }
-    })
-    return task.result;
-  } catch (err) {
-    console.error('error', err)
-  }
-}
+import { getContent } from './homepage';
 
 export const defaultContentStore = {
   namespaced: true,
@@ -38,7 +22,7 @@ export const defaultContentStore = {
         const content = await getContent(url)
         commit('SET_DEFAULT_CONTENT', content.content)
       } catch (err) {
-        Logger.debug('Unable to load default content' + err)()
+        Logger.debug('Unable to load default content ' + err)()
       }
     }
   },

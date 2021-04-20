@@ -18,6 +18,7 @@ let routes = [
   { name: 'checkout', path: '/checkout', component: Checkout },
   { name: 'legal', path: '/legal', component: Static },
   { name: 'privacy', path: '/privacy', component: Static },
+  { name: 'additional-information', path: '/additional-information', component: Static },
   { name: 'my-account', path: '/my-account', component: MyAccount },
   { name: 'about-us', path: '/about-us', component: Static },
   { name: 'customer-service', path: '/customer-service', component: Static },

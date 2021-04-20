@@ -56,7 +56,7 @@ export default {
         // { title: i18n.t('Privacy policy'), link: '/privacy' },
         // { title: i18n.t('Size guide'), link: '/size-guide' },
         { title: i18n.t('Contact us'), link: getPathForStaticPage('/contact'), isCms: true },
-        { title: i18n.t('Additional Information'), link: '/legal' }
+        { title: i18n.t('Additional Information'), link: '/additional-information' }
       ]
     };
   },

@@ -62,7 +62,8 @@ import MProductCarousel from 'theme/components/molecules/m-product-carousel';
 import ONewsletter from 'theme/components/organisms/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
-import { getSocialLinks } from 'theme/store/homepage'
+import { getContent } from 'theme/store/homepage'
+import config from 'config';
 
 import {
   SfHero,
@@ -117,7 +118,8 @@ export default {
   methods: {
     async phrase () {
       try {
-        this.social = await getSocialLinks()
+        let url = config.api.url + '/api/social'
+        this.social = await getContent(url)
         return this.social
       } catch (err) {
         Logger.debug('Unable to load phrase' + err)()
