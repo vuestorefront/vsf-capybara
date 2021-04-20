@@ -1,0 +1,124 @@
+@import "~@storefront-ui/shared/styles/helpers/colors";
+
+$line-height-base: 1.5;
+
+$font-size-base: 16px;
+$font-size-base-mobile: 14px;
+
+$font-family-base: "Avenir", sans-serif;
+$font-family-intro: "Roselina", cursive;
+
+$page-color: #fff;
+$color-regular-text: #535353;
+$color-page-title: #003e6b;
+$color-titles: $color-page-title;
+$color-subtitle: $color-titles;
+$color-helper-subtext: #a3a3a3;
+$color-action: #43c5e4;
+$color-action-light: #c3e8fd;
+$color-accent: #f78f9e;
+$color-accent-light: #fce0e1;
+$color-accent-highlight: $color-action;
+$color-menu-item: $color-action;
+$color-secondary-menu-item: #848484;
+$color-mobile-menu-items: $color-action;
+$color-highlighted-section: #e3f9ff;
+
+$color-light: $page-color;
+$color-dark: $color-regular-text;
+$color-solid: $color-regular-text;
+$color-special-price: $color-accent;
+
+$color-cart-icon: $color-action;
+
+$color-link: $color-action;
+
+$color-error: #f53f00;
+$color-success: #18ae0c;
+
+$color-messages-success: #81d57b;
+$color-messages-error: #f9a284;
+$color-messages-warning: #fce0e1;
+$color-messages-notice: #9fd2f1;
+$color-success-text: $color-messages-success;
+
+$color-background: #fff;
+$color-overlay: #000;
+
+$forms-border-color: #a3a3a3;
+$forms-color-placeholder: #a09999;
+
+// override storefront-ui variables
+:root {
+    // font-family
+    --font-family-primary: #{$font-family-base};
+    --font-family-secondary: #{$font-family-base};
+    // font-weight
+    --font-light: 300;
+    --font-normal: 300;
+    --font-medium: 500;
+    --font-semibold: 500;
+    --font-bold: 800;
+    --font-extra-bold: 800;
+    --font-black: 800;
+    // font-size
+    --font-2xs: 0.5rem; //8px
+    --font-xs: 0.625rem; //10px
+    --font-sm: 0.75rem; //12px
+    --font-base: 0.875rem; //14px
+    --font-lg: 1rem; //16px
+    --font-xl: 1.25rem; //20px
+    // Colors
+    @include generate-color-variants(--c-black, #535353);
+    @include generate-color-variants(--c-white, #ffffff);
+    @include generate-color-variants(--c-blue, #003e6b);
+    @include generate-color-variants(--_c-green-primary, #18ae0c);
+    @include generate-color-variants(--_c-green-secondary, #81d57b);
+    @include generate-color-variants(--_c-dark-primary, #535353);
+    @include generate-color-variants(--_c-dark-secondary, #a3a3a3);
+    @include generate-color-variants(--_c-gray-primary, #72757E);
+    @include generate-color-variants(--_c-gray-secondary, #8D8F9A);
+    @include generate-color-variants(--_c-gray-accent, #e0e0e1);
+    @include generate-color-variants(--_c-light-primary, #f78f9e);
+    @include generate-color-variants(--_c-light-secondary, #fce0e1);
+    @include generate-color-variants(--_c-red-primary, #f53f00);
+    @include generate-color-variants(--_c-red-secondary, #f9a284);
+    @include generate-color-variants(--_c-yellow-primary, #ecc713);
+    @include generate-color-variants(--_c-yellow-secondary, #f6e389);
+    @include generate-color-variants(--_c-blue-primary, #43c5e4);
+    @include generate-color-variants(--_c-blue-secondary, #c3e8fd);
+    --c-body: var(--c-white);
+    --c-text: var(--c-black);
+    --c-text-muted: var(--_c-gray-secondary);
+    --c-text-disabled: var(--_c-gray-secondary-lighten);
+    --c-link: var(--_c-blue-primary);
+    --c-link-hover: var(--_c-blue-primary);
+    --c-footer: var(--c-blue);
+    @include assign-color-variants(--c-primary, --_c-blue-primary);
+    --c-primary-variant: var(--_c-blue-primary-darken);
+    @include assign-color-variants(--c-secondary, --_c-blue-secondary);
+    --c-secondary-variant: var(--_c-blue-secondary-darken);
+    @include assign-color-variants(--c-light, --_c-light-secondary);
+    --c-light-variant: var(--c-white);
+    @include assign-color-variants(--c-gray, --_c-gray-primary);
+    --c-gray-variant: var(--_c-gray-secondary);
+    @include assign-color-variants(--c-dark, --_c-dark-primary);
+    --c-dark-variant: var(--_c-dark-secondary);
+    @include assign-color-variants(--c-info, --_c-blue-primary);
+    --c-info-variant: var(--_c-blue-secondary);
+    @include assign-color-variants(--c-success, --_c-green-secondary);
+    --c-success-variant: var(--_c-green-primary);
+    @include assign-color-variants(--c-warning, --_c-light-primary);
+    --c-warning-variant: var(--_c-light-secondary);
+    @include assign-color-variants(--c-danger, --_c-red-secondary);
+    --c-danger-variant: var(--_c-red-primary);
+
+    @include for-desktop {
+      --font-2xs: 0.625rem; //10px
+      --font-xs: 0.75rem; //12px
+      --font-sm: 0.875rem; //14px
+      --font-base: 1rem; //16px
+      --font-lg: 1.125rem; //18px
+      --font-xl: 1.5rem; //24px
+    }	
+  }

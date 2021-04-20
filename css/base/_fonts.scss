@@ -1,0 +1,95 @@
+// =============================================================================
+// String Replace
+// =============================================================================
+
+@function str-replace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace +
+      str-replace(
+        str-slice($string, $index + str-length($search)),
+        $search,
+        $replace
+      );
+  }
+
+  @return $string;
+}
+
+// =============================================================================
+// Font Face
+// =============================================================================
+
+@mixin font-face(
+  $name,
+  $path,
+  $weight: null,
+  $style: null,
+  $exts: eot svg woff ttf
+) {
+  $src: null;
+
+  $extmods: (
+    eot: "?",
+    svg: "#" + str-replace($name, " ", "_"),
+  );
+
+  $formats: (
+    eot: "embedded-opentype",
+    otf: "opentype",
+    ttf: "truetype",
+  );
+
+  @each $ext in $exts {
+    $extmod: if(
+      map-has-key($extmods, $ext),
+      $ext + map-get($extmods, $ext),
+      $ext
+    );
+    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $src: append(
+      $src,
+      url(quote($path + "." + $extmod)) format(quote($format)),
+      comma
+    );
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style: $style;
+    font-weight: $weight;
+    src: $src;
+  }
+}
+
+$path: "../assets/fonts/";
+$font-name: "Avenir";
+$font-weights: (300, 500, 800);
+
+@each $font-weight in $font-weights {
+  $font-path: $path + $font-name + "_" + $font-weight;
+  @include font-face($font-name, $font-path, $font-weight, normal);
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @each $font-weight in $font-weights {
+    $font-path: $path + $font-name + "_" + $font-weight;
+    @include font-face($font-name, $font-path, $font-weight, normal, svg);
+  }
+}
+
+$font-path: $path + $font-name + "_500_italic";
+@include font-face($font-name, $font-path, 500, italic);
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  $font-path: $path + $font-name + "_500_italic";
+  @include font-face($font-name, $font-path, 500, italic, svg);
+}
+
+$font-path: $path + "Roselina-Script";
+@include font-face("Roselina", $font-path, 400, normal);
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @include font-face("Roselina", $font-path, 400, normal, svg);
+}

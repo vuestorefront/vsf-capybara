@@ -1,1 +1,9 @@
 @import "~@storefront-ui/vue/styles";
+@import "./base/fonts";
+@import "./base/variables";
+
+@import "./components/organisms/SfFooter.scss";
+@import "./components/organisms/SfList.scss";
+
+@import "./components/atoms/SfQuantitySelector.scss";
+@import "./components/atoms/SfPrice.scss";

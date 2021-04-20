@@ -156,12 +156,16 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-footer {
+  background-color: var(--c-footer);
+  --menu-item-label-color: var(--c-light-variant);
   @include for-desktop {
-    max-width: 1272px;
+    max-width: 100%;
     margin: auto;
   }
   .sf-footer {
-    --footer-width: auto;
+    --footer-width: 1272px;
+    --footer-padding: 0 var(--spacer-sm);
+    --footer-column-title-color: var(--c-light-variant);
   }
 }
 .social-column {

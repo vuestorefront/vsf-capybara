@@ -1,0 +1,5 @@
+.sf-footer-column {
+  &__title {
+    color: var(--footer-column-title-color, var(--c-text));
+  }
+}

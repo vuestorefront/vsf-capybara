@@ -23,7 +23,7 @@
         <h4>Heading H4</h4>
         <h5>Heading H5</h5>
         <h6>Heading H6</h6>
-        <p>Lorem ipsum dolor sit amet, <i>consectetur adipiscing elit.</i> <b>Ut laoreet elementum elit ac mollis.</b> <u>Praesent</u> luctus libero augue. In sit amet vestibulum elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Proin hendrerit, tellus quis mollis venenatis, tellus mauris imperdiet libero, interdum consequat dui diam.</p>
+        <p>Lorem ipsum dolor sit amet, <i>consectetur adipiscing elit.</i> <b>Ut laoreet elementum elit ac mollis.</b> <u>Praesent</u> luctus libero augue. In sit amet vestibulum elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Proin hendrerit, tellus quis mollis venenatis, tellus mauris imperdiet libero, <a href="/">some link example.</a></p>
         <SfDivider />
         <h4>Icons</h4>
         <div>Small mail icon <SfIcon icon="mail" size="sm" /></div>
@@ -31,7 +31,7 @@
         <div>Large mail icon <SfIcon icon="mail" size="lg" /></div>
         <SfDivider />
         <h4>Lists</h4>
-        <SfList>
+        <SfList class="-with-markers">
           <SfListItem>Marked list component</SfListItem>
           <SfListItem>Lorem ipsum</SfListItem>
           <SfListItem>Dolor sit amet</SfListItem>
@@ -158,13 +158,19 @@
           <SfButton class="_typography-form-button color-secondary">
             Secondary
           </SfButton>
-          <SfButton class="_typography-form-button color-light">
-            Light
+          <SfButton class="_typography-form-button color-success">
+            Success
           </SfButton>
           <SfButton class="_typography-form-button color-warning">
-            Outlined
+            Warning
           </SfButton>
-          <SfButton class="_typography-form-button color-info" disabled>
+          <SfButton class="_typography-form-button color-info">
+            Info
+          </SfButton>
+          <SfButton class="_typography-form-button color-danger">
+            Danger
+          </SfButton>
+          <SfButton class="_typography-form-button" disabled>
             Disabled
           </SfButton>
         </form>
