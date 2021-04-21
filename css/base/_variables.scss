@@ -50,6 +50,7 @@ $forms-color-placeholder: #a09999;
 
 // override storefront-ui variables
 :root {
+    --font-size-base: #{$font-size-base};
     // font-family
     --font-family-primary: #{$font-family-base};
     --font-family-secondary: #{$font-family-base};
@@ -98,7 +99,7 @@ $forms-color-placeholder: #a09999;
     --c-primary-variant: var(--_c-blue-primary-darken);
     @include assign-color-variants(--c-secondary, --_c-blue-secondary);
     --c-secondary-variant: var(--_c-blue-secondary-darken);
-    @include assign-color-variants(--c-light, --_c-light-secondary);
+    @include assign-color-variants(--c-light, --_c-blue-secondary);
     --c-light-variant: var(--c-white);
     @include assign-color-variants(--c-gray, --_c-gray-primary);
     --c-gray-variant: var(--_c-gray-secondary);

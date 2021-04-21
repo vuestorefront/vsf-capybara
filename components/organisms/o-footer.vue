@@ -157,7 +157,12 @@ export default {
 
 .o-footer {
   background-color: var(--c-footer);
-  --menu-item-label-color: var(--c-light-variant);
+  .sf-menu-item {
+    --menu-item-label-color: var(--c-light-variant);
+    &:hover {
+      --menu-item-label-color: var(--c-light-variant);
+    }
+  }
   @include for-desktop {
     max-width: 100%;
     margin: auto;
@@ -166,6 +171,7 @@ export default {
     --footer-width: 1272px;
     --footer-padding: 0 var(--spacer-sm);
     --footer-column-title-color: var(--c-light-variant);
+    --footer-column-title-background: var(--c-footer);
   }
 }
 .social-column {

@@ -1,0 +1,7 @@
+.sf-select {
+    @include for-desktop {
+        &__options {
+            overflow: auto;
+        }
+    }
+}

@@ -35,17 +35,18 @@ export default {
           if (
             typeof image.id !== 'undefined' &&
             typeof image.id[key] !== 'undefined' &&
-            image.id[key] !== value.id
+            image.id[key] !== +value.id
           ) {
             selectThis = false
           }
         }
-        return this.configuration.color ? selectThis || (image.id && image.id.color && String(image.id.color) === String(this.configuration.color.id)) : false
+        return this.configuration.color ? false : selectThis
       })
 
       if (!variantImage) {
         variantImage = this.gallery.find(image => {
-          return typeof image.id.color !== 'undefined' &&
+          return typeof image.id !== 'undefined' &&
+            typeof image.id.color !== 'undefined' &&
             typeof this.configuration.color !== 'undefined' &&
             String(image.id.color) === String(this.configuration.color.id)
         })

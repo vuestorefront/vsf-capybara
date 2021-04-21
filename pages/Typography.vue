@@ -36,11 +36,13 @@
           <SfListItem>Lorem ipsum</SfListItem>
           <SfListItem>Dolor sit amet</SfListItem>
         </SfList>
+        <br>
         <ul>
           <li>Marked list</li>
           <li>Lorem ipsum</li>
           <li>Dolor sit amet</li>
         </ul>
+        <br>
         <ol>
           <li>Numered list</li>
           <li>Lorem ipsum</li>
@@ -60,33 +62,32 @@
           <SfInput v-model="firstname" name="firstname" label="Your Firstname" :required="true" :valid="false" error-message="Field is required." />
           <SfInput name="name" label="Disabled Field" :required="true" :valid="true" disabled />
           <br>
-          <SfCheckbox
-            class="_typography-form-checkbox"
-            v-model="options"
-            name="options"
-            label="label1"
-            value="value1"
-            required="required"
-            :valid="true"
-          />
-          <SfCheckbox
-            class="_typography-form-checkbox"
-            v-model="options"
-            name="options"
-            label="label2"
-            value="value2"
-            required="required"
-            disabled
-            :valid="true"
-          />
-          <SfCheckbox
-            class="_typography-form-checkbox"
-            v-model="options"
-            name="options"
-            value="value3"
-            required="required"
-            :valid="true"
-          />
+          <div class="_typography-form-checkbox-container">
+            <SfCheckbox
+              v-model="options"
+              name="options"
+              label="enabled checkbox"
+              value="value1"
+              required="required"
+              :valid="true"
+            />
+            <SfCheckbox
+              v-model="options"
+              name="options"
+              label="disabled checkbox"
+              value="value2"
+              required="required"
+              disabled
+              :valid="true"
+            />
+            <SfCheckbox
+              v-model="options"
+              name="options"
+              value="value3"
+              required="required"
+              :valid="true"
+            />
+          </div>
           <br>
           <SfSelect
             v-model="select"
@@ -129,23 +130,20 @@
             </SfRadio>
           </div>
           <br>
-          <div style="position: relative; display: inline-block;">
+          <div class="_typography-form-dropdown-container">
             <SfButton @click.stop.prevent="isOpen = true">
-              Choose your item
+              Choose your action
             </SfButton>
             <SfDropdown :is-open="isOpen" title="Available Items" @click:close="isOpen = false">
               <SfList>
-                <br>
                 <SfListItem>
-                  First item
+                  <a>First action</a>
                 </SfListItem>
-                <br>
                 <SfListItem>
-                  Second item
+                  <a>Second action</a>
                 </SfListItem>
-                <br>
                 <SfListItem>
-                  Third item
+                  <a>Third action</a>
                 </SfListItem>
               </SfList>
             </SfDropdown>
@@ -335,10 +333,27 @@ export default {
 .page-typography {
   box-sizing: border-box;
 
-  ._typography-form-button, ._typography-form-checkbox {
+  ._typography-form-button {
     display: inline-block;
     margin-right: 1em;
     margin-top: 0.5em;
+  }
+
+  ._typography-form-checkbox-container {
+    display: flex;
+
+    .sf-checkbox {
+      margin-right: 1em;
+    }
+  }
+
+  ._typography-form-dropdown-container {
+    position: relative;
+    display: inline-block;
+
+    .sf-list__item {
+      padding: var(--spacer-sm);
+    }
   }
 
   @include for-desktop {

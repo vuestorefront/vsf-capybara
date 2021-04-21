@@ -36,7 +36,7 @@ body {
   --bar-height: 3.125rem;
   --notification-font-size: var(--font-sm);
   font-family: var(--font-family-secondary);
-  font-size: var(--font-size--base);
+  font-size: var(--font-size-base);
   line-height: #{$line-height-base};
   margin: 0;
   padding: 0;

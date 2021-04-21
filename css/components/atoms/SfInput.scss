@@ -1,0 +1,15 @@
+.sf-input {
+    input {
+        --input-padding: var(--spacer-sm) var(--spacer-xs) var(--spacer-xs) var(--spacer-xs);
+        &:focus {
+            & ~ * {
+                --input-label-left: 0.3em;
+                --input-label-top: 10%;
+            }
+        }
+    }
+    &--has-text {
+        --input-label-left: 0.3em;
+        --input-label-top: 10%;
+    }
+}

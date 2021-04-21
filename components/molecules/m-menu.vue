@@ -136,16 +136,15 @@ export default {
 .aside-banner {
   margin-bottom: var(--spacer-sm);
   text-transform: uppercase;
+  display: none;
   --banner-height: 300px;
   &--mobile {
-    display: none;
     @include for-mobile {
       display: block;
     }
   }
   &--desktop {
     --banner-width: 300px;
-    display: none;
     margin: 0 var(--spacer-sm);
     @include for-desktop {
       display: block;

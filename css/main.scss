@@ -1,9 +1,13 @@
 @import "~@storefront-ui/vue/styles";
 @import "./base/fonts";
 @import "./base/variables";
-
-@import "./components/organisms/SfFooter.scss";
-@import "./components/organisms/SfList.scss";
+@import "./base/base";
 
 @import "./components/atoms/SfQuantitySelector.scss";
 @import "./components/atoms/SfPrice.scss";
+@import "./components/atoms/SfInput.scss";
+
+@import "./components/molecules/SfSelect.scss";
+
+@import "./components/organisms/SfFooter.scss";
+@import "./components/organisms/SfList.scss";
