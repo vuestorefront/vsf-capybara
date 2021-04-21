@@ -4,12 +4,12 @@
         &:focus {
             & ~ * {
                 --input-label-left: 0.3em;
-                --input-label-top: 10%;
+                --input-label-top: 10% !important;
             }
         }
     }
     &--has-text {
         --input-label-left: 0.3em;
-        --input-label-top: 10%;
+        --input-label-top: 10% !important;
     }
 }
