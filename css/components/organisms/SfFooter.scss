@@ -1,4 +1,6 @@
 .sf-footer-column {
+  --list-item-color: var(--menu-item-label-color, var(--c-dark-variant));
+
   &__title {
     color: var(--footer-column-title-color, var(--c-text));
   }
