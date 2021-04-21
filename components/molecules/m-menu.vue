@@ -133,21 +133,23 @@ export default {
      justify-content: space-between;
   }
 }
-.aside-banner {
-  margin-bottom: var(--spacer-sm);
-  text-transform: uppercase;
-  display: none;
-  --banner-height: 300px;
-  &--mobile {
-    @include for-mobile {
-      display: block;
+.sf-banner {
+  &.aside-banner {
+    margin-bottom: var(--spacer-sm);
+    text-transform: uppercase;
+    display: none;
+    --banner-height: 300px;
+    &--mobile {
+      @include for-mobile {
+        display: block;
+      }
     }
-  }
-  &--desktop {
-    --banner-width: 300px;
-    margin: 0 var(--spacer-sm);
-    @include for-desktop {
-      display: block;
+    &--desktop {
+      --banner-width: 300px;
+      margin: 0 var(--spacer-sm);
+      @include for-desktop {
+        display: block;
+      }
     }
   }
 }
