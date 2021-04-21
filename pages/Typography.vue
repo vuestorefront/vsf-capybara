@@ -80,13 +80,6 @@
               disabled
               :valid="true"
             />
-            <SfCheckbox
-              v-model="options"
-              name="options"
-              value="value3"
-              required="required"
-              :valid="true"
-            />
           </div>
           <br>
           <SfSelect
