@@ -209,10 +209,10 @@ export default {
             /(?=[a-z])/.test(value),
             /(?=[A-Z])/.test(value),
             /(?=[0-9])/.test(value),
-            /(?=\W)/.test(value),
+            /(?=\W)/.test(value)
           ].filter((result) => result).length >= 3
         );
-      },
+      }
     },
     rPassword: {
       required,
