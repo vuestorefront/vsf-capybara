@@ -13,7 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / Improved
 
-- Updated o-personal-details to match latest designs(#601)
+- Updated css styling by replacing flexbox to css grid(#601)
+- Updated spacing between the form elements(#601)
+- Updated spacing around login button and details heading(#601)
+- Updated width and position of login button on mobile(#601)
 
 ## [1.0.4] - 04.01.2020
 

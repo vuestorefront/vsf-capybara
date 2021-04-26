@@ -2,9 +2,11 @@
   <div class="o-personal-details">
     <div v-if="!currentUser" class="log-in">
       <SfButton class="log-in__button color-secondary" @click="login">
-        {{ $t("Log in to your account") }}
+        {{ $t('Log in to your account') }}
       </SfButton>
-      <p class="log-in__info">{{ $t("or fill the details below") }}:</p>
+      <p class="log-in__info">
+        {{ $t("or fill the details below") }}:
+      </p>
     </div>
 
     <SfHeading
@@ -55,7 +57,7 @@
 
       <div class="info">
         <p class="info__heading">
-          {{ $t("Enjoy these perks with your free account!") }}
+          {{ $t('Enjoy these perks with your free account!') }}
         </p>
         <SfCharacteristic
           v-for="({ description, icon }, index) in characteristics"
@@ -144,63 +146,57 @@
   </div>
 </template>
 <script>
-import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
-import { PersonalDetails } from "@vue-storefront/core/modules/checkout/components/PersonalDetails";
-import {
-  SfInput,
-  SfButton,
-  SfHeading,
-  SfCheckbox,
-  SfCharacteristic,
-} from "@storefront-ui/vue";
-import { ModalList } from "theme/store/ui/modals";
-import { mapActions } from "vuex";
+import { required, minLength, email, sameAs } from 'vuelidate/lib/validators';
+import { PersonalDetails } from '@vue-storefront/core/modules/checkout/components/PersonalDetails';
+import { SfInput, SfButton, SfHeading, SfCheckbox, SfCharacteristic } from '@storefront-ui/vue';
+import { ModalList } from 'theme/store/ui/modals'
+import { mapActions } from 'vuex';
 
 export default {
-  name: "OPersonalDetails",
+  name: 'OPersonalDetails',
   components: {
     SfInput,
     SfButton,
     SfHeading,
     SfCheckbox,
-    SfCharacteristic,
+    SfCharacteristic
   },
   mixins: [PersonalDetails],
-  data() {
+  data () {
     return {
       characteristics: [
         {
-          description: this.$t("Faster checkout"),
-          icon: "clock",
+          description: this.$t('Faster checkout'),
+          icon: 'clock'
         },
         {
-          description: this.$t("Full rewards program benefits"),
-          icon: "rewards",
+          description: this.$t('Full rewards program benefits'),
+          icon: 'rewards'
         },
         {
-          description: this.$t("Earn credits with every purchase"),
-          icon: "credits",
+          description: this.$t('Earn credits with every purchase'),
+          icon: 'credits'
         },
         {
-          description: this.$t("Manage your wishlist"),
-          icon: "heart",
-        },
-      ],
+          description: this.$t('Manage your wishlist'),
+          icon: 'heart'
+        }
+      ]
     };
   },
   validations: {
     personalDetails: {
       firstName: {
         required,
-        minLength: minLength(2),
+        minLength: minLength(2)
       },
       lastName: {
-        required,
+        required
       },
       emailAddress: {
         required,
-        email,
-      },
+        email
+      }
     },
     password: {
       required,
@@ -220,23 +216,23 @@ export default {
     },
     rPassword: {
       required,
-      sameAsPassword: sameAs("password"),
+      sameAsPassword: sameAs('password')
     },
     acceptConditions: {
-      required,
-    },
+      required
+    }
   },
   methods: {
-    ...mapActions("ui", {
-      openModal: "openModal",
+    ...mapActions('ui', {
+      openModal: 'openModal'
     }),
-    login() {
-      this.openModal({ name: ModalList.Auth, payload: "login" });
+    login () {
+      this.openModal({ name: ModalList.Auth, payload: 'login' });
     },
-    openTermsAndConditionsModal() {
+    openTermsAndConditionsModal () {
       this.openModal({ name: ModalList.TermsAndConditions });
-    },
-  },
+    }
+  }
 };
 </script>
 
