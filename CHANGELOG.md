@@ -8,13 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.5] - ???
 
 ### Added
+
 - Added `VueObserveVisibility` and `VueLazyload` dependency
+
+### Changed / Improved
+
+- Updated o-personal-details to match latest designs(#601)
 
 ## [1.0.4] - 04.01.2020
 
 ### Added
 
 ### Changed / Improved
+
 - Improved spacing around product carousal on home page(#471)
 - Improved navbar layout (#467)
 - Improved heading in search panel (#478)
@@ -56,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Used sku instead of product_id while preparing order line items product (#415)
 - Replaced deprecated action product/list call with findProducts (#417)
 - Fix hydration errors with fresh installation (#462)
-- Fixed console warning related to  value of key 'Sort by' is not a string (#476)
+- Fixed console warning related to value of key 'Sort by' is not a string (#476)
 - Update pwacompat to avoid loading multiple favicons (https://github.com/DivanteLtd/vue-storefront/issues/4559)
 - Fixed changing and deleting shipping details on MyAccount (#4499)
 - Corrected displayed price when choosing configurable product second time (#493)
@@ -64,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 03.07.2020
 
 ### Added
+
 ### Changed / Improved
 
 - Update sfui version to 0.7.11
@@ -77,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2020.06.02
 
 ### Added
+
 ### Changed / Improved
 
 - Support theme configuration via CLI (#369)
