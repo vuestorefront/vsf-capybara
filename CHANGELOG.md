@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
+### Changed / Improved
+- Improved css styling by replacing flexbox to css grid(#606)
+- Improved spacing between the form elements through grid gap(#606)
+- Improved button width on desktop(#606)
+- Improved line height of message text(#606)
+- Removed styling of 'a' tag as their was no 'a' tag in the file(#606)
+- Improved HTML markup by spacing between elements(#606)
+- Improved CSS styling by using shorthand methods (#606)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
