@@ -110,28 +110,28 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .message {
-  margin-bottom: var(--spacer-xl);
   color: var(--c-dark-variant);
   line-height: 1.4;
+  margin: 0 0 var(--spacer-xl) 0;
 }
 
 .form {
   display: grid;
-  grid: "cpwd" "npwd" "rpwd";
+  grid: "current" "new" "repeat";
   grid-gap: var(--spacer-base) var(--spacer-lg);
   align-items: center;
 }
 
-.current-password { grid-area: cpwd; }
+.current-password { grid-area: current; }
 
-.new-password { grid-area: npwd; }
+.new-password { grid-area: new; }
 
-.repeat-password { grid-area: rpwd; }
+.repeat-password { grid-area: repeat; }
 
 @include for-desktop {
   .form {
-    grid: "cpwd  cpwd"
-          "npwd  rpwd";
+    grid: "current  current"
+          "new      repeat";
   }
 
   .action {
