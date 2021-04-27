@@ -128,7 +128,7 @@ export default {
 .message {
   color: var(--c-dark-variant);
   line-height: 1.4;
-  margin-bottom: var(--spacer-xl);
+  margin: 0 0 var(--spacer-xl) 0;
 }
 
 .form {
