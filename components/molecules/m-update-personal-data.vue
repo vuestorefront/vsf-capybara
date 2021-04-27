@@ -3,28 +3,30 @@
     <p class="message">
       {{ $t('Feel free to edit any of your details below so your account is always up to date') }}
     </p>
+
     <div class="form">
       <SfInput
         v-model="firstName"
+        class="first-name"
         name="firstName"
         :label="$t('First Name')"
         required
         :valid="!$v.firstName.$error"
         :error-message="!$v.firstName.required ? $t('Field is required.') : $t('Name must have at least 2 letters.')"
-        class="form__element form__element--half"
       />
       <SfInput
         v-model="lastName"
+        class="last-name"
         name="lastName"
         :label="$t('Last Name')"
         required
         :valid="!$v.lastName.$error"
         :error-message="$t('Field is required.')"
-        class="form__element form__element--half form__element--half-even"
       />
       <SfInput
         v-model="email"
         type="email"
+        class="email"
         name="email"
         :label="$t('Your e-mail')"
         required
@@ -34,12 +36,13 @@
             ? $t('Field is required.')
             : $t('Please provide valid e-mail address.')
         "
-        class="form__element"
       />
-      <SfButton class="form__button" @click.native="updatePersonalData">
+
+      <SfButton class="action" @click.native="updatePersonalData">
         {{ $t('Update personal data') }}
       </SfButton>
     </div>
+
     <p class="notice">
       {{ $t('At Brand name, we attach great importance to privacy issues and are committed to protecting the personal data of our users. Learn more about how we care and use your personal data in the') }}
       <a :href="localizedRoute('/privacy')">{{ $t('Privacy Policy') }}</a>.
@@ -119,51 +122,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.form {
-  @include for-desktop {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  &__element {
-    margin: 0 0 var(--spacer-lg) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-lg);
-        }
-      }
-    }
-  }
-  &__button {
-    --button-width: 100%;
-    @include for-desktop {
-      --button-width: auto;
-    }
-  }
-}
 .message {
-  margin: 0 0 var(--spacer-xl) 0;
   color: var(--c-dark-variant);
+  line-height: 1.4;
+  margin-bottom: var(--spacer-xl);
 }
+
+.form {
+  display: grid;
+  grid: "fn" "ln" "email";
+  grid-gap: var(--spacer-base) var(--spacer-lg);
+  align-items: center;
+}
+
+.first-name { grid-area: fn; }
+
+.last-name { grid-area: ln; }
+
+.email { grid-area: email; }
+
 .notice {
-  max-width: 31rem;
-  margin: var(--spacer-base) 0 0 0;
-  font-size: var(--font-2xs);
+  font: var(--font-light) var(--font-sm) / 1.4 var(--font-family-primary);
+  margin-top: var(--spacer-xl);
 }
+
 a {
   color: var(--c-primary);
-  text-decoration: none;
   &:hover {
-    color: var(--c-text);
+    color: var(--c-primary-variant);
+  }
+}
+
+@include for-desktop {
+  .form {
+    grid: "fn    ln"
+          "email email" ;
+  }
+
+  .action {
+  width: max-content;
   }
 }
 </style>
