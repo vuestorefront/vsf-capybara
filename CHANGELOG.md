@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
+### Changed / Improved
+- Improved css styling by replacing flexbox to css grid(#610)
+- Added auto fill property to grid column(#610)
+- Removed update button(#610)
+- Added update click functionality to address card itself(#610)
+- Improved delete button by using it with icon for deleting address on desktop also(#610)
+- Added hover effect to delete icon button(#610)
+- Improved HTML markup by spacing between elements(#610)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
