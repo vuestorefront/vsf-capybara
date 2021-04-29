@@ -322,6 +322,7 @@ export default {
   position: relative;
   transition: box-shadow 150ms linear;
   padding: var(--spacer-sm);
+  border: 1px solid var(--c-light);
 
   &:hover {
     box-shadow: 0px 4px 35px 0px var(--c-light);
