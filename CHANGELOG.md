@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added auto fill property to grid column(#610)
 - Removed update button(#610)
 - Added update click functionality to address card itself(#610)
+- Added border to address card(#610)
 - Improved delete button by using it with icon for deleting address on desktop also(#610)
 - Added hover effect to delete icon button(#610)
 - Improved HTML markup by spacing between elements(#610)
