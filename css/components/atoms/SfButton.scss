@@ -8,6 +8,10 @@
             --button-background: var(--c-light);
         }
 
+        &:active {
+            --button-background: var(--c-secondary-variant);
+        }
+
         &.sf-button--text {
             --button-border-width: 0;
             --button-padding: 0;
