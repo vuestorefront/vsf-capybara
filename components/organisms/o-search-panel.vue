@@ -158,6 +158,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-search-panel {
@@ -166,7 +167,6 @@ export default {
   right: 0;
   top: var(--_header-height);
   background: var(--c-white);
-  overflow: auto;
   max-height: calc(66vh - var(--_header-height));
 
   @include for-mobile {
@@ -175,6 +175,8 @@ export default {
   }
 
   .container {
+    max-height: inherit;
+    overflow: auto;
     display: flex;
     padding: 0 var(--spacer-sm);
     max-width: 1272px;
@@ -190,6 +192,8 @@ export default {
 
   .categories {
     @include for-desktop {
+      position: sticky;
+      top: 0;
       flex: 0 0 20%;
       padding-right: 3rem;
       border-right: 1px solid var(--c-light);
@@ -217,6 +221,7 @@ export default {
 
   .products {
     width: 100%;
+    height: max-content;
     &__title {
       padding: 0;
       justify-content: start;
