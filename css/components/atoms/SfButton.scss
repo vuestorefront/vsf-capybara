@@ -1,11 +1,11 @@
 .sf-button {
     &.color-secondary {
         --button-color: var(--c-primary);
-        --button-background: var(--c-light-variant);
+        --c-secondary: var(--c-light-variant);
         --button-border-width: 2px;
 
         &:hover, &:focus {
-            --button-background: var(--c-secondary);
+            --button-background: var(--c-light);
         }
 
         &.sf-button--text {
