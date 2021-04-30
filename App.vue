@@ -24,10 +24,11 @@ export default {
 };
 </script>
 
-<style lang="scss" src="theme/css/main.scss"></style>
 <style lang="scss">
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
-@import "css/base/variables";
+@import "~@storefront-ui/vue/styles";
+</style>
+<style lang="scss">
+@import "./css/main";
 body {
   --overlay-z-index: 1;
   --sidebar-aside-z-index: 2;
@@ -50,8 +51,25 @@ body {
   }
 }
 
+html,
+body,
+#app,
+.default-layout,
+#viewport {
+  height: 100%;
+}
+
 #viewport {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  .content {
+    flex: 1 0 auto;
+  }
+  .o-footer {
+    flex: 0 0 auto;
+  }
 }
 
 @include for-desktop {

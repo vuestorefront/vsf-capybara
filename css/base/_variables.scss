@@ -1,4 +1,5 @@
 @import "~@storefront-ui/shared/styles/helpers/colors";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 $line-height-base: 1.5;
 
@@ -62,13 +63,6 @@ $forms-color-placeholder: #a09999;
     --font-bold: 800;
     --font-extra-bold: 800;
     --font-black: 800;
-    // font-size
-    --font-2xs: 0.5rem; //8px
-    --font-xs: 0.625rem; //10px
-    --font-sm: 0.75rem; //12px
-    --font-base: 0.875rem; //14px
-    --font-lg: 1rem; //16px
-    --font-xl: 1.25rem; //20px
     // Colors
     @include generate-color-variants(--c-black, #535353);
     @include generate-color-variants(--c-white, #ffffff);
@@ -114,13 +108,4 @@ $forms-color-placeholder: #a09999;
     --c-warning-variant: var(--_c-light-secondary);
     @include assign-color-variants(--c-danger, --_c-red-secondary);
     --c-danger-variant: var(--_c-red-primary);
-
-    @include for-desktop {
-      --font-2xs: 0.625rem; //10px
-      --font-xs: 0.75rem; //12px
-      --font-sm: 0.875rem; //14px
-      --font-base: 1rem; //16px
-      --font-lg: 1.125rem; //18px
-      --font-xl: 1.5rem; //24px
-    }	
   }

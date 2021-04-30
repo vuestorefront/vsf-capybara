@@ -4,7 +4,9 @@
     <div id="viewport">
       <OHeader />
       <OMicrocart />
-      <slot />
+      <div class="content">
+        <slot />
+      </div>
       <OFooter />
       <OModal />
       <ONotification />

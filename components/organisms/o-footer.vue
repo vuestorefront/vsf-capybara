@@ -165,7 +165,6 @@ export default {
   }
   @include for-desktop {
     max-width: 100%;
-    margin: auto;
   }
   .sf-footer {
     --footer-width: 1272px;
