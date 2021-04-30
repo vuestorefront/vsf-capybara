@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
+### Changed / Improved
+- Removed auto overflow from o-search-panel(#613)
+- Added  auto overflow to container(#613)
+- Improved position of categories(#613)
+- Improved height of products(#613)
+- Updated padding of container on mobile(#613)
+- Updated padding values(#613)
+- Improved HTML markup by spacing between elements(#613)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
