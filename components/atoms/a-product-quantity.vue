@@ -82,11 +82,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .a-product-quantity {
-  display: flex;
-  flex-shrink: 0;
-  height: auto;
-  width: 100%;
-  min-width: 4.625rem;
-  max-width: 5.625rem;
+justify-content: space-between;
 }
 </style>
