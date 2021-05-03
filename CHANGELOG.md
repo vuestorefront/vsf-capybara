@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
+### Changed / Improved
+- Improved category list and product list styling through css grid(#617)
+- Improved color of filter icon(#617)
+- Improved font size of sortby dropdown(#617)
+- Updated styling of colors in filter(#617)
+- Removed section class from navbar and main(#617)
+- Updated alignment of pagination(#617)
+- Removed filter clear button on mobile(#617)
+- Improved spacing between HTML markup(#617)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
