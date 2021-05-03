@@ -196,7 +196,6 @@ export default {
     }
     @include for-mobile {
       flex-direction: column;
-      padding: 0 var(--spacer-sm);
     }
   }
 
