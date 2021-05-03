@@ -7,29 +7,34 @@
         </router-link>
       </template>
     </SfBreadcrumbs>
-    <div class="navbar section">
-      <div class="navbar__aside desktop-only">
-        <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
+
+    <div class="content">
+      <div class="title desktop-only">
+        <SfHeading :level="3" :title="$t('Categories')" class="sf-heading--left" />
       </div>
-      <div class="navbar__main">
+
+      <div class="navbar">
         <div class="navbar__filter">
           <SfButton
-            class="sf-button--text navbar__filters-button"
+            class="sf-button--text navbar__button"
             @click="isFilterSidebarOpen = true"
           >
-            <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
+            <SfIcon size="xxs" class="navbar__filters-icon" color="dark-secondary" icon="filter" />
             {{ $t("Filters") }}
           </SfButton>
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
-            <span> &nbsp;&mdash;&nbsp;</span>
-            <button @click="clearAllFilters" class="sf-button sf-button--text navbar__filters-clear-all">
-              {{ $t('Clear all') }}
-            </button>
+            <div class="desktop-only">
+              <span> &nbsp;&mdash;&nbsp;</span>
+              <SfButton @click="clearAllFilters" class="sf-button--text">
+                {{ $t('Clear all') }}
+              </SfButton>
+            </div>
           </template>
         </div>
+
         <div class="navbar__sort">
-          <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
+          <span class="label desktop-only">{{ $t("Sort By") }}:</span>
           <SfSelect
             class="navbar__select sort-by"
             ref="SortBy"
@@ -46,26 +51,26 @@
             </SfSelectOption>
           </SfSelect>
           <SfButton
-            class="sf-button--text navbar__filters-button sort-by__button mobile-only"
+            class="sf-button--text navbar__button mobile-only"
             @click="$refs.SortBy.toggle()"
           >
             {{ $t('Sort By') }}
             <ASortIcon />
           </SfButton>
         </div>
+
         <div class="navbar__counter">
-          <span class="navbar__label desktop-only">
+          <span class="label desktop-only">
             {{ $t("Products found") }}:
           </span>
           <strong class="desktop-only">{{ getCategoryProductsTotal }}</strong>
-          <span class="navbar__label mobile-only">
+          <span class="count mobile-only">
             {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
           </span>
         </div>
       </div>
-    </div>
-    <div class="main section">
-      <div class="sidebar desktop-only">
+
+      <div class="categories desktop-only">
         <SfAccordion :show-chevron="false">
           <SfAccordionItem
             v-for="category in categories"
@@ -82,6 +87,7 @@
           </SfAccordionItem>
         </SfAccordion>
       </div>
+
       <div class="products">
         <SfHeading
           v-if="isCategoryEmpty"
@@ -126,6 +132,7 @@
         </template>
       </div>
     </div>
+
     <SfSidebar
       :visible="isFilterSidebarOpen"
       :title="$t('Filters')"
@@ -161,6 +168,7 @@
           </template>
         </template>
       </div>
+
       <template #content-bottom>
         <div class="filters__buttons">
           <SfButton
@@ -595,6 +603,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #category {
@@ -604,107 +613,97 @@ export default {
     margin: 0 auto;
   }
 }
-.main {
-  &.section {
-    padding: var(--spacer-xs);
-    @include for-desktop {
-      padding: 0;
-    }
-  }
-}
+
 .breadcrumbs {
   padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
+
+.content {
+  display: grid;
+  grid: "navbar" "products";
+
+  @include for-desktop{
+    grid: "title      navbar"
+          "categories products"
+          / 15% 1fr;
+  }
+}
+
+.title {
+    grid-area: title;
+    padding: var(--spacer-sm);
+    border: 1px solid var(--c-light);
+    border-width: 1px 1px 1px 0;
+  }
+
 .navbar {
-  position: relative;
-  display: flex;
+  grid-area: navbar;
+  display: grid;
+  grid:"filter counter sort" / 1fr minmax( auto, max-content) 1fr;
+  grid-column-gap: var(--spacer-xs);
+  align-items: center;
+  padding: var(--spacer-sm);
   border: 1px solid var(--c-light);
   border-width: 0 0 1px 0;
+
   @include for-desktop {
+    grid: "filter sort counter" / max-content max-content auto;
+    grid-column-gap: var(--spacer-2xl);
+    padding: var(--spacer-xs) var(--spacer-xl);
     border-width: 1px 0 1px 0;
   }
-  &.section {
-    padding: var(--spacer-sm);
-    @include for-desktop {
-      padding: 0;
-    }
-  }
-  &__aside {
-    align-items: center;
+
+  &__filter {
     display: flex;
-    flex: 0 0 15%;
-    padding: var(--spacer-sm) var(--spacer-sm);
-    border: 1px solid var(--c-light);
-    border-width: 0 1px 0 0;
+    grid-area: filter;
   }
-  &__main {
-    align-items: center;
-    display: grid;
-    flex: 1;
-    grid-template-columns: 1fr minmax( auto, max-content) 1fr;
-    grid-template-areas:'filter counter sort';
-    @include for-desktop {
-      grid-template-areas:'filter sort counter';
-      grid-column-gap: var(--spacer-2xl);
-      grid-template-columns: max-content max-content auto;
-      padding: var(--spacer-xs) var(--spacer-xl);
-    }
+
+    &__filters-icon {
+    margin-right: var(--spacer-xs);
   }
-  &__filters-button {
+
+  &__button {
     display: flex;
     align-items: center;
     font-size: 1rem;
-    grid-column: 1;
-    justify-self: start;
     &:hover {
       .sf-icon {
         fill: var(--c-primary);
       }
     }
+
     @include for-mobile {
-      --button-text-transform: uppercase;
-      font-size: var(--font-xs);
-      &.sort-by__button {
-        order: 1;
-      }
+      font-weight: var(--font-medium);
     }
   }
-  &__filter {
-    display: flex;
-    grid-area: filter;
-  }
-  &__filters-icon {
-    margin: 0 var(--spacer-sm) 0 0;
-  }
-  &__label {
-    font-family: var(--font-family-secondary);
-    font-weight: var(--font-normal);
-    color: var(--c-text-muted);
-    margin: 0 var(--spacer-2xs) 0 0;
-    @include for-mobile {
-      font-size: var(--font-xs);
-    }
-  }
-  &__select {
-    --select-padding: 0 var(--spacer-lg) 0 var(--spacer-2xs);
-    --select-margin: 0;
-    --select-selected-padding: 0 var(--spacer-xl) 0 0;
-  }
-  &__sort {
+
+   &__sort {
+    grid-area: sort;
     display: flex;
     align-items: center;
     justify-self: end;
-    grid-area: sort;
-    @include for-desktop {
-      justify-self: center;
+  }
+
+  &__select {
+    --select-selected-padding: 0 var(--spacer-xl) 0 0;
+    --select-margin: 0;
+  }
+
+  ::v-deep {
+    .sf-select__selected {
+     --select-option-font-size: var(--font-base);
+    }
+
+    .sf-button--text {
+      --button-text-decoration: none;
     }
   }
+
   &__counter {
-    font-family: var(--font-family-secondary);
-    grid-column: 3;
-    justify-self: end;
     grid-area: counter;
+    justify-self: end;
   }
+
   &__view {
     display: flex;
     align-items: center;
@@ -712,19 +711,25 @@ export default {
     @include for-desktop {
       margin: 0 0 0 var(--spacer-2xl);
     }
+
     &-icon {
       cursor: pointer;
     }
-    &-label {
-      margin: 0 var(--spacer-sm) 0 0;
-      font: var(--font-medium) var(--font-xs) / 1.6 var(--font-family-secondary);
-      text-decoration: underline;
-    }
   }
 }
+
+.label {
+  font: var(--font-normal) var(--font-base) / 1.6 var(--font-family-secondary);
+  color: var(--c-link);
+  margin-right: var(--spacer-2xs);
+}
+
+.count {
+  color: var(--c-text-muted);
+}
+
 .sort-by {
   --select-dropdown-z-index: 2;
-  flex: unset;
   padding: 0;
   ::v-deep {
     .sf-select__dropdown {
@@ -743,82 +748,93 @@ export default {
     overflow: hidden;
     --select-dropdown-z-index: 2;
     ::v-deep .sf-select__cancel {
-      margin: 16px;
+      margin: var(--spacer-sm);
       box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
       --button-width: calc(100% - 32px);
     }
   }
 }
-.main {
-  display: flex;
-}
-.sidebar {
-  flex: 0 0 15%;
+
+.categories {
+  grid-area: categories;
   padding: var(--spacer-sm);
   border: 1px solid var(--c-light);
   border-width: 0 1px 0 0;
 }
-.sidebar-filters {
-  --sidebar-title-display: none;
-  --sidebar-top-padding: 0;
-  @include for-desktop {
-    --sidebar-content-padding: 0 var(--spacer-xl);
-    --sidebar-bottom-padding: 0 var(--spacer-xl);
-  }
-}
+
 .list {
-  --menu-item-font-size: var(--font-sm);
   &__item {
     &:not(:last-of-type) {
       --list-item-margin: 0 0 var(--spacer-sm) 0;
     }
   }
 }
+
 .products {
+  grid-area: products;
   box-sizing: border-box;
-  flex: 1;
-  margin: 0;
+  padding: var(--spacer-xs);
+
   &__grid,
   &__list {
     display: flex;
     flex-wrap: wrap;
   }
+
   &__grid {
     justify-content: space-between;
   }
+
   &__product-card {
     --product-card-max-width: 50%;
     flex: 1 1 50%;
   }
+
   &__product-card-horizontal {
     flex: 0 0 100%;
   }
+
   &__slide-enter {
     opacity: 0;
     transform: scale(0.5);
   }
+
   &__slide-enter-active {
     transition: all 0.2s ease;
     transition-delay: calc(0.1s * var(--index));
   }
+
   @include for-desktop {
+    padding: 0;
     margin: var(--spacer-sm) 0 0 var(--spacer-sm);
+
     &__pagination {
-      display: flex;
-      justify-content: center;
       margin: var(--spacer-xl) 0 0 0;
     }
+
     &__product-card-horizontal {
       margin: var(--spacer-lg) 0;
     }
+
     &__product-card {
       flex: 1 1 25%;
     }
+
     &__list {
       margin: 0 0 0 var(--spacer-sm);
     }
   }
 }
+
+.sidebar-filters {
+  --sidebar-title-display: none;
+  --sidebar-top-padding: 0;
+
+  @include for-desktop {
+    --sidebar-bottom-padding: var(--spacer-sm);
+  }
+}
+
 .filters {
   &__title {
     --heading-title-font-size: var(--font-xl);
@@ -827,42 +843,35 @@ export default {
       margin: calc(var(--spacer-xl) + var(--spacer-base)) 0 var(--spacer-xs) 0;
     }
   }
+
+  &__colors{
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   &__color {
     margin: var(--spacer-xs) var(--spacer-xs) var(--spacer-xs) 0;
     border: 1px solid var(--c-light);
   }
+
   &__item {
-    --filter-label-color: var(--c-secondary-variant);
-    --filter-count-color: var(--c-secondary-variant);
-    --checkbox-padding: 0 var(--spacer-sm) 0 var(--spacer-xl);
     padding: var(--spacer-sm) 0;
     border-bottom: 1px solid var(--c-light);
     &:last-child {
       border-bottom: 0;
     }
+
     @include for-desktop {
-      --checkbox-padding: 0;
       margin: var(--spacer-sm) 0;
       border: 0;
       padding: 0;
     }
   }
-  &__accordion-item {
-    --accordion-item-content-padding: 0;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    width: 100vw;
-  }
-  &__buttons {
-    margin: var(--spacer-sm) 0;
-  }
+
   &__button-clear {
     --button-background: var(--c-light);
-    --button-color: var(--c-dark-variant);
-    margin: var(--spacer-xs) 0 0 0;
+    --button-color: var(--c-on-light);
+    margin-top: var(--spacer-xs);
   }
 }
 </style>
