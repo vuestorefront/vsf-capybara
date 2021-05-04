@@ -140,7 +140,7 @@
                 <SfIcon
                   icon="cross"
                   color="gray"
-                  size="14px"
+                  size="xxs"
                   role="button"
                   class="mobile-only"
                   @click="deleteAddress(key)"

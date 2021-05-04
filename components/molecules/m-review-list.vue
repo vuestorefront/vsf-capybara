@@ -79,7 +79,7 @@ export default {
 
 .product {
   &__review {
-    padding-bottom: 24px;
+    padding-bottom: var(--spacer-base);
     border-bottom: var(--c-light) solid 1px;
     margin-bottom: var(--spacer-base);
     &:last-of-type {

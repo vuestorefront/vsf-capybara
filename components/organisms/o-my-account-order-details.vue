@@ -270,8 +270,8 @@ export default {
   }
 }
 .property-total {
-  --property-name-font-weight: 500;
-  --property-value-font-weight: 500;
+  --property-name-font-weight: var(--font-weight--medium);
+  --property-value-font-weight: var(--font-weight--medium);
 }
 .order-details__summary {
   .sf-property__name {

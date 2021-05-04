@@ -115,7 +115,7 @@ export default {
     }
   }
   @include for-mobile {
-    --content-pages-sidebar-category-title-font-weight: var(--font-normal);
+    --content-pages-sidebar-category-title-font-weight: var(--font-weight--normal);
     --content-pages-sidebar-category-title-margin: var(--spacer-sm) var(--spacer-sm) var(--spacer-sm) var(--spacer-base);
   }
   @include for-desktop {

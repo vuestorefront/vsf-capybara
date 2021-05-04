@@ -158,7 +158,7 @@ export default {
     padding: 0 var(--spacer-sm);
     @include for-desktop {
       max-width: 32.625rem;
-      margin: 0 0 0 7.5rem;
+      margin: 0 0 0 var(--spacer-2xl);
       padding: 0;
     }
   }
@@ -178,7 +178,7 @@ export default {
 
 .section {
   border-bottom: 1px solid #f1f2f3;
-  padding-bottom: 10px;
+  padding-bottom: 1var(--spacer-xs);
   @include for-desktop {
     border: 0;
     padding-bottom: 0;

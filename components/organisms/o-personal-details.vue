@@ -258,7 +258,7 @@ export default {
     color: var(--c-dark-variant);
     font: var(--font-light) var(--font-base) / 1.6 var(--font-family-primary);
     @include for-desktop {
-      font-weight: var(--font-normal);
+      font-weight: var(--font-weight--normal);
       font-size: var(--font-sm);
     }
   }
@@ -271,7 +271,7 @@ export default {
   flex: 1;
   &__heading {
     font-family: var(--font-family-primary);
-    font-weight: var(--font-light);
+    font-weight: var(--font-weight--light);
   }
   &__characteristic {
     --characteristic-description-font-size: var(--font-xs);
@@ -306,7 +306,7 @@ export default {
   @include for-mobile {
     &__checkbox {
       --checkbox-font-family: var(--font-family-primary);
-      --checkbox-font-weight: var(--font-light);
+      --checkbox-font-weight: var(--font-weight--light);
       --checkbox-font-size: var(--font-sm);
     }
   }
@@ -327,7 +327,7 @@ export default {
     }
   }
   .terms {
-    margin: 0 0 0 0.4em;
+    margin: 0 0 0 var(--spacer-xs);
   }
 }
 .no-flex {

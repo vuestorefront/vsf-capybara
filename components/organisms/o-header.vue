@@ -151,11 +151,11 @@ export default {
   z-index: 1;
 }
 .o-header {
-  --header-navigation-item-margin: 0 2rem 0 0;
+  --header-navigation-item-margin: 0 var(--spacer-lg) 0 0;
   box-sizing: border-box;
   a {
     &.active {
-      font-weight: bold;
+      font-weight: var(--font-weight--bold);
     }
   }
   .search-container {

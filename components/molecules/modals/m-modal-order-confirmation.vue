@@ -131,7 +131,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     .sf-button:not(:first-child) {
-      margin-left: 1rem;
+      margin-left: var(--spacer-sm);
     }
   }
   @include for-desktop {

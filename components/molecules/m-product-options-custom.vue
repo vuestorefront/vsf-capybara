@@ -144,9 +144,9 @@ export default {
   }
 }
 .single-option {
-  margin-top: 1.5rem;
+  margin-top: var(--spacer-base);
 }
 .sf-divider {
-  margin-top: 1.5rem;
+  margin-top: var(--spacer-base);
 }
 </style>

@@ -39,7 +39,7 @@ export default {
   color: var(--c-dark-variant);
 }
 a {
-  font-weight: var(--font-medium);
+  font-weight: var(--font-weight--medium);
   color: var(--c-primary);
   text-decoration: none;
   &:hover {

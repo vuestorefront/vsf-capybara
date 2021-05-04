@@ -2,7 +2,7 @@
   <div class="a-wishlist-icon">
     <SfCircleIcon
       icon="heart"
-      icon-size="20px"
+      icon-size="xs"
       class="sf-header__circle-icon"
       role="button"
       aria-label="wishlist"
@@ -32,8 +32,8 @@ export default {
   position: absolute;
   bottom: 2.2em;
   left: 4.2em;
-  font-size: 0.6em;
-  padding: 0.3em 0;
+  font-size: var(--font-size--xs);
+  padding: var(--spacer-2xs) 0;
   border-radius: 100%;
   width: 2.2em;
   min-height: 2.2em;

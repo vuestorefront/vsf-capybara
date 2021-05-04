@@ -17,7 +17,7 @@
             class="sf-button--text navbar__filters-button"
             @click="isFilterSidebarOpen = true"
           >
-            <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
+            <SfIcon size="xxs" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
             {{ $t("Filters") }}
           </SfButton>
           <template v-if="activeFiltersCount">
@@ -653,7 +653,7 @@ export default {
   &__filters-button {
     display: flex;
     align-items: center;
-    font-size: 1rem;
+    font-size: var(--font-size--base);
     grid-column: 1;
     justify-self: start;
     &:hover {
@@ -678,7 +678,7 @@ export default {
   }
   &__label {
     font-family: var(--font-family-secondary);
-    font-weight: var(--font-normal);
+    font-weight: var(--font-weight--normal);
     color: var(--c-text-muted);
     margin: 0 var(--spacer-2xs) 0 0;
     @include for-mobile {
@@ -743,7 +743,7 @@ export default {
     overflow: hidden;
     --select-dropdown-z-index: 2;
     ::v-deep .sf-select__cancel {
-      margin: 16px;
+      margin: var(--spacer-sm);
       box-shadow: 4px 12px 24px rgba(119, 121, 122, 0.25);
       --button-width: calc(100% - 32px);
     }

@@ -188,17 +188,17 @@ export default {
 .banner {
   background-color: #f1f2f3;
   &__info {
-    padding: 2rem;
+    padding: var(--spacer-lg);
     text-align: left;
     @include for-desktop {
       text-align: center;
     }
     @include for-mobile {
-      margin: 1rem;
+      margin: var(--spacer-sm);
     }
   }
   &__order-number {
-    font-size: 0.875rem;
+    font-size: var(--font-size--sm);
   }
 }
 .wrapper {
@@ -230,7 +230,7 @@ export default {
   }
 }
 .paragraph {
-  line-height: 1.875rem;
+  line-height: 1.8;
   font-size: var(--font-lg);
 }
 .feedback {
@@ -238,7 +238,7 @@ export default {
   border: 1px solid var(--c-light);
   width: 100%;
   height: 25vh;
-  padding: 0.5em;
+  padding: var(--spacer-xs);
   font-family: var(--font-family-primary);
   resize: vertical;
 }

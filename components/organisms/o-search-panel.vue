@@ -191,7 +191,7 @@ export default {
   .categories {
     @include for-desktop {
       flex: 0 0 20%;
-      padding-right: 3rem;
+      padding-right: var(--spacer-xl);
       border-right: 1px solid var(--c-light);
     }
 
@@ -202,14 +202,14 @@ export default {
     }
     &__listing {
       @include for-desktop {
-        margin-top: 2rem;
+        margin-top: var(--spacer-lg);
       }
 
       .sf-list__item {
-        padding: 0.3rem 0;
+        padding: var(--spacer-2xs) 0;
       }
       .sf-menu-item.selected {
-        --menu-item-font-weight: 500;
+        --menu-item-font-weight: var(--font-weight--medium);
         text-decoration: underline;
       }
     }
@@ -234,7 +234,7 @@ export default {
     }
 
     @include for-desktop {
-      padding-left: 3rem;
+      padding-left: var(--spacer-xl);
     }
   }
 
