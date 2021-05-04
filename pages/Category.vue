@@ -59,11 +59,15 @@
           </SfButton>
         </div>
 
+        <!-- If a user wants to add additional items to the navbar they should insert them right here, before the counter. -->
         <div class="navbar__counter">
+          <!-- For desktop view -->
           <span class="label desktop-only">
             {{ $t("Products found") }}:
           </span>
           <strong class="desktop-only">{{ getCategoryProductsTotal }}</strong>
+
+          <!-- For mobile view -->
           <span class="count mobile-only">
             {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
           </span>
@@ -102,9 +106,9 @@
           <lazy-hydrate :trigger-hydration="!loading">
             <transition-group
               appear
+              class="products__grid"
               name="products__slide"
               tag="div"
-              class="products__grid"
             >
               <SfProductCard
                 v-for="product in products"
@@ -124,10 +128,10 @@
           </lazy-hydrate>
           <SfPagination
             v-if="totalPages > 1"
-            class="products__pagination desktop-only"
             :current="currentPage"
             :total="totalPages"
             :visible="3"
+            class="products__pagination desktop-only"
           />
         </template>
       </div>
@@ -162,8 +166,8 @@
               :count="filter.count"
               :color="filter.color"
               :selected="isFilterActive(filter)"
-              class="filters__item"
               @change="changeFilter(filter)"
+              class="filters__item"
             />
           </template>
         </template>
@@ -623,12 +627,14 @@ export default {
   grid: "navbar" "products";
 
   @include for-desktop{
+    // Add or reorder desktop content elements here.
     grid: "title      navbar"
           "categories products"
           / 15% 1fr;
   }
 }
 
+// Title of categories
 .title {
     grid-area: title;
     padding: var(--spacer-sm);
@@ -637,6 +643,8 @@ export default {
   }
 
 .navbar {
+  // To add more items to the navbar, add their grid-area to the template.
+  // The mobile navbar shouldn't have more than 3 items at a time, so replace rather than add.
   grid-area: navbar;
   display: grid;
   grid:"filter counter sort" / 1fr minmax( auto, max-content) 1fr;
@@ -647,6 +655,7 @@ export default {
   border-width: 0 0 1px 0;
 
   @include for-desktop {
+    // Add or reorder desktop navbar elements here.
     grid: "filter sort counter" / max-content max-content auto;
     grid-column-gap: var(--spacer-2xl);
     padding: var(--spacer-xs) var(--spacer-xl);
@@ -704,6 +713,7 @@ export default {
     justify-self: end;
   }
 
+  // It is useful when we will implement a grid/list view switcher.
   &__view {
     display: flex;
     align-items: center;
@@ -718,12 +728,14 @@ export default {
   }
 }
 
+// Styling the text of sort-by and counter of navbar.
 .label {
   font: var(--font-normal) var(--font-base) / 1.6 var(--font-family-secondary);
   color: var(--c-link);
   margin-right: var(--spacer-2xs);
 }
 
+// Counter items
 .count {
   color: var(--c-text-muted);
 }
@@ -826,6 +838,7 @@ export default {
   }
 }
 
+// Sidebar filters styling
 .sidebar-filters {
   --sidebar-title-display: none;
   --sidebar-top-padding: 0;
