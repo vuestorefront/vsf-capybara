@@ -653,7 +653,7 @@ export default {
   &__filters-button {
     display: flex;
     align-items: center;
-    font-size: var(--font-size--base);
+    font-size: var(--font-base);
     grid-column: 1;
     justify-self: start;
     &:hover {
@@ -678,7 +678,7 @@ export default {
   }
   &__label {
     font-family: var(--font-family-secondary);
-    font-weight: var(--font-weight--normal);
+    font-weight: var(--font-normal);
     color: var(--c-text-muted);
     margin: 0 var(--spacer-2xs) 0 0;
     @include for-mobile {

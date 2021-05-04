@@ -32,7 +32,7 @@ export default {
   position: absolute;
   bottom: 2.2em;
   left: 4.2em;
-  font-size: var(--font-size--xs);
+  font-size: var(--font-2xs);
   padding: var(--spacer-2xs) 0;
   border-radius: 100%;
   width: 2.2em;

@@ -220,7 +220,7 @@ export default {
   }
   &__total-price {
     --price-font-size: var(--font-sm);
-    --price-font-weight: var(--font-weight--semibold);
+    --price-font-weight: var(--font-semibold);
     margin: 0 0 var(--spacer-xs) 0;
   }
 }
@@ -228,7 +228,7 @@ export default {
   --heading-subtitle-margin: 0 0 var(--spacer-xl) 0;
   --heading-title-margin: 0 0 var(--spacer-base) 0;
   --heading-title-color: var(--c-primary);
-  --heading-title-font-weight: var(--font-weight--semibold);
+  --heading-title-font-weight: var(--font-semibold);
   display: flex;
   flex: 1;
   align-items: center;

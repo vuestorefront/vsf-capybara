@@ -118,7 +118,7 @@ export default {
 .promo-code {
   &__button {
     --button-height: 2rem;
-    --button-font-size: var(--font-size--xs);
+    --button-font-size: var(--font-2xs);
     margin: var(--spacer-sm) 0;
   }
 }

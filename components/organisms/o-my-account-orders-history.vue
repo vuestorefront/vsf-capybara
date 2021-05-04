@@ -150,7 +150,7 @@ export default {
 }
 a {
   color: var(--c-primary);
-  font-weight: var(--font-weight--medium);
+  font-weight: var(--font-medium);
   text-decoration: none;
   &:hover {
     color: var(--c-text);

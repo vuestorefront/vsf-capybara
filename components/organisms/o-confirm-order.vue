@@ -488,7 +488,7 @@ export default {
 }
 .property {
   margin: 0 0 var(--spacer-base) 0;
-  --property-value-font-weight: var(--font-weight--semibold);
+  --property-value-font-weight: var(--font-semibold);
   --property-value-font-size: var(--font-base);
   @include for-desktop {
     margin: 0 0 var(--spacer-sm) 0;
@@ -568,7 +568,7 @@ export default {
   margin: 0 0 var(--spacer-base) 0;
   color: var(--c-text);
   &__label {
-    font-weight: var(--font-weight--normal);
+    font-weight: var(--font-normal);
   }
 }
 .actions {

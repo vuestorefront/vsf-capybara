@@ -198,7 +198,7 @@ export default {
     }
   }
   &__order-number {
-    font-size: var(--font-size--sm);
+    font-size: var(--font-sm);
   }
 }
 .wrapper {
@@ -230,7 +230,7 @@ export default {
   }
 }
 .paragraph {
-  line-height: 1.8;
+  line-height: 1.875rem;
   font-size: var(--font-lg);
 }
 .feedback {

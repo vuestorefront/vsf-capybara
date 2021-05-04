@@ -306,7 +306,7 @@ export default {
   @include for-mobile {
     &__checkbox {
       --checkbox-font-family: var(--font-family-primary);
-      --checkbox-font-weight: var(--font-weight--light);
+      --checkbox-font-weight: var(--font-light);
       --checkbox-font-size: var(--font-sm);
     }
   }

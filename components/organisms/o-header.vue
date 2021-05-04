@@ -155,7 +155,7 @@ export default {
   box-sizing: border-box;
   a {
     &.active {
-      font-weight: var(--font-weight--bold);
+      font-weight: var(--font-bold);
     }
   }
   .search-container {
