@@ -622,7 +622,7 @@ export default {
   @include for-desktop {
     border-width: 1px 0 1px 0;
   }
-  @include for-mobile{
+  @include for-mobile {
     // Made it visible while scrolling.
     position: sticky;
     top: 0;
