@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
 ### Changed / Improved
-- Made navbar visible while scrolling(#622)
-- Added background blur effect(#622)
+- Made navbar visible while scrolling on mobile(#622)
+- Added background blur effect on mobile(#622)
 
 ## [1.0.4] - 04.01.2020
 
