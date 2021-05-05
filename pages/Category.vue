@@ -634,13 +634,16 @@ export default {
   }
 }
 
-// Title of categories
+// Title
+
 .title {
     grid-area: title;
     padding: var(--spacer-sm);
     border: 1px solid var(--c-light);
     border-width: 1px 1px 1px 0;
   }
+
+// Navbar
 
 .navbar {
   // To add more items to the navbar, add their grid-area to the template.
@@ -713,7 +716,7 @@ export default {
     justify-self: end;
   }
 
-  // It is useful when we will implement a grid/list view switcher.
+  // Grid/list view switcher.
   &__view {
     display: flex;
     align-items: center;
@@ -728,14 +731,12 @@ export default {
   }
 }
 
-// Styling the text of sort-by and counter of navbar.
 .label {
   font: var(--font-normal) var(--font-base) / 1.6 var(--font-family-secondary);
   color: var(--c-link);
   margin-right: var(--spacer-2xs);
 }
 
-// Counter items
 .count {
   color: var(--c-text-muted);
 }
@@ -767,6 +768,8 @@ export default {
   }
 }
 
+//Categories
+
 .categories {
   grid-area: categories;
   padding: var(--spacer-sm);
@@ -781,6 +784,8 @@ export default {
     }
   }
 }
+
+//Products
 
 .products {
   grid-area: products;
@@ -838,7 +843,8 @@ export default {
   }
 }
 
-// Sidebar filters styling
+// Sidebar
+
 .sidebar-filters {
   --sidebar-title-display: none;
   --sidebar-top-padding: 0;
