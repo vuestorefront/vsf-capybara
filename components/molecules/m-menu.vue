@@ -1,52 +1,51 @@
 <template>
   <div class="m-menu sf-mega-menu bg-white">
     <SfMegaMenu
-      :title="title || currentCategoryTitle"
+      :title="title"
       :visible="visible"
     >
       <SfMegaMenuColumn
-        v-for="category in categories"
-        :key="category.id"
-        :title="category.name"
+        title="Custom Products"
       >
         <SfList>
           <SfListItem
-            v-for="item in category.items"
-            :key="item.id"
+            v-for="item in customProductsItems"
+            :key="item.label"
           >
             <router-link
-              :to="item.link"
+              :to="item.url"
               @click.native="$emit('close')"
             >
-              <SfMenuItem :label="item.name" />
+              <SfMenuItem :label="item.label" />
             </router-link>
           </SfListItem>
         </SfList>
       </SfMegaMenuColumn>
-      <template #aside>
-        <div class="aside-menu">
-          <SfBanner
-            v-for="(banner, i) in banners"
-            :key="i"
-            :title="banner.title"
-            :image="banner.image"
-            class="aside-banner"
-            :class="`aside-banner--${banner.type}`"
-          />
-        </div>
-      </template>
+
+      <SfMegaMenuColumn
+        title="Other Products"
+      >
+        <SfList>
+          <SfListItem
+            v-for="item in otherProductsItems"
+            :key="item.label"
+          >
+            <router-link
+              :to="item.url"
+              @click.native="$emit('close')"
+            >
+              <SfMenuItem :label="item.label" />
+            </router-link>
+          </SfListItem>
+        </SfList>
+      </SfMegaMenuColumn>
     </SfMegaMenu>
   </div>
 </template>
 <script>
-import { SfMegaMenu, SfList, SfMenuItem, SfBanner } from '@storefront-ui/vue';
-import config from 'config'
-import get from 'lodash-es/get'
-import { prepareCategoryMenuItem } from 'theme/helpers';
-import { mapGetters, mapState } from 'vuex';
-import { checkWebpSupport } from 'theme/helpers'
+import { SfMegaMenu, SfList, SfMenuItem } from '@storefront-ui/vue';
 export default {
-  components: { SfMegaMenu, SfList, SfMenuItem, SfBanner },
+  components: { SfMegaMenu, SfList, SfMenuItem },
   props: {
     visible: {
       type: Boolean,
@@ -55,50 +54,50 @@ export default {
     title: {
       type: String,
       default: ''
-    },
-    categoriesIds: {
-      type: Array,
-      default: () => []
     }
   },
-  computed: {
-    ...mapState({
-      isWebpSupported: state => state.ui.isWebpSupported
-    }),
-    ...mapGetters({
-      getCategories: 'category/getCategories',
-      getCurrentCategory: 'category/getCurrentCategory',
-      getPromotedOffers: 'promoted/getPromotedOffers'
-    }),
-    categories () {
-      return this.categoriesIds
-        .map(({ id, children_data: childrenData = [] }) => {
-          const subCategories = childrenData
-            .map(subCategory => prepareCategoryMenuItem(
-              this.getCategories.find(category => category.id === subCategory.id)
-            ))
-            .filter(Boolean)
-            .sort((a, b) => a.position - b.position)
-
-          const category = this.getCategories.find(category => category.id === id)
-          const viewAllMenuItem = prepareCategoryMenuItem({
-            ...category,
-            name: this.$t('View all'),
-            position: 0
-          });
-
-          return {
-            ...prepareCategoryMenuItem(category),
-            items: [viewAllMenuItem, ...subCategories]
-          };
-        })
-        .sort((a, b) => a.position - b.position);
-    },
-    currentCategoryTitle () {
-      return this.getCurrentCategory.name || ''
-    },
-    banners () {
-      return checkWebpSupport(this.getPromotedOffers.menuAsideBanners, this.isWebpSupported)
+  data () {
+    return {
+      customProductsItems: [
+        {
+          label: 'Petsies Stuffed Animals',
+          url: '/'
+        },
+        {
+          label: 'Pet Shaped Pillows',
+          url: '/'
+        },
+        {
+          label: 'Square Photo Pillows',
+          url: '/'
+        },
+        {
+          label: 'Pet Socks',
+          url: '/'
+        },
+        {
+          label: 'Face Masks',
+          url: '/'
+        },
+        {
+          label: 'Pet Keychains',
+          url: '/'
+        }
+      ],
+      otherProductsItems: [
+        {
+          label: 'Gift Boxes',
+          url: '/'
+        },
+        {
+          label: 'Accessories',
+          url: '/'
+        },
+        {
+          label: 'Bulk Orders',
+          url: '/'
+        }
+      ]
     }
   }
 }
@@ -122,34 +121,6 @@ export default {
     @include for-desktop {
       flex-wrap: wrap;
       flex: 0 1 auto;
-    }
-  }
-}
-.aside-menu {
-  display: flex;
-  justify-content: stretch;
-  flex-wrap: wrap;
-  @include for-desktop {
-     justify-content: space-between;
-  }
-}
-.sf-banner {
-  &.aside-banner {
-    margin-bottom: var(--spacer-sm);
-    text-transform: uppercase;
-    display: none;
-    --banner-height: 300px;
-    &--mobile {
-      @include for-mobile {
-        display: block;
-      }
-    }
-    &--desktop {
-      --banner-width: 300px;
-      margin: 0 var(--spacer-sm);
-      @include for-desktop {
-        display: block;
-      }
     }
   }
 }

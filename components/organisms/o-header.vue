@@ -18,24 +18,63 @@
       </template>
       <template #navigation>
         <SfHeaderNavigationItem
-          v-for="category in categories"
-          :key="category.id"
           @mouseover="isHoveredMenu = true"
           @mouseleave="isHoveredMenu = false"
         >
-          <router-link
-            :class="{active: isCategoryActive(category)}"
-            :to="categoryLink(category)"
-          >
-            {{ category.name }}
-          </router-link>
+          <div>
+            Products
+          </div>
           <MMenu
             :visible="isHoveredMenu && !isSearchPanelVisible"
-            :categories-ids="category.children_data"
-            :title="category.name"
             @close="isHoveredMenu = false"
           />
         </SfHeaderNavigationItem>
+        <SfHeaderNavigationItem>
+          <router-link
+            to="/"
+          >
+            Gift Cards
+          </router-link>
+        </SfHeaderNavigationItem>
+        <SfHeaderNavigationItem>
+          <router-link
+            to="/"
+          >
+            Reviews
+          </router-link>
+        </SfHeaderNavigationItem>
+        <SfHeaderNavigationItem>
+          <router-link
+            to="/"
+          >
+            Pricing
+          </router-link>
+        </SfHeaderNavigationItem>
+        <div
+          class="_dropdown-container"
+          @mouseover="isDropdownOpen = true"
+          @mouseleave="isDropdownOpen = false"
+        >
+          <SfButton>
+            Make your own
+          </SfButton>
+          <SfDropdown
+            :is-open="isDropdownOpen"
+          >
+            <SfList>
+              <SfListItem
+                v-for="action in dropdownActions"
+                :key="action.label"
+              >
+                <router-link
+                  :to="action.url"
+                >
+                  {{ action.label }}
+                </router-link>
+              </SfListItem>
+            </SfList>
+          </SfDropdown>
+        </div>
       </template>
       <template #search>
         <div class="search-container">
@@ -66,21 +105,21 @@
 </template>
 
 <script>
-import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay, SfButton, SfDropdown, SfList } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
-import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
-import { getTopLevelCategories } from 'theme/helpers';
 
 export default {
   name: 'OHeader',
   components: {
     SfHeader,
     SfButton,
+    SfDropdown,
+    SfList,
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
@@ -90,7 +129,34 @@ export default {
   },
   data () {
     return {
-      isHoveredMenu: false
+      isHoveredMenu: false,
+      isDropdownOpen: false,
+      dropdownActions: [
+        {
+          label: 'Custom Petsies',
+          url: '/'
+        },
+        {
+          label: 'Custom Pillows',
+          url: '/'
+        },
+        {
+          label: 'Custom Socks',
+          url: '/'
+        },
+        {
+          label: 'Face Masks',
+          url: '/'
+        },
+        {
+          label: 'Pet Keychains',
+          url: '/'
+        },
+        {
+          label: 'Gift Box',
+          url: '/'
+        }
+      ]
     }
   },
   computed: {
@@ -98,21 +164,9 @@ export default {
       isSearchPanelVisible: state => state.ui.searchpanel
     }),
     ...mapState('ui', ['isMobileMenu']),
-    ...mapGetters('category', ['getCategories', 'getCurrentCategory']),
     ...mapGetters('user', ['isLoggedIn']),
     activeIcon () {
       return this.isLoggedIn ? 'account' : '';
-    },
-    categories () {
-      return getTopLevelCategories(this.getCategories);
-    }
-  },
-  methods: {
-    categoryLink (category) {
-      return formatCategoryLink(category);
-    },
-    isCategoryActive (category) {
-      return this.getCurrentCategory.path ? this.getCurrentCategory.path.startsWith(category.path) : false;
     }
   },
   watch: {
@@ -151,7 +205,8 @@ export default {
   z-index: 1;
 }
 .o-header {
-  --header-navigation-item-margin: 0 2rem 0 0;
+  --header-navigation-item-margin: 0;
+  --header-navigation-item-padding: var(--spacer-lg) 0;
   box-sizing: border-box;
   a {
     &.active {
@@ -167,6 +222,26 @@ export default {
       width: 100%;
       .sf-button {
         margin: 0 0 0 var(--spacer-sm);
+      }
+    }
+  }
+  ._dropdown-container {
+    position: relative;
+    align-self: center;
+    .sf-button {
+      --button-font-size: var(--font-sm);
+      --button-font-line-height: 1;
+    }
+    .sf-dropdown {
+      --dropdown-background: var(--c-primary);
+      --c-link: var(--c-light-variant);
+      --c-link-hover: var(--c-light-variant);
+      --list-item-padding: var(--spacer-xs) var(--spacer-sm);
+
+      .sf-list__item {
+        &:hover {
+          background-color: var(--c-light);
+        }
       }
     }
   }
