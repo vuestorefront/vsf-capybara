@@ -26,7 +26,7 @@
             <router-link to="/legal" exact>
               <SfMenuItem
                 class="sf-footer__menu-item"
-                :label="$t('Legal notice')"
+                :label="$t('Terms of Service')"
               />
             </router-link>
           </SfListItem>
@@ -45,19 +45,18 @@
               :label="currentLanguage"
             />
           </SfListItem>
-          <SfListItem class="sf-footer__menu-item">
-            {{ getVersionInfo }}
-          </SfListItem>
         </SfList>
       </SfFooterColumn>
       <SfFooterColumn :title="$t('Social')" class="social-column">
         <div class="social-icon">
-          <img
+          <a
+            :href="item.url"
             v-for="item in social"
             :key="item"
-            :src="'/assets/icons/' + item + '.svg'"
-            class="social-icon__img"
-          >
+            class="social-icon__link"
+            :class="'-' + item.name"
+            target="_blank"
+          />
         </div>
       </SfFooterColumn>
     </SfFooter>
@@ -85,16 +84,30 @@ export default {
   },
   data () {
     return {
-      social: ['facebook', 'pinterest', 'twitter', 'youtube']
+      social: [
+        {
+          name: 'facebook',
+          url: 'https://www.facebook.com/petsies/'
+        },
+        {
+          name: 'instagram',
+          url: 'https://www.instagram.com/petsies/'
+        },
+        {
+          name: 'twitter',
+          url: 'https://twitter.com/petsiesofficial/'
+        },
+        {
+          name: 'pinterest',
+          url: 'https://www.pinterest.com/petsies/'
+        }
+      ]
     };
   },
   computed: {
     ...mapGetters('user', ['isLoggedIn']),
     multistoreEnabled () {
       return get(config, 'storeViews.multistore', false);
-    },
-    getVersionInfo () {
-      return `v${process.env.__APPVERSION__} ${process.env.__BUILDTIME__}`;
     },
     currentLanguage () {
       const { i18n = config.i18n } = currentStoreView();
@@ -157,14 +170,13 @@ export default {
 
 .o-footer {
   background-color: var(--c-footer);
+  padding-bottom: var(--spacer-lg);
   .sf-menu-item {
+    --menu-item-font-size: var(--font-sm);
     --menu-item-label-color: var(--c-light-variant);
     &:hover {
       --menu-item-label-color: var(--c-light-variant);
     }
-  }
-  @include for-desktop {
-    max-width: 100%;
   }
   .sf-footer {
     --footer-width: 1272px;
@@ -172,20 +184,39 @@ export default {
     --footer-column-title-color: var(--c-light-variant);
     --footer-column-title-background: var(--c-footer);
   }
-}
-.social-column {
-  flex-basis: auto;
-}
-.social-icon {
-  padding: var(--spacer-sm) var(--spacer-xl);
-  @include for-desktop {
-    padding: var(--spacer-xs) 0;
-  }
-  &__img {
-    height: 1.75rem;
-    &:not(:last-child) {
-      margin-right: var(--spacer-base);
+  .sf-list {
+    &__item {
+      --list-item-margin: var(--spacer-2xs) 0;
     }
+  }
+  .social-column {
+    flex-basis: auto;
+  }
+  .social-icon {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacer-sm) var(--spacer-xl);
+    &__link {
+      background-image: url(../../assets/footer-socials.png);
+      display: block;
+      height: 42px;
+      width: 42px;
+      &.-facebook {
+        background-position: -1px -1px;
+      }
+      &.-instagram {
+        background-position: -45px -1px;
+      }
+      &.-twitter {
+        background-position: -89px -1px;
+      }
+      &.-pinterest {
+        background-position: -133px -1px;
+      }
+    }
+  }
+  @include for-desktop {
+    max-width: 100%;
   }
 }
 </style>
