@@ -1,5 +1,5 @@
 <template>
-  <div class="o-bottom-navigation">
+  <div class="o-top-navigation">
     <SfBottomNavigation>
       <SfBottomNavigationItem
         v-for="item in navigationItems"
@@ -9,6 +9,16 @@
         :is-floating="item.isFloating"
         :is-active="isActive(item.icon)"
         @click.native="item.onClick"
+      />
+      <ALogo />
+      <SfButton>
+        Make your own
+      </SfButton>
+      <SfBottomNavigationItem
+        icon="add_to_cart"
+        :is-floating="true"
+        :is-active="isActive('add_to_cart')"
+        @click.native="goToCart"
       />
     </SfBottomNavigation>
   </div>
@@ -21,21 +31,22 @@ import AHomeIcon from 'theme/components/atoms/a-home-icon';
 import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
-import { SfBottomNavigation } from '@storefront-ui/vue';
+import { SfBottomNavigation, SfButton } from '@storefront-ui/vue';
+import ALogo from 'theme/components/atoms/a-logo.vue';
 
 export default {
-  name: 'OBottomNavigation',
+  name: 'OTopNavigation',
   components: {
-    SfBottomNavigation
+    SfBottomNavigation,
+    SfButton,
+    ALogo
   },
   data () {
     return {
       navigationItems: [
-        { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
-        { icon: 'menu', label: '', onClick: this.goToMenu },
-        { icon: 'search', label: '', onClick: this.goToSearch },
-        { icon: 'account', label: '', onClick: this.goToAccount },
-        { icon: 'add_to_cart', label: '', onClick: this.goToCart, isFloating: true }
+        { icon: 'list', label: '', onClick: this.goToMenu },
+        // { icon: 'search', label: '', onClick: this.goToSearch },
+        { icon: 'account', label: '', onClick: this.goToAccount }
       ]
     }
   },
@@ -110,17 +121,19 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.o-bottom-navigation {
+.o-top-navigation {
   position: relative;
-  min-height: var(--bottom-navigation-height);
+  min-height: calc(var(--bottom-navigation-height) + var(--spacer-base));
   z-index: 1;
-  @include for-desktop() {
-    display: none;
+  .sf-button {
+    --button-font-size: var(--font-sm);
+    --button-font-line-height: 1;
   }
   ::v-deep .sf-bottom-navigation {
     top: 0;
     bottom: auto;
     z-index: inherit;
+    align-items: center;
     .sf-bottom-navigation-item {
       cursor: pointer;
       .sf-circle-icon {
@@ -128,6 +141,9 @@ export default {
         top: 50%;
       }
     }
+  }
+  @include for-desktop() {
+    display: none;
   }
 }
 </style>

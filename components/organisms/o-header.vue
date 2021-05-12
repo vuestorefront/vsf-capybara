@@ -77,14 +77,15 @@
         </div>
       </template>
       <template #search>
-        <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
+        <div />
+        <!-- <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
         <SfButton
           v-if="isSearchPanelVisible"
           class="sf-button--text form__action-button form__action-button--secondary mobile-only"
           @click="$store.commit('ui/setSearchpanel', false)"
         >
           {{ $t("Cancel") }}
-        </SfButton>
+        </SfButton> -->
       </template>
       <template #header-icons>
         <div class="sf-header__icons">
@@ -191,7 +192,6 @@ export default {
   z-index: 1;
 }
 .o-header {
-  display: none;
   --header-navigation-item-margin: 0;
   --header-navigation-item-padding: var(--spacer-lg) var(--spacer-xs);
   box-sizing: border-box;
@@ -236,27 +236,30 @@ export default {
     }
   }
   .sf-header {
-    &__icons {
-      display: none;
-    }
-    &__action {
-      --header-action-margin: 0 0 0 var(--spacer-base);
-    }
+    display: none;
   }
-  ::v-deep .sf-header__navigation {
-    --header-navigation-margin: 0 auto;
+  ::v-deep .sf-header {
+    --header-logo-margin: 0 0 var(--spacer-sm) 0;
+    &__navigation {
+      --header-navigation-margin: 0 var(--spacer-base);
+      justify-content: space-evenly;
+      flex-grow: 2;
+    }
+    &__actions {
+      justify-content: space-between;
+    }
   }
   .mobile-menu {
     position: fixed;
     opacity: 1;
     visibility: visible;
-    top: 0;
+    top: var(--bottom-navigation-height);
     z-index: 1;
     --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
   }
   @include for-desktop {
-    display: block;
     .sf-header {
+      display: block;
       --header-navigation-margin: 0 auto;
     }
     .mobile-menu {
