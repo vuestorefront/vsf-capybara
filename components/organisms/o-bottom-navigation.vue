@@ -32,10 +32,10 @@ export default {
     return {
       navigationItems: [
         { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
-        { icon: 'menu', label: this.$t('Menu'), onClick: this.goToMenu },
-        { icon: 'search', label: this.$t('Search'), onClick: this.goToSearch },
-        { icon: 'account', label: this.$t('Profile'), onClick: this.goToAccount },
-        { icon: 'add_to_cart', label: this.$t('Cart'), onClick: this.goToCart, isFloating: true }
+        { icon: 'menu', label: '', onClick: this.goToMenu },
+        { icon: 'search', label: '', onClick: this.goToSearch },
+        { icon: 'account', label: '', onClick: this.goToAccount },
+        { icon: 'add_to_cart', label: '', onClick: this.goToCart, isFloating: true }
       ]
     }
   },
@@ -112,14 +112,21 @@ export default {
 
 .o-bottom-navigation {
   position: relative;
+  min-height: var(--bottom-navigation-height);
   z-index: 1;
   @include for-desktop() {
     display: none;
   }
   ::v-deep .sf-bottom-navigation {
+    top: 0;
+    bottom: auto;
     z-index: inherit;
     .sf-bottom-navigation-item {
       cursor: pointer;
+      .sf-circle-icon {
+        --button-size: 3rem;
+        top: 50%;
+      }
     }
   }
 }

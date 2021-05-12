@@ -77,16 +77,14 @@
         </div>
       </template>
       <template #search>
-        <div class="search-container">
-          <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
-          <SfButton
-            v-if="isSearchPanelVisible"
-            class="sf-button--text form__action-button form__action-button--secondary mobile-only"
-            @click="$store.commit('ui/setSearchpanel', false)"
-          >
-            {{ $t("Cancel") }}
-          </SfButton>
-        </div>
+        <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
+        <SfButton
+          v-if="isSearchPanelVisible"
+          class="sf-button--text form__action-button form__action-button--secondary mobile-only"
+          @click="$store.commit('ui/setSearchpanel', false)"
+        >
+          {{ $t("Cancel") }}
+        </SfButton>
       </template>
       <template #header-icons>
         <div class="sf-header__icons">
@@ -185,43 +183,35 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.sf-header-navigation-item {
-  &::after {
-    bottom: 0;
-    width: 0;
-  }
-  &:hover {
-    .m-menu {
-      opacity: 1;
-      visibility: visible;
-    }
-    &::after {
-      width: 100%;
-    }
-  }
+.a-logo {
+  margin-right: var(--spacer-lg);
 }
 .overlay {
   position: absolute;
   z-index: 1;
 }
 .o-header {
+  display: none;
   --header-navigation-item-margin: 0;
-  --header-navigation-item-padding: var(--spacer-lg) 0;
+  --header-navigation-item-padding: var(--spacer-lg) var(--spacer-xs);
   box-sizing: border-box;
   a {
     &.active {
       font-weight: bold;
     }
   }
-  .search-container {
-    display: flex;
-    .o-search {
-      flex-grow: 1;
+  .sf-header-navigation-item {
+    &::after {
+      bottom: 0;
+      width: 0;
     }
-    @include for-mobile {
-      width: 100%;
-      .sf-button {
-        margin: 0 0 0 var(--spacer-sm);
+    &:hover {
+      .m-menu {
+        opacity: 1;
+        visibility: visible;
+      }
+      &::after {
+        width: 100%;
       }
     }
   }
@@ -245,28 +235,40 @@ export default {
       }
     }
   }
-  @include for-mobile {
-    .mobile-menu {
-      position: fixed;
-      opacity: 1;
-      visibility: visible;
-      top: 0;
-      z-index: 1;
-      --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
-    }
-  }
-}
-.sf-header {
-  @include for-mobile {
+  .sf-header {
     &__icons {
       display: none;
     }
+    &__action {
+      --header-action-margin: 0 0 0 var(--spacer-base);
+    }
+  }
+  ::v-deep .sf-header__navigation {
+    --header-navigation-margin: 0 auto;
+  }
+  .mobile-menu {
+    position: fixed;
+    opacity: 1;
+    visibility: visible;
+    top: 0;
+    z-index: 1;
+    --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
   }
   @include for-desktop {
-    &__icons {
-      display: flex;
-      .sf-header__icon {
-        cursor: pointer;
+    display: block;
+    .sf-header {
+      --header-navigation-margin: 0 auto;
+    }
+    .mobile-menu {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .sf-header {
+      &__icons {
+        display: flex;
+        .sf-header__icon {
+          cursor: pointer;
+        }
       }
     }
   }

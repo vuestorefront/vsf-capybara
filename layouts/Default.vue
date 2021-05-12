@@ -2,6 +2,7 @@
   <div class="default-layout">
     <MLoader />
     <div id="viewport">
+      <OBottomNavigation />
       <OHeader />
       <OMicrocart />
       <div class="content">
@@ -12,7 +13,6 @@
       <ONotification />
       <MCookieNotification />
       <MOfflineBadge />
-      <OBottomNavigation />
     </div>
     <vue-progress-bar />
   </div>
