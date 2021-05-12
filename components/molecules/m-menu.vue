@@ -91,7 +91,7 @@ export default {
         },
         {
           label: 'Accessories',
-          url: '/'
+          url: '/c/petsies-accessories-11'
         },
         {
           label: 'Bulk Orders',
