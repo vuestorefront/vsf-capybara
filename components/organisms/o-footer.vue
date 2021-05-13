@@ -1,6 +1,10 @@
 <template>
   <footer class="o-footer">
-    <SfFooter :column="5" :multiple="true">
+    <div class="o-footer__logo" />
+    <div class="o-footer__slogan">
+      Handmade pet keepsakes
+    </div>
+    <SfFooter :column="6" :multiple="true">
       <SfFooterColumn
         v-for="linkGroup in links"
         :key="linkGroup.name"
@@ -47,7 +51,13 @@
           </SfListItem>
         </SfList>
       </SfFooterColumn>
-      <SfFooterColumn :title="$t('Social')" class="social-column">
+      <SfFooterColumn title="Get more @Petsies cuteness" class="social-column">
+        <form class="o-footer__subscribe">
+          <SfInput v-model="subscribeEmail" name="subscribeEmail" label="Email address" :required="true" />
+          <SfButton class="_typography-form-button color-primary">
+            Join
+          </SfButton>
+        </form>
         <div class="social-icon">
           <a
             :href="item.url"
@@ -67,7 +77,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ABackToTop from 'theme/components/atoms/a-back-to-top';
-import { SfFooter, SfList, SfMenuItem } from '@storefront-ui/vue';
+import { SfFooter, SfList, SfMenuItem, SfInput, SfButton } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { getPathForStaticPage } from 'theme/helpers';
 import config from 'config';
@@ -80,7 +90,15 @@ export default {
     ABackToTop,
     SfFooter,
     SfList,
-    SfMenuItem
+    SfMenuItem,
+    SfInput,
+    SfButton
+  },
+  props: {
+    subscribeEmail: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {
@@ -171,6 +189,40 @@ export default {
 .o-footer {
   background-color: var(--c-footer);
   padding-bottom: var(--spacer-lg);
+  margin-top: calc(var(--spacer-2xl) + var(--spacer-xl));
+  &__logo {
+    background-image: url(../../assets/logo-footer.png);
+    height: 121px;
+    margin: -60px auto 0;
+    width: 127px;
+  }
+  &__slogan {
+    text-align: center;
+    color: var(--c-light-variant);
+    font-family: var(--font-family-intro);
+    font-size: var(--font-2xl);
+    margin: var(--spacer-base) 0;
+  }
+  &__subscribe {
+    --input-background: var(--c-light-variant);
+    display: flex;
+    align-items: flex-start;
+    ::v-deep .sf-input {
+      &__wrapper {
+        border: solid var(--c-light-variant) 3px;
+        border-radius: 5px;
+      }
+      &__label {
+        font-size: var(--font-sm);
+      }
+      input {
+        --input-border: none;
+      }
+    }
+    .sf-button {
+      margin-left: var(--spacer-base);
+    }
+  }
   .sf-menu-item {
     --menu-item-font-size: var(--font-sm);
     --menu-item-label-color: var(--c-light-variant);
@@ -194,13 +246,14 @@ export default {
   }
   .social-icon {
     display: flex;
-    justify-content: space-between;
-    padding: var(--spacer-sm) var(--spacer-xl);
+    justify-content: flex-start;
+    padding: var(--spacer-sm) 0;
     &__link {
       background-image: url(../../assets/footer-socials.png);
       display: block;
       height: 42px;
       width: 42px;
+      margin-right: var(--spacer-base);
       &.-facebook {
         background-position: -1px -1px;
       }
