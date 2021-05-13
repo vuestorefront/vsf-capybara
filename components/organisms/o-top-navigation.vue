@@ -126,19 +126,27 @@ export default {
   min-height: calc(var(--bottom-navigation-height) + var(--spacer-base));
   z-index: 1;
   .sf-button {
-    --button-font-size: var(--font-sm);
+    --button-font-size: var(--font-2xs);
     --button-font-line-height: 1;
+    --button-padding: calc(var(--spacer-2xs) * 3) var(--spacer-sm);
   }
+  ::v-deep .sf-header {
+      &__logo {
+        --header-logo-height: 1.5rem;
+      }
+    }
   ::v-deep .sf-bottom-navigation {
     top: 0;
     bottom: auto;
     z-index: inherit;
     align-items: center;
+    justify-content: space-between;
     .sf-bottom-navigation-item {
       cursor: pointer;
       .sf-circle-icon {
-        --button-size: 3rem;
-        top: 50%;
+        --button-size: 2.5rem;
+        --circle-icon-position: static;
+        transform: none;
       }
     }
   }

@@ -97,7 +97,6 @@
     <MMenu
       v-show="isMobileMenu"
       class="mobile-menu"
-      :categories-ids="categories"
       @close="$store.commit('ui/closeMenu')"
     />
   </div>
@@ -194,6 +193,7 @@ export default {
 .o-header {
   --header-navigation-item-margin: 0;
   --header-navigation-item-padding: var(--spacer-lg) var(--spacer-xs);
+  --header-navigation-item-color: var(--c-dark);
   box-sizing: border-box;
   a {
     &.active {
@@ -258,15 +258,15 @@ export default {
     --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
   }
   @include for-desktop {
-    .sf-header {
-      display: block;
-      --header-navigation-margin: 0 auto;
-    }
     .mobile-menu {
       opacity: 0;
       visibility: hidden;
     }
     .sf-header {
+      display: block;
+      --header-navigation-margin: 0 auto;
+    }
+    ::v-deep .sf-header {
       &__icons {
         display: flex;
         .sf-header__icon {

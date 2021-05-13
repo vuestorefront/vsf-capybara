@@ -117,10 +117,18 @@ export default {
   .router-link-exact-active {
     --menu-item-font-weight: bold;
   }
+  .sf-menu-item {
+    --menu-item-label-color: var(--c-dark);
+  }
   .sf-mega-menu__menu {
     @include for-desktop {
       flex-wrap: wrap;
       flex: 0 1 auto;
+    }
+  }
+  .sf-mega-menu__content {
+    @include for-desktop {
+      --mega-menu-content-padding: var(--spacer-xl) var(--spacer-sm);
     }
   }
 }
