@@ -54,7 +54,7 @@
       <SfFooterColumn title="Get more @Petsies cuteness" class="social-column">
         <form class="o-footer__subscribe">
           <SfInput v-model="subscribeEmail" name="subscribeEmail" label="Email address" :required="true" />
-          <SfButton class="_typography-form-button color-primary">
+          <SfButton class="color-primary">
             Join
           </SfButton>
         </form>
@@ -213,21 +213,37 @@ export default {
         border-radius: 5px;
       }
       &__label {
-        font-size: var(--font-sm);
+        --input-label-font-size: var(--font-sm);
       }
       input {
         --input-border: none;
+        --input-font-size: var(--font-sm);
+        &:focus {
+          & ~ * {
+            --input-label-font-size: var(--font-2xs);
+          }
+        }
+      }
+      &--has-text,
+      &--filled {
+        .sf-input__label {
+          --input-label-font-size: var(--font-2xs);
+        }
       }
     }
     .sf-button {
       margin-left: var(--spacer-base);
+      --button-font-size: var(--font-xs);
     }
   }
-  .sf-menu-item {
+  ::v-deep .sf-menu-item {
     --menu-item-font-size: var(--font-sm);
     --menu-item-label-color: var(--c-light-variant);
     &:hover {
       --menu-item-label-color: var(--c-light-variant);
+    }
+    .sf-icon {
+      --icon-color: var(--c-light-variant);
     }
   }
   .sf-footer {
@@ -236,9 +252,19 @@ export default {
     --footer-column-title-color: var(--c-light-variant);
     --footer-column-title-background: var(--c-footer);
   }
+  ::v-deep .sf-footer-column__content {
+    padding: 0 var(--spacer-xl);
+  }
   .sf-list {
     &__item {
       --list-item-margin: var(--spacer-2xs) 0;
+    }
+  }
+  ::v-deep .sf-chevron {
+    &__bar {
+      &:after {
+        --chevron-color: var(--c-light-variant);
+      }
     }
   }
   .social-column {
@@ -270,6 +296,9 @@ export default {
   }
   @include for-desktop {
     max-width: 100%;
+    ::v-deep .sf-footer-column__content {
+      padding: 0;
+    }
   }
 }
 </style>
