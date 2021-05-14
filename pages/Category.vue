@@ -757,6 +757,10 @@ export default {
   padding: var(--spacer-sm);
   border: 1px solid var(--c-light);
   border-width: 0 1px 0 0;
+
+  ::v-deep .sf-accordion-item__header {
+    text-align: left;
+  }
 }
 .sidebar-filters {
   --sidebar-title-display: none;
