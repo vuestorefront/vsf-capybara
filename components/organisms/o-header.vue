@@ -52,7 +52,8 @@
       <template #header-icons>
         <div class="sf-header__icons">
           <AAccountIcon class="sf-header__action" />
-          <AMicrocartIcon class="sf-header__action" />
+          <!-- <AMicrocartIcon class="sf-header__action" /> -->
+          <ADetailedCartIcon class="sf-header__action" />
         </div>
       </template>
     </SfHeader>
@@ -70,6 +71,7 @@ import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
+import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
@@ -84,6 +86,7 @@ export default {
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
+    ADetailedCartIcon,
     OSearch,
     MMenu,
     SfOverlay
