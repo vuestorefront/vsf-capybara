@@ -12,7 +12,7 @@
         <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
       </div>
       <div class="navbar__main">
-        <div class="navbar__filter">
+        <div class="navbar__filter" v-if="false">
           <SfButton
             class="sf-button--text navbar__filters-button"
             @click="isFilterSidebarOpen = true"
@@ -28,7 +28,7 @@
             </button>
           </template>
         </div>
-        <div class="navbar__sort">
+        <div class="navbar__sort" v-if="false">
           <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
           <SfSelect
             class="navbar__select sort-by"
