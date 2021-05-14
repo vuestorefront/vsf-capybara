@@ -131,9 +131,6 @@ export default {
       default: true
     }
   },
-  created () {
-    console.log(this.products)
-  },
   computed: {
     ...mapGetters({
       products: 'cart/getCartItems'
