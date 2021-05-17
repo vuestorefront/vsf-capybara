@@ -12,7 +12,6 @@
       <MProductShortInfo
         :product="product"
         :custom-options="productCustomOptions"
-        :reviews="reviews"
       />
       <SfButton
         v-show="sizeOption"
@@ -47,16 +46,12 @@
       </div>
       <MProductAdditionalInfo
         :product="product"
-        :reviews="reviews"
-        :attributes="productAttributes"
       />
     </div>
   </div>
 </template>
 <script>
 import get from 'lodash-es/get'
-import config from 'config';
-import { mapGetters, mapActions } from 'vuex';
 import { SfButton } from '@storefront-ui/vue';
 import MProductGallery from 'theme/components/molecules/m-product-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
@@ -67,6 +62,7 @@ import MProductOptionsBundle from 'theme/components/molecules/m-product-options-
 import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
 import MProductOptionsGroup from 'theme/components/molecules/m-product-options-group';
 import { ModalList } from 'theme/store/ui/modals';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
@@ -120,15 +116,6 @@ export default {
         }
       }));
     },
-    reviews () {
-      const baseReviews = get(this.$store.state.review, 'items.items', [])
-      return baseReviews.map((review) => ({
-        author: review.nickname,
-        date: review.created_at,
-        message: `${review.title}: ${review.detail}`,
-        rating: 1 // TODO: remove hardcode
-      }))
-    },
     availability () {
       return this.product.stock && this.product.stock.is_in_stock ? 'InStock' : 'OutOfStock'
     },
@@ -148,6 +135,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.o-product-details {
+  .m-product-additional-info {
+    margin-top: var(--spacer-lg);
+  }
+}
 
 .product {
   @include for-desktop {
