@@ -7,12 +7,13 @@
         </router-link>
       </template>
     </SfBreadcrumbs>
-    <div class="navbar section">
+
+    <div class="navbar section"  v-if="false">
       <div class="navbar__aside desktop-only">
         <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
       </div>
       <div class="navbar__main">
-        <div class="navbar__filter" v-if="false">
+        <div class="navbar__filter">
           <SfButton
             class="sf-button--text navbar__filters-button"
             @click="isFilterSidebarOpen = true"
@@ -28,7 +29,7 @@
             </button>
           </template>
         </div>
-        <div class="navbar__sort" v-if="false">
+        <div class="navbar__sort">
           <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
           <SfSelect
             class="navbar__select sort-by"
@@ -65,7 +66,7 @@
       </div>
     </div>
     <div class="main section">
-      <div class="sidebar desktop-only">
+      <div class="sidebar desktop-only" v-if="false">
         <SfAccordion :show-chevron="false">
           <SfAccordionItem
             v-for="category in categories"
