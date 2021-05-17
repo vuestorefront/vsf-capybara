@@ -8,6 +8,16 @@
       </template>
     </SfBreadcrumbs>
 
+    <div class="page-header">
+      <SfHeading :level="1" :title="$t(getCurrentCategory.name)" class="navbar__title" />
+    </div>
+
+    <div 
+      class="category__short-description" 
+      v-html="getCurrentCategory.short_desc"
+    > 
+    </div>
+
     <div class="navbar section"  v-if="false">
       <div class="navbar__aside desktop-only">
         <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
@@ -108,8 +118,6 @@
                 :image="product.image"
                 :regular-price="product.price.regular"
                 :special-price="product.price.special"
-                :max-rating="product.rating.max"
-                :score-rating="product.rating.score"
                 :link="product.link"
                 link-tag="router-link"
                 :wishlist-icon="false"
@@ -179,6 +187,12 @@
         </div>
       </template>
     </SfSidebar>
+
+    <div 
+      class="category__description" 
+      v-html="getCurrentCategory.description"
+    > 
+    </div>
   </div>
 </template>
 
@@ -597,12 +611,51 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "~@storefront-ui/shared/styles/components/atoms/SfHeading";
 
 #category {
   box-sizing: border-box;
   @include for-desktop {
     max-width: 1272px;
     margin: 0 auto;
+  }
+
+  .category__short-description,
+  .category__description {
+    margin: var(--spacer-sm) auto 0 auto;
+    max-width: 60em;
+    padding: 0 var(--spacer-xs);
+
+    ::v-deep h1,
+    ::v-deep h2,
+    ::v-deep h3,
+    ::v-deep h4,
+    ::v-deep h5,
+    ::v-deep h6 {
+      //@extend .sf-heading;
+      text-align: var(--heading-text-align, center);
+      @extend .sf-heading__title;
+    } 
+
+    ::v-deep h2 {
+      @extend .sf-heading__title--h2;
+    } 
+
+    ::v-deep h3 {
+      @extend .sf-heading__title--h3;
+    } 
+
+    ::v-deep h4 {
+      @extend .sf-heading__title--h4;
+    } 
+
+    ::v-deep h5 {
+      @extend .sf-heading__title--h5;
+    } 
+
+    ::v-deep h6 {
+      @extend .sf-heading__title--h6;
+    } 
   }
 }
 .main {
