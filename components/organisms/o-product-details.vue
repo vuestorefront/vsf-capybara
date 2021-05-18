@@ -4,9 +4,8 @@
     <meta itemprop="price" :content="parseFloat(product.price_incl_tax).toFixed(2)">
     <meta itemprop="availability" :content="availability">
     <meta itemprop="url" :content="product.url_path">
-    <MProductGallery
-      :gallery="gallery"
-      :configuration="productConfiguration"
+    <MZoomGallery
+      :images="gallery"
     />
     <div class="product__info">
       <MProductShortInfo
@@ -53,7 +52,7 @@
 <script>
 import get from 'lodash-es/get'
 import { SfButton } from '@storefront-ui/vue';
-import MProductGallery from 'theme/components/molecules/m-product-gallery';
+import MZoomGallery from 'theme/components/molecules/m-zoom-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
 import MProductAddToCart from 'theme/components/molecules/m-product-add-to-cart';
 import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
@@ -67,7 +66,7 @@ import { mapActions } from 'vuex';
 export default {
   components: {
     SfButton,
-    MProductGallery,
+    MZoomGallery,
     MProductShortInfo,
     MProductAddToCart,
     MProductAdditionalInfo,
@@ -105,15 +104,11 @@ export default {
   computed: {
     gallery () {
       return this.productGallery.map(imageObject => ({
-        id: imageObject.id,
-        mobile: {
-          url: imageObject.src,
-          alt: this.product.name
-        },
-        desktop: {
-          url: imageObject.src,
-          alt: this.product.name
-        }
+        stage: imageObject.src,
+        thumb: imageObject.src,
+        big: imageObject.src,
+        alt: this.product.name,
+        title: this.product.name
       }));
     },
     availability () {
@@ -139,6 +134,10 @@ export default {
 .o-product-details {
   .m-product-additional-info {
     margin-top: var(--spacer-lg);
+  }
+  .m-zoom-gallery {
+    flex: 1 1;
+    max-width: 42%;
   }
 }
 
