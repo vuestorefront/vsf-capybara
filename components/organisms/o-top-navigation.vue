@@ -125,6 +125,11 @@ export default {
   position: relative;
   min-height: calc(var(--bottom-navigation-height) + var(--spacer-base));
   z-index: 1;
+
+  .a-logo {
+    display: none;
+  }
+
   .sf-button {
     --button-font-size: var(--font-2xs);
     --button-font-line-height: 1;
@@ -150,6 +155,13 @@ export default {
       }
     }
   }
+
+  @media (min-width: 375px) {
+    .a-logo {
+      display: block;
+    }
+  }
+
   @include for-desktop() {
     display: none;
   }
