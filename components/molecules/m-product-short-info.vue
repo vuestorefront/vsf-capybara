@@ -3,7 +3,7 @@
     <div class="product__header">
       <SfHeading
         :title="product.name | htmlDecode"
-        :level="3"
+        :level="1"
         class="sf-heading--no-underline sf-heading--left"
       />
       <SfIcon
@@ -58,6 +58,11 @@ export default {
   &__header {
     display: flex;
     justify-content: space-between;
+
+    ::v-deep .sf-heading__title {
+      line-height: 1.2;
+    }
+
     @include for-desktop {
       margin: 0 auto;
     }
