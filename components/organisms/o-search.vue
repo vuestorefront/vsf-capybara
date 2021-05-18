@@ -71,3 +71,17 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.o-search {
+  margin-left: var(--spacer-xs);
+
+  .sf-search-bar {
+    @include for-desktop {
+      --search-bar-width: 14rem;
+    }
+  }
+}
+</style>
