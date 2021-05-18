@@ -122,6 +122,8 @@
                 link-tag="router-link"
                 :wishlist-icon="false"
                 class="products__product-card"
+                :imageHeight="352"
+                :imageWidth="352"
               />
             </transition-group>
           </lazy-hydrate>
@@ -843,9 +845,11 @@ export default {
   }
   &__grid {
     justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
   }
   &__product-card {
-    --product-card-max-width: 50%;
+    --product-card-max-width: none;
     flex: 1 1 50%;
   }
   &__product-card-horizontal {
@@ -859,8 +863,24 @@ export default {
     transition: all 0.2s ease;
     transition-delay: calc(0.1s * var(--index));
   }
+
+  @media (min-width: $tablet-min) {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+    }
+
+    &__product-card {
+      flex: 1 1 33%;
+    }
+  }
+
   @include for-desktop {
     margin: var(--spacer-sm) 0 0 var(--spacer-sm);
+    
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    }
+
     &__pagination {
       display: flex;
       justify-content: center;
@@ -874,6 +894,16 @@ export default {
     }
     &__list {
       margin: 0 0 0 var(--spacer-sm);
+    }
+  }
+
+  @media (min-width: $desktop-l-min) {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+    }
+
+    &__product-card {
+      flex: 1 1 20%;
     }
   }
 }
