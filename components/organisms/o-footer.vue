@@ -209,8 +209,7 @@ export default {
     align-items: flex-start;
     ::v-deep .sf-input {
       &__wrapper {
-        border: solid var(--c-light-variant) 3px;
-        border-radius: 5px;
+        margin-top: 3px;
       }
       &__label {
         --input-label-font-size: var(--font-sm);
