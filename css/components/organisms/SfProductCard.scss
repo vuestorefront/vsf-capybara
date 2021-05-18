@@ -1,0 +1,7 @@
+.sf-product-card {
+    @include for-desktop {
+        &__title {
+            --product-card-title-margin: var(--spacer-xs) 0 0 0;
+        }
+    }
+}

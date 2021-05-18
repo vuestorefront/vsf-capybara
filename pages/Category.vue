@@ -7,7 +7,18 @@
         </router-link>
       </template>
     </SfBreadcrumbs>
-    <div class="navbar section">
+
+    <div class="page-header">
+      <SfHeading :level="1" :title="$t(getCurrentCategory.name)" class="navbar__title" />
+    </div>
+
+    <div 
+      class="category__short-description" 
+      v-html="getCurrentCategory.short_desc"
+    > 
+    </div>
+
+    <div class="navbar section"  v-if="false">
       <div class="navbar__aside desktop-only">
         <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
       </div>
@@ -65,7 +76,7 @@
       </div>
     </div>
     <div class="main section">
-      <div class="sidebar desktop-only">
+      <div class="sidebar desktop-only" v-if="false">
         <SfAccordion :show-chevron="false">
           <SfAccordionItem
             v-for="category in categories"
@@ -107,12 +118,12 @@
                 :image="product.image"
                 :regular-price="product.price.regular"
                 :special-price="product.price.special"
-                :max-rating="product.rating.max"
-                :score-rating="product.rating.score"
                 :link="product.link"
                 link-tag="router-link"
                 :wishlist-icon="false"
                 class="products__product-card"
+                :imageHeight="352"
+                :imageWidth="352"
               />
             </transition-group>
           </lazy-hydrate>
@@ -178,6 +189,12 @@
         </div>
       </template>
     </SfSidebar>
+
+    <div 
+      class="category__description" 
+      v-html="getCurrentCategory.description"
+    > 
+    </div>
   </div>
 </template>
 
@@ -596,12 +613,51 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "~@storefront-ui/shared/styles/components/atoms/SfHeading";
 
 #category {
   box-sizing: border-box;
   @include for-desktop {
     max-width: 1272px;
     margin: 0 auto;
+  }
+
+  .category__short-description,
+  .category__description {
+    margin: var(--spacer-sm) auto 0 auto;
+    max-width: 60em;
+    padding: 0 var(--spacer-xs);
+
+    ::v-deep h1,
+    ::v-deep h2,
+    ::v-deep h3,
+    ::v-deep h4,
+    ::v-deep h5,
+    ::v-deep h6 {
+      //@extend .sf-heading;
+      text-align: var(--heading-text-align, center);
+      @extend .sf-heading__title;
+    } 
+
+    ::v-deep h2 {
+      @extend .sf-heading__title--h2;
+    } 
+
+    ::v-deep h3 {
+      @extend .sf-heading__title--h3;
+    } 
+
+    ::v-deep h4 {
+      @extend .sf-heading__title--h4;
+    } 
+
+    ::v-deep h5 {
+      @extend .sf-heading__title--h5;
+    } 
+
+    ::v-deep h6 {
+      @extend .sf-heading__title--h6;
+    } 
   }
 }
 .main {
@@ -757,6 +813,10 @@ export default {
   padding: var(--spacer-sm);
   border: 1px solid var(--c-light);
   border-width: 0 1px 0 0;
+
+  ::v-deep .sf-accordion-item__header {
+    text-align: left;
+  }
 }
 .sidebar-filters {
   --sidebar-title-display: none;
@@ -785,9 +845,11 @@ export default {
   }
   &__grid {
     justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
   }
   &__product-card {
-    --product-card-max-width: 50%;
+    --product-card-max-width: none;
     flex: 1 1 50%;
   }
   &__product-card-horizontal {
@@ -801,8 +863,24 @@ export default {
     transition: all 0.2s ease;
     transition-delay: calc(0.1s * var(--index));
   }
+
+  @media (min-width: $tablet-min) {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+    }
+
+    &__product-card {
+      flex: 1 1 33%;
+    }
+  }
+
   @include for-desktop {
     margin: var(--spacer-sm) 0 0 var(--spacer-sm);
+    
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    }
+
     &__pagination {
       display: flex;
       justify-content: center;
@@ -816,6 +894,16 @@ export default {
     }
     &__list {
       margin: 0 0 0 var(--spacer-sm);
+    }
+  }
+
+  @media (min-width: $desktop-l-min) {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+    }
+
+    &__product-card {
+      flex: 1 1 20%;
     }
   }
 }

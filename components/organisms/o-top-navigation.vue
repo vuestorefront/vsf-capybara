@@ -1,5 +1,5 @@
 <template>
-  <div class="o-bottom-navigation">
+  <div class="o-top-navigation">
     <SfBottomNavigation>
       <SfBottomNavigationItem
         v-for="item in navigationItems"
@@ -9,6 +9,16 @@
         :is-floating="item.isFloating"
         :is-active="isActive(item.icon)"
         @click.native="item.onClick"
+      />
+      <ALogo />
+      <SfButton>
+        Make your own
+      </SfButton>
+      <SfBottomNavigationItem
+        icon="add_to_cart"
+        :is-floating="true"
+        :is-active="isActive('add_to_cart')"
+        @click.native="goToCart"
       />
     </SfBottomNavigation>
   </div>
@@ -21,21 +31,22 @@ import AHomeIcon from 'theme/components/atoms/a-home-icon';
 import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
-import { SfBottomNavigation } from '@storefront-ui/vue';
+import { SfBottomNavigation, SfButton } from '@storefront-ui/vue';
+import ALogo from 'theme/components/atoms/a-logo.vue';
 
 export default {
-  name: 'OBottomNavigation',
+  name: 'OTopNavigation',
   components: {
-    SfBottomNavigation
+    SfBottomNavigation,
+    SfButton,
+    ALogo
   },
   data () {
     return {
       navigationItems: [
-        { icon: 'home', label: this.$t('Home'), onClick: this.goToHome },
-        { icon: 'menu', label: this.$t('Menu'), onClick: this.goToMenu },
-        { icon: 'search', label: this.$t('Search'), onClick: this.goToSearch },
-        { icon: 'account', label: this.$t('Profile'), onClick: this.goToAccount },
-        { icon: 'add_to_cart', label: this.$t('Cart'), onClick: this.goToCart, isFloating: true }
+        { icon: 'list', label: '', onClick: this.goToMenu },
+        // { icon: 'search', label: '', onClick: this.goToSearch },
+        { icon: 'account', label: '', onClick: this.goToAccount }
       ]
     }
   },
@@ -110,17 +121,49 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.o-bottom-navigation {
+.o-top-navigation {
   position: relative;
+  min-height: calc(var(--bottom-navigation-height) + var(--spacer-base));
   z-index: 1;
-  @include for-desktop() {
+
+  .a-logo {
     display: none;
   }
+
+  .sf-button {
+    --button-font-size: var(--font-2xs);
+    --button-font-line-height: 1;
+    --button-padding: calc(var(--spacer-2xs) * 3) var(--spacer-sm);
+  }
+  ::v-deep .sf-header {
+      &__logo {
+        --header-logo-height: 1.5rem;
+      }
+    }
   ::v-deep .sf-bottom-navigation {
+    top: 0;
+    bottom: auto;
     z-index: inherit;
+    align-items: center;
+    justify-content: space-between;
     .sf-bottom-navigation-item {
       cursor: pointer;
+      .sf-circle-icon {
+        --button-size: 2.5rem;
+        --circle-icon-position: static;
+        transform: none;
+      }
     }
+  }
+
+  @media (min-width: 375px) {
+    .a-logo {
+      display: block;
+    }
+  }
+
+  @include for-desktop() {
+    display: none;
   }
 }
 </style>

@@ -18,36 +18,74 @@
       </template>
       <template #navigation>
         <SfHeaderNavigationItem
-          v-for="category in categories"
-          :key="category.id"
           @mouseover="isHoveredMenu = true"
           @mouseleave="isHoveredMenu = false"
         >
-          <router-link
-            :class="{active: isCategoryActive(category)}"
-            :to="categoryLink(category)"
-          >
-            {{ category.name }}
-          </router-link>
+          <div>
+            Products
+          </div>
           <MMenu
             :visible="isHoveredMenu && !isSearchPanelVisible"
-            :categories-ids="category.children_data"
-            :title="category.name"
             @close="isHoveredMenu = false"
           />
         </SfHeaderNavigationItem>
+        <SfHeaderNavigationItem>
+          <router-link
+            to="/"
+          >
+            Gift Cards
+          </router-link>
+        </SfHeaderNavigationItem>
+        <SfHeaderNavigationItem>
+          <router-link
+            to="/"
+          >
+            Reviews
+          </router-link>
+        </SfHeaderNavigationItem>
+        <SfHeaderNavigationItem>
+          <router-link
+            to="/"
+          >
+            Pricing
+          </router-link>
+        </SfHeaderNavigationItem>
+        <div
+          class="_dropdown-container"
+          @mouseover="isDropdownOpen = true"
+          @mouseleave="isDropdownOpen = false"
+        >
+          <SfButton>
+            Make your own
+          </SfButton>
+          <SfDropdown
+            :is-open="isDropdownOpen"
+          >
+            <SfList>
+              <SfListItem
+                v-for="action in dropdownActions"
+                :key="action.label"
+              >
+                <router-link
+                  :to="action.url"
+                >
+                  {{ action.label }}
+                </router-link>
+              </SfListItem>
+            </SfList>
+          </SfDropdown>
+        </div>
       </template>
       <template #search>
-        <div class="search-container">
-          <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
-          <SfButton
-            v-if="isSearchPanelVisible"
-            class="sf-button--text form__action-button form__action-button--secondary mobile-only"
-            @click="$store.commit('ui/setSearchpanel', false)"
-          >
-            {{ $t("Cancel") }}
-          </SfButton>
-        </div>
+        <div />
+        <!-- <OSearch :class="{'desktop-only': !isSearchPanelVisible}" />
+        <SfButton
+          v-if="isSearchPanelVisible"
+          class="sf-button--text form__action-button form__action-button--secondary mobile-only"
+          @click="$store.commit('ui/setSearchpanel', false)"
+        >
+          {{ $t("Cancel") }}
+        </SfButton> -->
       </template>
       <template #header-icons>
         <div class="sf-header__icons">
@@ -59,28 +97,27 @@
     <MMenu
       v-show="isMobileMenu"
       class="mobile-menu"
-      :categories-ids="categories"
       @close="$store.commit('ui/closeMenu')"
     />
   </div>
 </template>
 
 <script>
-import { SfHeader, SfOverlay, SfButton } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay, SfButton, SfDropdown, SfList } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
-import { formatCategoryLink } from '@vue-storefront/core/modules/url/helpers';
-import { getTopLevelCategories } from 'theme/helpers';
 
 export default {
   name: 'OHeader',
   components: {
     SfHeader,
     SfButton,
+    SfDropdown,
+    SfList,
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
@@ -90,7 +127,34 @@ export default {
   },
   data () {
     return {
-      isHoveredMenu: false
+      isHoveredMenu: false,
+      isDropdownOpen: false,
+      dropdownActions: [
+        {
+          label: 'Custom Petsies',
+          url: '/'
+        },
+        {
+          label: 'Custom Pillows',
+          url: '/'
+        },
+        {
+          label: 'Custom Socks',
+          url: '/'
+        },
+        {
+          label: 'Face Masks',
+          url: '/'
+        },
+        {
+          label: 'Pet Keychains',
+          url: '/'
+        },
+        {
+          label: 'Gift Box',
+          url: '/'
+        }
+      ]
     }
   },
   computed: {
@@ -98,21 +162,9 @@ export default {
       isSearchPanelVisible: state => state.ui.searchpanel
     }),
     ...mapState('ui', ['isMobileMenu']),
-    ...mapGetters('category', ['getCategories', 'getCurrentCategory']),
     ...mapGetters('user', ['isLoggedIn']),
     activeIcon () {
       return this.isLoggedIn ? 'account' : '';
-    },
-    categories () {
-      return getTopLevelCategories(this.getCategories);
-    }
-  },
-  methods: {
-    categoryLink (category) {
-      return formatCategoryLink(category);
-    },
-    isCategoryActive (category) {
-      return this.getCurrentCategory.path ? this.getCurrentCategory.path.startsWith(category.path) : false;
     }
   },
   watch: {
@@ -131,67 +183,95 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.sf-header-navigation-item {
-  &::after {
-    bottom: 0;
-    width: 0;
-  }
-  &:hover {
-    .m-menu {
-      opacity: 1;
-      visibility: visible;
-    }
-    &::after {
-      width: 100%;
-    }
-  }
+.a-logo {
+  margin-right: var(--spacer-lg);
 }
 .overlay {
   position: absolute;
   z-index: 1;
 }
 .o-header {
-  --header-navigation-item-margin: 0 2rem 0 0;
+  --header-navigation-item-margin: 0;
+  --header-navigation-item-padding: var(--spacer-lg) var(--spacer-xs);
+  --header-navigation-item-color: var(--c-dark);
   box-sizing: border-box;
   a {
     &.active {
       font-weight: bold;
     }
   }
-  .search-container {
-    display: flex;
-    .o-search {
-      flex-grow: 1;
+  .sf-header-navigation-item {
+    &::after {
+      bottom: 0;
+      width: 0;
     }
-    @include for-mobile {
-      width: 100%;
-      .sf-button {
-        margin: 0 0 0 var(--spacer-sm);
+    &:hover {
+      .m-menu {
+        opacity: 1;
+        visibility: visible;
+      }
+      &::after {
+        width: 100%;
       }
     }
   }
-  @include for-mobile {
-    .mobile-menu {
-      position: fixed;
-      opacity: 1;
-      visibility: visible;
-      top: 0;
-      z-index: 1;
-      --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
+  ._dropdown-container {
+    position: relative;
+    align-self: center;
+    .sf-button {
+      --button-font-size: var(--font-sm);
+      --button-font-line-height: 1;
+    }
+    .sf-dropdown {
+      --dropdown-background: var(--c-primary);
+      --c-link: var(--c-light-variant);
+      --c-link-hover: var(--c-light-variant);
+      --list-item-padding: var(--spacer-xs) var(--spacer-sm);
+
+      .sf-list__item {
+        &:hover {
+          background-color: var(--c-light);
+        }
+      }
     }
   }
-}
-.sf-header {
-  @include for-mobile {
-    &__icons {
-      display: none;
+  .sf-header {
+    display: none;
+  }
+  ::v-deep .sf-header {
+    --header-logo-margin: 0 0 var(--spacer-sm) 0;
+    &__navigation {
+      --header-navigation-margin: 0 var(--spacer-base);
+      justify-content: space-evenly;
+      flex-grow: 2;
     }
+    &__actions {
+      justify-content: space-between;
+    }
+  }
+  .mobile-menu {
+    position: fixed;
+    opacity: 1;
+    visibility: visible;
+    top: var(--bottom-navigation-height);
+    z-index: 1;
+    --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
   }
   @include for-desktop {
-    &__icons {
-      display: flex;
-      .sf-header__icon {
-        cursor: pointer;
+    .mobile-menu {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .sf-header {
+      display: block;
+      --header-navigation-margin: 0 auto;
+    }
+    ::v-deep .sf-header {
+      &__icons {
+        display: flex;
+        .sf-header__icon {
+          cursor: pointer;
+        }
       }
     }
   }

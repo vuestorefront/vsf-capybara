@@ -55,6 +55,7 @@ $forms-color-placeholder: #a09999;
     // font-family
     --font-family-primary: #{$font-family-base};
     --font-family-secondary: #{$font-family-base};
+    --font-family-intro: #{$font-family-intro};
     // font-weight
     --font-light: 300;
     --font-normal: 300;
@@ -69,7 +70,8 @@ $forms-color-placeholder: #a09999;
     --font-sm: 0.984rem; 
     --font-base: 1.125rem; 
     --font-lg: 1.266rem; 
-    --font-xl: 1.5rem; 
+    --font-xl: 1.5rem;
+    --font-2xl: 1.875rem; 
     // Colors
     @include generate-color-variants(--c-black, #535353);
     @include generate-color-variants(--c-white, #ffffff);
