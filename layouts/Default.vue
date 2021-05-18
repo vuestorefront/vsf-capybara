@@ -2,6 +2,7 @@
   <div class="default-layout">
     <MLoader />
     <div id="viewport">
+      <OTopNavigation />
       <OHeader />
       <OMicrocart />
       <div class="content">
@@ -12,7 +13,6 @@
       <ONotification />
       <MCookieNotification />
       <MOfflineBadge />
-      <OBottomNavigation />
     </div>
     <vue-progress-bar />
   </div>
@@ -24,7 +24,7 @@ import OHeader from 'theme/components/organisms/o-header';
 import OMicrocart from 'theme/components/organisms/o-microcart';
 import OFooter from 'theme/components/organisms/o-footer';
 import OModal from 'theme/components/organisms/o-modal';
-import OBottomNavigation from 'theme/components/organisms/o-bottom-navigation';
+import OTopNavigation from 'theme/components/organisms/o-top-navigation';
 import MLoader from 'theme/components/molecules/m-loader';
 import ONotification from 'theme/components/organisms/o-notification';
 import MCookieNotification from 'theme/components/molecules/m-cookie-notification';
@@ -43,7 +43,7 @@ export default {
     ONotification,
     MCookieNotification,
     MOfflineBadge,
-    OBottomNavigation,
+    OTopNavigation,
     OModal
   },
   data () {
