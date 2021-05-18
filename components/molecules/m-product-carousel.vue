@@ -12,11 +12,11 @@
         :image="product.image"
         :regular-price="product.price.regular"
         :special-price="product.price.special"
-        :max-rating="product.rating.max"
-        :score-rating="product.rating.score"
         :link="product.link"
         :wishlist-icon="false"
         link-tag="router-link"
+        :image-height="216"
+        :image-width="216"
       />
     </SfCarouselItem>
   </SfCarousel>
