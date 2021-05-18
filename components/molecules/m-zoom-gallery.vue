@@ -51,7 +51,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, { PropType } from 'vue';
+
 import {
   mapMobileObserver,
   unMapMobileObserver
@@ -64,14 +66,24 @@ import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
 require('@cabbiepete/cloud-zoom');
 require('@cabbiepete/cloud-zoom/cloud-zoom.css');
 
-export default {
+interface ZoomGalleryImage {
+  thumb: string,
+  stage: string,
+  big: string,
+  alt?: string,
+  title?: string,
+  link?: string,
+  target?: string
+}
+
+export default Vue.extend({
   name: 'MZoomGallery',
   components: {
     VueSlickCarousel
   },
   props: {
     images: {
-      type: Array,
+      type: Array as PropType<ZoomGalleryImage[]>,
       default: () => []
     },
     horizontalThumbnails: {
@@ -81,19 +93,19 @@ export default {
   },
   data () {
     return {
-      fCurrentIndex: 0
+      fCurrentIndex: undefined as number | undefined
     }
   },
   computed: {
     ...mapMobileObserver(),
-    isHorizontalThumbnails () {
+    isHorizontalThumbnails (): boolean {
       if (this.horizontalThumbnails) {
         return true;
       }
 
       return false;
     },
-    stageImage () {
+    stageImage (): ZoomGalleryImage | undefined {
       if (this.currentIndex == null) {
         return undefined;
       }
@@ -101,10 +113,10 @@ export default {
       return this.images[this.currentIndex];
     },
     currentIndex: {
-      get: function () {
+      get: function (): number | undefined {
         return this.fCurrentIndex;
       },
-      set: function (index) {
+      set: function (index: number | undefined) {
         this.detachZoom();
 
         this.fCurrentIndex = index;
@@ -143,7 +155,7 @@ export default {
     this.detachZoom();
   },
   methods: {
-    setCurrentIndex (index) {
+    setCurrentIndex (index: number): void {
       const previousIndex = this.currentIndex;
       this.currentIndex = index;
 
@@ -151,7 +163,7 @@ export default {
         this.$emit('gallery-index-changed', this.currentIndex);
       }
     },
-    detachZoom () {
+    detachZoom (): void {
       const imageWrapper = this.getStageImageWrapper();
 
       if (!imageWrapper) {
@@ -166,8 +178,8 @@ export default {
 
       zoom.destroy();
     },
-    getStageImageWrapper () {
-      return this.$refs['stageImageWrapper'];
+    getStageImageWrapper (): HTMLElement | undefined {
+      return this.$refs['stageImageWrapper'] as HTMLElement | undefined;
     }
   },
   watch: {
@@ -182,7 +194,7 @@ export default {
       immediate: true
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
