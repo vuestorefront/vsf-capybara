@@ -175,7 +175,6 @@ export default {
 .secondary-action {
     display: block;
     margin: var(--spacer-xl) 0 var(--spacer-base) auto;
-
 }
 
 .m-product-add-to-cart {
