@@ -10,6 +10,7 @@
       :slides-to-show="5"
       :slides-to-scroll="1"
       :focus-on-select="true"
+      v-if="images.length"
     >
       <div
         v-for="(image, index) in images"
@@ -66,7 +67,7 @@ import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
 require('@cabbiepete/cloud-zoom');
 require('@cabbiepete/cloud-zoom/cloud-zoom.css');
 
-interface ZoomGalleryImage {
+export interface ZoomGalleryImage {
   thumb: string,
   stage: string,
   big: string,

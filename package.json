@@ -16,6 +16,8 @@
     "@storefront-ui/shared": "0.7.11",
     "body-scroll-lock": "^3.0.1",
     "quicklink": "^2.0.0-alpha",
+    "vee-validate": "^3.3.0",
+    "vue2-filters": "^0.11.0",
     "vue-slick-carousel": "1.0.6",
     "@cabbiepete/cloud-zoom": "https://github.com/GorbunovStudio/cloud-zoom.git#gorbunov-studio",
     "jquery": "^3.0.0",

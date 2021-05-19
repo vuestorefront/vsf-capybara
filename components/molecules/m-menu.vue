@@ -81,7 +81,7 @@ export default {
         },
         {
           label: 'Pet Keychains',
-          url: '/'
+          url: '/printed/p/customPrintedKeychains_bundle/face-keychains'
         }
       ],
       otherProductsItems: [
