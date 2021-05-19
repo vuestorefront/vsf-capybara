@@ -1,0 +1,6 @@
+.sf-carousel {
+  @media (min-width: $tablet-min) {
+    --carousel-controls-size: 15rem;
+    --carousel-controls-display: flex;
+  }
+}
