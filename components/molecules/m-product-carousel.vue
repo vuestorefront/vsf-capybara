@@ -2,8 +2,24 @@
   <SfCarousel
     class="m-product-carousel"
     :settings="{
-      animationDuration: 2000,
-      rewindDuration: 2000
+      rewind: false,
+      type: 'slider',
+      breakpoints: {
+        768: {
+          perView: 2,
+          peek: {
+            before: 0,
+            after: 50,
+          },
+        },
+        1023: {
+          perView: 3,
+          peek: {
+            before: 0,
+            after: 0,
+          },
+        }
+      }
     }"
   >
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
