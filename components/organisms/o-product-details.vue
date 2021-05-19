@@ -137,26 +137,40 @@ export default {
   }
   .m-zoom-gallery {
     flex: 1 1;
-    max-width: 42%;
+    padding: 0 var(--spacer-sm);
+
+    @media (min-width: $tablet-min) {
+      padding: 0 0 0 var(--spacer-sm);
+    }
+
+    @include for-desktop {
+      max-width: 42%;
+    }
   }
 }
 
 .product {
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     display: flex;
   }
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
     padding: 0 var(--spacer-sm);
+
+    @media (min-width: $tablet-min) {
+      max-width: 25.625rem;
+      margin: 0 0 0 2.5rem;
+      padding: 0 var(--spacer-sm) 0 0;
+    }
+
     @include for-desktop {
       max-width: 32.625rem;
       margin: 0 0 0 7.5rem;
-      padding: 0;
     }
   }
   &__add-to-cart {
     margin: var(--spacer-base) 0 0;
-    @include for-desktop {
+    @media (min-width: $tablet-min) {
       margin-top: var(--spacer-sm);
     }
   }
@@ -171,7 +185,7 @@ export default {
 .section {
   border-bottom: 1px solid #f1f2f3;
   padding-bottom: 10px;
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     border: 0;
     padding-bottom: 0;
   }
