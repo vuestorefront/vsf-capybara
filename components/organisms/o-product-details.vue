@@ -4,10 +4,12 @@
     <meta itemprop="price" :content="parseFloat(product.price_incl_tax).toFixed(2)">
     <meta itemprop="availability" :content="availability">
     <meta itemprop="url" :content="product.url_path">
+
     <MProductGallery
       :gallery="gallery"
       :configuration="productConfiguration"
     />
+
     <div class="product__info">
       <MProductShortInfo
         :product="product"
@@ -17,10 +19,11 @@
       <SfButton
         v-show="sizeOption"
         @click.native="openSizeGuide"
-        class="sf-button--text desktop-only product__guide"
+        class="sf-button--text desktop-only secondary-action"
       >
         {{ $t('Size guide') }}
       </SfButton>
+
       <div>
         <MProductOptionsConfigurable
           v-if="product.type_id =='configurable'"
@@ -45,6 +48,7 @@
           :stock="productStock"
         />
       </div>
+
       <MProductAdditionalInfo
         :product="product"
         :reviews="reviews"
@@ -53,6 +57,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import get from 'lodash-es/get'
 import config from 'config';
@@ -146,42 +151,35 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.product {
-  @include for-desktop {
-    display: flex;
-  }
-  &__info {
-    margin: var(--spacer-sm) auto var(--spacer-xs);
-    padding: 0 var(--spacer-sm);
-    @include for-desktop {
-      max-width: 32.625rem;
-      margin: 0 0 0 7.5rem;
-      padding: 0;
-    }
-  }
-  &__add-to-cart {
-    margin: var(--spacer-base) 0 0;
-    @include for-desktop {
-      margin-top: var(--spacer-sm);
-    }
-  }
-  &__guide,
-  &__compare,
-  &__save {
-    display: block;
-    margin: var(--spacer-xl) 0 var(--spacer-base) auto;
+.o-product-details {
+  @include for-desktop{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: var(--spacer-2xl);
   }
 }
 
-.section {
-  border-bottom: 1px solid #f1f2f3;
-  padding-bottom: 10px;
+.product__info {
+  margin: var(--spacer-sm) auto var(--spacer-xs);
+  padding: 0 var(--spacer-sm);
   @include for-desktop {
-    border: 0;
-    padding-bottom: 0;
+    margin: 0;
   }
 }
+
+.secondary-action {
+    display: block;
+    margin: var(--spacer-xl) 0 var(--spacer-base) auto;
+
+}
+
+.m-product-add-to-cart {
+   margin: var(--spacer-base) 0;
+}
+
 </style>

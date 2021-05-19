@@ -6,6 +6,7 @@
       :message="alert.message"
       :type="alert.type"
     />
+
     <SfAddToCart v-model="qty">
       <template #add-to-cart-btn>
         <AAddToCart
@@ -15,6 +16,7 @@
           :disabled="isAddToCartDisabled"
         />
       </template>
+
       <template #quantity-select-input>
         <AProductQuantity
           class="sf-add-to-cart__select-quantity"

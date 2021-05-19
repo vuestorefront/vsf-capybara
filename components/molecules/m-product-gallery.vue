@@ -73,7 +73,4 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.m-product-gallery {
-  flex: 1;
-}
 </style>

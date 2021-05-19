@@ -47,12 +47,11 @@ export default {
   &__rating {
     display: flex;
     align-items: center;
-    margin: var(--spacer-xs) 0 0 0;
   }
+
   &__count {
     color: var(--c-text);
-    text-decoration: none;
-    margin: 0 0 0 var(--spacer-xs);
+    margin-left: var(--spacer-xs);
   }
 }
 </style>

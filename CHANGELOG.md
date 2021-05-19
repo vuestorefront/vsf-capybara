@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
+### Changed / Improved
+- Replaced flex with css grid in product galley and info(#621)
+- Removed margin from product rating(#621)
+- Renamed class of guide, compare and save actions(#621)
+- Updated margin of product additional info tabs(#621)
+- Formatted HTML markup and reordered CSS styles(#621)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
