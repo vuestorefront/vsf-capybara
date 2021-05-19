@@ -16,6 +16,9 @@
     "@storefront-ui/shared": "0.7.11",
     "body-scroll-lock": "^3.0.1",
     "quicklink": "^2.0.0-alpha",
+    "vue-slick-carousel": "1.0.6",
+    "@cabbiepete/cloud-zoom": "https://github.com/GorbunovStudio/cloud-zoom.git#gorbunov-studio",
+    "jquery": "^3.0.0",
     "storefront-query-builder": "https://github.com/DivanteLtd/storefront-query-builder.git",
     "supports-webp": "^2.0.1",
     "vue": "^2.6.11",
@@ -29,6 +32,8 @@
     "vue-observe-visibility": "^0.4.1"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.5",
+    "@types/storefront-ui__vue": "^0.7.0",
     "husky": "^3.1.0",
     "postcss-filter-stream": "^0.0.6",
     "semver": "^7.3.2"

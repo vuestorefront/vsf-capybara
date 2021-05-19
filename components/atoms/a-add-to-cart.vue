@@ -52,6 +52,9 @@ export default {
           productToAdd: Object.assign({}, this.product, { qty: this.qty })
         });
         diffLog.clientNotifications.forEach(notificationData => {
+          notificationData.type = 'info'
+          notificationData.timeToLive = 10 * 1000
+
           this.$store.dispatch(
             'notification/spawnNotification',
             notificationData,
@@ -61,7 +64,7 @@ export default {
       } catch (message) {
         this.$store.dispatch(
           'notification/spawnNotification',
-          notifications.createNotification({ type: 'danger', message }),
+          notifications.createNotification({ type: 'danger', message, timeToLive: 10 * 1000 }),
           { root: true }
         );
       }

@@ -22,29 +22,10 @@
         </SfSection>
       </lazy-hydrate>
       <lazy-hydrate when-idle>
-        <SfSection v-show="banners.length">
-          <router-link :key="i" :to="banner.link" v-for="(banner, i) in banners">
-            <SfBanner
-              :subtitle="banner.subtitle"
-              :title="banner.title"
-              :image="banner.image"
-              class="banner sf-banner--slim"
-            />
-          </router-link>
-        </SfSection>
-      </lazy-hydrate>
-      <lazy-hydrate when-idle>
         <SfSection :title-heading="$t('Similar Products')">
           <MRelatedProducts type="related" />
         </SfSection>
       </lazy-hydrate>
-      <SfSection
-        v-if="isOnline"
-        title-heading="Share Your Look"
-        subtitle-heading="#YOURLOOK"
-      >
-        <AImagesGrid :images="instagramImages" />
-      </SfSection>
     </div>
   </div>
 </template>
@@ -52,20 +33,13 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
-import {
-  localizedRoute,
-  currentStoreView
-} from '@vue-storefront/core/lib/multistore';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { htmlDecode } from '@vue-storefront/core/filters';
-import { ReviewModule } from '@vue-storefront/core/modules/review';
-import { registerModule } from '@vue-storefront/core/lib/modules';
 import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
-import AImagesGrid from 'theme/components/atoms/a-images-grid';
-import { checkWebpSupport } from 'theme/helpers'
-import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';
+import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
 
 export default {
@@ -75,8 +49,6 @@ export default {
     MRelatedProducts,
     SfSection,
     OProductDetails,
-    SfBanner,
-    AImagesGrid,
     SfBreadcrumbs
   },
   provide () {
@@ -106,7 +78,6 @@ export default {
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
       promotedOffers: 'promoted/getPromotedOffers',
-      dummyInstagramImages: 'instagram/getInstagramImages',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
       getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
     }),
@@ -139,12 +110,6 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
-    },
-    banners () {
-      return checkWebpSupport(this.promotedOffers.productBanners, this.isWebpSupported)
-    },
-    instagramImages () {
-      return checkWebpSupport(this.dummyInstagramImages, this.isWebpSupported)
     }
   },
   watch: {
@@ -171,15 +136,6 @@ export default {
     );
     if (isServer) await loadBreadcrumbsPromise;
     catalogHooksExecutors.productPageVisited(product);
-  },
-  beforeCreate () {
-    registerModule(ReviewModule);
-  },
-  async mounted () {
-    await Promise.all([
-      this.$store.dispatch('review/list', { productId: this.getOriginalProduct.id }),
-      this.$store.dispatch('instagram/updateInstagramImages')
-    ])
   },
   beforeRouteEnter (to, from, next) {
     if (isServer) {
