@@ -62,7 +62,7 @@
           <a
             :href="item.url"
             v-for="item in social"
-            :key="item"
+            :key="item.name + ';' + item.url"
             class="social-icon__link"
             :class="'-' + item.name"
             target="_blank"

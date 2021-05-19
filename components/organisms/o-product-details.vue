@@ -4,15 +4,13 @@
     <meta itemprop="price" :content="parseFloat(product.price_incl_tax).toFixed(2)">
     <meta itemprop="availability" :content="availability">
     <meta itemprop="url" :content="product.url_path">
-    <MProductGallery
-      :gallery="gallery"
-      :configuration="productConfiguration"
+    <MZoomGallery
+      :images="gallery"
     />
     <div class="product__info">
       <MProductShortInfo
         :product="product"
         :custom-options="productCustomOptions"
-        :reviews="reviews"
       />
       <SfButton
         v-show="sizeOption"
@@ -47,18 +45,14 @@
       </div>
       <MProductAdditionalInfo
         :product="product"
-        :reviews="reviews"
-        :attributes="productAttributes"
       />
     </div>
   </div>
 </template>
 <script>
 import get from 'lodash-es/get'
-import config from 'config';
-import { mapGetters, mapActions } from 'vuex';
 import { SfButton } from '@storefront-ui/vue';
-import MProductGallery from 'theme/components/molecules/m-product-gallery';
+import MZoomGallery from 'theme/components/molecules/m-zoom-gallery';
 import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
 import MProductAddToCart from 'theme/components/molecules/m-product-add-to-cart';
 import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
@@ -67,11 +61,12 @@ import MProductOptionsBundle from 'theme/components/molecules/m-product-options-
 import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
 import MProductOptionsGroup from 'theme/components/molecules/m-product-options-group';
 import { ModalList } from 'theme/store/ui/modals';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
     SfButton,
-    MProductGallery,
+    MZoomGallery,
     MProductShortInfo,
     MProductAddToCart,
     MProductAdditionalInfo,
@@ -109,25 +104,12 @@ export default {
   computed: {
     gallery () {
       return this.productGallery.map(imageObject => ({
-        id: imageObject.id,
-        mobile: {
-          url: imageObject.src,
-          alt: this.product.name
-        },
-        desktop: {
-          url: imageObject.src,
-          alt: this.product.name
-        }
+        stage: imageObject.src,
+        thumb: imageObject.src,
+        big: imageObject.src,
+        alt: this.product.name,
+        title: this.product.name
       }));
-    },
-    reviews () {
-      const baseReviews = get(this.$store.state.review, 'items.items', [])
-      return baseReviews.map((review) => ({
-        author: review.nickname,
-        date: review.created_at,
-        message: `${review.title}: ${review.detail}`,
-        rating: 1 // TODO: remove hardcode
-      }))
     },
     availability () {
       return this.product.stock && this.product.stock.is_in_stock ? 'InStock' : 'OutOfStock'
@@ -149,22 +131,47 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+.o-product-details {
+  .m-product-additional-info {
+    margin-top: var(--spacer-lg);
+  }
+  .m-zoom-gallery {
+    flex: 1 1;
+    padding: 0 var(--spacer-sm);
+
+    @media (min-width: $tablet-min) {
+      padding: 0 0 0 var(--spacer-sm);
+    }
+
+    @include for-desktop {
+      max-width: 42%;
+    }
+  }
+}
+
 .product {
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     display: flex;
+    align-items: flex-start;
   }
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
     padding: 0 var(--spacer-sm);
+
+    @media (min-width: $tablet-min) {
+      max-width: 25.625rem;
+      margin: 0 0 0 2.5rem;
+      padding: 0 var(--spacer-sm) 0 0;
+    }
+
     @include for-desktop {
       max-width: 32.625rem;
       margin: 0 0 0 7.5rem;
-      padding: 0;
     }
   }
   &__add-to-cart {
     margin: var(--spacer-base) 0 0;
-    @include for-desktop {
+    @media (min-width: $tablet-min) {
       margin-top: var(--spacer-sm);
     }
   }
@@ -179,7 +186,7 @@ export default {
 .section {
   border-bottom: 1px solid #f1f2f3;
   padding-bottom: 10px;
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     border: 0;
     padding-bottom: 0;
   }

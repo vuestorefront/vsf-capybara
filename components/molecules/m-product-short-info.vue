@@ -3,7 +3,7 @@
     <div class="product__header">
       <SfHeading
         :title="product.name | htmlDecode"
-        :level="3"
+        :level="1"
         class="sf-heading--no-underline sf-heading--left"
       />
       <SfIcon
@@ -13,37 +13,29 @@
         class="product__drag-icon mobile-only"
       />
     </div>
-    <div class="product__price-and-rating">
+    <div
+      class="product__description desktop-only"
+      v-html="product.short_description"
+      v-if="product.short_description"
+    />
+    <div class="product__price">
       <AProductPrice
         v-if="product.type_id !== 'grouped'"
         :product="product"
         :custom-options="customOptions"
       />
-      <AProductRating
-        @click="openReviewsTab"
-        :reviews="reviews"
-      >
-        {{ $t("Read all {count} review", { count: reviewsCount }) }}
-      </AProductRating>
     </div>
-    <div
-      class="product__description desktop-only"
-      v-html="product.short_description || product.description"
-    />
   </div>
 </template>
 
 <script>
-import { SfHeading, SfIcon, SfPrice, SfButton } from '@storefront-ui/vue';
-import AProductRating from 'theme/components/atoms/a-product-rating';
+import { SfHeading, SfIcon } from '@storefront-ui/vue';
 import AProductPrice from 'theme/components/atoms/a-product-price';
-import { createSmoothscroll } from 'theme/helpers'
 export default {
   name: 'MProductShortInfo',
   components: {
     SfHeading,
     SfIcon,
-    AProductRating,
     AProductPrice
   },
   props: {
@@ -54,26 +46,6 @@ export default {
     customOptions: {
       type: Object,
       default: () => ({})
-    },
-    reviews: {
-      type: Array,
-      default: () => []
-    }
-  },
-  computed: {
-    reviewsCount () {
-      return this.reviews.length
-    }
-  },
-  methods: {
-    openReviewsTab () {
-      this.$store.commit('ui/setReviewProductTab', true);
-
-      const reviewsEl = document.querySelector('#m-product-additional-info');
-      if (!reviewsEl) return;
-
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      createSmoothscroll(scrollTop, scrollTop + reviewsEl.getBoundingClientRect().top);
     }
   }
 };
@@ -86,6 +58,11 @@ export default {
   &__header {
     display: flex;
     justify-content: space-between;
+
+    ::v-deep .sf-heading__title {
+      line-height: 1.2;
+    }
+
     @include for-desktop {
       margin: 0 auto;
     }
@@ -93,7 +70,7 @@ export default {
   &__drag-icon {
     animation: moveicon 1s ease-in-out infinite;
   }
-  &__price-and-rating {
+  &__price {
     margin: var(--spacer-xs) 0 var(--spacer-base);
     align-items: center;
     @include for-desktop {
@@ -103,7 +80,6 @@ export default {
     }
   }
   &__description {
-    color: var(--c-link);
     @include font(
       --product-description-font,
       var(--font-light),

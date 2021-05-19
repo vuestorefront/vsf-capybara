@@ -12,13 +12,12 @@
       <SfHeading :level="1" :title="$t(getCurrentCategory.name)" class="navbar__title" />
     </div>
 
-    <div 
-      class="category__short-description" 
+    <div
+      class="category__short-description"
       v-html="getCurrentCategory.short_desc"
-    > 
-    </div>
+    />
 
-    <div class="navbar section"  v-if="false">
+    <div class="navbar section" v-if="false">
       <div class="navbar__aside desktop-only">
         <SfHeading :level="3" :title="$t('Categories')" class="navbar__title" />
       </div>
@@ -122,8 +121,8 @@
                 link-tag="router-link"
                 :wishlist-icon="false"
                 class="products__product-card"
-                :imageHeight="352"
-                :imageWidth="352"
+                :image-height="352"
+                :image-width="352"
               />
             </transition-group>
           </lazy-hydrate>
@@ -190,11 +189,10 @@
       </template>
     </SfSidebar>
 
-    <div 
-      class="category__description" 
+    <div
+      class="category__description"
       v-html="getCurrentCategory.description"
-    > 
-    </div>
+    />
   </div>
 </template>
 
@@ -637,27 +635,27 @@ export default {
       //@extend .sf-heading;
       text-align: var(--heading-text-align, center);
       @extend .sf-heading__title;
-    } 
+    }
 
     ::v-deep h2 {
       @extend .sf-heading__title--h2;
-    } 
+    }
 
     ::v-deep h3 {
       @extend .sf-heading__title--h3;
-    } 
+    }
 
     ::v-deep h4 {
       @extend .sf-heading__title--h4;
-    } 
+    }
 
     ::v-deep h5 {
       @extend .sf-heading__title--h5;
-    } 
+    }
 
     ::v-deep h6 {
       @extend .sf-heading__title--h6;
-    } 
+    }
   }
 }
 .main {
@@ -876,7 +874,7 @@ export default {
 
   @include for-desktop {
     margin: var(--spacer-sm) 0 0 var(--spacer-sm);
-    
+
     &__grid {
       grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
     }
