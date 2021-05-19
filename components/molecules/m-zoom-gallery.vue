@@ -10,6 +10,7 @@
       :slides-to-show="5"
       :slides-to-scroll="1"
       :focus-on-select="true"
+      v-if="shouldShowThumbnails"
     >
       <div
         v-for="(image, index) in images"
@@ -93,7 +94,8 @@ export default Vue.extend({
   },
   data () {
     return {
-      fCurrentIndex: undefined as number | undefined
+      fCurrentIndex: undefined as number | undefined,
+      fShouldShowThumbnails: false
     }
   },
   computed: {
@@ -139,6 +141,9 @@ export default Vue.extend({
           jQuery(imageWrapper).CloudZoom({ adjustX: 10, showTitle: false });
         });
       }
+    },
+    shouldShowThumbnails: function (): boolean {
+      return this.fShouldShowThumbnails
     }
   },
   created () {
@@ -185,11 +190,17 @@ export default Vue.extend({
   watch: {
     images: {
       handler () {
+        this.fShouldShowThumbnails = false;
+
         this.currentIndex = undefined;
 
         if (this.images.length) {
           this.currentIndex = 0;
         }
+
+        this.$nextTick(() => {
+          this.fShouldShowThumbnails = true;
+        })
       },
       immediate: true
     }

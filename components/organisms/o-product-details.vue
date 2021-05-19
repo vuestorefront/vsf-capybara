@@ -152,6 +152,7 @@ export default {
 .product {
   @media (min-width: $tablet-min) {
     display: flex;
+    align-items: flex-start;
   }
   &__info {
     margin: var(--spacer-sm) auto var(--spacer-xs);
