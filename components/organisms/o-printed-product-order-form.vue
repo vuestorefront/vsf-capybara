@@ -44,42 +44,23 @@
 
             <div class="_additional-options">
               <div v-show="hasStyleSelections">
-                <validation-provider
-                  v-slot="{ errors }"
-                  name="'Style Option'"
-                  tag="div"
+                <SfSelect
+                  v-model="selectedStyle"
+                  label="Select Design Variant"
+                  :required="true"
                 >
-                  <select
-                    v-model="selectedStyle"
-                    name="design_option"
-                    class="_design-option-list"
-                    required
+                  <SfSelectOption
+                    v-for="option in availableStyles"
+                    :key="option.value"
+                    :value="option.value"
                   >
-                    <option
-                      :value="undefined"
-                      selected
-                      disabled
-                    >
-                      Select Design Variant
-                    </option>
-
-                    <option
-                      v-for="option in availableStyles"
-                      :key="option.value"
-                      :value="option.value"
-                    >
-                      {{ option.label }}
-                    </option>
-                  </select>
-
-                  <div class="_error-text">
-                    {{ errors[0] }}
-                  </div>
-                </validation-provider>
+                    {{ option.label }}
+                  </SfSelectOption>
+                </SfSelect>
               </div>
             </div>
 
-<!--             <div class="_artwork-upload">
+            <!--             <div class="_artwork-upload">
               <div class="_step-title">
                 Upload your pet's photo
               </div>
@@ -174,14 +155,14 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { PropType } from 'vue';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 
 import ACustomProductPrice from '../atoms/a-custom-product-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
 
-import { SfButton } from '@storefront-ui/vue';
+import { SfButton, SfSelect } from '@storefront-ui/vue';
 
 // import FileStorageItem from '@/ts/modules/file-storage/item.model';
 // import ArtworkUpload from './ArtworkUpload.vue';
@@ -194,7 +175,7 @@ export interface GalleryProductImages {
   images: ZoomGalleryImage[]
 }
 
-export default Vue.extend({
+export default {
   name: 'OPrintedProductOrderForm',
   components: {
     ValidationObserver,
@@ -203,6 +184,7 @@ export default Vue.extend({
     ACustomProductPrice,
     ACustomProductQuantity,
     MZoomGallery,
+    SfSelect,
     SfButton
     // ExtraFaces
   },
@@ -401,7 +383,7 @@ export default Vue.extend({
       this.fStorageItemId = this.uploadedArtworkId;
     }
   }
-})
+}
 </script>
 
 <style lang="scss" scoped>

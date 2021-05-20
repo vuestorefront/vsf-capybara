@@ -23,9 +23,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import { getProductPrice } from 'theme/helpers';
-import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { htmlDecode } from '@vue-storefront/core/filters';
-import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
+import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import OPrintedProductOrderForm from 'theme/components/organisms/o-printed-product-order-form';
 
@@ -43,9 +42,6 @@ export default {
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
       attributesByCode: 'attribute/attributeListByCode'
     }),
-    isOnline () {
-      return onlineHelper.isOnline;
-    },
     price () {
       return getProductPrice(this.getCurrentProduct, this.getCurrentCustomOptions, false);
     },
@@ -66,44 +62,36 @@ export default {
       ]
     },
     getAvailableStyles () {
-      const simpleProducts = this.getCurrentProduct.bundle_options[0].product_links.map(linkedProduct => ({
-        value: linkedProduct.product.sku,
-        label: linkedProduct.product.name,
-        description: linkedProduct.product.description,
-        shortDescription: linkedProduct.product.short_description,
-        price: linkedProduct.product.regular_price,
-        specialPrice: linkedProduct.product.special_price
-      }));
+      if (!this.getCurrentProduct.bundle_options) {
+        throw new Error('The printed product has not bundle options');
+      }
 
-      return simpleProducts;
-    }
-  },
-  data () {
-    return {
-      stock: {
-        isLoading: false,
-        max: 0,
-        manageQuantity: true
+      let optionsProducts = [];
+      this.getCurrentProduct.bundle_options.forEach(option => {
+        option.product_links.forEach(productLink => optionsProducts.push(productLink.product));
+      });
+
+      const variantProducts = optionsProducts.filter(product => ['simple', 'bundlePrimaryProduct'].includes(product.type_id));
+
+      if (!variantProducts) {
+        throw new Error('The printed product has not available styles');
       }
-    };
-  },
-  watch: {
-    isOnline: {
-      handler (isOnline) {
-        if (isOnline) {
-          this.getQuantity();
-        }
-      }
+
+      return variantProducts.map(variantProduct => ({
+        value: variantProduct.sku,
+        label: variantProduct.name,
+        description: variantProduct.description,
+        shortDescription: variantProduct.short_description,
+        price: variantProduct.regular_price,
+        specialPrice: variantProduct.special_price
+      }));
     }
   },
   async asyncData ({ store, route, context }) {
     if (context) context.output.cacheTags.add('product')
     const product = await store.dispatch('product/loadProduct', {
       parentSku: route.params.parentSku,
-      childSku:
-        route && route.params && route.params.childSku
-          ? route.params.childSku
-          : null
+      childSku: null
     });
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',
@@ -112,33 +100,7 @@ export default {
     if (isServer) await loadBreadcrumbsPromise;
     catalogHooksExecutors.productPageVisited(product);
   },
-  beforeRouteEnter (to, from, next) {
-    if (isServer) {
-      next();
-    } else {
-      next(vm => {
-        vm.getQuantity();
-      });
-    }
-  },
-  methods: {
-    async getQuantity () {
-      if (this.stock.isLoading) return; // stock info is already loading
-      this.stock.isLoading = true;
-      try {
-        const res = await this.$store.dispatch('stock/check', {
-          product: this.getCurrentProduct,
-          qty: this.getCurrentProduct.qty
-        });
-        this.manageQuantity = res.isManageStock;
-        this.stock.max = res.isManageStock ? res.qty : null;
-      } finally {
-        this.stock.isLoading = false;
-      }
-    }
-  },
   metaInfo () {
-    const storeView = currentStoreView();
     return {
       title: htmlDecode(
         this.getCurrentProduct.meta_title || this.getCurrentProduct.name
