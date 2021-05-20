@@ -35,8 +35,8 @@
 
 <script>
 import { SfHeading, SfIcon, SfPrice, SfButton } from '@storefront-ui/vue';
-import AProductRating from 'theme/components/atoms/a-product-rating';
-import AProductPrice from 'theme/components/atoms/a-product-price';
+import AProductRating from 'theme/components/product/a-product-rating';
+import AProductPrice from 'theme/components/product/a-product-price';
 import { createSmoothscroll } from 'theme/helpers'
 export default {
   name: 'MProductShortInfo',

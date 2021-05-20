@@ -61,8 +61,8 @@ import { ReviewModule } from '@vue-storefront/core/modules/review';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import MRelatedProducts from 'theme/components/molecules/m-related-products';
-import OProductDetails from 'theme/components/organisms/o-product-details';
+import MRelatedProducts from 'theme/components/product/m-related-products';
+import OProductDetails from 'theme/components/product/o-product-details';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 import { SfSection, SfBanner, SfBreadcrumbs } from '@storefront-ui/vue';

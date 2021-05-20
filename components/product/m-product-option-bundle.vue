@@ -38,8 +38,8 @@
 <script>
 import { ProductBundleOption } from '@vue-storefront/core/modules/catalog/components/ProductBundleOption';
 import { SfHeading, SfRadio, SfDivider, SfAlert } from '@storefront-ui/vue';
-import AProductPrice from 'theme/components/atoms/a-product-price'
-import AProductQuantity from 'theme/components/atoms/a-product-quantity'
+import AProductPrice from 'theme/components/product/a-product-price'
+import AProductQuantity from 'theme/components/product/a-product-quantity'
 
 export default {
   mixins: [ProductBundleOption],

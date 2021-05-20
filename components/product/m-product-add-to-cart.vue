@@ -34,8 +34,8 @@
 <script>
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { SfAddToCart, SfAlert } from '@storefront-ui/vue';
-import AProductQuantity from 'theme/components/atoms/a-product-quantity';
-import AAddToCart from 'theme/components/atoms/a-add-to-cart';
+import AProductQuantity from 'theme/components/product/a-product-quantity';
+import AAddToCart from 'theme/components/product/a-add-to-cart';
 export default {
   name: 'MProductAddToCart',
   components: {
