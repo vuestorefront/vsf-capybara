@@ -25,23 +25,8 @@
 
         <validation-observer v-slot="{ passes }" slim>
           <form
-            data-action="addToCart"
-            method="POST"
-            :action="formAction"
-            :product-id="productId"
-            :data-product-sku="productSku"
-            @submit.prevent="
-              (event) => passes(() => onSubmit(event))
-            "
+            @submit.prevent="(event) => passes(() => onSubmit(event))"
           >
-            <input type="hidden" name="submit_value">
-
-            <input
-              type="hidden"
-              name="product_id"
-              :value="productId"
-            >
-
             <div class="_additional-options">
               <div v-show="hasStyleSelections">
                 <SfSelect
@@ -166,6 +151,8 @@ import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 
 import FileStorageItem from '../../ts/modules/file-storage/item.model';
+import { Logger } from '@vue-storefront/core/lib/logger';
+import i18n from '@vue-storefront/i18n';
 // import ArtworkUpload from './ArtworkUpload.vue';
 // import ExtraFaces from './ExtraFaces.vue';
 // import SelectOption from './select-option.interface';
@@ -367,7 +354,40 @@ export default {
       this.fStorageItemId = value.id;
     },
     onSubmit (event: Event) {
-      (event.target as HTMLFormElement).submit();
+      this.$v.$touch();
+
+      if (this.$v.$invalid) {
+        return;
+      }
+
+      this.$store
+        .dispatch('budsies/addPrintedProductToCart', {
+          productId: this.productId,
+          designOption: this.selectedStyle,
+          uploadedArtworkIds: this.storageItemId,
+          qty: this.quantity,
+          addons: {}
+        }).then(result => {
+          if (result.code !== 200) {
+            this.onFailure(result.result);
+          } else {
+            this.onSuccess();
+          }
+        }).catch(err => {
+          Logger.error(err, 'budsies')();
+
+          this.onFailure('Unexpected error: ' + err);
+        });
+    },
+    onSuccess () {
+
+    },
+    onFailure (message) {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'danger',
+        message: message,
+        action1: { label: i18n.t('OK') }
+      });
     },
     getGallery (): HTMLElement | undefined {
       return this.$refs['gallery'] as HTMLElement | undefined;
