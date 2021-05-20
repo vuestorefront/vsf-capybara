@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added `VueObserveVisibility` and `VueLazyload` dependency
 
+### Changed / Improved
+- Created a folder product in components(#627)
+- Arranged components of product page in product folder(#627)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
