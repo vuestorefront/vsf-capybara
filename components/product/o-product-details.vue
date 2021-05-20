@@ -58,14 +58,14 @@ import get from 'lodash-es/get'
 import config from 'config';
 import { mapGetters, mapActions } from 'vuex';
 import { SfButton } from '@storefront-ui/vue';
-import MProductGallery from 'theme/components/molecules/m-product-gallery';
-import MProductShortInfo from 'theme/components/molecules/m-product-short-info';
-import MProductAddToCart from 'theme/components/molecules/m-product-add-to-cart';
-import MProductAdditionalInfo from 'theme/components/molecules/m-product-additional-info';
-import MProductOptionsConfigurable from 'theme/components/molecules/m-product-options-configurable';
-import MProductOptionsBundle from 'theme/components/molecules/m-product-options-bundle';
-import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
-import MProductOptionsGroup from 'theme/components/molecules/m-product-options-group';
+import MProductGallery from 'theme/components/product/m-product-gallery';
+import MProductShortInfo from 'theme/components/product/m-product-short-info';
+import MProductAddToCart from 'theme/components/product/m-product-add-to-cart';
+import MProductAdditionalInfo from 'theme/components/product/m-product-additional-info';
+import MProductOptionsConfigurable from 'theme/components/product/m-product-options-configurable';
+import MProductOptionsBundle from 'theme/components/product/m-product-options-bundle';
+import MProductOptionsCustom from 'theme/components/product/m-product-options-custom';
+import MProductOptionsGroup from 'theme/components/product/m-product-options-group';
 import { ModalList } from 'theme/store/ui/modals';
 
 export default {

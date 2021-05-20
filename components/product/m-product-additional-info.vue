@@ -41,9 +41,9 @@
 import { ModalList } from 'theme/store/ui/modals';
 import { mapState, mapActions } from 'vuex';
 import { SfHeading, SfTabs, SfDivider } from '@storefront-ui/vue';
-import AProductRating from 'theme/components/atoms/a-product-rating';
-import AProductAttribute from 'theme/components/atoms/a-product-attribute';
-import MReviewList from 'theme/components/molecules/m-review-list';
+import AProductRating from 'theme/components/product/a-product-rating';
+import AProductAttribute from 'theme/components/product/a-product-attribute';
+import MReviewList from 'theme/components/product/m-review-list';
 
 export default {
   name: 'MProductAdditionalInfo',

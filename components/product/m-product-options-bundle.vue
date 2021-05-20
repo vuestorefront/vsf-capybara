@@ -12,7 +12,7 @@
 
 <script>
 import { ProductBundleOptions } from '@vue-storefront/core/modules/catalog/components/ProductBundleOptions'
-import MProductOptionBundle from 'theme/components/molecules/m-product-option-bundle'
+import MProductOptionBundle from 'theme/components/product/m-product-option-bundle'
 
 export default {
   mixins: [ProductBundleOptions],

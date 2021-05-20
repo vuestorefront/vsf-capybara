@@ -30,7 +30,7 @@
 <script>
 import config from 'config'
 import { SfGroupedProduct } from '@storefront-ui/vue';
-import AProductPrice from 'theme/components/atoms/a-product-price'
+import AProductPrice from 'theme/components/product/a-product-price'
 export default {
   name: 'MProductOptionsGroup',
   components: {
