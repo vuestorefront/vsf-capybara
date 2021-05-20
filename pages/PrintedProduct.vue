@@ -1,7 +1,7 @@
 <template>
   <div id="printed-product" itemscope itemtype="http://schema.org/Product">
     <o-printed-product-order-form
-      artwork-upload-url="/"
+      :artwork-upload-url="artworkUploadUrl"
       form-action="/"
       :product="getCurrentProduct"
       :product-id="getCurrentProduct.id + ''"
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import config from 'config';
 import { mapGetters } from 'vuex';
 import { getProductPrice } from 'theme/helpers';
 import { htmlDecode } from '@vue-storefront/core/filters';
@@ -42,6 +43,9 @@ export default {
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
       attributesByCode: 'attribute/attributeListByCode'
     }),
+    artworkUploadUrl () {
+      return config.images.fileuploaderUploadUrl;
+    },
     price () {
       return getProductPrice(this.getCurrentProduct, this.getCurrentCustomOptions, false);
     },

@@ -60,7 +60,7 @@
               </div>
             </div>
 
-            <!--             <div class="_artwork-upload">
+            <div class="_artwork-upload">
               <div class="_step-title">
                 Upload your pet's photo
               </div>
@@ -78,13 +78,12 @@
                   required
                 >
 
-                <artwork-upload
+                <MArtworkUpload
                   ref="artwork-upload"
                   class="_file-uploader"
                   :product-id="productType"
                   :disabled="isUploadDisabled"
                   :upload-url="artworkUploadUrl"
-                  :file="uploadedFile"
                   @input="onArtworkChange"
                 />
 
@@ -92,7 +91,7 @@
                   {{ errors[0] }}
                 </div>
               </validation-provider>
-            </div> -->
+            </div>
 
             <!-- <extra-faces
               :available-options="addons"
@@ -156,19 +155,26 @@
 
 <script lang="ts">
 import { PropType } from 'vue';
-import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required } from 'vee-validate/dist/rules';
 
 import ACustomProductPrice from '../atoms/a-custom-product-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
+import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 
-// import FileStorageItem from '@/ts/modules/file-storage/item.model';
+import FileStorageItem from '../../ts/modules/file-storage/item.model';
 // import ArtworkUpload from './ArtworkUpload.vue';
 // import ExtraFaces from './ExtraFaces.vue';
 // import SelectOption from './select-option.interface';
 // import AddonOption from './addon-option.interface';
+
+extend('required', {
+  ...required,
+  message: 'The {_field_} field is required'
+});
 
 export interface GalleryProductImages {
   sku: string,
@@ -184,6 +190,7 @@ export default {
     ACustomProductPrice,
     ACustomProductQuantity,
     MZoomGallery,
+    MArtworkUpload,
     SfSelect,
     SfButton
     // ExtraFaces
@@ -261,8 +268,8 @@ export default {
   data () {
     return {
       quantity: 1,
-      fStorageItemId: '',
-      fSelectedStyle: ''
+      fStorageItemId: undefined,
+      fSelectedStyle: undefined
     }
   },
   computed: {
@@ -351,14 +358,14 @@ export default {
     }
   },
   methods: {
-    /* onArtworkChange (value?: FileStorageItem): void {
+    onArtworkChange (value?: FileStorageItem): void {
       if (!value) {
         this.fStorageItemId = undefined;
         return;
       }
 
       this.fStorageItemId = value.id;
-    }, */
+    },
     onSubmit (event: Event) {
       (event.target as HTMLFormElement).submit();
     },

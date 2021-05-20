@@ -10,6 +10,15 @@
 import get from 'lodash-es/get'
 import DefaultLayout from './layouts/Default'
 import MinimalLayout from './layouts/Minimal'
+import ErrorConverterService from './ts/lib/error-converter.service'
+import FileProcessingRepositoryFactory from './ts/modules/file-storage/file-processing.repository.factory'
+import FileStorageItemFactory from './ts/modules/file-storage/item.factory'
+
+const errorConverterService = new ErrorConverterService();
+const fileStorageItemFactory = new FileStorageItemFactory();
+const fileProcessingRepositoryFactory = new FileProcessingRepositoryFactory(
+  fileStorageItemFactory
+);
 
 export default {
   components: {
@@ -20,6 +29,10 @@ export default {
     layout () {
       return `${get(this.$route, 'meta.layout', 'default')}-layout`
     }
+  },
+  provide: {
+    ErrorConverterService: errorConverterService,
+    FileProcessingRepositoryFactory: fileProcessingRepositoryFactory
   }
 };
 </script>

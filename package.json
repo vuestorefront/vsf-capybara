@@ -18,6 +18,14 @@
     "quicklink": "^2.0.0-alpha",
     "vee-validate": "^3.3.0",
     "vue2-filters": "^0.11.0",
+    "filepond": "^4.13.5",
+    "filepond-plugin-file-validate-size": "^2.2.1",
+    "filepond-plugin-file-validate-type": "^1.2.5",
+    "filepond-plugin-image-exif-orientation": "^1.0.8",
+    "filepond-plugin-image-preview": "^4.6.3",
+    "filepond-plugin-image-resize": "^2.0.5",
+    "filepond-plugin-image-transform": "^3.7.3",
+    "vue-filepond": "^6.0.2",
     "vue-slick-carousel": "1.0.6",
     "@cabbiepete/cloud-zoom": "https://github.com/GorbunovStudio/cloud-zoom.git#gorbunov-studio",
     "jquery": "^3.0.0",
@@ -37,9 +45,15 @@
     "@types/jquery": "^3.5.5",
     "@types/storefront-ui__vue": "^0.7.0",
     "husky": "^3.1.0",
+    "css-loader": "^1.0.0",
+    "postcss": "^8.0.9",
+    "postcss-loader": "^4.0.2",
     "postcss-filter-stream": "^0.0.6",
     "semver": "^7.3.2"
   },
+  "browserslist": [
+    "defaults"
+  ],
   "sideEffects": [
     "*.(sc|sa|c)?ss",
     "*.vue"
