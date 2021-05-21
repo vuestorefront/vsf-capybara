@@ -90,15 +90,14 @@
               </validation-provider>
             </div>
 
-            <!-- <extra-faces
+            <MExtraFaces
               :available-options="addons"
               :product-id="productType"
               :disabled="isUploadDisabled"
               :upload-url="artworkUploadUrl"
               :initial-variant="initialExtraFacesAddon"
-              :initial-artworks="uploadedAddonArtworkUrls"
               v-show="hasExtraFaceAddons"
-            /> -->
+            />
 
             <validation-provider
               v-slot="{ errors, classes }"
@@ -166,8 +165,7 @@ import FileStorageItem from '../../ts/modules/file-storage/item.model';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
-// import ArtworkUpload from './ArtworkUpload.vue';
-// import ExtraFaces from './ExtraFaces.vue';
+import MExtraFaces from '../molecules/m-extra-faces.vue';
 // import SelectOption from './select-option.interface';
 // import AddonOption from './addon-option.interface';
 
@@ -186,14 +184,13 @@ export default {
   components: {
     ValidationObserver,
     ValidationProvider,
-    // ArtworkUpload,
     ACustomProductPrice,
     ACustomProductQuantity,
     MZoomGallery,
     MArtworkUpload,
+    MExtraFaces,
     SfSelect,
     SfButton
-    // ExtraFaces
   },
   props: {
     artworkUploadUrl: {
@@ -517,6 +514,10 @@ export default {
         ._product-description {
             margin-top: 1em;
         }
+    }
+
+    .sf-select {
+      --select-padding: 0;
     }
 
     &.-skin-petsies {
