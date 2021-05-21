@@ -41,7 +41,7 @@
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
-import Vue from 'vue';
+import Vue, { VueConstructor } from 'vue';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
 import { File as FilePond, Status } from 'filepond';
@@ -55,6 +55,9 @@ import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 import { ImageType } from '../../ts/modules/file-storage/imageType';
 import FileProcessingRepository from '../../ts/modules/file-storage/file-processing.repository';
+import ErrorConverterService from 'theme/ts/lib/error-converter.service';
+import FileProcessingRepositoryFactory from 'theme/ts/modules/file-storage/file-processing.repository.factory';
+import { InjectKey, InjectOptions } from 'vue/types/options';
 
 // Create component
 const FilePondComponent = vueFilePond(
@@ -84,7 +87,14 @@ interface FilePondInitialFile {
   }
 }
 
-export default Vue.extend({
+interface InjectedServices {
+  fErrorConverterService: ErrorConverterService,
+  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory
+}
+
+type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
+
+export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MArtworkUpload',
   components: {
     FilePond: FilePondComponent
@@ -92,7 +102,7 @@ export default Vue.extend({
   inject: {
     fErrorConverterService: { from: 'ErrorConverterService' },
     fFileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' }
-  },
+  } as unknown as InjectType<InjectedServices>,
   props: {
     productId: {
       type: String,
@@ -109,12 +119,12 @@ export default Vue.extend({
   },
   data () {
     return {
-      file: undefined,
+      file: undefined as undefined | string,
       fRemoveRequestsCount: 0,
       fPondStatus: 0,
-      fFileProcessingRepository: FileProcessingRepository,
-      fDragHoverHandler: undefined,
-      fDragDropHandler: undefined
+      fFileProcessingRepository: undefined as undefined | FileProcessingRepository,
+      fDragHoverHandler: undefined as undefined | ((e: DragEvent) => void),
+      fDragDropHandler: undefined as undefined | ((e: DragEvent) => void)
     }
   },
   computed: {
@@ -158,7 +168,7 @@ export default Vue.extend({
     const dropzone = this.getDropzone();
     const dropzoneOverlay = this.getDropzoneOverlay();
 
-    if (!dropzone || !dropzoneOverlay) {
+    if (!dropzone || !dropzoneOverlay || !this.fDragHoverHandler || !this.fDragDropHandler) {
       return;
     }
 
@@ -243,7 +253,7 @@ export default Vue.extend({
       // transfer: (transferId: string) => void,
       // options: any
     ) {
-      if (this.disabled) {
+      if (this.disabled || !this.fFileProcessingRepository) {
         error('Operations are disabled!');
         return;
       }
