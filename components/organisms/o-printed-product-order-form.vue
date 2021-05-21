@@ -29,19 +29,31 @@
           >
             <div class="_additional-options">
               <div v-show="hasStyleSelections">
-                <SfSelect
-                  v-model="selectedStyle"
-                  label="Select Design Variant"
-                  :required="true"
+                <validation-provider
+                  v-slot="{ errors }"
+                  rules="required"
+                  name="'Style Option'"
+                  tag="div"
                 >
-                  <SfSelectOption
-                    v-for="option in availableStyles"
-                    :key="option.value"
-                    :value="option.value"
+                  <SfSelect
+                    v-model="selectedStyle"
+                    name="design_option"
+                    label="Select Design Variant"
+                    required
                   >
-                    {{ option.label }}
-                  </SfSelectOption>
-                </SfSelect>
+                    <SfSelectOption
+                      v-for="option in availableStyles"
+                      :key="option.value"
+                      :value="option.value"
+                    >
+                      {{ option.label }}
+                    </SfSelectOption>
+                  </SfSelect>
+
+                  <div class="_error-text">
+                    {{ errors[0] }}
+                  </div>
+                </validation-provider>
               </div>
             </div>
 

@@ -77,7 +77,7 @@ export default {
         },
         {
           label: 'Face Masks',
-          url: '/'
+          url: '/printed/p/customPrintedMasks_bundle/printed-masks'
         },
         {
           label: 'Pet Keychains',
