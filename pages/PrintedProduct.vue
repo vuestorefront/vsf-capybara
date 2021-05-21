@@ -128,19 +128,23 @@ export default {
 
 #printed-product {
   box-sizing: border-box;
+  padding: 0 1rem;
+
+  ::v-deep {
+    .product__colors button {
+        border: 1px solid var(--c-light);
+    }
+  }
+
   @include for-desktop {
     max-width: 1272px;
     margin: 0 auto;
+
+    .o-printed-product-order-form {
+      margin-top: var(--spacer-lg);
+    }
   }
 }
 
-.o-printed-product-order-form {
-  margin-top: var(--spacer-lg);
-}
 
-::v-deep {
-  .product__colors button {
-      border: 1px solid var(--c-light);
-  }
-}
 </style>

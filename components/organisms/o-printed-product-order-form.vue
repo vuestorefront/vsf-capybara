@@ -443,11 +443,12 @@ export default {
 .o-printed-product-order-form {
     ._info {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
     }
 
     ._info > div {
-      max-width: 100%;
+      width: 100%;
       flex-grow: 1;
     }
 
@@ -513,6 +514,10 @@ export default {
     }
 
   @include for-desktop {
+    ._info {
+      flex-direction: row;
+    }
+
     ._info > div {
       max-width: 45%;
     }
