@@ -383,6 +383,7 @@ export default Vue.extend({
         const diffLog = await this.$store.dispatch('cart/addItem', {
           productToAdd: Object.assign({}, this.product, { qty: this.quantity })
         });
+
         diffLog.clientNotifications.forEach(notificationData => {
           notificationData.type = 'info'
           notificationData.timeToLive = 10 * 1000
@@ -393,6 +394,11 @@ export default Vue.extend({
             { root: true }
           );
         });
+
+        const uploader = this.getUploader();
+        if (uploader) {
+          uploader.clearInput();
+        }
       } catch (message) {
         this.$store.dispatch(
           'notification/spawnNotification',
@@ -412,6 +418,9 @@ export default Vue.extend({
     },
     getGallery (): HTMLElement | undefined {
       return this.$refs['gallery'] as HTMLElement | undefined;
+    },
+    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
+      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
     }
   },
   mounted (): void {
