@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.5",
-    "@types/storefront-ui__vue": "^0.7.0",
+    "@types/storefront-ui__vue": "https://github.com/GorbunovStudio/vue-storefront-ui-type-definitions.git",
     "husky": "^3.1.0",
     "css-loader": "^1.0.0",
     "postcss": "^8.0.9",

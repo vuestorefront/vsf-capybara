@@ -2,25 +2,28 @@
   <div class="o-printed-product-order-form product" :class="skinClass">
     <div class="_info">
       <div>
-        <h1 class="_product-name-mobile">
-          {{ productName }}
-        </h1>
+        <header class="sf-heading sf-heading--no-underline sf-heading--left">
+          <h1 class="_product-name-mobile sf-heading__title">
+            {{ productName }}
+          </h1>
+        </header>
 
         <m-zoom-gallery ref="gallery" :images="galleryImages" />
       </div>
 
       <div>
-        <h1 class="_product-name-desktop">
-          {{ productName }}
-        </h1>
+        <header class="sf-heading sf-heading--no-underline sf-heading--left">
+          <h1 class="_product-name-desktop sf-heading__title">
+            {{ productName }}
+          </h1>
+        </header>
 
         <div class="_short-description" v-html="shortDescription" />
 
-        <a-custom-product-price
+        <a-custom-price
           class="_price"
-          :price="price"
+          :regular="price"
           :special-price="specialPrice"
-          show-cents
         />
 
         <validation-observer v-slot="{ passes }" slim>
@@ -131,30 +134,27 @@
       </div>
     </div>
 
-    <div class="row _description">
-      <div class="columns">
-        <div class="_header">
-          <div class="custom-header _h3">
-            <div class="_container">
-              <h3 class="_content">
-                Product Details
-              </h3>
-            </div>
-          </div>
-        </div>
+    <div class="_description">
+      <header class="sf-heading">
+        <h3 class="sf-heading__title sf-heading__title--h3">
+          Product Details
+        </h3>
+      </header>
 
-        <div class="_product-description" v-html="description" />
-      </div>
+      <div class="_product-description" v-html="description" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue';
+import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
+import { Logger } from '@vue-storefront/core/lib/logger';
+import i18n from '@vue-storefront/i18n';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 
-import ACustomProductPrice from '../atoms/a-custom-product-price.vue';
+import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -162,9 +162,6 @@ import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 
 import FileStorageItem from '../../ts/modules/file-storage/item.model';
-import { Logger } from '@vue-storefront/core/lib/logger';
-import i18n from '@vue-storefront/i18n';
-import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import MExtraFaces from '../molecules/m-extra-faces.vue';
 // import SelectOption from './select-option.interface';
 // import AddonOption from './addon-option.interface';
@@ -179,12 +176,12 @@ export interface GalleryProductImages {
   images: ZoomGalleryImage[]
 }
 
-export default {
+export default Vue.extend({
   name: 'OPrintedProductOrderForm',
   components: {
     ValidationObserver,
     ValidationProvider,
-    ACustomProductPrice,
+    ACustomPrice,
     ACustomProductQuantity,
     MZoomGallery,
     MArtworkUpload,
@@ -265,13 +262,13 @@ export default {
   data () {
     return {
       quantity: 1,
-      fStorageItemId: undefined,
-      fSelectedStyle: undefined,
+      fStorageItemId: undefined as string | undefined,
+      fSelectedStyle: undefined as string | undefined,
       fIsLoading: false
     }
   },
   computed: {
-    isLoading () {
+    isLoading (): boolean {
       return this.fIsLoading;
     },
     skinClass (): string {
@@ -367,7 +364,7 @@ export default {
 
       this.fStorageItemId = value.id;
     },
-    onSubmit (event: Event) {
+    onSubmit (event: Event): void {
       this.fIsLoading = true;
 
       this.$store.dispatch('budsies/addPrintedProductToCart', {
@@ -390,7 +387,7 @@ export default {
         this.fIsLoading = false;
       });
     },
-    async onSuccess () {
+    async onSuccess (): Promise<void> {
       try {
         const diffLog = await this.$store.dispatch('cart/addItem', {
           productToAdd: Object.assign({}, this.product, { qty: this.quantity })
@@ -415,7 +412,7 @@ export default {
 
       this.fIsLoading = false;
     },
-    onFailure (message) {
+    onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
         message: message,
@@ -426,7 +423,7 @@ export default {
       return this.$refs['gallery'] as HTMLElement | undefined;
     }
   },
-  mounted () {
+  mounted (): void {
     if (
       this.initialStyleValue &&
           this.availableStyles.find(
@@ -436,18 +433,20 @@ export default {
       this.selectedStyle = this.initialStyleValue;
     }
   },
-  created () {
+  created (): void {
     this.quantity = this.productQuantity;
 
     if (this.uploadedArtworkId) {
       this.fStorageItemId = this.uploadedArtworkId;
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "~@storefront-ui/shared/styles/helpers/typography";
+@import "~@storefront-ui/shared/styles/components/atoms/SfHeading";
 
 .o-printed-product-order-form {
     ._info {
@@ -463,6 +462,16 @@ export default {
 
     ._product-name-desktop {
         display: none;
+    }
+
+    ._short-description {
+      @include font(
+        --product-description-font,
+        var(--font-light),
+        var(--font-base),
+        1.6,
+        var(--font-family-primary)
+      );
     }
 
     ._price,
@@ -486,6 +495,7 @@ export default {
 
     ._artwork-upload {
         ._step-title {
+            font-size: var(--font-base);
             font-weight: 800;
             text-align: left;
         }
@@ -509,10 +519,42 @@ export default {
     }
 
     ._description {
-        margin-top: 3em;
+        margin-top: calc(var(--spacer-lg) * 2);
 
         ._product-description {
             margin-top: 1em;
+
+            ::v-deep h1,
+            ::v-deep h2,
+            ::v-deep h3,
+            ::v-deep h4,
+            ::v-deep h5,
+            ::v-deep h6 {
+              //@extend .sf-heading;
+              text-align: var(--heading-text-align, center);
+              margin-top: var(--spacer-lg);
+              @extend .sf-heading__title;
+            }
+
+            ::v-deep h2 {
+              @extend .sf-heading__title--h2;
+            }
+
+            ::v-deep h3 {
+              @extend .sf-heading__title--h3;
+            }
+
+            ::v-deep h4 {
+              @extend .sf-heading__title--h4;
+            }
+
+            ::v-deep h5 {
+              @extend .sf-heading__title--h5;
+            }
+
+            ::v-deep h6 {
+              @extend .sf-heading__title--h6;
+            }
         }
     }
 
