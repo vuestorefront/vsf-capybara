@@ -136,9 +136,12 @@
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue';
+import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
+import { Logger } from '@vue-storefront/core/lib/logger';
+import i18n from '@vue-storefront/i18n';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -148,9 +151,6 @@ import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 
 import FileStorageItem from '../../ts/modules/file-storage/item.model';
-import { Logger } from '@vue-storefront/core/lib/logger';
-import i18n from '@vue-storefront/i18n';
-import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 // import ArtworkUpload from './ArtworkUpload.vue';
 // import ExtraFaces from './ExtraFaces.vue';
 // import SelectOption from './select-option.interface';
@@ -166,7 +166,7 @@ export interface GalleryProductImages {
   images: ZoomGalleryImage[]
 }
 
-export default {
+export default Vue.extend({
   name: 'OPrintedProductOrderForm',
   components: {
     ValidationObserver,
@@ -253,13 +253,13 @@ export default {
   data () {
     return {
       quantity: 1,
-      fStorageItemId: undefined,
-      fSelectedStyle: undefined,
+      fStorageItemId: undefined as string | undefined,
+      fSelectedStyle: undefined as string | undefined,
       fIsLoading: false
     }
   },
   computed: {
-    isLoading () {
+    isLoading (): boolean {
       return this.fIsLoading;
     },
     skinClass (): string {
@@ -355,7 +355,7 @@ export default {
 
       this.fStorageItemId = value.id;
     },
-    onSubmit (event: Event) {
+    onSubmit (event: Event): void {
       this.fIsLoading = true;
 
       this.$store.dispatch('budsies/addPrintedProductToCart', {
@@ -378,7 +378,7 @@ export default {
         this.fIsLoading = false;
       });
     },
-    async onSuccess () {
+    async onSuccess (): Promise<void> {
       try {
         const diffLog = await this.$store.dispatch('cart/addItem', {
           productToAdd: Object.assign({}, this.product, { qty: this.quantity })
@@ -403,7 +403,7 @@ export default {
 
       this.fIsLoading = false;
     },
-    onFailure (message) {
+    onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
         message: message,
@@ -414,7 +414,7 @@ export default {
       return this.$refs['gallery'] as HTMLElement | undefined;
     }
   },
-  mounted () {
+  mounted (): void {
     if (
       this.initialStyleValue &&
           this.availableStyles.find(
@@ -424,14 +424,14 @@ export default {
       this.selectedStyle = this.initialStyleValue;
     }
   },
-  created () {
+  created (): void {
     this.quantity = this.productQuantity;
 
     if (this.uploadedArtworkId) {
       this.fStorageItemId = this.uploadedArtworkId;
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
