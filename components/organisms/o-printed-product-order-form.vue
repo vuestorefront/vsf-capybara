@@ -109,7 +109,7 @@
             <div class="_actions">
               <div class="row">
                 <div class="medium-8 large-6 columns">
-                  <SfButton class="_add-to-cart color-primary" type="submit">
+                  <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
                     Add to Cart
                   </SfButton>
                 </div>
@@ -153,6 +153,7 @@ import { SfButton, SfSelect } from '@storefront-ui/vue';
 import FileStorageItem from '../../ts/modules/file-storage/item.model';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 // import ArtworkUpload from './ArtworkUpload.vue';
 // import ExtraFaces from './ExtraFaces.vue';
 // import SelectOption from './select-option.interface';
@@ -256,10 +257,14 @@ export default {
     return {
       quantity: 1,
       fStorageItemId: undefined,
-      fSelectedStyle: undefined
+      fSelectedStyle: undefined,
+      fIsLoading: false
     }
   },
   computed: {
+    isLoading () {
+      return this.fIsLoading;
+    },
     skinClass (): string {
       return '-skin-petsies';
     },
@@ -354,33 +359,52 @@ export default {
       this.fStorageItemId = value.id;
     },
     onSubmit (event: Event) {
-      this.$v.$touch();
+      this.fIsLoading = true;
 
-      if (this.$v.$invalid) {
-        return;
+      this.$store.dispatch('budsies/addPrintedProductToCart', {
+        productId: this.productId,
+        designOption: this.selectedStyle,
+        uploadedArtworkIds: [this.storageItemId],
+        qty: this.quantity,
+        addons: {}
+      }).then(result => {
+        if (result.code !== 200) {
+          this.onFailure(result.result);
+        } else {
+          this.onSuccess(result.result);
+        }
+      }).catch(err => {
+        Logger.error(err, 'budsies')();
+
+        this.onFailure('Unexpected error: ' + err);
+
+        this.fIsLoading = false;
+      });
+    },
+    async onSuccess () {
+      try {
+        const diffLog = await this.$store.dispatch('cart/addItem', {
+          productToAdd: Object.assign({}, this.product, { qty: this.quantity })
+        });
+        diffLog.clientNotifications.forEach(notificationData => {
+          notificationData.type = 'info'
+          notificationData.timeToLive = 10 * 1000
+
+          this.$store.dispatch(
+            'notification/spawnNotification',
+            notificationData,
+            { root: true }
+          );
+        });
+      } catch (message) {
+        this.$store.dispatch(
+          'notification/spawnNotification',
+          notifications.createNotification({ type: 'danger', message, timeToLive: 10 * 1000 }),
+          { root: true }
+        );
       }
 
-      this.$store
-        .dispatch('budsies/addPrintedProductToCart', {
-          productId: this.productId,
-          designOption: this.selectedStyle,
-          uploadedArtworkIds: this.storageItemId,
-          qty: this.quantity,
-          addons: {}
-        }).then(result => {
-          if (result.code !== 200) {
-            this.onFailure(result.result);
-          } else {
-            this.onSuccess();
-          }
-        }).catch(err => {
-          Logger.error(err, 'budsies')();
-
-          this.onFailure('Unexpected error: ' + err);
-        });
-    },
-    onSuccess () {
-
+      this.fIsLoading = false;
     },
     onFailure (message) {
       this.$store.dispatch('notification/spawnNotification', {
