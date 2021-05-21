@@ -20,11 +20,10 @@
 
         <div class="_short-description" v-html="shortDescription" />
 
-        <a-custom-product-price
+        <a-custom-price
           class="_price"
-          :price="price"
+          :regular="price"
           :special-price="specialPrice"
-          show-cents
         />
 
         <validation-observer v-slot="{ passes }" slim>
@@ -130,7 +129,7 @@
           Product Details
         </h3>
       </header>
-        
+
       <div class="_product-description" v-html="description" />
     </div>
   </div>
@@ -141,7 +140,7 @@ import { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 
-import ACustomProductPrice from '../atoms/a-custom-product-price.vue';
+import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -173,7 +172,7 @@ export default {
     ValidationObserver,
     ValidationProvider,
     // ArtworkUpload,
-    ACustomProductPrice,
+    ACustomPrice,
     ACustomProductQuantity,
     MZoomGallery,
     MArtworkUpload,
