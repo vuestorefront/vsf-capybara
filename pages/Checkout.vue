@@ -25,13 +25,13 @@
 <script>
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
-import OPayment from 'theme/components/organisms/o-payment';
-import OShipping from 'theme/components/organisms/o-shipping';
-import OConfirmOrder from 'theme/components/organisms/o-confirm-order';
-import OOrderReview from 'theme/components/organisms/o-order-review';
-import OOrderSummary from 'theme/components/organisms/o-order-summary';
-import OOrderConfirmation from 'theme/components/organisms/o-order-confirmation';
-import OPersonalDetails from 'theme/components/organisms/o-personal-details';
+import OPayment from 'theme/components/checkout/o-payment';
+import OShipping from 'theme/components/checkout/o-shipping';
+import OConfirmOrder from 'theme/components/checkout/o-confirm-order';
+import OOrderReview from 'theme/components/checkout/o-order-review';
+import OOrderSummary from 'theme/components/checkout/o-order-summary';
+import OOrderConfirmation from 'theme/components/checkout/o-order-confirmation';
+import OPersonalDetails from 'theme/components/checkout/o-personal-details';
 
 export default {
   name: 'Checkout',
