@@ -16,6 +16,7 @@
       :product-images="getProductImages"
       initial-style-value="simplePrintedKeychains"
       :available-styles="getAvailableStyles"
+      :addons="getAvailableAddons"
     />
   </div>
 </template>
@@ -40,8 +41,7 @@ export default {
       getProductGallery: 'product/getProductGallery',
       getCurrentProductConfiguration: 'product/getCurrentProductConfiguration',
       getOriginalProduct: 'product/getOriginalProduct',
-      getCurrentCustomOptions: 'product/getCurrentCustomOptions',
-      attributesByCode: 'attribute/attributeListByCode'
+      getCurrentCustomOptions: 'product/getCurrentCustomOptions'
     }),
     artworkUploadUrl () {
       return config.images.fileuploaderUploadUrl;
@@ -89,6 +89,23 @@ export default {
         price: variantProduct.regular_price,
         specialPrice: variantProduct.special_price
       }));
+    },
+    getAvailableAddons () {
+      const addons = this.$store.getters['budsies/getPrintedProductAddons'](this.getCurrentProduct.id);
+
+      if (!addons.length) {
+        return [];
+      }
+
+      return addons.map(
+        (addon) => {
+          return {
+            id: addon.id,
+            label: addon.label,
+            value: addon.value
+          }
+        }
+      );
     }
   },
   async asyncData ({ store, route, context }) {
@@ -96,6 +113,9 @@ export default {
     const product = await store.dispatch('product/loadProduct', {
       parentSku: route.params.parentSku,
       childSku: null
+    });
+    await store.dispatch('budsies/loadPrintedProductAddons', {
+      productId: product.id
     });
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',

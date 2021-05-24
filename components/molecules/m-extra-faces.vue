@@ -46,9 +46,12 @@
     <SfSelect
       v-model="selectedVariant"
       name="extra_faces_addon"
-      label="Select Design Variant"
       class="_extra-faces-selector"
+      selected=""
     >
+      <SfSelectOption value="">
+        No extra face
+      </SfSelectOption>
       <SfSelectOption
         v-for="option in availableOptions"
         :key="option.id"
@@ -86,7 +89,7 @@ export interface UploadedAddonArtwork {
   url: string
 }
 
-export default {
+export default Vue.extend({
   name: 'MExtraFaces',
   components: {
     ValidationProvider,
@@ -116,7 +119,7 @@ export default {
     },
     initialArtworks: {
       type: Array as PropType<UploadedAddonArtwork[]>,
-      default: []
+      default: () => []
     }
   },
   data () {
@@ -202,7 +205,7 @@ export default {
       });
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

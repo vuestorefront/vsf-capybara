@@ -94,11 +94,11 @@
             </div>
 
             <MExtraFaces
+              ref="extra-faces"
               :available-options="addons"
               :product-id="productType"
               :disabled="isUploadDisabled"
               :upload-url="artworkUploadUrl"
-              :initial-variant="initialExtraFacesAddon"
               v-show="hasExtraFaceAddons"
             />
 
@@ -162,7 +162,7 @@ import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 
 import FileStorageItem from '../../ts/modules/file-storage/item.model';
-import MExtraFaces from '../molecules/m-extra-faces.vue';
+import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
 // import SelectOption from './select-option.interface';
 // import AddonOption from './addon-option.interface';
 
@@ -247,14 +247,10 @@ export default Vue.extend({
       default: () => []
     },
     addons: {
-      type: Array, // as PropType<AddonOption[]>,
+      type: Array as PropType<AddonOption[]>,
       default: () => []
     },
     initialStyleValue: {
-      type: String,
-      default: ''
-    },
-    initialExtraFacesAddon: {
       type: String,
       default: ''
     }
@@ -326,7 +322,7 @@ export default Vue.extend({
     },
     hasExtraFaceAddons (): boolean {
       return (
-        this.addons.length > 0 && this.initialExtraFacesAddon !== undefined
+        this.addons.length > 0
       );
     },
     storageItemId (): string | undefined {
@@ -367,12 +363,15 @@ export default Vue.extend({
     onSubmit (event: Event): void {
       this.fIsLoading = true;
 
+      const extraFacesArtworks = this.getExtraFaces().fUploaderValues.map(item => item.id);
+      const extraFacesSelectedVariant = this.getExtraFaces().fSelectedVariant;
+
       this.$store.dispatch('budsies/addPrintedProductToCart', {
         productId: this.productId,
         designOption: this.selectedStyle,
-        uploadedArtworkIds: [this.storageItemId],
+        uploadedArtworkIds: [this.storageItemId, ...extraFacesArtworks],
         qty: this.quantity,
-        addons: {}
+        addons: extraFacesSelectedVariant ? { extra_faces_addon: extraFacesSelectedVariant } : {}
       }).then(result => {
         if (result.code !== 200) {
           this.onFailure(result.result);
@@ -430,6 +429,9 @@ export default Vue.extend({
     },
     getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
       return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
+    },
+    getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
+      return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     }
   },
   mounted (): void {
