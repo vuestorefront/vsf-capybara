@@ -22,8 +22,8 @@
 </template>
 <script>
 import { SfHeading, SfCharacteristic } from '@storefront-ui/vue';
-import APromoCode from 'theme/components/atoms/a-promo-code';
-import MPriceSummary from 'theme/components/molecules/m-price-summary';
+import APromoCode from 'theme/components/checkout/a-promo-code';
+import MPriceSummary from 'theme/components/checkout/m-price-summary';
 export default {
   name: 'OOrderSummary',
   components: {

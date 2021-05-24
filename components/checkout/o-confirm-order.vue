@@ -292,8 +292,8 @@ import {
   SfCharacteristic,
   SfCollectedProduct
 } from '@storefront-ui/vue';
-import MPriceSummary from 'theme/components/molecules/m-price-summary';
-import APromoCode from 'theme/components/atoms/a-promo-code';
+import MPriceSummary from 'theme/components/checkout/m-price-summary';
+import APromoCode from 'theme/components/checkout/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
 import { createSmoothscroll } from 'theme/helpers';
 
