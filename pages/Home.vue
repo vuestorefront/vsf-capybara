@@ -58,7 +58,7 @@ import LazyHydrate from 'vue-lazy-hydration';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import { isServer, onlineHelper } from '@vue-storefront/core/helpers';
 import MProductCarousel from 'theme/components/molecules/m-product-carousel';
-import ONewsletter from 'theme/components/organisms/o-newsletter';
+import ONewsletter from 'theme/components/home/o-newsletter';
 import AImagesGrid from 'theme/components/atoms/a-images-grid';
 import { checkWebpSupport } from 'theme/helpers'
 
