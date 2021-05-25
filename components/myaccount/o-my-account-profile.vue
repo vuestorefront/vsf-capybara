@@ -13,8 +13,8 @@
 
 <script>
 import { SfTabs } from '@storefront-ui/vue';
-import MUpdatePersonalData from 'theme/components/molecules/m-update-personal-data'
-import MUpdatePassword from 'theme/components/molecules/m-update-password'
+import MUpdatePersonalData from 'theme/components/myaccount/m-update-personal-data'
+import MUpdatePassword from 'theme/components/myaccount/m-update-password'
 
 export default {
   name: 'OMyAccountProfile',
