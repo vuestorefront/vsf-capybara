@@ -360,11 +360,15 @@ export default Vue.extend({
 
       this.fStorageItemId = value.id;
     },
-    onSubmit (event: Event): void {
+    async onSubmit (event: Event): Promise<void> {
       this.fIsLoading = true;
 
       const extraFacesArtworks = this.getExtraFaces().fUploaderValues.map(item => item.id);
       const extraFacesSelectedVariant = this.getExtraFaces().fSelectedVariant;
+
+      if (!this.$store.getters['cart/getCartToken']) {
+        await this.$store.dispatch('cart/connect', { guestCart: false });
+      }
 
       this.$store.dispatch('budsies/addPrintedProductToCart', {
         productId: this.productId,
@@ -388,29 +392,22 @@ export default Vue.extend({
     },
     async onSuccess (): Promise<void> {
       try {
-        const diffLog = await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, { qty: this.quantity })
-        });
+        await this.$store.dispatch('cart/load', { forceClientState: false, forceSync: true });
 
-        diffLog.clientNotifications.forEach(notificationData => {
-          notificationData.type = 'info'
-          notificationData.timeToLive = 10 * 1000
-
-          this.$store.dispatch(
-            'notification/spawnNotification',
-            notificationData,
-            { root: true }
-          );
-        });
+        this.$store.dispatch(
+          'notification/spawnNotification',
+          notifications.productAddedToCart(),
+          { root: true }
+        );
 
         const uploader = this.getUploader();
         if (uploader) {
           uploader.clearInput();
         }
-      } catch (message) {
+      } catch (e) {
         this.$store.dispatch(
           'notification/spawnNotification',
-          notifications.createNotification({ type: 'danger', message, timeToLive: 10 * 1000 }),
+          notifications.createNotification({ type: 'danger', message: e.message, timeToLive: 10 * 1000 }),
           { root: true }
         );
       }
