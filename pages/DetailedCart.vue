@@ -25,13 +25,11 @@
                 :key="product.id"
                 :qty="product.qty"
                 :image="getThumbnailForProductExtend(product)"
+                image-width="140"
+                image-height="140"
                 :title="product.name"
-                :regular-price="
-                  product.price.regular && `$${product.price.regular}`
-                "
-                :special-price="
-                  product.price.special && `$${product.price.special}`
-                "
+                :regular-price="getProductRegularPrice(product)"
+                :special-price="getProductSpecialPrice(product)"
                 class="sf-collected-product--detailed collected-product"
                 @click:remove="removeHandler(product)"
                 @input="changeQuantity(product, $event)"
@@ -50,18 +48,42 @@
                   <SfButton class="sf-button--text actions__button desktop-only">
                     Edit
                   </SfButton>
-                  <SfButton class="sf-button--text actions__button desktop-only">
-                    Save for later
-                  </SfButton>
-                  <SfButton class="sf-button--text actions__button desktop-only">
-                    Add to compare
-                  </SfButton>
-                  <SfButton class="sf-button--text actions__button desktop-only">
-                    Add message or gift wrap
+                </template>
+                <template #more-actions>
+                  <SfButton
+                    aria-label="Edit"
+                    class="sf-button--pure sf-collected-product__more-actions mobile-only"
+                  >
+                    <SfIcon icon="more" />
                   </SfButton>
                 </template>
               </SfCollectedProduct>
             </transition-group>
+            <div class="_dropdown-container">
+              <SfButton
+                class="color-secondary"
+                @click.prevent.self="isDropdownOpen = !isDropdownOpen"
+              >
+                Make your own
+              </SfButton>
+              <SfDropdown
+                :is-open="isDropdownOpen"
+                @click:close="isDropdownOpen = false"
+              >
+                <SfList>
+                  <SfListItem
+                    v-for="action in dropdownActions"
+                    :key="action.label"
+                  >
+                    <router-link
+                      :to="action.url"
+                    >
+                      {{ action.label }}
+                    </router-link>
+                  </SfListItem>
+                </SfList>
+              </SfDropdown>
+            </div>
           </div>
           <div v-else key="empty-cart" class="empty-cart">
             <SfImage
@@ -88,9 +110,12 @@
 </template>
 <script>
 import {
+  SfList,
+  SfDropdown,
   SfCollectedProduct,
   SfButton,
   SfImage,
+  SfIcon,
   SfProperty,
   SfHeading,
   SfBreadcrumbs
@@ -102,9 +127,12 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 export default {
   name: 'DetailedCart',
   components: {
+    SfList,
+    SfDropdown,
     SfCollectedProduct,
     SfBreadcrumbs,
     SfImage,
+    SfIcon,
     SfButton,
     SfHeading,
     SfProperty,
@@ -113,6 +141,29 @@ export default {
   mixins: [Shipping],
   data () {
     return {
+      isDropdownOpen: false,
+      dropdownActions: [
+        {
+          label: 'Petsies',
+          url: '/'
+        },
+        {
+          label: 'Pet Pillow',
+          url: '/'
+        },
+        {
+          label: 'Photo Pillow',
+          url: '/'
+        },
+        {
+          label: 'Socks',
+          url: '/'
+        },
+        {
+          label: 'Face Masks',
+          url: '/'
+        }
+      ],
       breadcrumbs: [
         {
           text: 'Home',
@@ -143,6 +194,14 @@ export default {
     }
   },
   methods: {
+    getProductRegularPrice (product) {
+      const price = product.original_price_incl_tax || product.price_incl_tax;
+      return price ? this.$options.filters.price(price) : '';
+    },
+    getProductSpecialPrice (product) {
+      const price = product.special_price ? product.price_incl_tax : false;
+      return price ? this.$options.filters.price(price) : '';
+    },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });
     },
@@ -172,6 +231,32 @@ export default {
   padding: var(--spacer-base) 0;
 }
 .detailed-cart {
+  .sf-collected-product {
+    --collected-product-image-background: none;
+  }
+  ._dropdown-container {
+    display: inline-block;
+    position: relative;
+    margin: var(--spacer-lg) auto;
+    align-self: center;
+    .sf-button {
+      --button-font-size: var(--font-sm);
+      --button-font-line-height: 1;
+    }
+    .sf-dropdown {
+      left: 0;
+      --dropdown-background: var(--c-primary);
+      --c-link: var(--c-light-variant);
+      --c-link-hover: var(--c-light-variant);
+      --list-item-padding: var(--spacer-xs) var(--spacer-sm);
+
+      .sf-list__item {
+        &:hover {
+          background-color: var(--c-light);
+        }
+      }
+    }
+  }
   &__main {
     padding: 0 var(--spacer-sm);
     @include for-desktop {
@@ -197,6 +282,14 @@ export default {
     }
   }
 }
+.collected-product-list {
+  text-align: center;
+}
+@include for-desktop {
+    .collected-product-list {
+      text-align: left;
+    }
+  }
 .collected-product {
   --collected-product-padding: var(--spacer-sm) 0;
   border: 1px solid var(--c-light);

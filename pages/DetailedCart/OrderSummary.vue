@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="detailed-cart-order-summary">
     <SfHeading
       title="Totals"
       :level="2"
@@ -30,31 +30,26 @@
       />
     </div>
     <div class="actions">
+      <APromoCode :allow-promo-code-removal="false" />
       <SfButton
-        class="sf-button--full-width actions__button desktop-only"
+        class="sf-button--full-width actions__button"
         @click="goToCheckout"
       >
         Go to checkout
       </SfButton>
-      <div class="actions__email">
-        <SfCharacteristic icon="mail" size-icon="20px" color-icon="secondary">
-          <template #text>
-            <SfButton
-              class="sf-button--text actions__button actions__button--secondary"
-            >
-              Send my basket to email
-            </SfButton>
-          </template>
-        </SfCharacteristic>
-      </div>
     </div>
-    <div class="info desktop-only">
-      <p>Helpful information:</p>
-      <ul class="info__list">
-        <li>Questions? Chat with us or call 1.888.282.6060.</li>
-        <li>Shipping internationally? Choose your destination & currency.</li>
-        <li>Shipping methods & charges</li>
-      </ul>
+    <div class="info">
+      <div class="shipping-handling-block">
+        <h3>Shipping &amp; Handling</h3>
+        <p>Once completed, your order will ship via USPS</p>
+        <ul>
+          <li>Petsies: (<strong>US</strong>) $13.95, $5.95 for each additional; (<strong>International</strong>) $25.95, $5.95 for each additional</li>
+          <li>Pillows: <strong>(US</strong>) starting at $9.95;&nbsp;(<strong>International)</strong> $20.95</li>
+          <li>Petsies Socks, Masks &amp; Keychains: (<strong>US</strong>) $4.95; (<strong>International</strong>)&nbsp;$9.95</li>
+          <li>Read more about rates&nbsp;<a href="http://support.mypetsies.com/support/solutions/articles/13000017023-shipping-handling-fees" target="_blank">here</a>. Rates determined by weight</li>
+          <li>Tracking number will be emailed to you at time of shipment</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -62,20 +57,20 @@
 import {
   SfHeading,
   SfButton,
-  SfCharacteristic,
   SfProperty,
   SfDivider
 } from '@storefront-ui/vue';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import APromoCode from 'theme/components/atoms/a-promo-code.vue'
 export default {
   name: 'OrderSummary',
   components: {
+    APromoCode,
     SfHeading,
     SfButton,
     SfDivider,
-    SfCharacteristic,
     SfProperty
   },
   props: {
@@ -139,62 +134,57 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-.title {
-  @include for-desktop {
-    --heading-title-margin: 0 0 var(--spacer-2xl) 0;
-    --heading-title-font-size: var(--h3-font-size);
-    --heading-title-font-weight: var(--font-semibold);
-  }
-}
-.property {
-  margin: var(--spacer-base) 0;
-  @include for-mobile {
-    --property-name-font-size: var(--font-base);
-    --property-value-font-size: var(--font-lg);
-    --property-value-font-weight: var(--font-semibold);
-    &__total {
-      --property-value-font-weight: var(--font-bold);
-    }
-  }
-  &:last-of-type {
+
+.detailed-cart-order-summary {
+  .title {
     @include for-desktop {
-      margin: var(--spacer-base) 0 var(--spacer-2xl) 0;
+      --heading-title-margin: 0 0 var(--spacer-2xl) 0;
+      --heading-title-font-size: var(--h3-font-size);
+      --heading-title-font-weight: var(--font-semibold);
     }
   }
-}
-.divider {
-  --divider-border-color: var(--c-white);
-  --divider-margin: var(--spacer-lg) 0 0 0;
-  @include for-desktop {
-    --divider-margin: calc(var(--spacer-base) * 2) 0 0 0;
-  }
-}
-.actions {
-  &__email {
-    margin: var(--spacer-lg) 0 0 0;
-  }
-  &__button {
-    margin: var(--spacer-sm) 0;
-    &--secondary {
-      margin: 0 0 0 var(--spacer-xs);
-      text-align: left;
+  .property {
+    margin: var(--spacer-base) 0;
+    @include for-mobile {
+      --property-name-font-size: var(--font-base);
+      --property-value-font-size: var(--font-lg);
+      --property-value-font-weight: var(--font-semibold);
+      &__total {
+        --property-value-font-weight: var(--font-bold);
+      }
+    }
+    &:last-of-type {
+      @include for-desktop {
+        margin: var(--spacer-base) 0 var(--spacer-2xl) 0;
+      }
     }
   }
-}
-.info {
-  margin: var(--spacer-2xl) 0;
-  color: var(--c-dark-variant);
-  font-family: var(--font-family-primary);
-  font-size: var(--font-xs);
-  line-height: 1.6;
-  &__list {
+  .divider {
+    --divider-border-color: var(--c-white);
+    --divider-margin: var(--spacer-lg) 0 0 0;
+    @include for-desktop {
+      --divider-margin: calc(var(--spacer-base) * 2) 0 0 0;
+    }
+  }
+  .actions {
+    &__email {
+      margin: var(--spacer-lg) 0 0 0;
+    }
+    &__button {
+      margin: var(--spacer-sm) 0;
+      &--secondary {
+        margin: 0 0 0 var(--spacer-xs);
+        text-align: left;
+      }
+    }
+  }
+  .info {
+    margin: var(--spacer-2xl) 0 var(--spacer-xl) 0;
+    font-size: var(--font-xs);
+    line-height: 1.6;
+  }
+  .promo-code {
     padding: 0;
-    list-style: none;
-    li::before {
-      content: "•";
-      color: var(--c-primary);
-      padding: 0 var(--spacer-xs) 0 0;
-    }
   }
 }
 </style>
