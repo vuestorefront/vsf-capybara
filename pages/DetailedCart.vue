@@ -43,7 +43,7 @@
                     Edit
                   </SfButton>
                   <SfButton
-                    class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text"
+                    class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text actions__button"
                     @click="removeHandler(product)"
                   >
                     Remove
@@ -66,7 +66,7 @@
                 class="color-secondary"
                 @click.prevent.self="isDropdownOpen = !isDropdownOpen"
               >
-                Make your own
+                Order More
               </SfButton>
               <SfDropdown
                 :is-open="isDropdownOpen"
@@ -319,6 +319,12 @@ export default {
       .sf-price {
         flex-direction: row;
       }
+      ::v-deep &__details {
+        flex-grow: 1.5;
+      }
+      ::v-deep &__actions {
+        flex-grow: 1;
+      }
     }
     &__main {
       flex: 1;
@@ -339,6 +345,7 @@ export default {
 }
 .collected-product {
   --collected-product-padding: var(--spacer-sm) 0;
+  --collected-product-title-font-size: var(--font-sm);
   border: 1px solid var(--c-light);
   border-width: 1px 0 0 0;
   &__properties {
@@ -352,11 +359,12 @@ export default {
   }
   @include for-desktop {
     --collected-product-padding: var(--spacer-lg) 0;
+    --collected-product-title-font-size: var(--font-base);
   }
 }
 .actions {
   &__button {
-    margin: 0 0 var(--spacer-base) 0;
+    margin-bottom: var(--spacer-xs);
   }
 }
 .empty-cart {

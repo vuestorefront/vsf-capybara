@@ -38,7 +38,7 @@
         Go to checkout
       </SfButton>
     </div>
-    <SfLoader :loading="isUpdatingQuantity" />
+    <SfLoader v-if="isUpdatingQuantity" :loading="isUpdatingQuantity" />
   </div>
 </template>
 <script>
