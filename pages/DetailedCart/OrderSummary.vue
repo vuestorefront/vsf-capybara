@@ -38,10 +38,12 @@
         Go to checkout
       </SfButton>
     </div>
+    <SfLoader :loading="isUpdatingQuantity" />
   </div>
 </template>
 <script>
 import {
+  SfLoader,
   SfHeading,
   SfButton,
   SfProperty,
@@ -54,6 +56,7 @@ import APromoCode from 'theme/components/atoms/a-promo-code.vue'
 export default {
   name: 'OrderSummary',
   components: {
+    SfLoader,
     APromoCode,
     SfHeading,
     SfButton,
@@ -76,6 +79,10 @@ export default {
     totalItems: {
       type: Number,
       default: null
+    },
+    isUpdatingQuantity: {
+      type: Boolean,
+      required: true
     }
   },
   computed: {
@@ -123,6 +130,7 @@ export default {
 @import "~@storefront-ui/vue/styles";
 
 .detailed-cart-order-summary {
+  position: relative;
   background: var(--c-light);
   padding: var(--spacer-xl);
 
@@ -170,6 +178,12 @@ export default {
   }
   .promo-code {
     padding: 0;
+  }
+  .sf-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
   }
 }
 </style>

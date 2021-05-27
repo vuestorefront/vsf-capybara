@@ -112,6 +112,7 @@
           :products="products"
           :shipping-methods="shippingMethods"
           :total-items="totalItems"
+          :is-updating-quantity="isUpdatingQuantity"
         />
 
         <div class="_shipping-handling-block">
@@ -163,6 +164,7 @@ export default {
   mixins: [Shipping],
   data () {
     return {
+      isUpdatingQuantity: false,
       isDropdownOpen: false,
       dropdownActions: [
         {
@@ -234,10 +236,12 @@ export default {
       return getThumbnailForProduct(product);
     },
     changeQuantity (product, newQuantity) {
+      this.isUpdatingQuantity = true;
+
       this.$store.dispatch('cart/updateQuantity', {
         product: product,
         qty: newQuantity
-      });
+      }).finally(() => { this.isUpdatingQuantity = false });
     }
   }
 };
