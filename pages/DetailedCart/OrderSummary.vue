@@ -19,7 +19,7 @@
       <SfProperty
         name="Shipping"
         v-if="cheapestShippingMethod.price !== undefined"
-        :value="`From ${cheapestShippingMethod.price}`"
+        :value="`From $${cheapestShippingMethod.price.toFixed(2)}`"
         class="sf-property--full-width sf-property--large property"
       />
       <SfDivider class="divider" />
