@@ -38,19 +38,6 @@
         Go to checkout
       </SfButton>
     </div>
-    <div class="info">
-      <div class="shipping-handling-block">
-        <h3>Shipping &amp; Handling</h3>
-        <p>Once completed, your order will ship via USPS</p>
-        <ul>
-          <li>Petsies: (<strong>US</strong>) $13.95, $5.95 for each additional; (<strong>International</strong>) $25.95, $5.95 for each additional</li>
-          <li>Pillows: <strong>(US</strong>) starting at $9.95;&nbsp;(<strong>International)</strong> $20.95</li>
-          <li>Petsies Socks, Masks &amp; Keychains: (<strong>US</strong>) $4.95; (<strong>International</strong>)&nbsp;$9.95</li>
-          <li>Read more about rates&nbsp;<a href="http://support.mypetsies.com/support/solutions/articles/13000017023-shipping-handling-fees" target="_blank">here</a>. Rates determined by weight</li>
-          <li>Tracking number will be emailed to you at time of shipment</li>
-        </ul>
-      </div>
-    </div>
   </div>
 </template>
 <script>
@@ -136,6 +123,9 @@ export default {
 @import "~@storefront-ui/vue/styles";
 
 .detailed-cart-order-summary {
+  background: var(--c-light);
+  padding: var(--spacer-xl);
+
   .title {
     @include for-desktop {
       --heading-title-margin: 0 0 var(--spacer-2xl) 0;
@@ -177,11 +167,6 @@ export default {
         text-align: left;
       }
     }
-  }
-  .info {
-    margin: var(--spacer-2xl) 0 var(--spacer-xl) 0;
-    font-size: var(--font-xs);
-    line-height: 1.6;
   }
   .promo-code {
     padding: 0;

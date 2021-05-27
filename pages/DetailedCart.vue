@@ -1,13 +1,6 @@
 <template>
   <div id="detailed-cart">
     <div class="detailed-cart">
-      <div v-if="totalItems" class="detailed-cart__aside">
-        <OrderSummary
-          :products="products"
-          :shipping-methods="shippingMethods"
-          :total-items="totalItems"
-        />
-      </div>
       <div class="detailed-cart__main">
         <SfBreadcrumbs
           class="breadcrumbs desktop-only"
@@ -28,10 +21,8 @@
                 image-width="140"
                 image-height="140"
                 :title="product.name"
-                :regular-price="getProductRegularPrice(product)"
-                :special-price="getProductSpecialPrice(product)"
+                :link="getProductLink(product)"
                 class="sf-collected-product--detailed collected-product"
-                @click:remove="removeHandler(product)"
                 @input="changeQuantity(product, $event)"
               >
                 <template #configuration>
@@ -44,18 +35,29 @@
                     />
                   </div>
                 </template>
+                <template #price>
+                  <div />
+                </template>
                 <template #actions>
-                  <SfButton class="sf-button--text actions__button desktop-only">
+                  <SfButton class="sf-button--text actions__button">
                     Edit
                   </SfButton>
+                  <SfButton
+                    class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text"
+                    @click="removeHandler(product)"
+                  >
+                    Remove
+                  </SfButton>
+                </template>
+                <template #remove>
+                  <SfPrice
+                    v-if="getProductRegularPrice(product)"
+                    :regular="getProductRegularPrice(product)"
+                    :special="getProductSpecialPrice(product)"
+                  />
                 </template>
                 <template #more-actions>
-                  <SfButton
-                    aria-label="Edit"
-                    class="sf-button--pure sf-collected-product__more-actions mobile-only"
-                  >
-                    <SfIcon icon="more" />
-                  </SfButton>
+                  <div />
                 </template>
               </SfCollectedProduct>
             </transition-group>
@@ -105,17 +107,36 @@
           </div>
         </transition>
       </div>
+      <div v-if="totalItems" class="detailed-cart__aside">
+        <OrderSummary
+          :products="products"
+          :shipping-methods="shippingMethods"
+          :total-items="totalItems"
+        />
+
+        <div class="_shipping-handling-block">
+          <SfHeading :level="3" title="Shipping &amp; Handling" />
+          <p>Once completed, your order will ship via USPS</p>
+          <ul>
+            <li>Petsies: (<strong>US</strong>) $13.95, $5.95 for each additional; (<strong>International</strong>) $25.95, $5.95 for each additional</li>
+            <li>Pillows: <strong>(US</strong>) starting at $9.95;&nbsp;(<strong>International)</strong> $20.95</li>
+            <li>Petsies Socks, Masks &amp; Keychains: (<strong>US</strong>) $4.95; (<strong>International</strong>)&nbsp;$9.95</li>
+            <li>Read more about rates&nbsp;<a href="http://support.mypetsies.com/support/solutions/articles/13000017023-shipping-handling-fees" target="_blank">here</a>. Rates determined by weight</li>
+            <li>Tracking number will be emailed to you at time of shipment</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import {
+  SfPrice,
   SfList,
   SfDropdown,
   SfCollectedProduct,
   SfButton,
   SfImage,
-  SfIcon,
   SfProperty,
   SfHeading,
   SfBreadcrumbs
@@ -124,15 +145,16 @@ import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters } from 'vuex';
 import { Shipping } from '@vue-storefront/core/modules/checkout/components/Shipping';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 export default {
   name: 'DetailedCart',
   components: {
+    SfPrice,
     SfList,
     SfDropdown,
     SfCollectedProduct,
     SfBreadcrumbs,
     SfImage,
-    SfIcon,
     SfButton,
     SfHeading,
     SfProperty,
@@ -194,6 +216,9 @@ export default {
     }
   },
   methods: {
+    getProductLink (product) {
+      return formatProductLink(product);
+    },
     getProductRegularPrice (product) {
       const price = product.original_price_incl_tax || product.price_incl_tax;
       return price ? this.$options.filters.price(price) : '';
@@ -233,6 +258,16 @@ export default {
 .detailed-cart {
   .sf-collected-product {
     --collected-product-image-background: none;
+    --collected-product-main-margin: 0 var(--spacer-sm);
+
+    .sf-price {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    &__remove {
+      position: static;
+    }
   }
   ._dropdown-container {
     display: inline-block;
@@ -266,19 +301,27 @@ export default {
   &__aside {
     box-sizing: border-box;
     width: 100%;
-    background: var(--c-light);
-    padding: var(--spacer-xl);
+
+    ._shipping-handling-block {
+      margin: var(--spacer-xl) 0;
+      padding: 0 var(--spacer-xl);
+      font-size: var(--font-xs);
+      line-height: 1.6;
+    }
   }
   @include for-desktop {
     display: flex;
+    .sf-collected-product {
+      .sf-price {
+        flex-direction: row;
+      }
+    }
     &__main {
       flex: 1;
     }
     &__aside {
       flex: 0 0 26.8125rem;
-      order: 1;
       margin: 0 0 0 var(--spacer-xl);
-      box-shadow: 0px 4px 11px rgba(var(--c-dark-base), 0.1);
     }
   }
 }
@@ -286,10 +329,10 @@ export default {
   text-align: center;
 }
 @include for-desktop {
-    .collected-product-list {
-      text-align: left;
-    }
+  .collected-product-list {
+    text-align: left;
   }
+}
 .collected-product {
   --collected-product-padding: var(--spacer-sm) 0;
   border: 1px solid var(--c-light);
