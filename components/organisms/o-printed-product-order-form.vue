@@ -421,6 +421,11 @@ export default Vue.extend({
         if (uploader) {
           uploader.clearInput();
         }
+
+        const extraFaces = this.getExtraFaces();
+        if (extraFaces) {
+          extraFaces.clearUploaders();
+        }
       } catch (e) {
         this.$store.dispatch(
           'notification/spawnNotification',

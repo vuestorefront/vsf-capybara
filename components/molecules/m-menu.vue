@@ -73,7 +73,7 @@ export default {
         },
         {
           label: 'Pet Socks',
-          url: '/'
+          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
         },
         {
           label: 'Face Masks',

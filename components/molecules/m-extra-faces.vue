@@ -20,6 +20,7 @@
             required
           >
           <MArtworkUpload
+            ref="artwork-upload"
             :product-id="productId"
             :upload-url="uploadUrl"
             :disabled="disabled"
@@ -185,6 +186,18 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
+    clearUploaders (): void {
+      const uploaders = this.getUploaders();
+
+      if (!uploaders) {
+        return;
+      }
+
+      uploaders.forEach(uploader => uploader.clearInput());
+    },
+    getUploaders (): InstanceType<typeof MArtworkUpload>[] | undefined {
+      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload>[] | undefined;
+    },
     getUploadedArtworkId (index: number): string | undefined {
       const item = this.fUploaderValues[index];
       if (!item) {
