@@ -28,6 +28,9 @@
         :value="total"
         class="sf-property--full-width sf-property--large property property__total"
       />
+      <div class="_total-notes">
+        All pricing in USD
+      </div>
     </div>
     <div class="actions">
       <APromoCode :allow-promo-code-removal="false" />
@@ -164,7 +167,16 @@ export default {
       --divider-margin: calc(var(--spacer-base) * 2) 0 0 0;
     }
   }
+  ._total-notes{
+    text-align: right;
+    font-size: var(--font-sm);
+
+    @include for-desktop {
+      font-size: var(--font-base);
+    }
+  }
   .actions {
+    margin-top: var(--spacer-lg);
     &__email {
       margin: var(--spacer-lg) 0 0 0;
     }
