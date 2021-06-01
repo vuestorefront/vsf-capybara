@@ -70,25 +70,31 @@ export default {
         throw new Error('The printed product has not bundle options');
       }
 
-      let optionsProducts = [];
+      let availableStyles = [];
       this.getCurrentProduct.bundle_options.forEach(option => {
-        option.product_links.forEach(productLink => optionsProducts.push(productLink.product));
+        option.product_links.forEach(productLink => {
+          if (!['simple', 'bundlePrimaryProduct'].includes(productLink.product.type_id)) {
+            return;
+          }
+
+          availableStyles.push({
+            optionId: option.option_id,
+            optionValueId: +productLink.id,
+            value: productLink.product.sku,
+            label: productLink.product.name,
+            description: productLink.product.description,
+            shortDescription: productLink.product.short_description,
+            price: productLink.product.regular_price,
+            specialPrice: productLink.product.special_price
+          });
+        });
       });
 
-      const variantProducts = optionsProducts.filter(product => ['simple', 'bundlePrimaryProduct'].includes(product.type_id));
-
-      if (!variantProducts) {
+      if (!availableStyles) {
         throw new Error('The printed product has not available styles');
       }
 
-      return variantProducts.map(variantProduct => ({
-        value: variantProduct.sku,
-        label: variantProduct.name,
-        description: variantProduct.description,
-        shortDescription: variantProduct.short_description,
-        price: variantProduct.regular_price,
-        specialPrice: variantProduct.special_price
-      }));
+      return availableStyles;
     },
     getAvailableAddons () {
       const addons = this.$store.getters['budsies/getPrintedProductAddons'](this.getCurrentProduct.id);
@@ -97,12 +103,33 @@ export default {
         return [];
       }
 
+      let addonOptions = [];
+      this.getCurrentProduct.bundle_options.forEach(option => {
+        option.product_links.forEach(productLink => {
+          if (productLink.product.type_id === 'plushToyAddon') {
+            addonOptions.push({
+              optionId: option.option_id,
+              optionValueId: +productLink.id,
+              sku: productLink.product.sku
+            });
+          }
+        })
+      });
+
       return addons.map(
         (addon) => {
+          const addonOption = addonOptions.find(addonOption => addonOption.sku === addon.id);
+
+          if (!addonOption) {
+            throw new Error('The option product of printed product is not found');
+          }
+
           return {
             id: addon.id,
             label: addon.label,
-            value: addon.value
+            value: addon.value,
+            optionId: addonOption.optionId,
+            optionValueId: addonOption.optionValueId
           }
         }
       );

@@ -47,6 +47,7 @@
       v-model="selectedVariant"
       name="extra_faces_addon"
       class="_extra-faces-selector"
+      @change="updateAddonOption"
       selected=""
     >
       <SfSelectOption value="">
@@ -68,10 +69,12 @@ import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import Vue, { PropType } from 'vue';
 import { SfSelect } from '@storefront-ui/vue';
+import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import FileStorageItem from '../../ts/modules/file-storage/item.model';
 
 import MArtworkUpload from './m-artwork-upload.vue';
+import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
@@ -81,7 +84,9 @@ extend('required', {
 export interface AddonOption {
   id: string,
   label: string,
-  value: number
+  value: number,
+  optionId: number,
+  optionValueId: number
 }
 
 export interface UploadedAddonArtwork {
@@ -177,6 +182,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    ...mapMutations('product', {
+      setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
+    }),
     getUploadedArtworkId (index: number): string | undefined {
       const item = this.fUploaderValues[index];
       if (!item) {
@@ -202,6 +210,15 @@ export default Vue.extend({
       Vue.set(this.fUploaderValues, index, {
         id: value.id,
         url: value.url
+      });
+    },
+    async updateAddonOption (value) {
+      const selectedAddon = this.availableOptions.find(option => option.id === value);
+
+      this.setBundleOptionValue({
+        optionId: selectedAddon.optionId,
+        optionQty: 1,
+        optionSelections: [parseInt(selectedAddon.optionValueId)]
       });
     }
   }

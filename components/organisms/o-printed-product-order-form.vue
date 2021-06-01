@@ -42,6 +42,7 @@
                     v-model="selectedStyle"
                     name="design_option"
                     label="Select Design Variant"
+                    @change="updateDesignOption"
                     required
                   >
                     <SfSelectOption
@@ -153,6 +154,7 @@ import { required } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
+import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -163,8 +165,7 @@ import { SfButton, SfSelect } from '@storefront-ui/vue';
 
 import FileStorageItem from '../../ts/modules/file-storage/item.model';
 import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
-// import SelectOption from './select-option.interface';
-// import AddonOption from './addon-option.interface';
+import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
@@ -174,6 +175,17 @@ extend('required', {
 export interface GalleryProductImages {
   sku: string,
   images: ZoomGalleryImage[]
+}
+
+export interface SelectOption {
+  optionId: number,
+  optionValueId: number,
+  value: string,
+  label: string,
+  description: string,
+  shortDescription: string,
+  price: number,
+  specialPrice: number
 }
 
 export default Vue.extend({
@@ -243,7 +255,7 @@ export default Vue.extend({
       default: []
     },
     availableStyles: {
-      type: Array, // as PropType<SelectOption[]>,
+      type: Array as PropType<SelectOption[]>,
       default: () => []
     },
     addons: {
@@ -352,6 +364,18 @@ export default Vue.extend({
     }
   },
   methods: {
+    ...mapMutations('product', {
+      setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
+    }),
+    async updateDesignOption (value): Promise<void> {
+      const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
+
+      this.setBundleOptionValue({
+        optionId: selectedDesign.optionId,
+        optionQty: 1,
+        optionSelections: [parseInt(selectedDesign.optionValueId)]
+      });
+    },
     onArtworkChange (value?: FileStorageItem): void {
       if (!value) {
         this.fStorageItemId = undefined;
@@ -363,37 +387,30 @@ export default Vue.extend({
     async onSubmit (event: Event): Promise<void> {
       this.fIsLoading = true;
 
+      await this.$store.dispatch(
+        'product/setBundleOptions',
+        { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
+      );
+
       const extraFacesArtworks = this.getExtraFaces().fUploaderValues.map(item => item.id);
-      const extraFacesSelectedVariant = this.getExtraFaces().fSelectedVariant;
 
-      if (!this.$store.getters['cart/getCartToken']) {
-        await this.$store.dispatch('cart/connect', { guestCart: false });
-      }
-
-      this.$store.dispatch('budsies/addPrintedProductToCart', {
-        productId: this.productId,
-        designOption: this.selectedStyle,
-        uploadedArtworkIds: [this.storageItemId, ...extraFacesArtworks],
-        qty: this.quantity,
-        addons: extraFacesSelectedVariant ? { extra_faces_addon: extraFacesSelectedVariant } : {}
-      }).then(result => {
-        if (result.code !== 200) {
-          this.onFailure(result.result);
-        } else {
-          this.onSuccess(result.result);
-        }
+      this.$store.dispatch('cart/addItem', {
+        productToAdd: Object.assign({}, this.product, {
+          qty: this.quantity,
+          uploadedArtworkIds: [this.storageItemId, ...extraFacesArtworks]
+        })
+      }).then(() => {
+        this.onSuccess();
       }).catch(err => {
         Logger.error(err, 'budsies')();
 
         this.onFailure('Unexpected error: ' + err);
-
+      }).finally(() => {
         this.fIsLoading = false;
       });
     },
     async onSuccess (): Promise<void> {
       try {
-        await this.$store.dispatch('cart/load', { forceClientState: false, forceSync: true });
-
         this.$store.dispatch(
           'notification/spawnNotification',
           notifications.productAddedToCart(),
@@ -411,8 +428,6 @@ export default Vue.extend({
           { root: true }
         );
       }
-
-      this.fIsLoading = false;
     },
     onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
@@ -431,7 +446,7 @@ export default Vue.extend({
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     }
   },
-  mounted (): void {
+  async mounted (): Promise<void> {
     if (
       this.initialStyleValue &&
           this.availableStyles.find(
@@ -439,6 +454,8 @@ export default Vue.extend({
           )
     ) {
       this.selectedStyle = this.initialStyleValue;
+
+      await this.updateDesignOption(this.selectedStyle);
     }
   },
   created (): void {
