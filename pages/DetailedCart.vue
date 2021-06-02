@@ -27,12 +27,12 @@
               >
                 <template #configuration>
                   <div class="collected-product__properties">
-                    <SfProperty
-                      v-for="(property, key) in product.configuration"
-                      :key="key"
-                      :name="property.name"
-                      :value="property.value"
-                    />
+                    <div
+                      v-for="option in getBundleProductOptions(product)"
+                      :key="option"
+                    >
+                      {{ option }}
+                    </div>
                   </div>
                 </template>
                 <template #price>
@@ -230,7 +230,48 @@ export default {
       this.$store.dispatch('cart/removeItem', { product: product });
     },
     getThumbnailForProductExtend (product) {
+      if (product.plushieThumb) {
+        return product.plushieThumb;
+      }
+
       return getThumbnailForProduct(product);
+    },
+    getBundleProductOptions (product) {
+      if (!product.bundle_options ||
+          product.bundle_options.length < 2 ||
+          !product.product_option ||
+          !product.product_option.extension_attributes ||
+          !product.product_option.extension_attributes.bundle_options
+      ) {
+        return [];
+      }
+
+      let result = [];
+      const productBundleOptions = product.product_option.extension_attributes.bundle_options;
+
+      product.bundle_options.forEach(option => {
+        if (!productBundleOptions.hasOwnProperty(option.option_id)) {
+          return
+        }
+
+        const selections = productBundleOptions[option.option_id].option_selections;
+
+        if (!selections) {
+          return
+        }
+
+        selections.forEach(selection => {
+          const productLink = option.product_links.find(productLink => +productLink.id === selection);
+
+          if (!productLink) {
+            return;
+          }
+
+          result.push(productLink.product.name);
+        });
+      });
+
+      return result;
     },
     changeQuantity (product, newQuantity) {
       this.isUpdatingQuantity = true;
@@ -346,7 +387,7 @@ export default {
   border: 1px solid var(--c-light);
   border-width: 1px 0 0 0;
   &__properties {
-    margin: var(--spacer-sm) 0 0 0;
+    margin-bottom: var(--spacer-sm);
   }
   @include for-mobile {
     --collected-product-remove-bottom: var(--spacer-sm);

@@ -102,21 +102,16 @@
                 class="collected-product"
               >
                 <template #configuration>
-                  <div class="collected-product__properties">
-                    <SfProperty
-                      v-for="property in ['Color', 'Size']"
-                      :key="property"
-                      :name="property"
-                      :value="getProductProperty(product, property)"
-                      class="collected-product__property"
-                    />
+                  <div
+                    class="collected-product__option"
+                    v-for="option in getBundleProductOptions(product)"
+                    :key="option"
+                  >
+                    {{ option }}
                   </div>
                 </template>
                 <template #actions>
                   <div>
-                    <div class="collected-product__action">
-                      {{ product.sku }}
-                    </div>
                     <div class="collected-product__action">
                       {{ $t('Quantity') }}:
                       <span class="product__qty">{{ product.qty }}</span>
@@ -165,16 +160,13 @@
           <div class="product-title">
             {{ product.name | htmlDecode }}
           </div>
-          <div class="product-sku">
-            {{ product.sku }}
+          <div
+            class="bundle-product-option"
+            v-for="option in getBundleProductOptions(product)"
+            :key="option"
+          >
+            {{ option }}
           </div>
-        </SfTableData>
-        <SfTableData
-          v-for="property in ['Color', 'Size']"
-          :key="property"
-          class="table__data"
-        >
-          {{ getProductProperty(product, property) }}
         </SfTableData>
         <SfTableData class="table__data">
           {{ product.qty }}
@@ -318,8 +310,6 @@ export default {
     return {
       tableHeaders: [
         this.$t('Description'),
-        this.$t('Colour'),
-        this.$t('Size'),
         this.$t('Quantity'),
         this.$t('Price')
       ],
@@ -380,6 +370,10 @@ export default {
       openModal: 'openModal'
     }),
     getThumbnailForProduct (product) {
+      if (product.plushieThumb) {
+        return product.plushieThumb;
+      }
+
       return getThumbnailForProduct(product);
     },
     getProductRegularPrice (product) {
@@ -395,6 +389,43 @@ export default {
         ? product.options.find(option => option.label === propertyName)
         : false;
       return property ? property.value : '';
+    },
+    getBundleProductOptions (product) {
+      if (!product.bundle_options ||
+          product.bundle_options.length < 2 ||
+          !product.product_option ||
+          !product.product_option.extension_attributes ||
+          !product.product_option.extension_attributes.bundle_options
+      ) {
+        return [];
+      }
+
+      let result = [];
+      const productBundleOptions = product.product_option.extension_attributes.bundle_options;
+
+      product.bundle_options.forEach(option => {
+        if (!productBundleOptions.hasOwnProperty(option.option_id)) {
+          return
+        }
+
+        const selections = productBundleOptions[option.option_id].option_selections;
+
+        if (!selections) {
+          return
+        }
+
+        selections.forEach(selection => {
+          const productLink = option.product_links.find(productLink => +productLink.id === selection);
+
+          if (!productLink) {
+            return;
+          }
+
+          result.push(productLink.product.name);
+        });
+      });
+
+      return result;
     },
     removeProduct (product) {
       this.$store.dispatch('cart/removeItem', { product });
@@ -432,6 +463,11 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
+  .sf-table {
+    &__data {
+      --table-data-color: var(--c-text);
+    }
+  }
   @include for-desktop {
     &__header {
       text-align: center;
@@ -444,19 +480,15 @@ export default {
     }
     &__description {
       text-align: left;
-      flex: 0 0 12rem;
+      flex: 1 0 12rem;
     }
     &__image {
       --image-width: 5.125rem;
       text-align: left;
-      margin: 0 var(--spacer-xl) 0 0;
-    }
-    &__price {
-      text-align: right;
     }
     &__action {
       display: flex;
-      justify-content: right;
+      justify-content: center;
     }
   }
 }
@@ -479,9 +511,6 @@ export default {
       margin: 0 0 0 0.4em;
     }
   }
-}
-.product-sku {
-  color: var(--c-text-muted);
 }
 .button {
   cursor: pointer;
@@ -541,6 +570,17 @@ export default {
   &:not(:last-of-type) {
     border: 1px solid var(--_c-light-primary);
     border-width: 0 0 1px 0;
+  }
+  &__action, &__option {
+    font-size: var(--font-sm);
+  }
+  &__action {
+    margin-top: var(--spacer-sm);
+  }
+}
+::v-deep .sf-collected-product {
+  &__title {
+    --collected-product-title-font-size: var(--font-sm);
   }
 }
 .summary {
