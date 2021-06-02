@@ -1,14 +1,14 @@
 ul,
 ol,
 dl {
-    list-style-position: inside;
+    list-style-position: outside;
     margin: 0;
-    padding: 0;
+    padding: 0 0 0 22px;
     li {
         ul {
-            list-style-position: inside;
+            list-style-position: outside;
             margin: 0;
-            padding: 0;
+            padding: 0 0 0 22px;
         }
     }
 }

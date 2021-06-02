@@ -1,7 +1,8 @@
 .sf-list {
-  list-style-position: inside !important;
+  list-style-position: outside;
   --list-item-font-size: var(--font-base);
   &.-with-markers {
+    --list-padding: 0 0 0 20px;
     --list-list-style: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAMAAABhq6zVAAAASFBMVEUAAABTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1NTU1Osg9trAAAAF3RSTlMA+cKxLeqaVR0JpjLUt599eWZaJhIMBE6jx8YAAABiSURBVAjXLcpHDsQwEANBjrIs59T//+muBNeJAFtSNv++3rK6BXKGRd0K+w6rpHK2aCFYbGfRjKvPfT/VMQsIh9kRADm4IsQLnMq0Nfq9TUV/HsBrSAyp78qnjspcSs4m6QfvDAZtfy8cOgAAAABJRU5ErkJggg==);
   }
 }

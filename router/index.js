@@ -12,6 +12,8 @@ const Category = () =>
   import(/* webpackChunkName: "vsf-category" */ 'theme/pages/Category');
 const Checkout = () =>
   import(/* webpackChunkName: "vsf-checkout" */ 'theme/pages/Checkout');
+const DetailedCart = () =>
+  import(/* webpackChunkName: "vsf-detailed-cart" */ 'theme/pages/DetailedCart');
 const MyAccount = () =>
   import(/* webpackChunkName: "vsf-my-account" */ 'theme/pages/MyAccount');
 const Static = () =>
@@ -19,6 +21,7 @@ const Static = () =>
 
 let routes = [
   { name: 'home', path: '/', component: Home, alias: '/pwa.html' },
+  { name: 'detailed-cart', path: '/cart', component: DetailedCart },
   { name: 'checkout', path: '/checkout', component: Checkout },
   { name: 'legal', path: '/legal', component: Static },
   { name: 'privacy', path: '/privacy', component: Static },
