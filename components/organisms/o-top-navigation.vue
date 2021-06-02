@@ -14,12 +14,7 @@
       <SfButton>
         Make your own
       </SfButton>
-      <SfBottomNavigationItem
-        icon="add_to_cart"
-        :is-floating="true"
-        :is-active="isActive('add_to_cart')"
-        @click.native="goToCart"
-      />
+      <ADetailedCartIcon class="sf-header__action" />
     </SfBottomNavigation>
   </div>
 </template>
@@ -30,7 +25,7 @@ import { ModalList } from 'theme/store/ui/modals'
 import AHomeIcon from 'theme/components/atoms/a-home-icon';
 import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
-import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
+import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon.vue';
 import { SfBottomNavigation, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo.vue';
 
@@ -39,7 +34,8 @@ export default {
   components: {
     SfBottomNavigation,
     SfButton,
-    ALogo
+    ALogo,
+    ADetailedCartIcon
   },
   data () {
     return {
@@ -83,8 +79,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      openModal: 'ui/openModal',
-      openMicrocart: 'ui/toggleMicrocart'
+      openModal: 'ui/openModal'
     }),
     goToHome () {
       this.$store.commit('ui/setSearchpanel', false)
@@ -111,9 +106,6 @@ export default {
       } else {
         this.openModal({ name: ModalList.Auth, payload: 'login' })
       }
-    },
-    goToCart () {
-      this.openMicrocart();
     }
   }
 }
@@ -135,6 +127,10 @@ export default {
     --button-font-line-height: 1;
     --button-padding: calc(var(--spacer-2xs) * 3) var(--spacer-sm);
   }
+  .a-microcart-icon {
+    margin: 0;
+    padding: var(--spacer-sm) var(--spacer-xs);
+  }
   ::v-deep .sf-header {
       &__logo {
         --header-logo-height: 1.5rem;
@@ -148,11 +144,6 @@ export default {
     justify-content: space-between;
     .sf-bottom-navigation-item {
       cursor: pointer;
-      .sf-circle-icon {
-        --button-size: 2.5rem;
-        --circle-icon-position: static;
-        transform: none;
-      }
     }
   }
 

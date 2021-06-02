@@ -1,0 +1,8 @@
+.sf-image {
+  &--has-size {
+    img:not(.noscript) {
+      top: 0;
+      transform: none;
+    }
+  }
+}

@@ -6,12 +6,6 @@
         :level="1"
         class="sf-heading--no-underline sf-heading--left"
       />
-      <SfIcon
-        icon="drag"
-        size="xl"
-        color="gray-secondary"
-        class="product__drag-icon mobile-only"
-      />
     </div>
     <div
       class="product__description desktop-only"
@@ -66,9 +60,6 @@ export default {
     @include for-desktop {
       margin: 0 auto;
     }
-  }
-  &__drag-icon {
-    animation: moveicon 1s ease-in-out infinite;
   }
   &__price {
     margin: var(--spacer-xs) 0 var(--spacer-base);
