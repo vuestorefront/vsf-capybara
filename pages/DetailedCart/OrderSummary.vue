@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="detailed-cart-order-summary">
     <SfHeading
       title="Totals"
       :level="2"
@@ -13,69 +13,56 @@
       />
       <SfProperty
         name="Subtotal"
-        :value="subtotal"
+        :value="`$${subtotal}`"
         class="sf-property--full-width sf-property--large property"
       />
       <SfProperty
-        name="Shipping"
-        v-if="cheapestShippingMethod.price !== undefined"
-        :value="`From ${cheapestShippingMethod.price}`"
+        name="Discount"
+        v-if="discount > 0"
+        :value="`$${discount}`"
         class="sf-property--full-width sf-property--large property"
       />
       <SfDivider class="divider" />
       <SfProperty
         name="Total price"
-        :value="total"
+        :value="`$${total}`"
         class="sf-property--full-width sf-property--large property property__total"
       />
+      <div class="_total-notes">
+        All pricing in USD
+      </div>
     </div>
     <div class="actions">
+      <APromoCode :allow-promo-code-removal="false" />
       <SfButton
-        class="sf-button--full-width actions__button desktop-only"
+        class="sf-button--full-width actions__button"
         @click="goToCheckout"
       >
         Go to checkout
       </SfButton>
-      <div class="actions__email">
-        <SfCharacteristic icon="mail" size-icon="20px" color-icon="secondary">
-          <template #text>
-            <SfButton
-              class="sf-button--text actions__button actions__button--secondary"
-            >
-              Send my basket to email
-            </SfButton>
-          </template>
-        </SfCharacteristic>
-      </div>
     </div>
-    <div class="info desktop-only">
-      <p>Helpful information:</p>
-      <ul class="info__list">
-        <li>Questions? Chat with us or call 1.888.282.6060.</li>
-        <li>Shipping internationally? Choose your destination & currency.</li>
-        <li>Shipping methods & charges</li>
-      </ul>
-    </div>
+    <SfLoader v-if="isUpdatingQuantity" :loading="isUpdatingQuantity" />
   </div>
 </template>
 <script>
 import {
+  SfLoader,
   SfHeading,
   SfButton,
-  SfCharacteristic,
   SfProperty,
   SfDivider
 } from '@storefront-ui/vue';
-import { onlineHelper } from '@vue-storefront/core/helpers';
-import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
+import { getProductPrice } from 'theme/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import APromoCode from 'theme/components/atoms/a-promo-code.vue'
 export default {
   name: 'OrderSummary',
   components: {
+    SfLoader,
+    APromoCode,
     SfHeading,
     SfButton,
     SfDivider,
-    SfCharacteristic,
     SfProperty
   },
   props: {
@@ -87,49 +74,49 @@ export default {
       type: Array,
       default: () => []
     },
-    shippingMethods: {
-      type: Array,
-      default: () => []
-    },
     totalItems: {
       type: Number,
       default: null
+    },
+    isUpdatingQuantity: {
+      type: Boolean,
+      required: true
     }
   },
   computed: {
-    cheapestShippingMethod () {
-      const methods = this.shippingMethods.filter(
-        (method) => method.price !== 'Free'
-      );
-      const cheapestMethod = methods.reduce((previous, current) => {
-        return current.price < previous.price ? current : previous;
-      });
-      return cheapestMethod;
-    },
     subtotal () {
       const products = this.products;
-      const subtotal = products.reduce((previous, current) => {
-        const productPrice = this.getProductPrice(current)
-        const price = productPrice.special
-          ? productPrice.special
-          : productPrice.regular;
-        const total = parseFloat(price.replace('$', ''));
-        return previous + total;
+      const subtotal = products.reduce((accumulator, current) => {
+        const productPrice = this.getProductPrice(current);
+        const price = productPrice.regular;
+        const priceValue = parseFloat(price.replace('$', ''));
+        return accumulator + priceValue;
       }, 0);
-      return '$' + subtotal.toFixed(2);
+      return subtotal.toFixed(2);
+    },
+    discount () {
+      const products = this.products;
+      const discount = products.reduce((accumulator, current) => {
+        const productPrice = this.getProductPrice(current);
+        console.log(productPrice)
+        const regularPrice = productPrice.regular;
+        const specialPrice = productPrice.special ? productPrice.special : productPrice.regular;
+        const regularPriceValue = parseFloat(regularPrice.replace('$', ''));
+        const specialPriceValue = parseFloat(specialPrice.replace('$', ''));
+        console.log(regularPriceValue)
+        console.log(specialPriceValue)
+        return accumulator + (regularPriceValue - specialPriceValue);
+      }, 0);
+      return discount.toFixed(2);
     },
     total () {
-      const subtotal = parseFloat(this.subtotal.replace('$', ''));
-      const shipping = this.cheapestShippingMethod.price;
-      const total = subtotal + (isNaN(shipping) ? 0 : shipping);
-      return '$' + total.toFixed(2);
+      const total = this.subtotal - this.discount;
+      return total.toFixed(2);
     }
   },
   methods: {
     getProductPrice (product) {
-      return onlineHelper.isOnline && product.totals && product.totals.options
-        ? getProductPriceFromTotals(product)
-        : getProductPrice(product);
+      return getProductPrice(product);
     },
     goToCheckout () {
       this.$router.push(localizedRoute('/checkout'));
@@ -139,62 +126,71 @@ export default {
 </script>
 <style lang="scss" scoped>
 @import "~@storefront-ui/vue/styles";
-.title {
-  @include for-desktop {
-    --heading-title-margin: 0 0 var(--spacer-2xl) 0;
-    --heading-title-font-size: var(--h3-font-size);
-    --heading-title-font-weight: var(--font-semibold);
-  }
-}
-.property {
-  margin: var(--spacer-base) 0;
-  @include for-mobile {
-    --property-name-font-size: var(--font-base);
-    --property-value-font-size: var(--font-lg);
-    --property-value-font-weight: var(--font-semibold);
-    &__total {
-      --property-value-font-weight: var(--font-bold);
-    }
-  }
-  &:last-of-type {
+
+.detailed-cart-order-summary {
+  position: relative;
+  background: var(--c-light);
+  padding: var(--spacer-xl);
+
+  .title {
     @include for-desktop {
-      margin: var(--spacer-base) 0 var(--spacer-2xl) 0;
+      --heading-title-margin: 0 0 var(--spacer-2xl) 0;
+      --heading-title-font-size: var(--h3-font-size);
+      --heading-title-font-weight: var(--font-semibold);
     }
   }
-}
-.divider {
-  --divider-border-color: var(--c-white);
-  --divider-margin: var(--spacer-lg) 0 0 0;
-  @include for-desktop {
-    --divider-margin: calc(var(--spacer-base) * 2) 0 0 0;
-  }
-}
-.actions {
-  &__email {
-    margin: var(--spacer-lg) 0 0 0;
-  }
-  &__button {
-    margin: var(--spacer-sm) 0;
-    &--secondary {
-      margin: 0 0 0 var(--spacer-xs);
-      text-align: left;
+  .property {
+    margin: var(--spacer-base) 0;
+    @include for-mobile {
+      --property-name-font-size: var(--font-base);
+      --property-value-font-size: var(--font-lg);
+      --property-value-font-weight: var(--font-semibold);
+      &__total {
+        --property-value-font-weight: var(--font-bold);
+      }
+    }
+    &:last-of-type {
+      @include for-desktop {
+        margin: var(--spacer-base) 0 var(--spacer-2xl) 0;
+      }
     }
   }
-}
-.info {
-  margin: var(--spacer-2xl) 0;
-  color: var(--c-dark-variant);
-  font-family: var(--font-family-primary);
-  font-size: var(--font-xs);
-  line-height: 1.6;
-  &__list {
+  .divider {
+    --divider-border-color: var(--c-white);
+    --divider-margin: var(--spacer-lg) 0 0 0;
+    @include for-desktop {
+      --divider-margin: calc(var(--spacer-base) * 2) 0 0 0;
+    }
+  }
+  ._total-notes{
+    text-align: right;
+    font-size: var(--font-sm);
+
+    @include for-desktop {
+      font-size: var(--font-base);
+    }
+  }
+  .actions {
+    margin-top: var(--spacer-lg);
+    &__email {
+      margin: var(--spacer-lg) 0 0 0;
+    }
+    &__button {
+      margin: var(--spacer-sm) 0;
+      &--secondary {
+        margin: 0 0 0 var(--spacer-xs);
+        text-align: left;
+      }
+    }
+  }
+  .promo-code {
     padding: 0;
-    list-style: none;
-    li::before {
-      content: "•";
-      color: var(--c-primary);
-      padding: 0 var(--spacer-xs) 0 0;
-    }
+  }
+  .sf-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
   }
 }
 </style>
