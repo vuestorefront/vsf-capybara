@@ -13,19 +13,19 @@
       />
       <SfProperty
         name="Subtotal"
-        :value="subtotal"
+        :value="`$${subtotal}`"
         class="sf-property--full-width sf-property--large property"
       />
       <SfProperty
-        name="Shipping"
-        v-if="cheapestShippingMethod.price !== undefined"
-        :value="`From $${cheapestShippingMethod.price.toFixed(2)}`"
+        name="Discount"
+        v-if="discount > 0"
+        :value="`$${discount}`"
         class="sf-property--full-width sf-property--large property"
       />
       <SfDivider class="divider" />
       <SfProperty
         name="Total price"
-        :value="total"
+        :value="`$${total}`"
         class="sf-property--full-width sf-property--large property property__total"
       />
       <div class="_total-notes">
@@ -52,8 +52,7 @@ import {
   SfProperty,
   SfDivider
 } from '@storefront-ui/vue';
-import { onlineHelper } from '@vue-storefront/core/helpers';
-import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
+import { getProductPrice } from 'theme/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import APromoCode from 'theme/components/atoms/a-promo-code.vue'
 export default {
@@ -75,10 +74,6 @@ export default {
       type: Array,
       default: () => []
     },
-    shippingMethods: {
-      type: Array,
-      default: () => []
-    },
     totalItems: {
       type: Number,
       default: null
@@ -89,39 +84,39 @@ export default {
     }
   },
   computed: {
-    cheapestShippingMethod () {
-      const methods = this.shippingMethods.filter(
-        (method) => method.price !== 'Free'
-      );
-      const cheapestMethod = methods.reduce((previous, current) => {
-        return current.price < previous.price ? current : previous;
-      });
-      return cheapestMethod;
-    },
     subtotal () {
       const products = this.products;
-      const subtotal = products.reduce((previous, current) => {
-        const productPrice = this.getProductPrice(current)
-        const price = productPrice.special
-          ? productPrice.special
-          : productPrice.regular;
-        const total = parseFloat(price.replace('$', ''));
-        return previous + total;
+      const subtotal = products.reduce((accumulator, current) => {
+        const productPrice = this.getProductPrice(current);
+        const price = productPrice.regular;
+        const priceValue = parseFloat(price.replace('$', ''));
+        return accumulator + priceValue;
       }, 0);
-      return '$' + subtotal.toFixed(2);
+      return subtotal.toFixed(2);
+    },
+    discount () {
+      const products = this.products;
+      const discount = products.reduce((accumulator, current) => {
+        const productPrice = this.getProductPrice(current);
+        console.log(productPrice)
+        const regularPrice = productPrice.regular;
+        const specialPrice = productPrice.special ? productPrice.special : productPrice.regular;
+        const regularPriceValue = parseFloat(regularPrice.replace('$', ''));
+        const specialPriceValue = parseFloat(specialPrice.replace('$', ''));
+        console.log(regularPriceValue)
+        console.log(specialPriceValue)
+        return accumulator + (regularPriceValue - specialPriceValue);
+      }, 0);
+      return discount.toFixed(2);
     },
     total () {
-      const subtotal = parseFloat(this.subtotal.replace('$', ''));
-      const shipping = this.cheapestShippingMethod.price;
-      const total = subtotal + (isNaN(shipping) ? 0 : shipping);
-      return '$' + total.toFixed(2);
+      const total = this.subtotal - this.discount;
+      return total.toFixed(2);
     }
   },
   methods: {
     getProductPrice (product) {
-      return onlineHelper.isOnline && product.totals && product.totals.options
-        ? getProductPriceFromTotals(product)
-        : getProductPrice(product);
+      return getProductPrice(product);
     },
     goToCheckout () {
       this.$router.push(localizedRoute('/checkout'));

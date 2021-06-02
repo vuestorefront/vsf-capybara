@@ -110,10 +110,21 @@
       <div v-if="totalItems" class="detailed-cart__aside">
         <OrderSummary
           :products="products"
-          :shipping-methods="shippingMethods"
           :total-items="totalItems"
           :is-updating-quantity="isUpdatingQuantity"
         />
+
+        <div class="_shipping-handling-block">
+          <SfHeading :level="3" title="Shipping &amp; Handling" />
+          <p>Once completed, your order will ship via USPS</p>
+          <ul>
+            <li>Petsies: (<strong>US</strong>) $13.95, $5.95 for each additional; (<strong>International</strong>) $25.95, $5.95 for each additional</li>
+            <li>Pillows: <strong>(US</strong>) starting at $9.95;&nbsp;(<strong>International)</strong> $20.95</li>
+            <li>Petsies Socks, Masks &amp; Keychains: (<strong>US</strong>) $4.95; (<strong>International</strong>)&nbsp;$9.95</li>
+            <li>Read more about rates&nbsp;<a href="http://support.mypetsies.com/support/solutions/articles/13000017023-shipping-handling-fees" target="_blank">here</a>. Rates determined by weight</li>
+            <li>Tracking number will be emailed to you at time of shipment</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -132,7 +143,6 @@ import {
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters } from 'vuex';
-import { Shipping } from '@vue-storefront/core/modules/checkout/components/Shipping';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 export default {
@@ -149,7 +159,6 @@ export default {
     SfProperty,
     OrderSummary
   },
-  mixins: [Shipping],
   data () {
     return {
       isUpdatingQuantity: false,
@@ -293,6 +302,13 @@ export default {
   &__aside {
     box-sizing: border-box;
     width: 100%;
+
+    ._shipping-handling-block {
+      margin: var(--spacer-xl) 0;
+      padding: 0 var(--spacer-xl);
+      font-size: var(--font-xs);
+      line-height: 1.6;
+    }
   }
   @include for-desktop {
     display: flex;
