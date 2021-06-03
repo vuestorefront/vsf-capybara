@@ -216,7 +216,7 @@ export default Vue.extend({
     },
     onArtworkChange (index: number, value?: FileStorageItem): void {
       if (!value) {
-        this.fUploaderValues[index] = undefined;
+        this.fUploaderValues.splice(index, 1);
         return;
       }
 

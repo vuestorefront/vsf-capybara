@@ -143,6 +143,7 @@ import {
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters } from 'vuex';
+import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 export default {
@@ -219,12 +220,10 @@ export default {
       return formatProductLink(product);
     },
     getProductRegularPrice (product) {
-      const price = product.original_price_incl_tax || product.price_incl_tax;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).regular;
     },
     getProductSpecialPrice (product) {
-      const price = product.special_price ? product.price_incl_tax : false;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).special;
     },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });

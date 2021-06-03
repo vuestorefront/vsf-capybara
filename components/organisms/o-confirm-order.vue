@@ -272,6 +272,7 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { OrderModule } from '@vue-storefront/core/modules/order';
 import { OrderReview } from '@vue-storefront/core/modules/checkout/components/OrderReview';
+import { getProductPrice } from 'theme/helpers';
 import {
   SfIcon,
   SfImage,
@@ -377,12 +378,10 @@ export default {
       return getThumbnailForProduct(product);
     },
     getProductRegularPrice (product) {
-      const price = product.original_price_incl_tax || product.price_incl_tax;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).regular;
     },
     getProductSpecialPrice (product) {
-      const price = product.special_price ? product.price_incl_tax : false;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).special;
     },
     getProductProperty (product, propertyName) {
       const property = product.options
