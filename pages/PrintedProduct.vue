@@ -28,6 +28,7 @@ import { getProductPrice } from 'theme/helpers';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import OPrintedProductOrderForm from 'theme/components/organisms/o-printed-product-order-form';
 
 export default {
@@ -53,17 +54,38 @@ export default {
       const images = this.getProductGallery.map(imageObject => ({
         stage: imageObject.src,
         thumb: imageObject.src,
-        big: imageObject.src,
-        alt: this.getCurrentProduct.name,
-        title: this.getCurrentProduct.name
+        big: imageObject.src
       }));
 
-      return [
+      let result = [
         {
           sku: this.getCurrentProduct.sku,
           images: images
         }
       ]
+
+      if (!this.getCurrentProduct.bundle_options) {
+        return result;
+      }
+
+      this.getCurrentProduct.bundle_options.forEach(option => {
+        option.product_links.forEach(productLink => {
+          const gallery = getGalleryByProduct(productLink.product);
+
+          const images = gallery.map(imageObject => ({
+            stage: imageObject.src,
+            thumb: imageObject.src,
+            big: imageObject.src
+          }));
+
+          result.push({
+            sku: productLink.product.sku,
+            images: images
+          });
+        });
+      });
+
+      return result;
     },
     getAvailableStyles () {
       if (!this.getCurrentProduct.bundle_options) {

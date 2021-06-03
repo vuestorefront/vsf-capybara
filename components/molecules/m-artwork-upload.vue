@@ -435,6 +435,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     ::v-deep {
         .filepond--root {
+            .filepond--list {
+              list-style-image: none;
+            }
+
             .filepond--drop-label {
                 .filepond--label-action {
                     @extend .sf-button;

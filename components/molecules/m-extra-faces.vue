@@ -47,7 +47,7 @@
     <SfSelect
       v-model="selectedVariant"
       name="extra_faces_addon"
-      class="_extra-faces-selector"
+      class="_extra-faces-selector sf-select--underlined"
       @change="updateAddonOption"
       selected=""
     >
@@ -216,7 +216,7 @@ export default Vue.extend({
     },
     onArtworkChange (index: number, value?: FileStorageItem): void {
       if (!value) {
-        this.fUploaderValues[index] = undefined;
+        this.fUploaderValues.splice(index, 1);
         return;
       }
 

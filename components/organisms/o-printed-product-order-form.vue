@@ -44,6 +44,7 @@
                     label="Select Design Variant"
                     @change="updateDesignOption"
                     required
+                    class="sf-select--underlined"
                   >
                     <SfSelectOption
                       v-for="option in availableStyles"
@@ -468,6 +469,11 @@ export default Vue.extend({
 
     if (this.uploadedArtworkId) {
       this.fStorageItemId = this.uploadedArtworkId;
+    }
+  },
+  watch: {
+    product () {
+      this.fSelectedStyle = undefined;
     }
   }
 })
