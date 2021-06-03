@@ -46,6 +46,7 @@
 
     <SfSelect
       v-model="selectedVariant"
+      v-if="showAddonSelector"
       name="extra_faces_addon"
       class="_extra-faces-selector sf-select--underlined"
       @change="updateAddonOption"
@@ -131,7 +132,8 @@ export default Vue.extend({
   data () {
     return {
       fSelectedVariant: undefined,
-      fUploaderValues: []
+      fUploaderValues: [],
+      fShouldShowAddonSelector: true
     }
   },
   computed: {
@@ -164,6 +166,9 @@ export default Vue.extend({
     },
     isUploadersSubtitleVisible (): boolean {
       return this.inputsCount > 0;
+    },
+    showAddonSelector: function (): boolean {
+      return this.fShouldShowAddonSelector
     }
   },
   created (): void {
@@ -226,6 +231,10 @@ export default Vue.extend({
       });
     },
     async updateAddonOption (value) {
+      if (!value) {
+        return;
+      }
+
       const selectedAddon = this.availableOptions.find(option => option.id === value);
 
       this.setBundleOptionValue({
@@ -233,6 +242,20 @@ export default Vue.extend({
         optionQty: 1,
         optionSelections: [parseInt(selectedAddon.optionValueId)]
       });
+    }
+  },
+  watch: {
+    productId: {
+      handler () {
+        this.fShouldShowAddonSelector = false;
+
+        this.fSelectedVariant = undefined;
+
+        this.$nextTick(() => {
+          this.fShouldShowAddonSelector = true;
+        })
+      },
+      immediate: true
     }
   }
 })

@@ -40,6 +40,7 @@
                 >
                   <SfSelect
                     v-model="selectedStyle"
+                    v-if="showDesignSelector"
                     name="design_option"
                     label="Select Design Variant"
                     @change="updateDesignOption"
@@ -273,7 +274,8 @@ export default Vue.extend({
       quantity: 1,
       fStorageItemId: undefined as string | undefined,
       fSelectedStyle: undefined as string | undefined,
-      fIsLoading: false
+      fIsLoading: false,
+      fShouldShowDesignSelector: true
     }
   },
   computed: {
@@ -362,6 +364,9 @@ export default Vue.extend({
       }
 
       return style.shortDescription;
+    },
+    showDesignSelector: function (): boolean {
+      return this.fShouldShowDesignSelector
     }
   },
   methods: {
@@ -472,8 +477,17 @@ export default Vue.extend({
     }
   },
   watch: {
-    product () {
-      this.fSelectedStyle = undefined;
+    product: {
+      handler () {
+        this.fShouldShowDesignSelector = false;
+
+        this.fSelectedStyle = undefined;
+
+        this.$nextTick(() => {
+          this.fShouldShowDesignSelector = true;
+        })
+      },
+      immediate: true
     }
   }
 })
