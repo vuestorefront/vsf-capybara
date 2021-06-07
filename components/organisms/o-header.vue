@@ -11,7 +11,7 @@
         'sf-header--has-mobile-search': isSearchPanelVisible,
         'sf-header--is-sticky': isSearchPanelVisible
       }"
-      :style="{'z-index': isHoveredMenu ? 2 : 1}"
+      :style="{'z-index': isHoveredMenu ? 200 : 1}"
     >
       <template #logo>
         <ALogo />
