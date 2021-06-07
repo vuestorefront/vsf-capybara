@@ -89,7 +89,7 @@ export default {
     },
     getAvailableStyles () {
       if (!this.getCurrentProduct.bundle_options) {
-        throw new Error('The printed product has not bundle options');
+        throw new Error('The printed product has no bundle options');
       }
 
       let availableStyles = [];
@@ -113,7 +113,7 @@ export default {
       });
 
       if (!availableStyles) {
-        throw new Error('The printed product has not available styles');
+        throw new Error('The printed product has no available styles');
       }
 
       return availableStyles;
