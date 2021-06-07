@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import config from 'config';
 import { mapGetters } from 'vuex';
 import { getProductPrice } from 'theme/helpers';
@@ -29,7 +29,9 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
-import OPrintedProductOrderForm from 'theme/components/organisms/o-printed-product-order-form';
+
+import OPrintedProductOrderForm, { GalleryProductImages, SelectOption } from 'theme/components/organisms/o-printed-product-order-form.vue';
+import { AddonOption } from 'theme/components/molecules/m-extra-faces.vue';
 
 export default {
   name: 'PrintedProduct',
@@ -50,14 +52,14 @@ export default {
     price () {
       return getProductPrice(this.getCurrentProduct, this.getCurrentCustomOptions, false);
     },
-    getProductImages () {
-      const images = this.getProductGallery.map(imageObject => ({
+    getProductImages (): GalleryProductImages[] {
+      const images = this.getProductGallery.map((imageObject: any) => ({
         stage: imageObject.src,
         thumb: imageObject.src,
         big: imageObject.src
       }));
 
-      let result = [
+      let result: GalleryProductImages[] = [
         {
           sku: this.getCurrentProduct.sku,
           images: images
@@ -68,11 +70,11 @@ export default {
         return result;
       }
 
-      this.getCurrentProduct.bundle_options.forEach(option => {
-        option.product_links.forEach(productLink => {
+      for (const option of this.getCurrentProduct.bundle_options) {
+        for (const productLink of option.product_links) {
           const gallery = getGalleryByProduct(productLink.product);
 
-          const images = gallery.map(imageObject => ({
+          const images = gallery.map((imageObject: any) => ({
             stage: imageObject.src,
             thumb: imageObject.src,
             big: imageObject.src
@@ -82,8 +84,8 @@ export default {
             sku: productLink.product.sku,
             images: images
           });
-        });
-      });
+        }
+      }
 
       return result;
     },
@@ -92,11 +94,11 @@ export default {
         throw new Error('The printed product has no bundle options');
       }
 
-      let availableStyles = [];
-      this.getCurrentProduct.bundle_options.forEach(option => {
-        option.product_links.forEach(productLink => {
+      let availableStyles: SelectOption[] = [];
+      for (const option of this.getCurrentProduct.bundle_options) {
+        for (const productLink of option.product_links) {
           if (!['simple', 'bundlePrimaryProduct'].includes(productLink.product.type_id)) {
-            return;
+            continue;
           }
 
           availableStyles.push({
@@ -109,8 +111,8 @@ export default {
             price: productLink.product.regular_price,
             specialPrice: productLink.product.special_price
           });
-        });
-      });
+        }
+      }
 
       if (!availableStyles) {
         throw new Error('The printed product has no available styles');
@@ -118,28 +120,31 @@ export default {
 
       return availableStyles;
     },
-    getAvailableAddons () {
+    getAvailableAddons (): AddonOption[] {
       const addons = this.$store.getters['budsies/getPrintedProductAddons'](this.getCurrentProduct.id);
 
       if (!addons.length) {
         return [];
       }
 
-      let addonOptions = [];
-      this.getCurrentProduct.bundle_options.forEach(option => {
-        option.product_links.forEach(productLink => {
-          if (productLink.product.type_id === 'plushToyAddon') {
-            addonOptions.push({
-              optionId: option.option_id,
-              optionValueId: +productLink.id,
-              sku: productLink.product.sku
-            });
+      let addonOptions: Record<string, string|number>[] = [];
+
+      for (const option of this.getCurrentProduct.bundle_options) {
+        for (const productLink of option.product_links) {
+          if (productLink.product.type_id !== 'plushToyAddon') {
+            continue;
           }
-        })
-      });
+
+          addonOptions.push({
+            optionId: option.option_id,
+            optionValueId: +productLink.id,
+            sku: productLink.product.sku
+          });
+        }
+      }
 
       return addons.map(
-        (addon) => {
+        (addon: any) => {
           const addonOption = addonOptions.find(addonOption => addonOption.sku === addon.id);
 
           if (!addonOption) {
@@ -159,17 +164,21 @@ export default {
   },
   async asyncData ({ store, route, context }) {
     if (context) context.output.cacheTags.add('product')
+
     const product = await store.dispatch('product/loadProduct', {
       parentSku: route.params.parentSku,
       childSku: null
     });
+
     await store.dispatch('budsies/loadPrintedProductAddons', {
       productId: product.id
     });
+
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',
       { product }
     );
+
     if (isServer) await loadBreadcrumbsPromise;
     catalogHooksExecutors.productPageVisited(product);
   },
