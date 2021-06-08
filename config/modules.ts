@@ -11,8 +11,26 @@ import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
 import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
 import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-delivery'
+import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
+import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
+import { extendStore } from '@vue-storefront/core/helpers'
+import { StorefrontModule } from '@vue-storefront/core/lib/modules';
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
+
+const extendUrlVuex = {
+  actions: {
+    async mapFallbackUrl (context, payload: any) {
+      const result = await forStoryblok(context, payload);
+      if (result) {
+        return result
+      }
+    }
+  }
+}
+const extendUrlModule: StorefrontModule = function ({ store }) {
+  extendStore('url', extendUrlVuex);
+}
 
 // TODO:distributed across proper pages BEFORE 1.11
 export function registerClientModules () {
@@ -28,6 +46,8 @@ export function registerClientModules () {
   registerModule(BreadcrumbsModule)
   registerModule(CmsModule)
   registerModule(NewsletterModule)
+  registerModule(StoryblokModule)
+  registerModule(extendUrlModule)
 }
 
 // Deprecated API, will be removed in 2.0
