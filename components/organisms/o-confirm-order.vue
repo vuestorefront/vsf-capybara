@@ -102,20 +102,18 @@
                 class="collected-product"
               >
                 <template #configuration>
-                  <div class="collected-product__properties">
-                    <SfProperty
-                      v-for="property in ['Color', 'Size']"
-                      :key="property"
-                      :name="property"
-                      :value="getProductProperty(product, property)"
-                      class="collected-product__property"
-                    />
-                  </div>
+                  <span />
                 </template>
                 <template #actions>
                   <div>
-                    <div class="collected-product__action">
-                      {{ product.sku }}
+                    <div class="collected-product__properties">
+                      <SfProperty
+                        v-for="option in getProductOptions(product)"
+                        :key="option.label"
+                        :name="option.label"
+                        :value="option.value"
+                        class="collected-product__property"
+                      />
                     </div>
                     <div class="collected-product__action">
                       {{ $t('Quantity') }}:
@@ -165,16 +163,13 @@
           <div class="product-title">
             {{ product.name | htmlDecode }}
           </div>
-          <div class="product-sku">
-            {{ product.sku }}
+          <div
+            class="product-options"
+            v-for="option in getProductOptions(product)"
+            :key="option.label"
+          >
+            {{ option.label }}: {{ option.value }}
           </div>
-        </SfTableData>
-        <SfTableData
-          v-for="property in ['Color', 'Size']"
-          :key="property"
-          class="table__data"
-        >
-          {{ getProductProperty(product, property) }}
         </SfTableData>
         <SfTableData class="table__data">
           {{ product.qty }}
@@ -290,12 +285,14 @@ import {
   SfCheckbox,
   SfAccordion,
   SfCharacteristic,
-  SfCollectedProduct
+  SfCollectedProduct,
+  SfProperty
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
 import { createSmoothscroll } from 'theme/helpers';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 
 export default {
   name: 'OConfirmOrder',
@@ -310,6 +307,7 @@ export default {
     SfAccordion,
     SfCharacteristic,
     SfCollectedProduct,
+    SfProperty,
     APromoCode,
     MPriceSummary
   },
@@ -318,8 +316,6 @@ export default {
     return {
       tableHeaders: [
         this.$t('Description'),
-        this.$t('Colour'),
-        this.$t('Size'),
         this.$t('Quantity'),
         this.$t('Price')
       ],
@@ -390,11 +386,10 @@ export default {
       const price = product.special_price ? product.price_incl_tax : false;
       return price ? this.$options.filters.price(price) : '';
     },
-    getProductProperty (product, propertyName) {
-      const property = product.options
-        ? product.options.find(option => option.label === propertyName)
-        : false;
-      return property ? property.value : '';
+    getProductOptions (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? product.totals.options
+        : product.options || [];
     },
     removeProduct (product) {
       this.$store.dispatch('cart/removeItem', { product });
@@ -479,9 +474,6 @@ export default {
       margin: 0 0 0 0.4em;
     }
   }
-}
-.product-sku {
-  color: var(--c-text-muted);
 }
 .button {
   cursor: pointer;

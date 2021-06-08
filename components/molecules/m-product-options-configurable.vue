@@ -1,11 +1,5 @@
 <template>
   <div class="m-product-options-configurable">
-    <SfAlert
-      v-if="product.errors && Object.keys(product.errors).length > 0"
-      class="m-product-call-to-action__alert"
-      :message="product.errors | formatProductMessages"
-      type="danger"
-    />
     <template v-for="attribute in productAttributes">
       <SfSelect
         :key="attribute.id"
@@ -43,7 +37,7 @@
 import config from 'config'
 import { mapGetters } from 'vuex';
 import get from 'lodash-es/get'
-import { SfAlert, SfSelect, SfProductOption, SfColor } from '@storefront-ui/vue';
+import { SfSelect, SfProductOption, SfColor } from '@storefront-ui/vue';
 import { getAvailableFiltersByProduct } from '@vue-storefront/core/modules/catalog/helpers/filters'
 export default {
   name: 'MProductOptionsConfigurable',
@@ -51,7 +45,6 @@ export default {
     configurableOptionCallback: { default: false }
   },
   components: {
-    SfAlert,
     SfSelect,
     SfProductOption,
     SfColor
@@ -82,13 +75,6 @@ export default {
       }
     },
     productAttributes () {
-      if (
-        this.product.errors &&
-        Object.keys(this.product.errors).length &&
-        Object.keys(this.configuration).length
-      ) {
-        return [];
-      }
       return this.product.configurable_options;
     },
     availableOptions () {

@@ -28,10 +28,10 @@
                 <template #configuration>
                   <div class="collected-product__properties">
                     <SfProperty
-                      v-for="(property, key) in product.configuration"
-                      :key="key"
-                      :name="property.name"
-                      :value="property.value"
+                      v-for="option in getProductOptions(product)"
+                      :key="option.label"
+                      :name="option.label"
+                      :value="option.value"
                     />
                   </div>
                 </template>
@@ -145,6 +145,7 @@ import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters } from 'vuex';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 export default {
   name: 'DetailedCart',
   components: {
@@ -215,6 +216,11 @@ export default {
     }
   },
   methods: {
+    getProductOptions (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? product.totals.options
+        : product.options || [];
+    },
     getProductLink (product) {
       return formatProductLink(product);
     },
