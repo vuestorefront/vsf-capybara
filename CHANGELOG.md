@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.5] - ?
 
+### Added
+
 ### Changed / Improved
+- Fixed: modalComponents map type errors
 - Fixed: remove product from Cart on Desktop
 
 ## [1.0.4] - 04.01.2020
@@ -32,7 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed: Overridden logo height (#490)
 - Fixed: duplicate image issue in offine mode (#498)
 - Fixed: Blank prices field on checkout in offline mode (#513)
-- Fixed: modalComponents map type errors
 
 ## [1.0.3] - 20.09.2020
 
