@@ -32,6 +32,10 @@
           >
             <div class="_additional-options">
               <div v-show="hasStyleSelections">
+                <div class="_step-title">
+                  Design
+                </div>
+
                 <validation-provider
                   v-slot="{ errors }"
                   rules="required"
@@ -42,10 +46,13 @@
                     v-model="selectedStyle"
                     v-if="showDesignSelector"
                     name="design_option"
-                    label="Select Design Variant"
                     required
                     class="sf-select--underlined"
+                    :size="10"
                   >
+                    <SfSelectOption disabled value="">
+                      Select Design Variant
+                    </SfSelectOption>
                     <SfSelectOption
                       v-for="option in availableStyles"
                       :key="option.value"
@@ -538,7 +545,7 @@ export default Vue.extend({
     ._artwork-upload,
     ._qty-container,
     ._actions {
-        margin-top: 1em;
+        margin-top: 1.5em;
     }
 
     ._design-option-list {
@@ -552,13 +559,13 @@ export default Vue.extend({
         }
     }
 
-    ._artwork-upload {
-        ._step-title {
-            font-size: var(--font-base);
-            font-weight: 800;
-            text-align: left;
-        }
+    ._step-title {
+        font-size: var(--font-base);
+        font-weight: 800;
+        text-align: left;
+    }
 
+    ._artwork-upload {
         ._uploader-wrapper {
             margin-top: 0.25em;
         }

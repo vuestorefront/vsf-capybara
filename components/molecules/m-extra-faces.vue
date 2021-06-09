@@ -37,7 +37,7 @@
 
     <div class="_step-description">
       <div class="_step-title">
-        Add more faces
+        Add more pets
       </div>
       <div class="_step-subtitle">
         How many additional faces do you want to add to the same design?
@@ -52,7 +52,7 @@
       selected=""
     >
       <SfSelectOption value="">
-        No extra face
+        No extra pets
       </SfSelectOption>
       <SfSelectOption
         v-for="option in availableOptions"
@@ -279,6 +279,7 @@ export default Vue.extend({
     }
 
     ._step-title {
+        font-size: var(--font-base);
         font-weight: 800;
         text-align: left;
     }
