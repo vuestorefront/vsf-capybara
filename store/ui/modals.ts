@@ -15,7 +15,7 @@ export enum ModalList {
 /**
  * List of modal components files
  */
-export const modalComponents = new Map([
+export const modalComponents = new Map<ModalList, any>([
   [ModalList.Review, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-review.vue')],
   [ModalList.Auth, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-authentication.vue')],
   [ModalList.SizeGuide, () => import(/* webpackChunkName: "vsf-modals" */ 'theme/components/molecules/modals/m-modal-size-guide.vue')],
