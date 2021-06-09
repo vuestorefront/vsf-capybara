@@ -169,6 +169,7 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
   name: 'OShipping',
@@ -212,6 +213,20 @@ export default {
         required,
         unicodeAlpha
       }
+    }
+  },
+  data: () => {
+    return {
+      states: States
+    };
+  },
+  computed: {
+    isSelectedCountryHasStates: () => {
+      if (!this.shipping.country || !States) {
+        return false;
+      }
+
+      return States.hasOwnProperty(this.shipping.country);
     }
   },
   mounted () {
