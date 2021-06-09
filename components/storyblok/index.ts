@@ -9,3 +9,4 @@ add('textarea', () => import('./Textarea.vue'))
 // add('ciLink', () => import('./Link.vue'))
 // Overwrite an existing component
 // add('tile', () => import('./Tile.vue'), { force: true })
+add('heading', () => import('./Heading.vue'))
