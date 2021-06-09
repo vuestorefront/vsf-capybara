@@ -1,25 +1,36 @@
 <template>
-  <div class="storyblok-button">
-    <sb-router-link
-      :link="item.link"
-      :is-new-window="item.open_in_new_window"
-      class="_link button-outline brdr-none px10 py20 bg-cl-mine-shaft :bg-cl-th-secondary weight-400 cl-white fs-medium no-underline pointer align-center"
-    >
-      {{ item.text }}
-    </sb-router-link>
-  </div>
+  <SfButton
+    :link="item.link"
+    :target="isOpenInNewWindow"
+    class="sf-button color-primary"
+  >
+    {{ item.text }}
+  </SfButton>
 </template>
 
-<script>
+<script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
-export default {
-  name: 'ButtonBlok',
-  extends: Blok
-}
+import { SfButton } from '@storefront-ui/vue';
+
+export default Blok.extend({
+  components: {
+    SfButton,
+    computed: {
+      isOpenInNewWindow () {
+        if (!this.item.open_in_new_window) {
+          return "_self"
+        }
+        return "_blank"
+      }
+    }
+  }
+})
+
 </script>
 
 <style scoped>
-.storyblok-button ._link {
+.sf-button {
   display: inline-block;
+  align: center;
 }
 </style>
