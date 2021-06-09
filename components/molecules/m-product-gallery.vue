@@ -3,6 +3,7 @@
     <SfGallery
       ref="gallery"
       :images="gallery"
+      :current="currentIndex + 1"
     />
   </div>
 </template>
