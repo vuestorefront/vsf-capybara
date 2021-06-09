@@ -37,7 +37,7 @@
 
     <div class="_step-description">
       <div class="_step-title">
-        Add more faces
+        Add more pets
       </div>
       <div class="_step-subtitle">
         How many additional faces do you want to add to the same design?
@@ -46,13 +46,13 @@
 
     <SfSelect
       v-model="selectedVariant"
+      v-if="showAddonSelector"
       name="extra_faces_addon"
-      class="_extra-faces-selector"
-      @change="updateAddonOption"
+      class="_extra-faces-selector sf-select--underlined"
       selected=""
     >
       <SfSelectOption value="">
-        No extra face
+        No extra pets
       </SfSelectOption>
       <SfSelectOption
         v-for="option in availableOptions"
@@ -130,8 +130,9 @@ export default Vue.extend({
   },
   data () {
     return {
-      fSelectedVariant: undefined,
-      fUploaderValues: []
+      fSelectedVariant: undefined as undefined | string,
+      fUploaderValues: [] as UploadedAddonArtwork[],
+      fShouldShowAddonSelector: true
     }
   },
   computed: {
@@ -164,6 +165,9 @@ export default Vue.extend({
     },
     isUploadersSubtitleVisible (): boolean {
       return this.inputsCount > 0;
+    },
+    showAddonSelector: function (): boolean {
+      return this.fShouldShowAddonSelector
     }
   },
   created (): void {
@@ -214,6 +218,9 @@ export default Vue.extend({
 
       return item.url;
     },
+    getFilesIds (): string[] {
+      return this.fUploaderValues.map(item => item.id);
+    },
     onArtworkChange (index: number, value?: FileStorageItem): void {
       if (!value) {
         this.fUploaderValues.splice(index, 1);
@@ -224,15 +231,40 @@ export default Vue.extend({
         id: value.id,
         url: value.url
       });
-    },
-    async updateAddonOption (value) {
-      const selectedAddon = this.availableOptions.find(option => option.id === value);
+    }
+  },
+  watch: {
+    productId: {
+      handler () {
+        this.fShouldShowAddonSelector = false;
 
-      this.setBundleOptionValue({
-        optionId: selectedAddon.optionId,
-        optionQty: 1,
-        optionSelections: [parseInt(selectedAddon.optionValueId)]
-      });
+        this.fSelectedVariant = undefined;
+
+        this.$nextTick(() => {
+          this.fShouldShowAddonSelector = true;
+        })
+      },
+      immediate: true
+    },
+    selectedVariant: {
+      handler () {
+        if (!this.selectedVariant) {
+          return;
+        }
+
+        const selectedAddon = this.availableOptions.find(option => option.id === this.selectedVariant);
+
+        if (!selectedAddon) {
+          return;
+        }
+
+        this.setBundleOptionValue({
+          optionId: selectedAddon.optionId,
+          optionQty: 1,
+          optionSelections: [selectedAddon.optionValueId]
+        });
+      },
+      immediate: false
     }
   }
 })
@@ -247,6 +279,7 @@ export default Vue.extend({
     }
 
     ._step-title {
+        font-size: var(--font-base);
         font-weight: 800;
         text-align: left;
     }
