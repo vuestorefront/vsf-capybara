@@ -15,7 +15,7 @@
             <transition-group name="fade" tag="div">
               <SfCollectedProduct
                 v-for="product in products"
-                :key="product.id"
+                :key="product.checksum"
                 :qty="product.qty"
                 :image="getThumbnailForProductExtend(product)"
                 image-width="140"
