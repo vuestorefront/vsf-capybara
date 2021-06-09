@@ -43,7 +43,6 @@
                     v-if="showDesignSelector"
                     name="design_option"
                     label="Select Design Variant"
-                    @change="updateDesignOption"
                     required
                     class="sf-select--underlined"
                   >
@@ -208,10 +207,6 @@ export default Vue.extend({
       type: String,
       required: true
     },
-    formAction: {
-      type: String,
-      required: true
-    },
     product: {
       type: Object,
       required: true
@@ -267,6 +262,10 @@ export default Vue.extend({
     initialStyleValue: {
       type: String,
       default: ''
+    },
+    uploadedArtworkId: {
+      type: String,
+      default: undefined
     }
   },
   data () {
@@ -373,15 +372,6 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    async updateDesignOption (value): Promise<void> {
-      const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
-
-      this.setBundleOptionValue({
-        optionId: selectedDesign.optionId,
-        optionQty: 1,
-        optionSelections: [parseInt(selectedDesign.optionValueId)]
-      });
-    },
     onArtworkChange (value?: FileStorageItem): void {
       if (!value) {
         this.fStorageItemId = undefined;
@@ -398,7 +388,12 @@ export default Vue.extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      const extraFacesArtworks = this.getExtraFaces().fUploaderValues.map(item => item.id);
+      let extraFacesArtworks: string[] = [];
+      const extraFacesComponent = this.getExtraFaces();
+
+      if (extraFacesComponent) {
+        extraFacesArtworks = extraFacesComponent.getFilesIds();
+      }
 
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
@@ -465,8 +460,6 @@ export default Vue.extend({
           )
     ) {
       this.selectedStyle = this.initialStyleValue;
-
-      await this.updateDesignOption(this.selectedStyle);
     }
   },
   created (): void {
@@ -488,6 +481,22 @@ export default Vue.extend({
         })
       },
       immediate: true
+    },
+    selectedStyle: {
+      handler () {
+        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
+
+        if (!selectedDesign) {
+          return;
+        }
+
+        this.setBundleOptionValue({
+          optionId: selectedDesign.optionId,
+          optionQty: 1,
+          optionSelections: [selectedDesign.optionValueId]
+        });
+      },
+      immediate: false
     }
   }
 })

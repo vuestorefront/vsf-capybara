@@ -2,7 +2,6 @@
   <div id="printed-product" itemscope itemtype="http://schema.org/Product">
     <o-printed-product-order-form
       :artwork-upload-url="artworkUploadUrl"
-      form-action="/"
       :product="getCurrentProduct"
       :product-id="getCurrentProduct.id + ''"
       :product-sku="getCurrentProduct.sku"

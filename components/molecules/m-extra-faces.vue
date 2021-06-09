@@ -49,7 +49,6 @@
       v-if="showAddonSelector"
       name="extra_faces_addon"
       class="_extra-faces-selector sf-select--underlined"
-      @change="updateAddonOption"
       selected=""
     >
       <SfSelectOption value="">
@@ -131,8 +130,8 @@ export default Vue.extend({
   },
   data () {
     return {
-      fSelectedVariant: undefined,
-      fUploaderValues: [],
+      fSelectedVariant: undefined as undefined | string,
+      fUploaderValues: [] as UploadedAddonArtwork[],
       fShouldShowAddonSelector: true
     }
   },
@@ -219,6 +218,9 @@ export default Vue.extend({
 
       return item.url;
     },
+    getFilesIds (): string[] {
+      return this.fUploaderValues.map(item => item.id);
+    },
     onArtworkChange (index: number, value?: FileStorageItem): void {
       if (!value) {
         this.fUploaderValues.splice(index, 1);
@@ -228,19 +230,6 @@ export default Vue.extend({
       Vue.set(this.fUploaderValues, index, {
         id: value.id,
         url: value.url
-      });
-    },
-    async updateAddonOption (value) {
-      if (!value) {
-        return;
-      }
-
-      const selectedAddon = this.availableOptions.find(option => option.id === value);
-
-      this.setBundleOptionValue({
-        optionId: selectedAddon.optionId,
-        optionQty: 1,
-        optionSelections: [parseInt(selectedAddon.optionValueId)]
       });
     }
   },
@@ -256,6 +245,26 @@ export default Vue.extend({
         })
       },
       immediate: true
+    },
+    selectedVariant: {
+      handler () {
+        if (!this.selectedVariant) {
+          return;
+        }
+
+        const selectedAddon = this.availableOptions.find(option => option.id === this.selectedVariant);
+
+        if (!selectedAddon) {
+          return;
+        }
+
+        this.setBundleOptionValue({
+          optionId: selectedAddon.optionId,
+          optionQty: 1,
+          optionSelections: [selectedAddon.optionValueId]
+        });
+      },
+      immediate: false
     }
   }
 })
