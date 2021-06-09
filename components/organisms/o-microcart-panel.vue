@@ -25,7 +25,6 @@
               :stock="10"
               :qty="product.qty"
               class="collected-product"
-              @click:remove="removeHandler(product)"
               @input="changeQuantity(product, $event)"
             >
               <template #configuration>
@@ -41,6 +40,19 @@
                     </template>
                   </SfProperty>
                 </div>
+              </template>
+              <template #remove>
+                <SfCircleIcon
+                  icon="cross"
+                  aria-label="Remove"
+                  class="sf-circle-icon--small sf-collected-product__remove sf-collected-product__remove--circle-icon"
+                  @click="removeHandler(product)"
+                />
+                <SfButton
+                  class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text"
+                  @click="removeHandler(product)"
+                >Remove</SfButton
+                >
               </template>
               <template #more-actions>
                 <span />
@@ -116,7 +128,8 @@ import {
   SfPrice,
   SfImage,
   SfHeading,
-  SfSidebar
+  SfSidebar,
+  SfCircleIcon
 } from '@storefront-ui/vue';
 
 export default {
@@ -127,7 +140,8 @@ export default {
     SfPrice,
     SfImage,
     SfHeading,
-    SfSidebar
+    SfSidebar,
+    SfCircleIcon
   },
   mixins: [VueOfflineMixin, onEscapePress],
   data () {
