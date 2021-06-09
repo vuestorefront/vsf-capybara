@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - ?
+
+### Added
+
+### Changed / Improved
+- Fixed: modalComponents map type errors
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
@@ -27,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed: Overridden logo height (#490)
 - Fixed: duplicate image issue in offine mode (#498)
 - Fixed: Blank prices field on checkout in offline mode (#513)
-- Fixed: modalComponents map type errors
 
 ## [1.0.3] - 20.09.2020
 
