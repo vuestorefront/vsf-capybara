@@ -31,6 +31,12 @@
                       v-for="option in getBundleProductOptions(product)"
                       :key="option"
                     >
+                      <SfIcon
+                        icon="check"
+                        size="xxs"
+                        color="blue-primary"
+                        class="collected-product__properties__icon"
+                      />
                       {{ option }}
                     </div>
                   </div>
@@ -139,7 +145,8 @@ import {
   SfImage,
   SfProperty,
   SfHeading,
-  SfBreadcrumbs
+  SfBreadcrumbs,
+  SfIcon
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters } from 'vuex';
@@ -158,6 +165,7 @@ export default {
     SfButton,
     SfHeading,
     SfProperty,
+    SfIcon,
     OrderSummary
   },
   data () {
@@ -383,10 +391,16 @@ export default {
 .collected-product {
   --collected-product-padding: var(--spacer-sm) 0;
   --collected-product-title-font-size: var(--font-sm);
+  --collected-product-title-font-weight: var(--font-semibold);
   border: 1px solid var(--c-light);
   border-width: 1px 0 0 0;
   &__properties {
+    font-size: var(--font-sm);
     margin-bottom: var(--spacer-sm);
+
+    &__icon {
+      display: inline-block;
+    }
   }
   @include for-mobile {
     --collected-product-remove-bottom: var(--spacer-sm);

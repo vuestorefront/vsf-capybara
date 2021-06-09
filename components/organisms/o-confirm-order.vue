@@ -107,6 +107,12 @@
                     v-for="option in getBundleProductOptions(product)"
                     :key="option"
                   >
+                    <SfIcon
+                      icon="check"
+                      size="xxs"
+                      color="blue-primary"
+                      class="collected-product__option__icon"
+                    />
                     {{ option }}
                   </div>
                 </template>
@@ -165,6 +171,12 @@
             v-for="option in getBundleProductOptions(product)"
             :key="option"
           >
+            <SfIcon
+              icon="check"
+              size="xxs"
+              color="blue-primary"
+              class="bundle-product-option__icon"
+            />
             {{ option }}
           </div>
         </SfTableData>
@@ -480,6 +492,19 @@ export default {
     &__description {
       text-align: left;
       flex: 1 0 12rem;
+
+      .product-title {
+        font-weight: var(--font-semibold);
+
+      }
+
+      .bundle-product-option {
+        font-size: var(--font-xs);
+
+        &__icon {
+          display: inline-block;
+        }
+      }
     }
     &__image {
       --image-width: 5.125rem;
@@ -576,10 +601,19 @@ export default {
   &__action {
     margin-top: var(--spacer-sm);
   }
+
+  &__option {
+    font-size: var(--font-xs);
+
+    &__icon {
+      display: inline-block;
+    }
+  }
 }
 ::v-deep .sf-collected-product {
   &__title {
     --collected-product-title-font-size: var(--font-sm);
+    --collected-product-title-font-weight: var(--font-semibold);
   }
 }
 .summary {
