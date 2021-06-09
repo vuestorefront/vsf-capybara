@@ -1,18 +1,23 @@
 <template>
   <div class="a-promo-code promo-code">
     <template v-if="!isCouponCode">
-      <SfInput
-        v-model="promoCode"
-        name="promoCode"
-        :placeholder="$t('Add a discount code')"
-        class="sf-input--filled promo-code__input"
-        @keyup.enter="applyCoupon"
-      />
-      <SfCircleIcon
-        class="promo-code__circle-icon"
-        icon="check"
-        @click="applyCoupon"
-      />
+      <div class="promo-code__title">
+        <slot name="title" />
+      </div>
+      <div class="promo-code__form">
+        <SfInput
+          v-model="promoCode"
+          name="promoCode"
+          :placeholder="$t('Add a discount code')"
+          class="sf-input--filled promo-code__input"
+          @keyup.enter="applyCoupon"
+        />
+        <SfCircleIcon
+          class="promo-code__circle-icon"
+          icon="check"
+          @click="applyCoupon"
+        />
+      </div>
     </template>
     <SfButton
       v-else-if="allowPromoCodeRemoval"
@@ -64,9 +69,13 @@ export default {
 <style lang="scss" scoped>
 .promo-code {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: var(--spacer-lg) 0 0;
+  flex-direction: column;
+  &__form {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: var(--spacer-sm);
+  }
   &__circle-icon {
     --button-size: 2rem;
     --icon-size: 0.6875rem;

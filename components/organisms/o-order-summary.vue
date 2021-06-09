@@ -6,7 +6,15 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <MPriceSummary :is-large="true" />
-    <APromoCode :allow-promo-code-removal="false" />
+    <APromoCode :allow-promo-code-removal="false">
+      <template #title>
+        <SfHeading
+          :title="$t('Discount Code')"
+          :level="3"
+          class="sf-heading--left"
+        />
+      </template>
+    </APromoCode>
     <div class="characteristics">
       <SfCharacteristic
         v-for="characteristic in characteristics"
@@ -67,6 +75,9 @@ export default {
   &__item {
     margin: var(--spacer-base) 0;
   }
+}
+.a-promo-code {
+  margin-top: var(--spacer-2xl);
 }
 .actions {
   &__button {

@@ -223,7 +223,15 @@
         </SfCheckbox>
       </div>
     </div>
-    <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
+    <APromoCode class="mobile-only" :allow-promo-code-removal="false">
+      <template #title>
+        <SfHeading
+          :title="$t('Discount Code')"
+          :level="2"
+          class="sf-heading--left"
+        />
+      </template>
+    </APromoCode>
     <div class="characteristics mobile-only">
       <SfCharacteristic
         v-for="characteristic in characteristics"
@@ -252,7 +260,15 @@
             </SfButton>
           </template>
         </SfCheckbox>
-        <APromoCode :allow-promo-code-removal="false" />
+        <APromoCode :allow-promo-code-removal="false">
+          <template #title>
+            <SfHeading
+              :title="$t('Discount Code')"
+              :level="4"
+              class="sf-heading--left"
+            />
+          </template>
+        </APromoCode>
       </div>
       <MPriceSummary class="totals__element" />
     </div>
@@ -464,6 +480,9 @@ export default {
   text-align: right;
   display: flex;
   flex-direction: column;
+}
+.a-promo-code {
+  margin-top: var(--spacer-xl);
 }
 .totals {
   display: flex;
