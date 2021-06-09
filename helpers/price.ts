@@ -26,7 +26,7 @@ function formatPrice (value) {
   return value ? price(value) : ''
 }
 
-export function getProductPrice (product, customOptions = {}) {
+export function getProductPrice (product, customOptions = {}, format = true) {
   if (!product) {
     return {
       regular: '',
@@ -44,6 +44,13 @@ export function getProductPrice (product, customOptions = {}) {
   const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
   const regular = product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
+
+  if (!format) {
+    return {
+      regular: isSpecialPrice ? original : regular,
+      special: isSpecialPrice ? special : 0
+    }
+  }
 
   return {
     regular: isSpecialPrice ? formatPrice(original) : formatPrice(regular),

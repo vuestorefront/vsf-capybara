@@ -4,6 +4,8 @@ const ErrorPage = () =>
   import(/* webpackChunkName: "vsf-error" */ 'theme/pages/Error');
 const Product = () =>
   import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Product');
+const PrintedProduct = () =>
+  import(/* webpackChunkName: "vsf-printed-product" */ 'theme/pages/PrintedProduct');
 const Typography = () =>
   import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Typography');
 const Category = () =>
@@ -46,7 +48,8 @@ let routes = [
   { name: 'petsiesStarProduct-product', path: '/p/:parentSku/:slug', component: Product },
   { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'category', path: '/c/:slug', component: Category },
-  { name: 'cms-page', path: '/i/:slug', component: Static }
+  { name: 'cms-page', path: '/i/:slug', component: Static },
+  { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct }
 ];
 
 export default routes;

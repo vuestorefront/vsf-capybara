@@ -116,7 +116,7 @@ export default {
 .o-top-navigation {
   position: relative;
   min-height: calc(var(--bottom-navigation-height) + var(--spacer-base));
-  z-index: 1;
+  z-index: 10;
 
   .a-logo {
     display: none;
@@ -139,7 +139,7 @@ export default {
   ::v-deep .sf-bottom-navigation {
     top: 0;
     bottom: auto;
-    z-index: inherit;
+    --bottom-navigation-z-index: 11;
     align-items: center;
     justify-content: space-between;
     .sf-bottom-navigation-item {

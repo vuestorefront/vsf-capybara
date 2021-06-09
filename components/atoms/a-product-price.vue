@@ -1,16 +1,18 @@
 <template>
-  <SfPrice
+  <a-custom-price
     :regular="price.regular"
-    :special="price.special"
+    :special-price="price.special"
   />
 </template>
+
 <script>
-import { SfPrice } from '@storefront-ui/vue';
+import ACustomPrice from '../atoms/a-custom-price.vue';
 import { getProductPrice } from 'theme/helpers'
+
 export default {
   name: 'AProductPrice',
   components: {
-    SfPrice
+    ACustomPrice
   },
   props: {
     product: {
@@ -24,7 +26,7 @@ export default {
   },
   computed: {
     price () {
-      return getProductPrice(this.product, this.customOptions)
+      return getProductPrice(this.product, this.customOptions, false)
     }
   }
 }

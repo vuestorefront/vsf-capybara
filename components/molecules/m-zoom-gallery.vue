@@ -67,7 +67,7 @@ import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
 require('@cabbiepete/cloud-zoom');
 require('@cabbiepete/cloud-zoom/cloud-zoom.css');
 
-interface ZoomGalleryImage {
+export interface ZoomGalleryImage {
   thumb: string,
   stage: string,
   big: string,
