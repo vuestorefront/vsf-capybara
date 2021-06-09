@@ -131,7 +131,7 @@
           </template>
         </SfRadio>
         <p class="shipping__note">
-          Our service is not responsible for local tariffs or duties on international shipments
+          {{ $t('Our service is not responsible for local tariffs or duties on international shipments') }}
         </p>
       </div>
       <div class="form__action">
