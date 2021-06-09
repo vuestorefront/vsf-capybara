@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / Improved
 - Fixed: modalComponents map type errors
+- Fixed: remove product from Cart on Desktop
 
 ## [1.0.4] - 04.01.2020
 
