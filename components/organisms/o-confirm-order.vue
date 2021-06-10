@@ -383,8 +383,8 @@ export default {
       openModal: 'openModal'
     }),
     getThumbnailForProduct (product) {
-      if (product.plushieThumb) {
-        return product.plushieThumb;
+      if (product.thumbnail && product.thumbnail.includes('://')) {
+        return product.thumbnail;
       }
 
       return getThumbnailForProduct(product);
