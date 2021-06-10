@@ -157,6 +157,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { mapMutations } from 'vuex';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -165,16 +166,15 @@ import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
+import { SfButton, SfSelect } from '@storefront-ui/vue';
+
+import FileStorageItem from 'src/modules/budsies/file-storage/item.model';
+
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
-
-import { SfButton, SfSelect } from '@storefront-ui/vue';
-
-import FileStorageItem from '../../ts/modules/file-storage/item.model';
 import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
-import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
