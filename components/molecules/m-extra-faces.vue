@@ -73,7 +73,7 @@ import { required } from 'vee-validate/dist/rules';
 import { SfSelect } from '@storefront-ui/vue';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
-import FileStorageItem from 'src/modules/budsies/file-storage/item.model';
+import FileStorageItem from 'src/modules/file-storage/item.model';
 
 import MArtworkUpload from './m-artwork-upload.vue';
 

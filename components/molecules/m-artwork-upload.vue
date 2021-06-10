@@ -55,9 +55,9 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
 import ErrorConverterService from 'src/modules/budsies/services/error-converter.service';
-import FileProcessingRepositoryFactory from 'src/modules/budsies/file-storage/file-processing.repository.factory';
-import FileProcessingRepository from 'src/modules/budsies/file-storage/file-processing.repository';
-import { ImageType } from 'src/modules/budsies/file-storage/imageType';
+import FileProcessingRepositoryFactory from 'src/modules/file-storage/file-processing.repository.factory';
+import FileProcessingRepository from 'src/modules/file-storage/file-processing.repository';
+import { ImageType } from 'src/modules/file-storage/image-type.value';
 
 // Create component
 const FilePondComponent = vueFilePond(
