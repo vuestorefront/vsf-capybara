@@ -157,23 +157,24 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { mapMutations } from 'vuex';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
+import { SfButton, SfSelect } from '@storefront-ui/vue';
+
+import FileStorageItem from 'src/modules/file-storage/item.model';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
-
-import { SfButton, SfSelect } from '@storefront-ui/vue';
-
-import FileStorageItem from '../../ts/modules/file-storage/item.model';
 import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
-import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
@@ -266,7 +267,7 @@ export default Vue.extend({
       type: Array as PropType<AddonOption[]>,
       default: () => []
     },
-    initialStyleValue: {
+    defaultStyle: {
       type: String,
       default: ''
     },
@@ -405,7 +406,7 @@ export default Vue.extend({
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
           qty: this.quantity,
-          uploadedArtworkIds: [this.storageItemId, ...extraFacesArtworks]
+          customerImagesIds: [this.storageItemId, ...extraFacesArtworks]
         })
       }).then(() => {
         this.onSuccess();
@@ -419,12 +420,6 @@ export default Vue.extend({
     },
     async onSuccess (): Promise<void> {
       try {
-        this.$store.dispatch(
-          'notification/spawnNotification',
-          notifications.productAddedToCart(),
-          { root: true }
-        );
-
         const uploader = this.getUploader();
         if (uploader) {
           uploader.clearInput();
@@ -434,6 +429,8 @@ export default Vue.extend({
         if (extraFaces) {
           extraFaces.clearUploaders();
         }
+
+        this.goToCart();
       } catch (e) {
         this.$store.dispatch(
           'notification/spawnNotification',
@@ -457,16 +454,19 @@ export default Vue.extend({
     },
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
+    },
+    goToCart (): void {
+      this.$router.push(localizedRoute('/cart'));
     }
   },
   async mounted (): Promise<void> {
     if (
-      this.initialStyleValue &&
+      this.defaultStyle &&
           this.availableStyles.find(
-            (item) => item.value === this.initialStyleValue
+            (item) => item.value === this.defaultStyle
           )
     ) {
-      this.selectedStyle = this.initialStyleValue;
+      this.selectedStyle = this.defaultStyle;
     }
   },
   created (): void {
@@ -481,7 +481,7 @@ export default Vue.extend({
       handler () {
         this.fShouldShowDesignSelector = false;
 
-        this.fSelectedStyle = undefined;
+        this.fSelectedStyle = this.defaultStyle ? this.defaultStyle : undefined;
 
         this.$nextTick(() => {
           this.fShouldShowDesignSelector = true;

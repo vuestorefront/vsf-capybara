@@ -5,7 +5,7 @@
       :product="getCurrentProduct"
       :product-id="getCurrentProduct.id + ''"
       :product-sku="getCurrentProduct.sku"
-      product-type="23"
+      :product-type="getBackendProductId"
       :product-price="price.regular"
       :product-special-price="price.special"
       :product-quantity="getCurrentProduct.qty"
@@ -13,7 +13,7 @@
       :product-short-description="getCurrentProduct.short_description"
       :product-name="getCurrentProduct.name"
       :product-images="getProductImages"
-      initial-style-value="simplePrintedKeychains"
+      :default-style="getDefaultStyle"
       :available-styles="getAvailableStyles"
       :addons="getAvailableAddons"
     />
@@ -28,6 +28,7 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import { ProductValue } from 'src/modules/budsies/models/product.value';
 
 import OPrintedProductOrderForm, { GalleryProductImages, SelectOption } from 'theme/components/organisms/o-printed-product-order-form.vue';
 import { AddonOption } from 'theme/components/molecules/m-extra-faces.vue';
@@ -88,6 +89,13 @@ export default {
 
       return result;
     },
+    getDefaultStyle () {
+      if (this.getBackendProductId === ProductValue.PRINTED_KEYCHAINS) {
+        return 'simplePrintedKeychains';
+      }
+
+      return '';
+    },
     getAvailableStyles () {
       if (!this.getCurrentProduct.bundle_options) {
         throw new Error('The printed product has no bundle options');
@@ -111,10 +119,6 @@ export default {
             specialPrice: productLink.product.special_price
           });
         }
-      }
-
-      if (!availableStyles) {
-        throw new Error('The printed product has no available styles');
       }
 
       return availableStyles;
@@ -159,6 +163,20 @@ export default {
           }
         }
       );
+    },
+    getBackendProductId (): ProductValue {
+      switch (this.getCurrentProduct.id) {
+        case 277:
+          return ProductValue.PRINTED_SOCKS;
+        case 340:
+          return ProductValue.PRINTED_MASKS;
+        case 353:
+          return ProductValue.PRINTED_KEYCHAINS;
+        default:
+          throw new Error(
+            `Can't resolve Backend product ID for Magento '${this.getCurrentProduct.id}' product ID`
+          );
+      }
     }
   },
   async asyncData ({ store, route, context }) {

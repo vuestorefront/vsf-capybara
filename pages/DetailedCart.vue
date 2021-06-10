@@ -237,8 +237,8 @@ export default {
       this.$store.dispatch('cart/removeItem', { product: product });
     },
     getThumbnailForProductExtend (product) {
-      if (product.plushieThumb) {
-        return product.plushieThumb;
+      if (product.thumbnail && product.thumbnail.includes('://')) {
+        return product.thumbnail;
       }
 
       return getThumbnailForProduct(product);
