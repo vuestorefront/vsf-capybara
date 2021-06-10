@@ -2,7 +2,9 @@
   <SfButton
     :link="item.link_ur"
     :target="isOpenInNewWindow"
-    class="sf-button color-primary"
+    :class="item.css_classes"
+    :style="styles"
+    class="color-primary"
   >
     {{ item.link_text }}
   </SfButton>
@@ -22,6 +24,13 @@ export default Blok.extend({
         return '_self';
       }
       return '_blank';
+    },
+    styles (): string {
+      let styles = '';
+      if (this.item.alignment) {
+        styles += 'text-align: ' + this.item.alignment.toString();
+      }
+      return styles;
     }
   }
 })

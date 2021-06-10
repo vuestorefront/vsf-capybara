@@ -1,24 +1,18 @@
 <template>
-  <SfHeading
-    :level="headingSize"
-    :title="item.title"
+  <div
+    v-html="item.html"
+    class="html-renderer"
     :class="item.css_classes"
     :style="styles"
   />
 </template>
 
 <script lang="ts">
-import { SfHeading } from '@storefront-ui/vue';
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 
 export default Blok.extend({
-  components: {
-    SfHeading
-  },
+  name: 'HtmlRenderer',
   computed: {
-    headingSize (): number {
-      return Number(this.item.heading_type);
-    },
     styles (): string {
       let styles = '';
       if (this.item.alignment) {
@@ -31,6 +25,6 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
-.sf-heading {
+.html-rendering {
 }
 </style>
