@@ -1,6 +1,6 @@
 <template>
   <SfHeading
-    :level="item.headingType"
+    :level="item.heading_type"
     :title="item.title"
     subtitle=""
   />
