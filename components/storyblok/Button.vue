@@ -1,10 +1,10 @@
 <template>
   <SfButton
-    :link="item.link"
+    :link="item.link_ur"
     :target="isOpenInNewWindow"
     class="sf-button color-primary"
   >
-    {{ item.text }}
+    {{ item.link_text }}
   </SfButton>
 </template>
 
@@ -14,14 +14,14 @@ import { SfButton } from '@storefront-ui/vue';
 
 export default Blok.extend({
   components: {
-    SfButton,
-    computed: {
-      isOpenInNewWindow () {
-        if (!this.item.open_in_new_window) {
-          return "_self"
-        }
-        return "_blank"
+    SfButton
+  },
+  computed: {
+    isOpenInNewWindow (): string {
+      if (!this.item.target_blank) {
+        return '_self';
       }
+      return '_blank';
     }
   }
 })
@@ -31,6 +31,5 @@ export default Blok.extend({
 <style scoped>
 .sf-button {
   display: inline-block;
-  align: center;
 }
 </style>
