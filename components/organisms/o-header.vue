@@ -257,7 +257,7 @@ export default {
     opacity: 1;
     visibility: visible;
     top: var(--bottom-navigation-height);
-    z-index: 1;
+    z-index: 12;
     --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
   }
   @include for-desktop {

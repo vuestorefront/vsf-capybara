@@ -98,13 +98,10 @@ export default {
       const products = this.products;
       const discount = products.reduce((accumulator, current) => {
         const productPrice = this.getProductPrice(current);
-        console.log(productPrice)
         const regularPrice = productPrice.regular;
         const specialPrice = productPrice.special ? productPrice.special : productPrice.regular;
         const regularPriceValue = parseFloat(regularPrice.replace('$', ''));
         const specialPriceValue = parseFloat(specialPrice.replace('$', ''));
-        console.log(regularPriceValue)
-        console.log(specialPriceValue)
         return accumulator + (regularPriceValue - specialPriceValue);
       }, 0);
       return discount.toFixed(2);
