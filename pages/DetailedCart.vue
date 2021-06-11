@@ -397,12 +397,7 @@ export default {
   }
 }
 .collected-product-list {
-  text-align: center;
-}
-@include for-desktop {
-  .collected-product-list {
-    text-align: left;
-  }
+  text-align: left;
 }
 .collected-product {
   --collected-product-padding: var(--spacer-sm) 0;
