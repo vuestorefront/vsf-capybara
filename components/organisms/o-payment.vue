@@ -323,13 +323,16 @@ export default {
     },
     canShowStateSelector () {
       return this.fCanShowStateSelector
+    },
+    getPaymentCountry () {
+      return this.payment.country;
     }
   },
   mounted () {
     createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   },
   watch: {
-    'payment.country': {
+    getPaymentCountry: {
       handler () {
         this.fCanShowStateSelector = false;
 
@@ -339,7 +342,7 @@ export default {
           this.fCanShowStateSelector = true;
         })
       },
-      immediate: false
+      immediate: true
     }
   }
 };

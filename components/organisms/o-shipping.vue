@@ -260,13 +260,16 @@ export default {
     },
     canShowStateSelector () {
       return this.fCanShowStateSelector
+    },
+    getShippingCountry () {
+      return this.shipping.country;
     }
   },
   mounted () {
     createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   },
   watch: {
-    'shipping.country': {
+    getShippingCountry: {
       handler () {
         this.fCanShowStateSelector = false;
 
@@ -276,7 +279,7 @@ export default {
           this.fCanShowStateSelector = true;
         })
       },
-      immediate: false
+      immediate: true
     }
   }
 };
