@@ -1,37 +1,46 @@
 <template>
   <div :class="cssClasses" :style="styles">
     <SfImage
-      :src="imagesList"
+      :src="srcSet"
       :alt="item.alt_tag"
-      pictureBreakpoint="768"
-      width=""
-      height=""
+      :picture-breakpoint="768"
     />
-    <p v-if="item.show_caption">{{ item.title_tag }}</p>
+    <p v-if="item.show_caption">
+      {{ item.title_tag }}
+    </p>
   </div>
 </template>
 
 <script lang="ts">
-import { Blok } from '../../../../modules/vsf-storyblok-module/components';
+import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { SfImage } from '@storefront-ui/vue';
 
+interface SrcSetValue {
+  desktop?: { url: string },
+  mobile?: { url: string }
+}
+
 export default Blok.extend({
-  name: 'Image',
+  name: 'StoryblokImage',
   components: {
     SfImage
   },
   computed: {
-    imagesList (): Record<string, any> {
-      let imagesSet: Record<string, any> = [];
-      imagesSet['desktop'] = [];
-      imagesSet['desktop']['url'] = this.item.image.filename;
-
-      if (this.item.mobile_image.filename){
-        imagesSet['mobile'] = [];
-        imagesSet['mobile']['url'] = this.item.mobile_image.filename;
+    srcSet (): SrcSetValue | string {
+      if (!this.item.mobile_image.filename) {
+        return this.item.image.filename;
       }
 
-      return imagesSet;
+      const srcSet: SrcSetValue = {
+        desktop: {
+          url: this.item.image.filename
+        },
+        mobile: {
+          url: this.item.mobile_image.filename
+        }
+      };
+
+      return srcSet;
     }
   }
 })
