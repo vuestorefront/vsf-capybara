@@ -1,9 +1,9 @@
 <template>
   <div :style="styles">
     <SfButton
-      :link="item.link_ur"
-      :target="isOpenInNewWindow"
+      :link="item.link_url.url"
       :class="cssClasses"
+      @click="openLink"
     >
       {{ item.link_text }}
     </SfButton>
@@ -11,8 +11,10 @@
 </template>
 
 <script lang="ts">
-import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import { SfButton } from '@storefront-ui/vue';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+
+import { Blok } from 'src/modules/vsf-storyblok-module/components'
 
 export default Blok.extend({
   name: 'Button',
@@ -20,11 +22,31 @@ export default Blok.extend({
     SfButton
   },
   computed: {
-    isOpenInNewWindow (): string {
-      if (!this.item.target_blank) {
-        return '_self';
+    shouldOpenInNewWindow (): boolean {
+      return !!this.item.target_blank;
+    },
+    extraCssClasses (): string[] {
+      const result: string [] = [];
+
+      if (!this.item.is_primary) {
+        result.push('color-secondary');
       }
-      return '_blank';
+
+      return result;
+    }
+  },
+  methods: {
+    openLink (): void {
+      const route = this.$router.resolve({
+        path: localizedRoute(this.item.link_url.url)
+      });
+
+      if (this.shouldOpenInNewWindow) {
+        window.open(route.href, '_blank');
+        return;
+      }
+
+      this.$router.push(route.location);
     }
   }
 })
