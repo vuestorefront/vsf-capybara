@@ -2,7 +2,7 @@
   <SfButton
     :link="item.link_ur"
     :target="isOpenInNewWindow"
-    :class="item.css_classes"
+    :class="cssClasses"
     :style="styles"
     class="color-primary"
   >
@@ -15,6 +15,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import { SfButton } from '@storefront-ui/vue';
 
 export default Blok.extend({
+  name: 'Button',
   components: {
     SfButton
   },
@@ -24,13 +25,6 @@ export default Blok.extend({
         return '_self';
       }
       return '_blank';
-    },
-    styles (): string {
-      let styles = '';
-      if (this.item.alignment) {
-        styles += 'text-align: ' + this.item.alignment.toString();
-      }
-      return styles;
     }
   }
 })
