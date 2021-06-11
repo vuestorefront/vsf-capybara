@@ -270,10 +270,12 @@ export default {
   },
   watch: {
     getShippingCountry: {
-      handler () {
+      handler (after, before) {
         this.fCanShowStateSelector = false;
 
-        this.shipping.state = '';
+        if (after && before) {
+          this.shipping.state = '';
+        }
 
         this.$nextTick(() => {
           this.fCanShowStateSelector = true;

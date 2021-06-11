@@ -333,10 +333,12 @@ export default {
   },
   watch: {
     getPaymentCountry: {
-      handler () {
+      handler (after, before) {
         this.fCanShowStateSelector = false;
 
-        this.payment.state = '';
+        if (after && before) {
+          this.payment.state = '';
+        }
 
         this.$nextTick(() => {
           this.fCanShowStateSelector = true;
