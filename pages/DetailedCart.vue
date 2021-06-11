@@ -15,7 +15,7 @@
             <transition-group name="fade" tag="div">
               <SfCollectedProduct
                 v-for="product in products"
-                :key="product.id"
+                :key="product.checksum"
                 :qty="product.qty"
                 :image="getThumbnailForProductExtend(product)"
                 image-width="140"
@@ -27,6 +27,18 @@
               >
                 <template #configuration>
                   <div class="collected-product__properties">
+                    <div
+                      v-for="option in getBundleProductOptions(product)"
+                      :key="option"
+                    >
+                      <SfIcon
+                        icon="check"
+                        size="xxs"
+                        color="blue-primary"
+                        class="collected-product__properties__icon"
+                      />
+                      {{ option }}
+                    </div>
                     <SfProperty
                       v-for="option in getProductOptions(product)"
                       :key="option.label"
@@ -139,10 +151,12 @@ import {
   SfImage,
   SfProperty,
   SfHeading,
-  SfBreadcrumbs
+  SfBreadcrumbs,
+  SfIcon
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters } from 'vuex';
+import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
@@ -158,6 +172,7 @@ export default {
     SfButton,
     SfHeading,
     SfProperty,
+    SfIcon,
     OrderSummary
   },
   data () {
@@ -179,11 +194,15 @@ export default {
         },
         {
           label: 'Socks',
-          url: '/'
+          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
         },
         {
           label: 'Face Masks',
-          url: '/'
+          url: '/printed/p/customPrintedMasks_bundle/printed-masks'
+        },
+        {
+          label: 'Pet Keychains',
+          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
         }
       ],
       breadcrumbs: [
@@ -225,18 +244,57 @@ export default {
       return formatProductLink(product);
     },
     getProductRegularPrice (product) {
-      const price = product.original_price_incl_tax || product.price_incl_tax;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).regular;
     },
     getProductSpecialPrice (product) {
-      const price = product.special_price ? product.price_incl_tax : false;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).special;
     },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });
     },
     getThumbnailForProductExtend (product) {
+      if (product.thumbnail && product.thumbnail.includes('://')) {
+        return product.thumbnail;
+      }
+
       return getThumbnailForProduct(product);
+    },
+    getBundleProductOptions (product) {
+      if (!product.bundle_options ||
+          product.bundle_options.length < 2 ||
+          !product.product_option ||
+          !product.product_option.extension_attributes ||
+          !product.product_option.extension_attributes.bundle_options
+      ) {
+        return [];
+      }
+
+      let result = [];
+      const productBundleOptions = product.product_option.extension_attributes.bundle_options;
+
+      product.bundle_options.forEach(option => {
+        if (!productBundleOptions.hasOwnProperty(option.option_id)) {
+          return
+        }
+
+        const selections = productBundleOptions[option.option_id].option_selections;
+
+        if (!selections) {
+          return
+        }
+
+        selections.forEach(selection => {
+          const productLink = option.product_links.find(productLink => +productLink.id === selection);
+
+          if (!productLink) {
+            return;
+          }
+
+          result.push(productLink.product.name);
+        });
+      });
+
+      return result;
     },
     changeQuantity (product, newQuantity) {
       this.isUpdatingQuantity = true;
@@ -349,10 +407,16 @@ export default {
 .collected-product {
   --collected-product-padding: var(--spacer-sm) 0;
   --collected-product-title-font-size: var(--font-sm);
+  --collected-product-title-font-weight: var(--font-semibold);
   border: 1px solid var(--c-light);
   border-width: 1px 0 0 0;
   &__properties {
-    margin: var(--spacer-sm) 0 0 0;
+    font-size: var(--font-sm);
+    margin-bottom: var(--spacer-sm);
+
+    &__icon {
+      display: inline-block;
+    }
   }
   @include for-mobile {
     --collected-product-remove-bottom: var(--spacer-sm);

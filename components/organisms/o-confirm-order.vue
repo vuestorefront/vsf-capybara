@@ -93,7 +93,7 @@
             <div class="accordion__content">
               <SfCollectedProduct
                 v-for="product in productsInCart"
-                :key="product.id"
+                :key="product.checksum"
                 v-model="product.qty"
                 :image="getThumbnailForProduct(product)"
                 :title="product.name | htmlDecode"
@@ -102,7 +102,19 @@
                 class="collected-product"
               >
                 <template #configuration>
-                  <span />
+                  <div
+                    class="collected-product__option"
+                    v-for="option in getBundleProductOptions(product)"
+                    :key="option"
+                  >
+                    <SfIcon
+                      icon="check"
+                      size="xxs"
+                      color="blue-primary"
+                      class="collected-product__option__icon"
+                    />
+                    {{ option }}
+                  </div>
                 </template>
                 <template #actions>
                   <div>
@@ -153,7 +165,7 @@
       </SfTableHeading>
       <SfTableRow
         v-for="product in productsInCart"
-        :key="product.id"
+        :key="product.checksum"
         class="table__row"
       >
         <SfTableData class="table__image">
@@ -162,6 +174,19 @@
         <SfTableData class="table__description">
           <div class="product-title">
             {{ product.name | htmlDecode }}
+          </div>
+          <div
+            class="bundle-product-option"
+            v-for="option in getBundleProductOptions(product)"
+            :key="option"
+          >
+            <SfIcon
+              icon="check"
+              size="xxs"
+              color="blue-primary"
+              class="bundle-product-option__icon"
+            />
+            {{ option }}
           </div>
           <div
             class="product-options"
@@ -275,6 +300,7 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { OrderModule } from '@vue-storefront/core/modules/order';
 import { OrderReview } from '@vue-storefront/core/modules/checkout/components/OrderReview';
+import { getProductPrice } from 'theme/helpers';
 import {
   SfIcon,
   SfImage,
@@ -376,20 +402,59 @@ export default {
       openModal: 'openModal'
     }),
     getThumbnailForProduct (product) {
+      if (product.thumbnail && product.thumbnail.includes('://')) {
+        return product.thumbnail;
+      }
+
       return getThumbnailForProduct(product);
     },
     getProductRegularPrice (product) {
-      const price = product.original_price_incl_tax || product.price_incl_tax;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).regular;
     },
     getProductSpecialPrice (product) {
-      const price = product.special_price ? product.price_incl_tax : false;
-      return price ? this.$options.filters.price(price) : '';
+      return getProductPrice(product, {}).special;
     },
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
         ? product.totals.options
         : product.options || [];
+    },
+    getBundleProductOptions (product) {
+      if (!product.bundle_options ||
+          product.bundle_options.length < 2 ||
+          !product.product_option ||
+          !product.product_option.extension_attributes ||
+          !product.product_option.extension_attributes.bundle_options
+      ) {
+        return [];
+      }
+
+      let result = [];
+      const productBundleOptions = product.product_option.extension_attributes.bundle_options;
+
+      product.bundle_options.forEach(option => {
+        if (!productBundleOptions.hasOwnProperty(option.option_id)) {
+          return
+        }
+
+        const selections = productBundleOptions[option.option_id].option_selections;
+
+        if (!selections) {
+          return
+        }
+
+        selections.forEach(selection => {
+          const productLink = option.product_links.find(productLink => +productLink.id === selection);
+
+          if (!productLink) {
+            return;
+          }
+
+          result.push(productLink.product.name);
+        });
+      });
+
+      return result;
     },
     removeProduct (product) {
       this.$store.dispatch('cart/removeItem', { product });
@@ -427,6 +492,11 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
+  .sf-table {
+    &__data {
+      --table-data-color: var(--c-text);
+    }
+  }
   @include for-desktop {
     &__header {
       text-align: center;
@@ -439,19 +509,28 @@ export default {
     }
     &__description {
       text-align: left;
-      flex: 0 0 12rem;
+      flex: 1 0 12rem;
+
+      .product-title {
+        font-weight: var(--font-semibold);
+
+      }
+
+      .bundle-product-option {
+        font-size: var(--font-xs);
+
+        &__icon {
+          display: inline-block;
+        }
+      }
     }
     &__image {
       --image-width: 5.125rem;
       text-align: left;
-      margin: 0 var(--spacer-xl) 0 0;
-    }
-    &__price {
-      text-align: right;
     }
     &__action {
       display: flex;
-      justify-content: right;
+      justify-content: center;
     }
   }
 }
@@ -533,6 +612,26 @@ export default {
   &:not(:last-of-type) {
     border: 1px solid var(--_c-light-primary);
     border-width: 0 0 1px 0;
+  }
+  &__action, &__option {
+    font-size: var(--font-sm);
+  }
+  &__action {
+    margin-top: var(--spacer-sm);
+  }
+
+  &__option {
+    font-size: var(--font-xs);
+
+    &__icon {
+      display: inline-block;
+    }
+  }
+}
+::v-deep .sf-collected-product {
+  &__title {
+    --collected-product-title-font-size: var(--font-sm);
+    --collected-product-title-font-weight: var(--font-semibold);
   }
 }
 .summary {

@@ -42,6 +42,7 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
 import Vue, { VueConstructor } from 'vue';
+import { InjectKey, InjectOptions } from 'vue/types/options';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
 import { File as FilePond, Status } from 'filepond';
@@ -53,11 +54,12 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 // import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
-import { ImageType } from '../../ts/modules/file-storage/imageType';
-import FileProcessingRepository from '../../ts/modules/file-storage/file-processing.repository';
-import ErrorConverterService from 'theme/ts/lib/error-converter.service';
-import FileProcessingRepositoryFactory from 'theme/ts/modules/file-storage/file-processing.repository.factory';
-import { InjectKey, InjectOptions } from 'vue/types/options';
+import { ErrorConverterService } from 'src/modules/budsies';
+import {
+  FileProcessingRepositoryFactory,
+  FileProcessingRepository,
+  ImageType
+} from 'src/modules/file-storage';
 
 // Create component
 const FilePondComponent = vueFilePond(

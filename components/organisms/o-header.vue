@@ -11,7 +11,7 @@
         'sf-header--has-mobile-search': isSearchPanelVisible,
         'sf-header--is-sticky': isSearchPanelVisible
       }"
-      :style="{'z-index': isHoveredMenu ? 2 : 1}"
+      :style="{'z-index': isHoveredMenu ? 200 : 1}"
     >
       <template #logo>
         <ALogo />
@@ -143,15 +143,15 @@ export default {
         },
         {
           label: 'Custom Socks',
-          url: '/'
+          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
         },
         {
           label: 'Face Masks',
-          url: '/'
+          url: '/printed/p/customPrintedMasks_bundle/printed-masks'
         },
         {
           label: 'Pet Keychains',
-          url: '/'
+          url: '/printed/p/customPrintedKeychains_bundle/face-keychains'
         },
         {
           label: 'Gift Box',

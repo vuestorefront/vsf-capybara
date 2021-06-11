@@ -32,6 +32,10 @@
           >
             <div class="_additional-options">
               <div v-show="hasStyleSelections">
+                <div class="_step-title">
+                  Design
+                </div>
+
                 <validation-provider
                   v-slot="{ errors }"
                   rules="required"
@@ -42,11 +46,13 @@
                     v-model="selectedStyle"
                     v-if="showDesignSelector"
                     name="design_option"
-                    label="Select Design Variant"
-                    @change="updateDesignOption"
                     required
                     class="sf-select--underlined"
+                    :size="10"
                   >
+                    <SfSelectOption disabled value="">
+                      Select Design Variant
+                    </SfSelectOption>
                     <SfSelectOption
                       v-for="option in availableStyles"
                       :key="option.value"
@@ -151,23 +157,24 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { mapMutations } from 'vuex';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
+import { SfButton, SfSelect } from '@storefront-ui/vue';
+
+import { Item } from 'src/modules/file-storage';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
-
-import { SfButton, SfSelect } from '@storefront-ui/vue';
-
-import FileStorageItem from '../../ts/modules/file-storage/item.model';
 import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
-import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
@@ -205,10 +212,6 @@ export default Vue.extend({
   },
   props: {
     artworkUploadUrl: {
-      type: String,
-      required: true
-    },
-    formAction: {
       type: String,
       required: true
     },
@@ -264,9 +267,13 @@ export default Vue.extend({
       type: Array as PropType<AddonOption[]>,
       default: () => []
     },
-    initialStyleValue: {
+    defaultStyle: {
       type: String,
       default: ''
+    },
+    uploadedArtworkId: {
+      type: String,
+      default: undefined
     }
   },
   data () {
@@ -373,16 +380,7 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    async updateDesignOption (value): Promise<void> {
-      const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
-
-      this.setBundleOptionValue({
-        optionId: selectedDesign.optionId,
-        optionQty: 1,
-        optionSelections: [parseInt(selectedDesign.optionValueId)]
-      });
-    },
-    onArtworkChange (value?: FileStorageItem): void {
+    onArtworkChange (value?: Item): void {
       if (!value) {
         this.fStorageItemId = undefined;
         return;
@@ -398,12 +396,17 @@ export default Vue.extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      const extraFacesArtworks = this.getExtraFaces().fUploaderValues.map(item => item.id);
+      let extraFacesArtworks: string[] = [];
+      const extraFacesComponent = this.getExtraFaces();
+
+      if (extraFacesComponent) {
+        extraFacesArtworks = extraFacesComponent.getFilesIds();
+      }
 
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
           qty: this.quantity,
-          uploadedArtworkIds: [this.storageItemId, ...extraFacesArtworks]
+          customerImagesIds: [this.storageItemId, ...extraFacesArtworks]
         })
       }).then(() => {
         this.onSuccess();
@@ -417,12 +420,6 @@ export default Vue.extend({
     },
     async onSuccess (): Promise<void> {
       try {
-        this.$store.dispatch(
-          'notification/spawnNotification',
-          notifications.productAddedToCart(),
-          { root: true }
-        );
-
         const uploader = this.getUploader();
         if (uploader) {
           uploader.clearInput();
@@ -432,6 +429,8 @@ export default Vue.extend({
         if (extraFaces) {
           extraFaces.clearUploaders();
         }
+
+        this.goToCart();
       } catch (e) {
         this.$store.dispatch(
           'notification/spawnNotification',
@@ -455,18 +454,19 @@ export default Vue.extend({
     },
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
+    },
+    goToCart (): void {
+      this.$router.push(localizedRoute('/cart'));
     }
   },
   async mounted (): Promise<void> {
     if (
-      this.initialStyleValue &&
+      this.defaultStyle &&
           this.availableStyles.find(
-            (item) => item.value === this.initialStyleValue
+            (item) => item.value === this.defaultStyle
           )
     ) {
-      this.selectedStyle = this.initialStyleValue;
-
-      await this.updateDesignOption(this.selectedStyle);
+      this.selectedStyle = this.defaultStyle;
     }
   },
   created (): void {
@@ -481,13 +481,29 @@ export default Vue.extend({
       handler () {
         this.fShouldShowDesignSelector = false;
 
-        this.fSelectedStyle = undefined;
+        this.fSelectedStyle = this.defaultStyle ? this.defaultStyle : undefined;
 
         this.$nextTick(() => {
           this.fShouldShowDesignSelector = true;
         })
       },
       immediate: true
+    },
+    selectedStyle: {
+      handler () {
+        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
+
+        if (!selectedDesign) {
+          return;
+        }
+
+        this.setBundleOptionValue({
+          optionId: selectedDesign.optionId,
+          optionQty: 1,
+          optionSelections: [selectedDesign.optionValueId]
+        });
+      },
+      immediate: false
     }
   }
 })
@@ -529,7 +545,7 @@ export default Vue.extend({
     ._artwork-upload,
     ._qty-container,
     ._actions {
-        margin-top: 1em;
+        margin-top: 1.5em;
     }
 
     ._design-option-list {
@@ -543,13 +559,13 @@ export default Vue.extend({
         }
     }
 
-    ._artwork-upload {
-        ._step-title {
-            font-size: var(--font-base);
-            font-weight: 800;
-            text-align: left;
-        }
+    ._step-title {
+        font-size: var(--font-base);
+        font-weight: 800;
+        text-align: left;
+    }
 
+    ._artwork-upload {
         ._uploader-wrapper {
             margin-top: 0.25em;
         }

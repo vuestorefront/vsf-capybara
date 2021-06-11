@@ -37,7 +37,7 @@
 
     <div class="_step-description">
       <div class="_step-title">
-        Add more faces
+        Add more pets
       </div>
       <div class="_step-subtitle">
         How many additional faces do you want to add to the same design?
@@ -49,11 +49,10 @@
       v-if="showAddonSelector"
       name="extra_faces_addon"
       class="_extra-faces-selector sf-select--underlined"
-      @change="updateAddonOption"
       selected=""
     >
       <SfSelectOption value="">
-        No extra face
+        No extra pets
       </SfSelectOption>
       <SfSelectOption
         v-for="option in availableOptions"
@@ -67,16 +66,16 @@
 </template>
 
 <script lang="ts">
+import Vue, { PropType } from 'vue';
+import { mapMutations } from 'vuex';
 import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
-import Vue, { PropType } from 'vue';
 import { SfSelect } from '@storefront-ui/vue';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
-import FileStorageItem from '../../ts/modules/file-storage/item.model';
+import { Item } from 'src/modules/file-storage';
 
 import MArtworkUpload from './m-artwork-upload.vue';
-import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
@@ -131,8 +130,8 @@ export default Vue.extend({
   },
   data () {
     return {
-      fSelectedVariant: undefined,
-      fUploaderValues: [],
+      fSelectedVariant: undefined as undefined | string,
+      fUploaderValues: [] as UploadedAddonArtwork[],
       fShouldShowAddonSelector: true
     }
   },
@@ -219,7 +218,10 @@ export default Vue.extend({
 
       return item.url;
     },
-    onArtworkChange (index: number, value?: FileStorageItem): void {
+    getFilesIds (): string[] {
+      return this.fUploaderValues.map(item => item.id);
+    },
+    onArtworkChange (index: number, value?: Item): void {
       if (!value) {
         this.fUploaderValues.splice(index, 1);
         return;
@@ -228,19 +230,6 @@ export default Vue.extend({
       Vue.set(this.fUploaderValues, index, {
         id: value.id,
         url: value.url
-      });
-    },
-    async updateAddonOption (value) {
-      if (!value) {
-        return;
-      }
-
-      const selectedAddon = this.availableOptions.find(option => option.id === value);
-
-      this.setBundleOptionValue({
-        optionId: selectedAddon.optionId,
-        optionQty: 1,
-        optionSelections: [parseInt(selectedAddon.optionValueId)]
       });
     }
   },
@@ -256,6 +245,26 @@ export default Vue.extend({
         })
       },
       immediate: true
+    },
+    selectedVariant: {
+      handler () {
+        if (!this.selectedVariant) {
+          return;
+        }
+
+        const selectedAddon = this.availableOptions.find(option => option.id === this.selectedVariant);
+
+        if (!selectedAddon) {
+          return;
+        }
+
+        this.setBundleOptionValue({
+          optionId: selectedAddon.optionId,
+          optionQty: 1,
+          optionSelections: [selectedAddon.optionValueId]
+        });
+      },
+      immediate: false
     }
   }
 })
@@ -270,6 +279,7 @@ export default Vue.extend({
     }
 
     ._step-title {
+        font-size: var(--font-base);
         font-weight: 800;
         text-align: left;
     }

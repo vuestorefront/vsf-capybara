@@ -8,16 +8,16 @@
 
 <script>
 import get from 'lodash-es/get'
+
 import DefaultLayout from './layouts/Default'
 import MinimalLayout from './layouts/Minimal'
-import ErrorConverterService from './ts/lib/error-converter.service'
-import FileProcessingRepositoryFactory from './ts/modules/file-storage/file-processing.repository.factory'
-import FileStorageItemFactory from './ts/modules/file-storage/item.factory'
+
+import { FileProcessingRepositoryFactory, itemFactory } from 'src/modules/file-storage'
+import { ErrorConverterService } from 'src/modules/budsies'
 
 const errorConverterService = new ErrorConverterService();
-const fileStorageItemFactory = new FileStorageItemFactory();
 const fileProcessingRepositoryFactory = new FileProcessingRepositoryFactory(
-  fileStorageItemFactory
+  itemFactory
 );
 
 export default {
