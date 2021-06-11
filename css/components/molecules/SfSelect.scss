@@ -1,4 +1,10 @@
 .sf-select {
+    &__overlay {
+        --overlay-z-index: 20
+    }
+    &__dropdown {
+        --select-dropdown-z-index: 21;
+    }
     @include for-desktop {
         &__options {
             overflow: auto;

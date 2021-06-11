@@ -634,6 +634,7 @@ export default {
     ::v-deep h6 {
       //@extend .sf-heading;
       text-align: var(--heading-text-align, center);
+      margin-top: var(--spacer-lg);
       @extend .sf-heading__title;
     }
 
