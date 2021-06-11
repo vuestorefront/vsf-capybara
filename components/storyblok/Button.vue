@@ -1,13 +1,13 @@
 <template>
-  <SfButton
-    :link="item.link_ur"
-    :target="isOpenInNewWindow"
-    :class="cssClasses"
-    :style="styles"
-    class="color-primary"
-  >
-    {{ item.link_text }}
-  </SfButton>
+  <div :style="styles">
+    <SfButton
+      :link="item.link_ur"
+      :target="isOpenInNewWindow"
+      :class="cssClasses"
+    >
+      {{ item.link_text }}
+    </SfButton>
+  </div>
 </template>
 
 <script lang="ts">
