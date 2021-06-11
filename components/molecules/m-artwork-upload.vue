@@ -54,10 +54,12 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 // import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
-import ErrorConverterService from 'src/modules/budsies/services/error-converter.service';
-import FileProcessingRepositoryFactory from 'src/modules/file-storage/file-processing.repository.factory';
-import FileProcessingRepository from 'src/modules/file-storage/file-processing.repository';
-import { ImageType } from 'src/modules/file-storage/image-type.value';
+import { ErrorConverterService } from 'src/modules/budsies';
+import {
+  FileProcessingRepositoryFactory,
+  FileProcessingRepository,
+  ImageType
+} from 'src/modules/file-storage';
 
 // Create component
 const FilePondComponent = vueFilePond(
