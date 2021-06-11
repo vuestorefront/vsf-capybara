@@ -119,7 +119,8 @@ export default {
 <style lang="scss">
 .default-layout {
   &.storyblok-preview-mode {
-    a {
+    a,
+    button {
       pointer-events: none;
     }
   }
