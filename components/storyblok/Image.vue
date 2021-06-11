@@ -4,6 +4,7 @@
       :src="srcSet"
       :alt="item.alt_tag"
       :picture-breakpoint="768"
+      :style="imageStyles"
     />
     <p v-if="item.show_caption">
       {{ item.title_tag }}
@@ -41,6 +42,19 @@ export default Blok.extend({
       };
 
       return srcSet;
+    },
+    imageStyles (): Record<string, string> {
+      const result: Record<string, string> = {};
+
+      if (this.item.height) {
+        result['height'] = this.item.height;
+      }
+
+      if (this.item.width) {
+        result['width'] = this.item.width;
+      }
+
+      return result;
     }
   }
 })
