@@ -11,9 +11,9 @@
       :alt="item.alt_tag"
       :picture-breakpoint="768"
     />
-    <p v-if="item.show_caption">
-      {{ item.title_tag }}
-    </p>
+    <span class="_driver-text" v-if="item.link_text">
+      {{ item.link_text }}
+    </span>
   </a>
 </template>
 
@@ -63,5 +63,26 @@ export default Blok.extend({
 .storyblok-driver {
   display: block;
   text-decoration: none;
+  position: relative;
+
+  ._driver-text {
+    position: absolute;
+    z-index: 10;
+    display: block;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background: #000;
+    background: rgba(0, 0, 0, 0.4);
+    text-align: center;
+    color: #fff;
+  }
+
+  &:hover {
+    ._driver-text {
+      background: rgba(0, 0, 0, 0.7);
+    }
+  }
 }
 </style>
