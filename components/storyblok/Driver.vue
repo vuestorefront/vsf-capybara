@@ -21,10 +21,7 @@
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { SfImage } from '@storefront-ui/vue';
 
-interface SrcSetValue {
-  desktop?: { url: string },
-  mobile?: { url: string }
-}
+import SrcSetValue from './src-set-value.interface';
 
 export default Blok.extend({
   name: 'StoryblokDriver',
