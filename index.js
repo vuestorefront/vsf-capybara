@@ -18,8 +18,6 @@ import { instagramStore } from 'theme/store/instagram-images';
 import { defaultContentStore } from 'theme/store/default-content';
 import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
 
-import './components/storyblok';
-
 once('__VUE_EXTEND_DROPPOINT_VPB__', () => {
   Vue.use(Vue2Filters);
   Vue.use(VueProgressBar);

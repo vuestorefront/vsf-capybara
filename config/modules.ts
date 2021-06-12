@@ -14,10 +14,11 @@ import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-deliver
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
 import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
 import { extendStore } from '@vue-storefront/core/helpers'
-import { StorefrontModule } from '@vue-storefront/core/lib/modules';
+import { StorefrontModule } from '@vue-storefront/core/lib/modules'
 import { BudsiesModule } from 'src/modules/budsies'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
+import registerStoryblokComponents from 'theme/components/storyblok'
 
 const extendUrlVuex = {
   actions: {
@@ -35,6 +36,8 @@ const extendUrlModule: StorefrontModule = function ({ store }) {
 
 // TODO:distributed across proper pages BEFORE 1.11
 export function registerClientModules () {
+  registerStoryblokComponents()
+
   registerModule(UrlModule)
   registerModule(CatalogModule)
   registerModule(CheckoutModule) // To Checkout
