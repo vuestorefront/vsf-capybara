@@ -1,5 +1,9 @@
 <template>
   <div class="a-promo-code">
+    <div class="a-promo-code__title">
+      <slot name="title" />
+    </div>
+
     <div v-if="!isCouponCode" class="a-promo-code__form">
       <SfInput
         v-model="promoCode"
@@ -81,11 +85,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .a-promo-code {
-  padding: var(--spacer-lg) 0 var(--spacer-sm) 0;
+  display: flex;
+  flex-direction: column;
+
   &__form {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    margin-top: var(--spacer-sm);
   }
   &__circle-icon {
     --button-size: 2rem;
