@@ -119,13 +119,22 @@
                 <template #actions>
                   <div>
                     <div class="collected-product__properties">
-                      <SfProperty
-                        v-for="option in getProductOptions(product)"
-                        :key="option.label"
-                        :name="option.label"
-                        :value="option.value"
-                        class="collected-product__property"
-                      />
+                      <template v-for="option in getProductOptions(product)">
+                        <SfProperty
+                          v-if="isCustomOption(product, option)"
+                          :key="option.label"
+                          :name="option.label"
+                          :value="option.value"
+                          class="collected-product__property"
+                        />
+                        <div
+                          v-else
+                          :key="option.label"
+                          class="collected-product__property"
+                        >
+                          {{ option.value }}
+                        </div>
+                      </template>
                     </div>
                     <div class="collected-product__action">
                       {{ $t('Quantity') }}:
@@ -193,7 +202,12 @@
             v-for="option in getProductOptions(product)"
             :key="option.label"
           >
-            {{ option.label }}: {{ option.value }}
+            <template v-if="isCustomOption(product, option)">
+              {{ option.label }}: {{ option.value }}
+            </template>
+            <template v-else>
+              {{ option.value }}
+            </template>
           </div>
         </SfTableData>
         <SfTableData class="table__data">
@@ -418,6 +432,13 @@ export default {
       return onlineHelper.isOnline && product.totals && product.totals.options
         ? product.totals.options
         : product.options || [];
+    },
+    isCustomOption (product, productOption) {
+      if (!product.custom_options) {
+        return false;
+      }
+
+      return product.custom_options.find(option => option.title === productOption.label) !== undefined;
     },
     getBundleProductOptions (product) {
       if (!product.bundle_options ||

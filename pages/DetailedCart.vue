@@ -39,12 +39,20 @@
                       />
                       {{ option }}
                     </div>
-                    <SfProperty
-                      v-for="option in getProductOptions(product)"
-                      :key="option.label"
-                      :name="option.label"
-                      :value="option.value"
-                    />
+                    <template v-for="option in getProductOptions(product)">
+                      <SfProperty
+                        v-if="isCustomOption(product, option)"
+                        :key="option.label"
+                        :name="option.label"
+                        :value="option.value"
+                      />
+                      <div
+                        v-else
+                        :key="option.label"
+                      >
+                        {{ option.value }}
+                      </div>
+                    </template>
                   </div>
                 </template>
                 <template #price>
@@ -240,6 +248,13 @@ export default {
         ? product.totals.options
         : product.options || [];
     },
+    isCustomOption (product, productOption) {
+      if (!product.custom_options) {
+        return false;
+      }
+
+      return product.custom_options.find(option => option.title === productOption.label) !== undefined;
+    },
     getProductLink (product) {
       return formatProductLink(product);
     },
@@ -412,6 +427,9 @@ export default {
     &__icon {
       display: inline-block;
     }
+  }
+  &__properties > div {
+    margin-bottom: var(--spacer-xs);
   }
   @include for-mobile {
     --collected-product-remove-bottom: var(--spacer-sm);
