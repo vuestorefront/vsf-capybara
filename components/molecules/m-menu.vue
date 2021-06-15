@@ -71,28 +71,26 @@ export default {
       getPromotedOffers: 'promoted/getPromotedOffers'
     }),
     categories () {
+      const positionSort = (a, b) => a.position - b.position;
       return this.categoriesIds
-        .map(({ id, children_data: childrenData = [] }) => {
-          const subCategories = childrenData
-            .map(subCategory => prepareCategoryMenuItem(
-              this.getCategories.find(category => category.id === subCategory.id)
-            ))
-            .filter(Boolean)
-            .sort((a, b) => a.position - b.position)
+        .map(category => {
+          const subCategories = category.children_data
+            .map(subCategory => prepareCategoryMenuItem(subCategory))
+            .sort(positionSort)
 
-          const category = this.getCategories.find(category => category.id === id)
-          const viewAllMenuItem = prepareCategoryMenuItem({
-            ...category,
+          const subheader = prepareCategoryMenuItem(category);
+          const viewAllMenuItem = {
+            ...subheader,
             name: this.$t('View all'),
             position: 0
-          });
+          };
 
           return {
-            ...prepareCategoryMenuItem(category),
+            ...subheader,
             items: [viewAllMenuItem, ...subCategories]
           };
         })
-        .sort((a, b) => a.position - b.position);
+        .sort(positionSort);
     },
     currentCategoryTitle () {
       return this.getCurrentCategory.name || ''
