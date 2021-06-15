@@ -7,6 +7,7 @@ export default function registerComponents () {
   add('image', () => import('./Image.vue'))
   add('driver', () => import('./Driver.vue'))
   add('homepage_intro_section', () => import('./HomepageIntroSection.vue'))
+  add('slider', () => import('./Slider.vue'))
 
   add('hero', () => import('./Hero.vue'))
   // add('product', () => import('./Product.vue'))

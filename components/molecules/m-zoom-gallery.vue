@@ -64,18 +64,10 @@ import jQuery from 'jquery';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
 
+import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
+
 require('@cabbiepete/cloud-zoom');
 require('@cabbiepete/cloud-zoom/cloud-zoom.css');
-
-export interface ZoomGalleryImage {
-  thumb: string,
-  stage: string,
-  big: string,
-  alt?: string,
-  title?: string,
-  link?: string,
-  target?: string
-}
 
 export default Vue.extend({
   name: 'MZoomGallery',
