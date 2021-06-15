@@ -64,11 +64,30 @@
         @blur="$v.payment.city.$touch()"
       />
       <SfInput
+        v-if="!isSelectedCountryHasStates"
         v-model.trim="payment.state"
         class="form__element form__element--half form__element--half-even"
         name="state"
         :label="$t('State / Province')"
       />
+      <SfSelect
+        v-if="isSelectedCountryHasStates && canShowStateSelector"
+        v-model.trim="payment.state"
+        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+        name="state"
+        :label="$t('State / Province')"
+        :required="true"
+        :valid="!$v.payment.state.$error"
+        :error-message="$t('Field is required')"
+      >
+        <SfSelectOption
+          v-for="state in getStatesForSelectedCountry"
+          :key="state.name"
+          :value="state.code"
+        >
+          {{ state.name }}
+        </SfSelectOption>
+      </SfSelect>
       <SfInput
         v-model.trim="payment.zipCode"
         class="form__element form__element--half"
@@ -148,7 +167,7 @@
   </div>
 </template>
 <script>
-import { required, minLength } from 'vuelidate/lib/validators';
+import { required, requiredIf, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 import {
@@ -160,6 +179,7 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
   name: 'OPayment',
@@ -185,6 +205,9 @@ export default {
       },
       country: {
         required
+      },
+      state: {
+        required: requiredIf(function () { return this.isSelectedCountryHasStates })
       },
       streetAddress: {
         required,
@@ -228,8 +251,52 @@ export default {
         }
       };
   },
+  data: () => {
+    return {
+      states: States,
+      fCanShowStateSelector: true
+    };
+  },
+  computed: {
+    isSelectedCountryHasStates () {
+      if (!this.payment.country || !this.states) {
+        return false;
+      }
+
+      return this.states.hasOwnProperty(this.payment.country);
+    },
+    getStatesForSelectedCountry () {
+      if (!this.isSelectedCountryHasStates) {
+        return [];
+      }
+
+      return this.states[this.payment.country];
+    },
+    canShowStateSelector () {
+      return this.fCanShowStateSelector
+    },
+    getPaymentCountry () {
+      return this.payment.country;
+    }
+  },
   mounted () {
     createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
+  },
+  watch: {
+    getPaymentCountry: {
+      handler (after, before) {
+        this.fCanShowStateSelector = false;
+
+        if (after && before) {
+          this.payment.state = '';
+        }
+
+        this.$nextTick(() => {
+          this.fCanShowStateSelector = true;
+        })
+      },
+      immediate: true
+    }
   }
 };
 </script>
