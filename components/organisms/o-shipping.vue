@@ -41,21 +41,11 @@
         v-model.trim="shipping.streetAddress"
         class="form__element"
         name="street-address"
-        :label="$t('Street name')"
+        :label="$t('Address')"
         :required="true"
         :valid="!$v.shipping.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.streetAddress.$touch()"
-      />
-      <SfInput
-        v-model.trim="shipping.apartmentNumber"
-        class="form__element"
-        name="apartment-number"
-        :label="$t('House/Apartment number')"
-        :required="true"
-        :valid="!$v.shipping.apartmentNumber.$error"
-        :error-message="$t('Field is required')"
-        @blur="$v.shipping.apartmentNumber.$touch()"
       />
       <SfInput
         v-model.trim="shipping.city"
@@ -68,11 +58,30 @@
         @blur="$v.shipping.city.$touch()"
       />
       <SfInput
+        v-if="!isSelectedCountryHasStates"
         v-model.trim="shipping.state"
         class="form__element form__element--half form__element--half-even"
         name="state"
         :label="$t('State / Province')"
       />
+      <SfSelect
+        v-if="isSelectedCountryHasStates && canShowStateSelector"
+        v-model.trim="shipping.state"
+        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+        name="state"
+        :label="$t('State / Province')"
+        :required="true"
+        :valid="!$v.shipping.state.$error"
+        :error-message="$t('Field is required')"
+      >
+        <SfSelectOption
+          v-for="state in getStatesForSelectedCountry"
+          :key="state.name"
+          :value="state.code"
+        >
+          {{ state.name }}
+        </SfSelectOption>
+      </SfSelect>
       <SfInput
         v-model.trim="shipping.zipCode"
         class="form__element form__element--half"
@@ -136,7 +145,13 @@
               </div>
             </div>
           </template>
+          <template #details v-if="method.method_name">
+            <p>{{ method.method_name }}</p>
+          </template>
         </SfRadio>
+        <p class="shipping__note">
+          {{ $t('Our service is not responsible for local tariffs or duties on international shipments') }}
+        </p>
       </div>
       <div class="form__action">
         <SfButton
@@ -157,7 +172,7 @@
   </div>
 </template>
 <script>
-import { required, minLength } from 'vuelidate/lib/validators';
+import { required, requiredIf, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Shipping } from '@vue-storefront/core/modules/checkout/components/Shipping';
 import {
@@ -169,6 +184,7 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
   name: 'OShipping',
@@ -195,11 +211,10 @@ export default {
       country: {
         required
       },
-      streetAddress: {
-        required,
-        unicodeAlphaNum
+      state: {
+        required: requiredIf(function () { return this.isSelectedCountryHasStates })
       },
-      apartmentNumber: {
+      streetAddress: {
         required,
         unicodeAlphaNum
       },
@@ -214,8 +229,52 @@ export default {
       }
     }
   },
+  data: () => {
+    return {
+      states: States,
+      fCanShowStateSelector: true
+    };
+  },
+  computed: {
+    isSelectedCountryHasStates () {
+      if (!this.shipping.country || !this.states) {
+        return false;
+      }
+
+      return this.states.hasOwnProperty(this.shipping.country);
+    },
+    getStatesForSelectedCountry () {
+      if (!this.isSelectedCountryHasStates) {
+        return [];
+      }
+
+      return this.states[this.shipping.country];
+    },
+    canShowStateSelector () {
+      return this.fCanShowStateSelector
+    },
+    getShippingCountry () {
+      return this.shipping.country;
+    }
+  },
   mounted () {
     createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
+  },
+  watch: {
+    getShippingCountry: {
+      handler (after, before) {
+        this.fCanShowStateSelector = false;
+
+        if (after && before) {
+          this.shipping.state = '';
+        }
+
+        this.$nextTick(() => {
+          this.fCanShowStateSelector = true;
+        })
+      },
+      immediate: true
+    }
   }
 };
 </script>
@@ -283,19 +342,13 @@ export default {
       margin: 0 calc(var(--spacer-sm) * -1);
     }
   }
-  @include for-mobile {
-    &__radio-group {
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      width: 100vw;
-    }
-  }
 }
 .shipping {
   --radio-container-padding: var(--spacer-sm);
+  &__note {
+    font-size: var(--font-sm);
+    color: var(--c-dark-variant);
+  }
   &__label {
     display: flex;
     justify-content: flex-start;

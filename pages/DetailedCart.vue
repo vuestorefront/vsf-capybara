@@ -187,11 +187,15 @@ export default {
         },
         {
           label: 'Socks',
-          url: '/'
+          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
         },
         {
           label: 'Face Masks',
-          url: '/'
+          url: '/printed/p/customPrintedMasks_bundle/printed-masks'
+        },
+        {
+          label: 'Pet Keychains',
+          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
         }
       ],
       breadcrumbs: [

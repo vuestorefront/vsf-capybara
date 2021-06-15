@@ -168,7 +168,7 @@ import * as types from '@vue-storefront/core/modules/catalog/store/product/mutat
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 
-import FileStorageItem from 'src/modules/file-storage/item.model';
+import { Item } from 'src/modules/file-storage';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -380,7 +380,7 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    onArtworkChange (value?: FileStorageItem): void {
+    onArtworkChange (value?: Item): void {
       if (!value) {
         this.fStorageItemId = undefined;
         return;

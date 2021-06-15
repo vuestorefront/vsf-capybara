@@ -47,21 +47,11 @@
         v-model.trim="payment.streetAddress"
         class="form__element"
         name="street-address"
-        :label="$t('Street name')"
+        :label="$t('Address')"
         :required="true"
         :valid="!$v.payment.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.streetAddress.$touch()"
-      />
-      <SfInput
-        v-model.trim="payment.apartmentNumber"
-        class="form__element"
-        name="apartment-number"
-        :label="$t('House/Apartment number')"
-        :required="true"
-        :valid="!$v.payment.apartmentNumber.$error"
-        :error-message="$t('Field is required')"
-        @blur="$v.payment.apartmentNumber.$touch()"
       />
       <SfInput
         v-model.trim="payment.city"
@@ -74,11 +64,30 @@
         @blur="$v.payment.city.$touch()"
       />
       <SfInput
+        v-if="!isSelectedCountryHasStates"
         v-model.trim="payment.state"
         class="form__element form__element--half form__element--half-even"
         name="state"
         :label="$t('State / Province')"
       />
+      <SfSelect
+        v-if="isSelectedCountryHasStates && canShowStateSelector"
+        v-model.trim="payment.state"
+        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+        name="state"
+        :label="$t('State / Province')"
+        :required="true"
+        :valid="!$v.payment.state.$error"
+        :error-message="$t('Field is required')"
+      >
+        <SfSelectOption
+          v-for="state in getStatesForSelectedCountry"
+          :key="state.name"
+          :value="state.code"
+        >
+          {{ state.name }}
+        </SfSelectOption>
+      </SfSelect>
       <SfInput
         v-model.trim="payment.zipCode"
         class="form__element form__element--half"
@@ -117,41 +126,6 @@
         name="phone"
         :label="$t('Phone Number')"
       />
-      <SfCheckbox
-        v-model="generateInvoice"
-        class="form__element form__checkbox"
-        name="generateInvoice"
-        :label="$t('I want to generate an invoice for the company')"
-      />
-      <template v-if="generateInvoice">
-        <SfInput
-          v-model.trim="payment.company"
-          class="form__element form__element--half"
-          name="company-name"
-          :label="$t('Company name')"
-          :required="true"
-          :valid="!$v.payment.company.$error"
-          :error-message="$t('Field is required')"
-          @blur="$v.payment.company.$touch()"
-        />
-        <SfInput
-          v-model.trim="payment.taxId"
-          class="form__element form__element--half form__element--half-even"
-          name="tax-id"
-          :label="$t('Tax identification number')"
-          :required="true"
-          :valid="!$v.payment.taxId.$error"
-          :error-message="
-            !$v.payment.taxId.required
-              ? $t('Field is required')
-              : $t('Tax identification number must have at least 3 letters.')
-          "
-          @blur="$v.payment.taxId.$touch()"
-        />
-        <p class="mb40 mt0">
-          {{ $t("We will send you the invoice to given e-mail address") }}
-        </p>
-      </template>
     </div>
     <SfHeading
       :title="$t('Payment method')"
@@ -193,7 +167,7 @@
   </div>
 </template>
 <script>
-import { required, minLength } from 'vuelidate/lib/validators';
+import { required, requiredIf, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 import {
@@ -205,6 +179,7 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
   name: 'OPayment',
@@ -231,11 +206,10 @@ export default {
       country: {
         required
       },
-      streetAddress: {
-        required,
-        unicodeAlphaNum
+      state: {
+        required: requiredIf(function () { return this.isSelectedCountryHasStates })
       },
-      apartmentNumber: {
+      streetAddress: {
         required,
         unicodeAlphaNum
       },
@@ -277,8 +251,52 @@ export default {
         }
       };
   },
+  data: () => {
+    return {
+      states: States,
+      fCanShowStateSelector: true
+    };
+  },
+  computed: {
+    isSelectedCountryHasStates () {
+      if (!this.payment.country || !this.states) {
+        return false;
+      }
+
+      return this.states.hasOwnProperty(this.payment.country);
+    },
+    getStatesForSelectedCountry () {
+      if (!this.isSelectedCountryHasStates) {
+        return [];
+      }
+
+      return this.states[this.payment.country];
+    },
+    canShowStateSelector () {
+      return this.fCanShowStateSelector
+    },
+    getPaymentCountry () {
+      return this.payment.country;
+    }
+  },
   mounted () {
     createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
+  },
+  watch: {
+    getPaymentCountry: {
+      handler (after, before) {
+        this.fCanShowStateSelector = false;
+
+        if (after && before) {
+          this.payment.state = '';
+        }
+
+        this.$nextTick(() => {
+          this.fCanShowStateSelector = true;
+        })
+      },
+      immediate: true
+    }
   }
 };
 </script>
