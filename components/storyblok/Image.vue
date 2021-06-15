@@ -23,8 +23,8 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { SfImage } from '@storefront-ui/vue';
 import LightBox from 'vue-image-lightbox';
 
-import SrcSetValue from './src-set-value.interface';
-import MediaSetValue from './media-set-value.interface';
+import SrcSetValue from './interfaces/src-set-value.interface';
+import MediaSetValue from './interfaces/media-set-value.interface';
 
 export default Blok.extend({
   name: 'StoryblokImage',

@@ -59,7 +59,7 @@ import {
   SfHeading
 } from '@storefront-ui/vue';
 
-import SrcSetValue from './src-set-value.interface';
+import SrcSetValue from './interfaces/src-set-value.interface';
 
 export default Blok.extend({
   name: 'StoryblokHomepageIntroSection',
