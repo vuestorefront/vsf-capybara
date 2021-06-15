@@ -28,7 +28,7 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
-import { ProductValue } from 'src/modules/budsies/models/product.value';
+import { ProductValue } from 'src/modules/budsies';
 
 import OPrintedProductOrderForm, { GalleryProductImages, SelectOption } from 'theme/components/organisms/o-printed-product-order-form.vue';
 import { AddonOption } from 'theme/components/molecules/m-extra-faces.vue';

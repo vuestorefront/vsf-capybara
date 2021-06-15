@@ -1,31 +1,33 @@
 <template>
-  <div class="a-promo-code promo-code">
-    <template v-if="!isCouponCode">
-      <div class="promo-code__title">
-        <slot name="title" />
-      </div>
-      <div class="promo-code__form">
-        <SfInput
-          v-model="promoCode"
-          name="promoCode"
-          :placeholder="$t('Add a discount code')"
-          class="sf-input--filled promo-code__input"
-          @keyup.enter="applyCoupon"
-        />
-        <SfCircleIcon
-          class="promo-code__circle-icon"
-          icon="check"
-          @click="applyCoupon"
-        />
-      </div>
-    </template>
+  <div class="a-promo-code">
+    <div class="a-promo-code__title">
+      <slot name="title" />
+    </div>
+
+    <div v-if="!isCouponCode" class="a-promo-code__form">
+      <SfInput
+        v-model="promoCode"
+        name="promoCode"
+        :placeholder="$t('Add a discount code')"
+        class="sf-input--filled a-promo-code__input"
+        @keyup.enter="applyCoupon"
+      />
+      <SfCircleIcon
+        class="a-promo-code__circle-icon"
+        icon="check"
+        @click="applyCoupon"
+      />
+    </div>
     <SfButton
       v-else-if="allowPromoCodeRemoval"
-      class="sf-button sf-button--outline promo-code__button"
+      class="sf-button sf-button--outline a-promo-code__button"
       @click="removeCoupon"
     >
       {{ $t("Delete discount code") }}
     </SfButton>
+    <div class="a-promo-code__message" v-if="message">
+      {{ message }}
+    </div>
   </div>
 </template>
 
@@ -47,18 +49,33 @@ export default {
   },
   data () {
     return {
-      promoCode: ''
+      promoCode: '',
+      fMessage: ''
     };
   },
   computed: {
     isCouponCode () {
       return this.$store.state.cart.platformTotals ? this.$store.state.cart.platformTotals.coupon_code : false;
+    },
+    message: {
+      set: function (message) {
+        this.fMessage = message;
+
+        setTimeout(() => { this.fMessage = '' }, 5000);
+      },
+      get: function () {
+        return this.fMessage;
+      }
     }
   },
   methods: {
-    async applyCoupon () {
-      await this.$store.dispatch('cart/applyCoupon', this.promoCode);
-      this.promoCode = ''
+    applyCoupon () {
+      this.$store.dispatch('cart/applyCoupon', this.promoCode)
+        .then((result) => {
+          if (!result) this.message = `Coupon code "${this.promoCode}" is not valid.`;
+        }).finally(() => {
+          this.promoCode = '';
+        });
     },
     removeCoupon () {
       this.$store.dispatch('cart/removeCoupon');
@@ -67,9 +84,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.promo-code {
+.a-promo-code {
   display: flex;
   flex-direction: column;
+
   &__form {
     display: flex;
     justify-content: space-between;
@@ -88,6 +106,19 @@ export default {
   &__button {
     --button-height: 2rem;
     --button-font-size: 0.6875rem;
+  }
+  &__message {
+    margin-top: var(--spacer-xs);
+    font-size: var(--font-xs);
+    color: var(--c-danger-variant);
+  }
+  ::v-deep .sf-input {
+    &__wrapper {
+      --input-margin: 0;
+    }
+    &__error-message {
+      height: auto;
+    }
   }
 }
 </style>
