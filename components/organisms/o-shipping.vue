@@ -41,21 +41,11 @@
         v-model.trim="shipping.streetAddress"
         class="form__element"
         name="street-address"
-        :label="$t('Street name')"
+        :label="$t('Address')"
         :required="true"
         :valid="!$v.shipping.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.streetAddress.$touch()"
-      />
-      <SfInput
-        v-model.trim="shipping.apartmentNumber"
-        class="form__element"
-        name="apartment-number"
-        :label="$t('House/Apartment number')"
-        :required="true"
-        :valid="!$v.shipping.apartmentNumber.$error"
-        :error-message="$t('Field is required')"
-        @blur="$v.shipping.apartmentNumber.$touch()"
       />
       <SfInput
         v-model.trim="shipping.city"
@@ -155,7 +145,13 @@
               </div>
             </div>
           </template>
+          <template #details v-if="method.method_name">
+            <p>{{ method.method_name }}</p>
+          </template>
         </SfRadio>
+        <p class="shipping__note">
+          {{ $t('Our service is not responsible for local tariffs or duties on international shipments') }}
+        </p>
       </div>
       <div class="form__action">
         <SfButton
@@ -219,10 +215,6 @@ export default {
         required: requiredIf(function () { return this.isSelectedCountryHasStates })
       },
       streetAddress: {
-        required,
-        unicodeAlphaNum
-      },
-      apartmentNumber: {
         required,
         unicodeAlphaNum
       },
@@ -350,19 +342,13 @@ export default {
       margin: 0 calc(var(--spacer-sm) * -1);
     }
   }
-  @include for-mobile {
-    &__radio-group {
-      position: relative;
-      left: 50%;
-      right: 50%;
-      margin-left: -50vw;
-      margin-right: -50vw;
-      width: 100vw;
-    }
-  }
 }
 .shipping {
   --radio-container-padding: var(--spacer-sm);
+  &__note {
+    font-size: var(--font-sm);
+    color: var(--c-dark-variant);
+  }
   &__label {
     display: flex;
     justify-content: flex-start;

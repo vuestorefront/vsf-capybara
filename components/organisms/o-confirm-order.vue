@@ -130,6 +130,9 @@
                 <template #more-actions>
                   <span />
                 </template>
+                <template #remove>
+                  <span />
+                </template>
               </SfCollectedProduct>
             </div>
           </transition>
@@ -152,7 +155,6 @@
         >
           {{ tableHeader }}
         </SfTableHeader>
-        <SfTableHeader class="table__action" />
       </SfTableHeading>
       <SfTableRow
         v-for="product in productsInCart"
@@ -188,16 +190,6 @@
             :regular="getProductRegularPrice(product)"
             :special="getProductSpecialPrice(product)"
             class="product-price"
-          />
-        </SfTableData>
-        <SfTableData class="table__action">
-          <SfIcon
-            icon="cross"
-            size="xxs"
-            color="#BEBFC4"
-            role="button"
-            class="button"
-            @click="removeProduct(product)"
           />
         </SfTableData>
       </SfTableRow>
@@ -438,9 +430,6 @@ export default {
 
       return result;
     },
-    removeProduct (product) {
-      this.$store.dispatch('cart/removeItem', { product });
-    },
     onSuccess () {},
     onFailure (response) {
       this.$store.dispatch('notification/spawnNotification', {
@@ -478,6 +467,9 @@ export default {
     &__data {
       --table-data-color: var(--c-text);
     }
+    &__row {
+      --table-row-box-shadow: none;
+    }
   }
   @include for-desktop {
     &__header {
@@ -510,17 +502,16 @@ export default {
       --image-width: 5.125rem;
       text-align: left;
     }
-    &__action {
-      display: flex;
-      justify-content: center;
-    }
   }
 }
 .product-price {
-  text-align: right;
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
 }
+// .a-promo-code {
+//   margin-top: var(--spacer-xl);
+// }
 .totals {
   display: flex;
   justify-content: space-between;

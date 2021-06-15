@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="actions">
-      <APromoCode :allow-promo-code-removal="false" />
+      <APromoCode />
       <SfButton
         class="sf-button--full-width actions__button"
         @click="goToCheckout"

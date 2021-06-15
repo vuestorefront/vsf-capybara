@@ -47,21 +47,11 @@
         v-model.trim="payment.streetAddress"
         class="form__element"
         name="street-address"
-        :label="$t('Street name')"
+        :label="$t('Address')"
         :required="true"
         :valid="!$v.payment.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.streetAddress.$touch()"
-      />
-      <SfInput
-        v-model.trim="payment.apartmentNumber"
-        class="form__element"
-        name="apartment-number"
-        :label="$t('House/Apartment number')"
-        :required="true"
-        :valid="!$v.payment.apartmentNumber.$error"
-        :error-message="$t('Field is required')"
-        @blur="$v.payment.apartmentNumber.$touch()"
       />
       <SfInput
         v-model.trim="payment.city"
@@ -136,41 +126,6 @@
         name="phone"
         :label="$t('Phone Number')"
       />
-      <SfCheckbox
-        v-model="generateInvoice"
-        class="form__element form__checkbox"
-        name="generateInvoice"
-        :label="$t('I want to generate an invoice for the company')"
-      />
-      <template v-if="generateInvoice">
-        <SfInput
-          v-model.trim="payment.company"
-          class="form__element form__element--half"
-          name="company-name"
-          :label="$t('Company name')"
-          :required="true"
-          :valid="!$v.payment.company.$error"
-          :error-message="$t('Field is required')"
-          @blur="$v.payment.company.$touch()"
-        />
-        <SfInput
-          v-model.trim="payment.taxId"
-          class="form__element form__element--half form__element--half-even"
-          name="tax-id"
-          :label="$t('Tax identification number')"
-          :required="true"
-          :valid="!$v.payment.taxId.$error"
-          :error-message="
-            !$v.payment.taxId.required
-              ? $t('Field is required')
-              : $t('Tax identification number must have at least 3 letters.')
-          "
-          @blur="$v.payment.taxId.$touch()"
-        />
-        <p class="mb40 mt0">
-          {{ $t("We will send you the invoice to given e-mail address") }}
-        </p>
-      </template>
     </div>
     <SfHeading
       :title="$t('Payment method')"
@@ -255,10 +210,6 @@ export default {
         required: requiredIf(function () { return this.isSelectedCountryHasStates })
       },
       streetAddress: {
-        required,
-        unicodeAlphaNum
-      },
-      apartmentNumber: {
         required,
         unicodeAlphaNum
       },
