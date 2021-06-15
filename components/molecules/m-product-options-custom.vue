@@ -5,16 +5,6 @@
       :key="('customOption_' + option.option_id)"
       class="single-option"
     >
-      <SfAlert
-        v-if="getError(option.option_id).error"
-        type="danger"
-        :message="getError(option.option_id).message"
-      />
-      <SfHeading
-        :title="option.title"
-        :level="4"
-        class="sf-heading--left"
-      />
       <div v-if="option.type === 'field'">
         <SfInput
           type="text"
@@ -22,6 +12,7 @@
           :label="option.title"
           :name="('customOption_' + option.option_id)"
           v-model="inputValues[('customOption_' + option.option_id)]"
+          :maxlength="option.max_characters"
           @change="optionChanged(option)"
         />
       </div>
@@ -65,14 +56,13 @@
           :required="option.is_require"
         />
       </div>
-      <SfDivider />
     </div>
   </form>
 </template>
 
 <script>
 import { ProductCustomOptions } from '@vue-storefront/core/modules/catalog/components/ProductCustomOptions'
-import { SfCheckbox, SfAlert, SfHeading, SfRadio, SfSelect, SfProductOption, SfInput, SfDivider } from '@storefront-ui/vue';
+import { SfCheckbox, SfRadio, SfSelect, SfProductOption, SfInput } from '@storefront-ui/vue';
 import get from 'lodash-es/get'
 import { customOptionFieldName, defaultCustomOptionValue, selectedCustomOptionValue } from '@vue-storefront/core/modules/catalog/helpers/customOption';
 
@@ -80,13 +70,10 @@ export default {
   mixins: [ProductCustomOptions],
   components: {
     SfCheckbox,
-    SfAlert,
-    SfHeading,
     SfRadio,
     SfSelect,
     SfProductOption,
-    SfInput,
-    SfDivider
+    SfInput
   },
   computed: {
     getError () {
@@ -138,15 +125,6 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .m-product-options-custom {
-  margin: 0 var(--spacer-sm);
-  @include for-desktop {
-    margin: 0 var(--spacer-xl);
-  }
-}
-.single-option {
-  margin-top: 1.5rem;
-}
-.sf-divider {
-  margin-top: 1.5rem;
+ // styles
 }
 </style>

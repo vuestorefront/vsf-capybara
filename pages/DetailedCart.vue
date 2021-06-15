@@ -39,6 +39,20 @@
                       />
                       {{ option }}
                     </div>
+                    <template v-for="option in getProductOptions(product)">
+                      <SfProperty
+                        v-if="isCustomOption(product, option)"
+                        :key="option.label"
+                        :name="option.label"
+                        :value="option.value"
+                      />
+                      <div
+                        v-else
+                        :key="option.label"
+                      >
+                        {{ option.value }}
+                      </div>
+                    </template>
                   </div>
                 </template>
                 <template #price>
@@ -153,6 +167,7 @@ import { mapGetters } from 'vuex';
 import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 export default {
   name: 'DetailedCart',
   components: {
@@ -228,6 +243,18 @@ export default {
     }
   },
   methods: {
+    getProductOptions (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? product.totals.options
+        : product.options || [];
+    },
+    isCustomOption (product, productOption) {
+      if (!product.custom_options) {
+        return false;
+      }
+
+      return product.custom_options.find(option => option.title === productOption.label) !== undefined;
+    },
     getProductLink (product) {
       return formatProductLink(product);
     },
@@ -385,12 +412,7 @@ export default {
   }
 }
 .collected-product-list {
-  text-align: center;
-}
-@include for-desktop {
-  .collected-product-list {
-    text-align: left;
-  }
+  text-align: left;
 }
 .collected-product {
   --collected-product-padding: var(--spacer-sm) 0;
@@ -405,6 +427,9 @@ export default {
     &__icon {
       display: inline-block;
     }
+  }
+  &__properties > div {
+    margin-bottom: var(--spacer-xs);
   }
   @include for-mobile {
     --collected-product-remove-bottom: var(--spacer-sm);

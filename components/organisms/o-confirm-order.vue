@@ -118,6 +118,24 @@
                 </template>
                 <template #actions>
                   <div>
+                    <div class="collected-product__properties">
+                      <template v-for="option in getProductOptions(product)">
+                        <SfProperty
+                          v-if="isCustomOption(product, option)"
+                          :key="option.label"
+                          :name="option.label"
+                          :value="option.value"
+                          class="collected-product__property"
+                        />
+                        <div
+                          v-else
+                          :key="option.label"
+                          class="collected-product__property"
+                        >
+                          {{ option.value }}
+                        </div>
+                      </template>
+                    </div>
                     <div class="collected-product__action">
                       {{ $t('Quantity') }}:
                       <span class="product__qty">{{ product.qty }}</span>
@@ -180,6 +198,18 @@
               class="bundle-product-option__icon"
             />
             {{ option }}
+          </div>
+          <div
+            class="product-options"
+            v-for="option in getProductOptions(product)"
+            :key="option.label"
+          >
+            <template v-if="isCustomOption(product, option)">
+              {{ option.label }}: {{ option.value }}
+            </template>
+            <template v-else>
+              {{ option.value }}
+            </template>
           </div>
         </SfTableData>
         <SfTableData class="table__data">
@@ -287,12 +317,14 @@ import {
   SfCheckbox,
   SfAccordion,
   SfCharacteristic,
-  SfCollectedProduct
+  SfCollectedProduct,
+  SfProperty
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
 import { createSmoothscroll } from 'theme/helpers';
+import { onlineHelper } from '@vue-storefront/core/helpers';
 
 export default {
   name: 'OConfirmOrder',
@@ -307,6 +339,7 @@ export default {
     SfAccordion,
     SfCharacteristic,
     SfCollectedProduct,
+    SfProperty,
     APromoCode,
     MPriceSummary
   },
@@ -387,11 +420,17 @@ export default {
     getProductSpecialPrice (product) {
       return getProductPrice(product, {}).special;
     },
-    getProductProperty (product, propertyName) {
-      const property = product.options
-        ? product.options.find(option => option.label === propertyName)
-        : false;
-      return property ? property.value : '';
+    getProductOptions (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? product.totals.options
+        : product.options || [];
+    },
+    isCustomOption (product, productOption) {
+      if (!product.custom_options) {
+        return false;
+      }
+
+      return product.custom_options.find(option => option.title === productOption.label) !== undefined;
     },
     getBundleProductOptions (product) {
       if (!product.bundle_options ||
