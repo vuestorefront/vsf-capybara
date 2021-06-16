@@ -1,13 +1,10 @@
-import ImageInterface from './image.interface';
 import LinkInterface from './link.interface';
 
-export default interface SliderItemInterface {
+export default interface ButtonItemInterface {
   _uid: string,
-  image: ImageInterface,
-  mobile_image: ImageInterface,
-  alt_tag: string,
-  title_tag: string,
+  link_text: string,
   link_url: LinkInterface,
+  is_primary: boolean,
   target_blank: boolean,
   css_classes: string,
   alignment: string,
