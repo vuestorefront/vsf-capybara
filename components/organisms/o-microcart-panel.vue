@@ -20,8 +20,8 @@
               :key="product.id"
               :image="getThumbnailForProductExtend(product)"
               :title="product.name"
-              :regular-price="getProductPrice(product).regular"
-              :special-price="getProductPrice(product).special"
+              :regular-price="!!getProductPrice(product).regular ? formatPrice(getProductPrice(product).regular) : null"
+              :special-price="!!getProductPrice(product).special ? formatPrice(getProductPrice(product).special) : null"
               :stock="10"
               :qty="product.qty"
               class="collected-product"
@@ -104,8 +104,8 @@
 import { mapState, mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { onlineHelper } from '@vue-storefront/core/helpers';
-import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
+import { getThumbnailForProduct, getProductPrice } from '@vue-storefront/core/modules/cart/helpers';
+import { price } from '@vue-storefront/core/filters';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
@@ -169,9 +169,10 @@ export default {
       return getThumbnailForProduct(product);
     },
     getProductPrice (product) {
-      return onlineHelper.isOnline && product.totals && product.totals.options
-        ? getProductPriceFromTotals(product)
-        : getProductPrice(product);
+      return getProductPrice(product)
+    },
+    formatPrice (value) {
+      return value ? price(value) : ''
     },
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
