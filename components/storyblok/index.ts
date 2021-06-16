@@ -9,6 +9,7 @@ export default function registerComponents () {
   add('driver', () => import('./Driver.vue'))
   add('homepage_intro_section', () => import('./HomepageIntroSection.vue'))
   add('slider', () => import('./Slider.vue'))
+  add('video', () => import('./Video.vue'))
 
   add('hero', () => import('./Hero.vue'))
   // add('product', () => import('./Product.vue'))
