@@ -1,4 +1,4 @@
-declare module 'vue-image-lightbox' {
+declare module 'vue-cool-lightbox' {
   import Vue from 'vue';
-  export default class LightBox extends Vue { }
+  export default class CoolLightBox extends Vue { }
 }

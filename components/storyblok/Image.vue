@@ -1,36 +1,43 @@
 <template>
   <div :class="cssClasses" :style="styles">
+    <CoolLightBox
+      :items="items"
+      :index="indexValue"
+      @close="indexValue = null"
+    />
+
     <SfImage
       :src="srcSet"
       :alt="item.alt_tag"
       :picture-breakpoint="768"
       :style="imageStyles"
-      @click="openLightbBox()"
+      @click="indexValue = 0"
     />
     <p v-if="item.show_caption">
       {{ item.title_tag }}
     </p>
-
-    <LightBox
-      ref="lightbox"
-      :media="mediaSet"
-    />
   </div>
 </template>
 
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { SfImage } from '@storefront-ui/vue';
-import LightBox from 'vue-image-lightbox';
+import CoolLightBox from 'vue-cool-lightbox';
+import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
 import SrcSetValue from './interfaces/src-set-value.interface';
-import MediaSetValue from './interfaces/media-set-value.interface';
+import LightboxItemValue from './interfaces/lightbox-item-value.interface';
 
 export default Blok.extend({
   name: 'StoryblokImage',
   components: {
     SfImage,
-    LightBox
+    CoolLightBox
+  },
+  data () {
+    return {
+      indexValue: null
+    }
   },
   computed: {
     srcSet (): SrcSetValue | string {
@@ -62,23 +69,13 @@ export default Blok.extend({
 
       return result;
     },
-    mediaSet (): MediaSetValue {
-      return {
-        thumb: this.item.image.filename,
-        src: this.item.image.filename
-      };
-    }
-  },
-  methods: {
-    getLightBoxContainer (): LightBox | undefined {
-      return this.$refs['lightbox'] as LightBox | undefined;
-    },
-    openLightbBox () {
-      const lightboxContainer = this.getLightBoxContainer();
-      if (!lightboxContainer) {
-        return;
-      }
-      lightboxContainer.showImage(0);
+    items (): LightboxItemValue[] {
+      return [
+        {
+          src: this.item.image.filename,
+          title: this.item.show_caption ? this.item.title_tag : undefined
+        }
+      ];
     }
   }
 })
