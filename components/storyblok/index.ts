@@ -3,6 +3,7 @@ import { add } from 'src/modules/vsf-storyblok-module/components'
 export default function registerComponents () {
   add('heading', () => import('./Heading.vue'))
   add('button_item', () => import('./Button.vue'))
+  add('buttons', () => import('./Buttons.vue'))
   add('html', () => import('./Html.vue'))
   add('image', () => import('./Image.vue'))
   add('driver', () => import('./Driver.vue'))
