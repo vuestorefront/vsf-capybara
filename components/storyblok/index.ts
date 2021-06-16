@@ -10,6 +10,7 @@ export default function registerComponents () {
   add('homepage_intro_section', () => import('./HomepageIntroSection.vue'))
   add('slider', () => import('./Slider.vue'))
   add('video', () => import('./Video.vue'))
+  add('promotion_image_banner', () => import('./PromoCampaignBanner.vue'))
 
   add('hero', () => import('./Hero.vue'))
   // add('product', () => import('./Product.vue'))
