@@ -61,6 +61,11 @@ export default {
       default: () => []
     }
   },
+  methods: {
+    positionSort (a, b) {
+      return a.position - b.position;
+    }
+  },
   computed: {
     ...mapState({
       isWebpSupported: state => state.ui.isWebpSupported
@@ -71,12 +76,11 @@ export default {
       getPromotedOffers: 'promoted/getPromotedOffers'
     }),
     categories () {
-      const positionSort = (a, b) => a.position - b.position;
       return this.categoriesIds
         .map(category => {
           const subCategories = category.children_data
             .map(subCategory => prepareCategoryMenuItem(subCategory))
-            .sort(positionSort)
+            .sort(this.positionSort)
 
           const subheader = prepareCategoryMenuItem(category);
           const viewAllMenuItem = {
@@ -90,7 +94,7 @@ export default {
             items: [viewAllMenuItem, ...subCategories]
           };
         })
-        .sort(positionSort);
+        .sort(this.positionSort);
     },
     currentCategoryTitle () {
       return this.getCurrentCategory.name || ''
