@@ -1,7 +1,7 @@
 <template>
   <div :class="cssClasses" :style="styles">
     <CoolLightBox
-      :items="items"
+      :items="getItems()"
       :index="indexValue"
       @close="indexValue = null"
     />
@@ -9,7 +9,7 @@
     <SfImage
       :src="srcSet"
       :alt="item.alt_tag"
-      :picture-breakpoint="768"
+      :picture-breakpoint="SCREEN_WIDTH_BREAKPOINT"
       :style="imageStyles"
       @click="indexValue = 0"
     />
@@ -27,6 +27,9 @@ import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
 import SrcSetValue from './interfaces/src-set-value.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
+import { isServer } from '@vue-storefront/core/helpers';
+
+const SCREEN_WIDTH_BREAKPOINT = 768;
 
 export default Blok.extend({
   name: 'StoryblokImage',
@@ -36,6 +39,7 @@ export default Blok.extend({
   },
   data () {
     return {
+      SCREEN_WIDTH_BREAKPOINT: SCREEN_WIDTH_BREAKPOINT,
       indexValue: null
     }
   },
@@ -68,8 +72,19 @@ export default Blok.extend({
       }
 
       return result;
-    },
-    items (): LightboxItemValue[] {
+    }
+  },
+  methods: {
+    getItems (): LightboxItemValue[] {
+      if (!isServer) {
+        if (window.innerWidth < SCREEN_WIDTH_BREAKPOINT && this.item.mobile_image.filename) {
+          return [{
+            src: this.item.mobile_image.filename,
+            title: this.item.show_caption ? this.item.title_tag : undefined
+          }];
+        }
+      }
+
       return [
         {
           src: this.item.image.filename,
