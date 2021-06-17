@@ -11,6 +11,7 @@
           :picture-breakpoint="768"
           class="_image"
           v-if="srcSet"
+          @load.capture="onLoad"
         />
       </div>
     </div>
@@ -83,7 +84,15 @@ export default Blok.extend({
       required: true
     }
   },
+  data () {
+    return {
+      isLoaded: false
+    }
+  },
   computed: {
+    extraCssClasses (): string[] {
+      return !this.isLoaded ? ['-loading'] : [];
+    },
     extraStyles (): Record<string, string> {
       const styles = generatePlaceholderStyles(
         this.item.image.filename,
@@ -131,6 +140,9 @@ export default Blok.extend({
     },
     openLink (): void {
       this.$router.push(localizedRoute(this.link));
+    },
+    onLoad (): void{
+      this.isLoaded = true;
     }
   }
 })
@@ -190,6 +202,12 @@ export default Blok.extend({
       left: 0;
       width: 100%;
       height: 100%;
+    }
+  }
+
+  &.-loading {
+    ._image-column {
+      background-color: var(--intro-section-background-color, #fafafa);
     }
   }
 

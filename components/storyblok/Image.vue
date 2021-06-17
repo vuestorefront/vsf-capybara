@@ -20,7 +20,7 @@
         :src="srcSet"
         :alt="item.alt_tag"
         :picture-breakpoint="screenWidthBreakpoint"
-
+        @load.capture="onLoad"
         @click="indexValue = 0"
       />
     </div>
@@ -56,10 +56,14 @@ export default Blok.extend({
   },
   data () {
     return {
-      indexValue: null
+      indexValue: null,
+      isLoaded: false
     }
   },
   computed: {
+    extraCssClasses (): string[] {
+      return !this.isLoaded ? ['-loading'] : [];
+    },
     extraStyles (): Record<string, string> {
       const styles = generatePlaceholderStyles(
         this.item.image.filename,
@@ -110,6 +114,9 @@ export default Blok.extend({
           title: this.item.show_caption ? this.item.title_tag : undefined
         }
       ];
+    },
+    onLoad (): void{
+      this.isLoaded = true;
     }
   }
 })
@@ -137,8 +144,14 @@ export default Blok.extend({
   }
 
   ._placeholder {
-    background-color: #fafafa;
+    background-color: none;
     padding-top: var(--image-block-height-mobile, var(--image-block-height, 0));
+  }
+
+  &.-loading {
+    ._placeholder {
+      background-color: #fafafa;
+    }
   }
 
   @media (min-width: $tablet-min) {

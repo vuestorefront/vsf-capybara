@@ -14,6 +14,7 @@
         :src="srcSet"
         :alt="item.alt_tag"
         :picture-breakpoint="768"
+        @load.capture="onLoad"
       />
     </div>
 
@@ -43,7 +44,15 @@ export default Blok.extend({
       required: true
     }
   },
+  data () {
+    return {
+      isLoaded: false
+    }
+  },
   computed: {
+    extraCssClasses (): string[] {
+      return !this.isLoaded ? ['-loading'] : [];
+    },
     extraStyles (): Record<string, string> {
       return generatePlaceholderStyles(
         this.item.image.filename,
@@ -78,6 +87,11 @@ export default Blok.extend({
 
       return srcSet;
     }
+  },
+  methods: {
+    onLoad (): void{
+      this.isLoaded = true;
+    }
   }
 })
 </script>
@@ -103,7 +117,6 @@ export default Blok.extend({
     }
 
     ._placeholder {
-      background-color: #fafafa;
       padding-top: var(--driver-image-height-mobile, var(--driver-image-height, 0));
     }
   }
@@ -125,6 +138,14 @@ export default Blok.extend({
   &:hover {
     ._driver-text {
       background: rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  &.-loading {
+    ._image-wrapper {
+      ._placeholder {
+        background-color: #fafafa;
+      }
     }
   }
 
