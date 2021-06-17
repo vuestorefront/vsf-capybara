@@ -1,5 +1,11 @@
 <template>
-  <div :class="cssClasses" :style="styles">
+  <div
+    :class="cssClasses"
+    :style="styles"
+    class="storyblok-image"
+  >
+    <div class="_placeholder" />
+
     <CoolLightBox
       :items="getItems()"
       :index="indexValue"
@@ -7,15 +13,13 @@
     />
 
     <SfImage
+      class="_image"
       :src="srcSet"
       :alt="item.alt_tag"
-      :picture-breakpoint="SCREEN_WIDTH_BREAKPOINT"
+      :picture-breakpoint="screenWidthBreakpoint"
       :style="imageStyles"
       @click="indexValue = 0"
     />
-    <p v-if="item.show_caption">
-      {{ item.title_tag }}
-    </p>
   </div>
 </template>
 
@@ -30,6 +34,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import SrcSetValue from './interfaces/src-set-value.interface';
 import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
+import generatePlaceholderStyles from './generate-placeholder-styles';
 
 const SCREEN_WIDTH_BREAKPOINT = 768;
 
@@ -47,11 +52,20 @@ export default Blok.extend({
   },
   data () {
     return {
-      SCREEN_WIDTH_BREAKPOINT: SCREEN_WIDTH_BREAKPOINT,
       indexValue: null
     }
   },
   computed: {
+    extraStyles (): Record<string, string> {
+      return generatePlaceholderStyles(
+        this.item.image.filename,
+        this.item.mobile_image.filename,
+        'image-block-height'
+      );
+    },
+    screenWidthBreakpoint (): number {
+      return SCREEN_WIDTH_BREAKPOINT;
+    },
     srcSet (): SrcSetValue | string {
       if (!this.item.mobile_image.filename) {
         return this.item.image.filename;
@@ -103,3 +117,30 @@ export default Blok.extend({
   }
 })
 </script>
+
+<style lang="scss">
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.storyblok-image {
+  position: relative;
+
+  ._image {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  ._placeholder {
+    background-color: #fafafa;
+    padding-top: var(--image-block-height-mobile, var(--image-block-height, 0));
+  }
+
+  @media (min-width: $tablet-min) {
+    ._placeholder {
+      padding-top: var(--image-block-height, 0);
+    }
+  }
+}
+</style>
