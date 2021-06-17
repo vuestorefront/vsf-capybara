@@ -12,21 +12,20 @@
       <SfImage
         class="_image"
         :src="srcSet"
-        :alt="item.alt_tag"
-        :title="item.title_tag"
+        :alt="itemData.alt_tag"
+        :title="itemData.title_tag"
         :picture-breakpoint="768"
         @load.capture="onLoad"
       />
     </div>
 
-    <span class="_driver-text" v-if="item.link_text">
-      {{ item.link_text }}
+    <span class="_driver-text" v-if="itemData.link_text">
+      {{ itemData.link_text }}
     </span>
   </a>
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue';
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { SfImage } from '@storefront-ui/vue';
 
@@ -39,50 +38,47 @@ export default Blok.extend({
   components: {
     SfImage
   },
-  props: {
-    item: {
-      type: Object as PropType<DriverData>,
-      required: true
-    }
-  },
   data () {
     return {
       isLoaded: false
     }
   },
   computed: {
+    itemData (): DriverData {
+      return this.item as DriverData;
+    },
     extraCssClasses (): string[] {
       return !this.isLoaded ? ['-loading'] : [];
     },
     extraStyles (): Record<string, string> {
       return generatePlaceholderStyles(
-        this.item.image.filename,
-        this.item.mobile_image.filename,
+        this.itemData.image.filename,
+        this.itemData.mobile_image.filename,
         'driver-image-height'
       );
     },
     link (): string {
-      return this.item.link_url.url;
+      return this.itemData.link_url.url;
     },
     linkTarget (): string {
-      return this.item.target_blank ? '_blank'
+      return this.itemData.target_blank ? '_blank'
         : '_self';
     },
     srcSet (): SrcSetValue | string | undefined {
-      if (!this.item.image.filename) {
+      if (!this.itemData.image.filename) {
         return undefined
       }
 
-      if (!this.item.mobile_image.filename) {
-        return this.item.image.filename;
+      if (!this.itemData.mobile_image.filename) {
+        return this.itemData.image.filename;
       }
 
       const srcSet: SrcSetValue = {
         desktop: {
-          url: this.item.image.filename
+          url: this.itemData.image.filename
         },
         mobile: {
-          url: this.item.mobile_image.filename
+          url: this.itemData.mobile_image.filename
         }
       };
 

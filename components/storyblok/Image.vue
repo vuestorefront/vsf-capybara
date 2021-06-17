@@ -18,8 +18,8 @@
       <SfImage
         class="_image"
         :src="srcSet"
-        :alt="item.alt_tag"
-        :title="item.title_tag"
+        :alt="itemData.alt_tag"
+        :title="itemData.title_tag"
         :picture-breakpoint="screenWidthBreakpoint"
         @load.capture="onLoad"
         @click="launchLightbox"
@@ -29,7 +29,6 @@
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue';
 import { isServer } from '@vue-storefront/core/helpers';
 import { SfImage } from '@storefront-ui/vue';
 import CoolLightBox from 'vue-cool-lightbox';
@@ -49,12 +48,6 @@ export default Blok.extend({
     SfImage,
     CoolLightBox
   },
-  props: {
-    item: {
-      type: Object as PropType<ImageData>,
-      required: true
-    }
-  },
   data () {
     return {
       lightboxIndexValue: null as number | null,
@@ -62,21 +55,24 @@ export default Blok.extend({
     }
   },
   computed: {
+    itemData (): ImageData {
+      return this.item as ImageData;
+    },
     extraCssClasses (): string[] {
       return !this.isLoaded ? ['-loading'] : [];
     },
     extraStyles (): Record<string, string> {
       const styles = generatePlaceholderStyles(
-        this.item.image.filename,
-        this.item.mobile_image.filename,
+        this.itemData.image.filename,
+        this.itemData.mobile_image.filename,
         'image-block-height'
       );
 
-      if (this.item.width) {
-        styles['--image-width'] = this.item.width;
+      if (this.itemData.width) {
+        styles['--image-width'] = this.itemData.width;
       }
 
-      if (this.item.has_lightbox) {
+      if (this.itemData.has_lightbox) {
         styles['cursor'] = 'pointer';
       }
 
@@ -86,16 +82,16 @@ export default Blok.extend({
       return SCREEN_WIDTH_BREAKPOINT;
     },
     srcSet (): SrcSetValue | string {
-      if (!this.item.mobile_image.filename) {
-        return this.item.image.filename;
+      if (!this.itemData.mobile_image.filename) {
+        return this.itemData.image.filename;
       }
 
       const srcSet: SrcSetValue = {
         desktop: {
-          url: this.item.image.filename
+          url: this.itemData.image.filename
         },
         mobile: {
-          url: this.item.mobile_image.filename
+          url: this.itemData.mobile_image.filename
         }
       };
 
@@ -106,8 +102,8 @@ export default Blok.extend({
     getItems (): LightboxItemValue[] {
       const result: LightboxItemValue[] = [
         {
-          src: this.item.image.filename,
-          title: this.item.title_tag ? this.item.title_tag : undefined
+          src: this.itemData.image.filename,
+          title: this.itemData.title_tag ? this.itemData.title_tag : undefined
         }
       ];
 
@@ -115,17 +111,17 @@ export default Blok.extend({
         return result;
       }
 
-      if (window.innerWidth >= SCREEN_WIDTH_BREAKPOINT || !this.item.mobile_image.filename) {
+      if (window.innerWidth >= SCREEN_WIDTH_BREAKPOINT || !this.itemData.mobile_image.filename) {
         return result;
       }
 
       return [{
-        src: this.item.mobile_image.filename,
-        title: this.item.title_tag ? this.item.title_tag : undefined
+        src: this.itemData.mobile_image.filename,
+        title: this.itemData.title_tag ? this.itemData.title_tag : undefined
       }];
     },
     launchLightbox (): void {
-      if (!this.item.has_lightbox) {
+      if (!this.itemData.has_lightbox) {
         return;
       }
 

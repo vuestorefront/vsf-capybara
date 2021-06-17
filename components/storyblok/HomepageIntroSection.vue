@@ -9,8 +9,8 @@
         <SfImage
           :src="srcSet"
           :picture-breakpoint="768"
-          :alt="item.title"
-          :title="item.title"
+          :alt="itemData.title"
+          :title="itemData.title"
           class="_image"
           v-if="srcSet"
           @load.capture="onLoad"
@@ -22,12 +22,12 @@
       <div class="_title-block">
         <SfHeading
           :level="2"
-          :subtitle="item.subtitle"
+          :subtitle="itemData.subtitle"
         >
           <template #title>
             <h2
               class="sf-heading__title sf-heading__title--h2"
-              v-html="nl2br(item.title)"
+              v-html="nl2br(itemData.title)"
             />
           </template>
 
@@ -46,9 +46,9 @@
             :link="link"
             class="_button"
             @click="openLink"
-            v-if="item.button_text"
+            v-if="itemData.button_text"
           >
-            {{ item.button_text }}
+            {{ itemData.button_text }}
           </SfButton>
         </div>
       </div>
@@ -57,7 +57,6 @@
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { nl2br } from 'src/modules/budsies';
 
@@ -80,56 +79,53 @@ export default Blok.extend({
     SfButton,
     SfHeading
   },
-  props: {
-    item: {
-      type: Object as PropType<HomepageIntroSectionData>,
-      required: true
-    }
-  },
   data () {
     return {
       isLoaded: false
     }
   },
   computed: {
+    itemData (): HomepageIntroSectionData {
+      return this.item as HomepageIntroSectionData;
+    },
     extraCssClasses (): string[] {
       return !this.isLoaded ? ['-loading'] : [];
     },
     extraStyles (): Record<string, string> {
       const styles = generatePlaceholderStyles(
-        this.item.image.filename,
-        this.item.mobile_image.filename,
+        this.itemData.image.filename,
+        this.itemData.mobile_image.filename,
         'intro-section-image-height'
       );
 
-      if (this.item.background_color.color) {
-        styles['--intro-section-background-color'] = this.item.background_color.color;
+      if (this.itemData.background_color.color) {
+        styles['--intro-section-background-color'] = this.itemData.background_color.color;
       }
 
-      if (this.item.text_color.color) {
-        styles['--heading-title-color'] = this.item.text_color.color;
+      if (this.itemData.text_color.color) {
+        styles['--heading-title-color'] = this.itemData.text_color.color;
       }
 
       return styles;
     },
     link (): string {
-      return this.item.button_link.url;
+      return this.itemData.button_link.url;
     },
     srcSet (): SrcSetValue | string | undefined {
-      if (!this.item.image.filename) {
+      if (!this.itemData.image.filename) {
         return undefined
       }
 
-      if (!this.item.mobile_image.filename) {
-        return this.item.image.filename;
+      if (!this.itemData.mobile_image.filename) {
+        return this.itemData.image.filename;
       }
 
       const srcSet: SrcSetValue = {
         desktop: {
-          url: this.item.image.filename
+          url: this.itemData.image.filename
         },
         mobile: {
-          url: this.item.mobile_image.filename
+          url: this.itemData.mobile_image.filename
         }
       };
 
