@@ -19,6 +19,7 @@
         class="_image"
         :src="srcSet"
         :alt="item.alt_tag"
+        :title="item.title_tag"
         :picture-breakpoint="screenWidthBreakpoint"
         @load.capture="onLoad"
         @click="indexValue = 0"

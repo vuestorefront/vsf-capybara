@@ -9,6 +9,8 @@
         <SfImage
           :src="srcSet"
           :picture-breakpoint="768"
+          :alt="item.title"
+          :title="item.title"
           class="_image"
           v-if="srcSet"
           @load.capture="onLoad"

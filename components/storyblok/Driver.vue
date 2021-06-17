@@ -13,6 +13,7 @@
         class="_image"
         :src="srcSet"
         :alt="item.alt_tag"
+        :title="item.title_tag"
         :picture-breakpoint="768"
         @load.capture="onLoad"
       />
