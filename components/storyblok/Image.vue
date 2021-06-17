@@ -20,14 +20,16 @@
 </template>
 
 <script lang="ts">
-import { Blok } from 'src/modules/vsf-storyblok-module/components';
+import { PropType } from 'vue';
+import { isServer } from '@vue-storefront/core/helpers';
 import { SfImage } from '@storefront-ui/vue';
 import CoolLightBox from 'vue-cool-lightbox';
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
+import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import SrcSetValue from './interfaces/src-set-value.interface';
+import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
-import { isServer } from '@vue-storefront/core/helpers';
 
 const SCREEN_WIDTH_BREAKPOINT = 768;
 
@@ -36,6 +38,12 @@ export default Blok.extend({
   components: {
     SfImage,
     CoolLightBox
+  },
+  props: {
+    item: {
+      type: Object as PropType<ImageData>,
+      required: true
+    }
   },
   data () {
     return {
