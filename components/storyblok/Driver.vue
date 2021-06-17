@@ -94,6 +94,7 @@ export default Blok.extend({
     position: relative;
 
     ._image {
+      --image-width: 100%;
       position: absolute;
       left: 0;
       top: 0;
