@@ -129,8 +129,6 @@
       </div>
       <div v-if="totalItems" class="detailed-cart__aside">
         <OrderSummary
-          :products="products"
-          :total-items="totalItems"
           :is-updating-quantity="isUpdatingQuantity"
         />
 

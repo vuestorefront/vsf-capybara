@@ -34,11 +34,27 @@
       class="sf-property--full-width property"
       :class="{'sf-property--large': isLarge}"
     />
-    <template v-if="prices.discounts">
+    <template v-if="prices.discount && isCouponCode">
       <SfProperty
-        :name="$t('Savings')"
+        :name="$t('Discount') + ` (${isCouponCode})`"
+        :value="prices.discount | price"
+        class="sf-property--full-width property --marked"
+        :class="{'sf-property--large': isLarge}"
+      />
+    </template>
+    <template v-if="prices.savings">
+      <SfProperty
+        :name="$t('Price Savings')"
+        :value="prices.savings | price"
+        class="sf-property--full-width property --marked"
+        :class="{'sf-property--large': isLarge}"
+      />
+    </template>
+    <template v-if="prices.discounts && prices.discounts">
+      <SfProperty
+        :name="$t('Total Discounts')"
         :value="prices.discounts | price"
-        class="sf-property--full-width property"
+        class="sf-property--full-width property --marked"
         :class="{'sf-property--large': isLarge}"
       />
     </template>
@@ -51,7 +67,7 @@
     </SfButton>
     <SfDivider class="divider" />
     <SfProperty
-      :name="$t('Total')"
+      :name="$t('Grand Total')"
       :value="prices.grand_total | price"
       class="sf-property--full-width property"
       :class="{'sf-property--large': isLarge}"
@@ -106,6 +122,12 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+.m-price-summary {
+  .sf-property.--marked {
+    --property-name-color: var(--c-primary);
+    --property-value-color: var(--c-primary);
+  }
+}
 .property {
   margin: 0 0 var(--spacer-base) 0;
   @include for-desktop {
