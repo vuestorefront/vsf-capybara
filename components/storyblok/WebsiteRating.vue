@@ -78,3 +78,26 @@ export default Blok.extend({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.website-rating {
+  text-align: center;
+
+  ._rating {
+    font-size: 1.5em;
+
+    ._averageValue {
+      display: inline;
+    }
+  }
+
+  ._rating-stars {
+    display: inline-block;
+  }
+
+  ._reviewsCount {
+    font-size: 0.75em;
+    font-weight: 600;
+  }
+}
+</style>
