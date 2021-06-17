@@ -1,7 +1,9 @@
-export default interface LinkInterface {
+import { LinkType } from './link-type.value';
+
+export default interface LinkField {
   id: string,
   url: string,
-  linktype: string,
+  linktype: LinkType,
   fieldtype: string,
   cached_url: string,
   story?: {

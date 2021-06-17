@@ -17,7 +17,7 @@ import { SfButton } from '@storefront-ui/vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 
-import ButtonItemInterface from './interfaces/button-item.interface';
+import ButtonItem from './interfaces/button-item-data.interface';
 
 export default Blok.extend({
   name: 'Button',
@@ -25,12 +25,12 @@ export default Blok.extend({
     SfButton
   },
   computed: {
-    buttons (): ButtonItemInterface[] {
+    buttons (): ButtonItem[] {
       return this.item.button_items;
     }
   },
   methods: {
-    openLink (button: ButtonItemInterface): void {
+    openLink (button: ButtonItem): void {
       const url = button.link_url.cached_url || button.link_url.url;
 
       const route = this.$router.resolve({
@@ -44,7 +44,7 @@ export default Blok.extend({
 
       this.$router.push(route.location);
     },
-    buttonClass (button: ButtonItemInterface): string[] {
+    buttonClass (button: ButtonItem): string[] {
       const result: string [] = [];
 
       if (button.is_primary) {

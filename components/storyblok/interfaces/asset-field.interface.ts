@@ -1,4 +1,4 @@
-export default interface ImageInterface {
+export default interface AssetField {
   alt: string,
   copyright: string,
   fieldtype: string,

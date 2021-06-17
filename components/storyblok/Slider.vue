@@ -10,7 +10,7 @@ import MZoomGallery from 'theme/components/molecules/m-zoom-gallery';
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 
 import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
-import SliderItemInterface from './interfaces/slider-item.interface';
+import SliderItemInterface from './interfaces/slider-item-data.interface';
 
 export default Blok.extend({
   name: 'Slider',
