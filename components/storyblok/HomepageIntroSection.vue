@@ -10,6 +10,7 @@
           :src="srcSet"
           :picture-breakpoint="768"
           class="_image"
+          v-if="srcSet"
         />
       </div>
     </div>
@@ -42,6 +43,7 @@
             :link="link"
             class="_button"
             @click="openLink"
+            v-if="item.button_text"
           >
             {{ item.button_text }}
           </SfButton>
@@ -52,6 +54,7 @@
 </template>
 
 <script lang="ts">
+import { PropType } from 'vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { nl2br } from 'src/modules/budsies';
 
@@ -65,6 +68,7 @@ import {
 } from '@storefront-ui/vue';
 
 import SrcSetValue from './interfaces/src-set-value.interface';
+import HomepageIntroSectionData from './interfaces/homepage-intro-section-data.interface';
 
 export default Blok.extend({
   name: 'StoryblokHomepageIntroSection',
@@ -73,11 +77,23 @@ export default Blok.extend({
     SfButton,
     SfHeading
   },
+  props: {
+    item: {
+      type: Object as PropType<HomepageIntroSectionData>,
+      required: true
+    }
+  },
   computed: {
     extraStyles (): Record<string, string> {
-      const styles: Record<string, string> = {
-        backgroundColor: this.item.background_color
-      };
+      const styles: Record<string, string> = {};
+
+      if (this.item.background_color.color) {
+        styles['--intro-section-background-color'] = this.item.background_color.color;
+      }
+
+      if (this.item.text_color.color) {
+        styles['--heading-title-color'] = this.item.text_color.color;
+      }
 
       if (!this.item.image.filename) {
         return styles;
@@ -104,7 +120,11 @@ export default Blok.extend({
     link (): string {
       return this.item.button_link.url;
     },
-    srcSet (): SrcSetValue | string {
+    srcSet (): SrcSetValue | string | undefined {
+      if (!this.item.image.filename) {
+        return undefined
+      }
+
       if (!this.item.mobile_image.filename) {
         return this.item.image.filename;
       }
@@ -172,6 +192,7 @@ export default Blok.extend({
   }
 
   ._image-column {
+    background-color: var(--intro-section-background-color, transparent);
     position: relative;
 
     ._image-wrapper {
