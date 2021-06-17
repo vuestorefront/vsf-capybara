@@ -58,7 +58,7 @@ import { PropType } from 'vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { nl2br } from 'src/modules/budsies';
 
-import parseImageDimensions from './parse-image-dimensions';
+import generatePlaceholderStyles from './generate-placeholder-styles';
 
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import {
@@ -85,7 +85,11 @@ export default Blok.extend({
   },
   computed: {
     extraStyles (): Record<string, string> {
-      const styles: Record<string, string> = {};
+      const styles = generatePlaceholderStyles(
+        this.item.image.filename,
+        this.item.mobile_image.filename,
+        'intro-section-image-height'
+      );
 
       if (this.item.background_color.color) {
         styles['--intro-section-background-color'] = this.item.background_color.color;
@@ -94,26 +98,6 @@ export default Blok.extend({
       if (this.item.text_color.color) {
         styles['--heading-title-color'] = this.item.text_color.color;
       }
-
-      if (!this.item.image.filename) {
-        return styles;
-      }
-
-      let dimensions = parseImageDimensions(this.item.image.filename);
-
-      let ratio = dimensions.height / dimensions.width * 100;
-
-      styles['--intro-section-image-height'] = ratio + '%';
-
-      if (!this.item.mobile_image.filename) {
-        return styles;
-      }
-
-      dimensions = parseImageDimensions(this.item.mobile_image.filename);
-
-      ratio = dimensions.height / dimensions.width * 100;
-
-      styles['--intro-section-image-height-mobile'] = ratio + '%';
 
       return styles;
     },

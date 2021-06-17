@@ -6,11 +6,17 @@
     :target="linkTarget"
     :href="link"
   >
-    <SfImage
-      :src="srcSet"
-      :alt="item.alt_tag"
-      :picture-breakpoint="768"
-    />
+    <div class="_image-wrapper">
+      <div class="_placeholder" />
+
+      <SfImage
+        class="_image"
+        :src="srcSet"
+        :alt="item.alt_tag"
+        :picture-breakpoint="768"
+      />
+    </div>
+
     <span class="_driver-text" v-if="item.link_text">
       {{ item.link_text }}
     </span>
@@ -24,6 +30,7 @@ import { SfImage } from '@storefront-ui/vue';
 
 import SrcSetValue from './interfaces/src-set-value.interface';
 import DriverData from './interfaces/driver-data.interface';
+import generatePlaceholderStyles from './generate-placeholder-styles';
 
 export default Blok.extend({
   name: 'StoryblokDriver',
@@ -37,6 +44,13 @@ export default Blok.extend({
     }
   },
   computed: {
+    extraStyles (): Record<string, string> {
+      return generatePlaceholderStyles(
+        this.item.image.filename,
+        this.item.mobile_image.filename,
+        'driver-image-height'
+      );
+    },
     link (): string {
       return this.item.link_url.url;
     },
@@ -44,7 +58,11 @@ export default Blok.extend({
       return this.item.target_blank ? '_blank'
         : '_self';
     },
-    srcSet (): SrcSetValue | string {
+    srcSet (): SrcSetValue | string | undefined {
+      if (!this.item.image.filename) {
+        return undefined
+      }
+
       if (!this.item.mobile_image.filename) {
         return this.item.image.filename;
       }
@@ -65,10 +83,29 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .storyblok-driver {
   display: block;
   text-decoration: none;
   position: relative;
+
+  ._image-wrapper {
+    position: relative;
+
+    ._image {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    ._placeholder {
+      background-color: #fafafa;
+      padding-top: var(--driver-image-height-mobile, var(--driver-image-height, 0));
+    }
+  }
 
   ._driver-text {
     position: absolute;
@@ -87,6 +124,14 @@ export default Blok.extend({
   &:hover {
     ._driver-text {
       background: rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  @media (min-width: $tablet-min) {
+    ._image-wrapper {
+      ._placeholder {
+        padding-top: var(--driver-image-height, 0);
+      }
     }
   }
 }
