@@ -7,6 +7,5 @@ export default interface ImageData extends Item {
   alt_tag: string,
   title_tag: string,
   has_lightbox?: boolean,
-  height: string,
   width: string
 }

@@ -4,22 +4,26 @@
     :style="styles"
     class="storyblok-image"
   >
-    <div class="_placeholder" />
-
     <CoolLightBox
       :items="getItems()"
       :index="indexValue"
       @close="indexValue = null"
     />
 
-    <SfImage
-      class="_image"
-      :src="srcSet"
-      :alt="item.alt_tag"
-      :picture-breakpoint="screenWidthBreakpoint"
-      :style="imageStyles"
-      @click="indexValue = 0"
-    />
+    <div
+      class="_image-wrapper"
+    >
+      <div class="_placeholder" />
+
+      <SfImage
+        class="_image"
+        :src="srcSet"
+        :alt="item.alt_tag"
+        :picture-breakpoint="screenWidthBreakpoint"
+
+        @click="indexValue = 0"
+      />
+    </div>
   </div>
 </template>
 
@@ -57,11 +61,17 @@ export default Blok.extend({
   },
   computed: {
     extraStyles (): Record<string, string> {
-      return generatePlaceholderStyles(
+      const styles = generatePlaceholderStyles(
         this.item.image.filename,
         this.item.mobile_image.filename,
         'image-block-height'
       );
+
+      if (this.item.width) {
+        styles['--image-width'] = this.item.width;
+      }
+
+      return styles;
     },
     screenWidthBreakpoint (): number {
       return SCREEN_WIDTH_BREAKPOINT;
@@ -81,19 +91,6 @@ export default Blok.extend({
       };
 
       return srcSet;
-    },
-    imageStyles (): Record<string, string> {
-      const result: Record<string, string> = {};
-
-      if (this.item.height) {
-        result['height'] = this.item.height;
-      }
-
-      if (this.item.width) {
-        result['width'] = this.item.width;
-      }
-
-      return result;
     }
   },
   methods: {
@@ -122,7 +119,14 @@ export default Blok.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .storyblok-image {
-  position: relative;
+  text-align: center;
+  font-size: 0;
+
+  ._image-wrapper {
+    display: inline-block;
+    position: relative;
+    width: var(--image-width, 100%);
+  }
 
   ._image {
     position: absolute;
