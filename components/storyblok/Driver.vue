@@ -18,15 +18,23 @@
 </template>
 
 <script lang="ts">
+import { PropType } from 'vue';
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { SfImage } from '@storefront-ui/vue';
 
 import SrcSetValue from './interfaces/src-set-value.interface';
+import DriverData from './interfaces/driver-data.interface';
 
 export default Blok.extend({
   name: 'StoryblokDriver',
   components: {
     SfImage
+  },
+  props: {
+    item: {
+      type: Object as PropType<DriverData>,
+      required: true
+    }
   },
   computed: {
     link (): string {
