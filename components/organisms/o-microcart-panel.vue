@@ -20,7 +20,7 @@
               :key="product.id"
               :image="getThumbnailForProductExtend(product)"
               :title="product.name"
-              :regular-price=" formatPrice(getProductPrice(product).regular)"
+              :regular-price="formatPrice(getProductPrice(product).regular)"
               :special-price="formatPrice(getProductPrice(product).special)"
               :stock="10"
               :qty="product.qty"
