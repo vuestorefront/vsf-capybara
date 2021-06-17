@@ -1,7 +1,8 @@
 <template>
   <div v-if="ratingEnabled" :class="cssClasses" class="website-rating-container" :style="styles">
-    <div class="external-script" />
-    <!-- <script type="application/ld+json">{{ ratingDataSring }}</script> -->
+    <script type="application/ld+json">
+      {{ ratingDataString }}
+    </script>
     <div class="website-rating" :data-average-rating="averageValue">
       <div class="_rating">
         Rating: {{ averageValue }} / 5
@@ -29,11 +30,6 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components';
 
 export default Blok.extend({
   name: 'WebsiteRating',
-  data () {
-    return {
-      ratingEnabled: true
-    }
-  },
   computed: {
     ratingEnabled (): boolean {
     // value should be fetched from Magento config
@@ -60,7 +56,24 @@ export default Blok.extend({
       return this.item.link_text;
     },
     ratingDataString (): string {
-      return '';
+      const data = {
+        '@context': 'http://schema.org',
+        '@type': 'Organization',
+        'name': 'Petsies', // get for a specific store
+        'image': this.getStoreImageUrl(),
+        'aggregateRating': {
+          '@type': 'AggregateRating',
+          'ratingCount': this.reviewsCount,
+          'ratingValue': this.averageValue
+        }
+      };
+      return JSON.stringify(data);
+    }
+  },
+  methods: {
+    getStoreImageUrl (): string {
+      // temporarily for Petsies only
+      return '/assets/logo.png';
     }
   }
 })
