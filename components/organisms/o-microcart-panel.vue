@@ -21,7 +21,7 @@
               :image="getThumbnailForProductExtend(product)"
               :title="product.name"
               :regular-price=" formatPrice(getProductPrice(product).regular)"
-              :special-price="!!getProductPrice(product).special ? formatPrice(getProductPrice(product).special) : null"
+              :special-price="formatPrice(getProductPrice(product).special)"
               :stock="10"
               :qty="product.qty"
               class="collected-product"
