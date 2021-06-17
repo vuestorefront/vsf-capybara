@@ -11,7 +11,7 @@
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 
 export default Blok.extend({
-  name: 'HtmlRenderer',
+  name: 'Video',
   computed: {
     iframeStyles (): Record<string, string> {
       const result: Record<string, string> = {};
