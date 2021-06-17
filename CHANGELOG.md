@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / Improved
 - Fix broken mega menu. Requires [one change](https://github.com/vuestorefront/vsf-capybara/issues/509#issuecomment-862174222) in the config. ([#509](https://github.com/vuestorefront/vsf-capybara/issues/509))
-- Used helper for calculating product prices in Cart/Checkout
+- Using `getProductPrice` helper for calculating product prices in Cart/Checkout
 
 ## [1.0.4] - 04.01.2020
 
