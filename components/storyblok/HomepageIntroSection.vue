@@ -2,13 +2,16 @@
   <div
     class="storyblok-homepage-intro-section"
     :class="cssClasses"
-    :style="{ backgroundColor: item.background_color }"
+    :style="styles"
   >
-    <div class="_intro-column _image">
-      <SfImage
-        :src="srcSet"
-        :picture-breakpoint="768"
-      />
+    <div class="_intro-column _image-column">
+      <div class="_image-wrapper">
+        <SfImage
+          :src="srcSet"
+          :picture-breakpoint="768"
+          class="_image"
+        />
+      </div>
     </div>
 
     <div class="_intro-column _content">
@@ -52,6 +55,8 @@
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { nl2br } from 'src/modules/budsies';
 
+import parseImageDimensions from './parse-image-dimensions';
+
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import {
   SfImage,
@@ -69,6 +74,33 @@ export default Blok.extend({
     SfHeading
   },
   computed: {
+    extraStyles (): Record<string, string> {
+      const styles: Record<string, string> = {
+        backgroundColor: this.item.background_color
+      };
+
+      if (!this.item.image.filename) {
+        return styles;
+      }
+
+      let dimensions = parseImageDimensions(this.item.image.filename);
+
+      let ratio = dimensions.height / dimensions.width * 100;
+
+      styles['--intro-section-image-height'] = ratio + '%';
+
+      if (!this.item.mobile_image.filename) {
+        return styles;
+      }
+
+      dimensions = parseImageDimensions(this.item.mobile_image.filename);
+
+      ratio = dimensions.height / dimensions.width * 100;
+
+      styles['--intro-section-image-height-mobile'] = ratio + '%';
+
+      return styles;
+    },
     link (): string {
       return this.item.button_link.url;
     },
@@ -139,13 +171,32 @@ export default Blok.extend({
     }
   }
 
-  ._image {
-    img {
+  ._image-column {
+    position: relative;
+
+    ._image-wrapper {
+      padding-top: var(--intro-section-image-height-mobile, --intro-section-image-height)
+    }
+
+    ._image {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
+      height: 100%;
+
+      img {
+        width: 100%;
+      }
     }
   }
 
   @media (min-width: $tablet-min) {
+    ._image-column {
+      ._image-wrapper {
+        padding-top: var(--intro-section-image-height, 0)
+      }
+    }
     ._content {
       padding: 0 5% 0 55%;
       position: absolute;
