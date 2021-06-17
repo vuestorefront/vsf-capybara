@@ -93,7 +93,7 @@
             <div class="accordion__content">
               <SfCollectedProduct
                 v-for="product in productsInCart"
-                :key="product.checksum"
+                :key="product.id + product.checksum"
                 v-model="product.qty"
                 :image="getThumbnailForProduct(product)"
                 :title="product.name | htmlDecode"
@@ -176,7 +176,7 @@
       </SfTableHeading>
       <SfTableRow
         v-for="product in productsInCart"
-        :key="product.checksum"
+        :key="product.id + product.checksum"
         class="table__row"
       >
         <SfTableData class="table__image">
