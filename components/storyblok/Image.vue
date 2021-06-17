@@ -6,8 +6,8 @@
   >
     <CoolLightBox
       :items="getItems()"
-      :index="indexValue"
-      @close="indexValue = null"
+      :index="lightboxIndexValue"
+      @close="lightboxIndexValue = null"
     />
 
     <div
@@ -22,7 +22,7 @@
         :title="item.title_tag"
         :picture-breakpoint="screenWidthBreakpoint"
         @load.capture="onLoad"
-        @click="indexValue = 0"
+        @click="launchLightbox"
       />
     </div>
   </div>
@@ -57,7 +57,7 @@ export default Blok.extend({
   },
   data () {
     return {
-      indexValue: null,
+      lightboxIndexValue: null as number | null,
       isLoaded: false
     }
   },
@@ -74,6 +74,10 @@ export default Blok.extend({
 
       if (this.item.width) {
         styles['--image-width'] = this.item.width;
+      }
+
+      if (this.item.has_lightbox) {
+        styles['cursor'] = 'pointer';
       }
 
       return styles;
@@ -100,21 +104,32 @@ export default Blok.extend({
   },
   methods: {
     getItems (): LightboxItemValue[] {
-      if (!isServer) {
-        if (window.innerWidth < SCREEN_WIDTH_BREAKPOINT && this.item.mobile_image.filename) {
-          return [{
-            src: this.item.mobile_image.filename,
-            title: this.item.show_caption ? this.item.title_tag : undefined
-          }];
-        }
-      }
-
-      return [
+      const result: LightboxItemValue[] = [
         {
           src: this.item.image.filename,
-          title: this.item.show_caption ? this.item.title_tag : undefined
+          title: this.item.title_tag ? this.item.title_tag : undefined
         }
       ];
+
+      if (isServer) {
+        return result;
+      }
+
+      if (window.innerWidth >= SCREEN_WIDTH_BREAKPOINT || !this.item.mobile_image.filename) {
+        return result;
+      }
+
+      return [{
+        src: this.item.mobile_image.filename,
+        title: this.item.title_tag ? this.item.title_tag : undefined
+      }];
+    },
+    launchLightbox (): void {
+      if (!this.item.has_lightbox) {
+        return;
+      }
+
+      this.lightboxIndexValue = 0;
     },
     onLoad (): void{
       this.isLoaded = true;
