@@ -196,7 +196,7 @@ export default Blok.extend({
     position: relative;
 
     ._image-wrapper {
-      padding-top: var(--intro-section-image-height-mobile, --intro-section-image-height)
+      padding-top: var(--intro-section-image-height-mobile, var(--intro-section-image-height, 0));
     }
 
     ._image {
@@ -215,7 +215,7 @@ export default Blok.extend({
   @media (min-width: $tablet-min) {
     ._image-column {
       ._image-wrapper {
-        padding-top: var(--intro-section-image-height, 0)
+        padding-top: var(--intro-section-image-height, 0);
       }
     }
     ._content {
