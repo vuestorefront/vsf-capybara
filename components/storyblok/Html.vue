@@ -1,10 +1,14 @@
 <template>
   <div
-    v-html="itemData.html"
     class="storyblok-html-renderer"
     :class="cssClasses"
     :style="styles"
-  />
+  >
+    <div
+      class="_html-wrapper"
+      v-html="itemData.html"
+    />
+  </div>
 </template>
 
 <script lang="ts">

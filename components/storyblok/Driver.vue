@@ -1,28 +1,32 @@
 <template>
-  <a
+  <div
     class="storyblok-driver"
     :class="cssClasses"
     :style="styles"
-    :target="linkTarget"
-    :href="link"
   >
-    <div class="_image-wrapper">
-      <div class="_placeholder" />
+    <a
+      class="_link"
+      :target="linkTarget"
+      :href="link"
+    >
+      <div class="_image-wrapper">
+        <div class="_placeholder" />
 
-      <SfImage
-        class="_image"
-        :src="srcSet"
-        :alt="itemData.alt_tag"
-        :title="itemData.title_tag"
-        :picture-breakpoint="768"
-        @load.capture="onLoad"
-      />
-    </div>
+        <SfImage
+          class="_image"
+          :src="srcSet"
+          :alt="itemData.alt_tag"
+          :title="itemData.title_tag"
+          :picture-breakpoint="768"
+          @load.capture="onLoad"
+        />
+      </div>
 
-    <span class="_driver-text" v-if="itemData.link_text">
-      {{ itemData.link_text }}
-    </span>
-  </a>
+      <span class="_driver-text" v-if="itemData.link_text">
+        {{ itemData.link_text }}
+      </span>
+    </a>
+  </div>
 </template>
 
 <script lang="ts">
@@ -97,9 +101,12 @@ export default Blok.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .storyblok-driver {
-  display: block;
-  text-decoration: none;
-  position: relative;
+
+  ._link {
+    display: block;
+    text-decoration: none;
+    position: relative;
+  }
 
   ._image-wrapper {
     position: relative;

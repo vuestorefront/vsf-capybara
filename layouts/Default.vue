@@ -121,7 +121,9 @@ export default {
   &.storyblok-preview-mode {
     a,
     button,
-    .storyblok-video ._embed-container {
+    .storyblok-video ._embed-container,
+    .storyblok-image ._image-wrapper,
+    .storyblok-html-renderer ._html-wrapper {
       pointer-events: none;
     }
   }
