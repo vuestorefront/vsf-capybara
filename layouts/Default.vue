@@ -120,7 +120,8 @@ export default {
 .default-layout {
   &.storyblok-preview-mode {
     a,
-    button {
+    button,
+    .storyblok-video ._embed-container {
       pointer-events: none;
     }
   }
