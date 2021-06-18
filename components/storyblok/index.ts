@@ -13,6 +13,7 @@ export default function registerComponents () {
   add('promotion_image_banner', () => import('./PromoCampaignBanner.vue'))
   add('textarea', () => import('./Textarea.vue'))
   add('website_rating', () => import('./WebsiteRating.vue'))
+  add('sharing', () => import('./Sharing.vue'))
 
   // add('product', () => import('./Product.vue'))
   // add('category', () => import('./Category.vue'))
