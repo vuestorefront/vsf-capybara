@@ -1,7 +1,9 @@
+import { AspectRatio } from './aspect-ratio.value';
 import Item from './item.interface';
+import VideoUrlField from './video-url-field.interface';
 
 export default interface VideoData extends Item {
-  video_url: string,
-  video_height: string,
-  video_width: string
+  url: VideoUrlField,
+  aspect_ratio: AspectRatio,
+  display_controls?: boolean
 }
