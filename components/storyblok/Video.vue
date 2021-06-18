@@ -60,15 +60,23 @@ export default Blok.extend({
       }
 
       if (this.itemData.url.provider === VideoProvider.vimeo) {
-        return '//player.vimeo.com/video/' + this.itemData.url.video_id
+        return '//player.vimeo.com/video/' + this.itemData.url.video_id;
       }
 
       if (this.itemData.url.provider === VideoProvider.wistia) {
-        return '//fast.wistia.net/embed/iframe/' + this.itemData.url.video_id
+        return '//fast.wistia.net/embed/iframe/' + this.itemData.url.video_id;
+      }
+
+      if (this.itemData.url.provider === VideoProvider.coub) {
+        return '//coub.com/embed/' +
+          this.itemData.url.video_id +
+          '?muted=false' +
+          '&autostart=false' +
+          '&startWithHD=true';
       }
 
       if (this.itemData.url.provider === VideoProvider.dailymotion) {
-        return '//www.dailymotion.com/embed/video/' + this.itemData.url.video_id
+        return '//www.dailymotion.com/embed/video/' + this.itemData.url.video_id;
       }
 
       return undefined;
