@@ -51,7 +51,7 @@ export default Blok.extend({
     },
     embedUrl (): string | undefined {
       if (this.itemData.url.provider === VideoProvider.youtube) {
-        return 'https://www.youtube.com/embed/' +
+        return '//www.youtube.com/embed/' +
           this.itemData.url.video_id +
           '?modestbranding=1' +
           '&rel=0' +
@@ -60,7 +60,11 @@ export default Blok.extend({
       }
 
       if (this.itemData.url.provider === VideoProvider.vimeo) {
-        return 'https://player.vimeo.com/video/' + this.itemData.url.video_id
+        return '//player.vimeo.com/video/' + this.itemData.url.video_id
+      }
+
+      if (this.itemData.url.provider === VideoProvider.wistia) {
+        return '//fast.wistia.net/embed/iframe/' + this.itemData.url.video_id
       }
 
       return undefined;
