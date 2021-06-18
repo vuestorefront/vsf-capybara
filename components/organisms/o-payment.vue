@@ -70,24 +70,18 @@
         name="state"
         :label="$t('State / Province')"
       />
-      <SfSelect
+      <MMultiselect
         v-if="isSelectedCountryHasStates && canShowStateSelector"
-        v-model.trim="payment.state"
-        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+        class="form__element form__element--half form__element--half-even form__select"
         name="state"
-        :label="$t('State / Province')"
-        :required="true"
+        :floating-label="$t('State / Province')"
+        :value="payment.state"
+        :options="getStatesForSelectedCountry"
         :valid="!$v.payment.state.$error"
         :error-message="$t('Field is required')"
-      >
-        <SfSelectOption
-          v-for="state in getStatesForSelectedCountry"
-          :key="state.name"
-          :value="state.code"
-        >
-          {{ state.name }}
-        </SfSelectOption>
-      </SfSelect>
+        :required="true"
+        @select="setState"
+      />
       <SfInput
         v-model.trim="payment.zipCode"
         class="form__element form__element--half"
@@ -102,24 +96,17 @@
         "
         @blur="$v.payment.zipCode.$touch()"
       />
-      <SfSelect
-        v-model="payment.country"
-        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+      <MMultiselect
+        class="form__element form__element--half form__element--half-even form__select"
         name="countries"
-        :label="$t('Country')"
-        :required="true"
+        :floating-label="$t('Country')"
+        :value="getPaymentCountry"
+        :options="countries"
         :valid="!$v.payment.country.$error"
         :error-message="$t('Field is required')"
-        @change="changeCountry"
-      >
-        <SfSelectOption
-          v-for="country in countries"
-          :key="country.code"
-          :value="country.code"
-        >
-          {{ country.name }}
-        </SfSelectOption>
-      </SfSelect>
+        :required="true"
+        @select="setCountry"
+      />
       <SfInput
         v-model.trim="payment.phoneNumber"
         class="form__element"
@@ -174,11 +161,11 @@ import {
   SfInput,
   SfRadio,
   SfButton,
-  SfSelect,
   SfHeading,
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+import MMultiselect from 'theme/components/molecules/m-multiselect';
 const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
@@ -187,9 +174,9 @@ export default {
     SfInput,
     SfRadio,
     SfButton,
-    SfSelect,
     SfHeading,
-    SfCheckbox
+    SfCheckbox,
+    MMultiselect
   },
   mixins: [Payment],
   validations () {
@@ -277,6 +264,15 @@ export default {
     },
     getPaymentCountry () {
       return this.payment.country;
+    }
+  },
+  methods: {
+    setCountry (country) {
+      this.payment.country = country.code;
+      this.changeCountry();
+    },
+    setState (state) {
+      this.payment.state = state.code;
     }
   },
   mounted () {
