@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="storyblok-video"
-    :class="cssClasses"
-    :style="styles"
-  >
+  <div class="storyblok-video" :class="cssClasses" :style="styles">
     <iframe
       class="_embed-container"
       :src="embedUrl"
@@ -16,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { Blok } from 'src/modules/vsf-storyblok-module/components'
+import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { AspectRatio } from './interfaces/aspect-ratio.value';
 import { VideoProvider } from './interfaces/video-provider.value';
 import VideoData from './interfaces/video-data.interface';
@@ -34,7 +30,7 @@ export default Blok.extend({
         return result;
       }
 
-      let height = 0.00;
+      let height = 0.0;
 
       switch (this.itemData.aspect_ratio) {
         case AspectRatio.A4_3:
@@ -49,23 +45,28 @@ export default Blok.extend({
           break;
       }
 
-      result['--storyblok-video-height'] = (height * 100) + '%';
+      result['--storyblok-video-height'] = height * 100 + '%';
 
       return result;
     },
     embedUrl (): string | undefined {
-      if (this.itemData.url.provider !== VideoProvider.youtube) {
-        return undefined;
+      if (this.itemData.url.provider === VideoProvider.youtube) {
+        return 'https://www.youtube.com/embed/' +
+          this.itemData.url.video_id +
+          '?modestbranding=1' +
+          '&rel=0' +
+          '&controls=' +
+          (this.itemData.display_controls ? 1 : 0);
       }
 
-      return 'https://www.youtube.com/embed/' +
-        this.itemData.url.video_id +
-        '?modestbranding=1' +
-        '&rel=0' +
-        '&controls=' + (this.itemData.display_controls ? 1 : 0);
+      if (this.itemData.url.provider === VideoProvider.vimeo) {
+        return 'https://player.vimeo.com/video/' + this.itemData.url.video_id
+      }
+
+      return undefined;
     }
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
