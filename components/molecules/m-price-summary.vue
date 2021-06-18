@@ -124,12 +124,19 @@ export default {
 
 .m-price-summary {
   .sf-property.--marked {
-    --property-name-color: var(--c-primary);
-    --property-value-color: var(--c-primary);
+    --property-name-color: var(--_c-light-primary);
+    --property-value-color: var(--_c-light-primary);
   }
 }
+
 .property {
   margin: 0 0 var(--spacer-base) 0;
+
+  &.sf-property--large {
+    --property-name-font-size: var(--font-lg);
+    --property-value-font-size: var(--font-lg);
+  }
+
   @include for-desktop {
     margin: 0 0 var(--spacer-sm) 0;
     &__total {
