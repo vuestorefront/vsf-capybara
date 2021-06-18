@@ -6,31 +6,44 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import { ProductService } from '@vue-storefront/core/data-resolver/ProductService'
 import { CategoryService } from '@vue-storefront/core/data-resolver/CategoryService'
-import Product from './Product'
 import { SearchQuery } from 'storefront-query-builder'
+import ProductModel from 'core/modules/catalog/types/Product';
+import { Category } from 'core/modules/catalog-next/types/Category'
 
-export default {
+import Product from './Product.vue'
+import CategoryData from './interfaces/category-data.interface';
+
+export default Blok.extend({
   name: 'CategoryBlock',
-  extends: Blok,
   components: {
     Product
   },
+  data: function () {
+    return {
+      products: [] as ProductModel[],
+      category: undefined as Category | undefined
+    }
+  },
   computed: {
-    productsList () {
+    itemData (): CategoryData {
+      return this.item as CategoryData;
+    },
+    productsList (): ProductModel[] {
       if (!this.products) {
         return []
       }
+
       return this.products
     },
-    colSizeLg: function () {
-      return 'col-lg-' + Math.floor(12 / this.item.products_count)
+    colSizeLg (): string {
+      return 'col-lg-' + Math.floor(12 / parseInt(this.itemData.products_count))
     }
   },
-  created: async function () {
+  async created (): Promise<void> {
     if (!this.category) {
       await this.loadCategory()
     }
@@ -42,47 +55,37 @@ export default {
     await this.loadProducts()
   },
   methods: {
-    async loadCategory () {
+    async loadCategory (): Promise<void> {
       let categories = await CategoryService.getCategories({
         filters: {
-          id: this.item.id
+          id: this.itemData.id
         }
       })
 
       this.category = categories.shift()
     },
-    async loadProducts () {
+    async loadProducts (): Promise<void> {
       let searchQuery = new SearchQuery()
       searchQuery = searchQuery.applyFilter({ key: 'category_ids', value: { 'in': [this.category.id] } })
 
       let { items } = await ProductService.getProducts({
         query: searchQuery,
-        size: +this.item.products_count
+        size: +this.itemData.products_count
       })
 
       this.products = items
     }
   },
   watch: {
-    item: async function () {
+    async item (): Promise<void> {
       await this.loadCategory()
       await this.loadProducts()
     }
-  },
-  props: {
-    products: {
-      type: Array,
-      default: () => []
-    },
-    category: {
-      type: Object,
-      default: undefined
-    }
   }
-}
+});
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .storyblok-category {
 
 }

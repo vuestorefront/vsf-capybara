@@ -1,6 +1,6 @@
 <template>
   <div
-    :data-campaign-id="item.campaign_id"
+    :data-campaign-id="itemData.campaign_id"
     class="promotion-platform-image-banner-container"
     :class="cssClasses"
     :style="styles"
@@ -9,8 +9,14 @@
 
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
+import PromoCampaignBannerData from './interfaces/promo-campaign-banner-data.interface';
 
 export default Blok.extend({
-  name: 'PromoCampaignBannerRenderer'
+  name: 'PromoCampaignBannerRenderer',
+  computed: {
+    itemData (): PromoCampaignBannerData {
+      return this.item as PromoCampaignBannerData;
+    }
+  }
 })
 </script>

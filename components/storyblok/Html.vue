@@ -1,7 +1,7 @@
 <template>
   <div
-    v-html="item.html"
-    class="html-renderer"
+    v-html="itemData.html"
+    class="storyblok-html-renderer"
     :class="cssClasses"
     :style="styles"
   />
@@ -9,13 +9,19 @@
 
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
+import HtmlData from './interfaces/html-data.interface';
 
 export default Blok.extend({
-  name: 'HtmlRenderer'
+  name: 'HtmlRenderer',
+  computed: {
+    itemData (): HtmlData {
+      return this.item as HtmlData;
+    }
+  }
 })
 </script>
 
 <style lang="scss" scoped>
-.html-rendering {
+.storyblok-html-renderer {
 }
 </style>

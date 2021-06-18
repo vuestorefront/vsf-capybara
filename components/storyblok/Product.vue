@@ -23,51 +23,70 @@
   </div>
 </template>
 
-<script>
-import { Blok } from 'src/modules/vsf-storyblok-module/components'
-import { ProductService } from '@vue-storefront/core/data-resolver/ProductService'
-import { productThumbnailPath } from '@vue-storefront/core/helpers'
-import { currentStoreView } from '@vue-storefront/core/lib/multistore'
-import { formatProductLink } from '@vue-storefront/core/modules/url/helpers'
-import ProductImage from '../core/ProductImage'
-import config from 'config'
+<script lang="ts">
+import { ProductService } from '@vue-storefront/core/data-resolver/ProductService';
+import { productThumbnailPath } from '@vue-storefront/core/helpers';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
+import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
+import ProductImage from '../core/ProductImage.vue';
+import { LocalizedRoute, StoreView } from 'core/lib/types';
+import config from 'config';
+import Product from 'core/modules/catalog/types/Product';
+import { Blok } from 'src/modules/vsf-storyblok-module/components';
 
-export default {
+import ProductData from './interfaces/product-data.interface';
+
+export default Blok.extend({
   name: 'ProductBlock',
-  extends: Blok,
   components: {
     ProductImage
   },
+  data: function () {
+    return {
+      placeholder: '/assets/placeholder.jpg',
+      product: undefined as Product | undefined
+    }
+  },
   computed: {
-    currentStoreView () {
-      return currentStoreView
+    itemData (): ProductData {
+      return this.item as ProductData;
     },
-    price () {
+    currentStoreView (): () => StoreView {
+      return currentStoreView;
+    },
+    price (): number | string {
       if (!this.product || !this.product.price_incl_tax) {
         return ''
       }
       return this.product.price_incl_tax
     },
-    name () {
+    name (): string {
       if (!this.product) {
         return ''
       }
       return this.product.name
     },
-    link () {
+    link (): string | LocalizedRoute {
       if (!this.product) {
         return ''
       }
+
+      if (!this.product.slug) {
+        return '';
+      }
+
       return formatProductLink(this.product, currentStoreView().storeCode)
     },
-    thumbnail () {
+    thumbnail (): string {
       if (!this.product) {
         return ''
       }
       let thumbnail = productThumbnailPath(this.product)
-      return this.getThumbnail(thumbnail, config.products.thumbnails.width, config.products.thumbnails.height)
+
+      // TODO: Figure out correct type definition
+      return (this as any).getThumbnail(thumbnail, config.products.thumbnails.width, config.products.thumbnails.height)
     },
-    thumbnailObj () {
+    thumbnailObj (): {src: string, loading: string, error: string} {
       return {
         src: this.thumbnail,
         loading: this.placeholder,
@@ -75,7 +94,7 @@ export default {
       }
     }
   },
-  created: async function () {
+  created: async function (): Promise<void> {
     if (this.product) {
       return
     }
@@ -86,7 +105,7 @@ export default {
     async loadData () {
       this.product = await ProductService.getProductByKey({
         options: {
-          id: this.item.id
+          id: this.itemData.product_id
         },
         key: 'id',
         skipCache: true
@@ -97,22 +116,11 @@ export default {
     item: async function () {
       await this.loadData()
     }
-  },
-  props: {
-    product: {
-      type: Object,
-      default: undefined
-    }
-  },
-  data: function () {
-    return {
-      placeholder: '/assets/placeholder.jpg'
-    }
   }
-}
+});
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .storyblok-product {
   display: flex;
   justify-content: center;

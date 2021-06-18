@@ -1,8 +1,14 @@
 <template>
-  <div v-if="ratingEnabled" :class="cssClasses" class="website-rating-container" :style="styles">
+  <div
+    v-if="ratingEnabled"
+    class="website-rating-container"
+    :class="cssClasses"
+    :style="styles"
+  >
     <script type="application/ld+json">
       {{ ratingDataString }}
     </script>
+
     <div class="website-rating" :data-average-rating="averageValue">
       <div class="_rating">
         Rating: {{ averageValue }} / 5

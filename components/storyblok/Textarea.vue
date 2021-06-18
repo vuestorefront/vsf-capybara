@@ -4,18 +4,19 @@
     :class="cssClasses"
     :style="styles"
   >
-    <sb-rich-text v-if="item.content" :text="item.content" />
+    <sb-rich-text v-if="itemData.content" :text="itemData.content" />
   </div>
 </template>
 
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
+import TextareaData from './interfaces/textarea-data.interface';
 
 export default Blok.extend({
   name: 'Textarea',
   computed: {
-    itemValue () {
-      return this.item;
+    itemData (): TextareaData {
+      return this.item as TextareaData;
     }
   }
 });

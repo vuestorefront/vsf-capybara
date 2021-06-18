@@ -6,11 +6,12 @@
 </template>
 
 <script lang="ts">
-import MZoomGallery from 'theme/components/molecules/m-zoom-gallery';
-import { Blok } from 'src/modules/vsf-storyblok-module/components'
-
+import MZoomGallery from 'theme/components/molecules/m-zoom-gallery.vue';
 import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
-import SliderItemInterface from './interfaces/slider-item-data.interface';
+
+import { Blok } from 'src/modules/vsf-storyblok-module/components'
+import SliderData from './interfaces/slider-data.interface';
+import { ThumbnailsPosition } from './interfaces/thumbnails-position.value';
 
 export default Blok.extend({
   name: 'Slider',
@@ -18,9 +19,12 @@ export default Blok.extend({
     MZoomGallery
   },
   computed: {
+    itemData (): SliderData {
+      return this.item as SliderData;
+    },
     slides (): ZoomGalleryImage[] {
       const slides = [];
-      for (const sliderItem of this.item.slider_items as SliderItemInterface[]) {
+      for (const sliderItem of this.itemData.slider_items) {
         const slide: ZoomGalleryImage = {
           thumb: sliderItem.image.filename,
           stage: sliderItem.image.filename,
@@ -37,7 +41,7 @@ export default Blok.extend({
       return slides;
     },
     isHorizontalThumbnails (): boolean {
-      return this.item.thumbnails_position === 'horizontal';
+      return this.itemData.thumbnails_position === ThumbnailsPosition.HORIZONTAL;
     }
   }
 })
