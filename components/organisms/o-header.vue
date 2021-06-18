@@ -21,7 +21,7 @@
           @mouseover="isHoveredMenu = true"
           @mouseleave="isHoveredMenu = false"
         >
-          <div>
+          <div class="o-header__submenu">
             Products
           </div>
           <MMenu
@@ -198,15 +198,28 @@ export default {
   --header-navigation-item-padding: var(--spacer-lg) var(--spacer-xs);
   --header-navigation-item-color: var(--c-dark);
   box-sizing: border-box;
+  &__submenu {
+    cursor: pointer;
+  }
   a {
     &.active {
       font-weight: bold;
+    }
+  }
+  ::v-deep .sf-menu-item {
+    &__label {
+      &:hover {
+        --menu-item-label-color: var(--c-primary);
+      }
     }
   }
   .sf-header-navigation-item {
     &::after {
       bottom: 0;
       width: 0;
+    }
+    &:hover > *:not(.sf-mega-menu) {
+      --header-navigation-item-color: var(--c-primary);
     }
     &:hover {
       .m-menu {
