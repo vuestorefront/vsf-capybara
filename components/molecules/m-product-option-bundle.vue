@@ -15,8 +15,9 @@
       :key="link.id"
       :label="link.product && link.product.name"
       :name="link.product && link.product.name"
-      :value="link.id"
-      v-model="productOptionId"
+      :value="String(link.id)"
+      @input.native="productOptionId = Number($event.target.value)"
+      :selected="String(productOptionId)"
     >
       <template #label="{label}">
         <div class="label">
