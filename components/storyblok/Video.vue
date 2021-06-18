@@ -67,6 +67,10 @@ export default Blok.extend({
         return '//fast.wistia.net/embed/iframe/' + this.itemData.url.video_id
       }
 
+      if (this.itemData.url.provider === VideoProvider.dailymotion) {
+        return '//www.dailymotion.com/embed/video/' + this.itemData.url.video_id
+      }
+
       return undefined;
     }
   }
