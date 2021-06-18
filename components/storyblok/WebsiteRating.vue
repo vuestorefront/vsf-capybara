@@ -27,10 +27,14 @@
 
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
+import WebsiteRatingData from './interfaces/website-rating-data.interface';
 
 export default Blok.extend({
   name: 'WebsiteRating',
   computed: {
+    itemData (): WebsiteRatingData {
+      return this.item as WebsiteRatingData;
+    },
     ratingEnabled (): boolean {
     // value should be fetched from Magento config
       return true;
@@ -44,16 +48,16 @@ export default Blok.extend({
       return 149;
     },
     reviewsLink (): string {
-      if (!this.item.link_url) {
+      if (!this.itemData.link_url.url) {
         return 'reviews';
       }
-      return this.item.link_url;
+      return this.itemData.link_url.url;
     },
     reviewsLinkText (): string {
-      if (!this.item.link_text) {
+      if (!this.itemData.link_text) {
         return 'Go to all reviews';
       }
-      return this.item.link_text;
+      return this.itemData.link_text;
     },
     ratingDataString (): string {
       const data = {
