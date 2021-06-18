@@ -160,7 +160,6 @@ export default Blok.extend({
     justify-content: center;
     padding: 1em;
     text-align: inherit;
-    z-index: 10;
 
     ._title-block {
       .sf-heading__title {
