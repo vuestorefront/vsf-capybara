@@ -7,9 +7,9 @@
       :class="{'sf-property--large': isLarge}"
     />
     <SfProperty
-      v-if="prices.subtotal"
+      v-if="prices.regular_subtotal"
       :name="$t('Subtotal')"
-      :value="prices.subtotal | price"
+      :value="prices.regular_subtotal | price"
       class="sf-property--full-width property"
       :class="{'sf-property--large': isLarge}"
     />
@@ -34,23 +34,40 @@
       class="sf-property--full-width property"
       :class="{'sf-property--large': isLarge}"
     />
-    <template v-if="prices.discount">
+    <template v-if="prices.discount && isCouponCode">
       <SfProperty
-        :name="$t('Discount')"
+        :name="$t('Discount') + ` (${isCouponCode})`"
         :value="prices.discount | price"
-        class="sf-property--full-width property"
+        class="sf-property--full-width property --marked"
         :class="{'sf-property--large': isLarge}"
       />
-      <SfButton
-        class="sf-button sf-button--outline promo-code__button"
-        @click="removeCoupon"
-      >
-        {{ $t("Delete discount code") }}
-      </SfButton>
     </template>
+    <template v-if="prices.savings">
+      <SfProperty
+        :name="$t('Price Savings')"
+        :value="prices.savings | price"
+        class="sf-property--full-width property --marked"
+        :class="{'sf-property--large': isLarge}"
+      />
+    </template>
+    <template v-if="prices.discounts && prices.discounts">
+      <SfProperty
+        :name="$t('Total Discounts')"
+        :value="prices.discounts | price"
+        class="sf-property--full-width property --marked"
+        :class="{'sf-property--large': isLarge}"
+      />
+    </template>
+    <SfButton
+      v-if="isCouponCode"
+      class="sf-button sf-button--outline promo-code__button"
+      @click="removeCoupon"
+    >
+      {{ $t("Delete discount code") }}
+    </SfButton>
     <SfDivider class="divider" />
     <SfProperty
-      :name="$t('Total')"
+      :name="$t('Grand Total')"
       :value="prices.grand_total | price"
       class="sf-property--full-width property"
       :class="{'sf-property--large': isLarge}"
@@ -60,11 +77,12 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { SfProperty, SfDivider } from '@storefront-ui/vue';
+import { SfProperty, SfDivider, SfButton } from '@storefront-ui/vue';
 
 export default {
   name: 'MPriceSummary',
   components: {
+    SfButton,
     SfProperty,
     SfDivider
   },
@@ -89,6 +107,9 @@ export default {
       return this.productsInCart.reduce((result, product) => {
         return result + product.qty;
       }, 0);
+    },
+    isCouponCode () {
+      return this.$store.state.cart.platformTotals ? this.$store.state.cart.platformTotals.coupon_code : false;
     }
   },
   methods: {
@@ -101,8 +122,21 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+.m-price-summary {
+  .sf-property.--marked {
+    --property-name-color: var(--_c-light-primary);
+    --property-value-color: var(--_c-light-primary);
+  }
+}
+
 .property {
   margin: 0 0 var(--spacer-base) 0;
+
+  &.sf-property--large {
+    --property-name-font-size: var(--font-lg);
+    --property-value-font-size: var(--font-lg);
+  }
+
   @include for-desktop {
     margin: 0 0 var(--spacer-sm) 0;
     &__total {
