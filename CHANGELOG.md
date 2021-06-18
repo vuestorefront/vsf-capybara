@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: remove product from Cart on Desktop
 - Fixed: close Mega Menu after clicking on the Category
 - Fixed: wrong product image on PDP after clicked on filtered product from PLP
-- Fixed: errors related to wrong data format after refreshed PDP with bundles
+- Fixed: warnings related to wrong data format after refreshed PDP with bundles
 
 ## [1.0.4] - 04.01.2020
 
