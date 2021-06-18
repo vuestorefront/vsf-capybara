@@ -2,7 +2,7 @@
   <div class="sf-buttons" :style="styles" :class="cssClasses">
     <span v-for="button in buttons" :key="button._uid" class="_button-item">
       <SfButton
-        :link="button.link_url.url"
+        :link="getLink(button)"
         :class="buttonClass(button)"
         @click="openLink(button)"
       >
@@ -19,6 +19,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 
 import ButtonItemData from './interfaces/button-item-data.interface';
 import ButtonsData from './interfaces/buttons-data.interface';
+import getUrlFromLink from './get-url-from-link';
 
 export default Blok.extend({
   name: 'Button',
@@ -34,8 +35,11 @@ export default Blok.extend({
     }
   },
   methods: {
+    getLink (button: ButtonItemData): string {
+      return getUrlFromLink(button.link_url);
+    },
     openLink (button: ButtonItemData): void {
-      const url = button.link_url.cached_url || button.link_url.url;
+      const url = getUrlFromLink(button.link_url);
 
       const route = this.$router.resolve({
         path: localizedRoute(url)

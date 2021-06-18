@@ -71,6 +71,7 @@ import {
 
 import SrcSetValue from './interfaces/src-set-value.interface';
 import HomepageIntroSectionData from './interfaces/homepage-intro-section-data.interface';
+import getUrlFromLink from './get-url-from-link';
 
 export default Blok.extend({
   name: 'StoryblokHomepageIntroSection',
@@ -109,7 +110,7 @@ export default Blok.extend({
       return styles;
     },
     link (): string {
-      return this.itemData.button_link.url;
+      return getUrlFromLink(this.itemData.button_link);
     },
     srcSet (): SrcSetValue | string | undefined {
       if (!this.itemData.image.filename) {

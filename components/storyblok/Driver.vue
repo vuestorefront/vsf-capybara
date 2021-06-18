@@ -36,6 +36,7 @@ import { SfImage } from '@storefront-ui/vue';
 import SrcSetValue from './interfaces/src-set-value.interface';
 import DriverData from './interfaces/driver-data.interface';
 import generatePlaceholderStyles from './generate-placeholder-styles';
+import getUrlFromLink from './get-url-from-link';
 
 export default Blok.extend({
   name: 'StoryblokDriver',
@@ -62,7 +63,7 @@ export default Blok.extend({
       );
     },
     link (): string {
-      return this.itemData.link_url.url;
+      return getUrlFromLink(this.itemData.link_url);
     },
     linkTarget (): string {
       return this.itemData.target_blank ? '_blank'

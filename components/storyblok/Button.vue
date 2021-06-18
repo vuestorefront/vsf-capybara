@@ -2,7 +2,7 @@
   <div :style="styles" class="storyblok-button">
     <SfButton
       class="_button"
-      :link="itemData.link_url.url"
+      :link="link"
       :class="cssClasses"
       @click="openLink"
     >
@@ -17,6 +17,7 @@ import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import ButtonItemData from './interfaces/button-item-data.interface';
+import getUrlFromLink from './get-url-from-link';
 
 export default Blok.extend({
   name: 'Button',
@@ -26,6 +27,9 @@ export default Blok.extend({
   computed: {
     itemData (): ButtonItemData {
       return this.item as ButtonItemData;
+    },
+    link (): string {
+      return getUrlFromLink(this.itemData.link_url);
     },
     shouldOpenInNewWindow (): boolean {
       return !!this.itemData.target_blank;
@@ -42,8 +46,10 @@ export default Blok.extend({
   },
   methods: {
     openLink (): void {
+      const url = getUrlFromLink(this.itemData.link_url);
+
       const route = this.$router.resolve({
-        path: localizedRoute(this.itemData.link_url.url)
+        path: localizedRoute(url)
       });
 
       if (this.shouldOpenInNewWindow) {
