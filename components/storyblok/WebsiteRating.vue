@@ -8,7 +8,15 @@
         Rating: {{ averageValue }} / 5
       </div>
 
-      <div class="_rating-stars" />
+      <div class="_rating-stars">
+        <star-rating
+          :rating="averageValue"
+          :increment="0.5"
+          :read-only="true"
+          :show-rating="false"
+          :star-size="35"
+        />
+      </div>
 
       <div class="_reviewsCount">
         based on {{ reviewsCount }} Google reviews
@@ -28,9 +36,13 @@
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import WebsiteRatingData from './interfaces/website-rating-data.interface';
+import StarRating from 'vue-star-rating/src';
 
 export default Blok.extend({
   name: 'WebsiteRating',
+  components: {
+    StarRating
+  },
   computed: {
     itemData (): WebsiteRatingData {
       return this.item as WebsiteRatingData;
