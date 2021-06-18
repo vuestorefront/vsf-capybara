@@ -15,7 +15,7 @@
             <transition-group name="fade" tag="div">
               <SfCollectedProduct
                 v-for="product in products"
-                :key="product.checksum"
+                :key="product.id + product.checksum"
                 :qty="product.qty"
                 :image="getThumbnailForProductExtend(product)"
                 image-width="140"
@@ -129,8 +129,6 @@
       </div>
       <div v-if="totalItems" class="detailed-cart__aside">
         <OrderSummary
-          :products="products"
-          :total-items="totalItems"
           :is-updating-quantity="isUpdatingQuantity"
         />
 
