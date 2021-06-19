@@ -41,7 +41,8 @@
     "vue-star-rating": "^1.7.0",
     "vue2-filters": "^0.11.0",
     "vuelidate": "0.6.2",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vue-multiselect": "^2.1"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.5",

@@ -64,24 +64,18 @@
         name="state"
         :label="$t('State / Province')"
       />
-      <SfSelect
+      <MMultiselect
         v-if="isSelectedCountryHasStates && canShowStateSelector"
         v-model.trim="shipping.state"
-        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+        class="form__element form__element--half form__element--half-even form__select"
         name="state"
         :label="$t('State / Province')"
         :required="true"
+        id-field="code"
+        :options="getStatesForSelectedCountry"
         :valid="!$v.shipping.state.$error"
         :error-message="$t('Field is required')"
-      >
-        <SfSelectOption
-          v-for="state in getStatesForSelectedCountry"
-          :key="state.name"
-          :value="state.code"
-        >
-          {{ state.name }}
-        </SfSelectOption>
-      </SfSelect>
+      />
       <SfInput
         v-model.trim="shipping.zipCode"
         class="form__element form__element--half"
@@ -96,24 +90,18 @@
         "
         @blur="$v.shipping.zipCode.$touch()"
       />
-      <SfSelect
+      <MMultiselect
         v-model="shipping.country"
-        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+        class="form__element form__element--half form__element--half-even form__select"
         name="countries"
         :label="$t('Country')"
         :required="true"
+        id-field="code"
+        :options="countries"
         :valid="!$v.shipping.country.$error"
         :error-message="$t('Field is required')"
         @change="changeCountry"
-      >
-        <SfSelectOption
-          v-for="country in countries"
-          :key="country.code"
-          :value="country.code"
-        >
-          {{ country.name }}
-        </SfSelectOption>
-      </SfSelect>
+      />
       <SfInput
         v-model.trim="shipping.phoneNumber"
         class="form__element"
@@ -179,11 +167,11 @@ import {
   SfInput,
   SfRadio,
   SfButton,
-  SfSelect,
   SfHeading,
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+import MMultiselect from 'theme/components/molecules/m-multiselect';
 const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
@@ -192,9 +180,9 @@ export default {
     SfInput,
     SfRadio,
     SfButton,
-    SfSelect,
     SfHeading,
-    SfCheckbox
+    SfCheckbox,
+    MMultiselect
   },
   mixins: [Shipping],
   validations: {
