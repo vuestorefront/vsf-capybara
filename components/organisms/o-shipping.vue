@@ -66,15 +66,15 @@
       />
       <MMultiselect
         v-if="isSelectedCountryHasStates && canShowStateSelector"
+        v-model.trim="shipping.state"
         class="form__element form__element--half form__element--half-even form__select"
         name="state"
-        :floating-label="$t('State / Province')"
-        :value="shipping.state"
+        :label="$t('State / Province')"
+        :required="true"
+        id-field="code"
         :options="getStatesForSelectedCountry"
         :valid="!$v.shipping.state.$error"
         :error-message="$t('Field is required')"
-        :required="true"
-        @select="setState"
       />
       <SfInput
         v-model.trim="shipping.zipCode"
@@ -91,15 +91,16 @@
         @blur="$v.shipping.zipCode.$touch()"
       />
       <MMultiselect
+        v-model="shipping.country"
         class="form__element form__element--half form__element--half-even form__select"
         name="countries"
-        :floating-label="$t('Country')"
-        :value="shipping.country"
+        :label="$t('Country')"
+        :required="true"
+        id-field="code"
         :options="countries"
         :valid="!$v.shipping.country.$error"
         :error-message="$t('Field is required')"
-        :required="true"
-        @select="setCountry"
+        @change="changeCountry"
       />
       <SfInput
         v-model.trim="shipping.phoneNumber"
@@ -245,13 +246,6 @@ export default {
     }
   },
   methods: {
-    setCountry (country) {
-      this.shipping.country = country.code;
-      this.changeCountry();
-    },
-    setState (state) {
-      this.shipping.state = state.code;
-    },
     saveDataToCheckout () {
       this.sendDataToCheckout();
       this.$store.dispatch('cart/syncTotals', { forceServerSync: true });

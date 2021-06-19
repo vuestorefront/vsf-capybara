@@ -72,15 +72,15 @@
       />
       <MMultiselect
         v-if="isSelectedCountryHasStates && canShowStateSelector"
+        v-model.trim="payment.state"
         class="form__element form__element--half form__element--half-even form__select"
         name="state"
-        :floating-label="$t('State / Province')"
-        :value="payment.state"
+        :label="$t('State / Province')"
+        :required="true"
+        id-field="code"
         :options="getStatesForSelectedCountry"
         :valid="!$v.payment.state.$error"
         :error-message="$t('Field is required')"
-        :required="true"
-        @select="setState"
       />
       <SfInput
         v-model.trim="payment.zipCode"
@@ -97,15 +97,16 @@
         @blur="$v.payment.zipCode.$touch()"
       />
       <MMultiselect
+        v-model="payment.country"
         class="form__element form__element--half form__element--half-even form__select"
         name="countries"
-        :floating-label="$t('Country')"
-        :value="getPaymentCountry"
+        :label="$t('Country')"
+        :required="true"
+        id-field="code"
         :options="countries"
         :valid="!$v.payment.country.$error"
         :error-message="$t('Field is required')"
-        :required="true"
-        @select="setCountry"
+        @change="changeCountry"
       />
       <SfInput
         v-model.trim="payment.phoneNumber"
@@ -264,15 +265,6 @@ export default {
     },
     getPaymentCountry () {
       return this.payment.country;
-    }
-  },
-  methods: {
-    setCountry (country) {
-      this.payment.country = country.code;
-      this.changeCountry();
-    },
-    setState (state) {
-      this.payment.state = state.code;
     }
   },
   mounted () {
