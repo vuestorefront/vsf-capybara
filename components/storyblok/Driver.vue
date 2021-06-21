@@ -7,7 +7,7 @@
     <router-link
       class="_link"
       :to="link"
-      target="linkTarget"
+      :target="linkTarget"
     >
       <BaseImage
         class="_image"
