@@ -10,10 +10,10 @@
     <div class="_image-wrapper">
       <picture>
         <source
-          v-for="(srcset, breakpoint) of sources"
-          :key="breakpoint"
-          :srcset="srcset.join(', ')"
-          :media="getMediaQuery(breakpoint)"
+          v-for="source of sources"
+          :key="source.breakpoint"
+          :srcset="source.srcset.join(', ')"
+          :media="getMediaQuery(source.breakpoint)"
         >
         <img
           v-show="defaultSrc"
@@ -52,13 +52,9 @@ import { InjectKey } from 'vue/types/options';
 import generatePlaceholderStyles from './generate-placeholder-styles';
 import parseImageDimensions from './parse-image-dimensions';
 
-export interface SrcSet {
-  src: string,
-  width: number
-}
-
-export interface SrcSets {
-  [key: number]: SrcSet
+interface SourceItem {
+  breakpoint: number,
+  srcset: string[]
 }
 
 interface InjectedServices {
@@ -97,8 +93,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     };
   },
   computed: {
-    sources (): Record<number, string[]> {
-      const result: Record<number, string[]> = {};
+    sources (): SourceItem[] {
+      const result: SourceItem[] = [];
 
       const breakpoints = this.componentWidthCalculator.getBreakpoints();
       const widths = this.componentWidthCalculator.getWidths();
@@ -123,31 +119,37 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           }
         }
 
-        result[breakpoints[sizeKey]] = [];
+        for (const filters of ['/filters:format(webp)', '']) {
+          const sourceItem: SourceItem = {
+            breakpoint: breakpoints[sizeKey],
+            srcset: []
+          };
 
-        const [, resource] = src.split('//a.storyblok.com');
-        let dimensions = parseImageDimensions(src);
-        const ratio = dimensions.height / dimensions.width;
+          const [, resource] = src.split('//a.storyblok.com');
+          let dimensions = parseImageDimensions(src);
+          const ratio = dimensions.height / dimensions.width;
 
-        for (const density of [1, 1.5, 2, 3]) {
-          const adjustedWidth = Math.round(width * density / 10) * 10;
-          const adjustedHeight = Math.round(adjustedWidth * ratio);
+          for (const density of [1, 1.5, 2, 3]) {
+            const adjustedWidth = Math.round(width * density / 10) * 10;
+            const adjustedHeight = Math.round(adjustedWidth * ratio);
 
           let mod = '';
-          mod += `/${adjustedWidth}x${adjustedHeight}`;
+            mod += `/${adjustedWidth}x${adjustedHeight}`;
+            mod += filters;
 
-          const resizedUrl = 'https://img2.storyblok.com' + mod + resource;
+            const resizedUrl = 'https://img2.storyblok.com' + mod + resource;
 
-          result[breakpoints[sizeKey]].push(`${resizedUrl}${density > 1 ? ' ' + density + 'x' : ''}`);
+            sourceItem.srcset.push(`${resizedUrl}${density > 1 ? ' ' + density + 'x' : ''}`);
+          }
+
+          result.push(sourceItem);
         }
       }
 
       return result;
     },
     defaultSrcSet (): string[] {
-      const maxBreakpoint = Math.max(...Object.keys(this.sources).map(i => Number(i)));
-
-      return this.sources[maxBreakpoint];
+      return this.sources.slice(-1)[0].srcset;
     },
     defaultSrc (): string {
       return this.defaultSrcSet[0];
@@ -171,7 +173,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   methods: {
-    getMediaQuery (breakpoint: string): string | undefined {
+    getMediaQuery (breakpoint: number): string | undefined {
       return `(max-width: ${breakpoint}px)`;
     },
     onLoad (): void{
