@@ -12,6 +12,7 @@ export default function registerComponents () {
   add('video', () => import('./Video.vue'))
   add('promotion_image_banner', () => import('./PromoCampaignBanner.vue'))
   add('textarea', () => import('./Textarea.vue'))
+  add('dongler_book', () => import('./DonglerBook.vue'))
   add('website_rating', () => import('./WebsiteRating.vue'))
   add('sharing', () => import('./Sharing.vue'))
 
