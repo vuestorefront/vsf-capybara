@@ -17,51 +17,38 @@
 
       <SfImage
         class="_image"
-        :srcsets="srcSets"
+        :src="itemData.image.filename"
+        :mobile-src="itemData.mobile_image.filename"
         :alt="itemData.alt_tag"
         :title="itemData.title_tag"
         @load.capture="onLoad"
         @click="launchLightbox"
+        :width="itemData.width"
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { VueConstructor } from 'vue';
-import { InjectKey } from 'vue/types/options';
 import { isServer } from '@vue-storefront/core/helpers';
 import CoolLightBox from 'vue-cool-lightbox';
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
-import
-ComponentWidthCalculator,
-{ SizeValue }
-  from 'src/modules/vsf-storyblok-module/component-width-calculator.service';
 
-import SfImage, { SrcSets } from './BaseImage.vue';
+import SfImage from './BaseImage.vue';
 import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
 import generatePlaceholderStyles from './generate-placeholder-styles';
 
 const SCREEN_WIDTH_BREAKPOINT = 768;
 
-interface InjectedServices {
-  componentWidthCalculator: ComponentWidthCalculator
-}
-
-type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
-
-export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
+export default Blok.extend({
   name: 'StoryblokImage',
   components: {
     SfImage,
     CoolLightBox
   },
-  inject: {
-    componentWidthCalculator: { default: undefined }
-  } as unknown as InjectType<InjectedServices>,
   data () {
     return {
       lightboxIndexValue: null as number | null,
@@ -92,40 +79,6 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
       }
 
       return styles;
-    },
-    srcSets (): SrcSets {
-      const result: SrcSets = {};
-
-      const breakpoints = this.componentWidthCalculator.getBreakpoints();
-      const widths = this.componentWidthCalculator.getWidths();
-
-      for (const size in widths) {
-        const sizeKey = size as SizeValue;
-
-        let src = this.itemData.image.filename;
-        if (
-          [SizeValue.xsmall, SizeValue.small].includes(sizeKey) &&
-          this.itemData.mobile_image.filename
-        ) {
-          src = this.itemData.mobile_image.filename;
-        }
-
-        let width = widths[sizeKey];
-
-        if (this.itemData.width) {
-          const value = this.itemData.width.replace(/\px$/, '');
-          if (!isNaN(Number(value))) {
-            width = Number(value);
-          }
-        }
-
-        result[breakpoints[sizeKey]] = {
-          src,
-          width
-        };
-      }
-
-      return result;
     }
   },
   methods: {

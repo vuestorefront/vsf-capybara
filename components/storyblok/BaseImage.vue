@@ -43,7 +43,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import ComponentWidthCalculator, { SizeValue } from 'src/modules/vsf-storyblok-module/component-width-calculator.service';
+import Vue, { VueConstructor } from 'vue';
+import { InjectKey } from 'vue/types/options';
 import parseImageDimensions from './parse-image-dimensions';
 
 export interface SrcSet {
@@ -55,13 +57,26 @@ export interface SrcSets {
   [key: number]: SrcSet
 }
 
-export default Vue.extend({
+interface InjectedServices {
+  componentWidthCalculator: ComponentWidthCalculator
+}
+
+type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
+
+export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'SfImage',
   inheritAttrs: false,
+  inject: {
+    componentWidthCalculator: { default: undefined }
+  } as unknown as InjectType<InjectedServices>,
   props: {
-    srcsets: {
-      type: Object as PropType<SrcSets>,
+    src: {
+      type: String,
       required: true
+    },
+    mobileSrc: {
+      type: String,
+      default: undefined
     },
     lazy: {
       type: Boolean,
@@ -92,25 +107,45 @@ export default Vue.extend({
     sources (): Record<number, string[]> {
       const result: Record<number, string[]> = {};
 
-      for (const breakpoint in this.srcsets) {
-        const srcset = this.srcsets[breakpoint];
+      const breakpoints = this.componentWidthCalculator.getBreakpoints();
+      const widths = this.componentWidthCalculator.getWidths();
 
-        result[breakpoint] = [];
+      for (const size in widths) {
+        const sizeKey = size as SizeValue;
 
-        const [, resource] = srcset.src.split('//a.storyblok.com');
-        let dimensions = parseImageDimensions(srcset.src);
+        let src = this.src;
+        if (
+          [SizeValue.xsmall, SizeValue.small].includes(sizeKey) &&
+          this.mobileSrc
+        ) {
+          src = this.mobileSrc;
+        }
+
+        let width = widths[sizeKey];
+
+        if (this.width) {
+          const value = this.width.toString().replace(/\px$/, '');
+          if (!isNaN(Number(value))) {
+            width = Number(value);
+          }
+        }
+
+        result[breakpoints[sizeKey]] = [];
+
+        const [, resource] = src.split('//a.storyblok.com');
+        let dimensions = parseImageDimensions(src);
         const ratio = dimensions.height / dimensions.width;
 
         for (const density of [1, 1.5, 2, 3]) {
-          const width = Math.round(srcset.width * density / 10) * 10;
-          const height = Math.round(width * ratio);
+          const adjustedWidth = Math.round(width * density / 10) * 10;
+          const adjustedHeight = Math.round(adjustedWidth * ratio);
 
           let mod = '';
-          mod += `/${width}x${height}`;
+          mod += `/${adjustedWidth}x${adjustedHeight}`;
 
           const resizedUrl = 'https://img2.storyblok.com' + mod + resource;
 
-          result[breakpoint].push(`${resizedUrl}${density > 1 ? ' ' + density + 'x' : ''}`);
+          result[breakpoints[sizeKey]].push(`${resizedUrl}${density > 1 ? ' ' + density + 'x' : ''}`);
         }
       }
 
