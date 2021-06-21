@@ -46,11 +46,13 @@
 </template>
 
 <script lang="ts">
-import ComponentWidthCalculator, { SizeValue } from 'src/modules/vsf-storyblok-module/component-width-calculator.service';
 import Vue, { VueConstructor } from 'vue';
+import { mapGetters } from 'vuex'
 import { InjectKey } from 'vue/types/options';
+
 import generatePlaceholderStyles from './generate-placeholder-styles';
 import parseImageDimensions from './parse-image-dimensions';
+import ComponentWidthCalculator, { SizeValue } from 'src/modules/vsf-storyblok-module/component-width-calculator.service';
 
 interface SourceItem {
   breakpoint: number,
@@ -93,6 +95,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     };
   },
   computed: {
+    ...mapGetters({
+      supportsWebp: 'storyblok/supportsWebp'
+    }),
     sources (): SourceItem[] {
       const result: SourceItem[] = [];
 
@@ -119,31 +124,31 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           }
         }
 
-        for (const filters of ['/filters:format(webp)', '']) {
-          const sourceItem: SourceItem = {
-            breakpoint: breakpoints[sizeKey],
-            srcset: []
-          };
+        const filters = this.supportsWebp ? '/filters:format(webp)' : '';
 
-          const [, resource] = src.split('//a.storyblok.com');
-          let dimensions = parseImageDimensions(src);
-          const ratio = dimensions.height / dimensions.width;
+        const sourceItem: SourceItem = {
+          breakpoint: breakpoints[sizeKey],
+          srcset: []
+        };
 
-          for (const density of [1, 1.5, 2, 3]) {
-            const adjustedWidth = Math.round(width * density / 10) * 10;
-            const adjustedHeight = Math.round(adjustedWidth * ratio);
+        const [, resource] = src.split('//a.storyblok.com');
+        let dimensions = parseImageDimensions(src);
+        const ratio = dimensions.height / dimensions.width;
 
-            let mod = '/fit-in';
-            mod += `/${adjustedWidth}x${adjustedHeight}`;
-            mod += filters;
+        for (const density of [1, 1.5, 2, 3]) {
+          const adjustedWidth = Math.round(width * density / 10) * 10;
+          const adjustedHeight = Math.round(adjustedWidth * ratio);
 
-            const resizedUrl = 'https://img2.storyblok.com' + mod + resource;
+          let mod = '/fit-in';
+          mod += `/${adjustedWidth}x${adjustedHeight}`;
+          mod += filters;
 
-            sourceItem.srcset.push(`${resizedUrl}${density > 1 ? ' ' + density + 'x' : ''}`);
-          }
+          const resizedUrl = 'https://img2.storyblok.com' + mod + resource;
 
-          result.push(sourceItem);
+          sourceItem.srcset.push(`${resizedUrl}${density > 1 ? ' ' + density + 'x' : ''}`);
         }
+
+        result.push(sourceItem);
       }
 
       return result;
@@ -168,8 +173,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return styles;
     },
-    hasOverlay () {
-      return this.$slots.default;
+    hasOverlay (): boolean {
+      return !!this.$slots.default;
     }
   },
   methods: {
