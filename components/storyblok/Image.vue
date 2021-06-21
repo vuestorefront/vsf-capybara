@@ -10,7 +10,7 @@
       @close="lightboxIndexValue = null"
     />
 
-    <SfImage
+    <BaseImage
       class="_image"
       :src="itemData.image.filename"
       :mobile-src="itemData.mobile_image.filename"
@@ -29,7 +29,7 @@ import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 
-import SfImage from './BaseImage.vue';
+import BaseImage from './BaseImage.vue';
 import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
 
@@ -38,7 +38,7 @@ const SCREEN_WIDTH_BREAKPOINT = 768;
 export default Blok.extend({
   name: 'StoryblokImage',
   components: {
-    SfImage,
+    BaseImage,
     CoolLightBox
   },
   data () {

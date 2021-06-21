@@ -5,17 +5,14 @@
     :style="styles"
   >
     <div class="_intro-column _image-column">
-      <div class="_image-wrapper">
-        <SfImage
-          :src="srcSet"
-          :picture-breakpoint="768"
-          :alt="itemData.title"
-          :title="itemData.title"
-          class="_image"
-          v-if="srcSet"
-          @load.capture="onLoad"
-        />
-      </div>
+      <BaseImage
+        :src="itemData.image.filename"
+        :mobile-src="itemData.mobile_image.filename"
+        :alt="itemData.title"
+        :title="itemData.title"
+        class="_image"
+        v-if="itemData.image.filename"
+      />
     </div>
 
     <div class="_intro-column _content">
@@ -60,44 +57,30 @@
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { nl2br } from 'src/modules/budsies';
 
-import generatePlaceholderStyles from './generate-placeholder-styles';
-
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import {
-  SfImage,
   SfButton,
   SfHeading
 } from '@storefront-ui/vue';
 
-import SrcSetValue from './interfaces/src-set-value.interface';
+import BaseImage from './BaseImage.vue';
+
 import HomepageIntroSectionData from './interfaces/homepage-intro-section-data.interface';
 import getUrlFromLink from './get-url-from-link';
 
 export default Blok.extend({
   name: 'StoryblokHomepageIntroSection',
   components: {
-    SfImage,
+    BaseImage,
     SfButton,
     SfHeading
-  },
-  data () {
-    return {
-      isLoaded: false
-    }
   },
   computed: {
     itemData (): HomepageIntroSectionData {
       return this.item as HomepageIntroSectionData;
     },
-    extraCssClasses (): string[] {
-      return !this.isLoaded ? ['-loading'] : [];
-    },
     extraStyles (): Record<string, string> {
-      const styles = generatePlaceholderStyles(
-        this.itemData.image.filename,
-        this.itemData.mobile_image.filename,
-        'intro-section-image-height'
-      );
+      const styles: Record<string, string> = {};
 
       if (this.itemData.background_color.color) {
         styles['--intro-section-background-color'] = this.itemData.background_color.color;
@@ -111,26 +94,6 @@ export default Blok.extend({
     },
     link (): string {
       return getUrlFromLink(this.itemData.button_link);
-    },
-    srcSet (): SrcSetValue | string | undefined {
-      if (!this.itemData.image.filename) {
-        return undefined
-      }
-
-      if (!this.itemData.mobile_image.filename) {
-        return this.itemData.image.filename;
-      }
-
-      const srcSet: SrcSetValue = {
-        desktop: {
-          url: this.itemData.image.filename
-        },
-        mobile: {
-          url: this.itemData.mobile_image.filename
-        }
-      };
-
-      return srcSet;
     }
   },
   methods: {
@@ -139,9 +102,6 @@ export default Blok.extend({
     },
     openLink (): void {
       this.$router.push(localizedRoute(this.link));
-    },
-    onLoad (): void{
-      this.isLoaded = true;
     }
   }
 })
@@ -188,33 +148,9 @@ export default Blok.extend({
   ._image-column {
     background-color: var(--intro-section-background-color, transparent);
     position: relative;
-
-    ._image-wrapper {
-      padding-top: var(--intro-section-image-height-mobile, var(--intro-section-image-height, 0));
-    }
-
-    ._image {
-      --image-width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  &.-loading {
-    ._image-column {
-      background-color: var(--intro-section-background-color, #fafafa);
-    }
   }
 
   @media (min-width: $tablet-min) {
-    ._image-column {
-      ._image-wrapper {
-        padding-top: var(--intro-section-image-height, 0);
-      }
-    }
     ._content {
       padding: 0 5% 0 55%;
       position: absolute;
