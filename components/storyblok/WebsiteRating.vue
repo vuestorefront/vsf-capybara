@@ -29,11 +29,12 @@
       </div>
 
       <div class="_links">
-        <a :href="reviewsLink"
-           target="_blank"
+        <router-link
+          :to="reviewsLink"
+          target="_blank"
         >
           {{ reviewsLinkText }}
-        </a>
+        </router-link>
       </div>
     </div>
   </div>

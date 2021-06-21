@@ -4,12 +4,11 @@
     :class="cssClasses"
     :style="styles"
   >
-    <a
+    <router-link
       class="_link"
-      :target="linkTarget"
-      :href="link"
+      :to="link"
+      target="linkTarget"
     >
-
       <BaseImage
         class="_image"
         :src="itemData.image.filename"
@@ -21,7 +20,7 @@
       <span class="_driver-text" v-if="itemData.link_text">
         {{ itemData.link_text }}
       </span>
-    </a>
+    </router-link>
   </div>
 </template>
 
