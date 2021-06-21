@@ -133,7 +133,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             const adjustedWidth = Math.round(width * density / 10) * 10;
             const adjustedHeight = Math.round(adjustedWidth * ratio);
 
-          let mod = '';
+            let mod = '/fit-in';
             mod += `/${adjustedWidth}x${adjustedHeight}`;
             mod += filters;
 
