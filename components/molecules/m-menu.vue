@@ -65,7 +65,7 @@ export default {
         },
         {
           label: 'Pet Shaped Pillows',
-          url: '/'
+          url: '/pillow/p/customPillow_bundle/pillow'
         },
         {
           label: 'Square Photo Pillows',
