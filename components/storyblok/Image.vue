@@ -17,10 +17,9 @@
 
       <SfImage
         class="_image"
-        :src="srcSet"
+        :srcsets="srcSets"
         :alt="itemData.alt_tag"
         :title="itemData.title_tag"
-        :picture-breakpoint="screenWidthBreakpoint"
         @load.capture="onLoad"
         @click="launchLightbox"
       />
@@ -29,25 +28,40 @@
 </template>
 
 <script lang="ts">
+import { VueConstructor } from 'vue';
+import { InjectKey } from 'vue/types/options';
 import { isServer } from '@vue-storefront/core/helpers';
-import { SfImage } from '@storefront-ui/vue';
 import CoolLightBox from 'vue-cool-lightbox';
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
-import SrcSetValue from './interfaces/src-set-value.interface';
+import
+ComponentWidthCalculator,
+{ SizeValue }
+  from 'src/modules/vsf-storyblok-module/component-width-calculator.service';
+
+import SfImage, { SrcSets } from './BaseImage.vue';
 import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
 import generatePlaceholderStyles from './generate-placeholder-styles';
 
 const SCREEN_WIDTH_BREAKPOINT = 768;
 
-export default Blok.extend({
+interface InjectedServices {
+  componentWidthCalculator: ComponentWidthCalculator
+}
+
+type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
+
+export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
   name: 'StoryblokImage',
   components: {
     SfImage,
     CoolLightBox
   },
+  inject: {
+    componentWidthCalculator: { default: undefined }
+  } as unknown as InjectType<InjectedServices>,
   data () {
     return {
       lightboxIndexValue: null as number | null,
@@ -68,6 +82,7 @@ export default Blok.extend({
         'image-block-height'
       );
 
+      styles['--image-width'] = '100%';
       if (this.itemData.width) {
         styles['--image-width'] = this.itemData.width;
       }
@@ -78,24 +93,39 @@ export default Blok.extend({
 
       return styles;
     },
-    screenWidthBreakpoint (): number {
-      return SCREEN_WIDTH_BREAKPOINT;
-    },
-    srcSet (): SrcSetValue | string {
-      if (!this.itemData.mobile_image.filename) {
-        return this.itemData.image.filename;
+    srcSets (): SrcSets {
+      const result: SrcSets = {};
+
+      const breakpoints = this.componentWidthCalculator.getBreakpoints();
+      const widths = this.componentWidthCalculator.getWidths();
+
+      for (const size in widths) {
+        const sizeKey = size as SizeValue;
+
+        let src = this.itemData.image.filename;
+        if (
+          [SizeValue.xsmall, SizeValue.small].includes(sizeKey) &&
+          this.itemData.mobile_image.filename
+        ) {
+          src = this.itemData.mobile_image.filename;
+        }
+
+        let width = widths[sizeKey];
+
+        if (this.itemData.width) {
+          const value = this.itemData.width.replace(/\px$/, '');
+          if (!isNaN(Number(value))) {
+            width = Number(value);
+          }
+        }
+
+        result[breakpoints[sizeKey]] = {
+          src,
+          width
+        };
       }
 
-      const srcSet: SrcSetValue = {
-        desktop: {
-          url: this.itemData.image.filename
-        },
-        mobile: {
-          url: this.itemData.mobile_image.filename
-        }
-      };
-
-      return srcSet;
+      return result;
     }
   },
   methods: {
@@ -145,19 +175,19 @@ export default Blok.extend({
     display: inline-block;
     position: relative;
     width: var(--image-width, 100%);
-  }
 
-  ._image {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
+    ._image {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
 
-  ._placeholder {
-    background-color: none;
-    padding-top: var(--image-block-height-mobile, var(--image-block-height, 0));
+    ._placeholder {
+      background-color: none;
+      padding-top: var(--image-block-height-mobile, var(--image-block-height, 0));
+    }
   }
 
   &.-loading {
@@ -167,8 +197,10 @@ export default Blok.extend({
   }
 
   @media (min-width: $tablet-min) {
-    ._placeholder {
-      padding-top: var(--image-block-height, 0);
+    ._image-wrapper {
+      ._placeholder {
+        padding-top: var(--image-block-height, 0);
+      }
     }
   }
 }
