@@ -104,8 +104,29 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       const breakpoints = this.componentWidthCalculator.getBreakpoints();
       const widths = this.componentWidthCalculator.getWidths();
 
+      let fixedWidth: number | undefined;
+
+      if (this.width) {
+        const value = this.width.toString().replace(/\px$/, '');
+        if (!isNaN(Number(value))) {
+          fixedWidth = Number(value);
+        }
+      }
+
+      let previousWidth = 0;
+      let sourceItem: SourceItem | undefined;
+
       for (const size in widths) {
         const sizeKey = size as SizeValue;
+
+        let width = fixedWidth || widths[sizeKey];
+
+        if (width === previousWidth && sourceItem) {
+          sourceItem.breakpoint = breakpoints[sizeKey];
+          continue;
+        }
+
+        previousWidth = width;
 
         let src = this.src;
         if (
@@ -115,18 +136,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           src = this.mobileSrc;
         }
 
-        let width = widths[sizeKey];
-
-        if (this.width) {
-          const value = this.width.toString().replace(/\px$/, '');
-          if (!isNaN(Number(value))) {
-            width = Number(value);
-          }
-        }
-
         const filters = this.supportsWebp ? '/filters:format(webp)' : '';
 
-        const sourceItem: SourceItem = {
+        sourceItem = {
           breakpoint: breakpoints[sizeKey],
           srcset: []
         };
