@@ -1,44 +1,47 @@
 <template>
   <div
-    class="sf-image"
-    :class="{ 'sf-image--has-size': size }"
-    :style="size"
+    class="storyblok-base-image sf-image"
+    :class="{'-loading': !isLoaded}"
+    :style="styles"
     v-on="$listeners"
   >
-    <picture>
-      <source
-        v-for="(srcset, breakpoint) of sources"
-        :key="breakpoint"
-        :srcset="srcset.join(', ')"
-        :media="getMediaQuery(breakpoint)"
-      >
-      <img
-        v-show="defaultSrc"
-        ref="image"
+    <div class="_placeholder" />
+
+    <div class="_image-wrapper">
+      <picture>
+        <source
+          v-for="(srcset, breakpoint) of sources"
+          :key="breakpoint"
+          :srcset="srcset.join(', ')"
+          :media="getMediaQuery(breakpoint)"
+        >
+        <img
+          v-show="defaultSrc"
+          ref="image"
+          :src="defaultSrc"
+          :srcset="defaultSrcSet"
+          v-bind="$attrs"
+          :width="width"
+          :loading="lazy ? 'lazy' : 'eager'"
+          @load="onLoad"
+        >
+      </picture>
+
+      <div v-if="hasOverlay" class="sf-image__overlay">
+        <slot />
+      </div>
+
+      <noscript inline-template>
+        <img
         :src="defaultSrc"
         :srcset="defaultSrcSet"
+        :alt="alt"
+        class="sf-image sf-image-loaded"
         v-bind="$attrs"
         :width="width"
-        :height="height"
-        :loading="lazy ? 'lazy' : 'eager'"
-      >
-    </picture>
-
-    <div v-if="hasOverlay" class="sf-image__overlay">
-      <slot />
+        />
+      </noscript>
     </div>
-
-    <noscript inline-template>
-      <img
-      :src="defaultSrc"
-      :srcset="defaultSrcSet"
-      :alt="alt"
-      class="sf-image sf-image-loaded"
-      v-bind="$attrs"
-      :width="width"
-      :height="height"
-      />
-    </noscript>
   </div>
 </template>
 
@@ -46,6 +49,7 @@
 import ComponentWidthCalculator, { SizeValue } from 'src/modules/vsf-storyblok-module/component-width-calculator.service';
 import Vue, { VueConstructor } from 'vue';
 import { InjectKey } from 'vue/types/options';
+import generatePlaceholderStyles from './generate-placeholder-styles';
 import parseImageDimensions from './parse-image-dimensions';
 
 export interface SrcSet {
@@ -85,22 +89,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     width: {
       type: [String, Number],
       default: null
-    },
-    height: {
-      type: [String, Number],
-      default: null
-    },
-    rootMargin: {
-      type: String,
-      default: '0px 0px 0px 0px'
-    },
-    threshold: {
-      type: [String, Number],
-      default: 0
     }
   },
   data () {
     return {
+      isLoaded: false
     };
   },
   computed: {
@@ -159,14 +152,19 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     defaultSrc (): string {
       return this.defaultSrcSet[0];
     },
-    size (): Record<string, string | number> | string | number {
-      return (
-        this.width &&
-        this.height && {
-          '--_image-width': this.width,
-          '--_image-height': this.height
-        }
+    styles (): Record<string, string> {
+      const styles = generatePlaceholderStyles(
+        this.src,
+        this.mobileSrc,
+        'image-block-height'
       );
+
+      styles['--image-width'] = '100%';
+      if (this.width) {
+        styles['--image-width'] = this.width.toString();
+      }
+
+      return styles;
     },
     hasOverlay () {
       return this.$slots.default;
@@ -175,16 +173,51 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   methods: {
     getMediaQuery (breakpoint: string): string | undefined {
       return `(max-width: ${breakpoint}px)`;
+    },
+    onLoad (): void{
+      this.isLoaded = true;
     }
   },
   mounted () {
   }
 });
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/components/atoms/SfImage.scss";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-picture {
-  display: block;
+.storyblok-base-image {
+  display: inline-block;
+  position: relative;
+  width: var(--image-width, 100%);
+
+  ._image-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  ._placeholder {
+    background-color: transparent;
+    padding-top: var(--image-block-height-mobile, var(--image-block-height, 0));
+  }
+
+  picture {
+   display: block;
+  }
+
+  &.-loading {
+    ._placeholder {
+      background-color: #fafafa;
+    }
+  }
+
+  @media (min-width: $tablet-min) {
+    ._placeholder {
+      padding-top: var(--image-block-height, 0);
+    }
+  }
 }
 </style>
