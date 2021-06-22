@@ -69,6 +69,7 @@ import {
 
 import HomepageIntroSectionData from './interfaces/homepage-intro-section-data.interface';
 import getUrlFromLink from './get-url-from-link';
+import generateBreakpointsSpecs from './generate-breakpoints-specs';
 import generateImageSourcesList from './generate-image-sources-list';
 
 interface InjectedServices {
@@ -113,11 +114,15 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
         return [];
       };
 
-      return generateImageSourcesList(
+      const breakpointsSpecs = generateBreakpointsSpecs(
         this.itemData.image.filename,
         this.componentWidthCalculator,
-        this.supportsWebp,
         this.itemData.mobile_image.filename
+      )
+
+      return generateImageSourcesList(
+        breakpointsSpecs,
+        this.supportsWebp
       )
     }
   },

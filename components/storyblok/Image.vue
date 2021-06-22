@@ -35,6 +35,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components';
 
 import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
+import generateBreakpointsSpecs from './generate-breakpoints-specs';
 import generateImageSourcesList from './generate-image-sources-list';
 
 const SCREEN_WIDTH_BREAKPOINT = 768;
@@ -78,12 +79,16 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
         return [];
       };
 
-      return generateImageSourcesList(
+      const breakpointsSpecs = generateBreakpointsSpecs(
         this.itemData.image.filename,
         this.componentWidthCalculator,
-        this.supportsWebp,
         this.itemData.mobile_image.filename,
         this.itemData.width
+      )
+
+      return generateImageSourcesList(
+        breakpointsSpecs,
+        this.supportsWebp
       )
     }
   },
