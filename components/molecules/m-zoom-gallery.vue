@@ -14,11 +14,20 @@
     >
       <div
         v-for="(image, index) in images"
-        :key="image.thumb"
+        :key="JSON.stringify(image.thumb)"
         class="_thumbnail-item"
-        :style="{ backgroundImage: `url(${image.thumb})` }"
         @click="setCurrentIndex(index)"
-      />
+      >
+        <div class="_thumbnail-item-content-wrapper">
+          <BaseImage
+            class="_image"
+            :src="getImageSrc(image, 'thumb')"
+            :srcsets="getImageSrcSets(image, 'thumb')"
+            :alt="image.alt"
+            :title="image.title"
+          />
+        </div>
+      </div>
     </VueSlickCarousel>
 
     <div class="_stage">
@@ -29,23 +38,13 @@
           :href="stageImage.big"
           v-if="stageImage"
         >
-          <a
-            :href="stageImage.link"
-            :target="stageImage.target"
-            v-if="stageImage.link"
-          >
-            <img
-              :src="stageImage.stage"
-              :alt="stageImage.alt"
-              :title="stageImage.title"
-            >
-          </a>
-          <img
-            :src="stageImage.stage"
+          <BaseImage
+            class="_image"
+            :src="getImageSrc(stageImage, 'stage')"
+            :srcsets="getImageSrcSets(stageImage, 'stage')"
             :alt="stageImage.alt"
             :title="stageImage.title"
-            v-else
-          >
+          />
         </div>
       </div>
     </div>
@@ -64,14 +63,18 @@ import jQuery from 'jquery';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
 
+import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
 import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
 
 require('@cabbiepete/cloud-zoom');
 require('@cabbiepete/cloud-zoom/cloud-zoom.css');
 
+type ImageKeys = keyof ZoomGalleryImage;
+
 export default Vue.extend({
   name: 'MZoomGallery',
   components: {
+    BaseImage,
     VueSlickCarousel
   },
   props: {
@@ -152,6 +155,22 @@ export default Vue.extend({
     this.detachZoom();
   },
   methods: {
+    getImageSrc (image: ZoomGalleryImage, variant: ImageKeys): string | undefined {
+      const value = image[variant];
+      if (typeof value !== 'string') {
+        return undefined;
+      }
+
+      return value;
+    },
+    getImageSrcSets (image: ZoomGalleryImage, variant: ImageKeys): ImageSourceItem[] | undefined {
+      const value = image[variant];
+      if (!Array.isArray(value)) {
+        return undefined;
+      }
+
+      return value;
+    },
     setCurrentIndex (index: number): void {
       const previousIndex = this.currentIndex;
       this.currentIndex = index;
@@ -213,16 +232,22 @@ export default Vue.extend({
         width: 15.5%;
 
         ._thumbnail-item {
+            position: relative;
             cursor: pointer;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
             padding-top: 100%;
             margin-top: 8.8%;
 
             &:first-child {
                 margin-top: 0;
             }
+        }
+
+        ._thumbnail-item-content-wrapper {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
         }
 
         ::v-deep .slick-list {
@@ -246,14 +271,13 @@ export default Vue.extend({
         }
 
         ._image-wrapper {
+          display: block;
             height: 100%;
             width: 100%;
 
-            img {
+            ._image {
                 width: 100%;
                 height: 100%;
-                object-fit: contain;
-                object-position: top;
             }
         }
 
