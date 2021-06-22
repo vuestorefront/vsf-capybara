@@ -11,8 +11,7 @@
     >
       <BaseImage
         class="_image"
-        :src="itemData.image.filename"
-        :mobile-src="itemData.mobile_image.filename"
+        :srcsets="imageSources"
         :alt="itemData.alt_tag"
         :title="itemData.title_tag"
       />
@@ -25,19 +24,35 @@
 </template>
 
 <script lang="ts">
+import { VueConstructor } from 'vue';
+import { mapGetters } from 'vuex';
+
+import { InjectType } from 'src/modules/shared';
+import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
+
+import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 
-import BaseImage from './BaseImage.vue';
-
-import DriverData from './interfaces/driver-data.interface';
 import getUrlFromLink from './get-url-from-link';
+import generateImageSourcesList from './generate-image-sources-list';
+import DriverData from './interfaces/driver-data.interface';
 
-export default Blok.extend({
+interface InjectedServices {
+  componentWidthCalculator: ComponentWidthCalculator
+}
+
+export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
   name: 'StoryblokDriver',
   components: {
     BaseImage
   },
+  inject: {
+    componentWidthCalculator: { default: undefined }
+  } as unknown as InjectType<InjectedServices>,
   computed: {
+    ...mapGetters({
+      supportsWebp: 'storyblok/supportsWebp'
+    }),
     itemData (): DriverData {
       return this.item as DriverData;
     },
@@ -47,6 +62,18 @@ export default Blok.extend({
     linkTarget (): string {
       return this.itemData.target_blank ? '_blank'
         : '_self';
+    },
+    imageSources (): ImageSourceItem[] {
+      if (!this.itemData.image.filename) {
+        return [];
+      };
+
+      return generateImageSourcesList(
+        this.itemData.image.filename,
+        this.componentWidthCalculator,
+        this.supportsWebp,
+        this.itemData.mobile_image.filename
+      )
     }
   },
   methods: {

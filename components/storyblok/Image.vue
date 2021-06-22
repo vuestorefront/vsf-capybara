@@ -5,15 +5,14 @@
     class="storyblok-image"
   >
     <CoolLightBox
-      :items="getItems()"
+      :items="getLightboxItems()"
       :index="lightboxIndexValue"
       @close="lightboxIndexValue = null"
     />
 
     <BaseImage
       class="_image"
-      :src="itemData.image.filename"
-      :mobile-src="itemData.mobile_image.filename"
+      :srcsets="imageSources"
       :alt="itemData.alt_tag"
       :title="itemData.title_tag"
       @click="launchLightbox"
@@ -23,30 +22,45 @@
 </template>
 
 <script lang="ts">
+import { VueConstructor } from 'vue';
+import { mapGetters } from 'vuex';
 import { isServer } from '@vue-storefront/core/helpers';
 import CoolLightBox from 'vue-cool-lightbox';
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
+import { InjectType } from 'src/modules/shared';
+import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
+import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 
-import BaseImage from './BaseImage.vue';
 import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
+import generateImageSourcesList from './generate-image-sources-list';
 
 const SCREEN_WIDTH_BREAKPOINT = 768;
 
-export default Blok.extend({
+interface InjectedServices {
+  componentWidthCalculator: ComponentWidthCalculator
+}
+
+export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
   name: 'StoryblokImage',
   components: {
     BaseImage,
     CoolLightBox
   },
+  inject: {
+    componentWidthCalculator: { default: undefined }
+  } as unknown as InjectType<InjectedServices>,
   data () {
     return {
       lightboxIndexValue: null as number | null
     }
   },
   computed: {
+    ...mapGetters({
+      supportsWebp: 'storyblok/supportsWebp'
+    }),
     itemData (): ImageData {
       return this.item as ImageData;
     },
@@ -58,10 +72,23 @@ export default Blok.extend({
       }
 
       return styles;
+    },
+    imageSources (): ImageSourceItem[] {
+      if (!this.itemData.image.filename) {
+        return [];
+      };
+
+      return generateImageSourcesList(
+        this.itemData.image.filename,
+        this.componentWidthCalculator,
+        this.supportsWebp,
+        this.itemData.mobile_image.filename,
+        this.itemData.width
+      )
     }
   },
   methods: {
-    getItems (): LightboxItemValue[] {
+    getLightboxItems (): LightboxItemValue[] {
       const result: LightboxItemValue[] = [
         {
           src: this.itemData.image.filename,

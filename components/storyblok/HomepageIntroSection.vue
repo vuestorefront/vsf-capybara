@@ -6,8 +6,7 @@
   >
     <div class="_intro-column _image-column">
       <BaseImage
-        :src="itemData.image.filename"
-        :mobile-src="itemData.mobile_image.filename"
+        :srcsets="imageSources"
         :alt="itemData.title"
         :title="itemData.title"
         class="_image"
@@ -54,28 +53,42 @@
 </template>
 
 <script lang="ts">
+import { VueConstructor } from 'vue';
+import { mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { nl2br } from 'src/modules/budsies';
 
+import { InjectType } from 'src/modules/shared';
+import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
+import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import {
   SfButton,
   SfHeading
 } from '@storefront-ui/vue';
 
-import BaseImage from './BaseImage.vue';
-
 import HomepageIntroSectionData from './interfaces/homepage-intro-section-data.interface';
 import getUrlFromLink from './get-url-from-link';
+import generateImageSourcesList from './generate-image-sources-list';
 
-export default Blok.extend({
+interface InjectedServices {
+  componentWidthCalculator: ComponentWidthCalculator
+}
+
+export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
   name: 'StoryblokHomepageIntroSection',
   components: {
     BaseImage,
     SfButton,
     SfHeading
   },
+  inject: {
+    componentWidthCalculator: { default: undefined }
+  } as unknown as InjectType<InjectedServices>,
   computed: {
+    ...mapGetters({
+      supportsWebp: 'storyblok/supportsWebp'
+    }),
     itemData (): HomepageIntroSectionData {
       return this.item as HomepageIntroSectionData;
     },
@@ -94,6 +107,18 @@ export default Blok.extend({
     },
     link (): string {
       return getUrlFromLink(this.itemData.button_link);
+    },
+    imageSources (): ImageSourceItem[] {
+      if (!this.itemData.image.filename) {
+        return [];
+      };
+
+      return generateImageSourcesList(
+        this.itemData.image.filename,
+        this.componentWidthCalculator,
+        this.supportsWebp,
+        this.itemData.mobile_image.filename
+      )
     }
   },
   methods: {
