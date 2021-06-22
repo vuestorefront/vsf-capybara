@@ -51,7 +51,7 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     CoolLightBox
   },
   inject: {
-    componentWidthCalculator: { default: undefined }
+    componentWidthCalculator: { }
   } as unknown as InjectType<InjectedServices>,
   data () {
     return {

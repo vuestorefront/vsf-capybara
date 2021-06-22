@@ -32,7 +32,7 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     MZoomGallery
   },
   inject: {
-    componentWidthCalculator: { default: undefined }
+    componentWidthCalculator: { }
   } as unknown as InjectType<InjectedServices>,
   computed: {
     ...mapGetters({

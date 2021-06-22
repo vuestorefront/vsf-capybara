@@ -84,7 +84,7 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     SfHeading
   },
   inject: {
-    componentWidthCalculator: { default: undefined }
+    componentWidthCalculator: { }
   } as unknown as InjectType<InjectedServices>,
   computed: {
     ...mapGetters({
