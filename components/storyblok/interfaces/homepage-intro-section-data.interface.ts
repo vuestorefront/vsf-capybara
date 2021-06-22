@@ -1,9 +1,6 @@
-import AssetField from './asset-field.interface';
-import ColorPickerField from './color-picker-field.interface';
-import Item from './item.interface';
-import LinkField from './link-field.interface';
+import { AssetField, ItemData, ColorPickerField, LinkField } from 'src/modules/vsf-storyblok-module';
 
-export default interface HomepageIntroSectionData extends Item {
+export default interface HomepageIntroSectionData extends ItemData {
   image: AssetField,
   mobile_image: AssetField,
   title: string,

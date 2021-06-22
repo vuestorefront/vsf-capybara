@@ -1,7 +1,6 @@
-import AssetField from './asset-field.interface';
-import Item from './item.interface';
+import { AssetField, ItemData } from 'src/modules/vsf-storyblok-module';
 
-export default interface ImageData extends Item {
+export default interface ImageData extends ItemData {
   image: AssetField,
   mobile_image: AssetField,
   alt_tag: string,
