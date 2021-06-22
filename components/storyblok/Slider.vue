@@ -10,7 +10,7 @@ import { VueConstructor } from 'vue';
 import { mapGetters } from 'vuex';
 
 import { InjectType } from 'src/modules/shared';
-import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
+import { ComponentWidthCalculator, SizeValue } from 'src/modules/vsf-storyblok-module';
 
 import MZoomGallery from 'theme/components/molecules/m-zoom-gallery.vue';
 import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
@@ -70,9 +70,11 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
           1
         );
 
+        const brakpointsList = this.componentWidthCalculator.getBreakpoints();
+
         const big = getResizedImageUrl(
           sliderItem.image.filename,
-          2730,
+          brakpointsList[SizeValue.xlarge],
           this.supportsWebp
         )
 
