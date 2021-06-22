@@ -79,11 +79,22 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
         return [];
       };
 
+      let widthCalculator = this.componentWidthCalculator;
+      if (this.itemData.width) {
+        const percentValue = Number(this.itemData.width.slice(0, -1));
+        const pixelValue = Number(this.itemData.width.replace(/\px$/, ''));
+
+        if (this.itemData.width.endsWith('%') && !isNaN(percentValue)) {
+          widthCalculator = widthCalculator.limitAllByPercent(percentValue);
+        } else if (!isNaN(pixelValue)) {
+          widthCalculator = widthCalculator.limitSize(pixelValue);
+        }
+      }
+
       const breakpointsSpecs = generateBreakpointsSpecs(
         this.itemData.image.filename,
-        this.componentWidthCalculator,
-        this.itemData.mobile_image.filename,
-        this.itemData.width
+        widthCalculator,
+        this.itemData.mobile_image.filename
       )
 
       return generateImageSourcesList(
