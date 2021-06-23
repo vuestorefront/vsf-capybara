@@ -27,7 +27,7 @@ interface InjectedServices {
 }
 
 export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
-  name: 'Slider',
+  name: 'StoryblokSlider',
   components: {
     MZoomGallery
   },
@@ -44,6 +44,10 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     slides (): ZoomGalleryImage[] {
       const slides = [];
       for (const sliderItem of this.itemData.slider_items) {
+        if (!sliderItem.image.filename) {
+          continue;
+        }
+
         let breakpointsSpecs = generateBreakpointsSpecs(
           sliderItem.image.filename,
           this.componentWidthCalculator,
