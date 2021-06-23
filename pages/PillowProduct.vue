@@ -97,6 +97,11 @@ export default {
       }
     }
   },
+  async mounted (): Promise<void> {
+    if (!this.plushieId && !this.$store.getters['budsies/getCurrentPlushieId']) {
+      await this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
+    }
+  },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product')
 
@@ -104,10 +109,6 @@ export default {
       parentSku: route.params.parentSku,
       childSku: null
     });
-
-    if (!this.plushieId && !store.getters['budsies/getCurrentPlushieId']) {
-      await store.dispatch('budsies/createNewPlushie', { productId: product.id });
-    }
 
     await store.dispatch('budsies/loadProductBodyparts', { productId: product.id });
 

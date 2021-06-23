@@ -201,6 +201,14 @@
           <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
             Add to Cart
           </SfButton>
+          <SfButton
+            class="_add-to-cart-and-make-another color-secondary"
+            type="submit"
+            :disabled="isLoading"
+            @click="fMakeAnother = true"
+          >
+            Save & Make Another
+          </SfButton>
         </div>
       </form>
     </validation-observer>
@@ -286,6 +294,7 @@ export default Vue.extend({
       fName: undefined as string | undefined,
       fEmail: undefined as string | undefined,
       fIsLoading: false,
+      fMakeAnother: false,
       fQuantityNotesVisible: false
     }
   },
@@ -390,7 +399,14 @@ export default Vue.extend({
           uploader.clearInput();
         }
 
-        this.goToCart();
+        if (!this.fMakeAnother) {
+          this.goToCart();
+
+          return;
+        }
+
+        this.fMakeAnother = false;
+        this.refreshPage();
       } catch (e) {
         this.$store.dispatch(
           'notification/spawnNotification',
@@ -422,6 +438,9 @@ export default Vue.extend({
     },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
+    },
+    refreshPage (): void {
+      this.$router.go(0);
     }
   },
   mounted (): void {
@@ -532,14 +551,19 @@ export default Vue.extend({
   }
 
   ._actions {
-      margin-top: var(--spacer-2xl);
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--spacer-xl);
 
-  ._actions {
-      ._add-to-cart {
-          display: inline-block;
-          margin: 0;
-      }
+    ._add-to-cart,
+    ._add-to-cart-and-make-another {
+        margin: var(--spacer-lg) 0 0 0;
+    }
+
+    ._add-to-cart-and-make-another {
+      font-size: var(--font-sm);
+    }
   }
 
   ._qty-container {
