@@ -17,87 +17,111 @@
       <form
         @submit.prevent="(event) => passes(() => onSubmit(event))"
       >
-        <div class="_additional-options">
-          <div v-show="hasStyleSelections">
-            <div class="_step-title">
-              Design
-            </div>
-
-            <validation-provider
-              v-slot="{ errors }"
-              rules="required"
-              name="'Style Option'"
-              tag="div"
-            >
-              <SfSelect
-                v-model="selectedStyle"
-                v-if="showDesignSelector"
-                name="design_option"
-                required
-                class="sf-select--underlined"
-                :size="10"
-              >
-                <SfSelectOption disabled value="">
-                  Select Design Variant
-                </SfSelectOption>
-                <SfSelectOption
-                  v-for="option in availableStyles"
-                  :key="option.value"
-                  :value="option.value"
-                >
-                  {{ option.label }}
-                </SfSelectOption>
-              </SfSelect>
-
-              <div class="_error-text">
-                {{ errors[0] }}
-              </div>
-            </validation-provider>
-          </div>
+        <div class="_step-number">
+          Step {{ getNextStepNumber(true) }}
         </div>
+        <h2 class="_step-title -required sf-heading__title">
+          Upload your photo
+        </h2>
+        <p>We do not edit your photos. The photo you submit will be printed on the pillow as is.</p>
+        <p>Don't have your photos? You can finalize your order and send them to us later.</p>
+        <validation-provider
+          v-slot="{ errors }"
+          name="'Artwork'"
+          tag="div"
+        >
+          <input
+            type="hidden"
+            name="uploaded_artwork_ids[]"
+            :value="fStorageItemId"
+            required
+          >
 
-        <div class="_artwork-upload">
-          <div class="_step-title">
-            Upload your pet's photo
+          <MArtworkUpload
+            ref="artwork-upload"
+            class="_file-uploader"
+            :product-id="backendProductId"
+            :disabled="isUploadDisabled"
+            :upload-url="artworkUploadUrl"
+            @input="onArtworkChange"
+          />
+
+          <div class="_error-text">
+            {{ errors[0] }}
           </div>
-
+        </validation-provider>
+        <p><b>Please Note: We recommend high resolution, clear photos for our Petsies Pillows!</b></p>
+        <p><b>Low quality, dark or blurry photos may impact photo clarity on your Pillow.</b></p>
+        <SfDivider />
+        <div class="_step-number">
+          Step {{ getNextStepNumber() }}
+        </div>
+        <h2 class="_step-title -required sf-heading__title">
+          Size
+        </h2>
+        <validation-provider
+          v-slot="{ errors }"
+          rules="required"
+          name="'Size'"
+          tag="div"
+        >
+          <m-bodypart-option-configurator
+            name="pillow_size"
+            v-model="fSize"
+            :options="sizes"
+          />
+          <div class="_error-text">
+            {{ errors[0] }}
+          </div>
+        </validation-provider>
+        <div
+          v-for="bodypart in bodyparts"
+          :key="bodypart.id"
+        >
+          <div class="_step-number">
+            Step {{ getNextStepNumber() }}
+          </div>
+          <h2 class="_step-title -required sf-heading__title">
+            {{ bodypart.name }}
+          </h2>
           <validation-provider
             v-slot="{ errors }"
-            name="'Artwork'"
+            rules="required"
+            :name="`'${bodypart.name}'`"
             tag="div"
-            class="_uploader-wrapper"
           >
-            <input
-              type="hidden"
-              name="uploaded_artwork_ids[]"
-              :value="storageItemId"
-              required
-            >
-
-            <MArtworkUpload
-              ref="artwork-upload"
-              class="_file-uploader"
-              :product-id="productType"
-              :disabled="isUploadDisabled"
-              :upload-url="artworkUploadUrl"
-              @input="onArtworkChange"
+            <m-bodypart-option-configurator
+              :name="bodypart.code"
+              v-model="fBodypartsValues[bodypart.code]"
+              :options="getBodypartValues(bodypart)"
             />
-
             <div class="_error-text">
               {{ errors[0] }}
             </div>
           </validation-provider>
         </div>
-
-        <MExtraFaces
-          ref="extra-faces"
-          :available-options="addons"
-          :product-id="productType"
-          :disabled="isUploadDisabled"
-          :upload-url="artworkUploadUrl"
-          v-show="hasExtraFaceAddons"
-        />
-
+        <div class="_step-number">
+          Step {{ getNextStepNumber() }}
+        </div>
+        <h2 class="_step-title -required sf-heading__title">
+          Your Pet's Name
+        </h2>
+        <validation-provider
+          v-slot="{ errors }"
+          rules="required"
+          name="'Pet Name'"
+          tag="div"
+        >
+          <SfInput
+            name="pet_name"
+            v-model="fName"
+            placeholder="Name"
+            :required="false"
+          />
+          <div class="_error-text">
+            {{ errors[0] }}
+          </div>
+        </validation-provider>
         <validation-provider
           v-slot="{ errors, classes }"
           rules="required"
@@ -105,38 +129,78 @@
           slim
         >
           <div class="_quantity-field" :class="classes">
+            <h2 class="_step-title -required sf-heading__title">
+              Quantity
+            </h2>
+
             <ACustomProductQuantity
-              v-model="quantity"
+              v-model="fQuantity"
               class="_qty-container"
             />
 
             <div class="_error-text">
               {{ errors[0] }}
             </div>
+
+            <a
+              class="_popup-link"
+              href="javascript:void(0)"
+              @click="fQuantityNotesVisible = true"
+            >Quantity & Shipping Discounts</a>
+
+            <SfModal
+              :visible="fQuantityNotesVisible"
+              @close="fQuantityNotesVisible = false"
+            >
+              <div class="_popup-content">
+                <p><b>Quantity Discounts</b></p>
+                <p>All quantity discounts applied automatically at checkout:</p>
+                <ul>
+                  <li>10% discount on 10+ Petsies</li>
+                  <li>20% discount on 20+ Petsies</li>
+                </ul>
+                <p><b>Shipping Discounts</b></p>
+                <ul>
+                  <li>First custom Petsie: $13.95 domestic</li>
+                  <li>Each additional Petsie in same order: $5.95</li>
+                  <li>All domestic Petsies ship via USPS 2 day priority mail.</li>
+                  <li>International orders ship via USPS First Class Mail for just $24.95 worldwide, with $5.95 per each additional Petsie in the order.</li>
+                </ul>
+              </div>
+            </SfModal>
           </div>
+        </validation-provider>
+        <div class="_step-number">
+          Step {{ getNextStepNumber() }}
+        </div>
+        <h2 class="_step-title -required sf-heading__title">
+          Enter your email address
+        </h2>
+        <validation-provider
+          v-slot="{ errors }"
+          rules="required"
+          name="'Email'"
+          tag="div"
+        >
+          <SfInput
+            name="email"
+            v-model="fEmail"
+            placeholder="sample@email.com"
+            :required="false"
+          />
+          <div class="_error-text">
+            {{ errors[0] }}
+          </div>
+          <p><b>Sometimes our team has questions about your design</b></p>
         </validation-provider>
 
         <div class="_actions">
-          <div class="row">
-            <div class="medium-8 large-6 columns">
-              <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
-                Add to Cart
-              </SfButton>
-            </div>
-          </div>
+          <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
+            Add to Cart
+          </SfButton>
         </div>
       </form>
     </validation-observer>
-
-    <div class="_description">
-      <header class="sf-heading">
-        <h3 class="sf-heading__title sf-heading__title--h3">
-          Product Details
-        </h3>
-      </header>
-
-      <div class="_product-description" v-html="description" />
-    </div>
   </div>
 </template>
 
@@ -149,52 +213,36 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
-import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
-
-import { SfButton, SfSelect, SfDivider } from '@storefront-ui/vue';
+import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import { SfButton, SfDivider, SfInput, SfModal } from '@storefront-ui/vue';
 
 import { Item } from 'src/modules/file-storage';
 
-import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
-import MZoomGallery, { ZoomGalleryImage } from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
-import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
+import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
+import BodypartOption from '../interfaces/bodypart-option';
+import Bodypart from 'src/modules/budsies/models/bodypart.model';
+import BodypartValue from 'src/modules/budsies/models/bodypart-value.model';
+import * as budsiesTypes from 'src/modules/budsies/store/mutation-types';
 
 extend('required', {
   ...required,
   message: 'The {_field_} field is required'
 });
 
-export interface GalleryProductImages {
-  sku: string,
-  images: ZoomGalleryImage[]
-}
-
-export interface SelectOption {
-  optionId: number,
-  optionValueId: number,
-  value: string,
-  label: string,
-  description: string,
-  shortDescription: string,
-  price: number,
-  specialPrice: number
-}
-
 export default Vue.extend({
   name: 'OPillowProductOrderForm',
   components: {
+    MBodypartOptionConfigurator,
     ValidationObserver,
     ValidationProvider,
-    ACustomPrice,
     ACustomProductQuantity,
-    MZoomGallery,
     MArtworkUpload,
-    MExtraFaces,
-    SfSelect,
     SfButton,
-    SfDivider
+    SfDivider,
+    SfInput,
+    SfModal
   },
   props: {
     artworkUploadUrl: {
@@ -205,57 +253,21 @@ export default Vue.extend({
       type: Object,
       required: true
     },
-    productId: {
+    backendProductId: {
       type: String,
       required: true
     },
-    productSku: {
+    plushieId: {
       type: String,
       required: true
     },
-    productType: {
-      type: String,
-      required: true
-    },
-    productPrice: {
-      type: Number,
-      default: 0
-    },
-    productSpecialPrice: {
-      type: Number,
-      default: 0
-    },
-    productQuantity: {
-      type: Number,
-      default: 1
-    },
-    productDescription: {
-      type: String,
-      default: ''
-    },
-    productShortDescription: {
-      type: String,
-      default: ''
-    },
-    productName: {
-      type: String,
-      default: ''
-    },
-    productImages: {
-      type: Array as PropType<GalleryProductImages[]>,
-      default: []
-    },
-    availableStyles: {
-      type: Array as PropType<SelectOption[]>,
+    sizes: {
+      type: Array as PropType<BodypartOption[]>,
       default: () => []
     },
-    addons: {
-      type: Array as PropType<AddonOption[]>,
+    bodyparts: {
+      type: Array as PropType<Bodypart[]>,
       default: () => []
-    },
-    defaultStyle: {
-      type: String,
-      default: ''
     },
     uploadedArtworkId: {
       type: String,
@@ -264,11 +276,14 @@ export default Vue.extend({
   },
   data () {
     return {
-      quantity: 1,
+      fQuantity: 1,
       fStorageItemId: undefined as string | undefined,
-      fSelectedStyle: undefined as string | undefined,
+      fSize: undefined as BodypartOption | undefined,
+      fBodypartsValues: {},
+      fName: undefined as string | undefined,
+      fEmail: undefined as string | undefined,
       fIsLoading: false,
-      fShouldShowDesignSelector: true
+      fQuantityNotesVisible: false
     }
   },
   computed: {
@@ -278,94 +293,46 @@ export default Vue.extend({
     skinClass (): string {
       return '-skin-petsies';
     },
-    galleryImages (): ZoomGalleryImage[] {
-      const productImages = this.productImages.find(
-        (item) => item.sku === this.selectedStyle
-      );
-
-      if (!productImages || !this.selectedStyle) {
-        return this.productImages[0]['images'];
-      }
-
-      return productImages['images'];
-    },
     isUploadDisabled (): boolean {
       return false;
-    },
-    price (): number {
-      const style = this.availableStyles.find(
-        (item) => item.value === this.selectedStyle
-      );
-
-      if (!style || !style.price) {
-        return this.productPrice;
-      }
-
-      return style.price;
-    },
-    specialPrice (): number {
-      const style = this.availableStyles.find(
-        (item) => item.value === this.selectedStyle
-      );
-
-      if (!style || !style.specialPrice) {
-        return this.productSpecialPrice;
-      }
-
-      return style.specialPrice;
-    },
-    selectedStyle: {
-      get: function (): string | undefined {
-        return this.fSelectedStyle;
-      },
-      set: function (value: string | undefined) {
-        this.fSelectedStyle = value;
-      }
-    },
-    hasStyleSelections (): boolean {
-      return !(
-        this.availableStyles.length === 1 &&
-            this.selectedStyle !== undefined
-      );
-    },
-    hasExtraFaceAddons (): boolean {
-      return (
-        this.addons.length > 0
-      );
-    },
-    storageItemId (): string | undefined {
-      return this.fStorageItemId;
-    },
-    description (): string | undefined {
-      const style = this.availableStyles.find(
-        (item) => item.value === this.selectedStyle
-      );
-
-      if (!style || !style.description) {
-        return this.productDescription;
-      }
-
-      return style.description;
-    },
-    shortDescription (): string | undefined {
-      const style = this.availableStyles.find(
-        (item) => item.value === this.selectedStyle
-      );
-
-      if (!style || !style.shortDescription) {
-        return this.productShortDescription;
-      }
-
-      return style.shortDescription;
-    },
-    showDesignSelector: function (): boolean {
-      return this.fShouldShowDesignSelector
     }
   },
   methods: {
     ...mapMutations('product', {
-      setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
+      setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
+    getNextStepNumber (reset = false): number {
+      if (reset) {
+        this.stepNumber = 0;
+      }
+
+      this.stepNumber += 1;
+
+      return this.stepNumber;
+    },
+    getBodypartValues (bodypart: Bodypart): BodypartOption[] {
+      const bodypartsValues = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
+
+      if (!bodypartsValues.length) {
+        return [];
+      }
+
+      const result: BodypartOption[] = [];
+
+      bodypartsValues.forEach((bodypartValue: BodypartValue) => {
+        result.push({
+          id: bodypartValue.id,
+          label: bodypartValue.name,
+          value: bodypartValue.code,
+          isSelected: false,
+          image: bodypartValue.image ? bodypartValue.image : '',
+          optionId: bodypart.id,
+          optionValueId: bodypartValue.id
+        });
+      });
+
+      return result;
+    },
     onArtworkChange (value?: Item): void {
       if (!value) {
         this.fStorageItemId = undefined;
@@ -382,17 +349,14 @@ export default Vue.extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      let extraFacesArtworks: string[] = [];
-      const extraFacesComponent = this.getExtraFaces();
-
-      if (extraFacesComponent) {
-        extraFacesArtworks = extraFacesComponent.getFilesIds();
-      }
-
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
-          qty: this.quantity,
-          customerImagesIds: [this.storageItemId, ...extraFacesArtworks]
+          qty: this.fQuantity,
+          plushieId: this.plushieId,
+          email: this.fEmail,
+          plushieName: this.fName,
+          bodyparts: this.getBodypartsData(),
+          customerImagesIds: [this.fStorageItemId]
         })
       }).then(() => {
         this.onSuccess();
@@ -406,14 +370,11 @@ export default Vue.extend({
     },
     async onSuccess (): Promise<void> {
       try {
+        this.$store.commit(budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CURRENT_PLUSHIE_ID_CLEAR);
+
         const uploader = this.getUploader();
         if (uploader) {
           uploader.clearInput();
-        }
-
-        const extraFaces = this.getExtraFaces();
-        if (extraFaces) {
-          extraFaces.clearUploaders();
         }
 
         this.goToCart();
@@ -425,6 +386,17 @@ export default Vue.extend({
         );
       }
     },
+    getBodypartsData (): Record<string, string> {
+      let data: Record<string, string> = {};
+
+      for (let key in this.fBodypartsValues) {
+        const value = this.fBodypartsValues[key];
+
+        data[value.optionId] = value.optionValueId;
+      }
+
+      return data;
+    },
     onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
@@ -432,61 +404,38 @@ export default Vue.extend({
         action1: { label: i18n.t('OK') }
       });
     },
-    getGallery (): HTMLElement | undefined {
-      return this.$refs['gallery'] as HTMLElement | undefined;
-    },
     getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
       return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
-    },
-    getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
-      return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
     }
   },
-  async mounted (): Promise<void> {
-    if (
-      this.defaultStyle &&
-          this.availableStyles.find(
-            (item) => item.value === this.defaultStyle
-          )
-    ) {
-      this.selectedStyle = this.defaultStyle;
-    }
+  mounted (): void {
+    this.stepNumber = 0;
   },
   created (): void {
-    this.quantity = this.productQuantity;
+    this.fQuantity = this.product.qty;
+
+    this.bodyparts.forEach(bodypart => {
+      this.fBodypartsValues[bodypart.code] = undefined;
+    });
 
     if (this.uploadedArtworkId) {
       this.fStorageItemId = this.uploadedArtworkId;
     }
   },
   watch: {
-    product: {
+    fSize: {
       handler () {
-        this.fShouldShowDesignSelector = false;
-
-        this.fSelectedStyle = this.defaultStyle ? this.defaultStyle : undefined;
-
-        this.$nextTick(() => {
-          this.fShouldShowDesignSelector = true;
-        })
-      },
-      immediate: true
-    },
-    selectedStyle: {
-      handler () {
-        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
-
-        if (!selectedDesign) {
-          return;
+        if (!this.fSize) {
+          return
         }
 
         this.setBundleOptionValue({
-          optionId: selectedDesign.optionId,
+          optionId: this.fSize.optionId,
           optionQty: 1,
-          optionSelections: [selectedDesign.optionValueId]
+          optionSelections: [this.fSize.optionValueId]
         });
       },
       immediate: false
@@ -498,49 +447,76 @@ export default Vue.extend({
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 @import "~@storefront-ui/shared/styles/helpers/typography";
+@import "~@storefront-ui/shared/styles/helpers/layout";
 @import "~@storefront-ui/shared/styles/components/atoms/SfHeading";
 
 .o-pillow-product-order-form {
   text-align: center;
 
-  ._short-description {
-    @include font(
-      --product-description-font,
-      var(--font-light),
-      var(--font-base),
-      1.6,
-      var(--font-family-primary)
-    );
+  ._step-number {
+    display: inline-block;
+    margin-top: var(--spacer-lg);
+    text-transform: uppercase;
+    color: var(--_c-light-primary);
+    font-size: var(--font-xl);
+    font-weight: var(--font-bold);
+    @include border(--step-border, 0 0 4px 0, solid, var(--_c-light-primary));
   }
 
-  ._price,
-  ._additional-options,
-  ._artwork-upload,
-  ._qty-container,
+  ._step-title {
+    margin-top: var(--spacer-base);
+    font-size: var(--font-xl);
+    font-weight: var(--font-bold);
+
+    &.-required {
+      &:after {
+        color: var(--c-danger-variant);
+        content: "*";
+        margin-left: var(--spacer-2xs);
+      }
+    }
+  }
+
+  ._popup-link {
+    font-weight: var(--font-medium);
+  }
+
+  ._popup-content {
+    text-align: left;
+  }
+
+  .sf-input {
+    margin-top: var(--spacer-lg);
+    text-align: left;
+    display: inline-block;
+    --input-width: 20em;
+  }
+
+  .sf-divider {
+    margin-top: var(--spacer-2xl);
+  }
+
+  .m-bodypart-option-configurator {
+    margin-top: var(--spacer-base);
+  }
+
+  .m-artwork-upload {
+    margin: var(--spacer-lg) auto;
+    max-width: 610px;
+  }
+
+  ._qty-container {
+      margin-top: var(--spacer-base);
+  }
+
   ._actions {
-      margin-top: 1.5em;
-  }
-
-  ._design-option-list {
-      display: block;
+      margin-top: var(--spacer-2xl);
   }
 
   ._actions {
       ._add-to-cart {
+          display: inline-block;
           margin: 0;
-          width: 100%;
-      }
-  }
-
-  ._step-title {
-      font-size: var(--font-base);
-      font-weight: 800;
-      text-align: left;
-  }
-
-  ._artwork-upload {
-      ._uploader-wrapper {
-          margin-top: 0.25em;
       }
   }
 
@@ -553,52 +529,8 @@ export default Vue.extend({
   }
 
   ._error-text {
-      font-size: 0.8em;
-      margin-top: 0.5em;
-  }
-
-  ._description {
-      margin-top: calc(var(--spacer-lg) * 2);
-
-      ._product-description {
-          margin-top: 1em;
-
-          ::v-deep h1,
-          ::v-deep h2,
-          ::v-deep h3,
-          ::v-deep h4,
-          ::v-deep h5,
-          ::v-deep h6 {
-            //@extend .sf-heading;
-            text-align: var(--heading-text-align, center);
-            margin-top: var(--spacer-lg);
-            @extend .sf-heading__title;
-          }
-
-          ::v-deep h2 {
-            @extend .sf-heading__title--h2;
-          }
-
-          ::v-deep h3 {
-            @extend .sf-heading__title--h3;
-          }
-
-          ::v-deep h4 {
-            @extend .sf-heading__title--h4;
-          }
-
-          ::v-deep h5 {
-            @extend .sf-heading__title--h5;
-          }
-
-          ::v-deep h6 {
-            @extend .sf-heading__title--h6;
-          }
-      }
-  }
-
-  .sf-select {
-    --select-padding: 0;
+      font-size: var(--font-xs);
+      margin-top: var(--spacer-lg);
   }
 
   &.-skin-petsies {
