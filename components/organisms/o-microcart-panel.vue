@@ -51,7 +51,7 @@
                 <SfButton
                   class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text"
                   @click="removeHandler(product)"
-                >Remove</SfButton
+                >{{ $t('Remove') }}</SfButton
                 >
               </template>
               <template #more-actions>
