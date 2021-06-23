@@ -1,18 +1,22 @@
 <template>
   <div
     class="m-zoom-gallery"
-    :class="{ '-horizontal': isHorizontalThumbnails }"
+    :class="{
+      '-horizontal': isHorizontalThumbnails,
+      '-slider-disabled': !shouldInitThumbnailsSlider
+    }"
   >
     <div
       class="_thumbnails"
     >
-      <VueSlickCarousel
+      <component
+        :is="shouldInitThumbnailsSlider ? 'VueSlickCarousel' : 'div'"
+        class="_carousel"
         :arrows="false"
         :vertical="!isHorizontalThumbnails"
         :slides-to-show="5"
         :slides-to-scroll="1"
         :focus-on-select="true"
-        v-if="shouldShowThumbnails"
       >
         <div
           v-for="(image, index) in images"
@@ -30,7 +34,7 @@
             />
           </div>
         </div>
-      </VueSlickCarousel>
+      </component>
     </div>
 
     <div class="_stage">
@@ -93,7 +97,7 @@ export default Vue.extend({
   data () {
     return {
       fCurrentIndex: undefined as number | undefined,
-      fShouldShowThumbnails: false
+      fShouldInitThumbnailsSlider: false
     }
   },
   computed: {
@@ -140,8 +144,8 @@ export default Vue.extend({
         });
       }
     },
-    shouldShowThumbnails: function (): boolean {
-      return this.fShouldShowThumbnails
+    shouldInitThumbnailsSlider: function (): boolean {
+      return this.fShouldInitThumbnailsSlider
     }
   },
   created () {
@@ -208,7 +212,7 @@ export default Vue.extend({
           return;
         };
 
-        this.fShouldShowThumbnails = false;
+        this.fShouldInitThumbnailsSlider = false;
 
         this.currentIndex = undefined;
 
@@ -216,7 +220,7 @@ export default Vue.extend({
           this.currentIndex = 0;
 
           this.$nextTick(() => {
-            this.fShouldShowThumbnails = true;
+            this.fShouldInitThumbnailsSlider = true;
           })
         }
       },
@@ -309,8 +313,22 @@ export default Vue.extend({
         flex-direction: column-reverse;
 
         ._thumbnails {
+            position: relative;
             margin-top: 0.5em;
             width: 100%;
+            padding-top: 18.99%;
+
+            ._carousel {
+              position: absolute;
+              top: 0;
+              left: 0;
+              height: 100%;
+              width: 100%;
+            }
+
+            ._thumbnail-item {
+              padding-top: 100%;
+            }
 
             ::v-deep .slick-track {
                 display: flex;
@@ -326,6 +344,25 @@ export default Vue.extend({
             padding-top: 99%;
             width: 100%;
         }
+    }
+
+    &.-slider-disabled {
+      ._carousel {
+        display: grid;
+        grid-template-rows: repeat(5, minmax(0, 1fr));
+        grid-template-columns: 1fr;
+        grid-auto-columns: 0;
+        grid-auto-rows: 0;
+        overflow: hidden;
+      }
+
+      &.-horizontal {
+        ._carousel {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          grid-template-rows: 1fr;
+          grid-column-gap: 1%;
+        }
+      }
     }
 }
 </style>
