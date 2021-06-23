@@ -110,6 +110,9 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        :required="true"
+        :valid="!$v.shipping.phoneNumber.$error"
+        :error-message="$t('Field is required')"
       />
     </div>
     <SfHeading
@@ -211,6 +214,9 @@ export default {
       city: {
         required,
         unicodeAlpha
+      },
+      phoneNumber: {
+        required
       }
     }
   },

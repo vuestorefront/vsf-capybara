@@ -116,6 +116,9 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        :required="true"
+        :valid="!$v.payment.phoneNumber.$error"
+        :error-message="$t('Field is required')"
       />
       <SfCheckbox
         v-model="generateInvoice"
@@ -247,6 +250,9 @@ export default {
       city: {
         required,
         unicodeAlpha
+      },
+      phoneNumber: {
+        required
       },
       paymentMethod: {
         required

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: remove product from Cart on Desktop
 - Fixed: close Mega Menu after clicking on the Category
 - Fixed: wrong product image on PDP after clicked on filtered product from PLP
+- Fixed: missing `phoneNumber` on the Checkout
 
 ## [1.0.4] - 04.01.2020
 
