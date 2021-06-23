@@ -49,6 +49,10 @@ export default Vue.extend({
       type: Object as PropType<BodypartOption>,
       default: undefined
     },
+    type: {
+      type: String,
+      default: 'product'
+    },
     options: {
       type: Array as PropType<BodypartOption[]>,
       default: () => []
@@ -59,7 +63,7 @@ export default Vue.extend({
       return 'size_value_' + option.id;
     },
     getIconStyle (option: BodypartOption): string {
-      const thumb = getThumbnailPath(option.image, 150, 150);
+      const thumb = getThumbnailPath(option.image, 150, 150, this.type);
 
       return 'background-image: url(' + thumb + ');';
     },

@@ -94,6 +94,7 @@
               :name="bodypart.code"
               v-model="fBodypartsValues[bodypart.code]"
               :options="getBodypartValues(bodypart)"
+              type="bodypart"
             />
             <div class="_error-text">
               {{ errors[0] }}
@@ -490,6 +491,10 @@ export default Vue.extend({
     text-align: left;
     display: inline-block;
     --input-width: 20em;
+  }
+
+  .sf-modal {
+    --modal-top: 3.75rem;
   }
 
   .sf-divider {
