@@ -15,6 +15,7 @@ export default function registerComponents () {
   add('dongler_book', () => import('./DonglerBook.vue'))
   add('website_rating', () => import('./WebsiteRating.vue'))
   add('sharing', () => import('./Sharing.vue'))
+  add('expandable_text_block', () => import('./ExpandableText.vue'))
 
   // add('product', () => import('./Product.vue'))
   // add('category', () => import('./Category.vue'))
