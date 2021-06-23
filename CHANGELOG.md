@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 23.06.2021
+
+### Added
+
+### Changed / Improved
+- Fixed: modalComponents map type errors
+- Fixed: remove product from Cart on Desktop
+- Fixed: close Mega Menu after clicking on the Category
+- Fixed: wrong product image on PDP after clicked on filtered product from PLP
+- Fixed: set missing require for `phoneNumber` on the Checkout
+
 ## [1.0.4] - 04.01.2020
 
 ### Added

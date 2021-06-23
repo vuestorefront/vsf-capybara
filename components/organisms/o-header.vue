@@ -22,6 +22,7 @@
           :key="category.id"
           @mouseover="isHoveredMenu = true"
           @mouseleave="isHoveredMenu = false"
+          @click="isHoveredMenu = false"
         >
           <router-link
             :class="{active: isCategoryActive(category)}"
