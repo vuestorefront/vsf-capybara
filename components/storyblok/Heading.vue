@@ -23,7 +23,8 @@ export default Blok.extend({
       return this.item as HeadingData;
     },
     headingSize (): number {
-      return Number(this.itemData.heading_type);
+      const value = Number(this.itemData.heading_type);
+      return !isNaN(value) ? value : 1;
     }
   }
 })
