@@ -171,29 +171,31 @@
             </SfModal>
           </div>
         </validation-provider>
-        <div class="_step-number">
-          Step {{ getNextStepNumber() }}
-        </div>
-        <h2 class="_step-title -required sf-heading__title">
-          Enter your email address
-        </h2>
-        <validation-provider
-          v-slot="{ errors }"
-          rules="required"
-          name="'Email'"
-          tag="div"
-        >
-          <SfInput
-            name="email"
-            v-model="fEmail"
-            placeholder="sample@email.com"
-            :required="false"
-          />
-          <div class="_error-text">
-            {{ errors[0] }}
+        <template v-if="showEmailStep">
+          <div class="_step-number">
+            Step {{ getNextStepNumber() }}
           </div>
-          <p><b>Sometimes our team has questions about your design</b></p>
-        </validation-provider>
+          <h2 class="_step-title -required sf-heading__title">
+            Enter your email address
+          </h2>
+          <validation-provider
+            v-slot="{ errors }"
+            rules="required"
+            name="'Email'"
+            tag="div"
+          >
+            <SfInput
+              name="email"
+              v-model="fEmail"
+              placeholder="sample@email.com"
+              :required="false"
+            />
+            <div class="_error-text">
+              {{ errors[0] }}
+            </div>
+            <p><b>Sometimes our team has questions about your design</b></p>
+          </validation-provider>
+        </template>
 
         <div class="_actions">
           <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
@@ -296,6 +298,11 @@ export default Vue.extend({
     },
     isUploadDisabled (): boolean {
       return false;
+    },
+    showEmailStep (): boolean {
+      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+
+      return customerEmail === undefined;
     }
   },
   methods: {
@@ -348,6 +355,11 @@ export default Vue.extend({
       await this.$store.dispatch(
         'product/setBundleOptions',
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
+      );
+
+      this.$store.commit(
+        budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CUSTOMER_EMAIL_SET,
+        { email: this.fEmail }
       );
 
       this.$store.dispatch('cart/addItem', {
@@ -424,6 +436,11 @@ export default Vue.extend({
 
     if (this.uploadedArtworkId) {
       this.fStorageItemId = this.uploadedArtworkId;
+    }
+
+    const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+    if (customerEmail) {
+      this.fEmail = customerEmail;
     }
   },
   watch: {
