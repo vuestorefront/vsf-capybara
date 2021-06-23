@@ -203,18 +203,22 @@ export default Vue.extend({
   },
   watch: {
     images: {
-      handler () {
+      handler (prev: ZoomGalleryImage[], next: ZoomGalleryImage[]) {
+        if (JSON.stringify(prev) === JSON.stringify(next)) {
+          return;
+        };
+
         this.fShouldShowThumbnails = false;
 
         this.currentIndex = undefined;
 
         if (this.images.length) {
           this.currentIndex = 0;
-        }
 
-        this.$nextTick(() => {
-          this.fShouldShowThumbnails = true;
-        })
+          this.$nextTick(() => {
+            this.fShouldShowThumbnails = true;
+          })
+        }
       },
       immediate: true
     }
