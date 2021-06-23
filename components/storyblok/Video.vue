@@ -18,7 +18,7 @@ import { VideoProvider } from 'src/modules/vsf-storyblok-module';
 import VideoData from './interfaces/video-data.interface';
 
 export default Blok.extend({
-  name: 'Video',
+  name: 'StoryblokVideo',
   computed: {
     itemData (): VideoData {
       return this.item as VideoData;

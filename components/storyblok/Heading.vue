@@ -14,7 +14,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import HeadingData from './interfaces/heading-data.interface';
 
 export default Blok.extend({
-  name: 'Heading',
+  name: 'StoryblokHeading',
   components: {
     SfHeading
   },

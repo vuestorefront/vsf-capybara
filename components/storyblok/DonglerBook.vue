@@ -60,7 +60,7 @@ import { TaskQueue } from '@vue-storefront/core/lib/sync'
 import { processURLAddress } from '@vue-storefront/core/helpers'
 
 export default Blok.extend({
-  name: 'DonglerBook',
+  name: 'StoryblokDonglerBook',
   components: {
     SfHeading,
     SfInput,

@@ -13,7 +13,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import TextareaData from './interfaces/textarea-data.interface';
 
 export default Blok.extend({
-  name: 'Textarea',
+  name: 'StoryblokTextarea',
   computed: {
     itemData (): TextareaData {
       return this.item as TextareaData;

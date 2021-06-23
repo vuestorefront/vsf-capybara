@@ -37,7 +37,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import ProductData from './interfaces/product-data.interface';
 
 export default Blok.extend({
-  name: 'ProductBlock',
+  name: 'StoryblokProductBlock',
   components: {
     ProductImage
   },

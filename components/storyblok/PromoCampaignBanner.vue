@@ -12,7 +12,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import PromoCampaignBannerData from './interfaces/promo-campaign-banner-data.interface';
 
 export default Blok.extend({
-  name: 'PromoCampaignBannerRenderer',
+  name: 'StoryblokPromoCampaignBannerRenderer',
   computed: {
     itemData (): PromoCampaignBannerData {
       return this.item as PromoCampaignBannerData;

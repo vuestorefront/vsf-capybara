@@ -21,7 +21,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import ExpandableTextData from './interfaces/expandable-text-data.interface';
 
 export default Blok.extend({
-  name: 'ExpandableText',
+  name: 'StoryblokExpandableText',
   data () {
     return {
       fIsExpanded: false,

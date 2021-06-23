@@ -20,7 +20,7 @@ import ButtonItemData from './interfaces/button-item-data.interface';
 import getUrlFromLink from './get-url-from-link';
 
 export default Blok.extend({
-  name: 'Button',
+  name: 'StoryblokButton',
   components: {
     SfButton
   },

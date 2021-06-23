@@ -18,7 +18,7 @@ import Product from './Product.vue'
 import CategoryData from './interfaces/category-data.interface';
 
 export default Blok.extend({
-  name: 'CategoryBlock',
+  name: 'StoryblokCategoryBlock',
   components: {
     Product
   },

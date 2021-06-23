@@ -46,7 +46,7 @@ import WebsiteRatingData from './interfaces/website-rating-data.interface';
 import StarRating from 'vue-star-rating/src';
 
 export default Blok.extend({
-  name: 'WebsiteRating',
+  name: 'StoryblokWebsiteRating',
   components: {
     StarRating
   },

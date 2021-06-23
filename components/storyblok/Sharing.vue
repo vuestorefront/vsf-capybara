@@ -16,7 +16,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import SharingData from './interfaces/sharing-data.interface';
 
 export default Blok.extend({
-  name: 'Sharing',
+  name: 'StoryblokSharing',
   computed: {
     itemData (): SharingData {
       return this.item as SharingData;

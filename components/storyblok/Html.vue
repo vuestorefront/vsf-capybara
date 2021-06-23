@@ -16,7 +16,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import HtmlData from './interfaces/html-data.interface';
 
 export default Blok.extend({
-  name: 'HtmlRenderer',
+  name: 'StoryblokHtmlRenderer',
   computed: {
     itemData (): HtmlData {
       return this.item as HtmlData;
