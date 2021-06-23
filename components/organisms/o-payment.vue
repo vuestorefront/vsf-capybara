@@ -24,7 +24,7 @@
         class="form__element form__element--half"
         name="first-name"
         :label="$t('First name')"
-        :required="true"
+        required
         :valid="!$v.payment.firstName.$error"
         :error-message="
           !$v.payment.firstName.required
@@ -38,7 +38,7 @@
         class="form__element form__element--half form__element--half-even"
         name="last-name"
         :label="$t('Last name')"
-        :required="true"
+        required
         :valid="!$v.payment.lastName.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.lastName.$touch()"
@@ -48,7 +48,7 @@
         class="form__element"
         name="street-address"
         :label="$t('Street name')"
-        :required="true"
+        required
         :valid="!$v.payment.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.streetAddress.$touch()"
@@ -58,7 +58,7 @@
         class="form__element"
         name="apartment-number"
         :label="$t('House/Apartment number')"
-        :required="true"
+        required
         :valid="!$v.payment.apartmentNumber.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.apartmentNumber.$touch()"
@@ -68,7 +68,7 @@
         class="form__element form__element--half"
         name="city"
         :label="$t('City')"
-        :required="true"
+        required
         :valid="!$v.payment.city.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.city.$touch()"
@@ -84,7 +84,7 @@
         class="form__element form__element--half"
         name="zipCode"
         :label="$t('Zip-code')"
-        :required="true"
+        required
         :valid="!$v.payment.zipCode.$error"
         :error-message="
           !$v.payment.zipCode.required
@@ -98,7 +98,7 @@
         class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
         name="countries"
         :label="$t('Country')"
-        :required="true"
+        required
         :valid="!$v.payment.country.$error"
         :error-message="$t('Field is required')"
         @change="changeCountry"
@@ -116,6 +116,10 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        required
+        :valid="!$v.payment.phoneNumber.$error"
+        @blur="$v.payment.phoneNumber.$touch()"
+        :error-message="$t('Field is required')"
       />
       <SfCheckbox
         v-model="generateInvoice"
@@ -129,7 +133,7 @@
           class="form__element form__element--half"
           name="company-name"
           :label="$t('Company name')"
-          :required="true"
+          required
           :valid="!$v.payment.company.$error"
           :error-message="$t('Field is required')"
           @blur="$v.payment.company.$touch()"
@@ -139,7 +143,7 @@
           class="form__element form__element--half form__element--half-even"
           name="tax-id"
           :label="$t('Tax identification number')"
-          :required="true"
+          required
           :valid="!$v.payment.taxId.$error"
           :error-message="
             !$v.payment.taxId.required
@@ -247,6 +251,9 @@ export default {
       city: {
         required,
         unicodeAlpha
+      },
+      phoneNumber: {
+        required
       },
       paymentMethod: {
         required

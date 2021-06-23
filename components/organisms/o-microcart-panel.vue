@@ -42,6 +42,19 @@
                   </SfProperty>
                 </div>
               </template>
+              <template #remove>
+                <SfCircleIcon
+                  icon="cross"
+                  aria-label="Remove"
+                  class="sf-circle-icon--small sf-collected-product__remove sf-collected-product__remove--circle-icon"
+                  @click="removeHandler(product)"
+                />
+                <SfButton
+                  class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text"
+                  @click="removeHandler(product)"
+                >{{ $t('Remove') }}</SfButton
+                >
+              </template>
               <template #more-actions>
                 <span />
               </template>
