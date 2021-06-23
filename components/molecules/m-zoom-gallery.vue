@@ -1,25 +1,41 @@
 <template>
   <div
     class="m-zoom-gallery"
-    :class="{ '-horizontal': isHorizontalThumbnails }"
+    :class="{
+      '-horizontal': isHorizontalThumbnails,
+      '-slider-disabled': !shouldInitThumbnailsSlider
+    }"
   >
-    <VueSlickCarousel
+    <div
       class="_thumbnails"
-      :arrows="false"
-      :vertical="!isHorizontalThumbnails"
-      :slides-to-show="5"
-      :slides-to-scroll="1"
-      :focus-on-select="true"
-      v-if="shouldShowThumbnails"
     >
-      <div
-        v-for="(image, index) in images"
-        :key="image.thumb"
-        class="_thumbnail-item"
-        :style="{ backgroundImage: `url(${image.thumb})` }"
-        @click="setCurrentIndex(index)"
-      />
-    </VueSlickCarousel>
+      <component
+        :is="shouldInitThumbnailsSlider ? 'VueSlickCarousel' : 'div'"
+        class="_carousel"
+        :arrows="false"
+        :vertical="!isHorizontalThumbnails"
+        :slides-to-show="5"
+        :slides-to-scroll="1"
+        :focus-on-select="true"
+      >
+        <div
+          v-for="(image, index) in images"
+          :key="JSON.stringify(image.thumb)"
+          class="_thumbnail-item"
+          @click="setCurrentIndex(index)"
+        >
+          <div class="_thumbnail-item-content-wrapper">
+            <BaseImage
+              class="_image"
+              :src="getImageSrc(image, 'thumb')"
+              :srcsets="getImageSrcSets(image, 'thumb')"
+              :alt="image.alt"
+              :title="image.title"
+            />
+          </div>
+        </div>
+      </component>
+    </div>
 
     <div class="_stage">
       <div class="_stage-content">
@@ -29,23 +45,13 @@
           :href="stageImage.big"
           v-if="stageImage"
         >
-          <a
-            :href="stageImage.link"
-            :target="stageImage.target"
-            v-if="stageImage.link"
-          >
-            <img
-              :src="stageImage.stage"
-              :alt="stageImage.alt"
-              :title="stageImage.title"
-            >
-          </a>
-          <img
-            :src="stageImage.stage"
+          <BaseImage
+            class="_image"
+            :src="getImageSrc(stageImage, 'stage')"
+            :srcsets="getImageSrcSets(stageImage, 'stage')"
             :alt="stageImage.alt"
             :title="stageImage.title"
-            v-else
-          >
+          />
         </div>
       </div>
     </div>
@@ -64,14 +70,18 @@ import jQuery from 'jquery';
 import 'vue-slick-carousel/dist/vue-slick-carousel.css';
 import 'vue-slick-carousel/dist/vue-slick-carousel-theme.css';
 
+import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
 import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
 
 require('@cabbiepete/cloud-zoom');
 require('@cabbiepete/cloud-zoom/cloud-zoom.css');
 
+type ImageKeys = keyof ZoomGalleryImage;
+
 export default Vue.extend({
   name: 'MZoomGallery',
   components: {
+    BaseImage,
     VueSlickCarousel
   },
   props: {
@@ -87,7 +97,7 @@ export default Vue.extend({
   data () {
     return {
       fCurrentIndex: undefined as number | undefined,
-      fShouldShowThumbnails: false
+      fShouldInitThumbnailsSlider: false
     }
   },
   computed: {
@@ -134,8 +144,8 @@ export default Vue.extend({
         });
       }
     },
-    shouldShowThumbnails: function (): boolean {
-      return this.fShouldShowThumbnails
+    shouldInitThumbnailsSlider: function (): boolean {
+      return this.fShouldInitThumbnailsSlider
     }
   },
   created () {
@@ -152,6 +162,22 @@ export default Vue.extend({
     this.detachZoom();
   },
   methods: {
+    getImageSrc (image: ZoomGalleryImage, variant: ImageKeys): string | undefined {
+      const value = image[variant];
+      if (typeof value !== 'string') {
+        return undefined;
+      }
+
+      return value;
+    },
+    getImageSrcSets (image: ZoomGalleryImage, variant: ImageKeys): ImageSourceItem[] | undefined {
+      const value = image[variant];
+      if (!Array.isArray(value)) {
+        return undefined;
+      }
+
+      return value;
+    },
     setCurrentIndex (index: number): void {
       const previousIndex = this.currentIndex;
       this.currentIndex = index;
@@ -181,18 +207,22 @@ export default Vue.extend({
   },
   watch: {
     images: {
-      handler () {
-        this.fShouldShowThumbnails = false;
+      handler (prev: ZoomGalleryImage[], next: ZoomGalleryImage[]) {
+        if (JSON.stringify(prev) === JSON.stringify(next)) {
+          return;
+        };
+
+        this.fShouldInitThumbnailsSlider = false;
 
         this.currentIndex = undefined;
 
         if (this.images.length) {
           this.currentIndex = 0;
-        }
 
-        this.$nextTick(() => {
-          this.fShouldShowThumbnails = true;
-        })
+          this.$nextTick(() => {
+            this.fShouldInitThumbnailsSlider = true;
+          })
+        }
       },
       immediate: true
     }
@@ -207,27 +237,34 @@ export default Vue.extend({
     justify-content: space-between;
 
     ._thumbnails {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
         width: 15.5%;
 
         ._thumbnail-item {
+            display: block !important;
+            position: relative;
             cursor: pointer;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-            padding-top: 100%;
-            margin-top: 8.8%;
+            padding-top: 108.1%;
 
             &:first-child {
                 margin-top: 0;
             }
         }
 
+        ._thumbnail-item-content-wrapper {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+        }
+
         ::v-deep .slick-list {
             .slick-track {
                 height: auto !important;
+            }
+
+            .slick-slide {
+              border: none;
             }
         }
     }
@@ -246,14 +283,13 @@ export default Vue.extend({
         }
 
         ._image-wrapper {
+          display: block;
             height: 100%;
             width: 100%;
 
-            img {
+            ._image {
                 width: 100%;
                 height: 100%;
-                object-fit: contain;
-                object-position: top;
             }
         }
 
@@ -277,8 +313,22 @@ export default Vue.extend({
         flex-direction: column-reverse;
 
         ._thumbnails {
+            position: relative;
             margin-top: 0.5em;
             width: 100%;
+            padding-top: 18.99%;
+
+            ._carousel {
+              position: absolute;
+              top: 0;
+              left: 0;
+              height: 100%;
+              width: 100%;
+            }
+
+            ._thumbnail-item {
+              padding-top: 100%;
+            }
 
             ::v-deep .slick-track {
                 display: flex;
@@ -294,6 +344,25 @@ export default Vue.extend({
             padding-top: 99%;
             width: 100%;
         }
+    }
+
+    &.-slider-disabled {
+      ._carousel {
+        display: grid;
+        grid-template-rows: repeat(5, minmax(0, 1fr));
+        grid-template-columns: 1fr;
+        grid-auto-columns: 0;
+        grid-auto-rows: 0;
+        overflow: hidden;
+      }
+
+      &.-horizontal {
+        ._carousel {
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          grid-template-rows: 1fr;
+          grid-column-gap: 1%;
+        }
+      }
     }
 }
 </style>

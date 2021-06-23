@@ -1,6 +1,6 @@
-import Item from './item.interface';
+import { ItemData } from 'src/modules/vsf-storyblok-module';
 
-export default interface ProductData extends Item {
+export default interface ProductData extends ItemData {
   product_id: string,
   product_display: string
 }

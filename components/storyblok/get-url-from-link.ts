@@ -1,5 +1,4 @@
-import LinkField from './interfaces/link-field.interface';
-import { LinkType } from './interfaces/link-type.value';
+import { LinkField, LinkType } from 'src/modules/vsf-storyblok-module';
 
 export default function getUrlFromLink (
   link: LinkField

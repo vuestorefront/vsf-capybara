@@ -4,8 +4,9 @@
     :title="$t('Home Page')"
     class="a-logo"
   >
-    <SfImage
+    <BaseImage
       src="/assets/logo.png"
+      :aspect-ratio="3.85"
       :alt="$t(defaultTitle)"
       class="sf-header__logo"
     />
@@ -15,13 +16,14 @@
 <script>
 import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
-import { SfImage } from '@storefront-ui/vue';
+import { BaseImage } from 'src/modules/budsies';
+
 import get from 'lodash-es/get';
 
 const storeView = currentStoreView();
 
 export default {
-  components: { SfImage },
+  components: { BaseImage },
   computed: {
     defaultTitle () {
       return get(storeView, 'seo.defaultTitle', config.seo.defaultTitle);
@@ -32,5 +34,9 @@ export default {
 <style lang="scss" scoped>
 .a-logo {
   display: inline-flex;
+
+  .sf-header__logo {
+    width: calc(var(--image-height) * 3.85);
+  }
 }
 </style>

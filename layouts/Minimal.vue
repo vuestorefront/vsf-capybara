@@ -31,7 +31,7 @@ export default {
     a,
     button,
     .storyblok-video ._embed-container,
-    .storyblok-image ._image-wrapper,
+    .storyblok-image ._image,
     .storyblok-html-renderer ._html-wrapper {
       pointer-events: none;
     }

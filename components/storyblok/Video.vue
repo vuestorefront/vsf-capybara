@@ -14,7 +14,7 @@
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
 import { AspectRatio } from './interfaces/aspect-ratio.value';
-import { VideoProvider } from './interfaces/video-provider.value';
+import { VideoProvider } from 'src/modules/vsf-storyblok-module';
 import VideoData from './interfaces/video-data.interface';
 
 export default Blok.extend({

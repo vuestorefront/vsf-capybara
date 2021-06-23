@@ -1,5 +1,5 @@
-import Item from './item.interface';
+import { ItemData } from 'src/modules/vsf-storyblok-module';
 
-export default interface HtmlData extends Item {
+export default interface HtmlData extends ItemData {
   html: string
 }

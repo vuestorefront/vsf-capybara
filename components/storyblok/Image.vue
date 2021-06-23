@@ -5,72 +5,68 @@
     class="storyblok-image"
   >
     <CoolLightBox
-      :items="getItems()"
+      :items="getLightboxItems()"
       :index="lightboxIndexValue"
       @close="lightboxIndexValue = null"
     />
 
-    <div
-      class="_image-wrapper"
-    >
-      <div class="_placeholder" />
-
-      <SfImage
-        class="_image"
-        :src="srcSet"
-        :alt="itemData.alt_tag"
-        :title="itemData.title_tag"
-        :picture-breakpoint="screenWidthBreakpoint"
-        @load.capture="onLoad"
-        @click="launchLightbox"
-      />
-    </div>
+    <BaseImage
+      class="_image"
+      :srcsets="imageSources"
+      :alt="itemData.alt_tag"
+      :title="itemData.title_tag"
+      @click="launchLightbox"
+      :width="itemData.width"
+    />
   </div>
 </template>
 
 <script lang="ts">
+import { VueConstructor } from 'vue';
+import { mapGetters } from 'vuex';
 import { isServer } from '@vue-storefront/core/helpers';
-import { SfImage } from '@storefront-ui/vue';
 import CoolLightBox from 'vue-cool-lightbox';
 import 'vue-cool-lightbox/dist/vue-cool-lightbox.min.css';
 
+import { InjectType } from 'src/modules/shared';
+import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
+import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
-import SrcSetValue from './interfaces/src-set-value.interface';
+
 import ImageData from './interfaces/image-data.interface';
 import LightboxItemValue from './interfaces/lightbox-item-value.interface';
-import generatePlaceholderStyles from './generate-placeholder-styles';
+import generateBreakpointsSpecs from './generate-breakpoints-specs';
+import generateImageSourcesList from './generate-image-sources-list';
 
 const SCREEN_WIDTH_BREAKPOINT = 768;
 
-export default Blok.extend({
+interface InjectedServices {
+  componentWidthCalculator: ComponentWidthCalculator
+}
+
+export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
   name: 'StoryblokImage',
   components: {
-    SfImage,
+    BaseImage,
     CoolLightBox
   },
+  inject: {
+    componentWidthCalculator: { }
+  } as unknown as InjectType<InjectedServices>,
   data () {
     return {
-      lightboxIndexValue: null as number | null,
-      isLoaded: false
+      lightboxIndexValue: null as number | null
     }
   },
   computed: {
+    ...mapGetters({
+      supportsWebp: 'storyblok/supportsWebp'
+    }),
     itemData (): ImageData {
       return this.item as ImageData;
     },
-    extraCssClasses (): string[] {
-      return !this.isLoaded ? ['-loading'] : [];
-    },
     extraStyles (): Record<string, string> {
-      const styles = generatePlaceholderStyles(
-        this.itemData.image.filename,
-        this.itemData.mobile_image.filename,
-        'image-block-height'
-      );
-
-      if (this.itemData.width) {
-        styles['--image-width'] = this.itemData.width;
-      }
+      const styles: Record<string, string> = {};
 
       if (this.itemData.has_lightbox) {
         styles['cursor'] = 'pointer';
@@ -78,28 +74,37 @@ export default Blok.extend({
 
       return styles;
     },
-    screenWidthBreakpoint (): number {
-      return SCREEN_WIDTH_BREAKPOINT;
-    },
-    srcSet (): SrcSetValue | string {
-      if (!this.itemData.mobile_image.filename) {
-        return this.itemData.image.filename;
-      }
-
-      const srcSet: SrcSetValue = {
-        desktop: {
-          url: this.itemData.image.filename
-        },
-        mobile: {
-          url: this.itemData.mobile_image.filename
-        }
+    imageSources (): ImageSourceItem[] {
+      if (!this.itemData.image.filename) {
+        return [];
       };
 
-      return srcSet;
+      let widthCalculator = this.componentWidthCalculator;
+      if (this.itemData.width) {
+        const percentValue = Number(this.itemData.width.slice(0, -1));
+        const pixelValue = Number(this.itemData.width.replace(/\px$/, ''));
+
+        if (this.itemData.width.endsWith('%') && !isNaN(percentValue)) {
+          widthCalculator = widthCalculator.limitAllByPercent(percentValue);
+        } else if (!isNaN(pixelValue)) {
+          widthCalculator = widthCalculator.limitSize(pixelValue);
+        }
+      }
+
+      const breakpointsSpecs = generateBreakpointsSpecs(
+        this.itemData.image.filename,
+        widthCalculator,
+        this.itemData.mobile_image.filename
+      )
+
+      return generateImageSourcesList(
+        breakpointsSpecs,
+        this.supportsWebp
+      )
     }
   },
   methods: {
-    getItems (): LightboxItemValue[] {
+    getLightboxItems (): LightboxItemValue[] {
       const result: LightboxItemValue[] = [
         {
           src: this.itemData.image.filename,
@@ -126,50 +131,14 @@ export default Blok.extend({
       }
 
       this.lightboxIndexValue = 0;
-    },
-    onLoad (): void{
-      this.isLoaded = true;
     }
   }
 })
 </script>
 
 <style lang="scss">
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
-
 .storyblok-image {
   text-align: center;
   font-size: 0;
-
-  ._image-wrapper {
-    display: inline-block;
-    position: relative;
-    width: var(--image-width, 100%);
-  }
-
-  ._image {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  ._placeholder {
-    background-color: none;
-    padding-top: var(--image-block-height-mobile, var(--image-block-height, 0));
-  }
-
-  &.-loading {
-    ._placeholder {
-      background-color: #fafafa;
-    }
-  }
-
-  @media (min-width: $tablet-min) {
-    ._placeholder {
-      padding-top: var(--image-block-height, 0);
-    }
-  }
 }
 </style>
