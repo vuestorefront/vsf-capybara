@@ -3,32 +3,35 @@
     class="m-zoom-gallery"
     :class="{ '-horizontal': isHorizontalThumbnails }"
   >
-    <VueSlickCarousel
+    <div
       class="_thumbnails"
-      :arrows="false"
-      :vertical="!isHorizontalThumbnails"
-      :slides-to-show="5"
-      :slides-to-scroll="1"
-      :focus-on-select="true"
-      v-if="shouldShowThumbnails"
     >
-      <div
-        v-for="(image, index) in images"
-        :key="JSON.stringify(image.thumb)"
-        class="_thumbnail-item"
-        @click="setCurrentIndex(index)"
+      <VueSlickCarousel
+        :arrows="false"
+        :vertical="!isHorizontalThumbnails"
+        :slides-to-show="5"
+        :slides-to-scroll="1"
+        :focus-on-select="true"
+        v-if="shouldShowThumbnails"
       >
-        <div class="_thumbnail-item-content-wrapper">
-          <BaseImage
-            class="_image"
-            :src="getImageSrc(image, 'thumb')"
-            :srcsets="getImageSrcSets(image, 'thumb')"
-            :alt="image.alt"
-            :title="image.title"
-          />
+        <div
+          v-for="(image, index) in images"
+          :key="JSON.stringify(image.thumb)"
+          class="_thumbnail-item"
+          @click="setCurrentIndex(index)"
+        >
+          <div class="_thumbnail-item-content-wrapper">
+            <BaseImage
+              class="_image"
+              :src="getImageSrc(image, 'thumb')"
+              :srcsets="getImageSrcSets(image, 'thumb')"
+              :alt="image.alt"
+              :title="image.title"
+            />
+          </div>
         </div>
-      </div>
-    </VueSlickCarousel>
+      </VueSlickCarousel>
+    </div>
 
     <div class="_stage">
       <div class="_stage-content">
@@ -226,16 +229,13 @@ export default Vue.extend({
     justify-content: space-between;
 
     ._thumbnails {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
         width: 15.5%;
 
         ._thumbnail-item {
+            display: block !important;
             position: relative;
             cursor: pointer;
-            padding-top: 100%;
-            margin-top: 8.8%;
+            padding-top: 108.1%;
 
             &:first-child {
                 margin-top: 0;
@@ -253,6 +253,10 @@ export default Vue.extend({
         ::v-deep .slick-list {
             .slick-track {
                 height: auto !important;
+            }
+
+            .slick-slide {
+              border: none;
             }
         }
     }
