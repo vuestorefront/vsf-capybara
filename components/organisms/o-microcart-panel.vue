@@ -129,7 +129,8 @@ import {
   SfPrice,
   SfImage,
   SfHeading,
-  SfSidebar
+  SfSidebar,
+  SfCircleIcon
 } from '@storefront-ui/vue';
 
 export default {
@@ -140,7 +141,8 @@ export default {
     SfPrice,
     SfImage,
     SfHeading,
-    SfSidebar
+    SfSidebar,
+    SfCircleIcon
   },
   mixins: [VueOfflineMixin, onEscapePress],
   data () {
