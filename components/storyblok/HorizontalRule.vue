@@ -11,7 +11,7 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import HorizontalRuleData from './interfaces/horizontal-rule-data.interface';
 
 export default Blok.extend({
-  name: 'HorizontalRule',
+  name: 'StoryblokHorizontalRule',
   computed: {
     itemData (): HorizontalRuleData {
       return this.item as HorizontalRuleData;
