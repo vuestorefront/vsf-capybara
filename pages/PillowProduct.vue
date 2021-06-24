@@ -4,7 +4,7 @@
       :artwork-upload-url="artworkUploadUrl"
       :product="getCurrentProduct"
       :backend-product-id="backendProductId"
-      :plushie-id="getPlushieId + ''"
+      :plushie-id="plushieId"
       :sizes="sizes"
       :bodyparts="bodyparts"
     />
@@ -21,33 +21,24 @@ import { ProductValue } from 'src/modules/budsies';
 
 import OPillowProductOrderForm from 'theme/components/organisms/o-pillow-product-order-form.vue';
 import BodypartOption from '../components/interfaces/bodypart-option';
-import { PropType } from 'vue';
 import Bodypart from 'src/modules/budsies/models/bodypart.model';
+import Task from 'core/lib/sync/types/Task';
 
 export default {
   name: 'PillowProduct',
   components: {
     OPillowProductOrderForm
   },
-  props: {
-    plushieId: {
-      type: String as PropType<string | undefined>,
-      default: undefined
-    }
+  data () {
+    return {
+      plushieId: undefined as number | undefined
+    };
   },
   computed: {
     ...mapGetters({
       getCurrentProduct: 'product/getCurrentProduct',
-      getCurrentCustomOptions: 'product/getCurrentCustomOptions',
-      getCurrentPlushieId: 'budsies/getCurrentPlushieId'
+      getCurrentCustomOptions: 'product/getCurrentCustomOptions'
     }),
-    getPlushieId (): string {
-      if (this.plushieId) {
-        return this.plushieId;
-      }
-
-      return this.getCurrentPlushieId;
-    },
     artworkUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
     },
@@ -98,9 +89,13 @@ export default {
     }
   },
   async mounted (): Promise<void> {
-    if (!this.plushieId && !this.$store.getters['budsies/getCurrentPlushieId']) {
-      await this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
-    }
+    // TODO check ID in URL and load plushie instead of create a new one
+
+    const result = this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
+
+    result.then((task: Task) => {
+      this.plushieId = task.result;
+    });
   },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product')

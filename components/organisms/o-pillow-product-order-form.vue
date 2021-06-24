@@ -23,35 +23,70 @@
         <h2 class="_step-title -required sf-heading__title">
           Upload your photo
         </h2>
-        <p>We do not edit your photos. The photo you submit will be printed on the pillow as is.</p>
-        <p>Don't have your photos? You can finalize your order and send them to us later.</p>
-        <validation-provider
-          v-slot="{ errors }"
-          name="'Artwork'"
-          tag="div"
-        >
-          <input
-            type="hidden"
-            name="uploaded_artwork_ids[]"
-            :value="fStorageItemId"
-            required
+        <div class="_upload-now" v-if="isUploadNow">
+          <p>We do not edit your photos. The photo you submit will be printed on the pillow as is.</p>
+          <p>
+            Don't have your photos? You can finalize your order and <a
+              class="_popup-link"
+              href="javascript:void(0)"
+              @click.stop.prevent="fUploadNow = false"
+            >send them to us later.</a>
+          </p>
+          <validation-provider
+            v-slot="{ errors }"
+            name="'Artwork'"
+            tag="div"
           >
+            <input
+              type="hidden"
+              name="uploaded_artwork_ids[]"
+              :value="fStorageItemId"
+              required
+            >
 
-          <MArtworkUpload
-            ref="artwork-upload"
-            class="_file-uploader"
-            :product-id="backendProductId"
-            :disabled="isUploadDisabled"
-            :upload-url="artworkUploadUrl"
-            @input="onArtworkChange"
-          />
+            <MArtworkUpload
+              ref="artwork-upload"
+              class="_file-uploader"
+              :product-id="backendProductId"
+              :disabled="isUploadDisabled"
+              :upload-url="artworkUploadUrl"
+              @input="onArtworkChange"
+            />
 
-          <div class="_error-text">
-            {{ errors[0] }}
-          </div>
-        </validation-provider>
-        <p><b>Please Note: We recommend high resolution, clear photos for our Petsies Pillows!</b></p>
-        <p><b>Low quality, dark or blurry photos may impact photo clarity on your Pillow.</b></p>
+            <div class="_error-text">
+              {{ errors[0] }}
+            </div>
+          </validation-provider>
+          <p><b>Please Note: We recommend high resolution, clear photos for our Petsies Pillows!</b></p>
+          <p><b>Low quality, dark or blurry photos may impact photo clarity on your Pillow.</b></p>
+        </div>
+
+        <div class="_upload-email" v-if="!isUploadNow">
+          <p>
+            Want to upload photos now? Please use <a
+              class="_popup-link"
+              href="javascript:void(0)"
+              @click.stop.prevent="fUploadNow = true"
+            >our uploader.</a>
+          </p>
+          <p>
+            When you're ready, please email a photo of the design to: <br> <a
+              class="_popup-link"
+              href="mailto:photos@mypetsies.com"
+              @click="fUploadNow = true"
+            >photos@mypetsies.com</a>
+          </p>
+          <p>Include this design's magic word in the subject line of the email:</p>
+          <p>{{ shortcode }}</p>
+          <p>
+            Don't worry, we'll send you a reminder with this code after you complete your order. <br> You may include only one photo per Pillow. <br> <a
+              class="_popup-link"
+              href="mailto:photos@mypetsies.com"
+              @click="fUploadNow = true"
+            >Photos@mypetsies.com</a> is an automated inbox used only for receiving images.
+          </p>
+          <p>NOTE: Proceed to Step 2 to complete your order. You may send us your photo within the next 5 days.</p>
+        </div>
         <SfDivider />
         <div class="_step-number">
           Step {{ getNextStepNumber() }}
@@ -269,8 +304,8 @@ export default Vue.extend({
       required: true
     },
     plushieId: {
-      type: String,
-      required: true
+      type: Number as PropType<number | undefined>,
+      default: undefined
     },
     sizes: {
       type: Array as PropType<BodypartOption[]>,
@@ -295,7 +330,8 @@ export default Vue.extend({
       fEmail: undefined as string | undefined,
       fIsLoading: false,
       fMakeAnother: false,
-      fQuantityNotesVisible: false
+      fQuantityNotesVisible: false,
+      fUploadNow: true
     }
   },
   computed: {
@@ -308,10 +344,16 @@ export default Vue.extend({
     isUploadDisabled (): boolean {
       return false;
     },
+    isUploadNow (): boolean {
+      return this.fUploadNow;
+    },
     showEmailStep (): boolean {
       const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
 
       return customerEmail === undefined;
+    },
+    shortcode (): string | undefined {
+      return this.$store.getters['budsies/getPlushieShortcode'](this.plushieId);
     }
   },
   methods: {
@@ -374,11 +416,12 @@ export default Vue.extend({
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
           qty: this.fQuantity,
-          plushieId: this.plushieId,
+          plushieId: this.plushieId + '',
           email: this.fEmail,
           plushieName: this.fName,
           bodyparts: this.getBodypartsData(),
-          customerImagesIds: [this.fStorageItemId]
+          customerImagesIds: this.fStorageItemId ? [this.fStorageItemId] : [],
+          uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
         })
       }).then(() => {
         this.onSuccess();
@@ -392,8 +435,6 @@ export default Vue.extend({
     },
     async onSuccess (): Promise<void> {
       try {
-        this.$store.commit(budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CURRENT_PLUSHIE_ID_CLEAR);
-
         const uploader = this.getUploader();
         if (uploader) {
           uploader.clearInput();
@@ -476,6 +517,16 @@ export default Vue.extend({
         });
       },
       immediate: false
+    },
+    plushieId: {
+      handler () {
+        if (!this.plushieId) {
+          return;
+        }
+
+        this.$store.dispatch('budsies/loadPlushieShortcode', { plushieId: this.plushieId });
+      },
+      immediate: true
     }
   }
 })
