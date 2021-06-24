@@ -16,6 +16,7 @@ export default function registerComponents () {
   add('website_rating', () => import('./WebsiteRating.vue'))
   add('sharing', () => import('./Sharing.vue'))
   add('expandable_text_block', () => import('./ExpandableText.vue'))
+  add('hr', () => import('./HorizontalRule.vue'))
 
   // add('product', () => import('./Product.vue'))
   // add('category', () => import('./Category.vue'))
