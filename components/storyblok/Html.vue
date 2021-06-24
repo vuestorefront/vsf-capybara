@@ -42,6 +42,14 @@ export default Blok.extend({
     this.setHtml(this.itemData.html);
   },
   methods: {
+    clearScriptContainer (): void {
+      const container = this.$refs['script-container'] as HTMLElement | undefined;
+      if (!container) {
+        return;
+      }
+
+      container.innerHTML = '';
+    },
     setHtml (html: string): void {
       const container = this.$refs['script-container'] as HTMLElement | undefined;
       if (!container) {
@@ -62,6 +70,20 @@ export default Blok.extend({
         newScript.appendChild(document.createTextNode(oldScript.innerHTML));
         oldScript.parentNode?.replaceChild(newScript, oldScript);
       }
+    }
+  },
+  watch: {
+    'itemData.html': {
+      handler () {
+        this.clearScriptContainer();
+
+        if (!this.doesHtmlContainScript) {
+          return;
+        }
+
+        this.setHtml(this.itemData.html);
+      },
+      immediate: false
     }
   }
 })
