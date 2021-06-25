@@ -3,6 +3,7 @@ import { AssetField, ItemData, LinkField } from 'src/modules/vsf-storyblok-modul
 export default interface DriverData extends ItemData {
   image: AssetField,
   mobile_image: AssetField,
+  zoom_effect: boolean,
   alt_tag: string,
   title_tag: string,
   link_text: string,
