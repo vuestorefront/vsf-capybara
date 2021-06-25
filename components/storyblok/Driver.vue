@@ -1,7 +1,7 @@
 <template>
   <div
     class="storyblok-driver"
-    :class="cssClasses"
+    :class="[cssClasses, {'-zoom-effect': isZoomEffectEnabled}]"
     :style="styles"
   >
     <router-link
@@ -64,6 +64,9 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
       return this.itemData.target_blank ? '_blank'
         : '_self';
     },
+    isZoomEffectEnabled (): boolean {
+      return this.itemData.zoom_effect;
+    },
     imageSources (): ImageSourceItem[] {
       if (!this.itemData.image.filename) {
         return [];
@@ -87,8 +90,13 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
 </script>
 
 <style lang="scss" scoped>
-.storyblok-driver {
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+$color-transition-overlay-bg: rgba(0, 0, 0, 0.3);
+$transition-zoom-in-scale: 1.25;
+$transition-zoom-in-time: 0.5s;
+
+.storyblok-driver {
   ._link {
     display: block;
     text-decoration: none;
@@ -97,21 +105,82 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
 
   ._driver-text {
     position: absolute;
-    z-index: 10;
     display: block;
     bottom: 0;
+    box-sizing: border-box;
     left: 0;
     right: 0;
-    padding: 15px;
+    padding: 1em;
     background: #000;
-    background: rgba(0, 0, 0, 0.4);
+    background: $color-transition-overlay-bg;
     text-align: center;
     color: #fff;
+  }
+
+  &.-zoom-effect {
+    overflow: hidden;
+    position: relative;
+    transition: opacity $transition-zoom-in-time ease;
+
+    &::after {
+      background: $color-transition-overlay-bg;
+      content: "\A";
+      height: 100%;
+      left: 0;
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      transition: opacity $transition-zoom-in-time ease;
+      width: 100%;
+      z-index: 1;
+    }
+
+    ._driver-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.4em;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    ._image {
+      transition: transform $transition-zoom-in-time ease;
+    }
+
+    &:hover {
+      &::after {
+        opacity: 1;
+      }
+
+      ._image {
+        transform: scale($transition-zoom-in-scale);
+      }
+    }
   }
 
   &:hover {
     ._driver-text {
       background: rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  @media (min-width: $tablet-min) {
+    &.-zoom-effect {
+      ._driver-text {
+        background-color: transparent;
+        display: none;
+        font-size: 2em;
+      }
+
+      &:hover {
+        ._driver-text {
+          display: flex;
+        }
+      }
     }
   }
 }
