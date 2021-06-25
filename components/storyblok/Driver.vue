@@ -1,7 +1,7 @@
 <template>
   <div
     class="storyblok-driver"
-    :class="[cssClasses, {'-zoom-effect': isZoomEffectEnabled}]"
+    :class="cssClasses"
     :style="styles"
   >
     <router-link
@@ -57,15 +57,21 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     itemData (): DriverData {
       return this.item as DriverData;
     },
+    extraCssClasses (): string[] {
+      const result: string [] = [];
+
+      if (this.itemData.zoom_effect) {
+        result.push('-zoom-effect');
+      }
+
+      return result;
+    },
     link (): string {
       return getUrlFromLink(this.itemData.link_url);
     },
     linkTarget (): string {
       return this.itemData.target_blank ? '_blank'
         : '_self';
-    },
-    isZoomEffectEnabled (): boolean {
-      return this.itemData.zoom_effect;
     },
     imageSources (): ImageSourceItem[] {
       if (!this.itemData.image.filename) {
@@ -115,6 +121,10 @@ $transition-zoom-in-time: 0.5s;
     background: $color-transition-overlay-bg;
     text-align: center;
     color: #fff;
+  }
+
+  ._image {
+    display: block;
   }
 
   &.-zoom-effect {
