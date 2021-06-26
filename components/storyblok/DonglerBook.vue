@@ -67,9 +67,7 @@ import { SfHeading, SfInput, SfButton } from '@storefront-ui/vue';
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import { required, email } from 'vuelidate/lib/validators';
 
-import config from 'config';
-import { TaskQueue } from '@vue-storefront/core/lib/sync';
-import { processURLAddress } from '@vue-storefront/core/helpers';
+import { DonglerBookService } from 'src/modules/dongler-book';
 
 import DonglerBookData from './interfaces/dongler-book-data.interface';
 
@@ -104,18 +102,7 @@ export default Blok.extend({
       this.isSubmitting = true;
 
       try {
-        const url = processURLAddress(`${config.budsies.endpoint}/dongler-book-requests`);
-
-        const response = await TaskQueue.execute({
-          url: url,
-          payload: {
-            headers: { 'Content-type': 'application/json' },
-            mode: 'cors',
-            method: 'POST',
-            body: JSON.stringify({ email: this.email })
-          },
-          silent: true
-        });
+        const response = await DonglerBookService.requestBook(this.email);
 
         if (response.result !== true) {
           throw new Error(response.result);
