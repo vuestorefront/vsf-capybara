@@ -58,6 +58,8 @@ export default Blok.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .storyblok-heading {
+  text-align: center;
+
   ._heading {
     text-align: inherit;
   }
