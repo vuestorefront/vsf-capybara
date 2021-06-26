@@ -8,41 +8,53 @@
       :level="2"
       :title="$t('Receive a Free Drawing & Storybook')"
     />
-    <form @submit.prevent="onSubmit" class="_form">
-      <div class="_sub-title">
-        A digital copy of our exclusive children’s book “Dongler’s Dinner Quest”!
-        <div class="_email-row">
-          <SfInput
-            v-model="email"
-            name="email"
-            :label="$t('Email:')"
-            :required="true"
-            :valid="!$v.email.$error"
-            :error-message="
-              !$v.email.required
-                ? $t('Field is required.')
-                : $t('Please provide valid e-mail address.')
-            "
-          />
-        </div>
-        <div class="_button-row">
-          <SfButton
-            class="color-secondary"
-          >
-            {{ item.dongler_book_btn_text }}
-          </SfButton>
-        </div>
+
+    <div class="_sub-title">
+      A digital copy of our exclusive children's book "Dongler's Dinner Quest"!
+    </div>
+
+    <form @submit.prevent="onSubmit" class="_form" v-show="!isSubmitted">
+      <div class="_email-row">
+        <SfInput
+          v-model="email"
+          name="email"
+          :label="$t('Email:')"
+          :required="true"
+          :disabled="isSubmitting"
+          :valid="!$v.email.$error"
+          :error-message="
+            !$v.email.required
+              ? $t('Field is required.')
+              : $t('Please provide valid e-mail address.')
+          "
+        />
       </div>
+
+      <div class="sf-input__error-message" v-show="isSubmittedWthError">
+        <div>Something went wrong... Please, try again or contact the support.</div>
+      </div>
+
+      <div class="_button-row">
+        <SfButton
+          class="_button color-secondary"
+          :disabled="isSubmitting"
+        >
+          {{ itemData.button_text }}
+        </SfButton>
+      </div>
+
       <div class="_description">
-        {{ $t("We’ll send you a digital copy of the coloring book via email for you to download when ready!") }}
+        {{ $t("We'll send you a digital copy of the coloring book via email for you to download when ready!") }}
       </div>
     </form>
-    <div v-show="isShowSuccessMessage">
+
+    <div v-show="isSubmitted">
       <p>
         <strong>
-          {{ $t("Success! Your storybook is on it’s way") }}
+          {{ $t("Success! Your storybook is on it's way") }}
         </strong>
       </p>
+
       <div class="_description">
         {{ $t("Enjoy over 25 beautifully illustrated color pages, where your child’s drawings will help Dongler get home in time for dinner!") }}
       </div>
@@ -55,9 +67,11 @@ import { SfHeading, SfInput, SfButton } from '@storefront-ui/vue';
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import { required, email } from 'vuelidate/lib/validators';
 
-import config from 'config'
-import { TaskQueue } from '@vue-storefront/core/lib/sync'
-import { processURLAddress } from '@vue-storefront/core/helpers'
+import config from 'config';
+import { TaskQueue } from '@vue-storefront/core/lib/sync';
+import { processURLAddress } from '@vue-storefront/core/helpers';
+
+import DonglerBookData from './interfaces/dongler-book-data.interface';
 
 export default Blok.extend({
   name: 'StoryblokDonglerBook',
@@ -68,18 +82,15 @@ export default Blok.extend({
   },
   data () {
     return {
+      isSubmitting: false,
+      isSubmittedWthError: false,
       email: '',
-      fIsShowSuccessMessage: false
+      isSubmitted: false
     };
   },
   computed: {
-    isShowSuccessMessage: {
-      set: function (isShow: boolean) {
-        this.fIsShowSuccessMessage = isShow;
-      },
-      get: function (): boolean {
-        return this.fIsShowSuccessMessage;
-      }
+    itemData (): DonglerBookData {
+      return this.item as DonglerBookData;
     }
   },
   methods: {
@@ -90,28 +101,35 @@ export default Blok.extend({
         return;
       }
 
-      const url = processURLAddress(`${config.budsies.endpoint}/dongler-book-requests`);
+      this.isSubmitting = true;
 
-      const result = await TaskQueue.execute({
-        url: url,
-        payload: {
-          headers: { 'Content-type': 'application/json' },
-          mode: 'cors',
-          method: 'POST',
-          body: JSON.stringify({ email: this.email })
-        },
-        silent: true
-      }).then(response => {
-        if (response.result === true) {
-          this.isShowSuccessMessage = true;
-          this.email = '';
-          this.$v.$reset();
-        } else {
-          console.error(response.result);
+      try {
+        const url = processURLAddress(`${config.budsies.endpoint}/dongler-book-requests`);
+
+        const response = await TaskQueue.execute({
+          url: url,
+          payload: {
+            headers: { 'Content-type': 'application/json' },
+            mode: 'cors',
+            method: 'POST',
+            body: JSON.stringify({ email: this.email })
+          },
+          silent: true
+        });
+
+        if (response.result !== true) {
+          throw new Error(response.result);
         }
-      }).catch(error => {
+
+        this.isSubmitted = true;
+        this.email = '';
+        this.$v.$reset();
+      } catch (error) {
         console.error(error);
-      })
+        this.isSubmittedWthError = true;
+      } finally {
+        this.isSubmitting = false;
+      }
     }
   },
   validations: {
@@ -132,16 +150,25 @@ export default Blok.extend({
 
   ._form {
     ._email-row {
+      max-width: 25em;
       margin-top: 1em;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
     }
 
     ._button-row {
+      margin-top: 1em;
+    }
+
+    ._button {
       display: inline-block;
     }
   }
 
   ._description {
     display: inline-block;
+    margin-top: 0.5em;
     width: 100%;
   }
 
