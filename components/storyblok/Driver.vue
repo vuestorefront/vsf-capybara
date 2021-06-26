@@ -178,6 +178,12 @@ $transition-zoom-in-time: 0.5s;
     }
   }
 
+  &.-editor-preview-mode {
+    ._link {
+      pointer-events: none
+    }
+  }
+
   @media (min-width: $tablet-min) {
     &.-zoom-effect {
       ._driver-text {

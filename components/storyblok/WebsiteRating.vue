@@ -122,5 +122,11 @@ export default Blok.extend({
     font-size: 0.75em;
     font-weight: 600;
   }
+
+  &.-editor-preview-mode {
+    ._links {
+      pointer-events: none
+    }
+  }
 }
 </style>

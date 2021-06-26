@@ -29,10 +29,7 @@ export default {
 .default-layout {
   &.storyblok-preview-mode {
     a,
-    button,
-    .storyblok-video ._embed-container,
-    .storyblok-image ._image,
-    .storyblok-html-renderer ._html-wrapper {
+    button {
       pointer-events: none;
     }
   }

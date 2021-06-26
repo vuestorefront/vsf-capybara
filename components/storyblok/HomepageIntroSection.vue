@@ -180,6 +180,12 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     position: relative;
   }
 
+  &.-editor-preview-mode {
+    ._button {
+      pointer-events: none
+    }
+  }
+
   @media (min-width: $tablet-min) {
     ._content {
       padding: 0 5% 0 55%;

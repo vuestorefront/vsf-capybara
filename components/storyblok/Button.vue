@@ -69,5 +69,11 @@ export default Blok.extend({
   ._button {
     display: inline-block;
   }
+
+  &.-editor-preview-mode {
+    ._button {
+      pointer-events: none
+    }
+  }
 }
 </style>

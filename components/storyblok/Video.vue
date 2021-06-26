@@ -99,5 +99,11 @@ export default Blok.extend({
     border: 0;
     box-sizing: border-box;
   }
+
+  &.-editor-preview-mode {
+    ._embed-container {
+      pointer-events: none
+    }
+  }
 }
 </style>

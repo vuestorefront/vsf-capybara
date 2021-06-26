@@ -143,8 +143,16 @@ export default Blok.extend({
   ._description {
     display: inline-block;
     width: 100%;
+  }
 
-    @include for-desktop {
+  &.-editor-preview-mode {
+    ._button-row {
+      pointer-events: none
+    }
+  }
+
+  @include for-desktop {
+    ._description {
       width: 50%;
     }
   }

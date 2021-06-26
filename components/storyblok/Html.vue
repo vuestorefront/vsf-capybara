@@ -91,5 +91,11 @@ export default Blok.extend({
 
 <style lang="scss" scoped>
 .storyblok-html-renderer {
+  &.-editor-preview-mode {
+    ._no-script-html,
+    ._script-container {
+      pointer-events: none
+    }
+  }
 }
 </style>
