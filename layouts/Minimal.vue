@@ -1,5 +1,5 @@
 <template>
-  <div class="minimal-layout">
+  <div class="minimal-layout" :class="{'storyblok-preview-mode': isStoryblokPreviewMode}">
     <div id="viewport">
       <OHeaderMinimal />
       <slot />
@@ -16,6 +16,22 @@ export default {
   components: {
     OHeaderMinimal,
     OFooter
+  },
+  computed: {
+    isStoryblokPreviewMode () {
+      return this.$route.query.hasOwnProperty('_storyblok')
+    }
   }
 }
 </script>
+
+<style lang="scss">
+.default-layout {
+  &.storyblok-preview-mode {
+    a,
+    button {
+      pointer-events: none;
+    }
+  }
+}
+</style>

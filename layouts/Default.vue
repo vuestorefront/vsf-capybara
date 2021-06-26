@@ -1,5 +1,5 @@
 <template>
-  <div class="default-layout">
+  <div class="default-layout" :class="{'storyblok-preview-mode': isStoryblokPreviewMode}">
     <MLoader />
     <div id="viewport">
       <OTopNavigation />
@@ -54,6 +54,9 @@ export default {
   computed: {
     quicklinkEnabled () {
       return typeof config.quicklink !== 'undefined' && config.quicklink.enabled
+    },
+    isStoryblokPreviewMode () {
+      return this.$route.query.hasOwnProperty('_storyblok')
     }
   },
   beforeMount () {
@@ -112,3 +115,14 @@ export default {
   metaInfo: Head
 };
 </script>
+
+<style lang="scss">
+.default-layout {
+  &.storyblok-preview-mode {
+    a,
+    button {
+      pointer-events: none;
+    }
+  }
+}
+</style>

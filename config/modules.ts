@@ -11,12 +11,33 @@ import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
 import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
 import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-delivery'
+import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
+import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
+import { extendStore } from '@vue-storefront/core/helpers'
+import { StorefrontModule } from '@vue-storefront/core/lib/modules'
 import { BudsiesModule } from 'src/modules/budsies'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
+import registerStoryblokComponents from 'theme/components/storyblok'
+
+const extendUrlVuex = {
+  actions: {
+    async mapFallbackUrl (context, payload: any) {
+      const result = await forStoryblok(context, payload);
+      if (result) {
+        return result
+      }
+    }
+  }
+}
+const extendUrlModule: StorefrontModule = function ({ store }) {
+  extendStore('url', extendUrlVuex);
+}
 
 // TODO:distributed across proper pages BEFORE 1.11
 export function registerClientModules () {
+  registerStoryblokComponents()
+
   registerModule(UrlModule)
   registerModule(CatalogModule)
   registerModule(CheckoutModule) // To Checkout
@@ -29,6 +50,8 @@ export function registerClientModules () {
   registerModule(BreadcrumbsModule)
   registerModule(CmsModule)
   registerModule(NewsletterModule)
+  registerModule(StoryblokModule)
+  registerModule(extendUrlModule)
   registerModule(BudsiesModule)
 }
 
