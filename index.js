@@ -26,7 +26,7 @@ once('__VUE_EXTEND_DROPPOINT_VPB__', () => {
 });
 
 const themeEntry = App;
-function initTheme (app, router, store, config) {
+function initTheme (app, router, store, config, ssrContext) {
   store.registerModule('themeCart', cartModule);
   // Register theme routes for the current store. In a single store setup this will add routes exactly as they are in the router definition file '[theme]/router/index.js'
   // In a multistore setup, it depends on the config setting 'appendStoreCode' for the current store
@@ -45,6 +45,9 @@ function initTheme (app, router, store, config) {
   store.registerModule('promoted', promotedStore);
   store.registerModule('instagram', instagramStore);
   store.registerModule('defaultContent', defaultContentStore);
+  if (ssrContext) {
+    store.dispatch('storyblok/ssrContext', ssrContext)
+  }
 }
 
 export { themeEntry, initTheme };
