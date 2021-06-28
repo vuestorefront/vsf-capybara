@@ -14,7 +14,9 @@ import MinimalLayout from './layouts/Minimal'
 
 import { FileProcessingRepositoryFactory, itemFactory } from 'src/modules/file-storage'
 import { ErrorConverterService } from 'src/modules/budsies'
+import { isServer } from '@vue-storefront/core/helpers'
 
+const windowObject = isServer ? {} : window;
 const errorConverterService = new ErrorConverterService();
 const fileProcessingRepositoryFactory = new FileProcessingRepositoryFactory(
   itemFactory
@@ -32,7 +34,8 @@ export default {
   },
   provide: {
     ErrorConverterService: errorConverterService,
-    FileProcessingRepositoryFactory: fileProcessingRepositoryFactory
+    FileProcessingRepositoryFactory: fileProcessingRepositoryFactory,
+    WindowObject: windowObject
   }
 };
 </script>
