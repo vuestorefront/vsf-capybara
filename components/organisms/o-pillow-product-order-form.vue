@@ -17,7 +17,7 @@
         @submit.prevent="(event) => passes(() => onSubmit(event))"
       >
         <div class="_step-number">
-          Step {{ getNextStepNumber(true) }}
+          Step 1
         </div>
 
         <SfHeading
@@ -103,7 +103,7 @@
         <SfDivider class="_step-divider" />
 
         <div class="_step-number">
-          Step {{ getNextStepNumber() }}
+          Step 2
         </div>
 
         <SfHeading
@@ -136,7 +136,7 @@
           <SfDivider class="_step-divider" />
 
           <div class="_step-number">
-            Step {{ getNextStepNumber() }}
+            Step 3
           </div>
 
           <SfHeading
@@ -167,7 +167,7 @@
         <SfDivider class="_step-divider" />
 
         <div class="_step-number">
-          Step {{ getNextStepNumber() }}
+          Step 4
         </div>
 
         <SfHeading
@@ -248,7 +248,7 @@
 
         <div v-show="showEmailStep">
           <div class="_step-number _email-step">
-            Step {{ getNextStepNumber() }}
+            Step 5
           </div>
 
           <SfHeading
@@ -414,15 +414,6 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
-    getNextStepNumber (reset = false): number {
-      if (reset) {
-        this.stepNumber = 0;
-      }
-
-      this.stepNumber += 1;
-
-      return this.stepNumber;
-    },
     getBodypartValues (bodypart: Bodypart): BodypartOption[] {
       const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
