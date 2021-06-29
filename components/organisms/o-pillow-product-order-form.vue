@@ -12,7 +12,7 @@
 
     <SfDivider class="_step-divider" />
 
-    <validation-observer v-slot="{ passes }" slim>
+    <validation-observer v-slot="{ passes }" slim ref="validation-observer">
       <form
         @submit.prevent="(event) => passes(() => onSubmit(event))"
       >
@@ -315,7 +315,6 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
-import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui/vue';
@@ -447,6 +446,27 @@ export default Vue.extend({
 
       return result;
     },
+    getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
+      return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
+    },
+    resetForm (): void {
+      this.quantity = this.product.qty;
+      this.storageItemId = undefined;
+      this.size = undefined;
+      this.name = undefined;
+
+      for (const bodypart of this.bodyparts) {
+        this.bodypartsValues[bodypart.code] = undefined;
+      }
+
+      const uploader = this.getUploader();
+      if (uploader) {
+        uploader.clearInput();
+      }
+
+      const validator = this.getValidationObserver();
+      validator?.reset();
+    },
     onArtworkChange (value?: Item): void {
       if (!value) {
         this.storageItemId = undefined;
@@ -462,6 +482,9 @@ export default Vue.extend({
 
       this.isSubmitting = true;
 
+      const shouldMakeAnother = this.shouldMakeAnother;
+      this.shouldMakeAnother = false;
+
       await this.$store.dispatch(
         'product/setBundleOptions',
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
@@ -472,7 +495,8 @@ export default Vue.extend({
         { email: this.email }
       );
 
-      this.$store.dispatch('cart/addItem', {
+      try {
+        await this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
             qty: this.quantity,
           plushieId: this.plushieId + '',
@@ -483,27 +507,20 @@ export default Vue.extend({
           uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
         })
       });
-    },
-    async onSuccess (): Promise<void> {
-      try {
-        const uploader = this.getUploader();
-        if (uploader) {
-          uploader.clearInput();
-        }
 
         if (!shouldMakeAnother) {
           this.goToCart();
           return;
         }
 
-        this.fMakeAnother = false;
-        this.refreshPage();
-      } catch (e) {
-        this.$store.dispatch(
-          'notification/spawnNotification',
-          notifications.createNotification({ type: 'danger', message: e.message, timeToLive: 10 * 1000 }),
-          { root: true }
-        );
+        this.resetForm();
+        this.$emit('make-another');
+      } catch (err) {
+        Logger.error(err, 'budsies')();
+
+        this.onFailure('Unexpected error: ' + err);
+      } finally {
+        this.isSubmitting = false;
       }
     },
     getBodypartsData (): Record<string, string> {
@@ -533,20 +550,10 @@ export default Vue.extend({
     },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
-    },
-    refreshPage (): void {
-      this.$router.go(0);
     }
   },
-  mounted (): void {
-    this.stepNumber = 0;
-  },
   created (): void {
-    this.fQuantity = this.product.qty;
-
-    this.bodyparts.forEach(bodypart => {
-      this.fBodypartsValues[bodypart.code] = undefined;
-    });
+    this.resetForm();
 
     if (this.uploadedArtworkId) {
       this.storageItemId = this.uploadedArtworkId;
