@@ -139,7 +139,7 @@ export default {
 
 #printed-product {
   box-sizing: border-box;
-  padding: 0 1rem;
+  padding: var(--spacer-lg) 1rem 0;
 
   ::v-deep {
     .product__colors button {
