@@ -99,6 +99,7 @@ export default Vue.extend({
       padding-top: 100%;
       width: 100%;
       position: relative;
+      z-index: 0;
     }
 
     ._name {
