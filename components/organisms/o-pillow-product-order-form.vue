@@ -1,17 +1,16 @@
 <template>
   <div class="o-pillow-product-order-form product" :class="skinClass">
-    <header class="sf-heading sf-heading--no-underline">
-      <h1 class="sf-heading__title">
-        Pillow Order Form
-      </h1>
-    </header>
+    <SfHeading
+      :level="1"
+      title="Pillow Order Form"
+    />
 
     <div class="_top-notes">
-      <p><b>Estimated Delivery: 2 weeks</b></p>
-      <p><i>Please make sure everything is correct before submitting. Your pillow goes straight to print!</i></p>
+      <p><strong>Estimated Delivery: 2 weeks</strong></p>
+      <p><strong>Please make sure everything is correct before submitting. Your pillow goes straight to print!</strong></p>
     </div>
 
-    <SfDivider />
+    <SfDivider class="_step-divider" />
 
     <validation-observer v-slot="{ passes }" slim>
       <form
@@ -20,9 +19,13 @@
         <div class="_step-number">
           Step {{ getNextStepNumber(true) }}
         </div>
-        <h2 class="_step-title -required sf-heading__title">
-          Upload your photo
-        </h2>
+
+        <SfHeading
+          class="_step-title -required "
+          :level="2"
+          title="Upload your photo"
+        />
+
         <div class="_upload-now" v-if="isUploadNow">
           <p>We do not edit your photos. The photo you submit will be printed on the pillow as is.</p>
           <p>
@@ -32,6 +35,7 @@
               @click.stop.prevent="fUploadNow = false"
             >send them to us later.</a>
           </p>
+
           <validation-provider
             v-slot="{ errors }"
             name="'Artwork'"
@@ -57,8 +61,14 @@
               {{ errors[0] }}
             </div>
           </validation-provider>
-          <p><b>Please Note: We recommend high resolution, clear photos for our Petsies Pillows!</b></p>
-          <p><b>Low quality, dark or blurry photos may impact photo clarity on your Pillow.</b></p>
+
+          <p>
+            <strong>
+              Please Note: We recommend high resolution, clear photos for our Petsies Pillows!
+              <br>
+              Low quality, dark or blurry photos may impact photo clarity on your Pillow.
+            </strong>
+          </p>
         </div>
 
         <div class="_upload-email" v-if="!isUploadNow">
@@ -69,6 +79,7 @@
               @click.stop.prevent="fUploadNow = true"
             >our uploader.</a>
           </p>
+
           <p>
             When you're ready, please email a photo of the design to: <br> <a
               class="_popup-link"
@@ -76,8 +87,10 @@
               @click="fUploadNow = true"
             >photos@mypetsies.com</a>
           </p>
+
           <p>Include this design's magic word in the subject line of the email:</p>
           <p>{{ shortcode }}</p>
+
           <p>
             Don't worry, we'll send you a reminder with this code after you complete your order. <br> You may include only one photo per Pillow. <br> <a
               class="_popup-link"
@@ -85,15 +98,22 @@
               @click="fUploadNow = true"
             >Photos@mypetsies.com</a> is an automated inbox used only for receiving images.
           </p>
+
           <p>NOTE: Proceed to Step 2 to complete your order. You may send us your photo within the next 5 days.</p>
         </div>
-        <SfDivider />
+
+        <SfDivider class="_step-divider" />
+
         <div class="_step-number">
           Step {{ getNextStepNumber() }}
         </div>
-        <h2 class="_step-title -required sf-heading__title">
-          Size
-        </h2>
+
+        <SfHeading
+          class="_step-title -required "
+          :level="2"
+          title="Size"
+        />
+
         <validation-provider
           v-slot="{ errors }"
           rules="required"
@@ -105,20 +125,28 @@
             v-model="fSize"
             :options="sizes"
           />
+
           <div class="_error-text">
             {{ errors[0] }}
           </div>
         </validation-provider>
+
         <div
           v-for="bodypart in bodyparts"
           :key="bodypart.id"
         >
+          <SfDivider class="_step-divider" />
+
           <div class="_step-number">
             Step {{ getNextStepNumber() }}
           </div>
-          <h2 class="_step-title -required sf-heading__title">
-            {{ bodypart.name }}
-          </h2>
+
+          <SfHeading
+            class="_step-title -required "
+            :level="2"
+            :title="bodypart.name"
+          />
+
           <validation-provider
             v-slot="{ errors }"
             rules="required"
@@ -131,17 +159,25 @@
               :options="getBodypartValues(bodypart)"
               type="bodypart"
             />
+
             <div class="_error-text">
               {{ errors[0] }}
             </div>
           </validation-provider>
         </div>
+
+        <SfDivider class="_step-divider" />
+
         <div class="_step-number">
           Step {{ getNextStepNumber() }}
         </div>
-        <h2 class="_step-title -required sf-heading__title">
-          Your Pet's Name
-        </h2>
+
+        <SfHeading
+          class="_step-title -required "
+          :level="2"
+          title="Your Pet's Name"
+        />
+
         <validation-provider
           v-slot="{ errors }"
           rules="required"
@@ -153,11 +189,11 @@
             v-model="fName"
             placeholder="Name"
             :required="false"
+            :valid="!errors.length"
+            :error-message="errors[0]"
           />
-          <div class="_error-text">
-            {{ errors[0] }}
-          </div>
         </validation-provider>
+
         <validation-provider
           v-slot="{ errors, classes }"
           rules="required"
@@ -165,9 +201,11 @@
           slim
         >
           <div class="_quantity-field" :class="classes">
-            <h2 class="_step-title -required sf-heading__title">
-              Quantity
-            </h2>
+            <SfHeading
+              class="_step-title -required "
+              :level="2"
+              title="Quantity"
+            />
 
             <ACustomProductQuantity
               v-model="fQuantity"
@@ -191,11 +229,14 @@
               <div class="_popup-content">
                 <p><b>Quantity Discounts</b></p>
                 <p>All quantity discounts applied automatically at checkout:</p>
+
                 <ul>
                   <li>10% discount on 10+ Petsies</li>
                   <li>20% discount on 20+ Petsies</li>
                 </ul>
+
                 <p><b>Shipping Discounts</b></p>
+
                 <ul>
                   <li>First custom Petsie: $13.95 domestic</li>
                   <li>Each additional Petsie in same order: $5.95</li>
@@ -206,16 +247,21 @@
             </SfModal>
           </div>
         </validation-provider>
+
         <template v-if="showEmailStep">
-          <div class="_step-number">
+          <div class="_step-number _email-step">
             Step {{ getNextStepNumber() }}
           </div>
-          <h2 class="_step-title -required sf-heading__title">
-            Enter your email address
-          </h2>
+
+          <SfHeading
+            class="_step-title -required "
+            :level="2"
+            title="Enter your email address"
+          />
+
           <validation-provider
             v-slot="{ errors }"
-            rules="required"
+            rules="required|email"
             name="'Email'"
             tag="div"
           >
@@ -224,11 +270,11 @@
               v-model="fEmail"
               placeholder="sample@email.com"
               :required="false"
+              :valid="!errors.length"
+              :error-message="errors[0]"
             />
-            <div class="_error-text">
-              {{ errors[0] }}
-            </div>
-            <p><b>Sometimes our team has questions about your design</b></p>
+
+            <div><b>Sometimes our team has questions about your design</b></div>
           </validation-provider>
         </template>
 
@@ -236,6 +282,7 @@
           <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
             Add to Cart
           </SfButton>
+
           <SfButton
             class="_add-to-cart-and-make-another color-secondary"
             type="submit"
@@ -244,6 +291,14 @@
           >
             Save & Make Another
           </SfButton>
+
+          <p class="_order-agreement">
+            I agree to <a href="/terms-of-service/" target="_blank">Terms of Service</a>,
+            <a href="/privacy-policy/" target="_blank">Privacy Policy</a>,
+            and <a href="http://support.mypetsies.com/support/solutions/folders/13000003991" target="_blank">Refund Policy</a>.
+            I understand that Petsies happily takes care of all tears, defects, and shipping damage with either a refund or a repair.
+            I also understand that my custom Petsies order is backed by the Petsies Guarantee.
+          </p>
         </div>
       </form>
     </validation-observer>
@@ -254,13 +309,13 @@
 import Vue, { PropType } from 'vue';
 import { mapMutations } from 'vuex';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required } from 'vee-validate/dist/rules';
+import { required, email } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
-import { SfButton, SfDivider, SfInput, SfModal } from '@storefront-ui/vue';
+import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui/vue';
 
 import { Item } from 'src/modules/file-storage';
 
@@ -277,6 +332,11 @@ extend('required', {
   message: 'The {_field_} field is required'
 });
 
+extend('email', {
+  ...email,
+  message: 'Please, provide the correct email address'
+});
+
 export default Vue.extend({
   name: 'OPillowProductOrderForm',
   components: {
@@ -288,7 +348,8 @@ export default Vue.extend({
     SfButton,
     SfDivider,
     SfInput,
-    SfModal
+    SfModal,
+    SfHeading
   },
   props: {
     artworkUploadUrl: {
@@ -541,6 +602,15 @@ export default Vue.extend({
 .o-pillow-product-order-form {
   text-align: center;
 
+  b,
+  strong {
+    font-weight: var(--font-semibold);
+  }
+
+  ._step-divider {
+    display: none;
+  }
+
   ._step-number {
     display: inline-block;
     margin-top: var(--spacer-lg);
@@ -553,14 +623,17 @@ export default Vue.extend({
 
   ._step-title {
     margin-top: var(--spacer-base);
-    font-size: var(--font-xl);
-    font-weight: var(--font-bold);
+    --heading-title-font-size: var(--font-xl);
+    --heading-title-font-weight: var(--font-bold);
+
+    &._email-step {
+      margin-top: var(--spacer-2xl);
+    }
 
     &.-required {
-      &:after {
+      ::v-deep .sf-heading__title::after {
         color: var(--c-danger-variant);
         content: "*";
-        margin-left: var(--spacer-2xs);
       }
     }
   }
@@ -574,8 +647,7 @@ export default Vue.extend({
   }
 
   .sf-input {
-    margin-top: var(--spacer-lg);
-    text-align: left;
+    text-align: center;
     display: inline-block;
     --input-width: 20em;
   }
@@ -598,7 +670,7 @@ export default Vue.extend({
   }
 
   ._qty-container {
-      margin-top: var(--spacer-base);
+      margin-top: var(--spacer-xs);
   }
 
   ._actions {
@@ -627,13 +699,25 @@ export default Vue.extend({
 
   ._error-text {
       font-size: var(--font-xs);
-      margin-top: var(--spacer-lg);
+      margin-top: var(--spacer-sm);
+  }
+
+  ._order-agreement {
+    max-width: 50em;
+    font-size: var(--font-xs);
+
   }
 
   &.-skin-petsies {
       ._error-text {
           color: var(--c-danger-variant);
       }
+  }
+
+  @media (min-width: $tablet-min) {
+    ._step-divider {
+      display: block;
+    }
   }
 }
 </style>
