@@ -57,11 +57,6 @@
               @input="onArtworkChange"
             />
 
-            <div class="_error-text">
-              {{ errors[0] }}
-            </div>
-          </validation-provider>
-
           <p>
             <strong>
               Please Note: We recommend high resolution, clear photos for our Petsies Pillows!
@@ -69,6 +64,11 @@
               Low quality, dark or blurry photos may impact photo clarity on your Pillow.
             </strong>
           </p>
+
+            <div class="_error-text">
+              {{ errors[0] }}
+            </div>
+          </validation-provider>
         </div>
 
         <div class="_upload-email" v-if="!isUploadNow">
@@ -254,7 +254,7 @@
           </div>
 
           <SfHeading
-            class="_step-title -required "
+            class="_step-title -required"
             :level="2"
             title="Enter your email address"
           />
@@ -619,16 +619,16 @@ export default Vue.extend({
     font-size: var(--font-xl);
     font-weight: var(--font-bold);
     @include border(--step-border, 0 0 4px 0, solid, var(--_c-light-primary));
+
+    &._email-step {
+      margin-top: var(--spacer-2xl);
+    }
   }
 
   ._step-title {
     margin-top: var(--spacer-base);
     --heading-title-font-size: var(--font-xl);
     --heading-title-font-weight: var(--font-bold);
-
-    &._email-step {
-      margin-top: var(--spacer-2xl);
-    }
 
     &.-required {
       ::v-deep .sf-heading__title::after {
@@ -657,7 +657,7 @@ export default Vue.extend({
   }
 
   .sf-divider {
-    margin-top: var(--spacer-2xl);
+    margin-top: var(--spacer-xl);
   }
 
   .m-bodypart-option-configurator {
@@ -700,6 +700,7 @@ export default Vue.extend({
   ._error-text {
       font-size: var(--font-xs);
       margin-top: var(--spacer-sm);
+      height: calc(var(--font-xs) * 1.2);
   }
 
   ._order-agreement {
