@@ -309,8 +309,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue, { PropType, VueConstructor } from 'vue';
 import { mapMutations } from 'vuex';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -320,6 +321,7 @@ import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/produc
 import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui/vue';
 
 import { Item } from 'src/modules/file-storage';
+import { InjectType } from 'src/modules/shared';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -339,7 +341,11 @@ extend('email', {
   message: 'Please, provide the correct email address'
 });
 
-export default Vue.extend({
+interface InjectedServices {
+  window: Window
+}
+
+export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPillowProductOrderForm',
   components: {
     MBodypartOptionConfigurator,
@@ -353,6 +359,9 @@ export default Vue.extend({
     SfModal,
     SfHeading
   },
+  inject: {
+    window: { from: 'WindowObject' }
+  } as unknown as InjectType<InjectedServices>,
   props: {
     artworkUploadUrl: {
       type: String,
@@ -526,6 +535,19 @@ export default Vue.extend({
         }
 
         this.resetForm();
+        this.window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+
+        const notification = notifications.createNotification({
+          type: 'info',
+          message: 'Product was added to the cart',
+          timeToLive: 5 * 1000
+        });
+
+        this.$store.dispatch(
+          'notification/spawnNotification',
+          notification,
+          { root: true }
+        );
         this.$emit('make-another');
       } catch (err) {
         Logger.error(err, 'budsies')();
