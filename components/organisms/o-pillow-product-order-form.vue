@@ -437,8 +437,29 @@ export default Vue.extend({
 
       return result;
     },
+    getBodypartsData (): Record<string, string> {
+      let data: Record<string, string> = {};
+
+      for (let key in this.bodypartsValues) {
+        const value = this.bodypartsValues[key];
+
+        if (value === undefined) {
+          continue;
+        }
+
+        data[value.optionId] = value.optionValueId;
+      }
+
+      return data;
+    },
+    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
+      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
+    },
     getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
       return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
+    },
+    goToCart (): void {
+      this.$router.push(localizedRoute('/cart'));
     },
     resetForm (): void {
       this.quantity = this.product.qty;
@@ -514,33 +535,12 @@ export default Vue.extend({
         this.isSubmitting = false;
       }
     },
-    getBodypartsData (): Record<string, string> {
-      let data: Record<string, string> = {};
-
-      for (let key in this.bodypartsValues) {
-        const value = this.bodypartsValues[key];
-
-        if (value === undefined) {
-          continue;
-        }
-
-        data[value.optionId] = value.optionValueId;
-      }
-
-      return data;
-    },
     onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
         message: message,
         action1: { label: i18n.t('OK') }
       });
-    },
-    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
-      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
-    },
-    goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
     }
   },
   created (): void {
