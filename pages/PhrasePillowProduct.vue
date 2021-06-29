@@ -3,14 +3,15 @@
     <o-phrase-pillow-product-order-form
       :image-upload-url="imageUploadUrl"
       :upload-product-type="backendProductId"
-      svg-path=""
-      :accent-color-part-id="0"
-      :front-design-products="[]"
-      :back-design-products="[]"
-      :accent-color-part-values="[]"
-      :submit-animation-steps="[]"
-      submit-animation-url=""
+      svg-path="https://vsf-api.petsies.denis.office.optimuspro.ru/img/150/150/resize/phrase_pillow/svg-templates"
+      :initial-front-design="initialFrontDesign"
+      :initial-back-design="initialBackDesign"
+      :front-design-products="frontDesigns"
+      :back-design-products="backDesigns"
+      :submit-animation-steps="submitAnimationSteps"
+      submit-animation-url="/assets/images/phrasePillow/submit-animation.mp4"
       :production-time-options="[]"
+      :bodyparts="bodyparts"
     />
   </div>
 </template>
@@ -22,11 +23,15 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { ProductValue } from 'src/modules/budsies';
+import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
+import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
-import BodypartOption from '../components/interfaces/bodypart-option';
 import Bodypart from 'src/modules/budsies/models/bodypart.model';
 import Task from 'core/lib/sync/types/Task';
+import DesignProduct from 'theme/components/interfaces/design-product.interface';
+import ProductImage from 'theme/components/interfaces/product-image.interface';
+import Product from 'core/modules/catalog/types/Product';
 
 export default {
   name: 'PhrasePillowProduct',
@@ -35,7 +40,12 @@ export default {
   },
   data () {
     return {
-      plushieId: undefined as number | undefined
+      plushieId: undefined as number | undefined,
+      submitAnimationSteps: [
+        { text: 'Uploading your image. So cute!', value: 33 },
+        { text: 'Rendering design to maximize hugs', value: 66 },
+        { text: 'Optimizing pillow softness vectors', value: 100 }
+      ]
     };
   },
   computed: {
@@ -46,31 +56,27 @@ export default {
     imageUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
     },
-    sizes (): BodypartOption[] {
-      if (!this.getCurrentProduct.bundle_options) {
-        throw new Error('The pillow product has no bundle options');
+    frontDesigns (): DesignProduct[] {
+      return this.getDesignProducts(true);
+    },
+    backDesigns (): DesignProduct[] {
+      return this.getDesignProducts(false);
+    },
+    initialFrontDesign (): string {
+      if (this.$route.params.childSku) {
+        return this.$route.params.childSku;
       }
 
-      let availableSizes: BodypartOption[] = [];
-      for (const option of this.getCurrentProduct.bundle_options) {
-        for (const productLink of option.product_links) {
-          if (!['bundlePrimaryProduct'].includes(productLink.product.type_id)) {
-            continue;
-          }
+      const designs = this.frontDesigns;
+      const design = designs.slice(-1)[0];
 
-          availableSizes.push({
-            id: productLink.product.id,
-            label: productLink.product.name + ' - $' + productLink.product.price,
-            value: productLink.product.sku,
-            isSelected: false,
-            image: productLink.product.image,
-            optionId: option.option_id,
-            optionValueId: productLink.id
-          });
-        }
-      }
+      return design ? design.sku : '';
+    },
+    initialBackDesign (): string {
+      const designs = this.backDesigns;
+      const design = designs.slice(-1)[0];
 
-      return availableSizes;
+      return design ? design.sku : '';
     },
     bodyparts (): Bodypart[] {
       const bodyparts = this.$store.getters['budsies/getProductBodyparts'](this.getCurrentProduct.id);
@@ -90,6 +96,51 @@ export default {
             `Can't resolve Backend product ID for Magento '${this.getCurrentProduct.id}' product ID`
           );
       }
+    }
+  },
+  methods: {
+    getDesignProductImages (product: Product): ProductImage[] {
+      const gallery = getGalleryByProduct(product);
+
+      return gallery.map((image: any) => ({
+        thumb: image.src,
+        stage: image.src,
+        big: image.src,
+        sku: product.sku
+      }))
+    },
+    getDesignProducts (returnFrontDesigns: boolean): DesignProduct[] {
+      if (!this.getCurrentProduct.bundle_options) {
+        throw new Error('The phrase pillow product has no bundle options');
+      }
+
+      let designs: DesignProduct[] = [];
+      for (const option of this.getCurrentProduct.bundle_options) {
+        for (const productLink of option.product_links) {
+          if (!['pillowSideDesign'].includes(productLink.product.type_id)) {
+            continue;
+          }
+
+          if (productLink.product.sku.includes('Back') === returnFrontDesigns) {
+            continue;
+          }
+
+          designs.push({
+            id: productLink.product.id,
+            sku: productLink.product.sku,
+            name: productLink.product.name,
+            thumbnail: getThumbnailForProduct(productLink.product),
+            price: 0,
+            defaultOtherSideDesign: productLink.product.default_other_side_design,
+            defaultAccentColor: productLink.product.default_accent_color,
+            images: this.getDesignProductImages(productLink.product),
+            optionId: option.option_id,
+            optionValueId: productLink.id
+          });
+        }
+      }
+
+      return designs;
     }
   },
   async mounted (): Promise<void> {

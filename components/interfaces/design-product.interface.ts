@@ -8,5 +8,7 @@ export default interface DesignProduct {
   price: number,
   defaultOtherSideDesign?: number,
   defaultAccentColor?: number,
-  images: ProductImage[]
+  images: ProductImage[],
+  optionId: string,
+  optionValueId: string
 }
