@@ -12,11 +12,14 @@
 
     <SfDivider class="_step-divider" />
 
-    <validation-observer v-slot="{ passes }" slim ref="validation-observer">
+    <validation-observer v-slot="{ passes, errors: formErrors }" slim ref="validation-observer">
       <form
         @submit.prevent="(event) => passes(() => onSubmit(event))"
       >
-        <div class="_step-number">
+        <div
+          class="_step-number"
+          ref="artwork-field-anchor"
+        >
           Step 1
         </div>
 
@@ -57,13 +60,13 @@
               @input="onArtworkChange"
             />
 
-          <p>
-            <strong>
-              Please Note: We recommend high resolution, clear photos for our Petsies Pillows!
-              <br>
-              Low quality, dark or blurry photos may impact photo clarity on your Pillow.
-            </strong>
-          </p>
+            <p>
+              <strong>
+                Please Note: We recommend high resolution, clear photos for our Petsies Pillows!
+                <br>
+                Low quality, dark or blurry photos may impact photo clarity on your Pillow.
+              </strong>
+            </p>
 
             <div class="_error-text">
               {{ errors[0] }}
@@ -102,7 +105,10 @@
 
         <SfDivider class="_step-divider" />
 
-        <div class="_step-number">
+        <div
+          class="_step-number"
+          ref="size-field-anchor"
+        >
           Step 2
         </div>
 
@@ -129,16 +135,19 @@
           </div>
         </validation-provider>
 
+        <SfDivider class="_step-divider" />
+
+        <div
+          class="_step-number"
+          ref="pillow-type-field-anchor"
+        >
+          Step 3
+        </div>
+
         <div
           v-for="bodypart in bodyparts"
           :key="bodypart.id"
         >
-          <SfDivider class="_step-divider" />
-
-          <div class="_step-number">
-            Step 3
-          </div>
-
           <SfHeading
             class="_step-title -required "
             :level="2"
@@ -166,7 +175,10 @@
 
         <SfDivider class="_step-divider" />
 
-        <div class="_step-number">
+        <div
+          class="_step-number"
+          ref="pet-name-field-anchor"
+        >
           Step 4
         </div>
 
@@ -247,7 +259,10 @@
         </validation-provider>
 
         <div v-show="showEmailStep">
-          <div class="_step-number _email-step">
+          <div
+            class="_step-number _email-step"
+            ref="email-field-anchor"
+          >
             Step 5
           </div>
 
@@ -274,6 +289,26 @@
 
             <div><b>Sometimes our team has questions about your design</b></div>
           </validation-provider>
+        </div>
+
+        <div class="_form-errors">
+          <template
+            v-for="(fieldErrors, field) in formErrors"
+          >
+            <div
+              class="_error-text"
+              :key="field"
+              v-if="fieldErrors.length > 0"
+            >
+              <a
+                class="_error-link"
+                href="javascript:void(0)"
+                @click.prevent="goToFieldByName(field.toString())"
+              >
+                {{ fieldErrors.join('. ') }}
+              </a>
+            </div>
+          </template>
         </div>
 
         <div class="_actions">
@@ -470,6 +505,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
     },
+    goToFieldByName (field: string): void {
+      // Strip quotes
+      let refName = field.replace(/^['"]+|['"]+$/g, '');
+      // Strip spaces & convert to lower case
+      refName = refName.toLowerCase().replace(/ /g, '-');
+
+      refName += '-field-anchor';
+
+      const ref = this.$refs[refName] as HTMLElement | undefined;
+      if (!ref) {
+        Logger.warn(`Reference for the field with error not found. Field: ${field}, ref: ${refName}`, 'budsies')();
+        return;
+      }
+
+      ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
     resetForm (): void {
       this.quantity = this.product.qty;
       this.storageItemId = undefined;
@@ -518,16 +569,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       try {
         await this.$store.dispatch('cart/addItem', {
-        productToAdd: Object.assign({}, this.product, {
+          productToAdd: Object.assign({}, this.product, {
             qty: this.quantity,
-          plushieId: this.plushieId + '',
+            plushieId: this.plushieId + '',
             email: this.email,
             plushieName: this.name,
-          bodyparts: this.getBodypartsData(),
+            bodyparts: this.getBodypartsData(),
             customerImagesIds: this.storageItemId ? [this.storageItemId] : [],
-          uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
-        })
-      });
+            uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
+          })
+        });
 
         if (!shouldMakeAnother) {
           this.goToCart();
@@ -692,12 +743,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     align-items: center;
     margin-top: var(--spacer-xl);
 
-    ._add-to-cart,
     ._add-to-cart-and-make-another {
-        margin: var(--spacer-lg) 0 0 0;
-    }
-
-    ._add-to-cart-and-make-another {
+      margin: var(--spacer-lg) 0 0 0;
       font-size: var(--font-sm);
     }
   }
@@ -714,6 +761,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       font-size: var(--font-xs);
       margin-top: var(--spacer-sm);
       height: calc(var(--font-xs) * 1.2);
+  }
+
+  ._form-errors {
+    margin-top: var(--spacer-xl);
+    min-height: calc(var(--font-xs) * 1.2 * 4);
+
+    ._error-link {
+      color: inherit;
+    }
   }
 
   ._order-agreement {
