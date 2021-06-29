@@ -719,5 +719,12 @@ export default Vue.extend({
       display: block;
     }
   }
+
+@include for-desktop {
+  .sf-modal {
+    --modal-top: 50%;
+  }
+}
+
 }
 </style>
