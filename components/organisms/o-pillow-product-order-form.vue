@@ -246,7 +246,7 @@
           </div>
         </validation-provider>
 
-        <template v-if="showEmailStep">
+        <div v-show="showEmailStep">
           <div class="_step-number _email-step">
             Step {{ getNextStepNumber() }}
           </div>
@@ -274,7 +274,7 @@
 
             <div><b>Sometimes our team has questions about your design</b></div>
           </validation-provider>
-        </template>
+        </div>
 
         <div class="_actions">
           <SfButton
