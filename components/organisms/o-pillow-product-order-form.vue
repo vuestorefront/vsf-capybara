@@ -32,7 +32,7 @@
             Don't have your photos? You can finalize your order and <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click.stop.prevent="fUploadNow = false"
+              @click.stop.prevent="isUploadNow = false"
             >send them to us later.</a>
           </p>
 
@@ -44,7 +44,7 @@
             <input
               type="hidden"
               name="uploaded_artwork_ids[]"
-              :value="fStorageItemId"
+              :value="storageItemId"
               required
             >
 
@@ -52,7 +52,7 @@
               ref="artwork-upload"
               class="_file-uploader"
               :product-id="backendProductId"
-              :disabled="isUploadDisabled"
+              :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
               @input="onArtworkChange"
             />
@@ -76,7 +76,7 @@
             Want to upload photos now? Please use <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click.stop.prevent="fUploadNow = true"
+              @click.stop.prevent="isUploadNow = true"
             >our uploader.</a>
           </p>
 
@@ -84,7 +84,6 @@
             When you're ready, please email a photo of the design to: <br> <a
               class="_popup-link"
               href="mailto:photos@mypetsies.com"
-              @click="fUploadNow = true"
             >photos@mypetsies.com</a>
           </p>
 
@@ -95,7 +94,6 @@
             Don't worry, we'll send you a reminder with this code after you complete your order. <br> You may include only one photo per Pillow. <br> <a
               class="_popup-link"
               href="mailto:photos@mypetsies.com"
-              @click="fUploadNow = true"
             >Photos@mypetsies.com</a> is an automated inbox used only for receiving images.
           </p>
 
@@ -122,7 +120,7 @@
         >
           <m-bodypart-option-configurator
             name="pillow_size"
-            v-model="fSize"
+            v-model="size"
             :options="sizes"
           />
 
@@ -155,7 +153,7 @@
           >
             <m-bodypart-option-configurator
               :name="bodypart.code"
-              v-model="fBodypartsValues[bodypart.code]"
+              v-model="bodypartsValues[bodypart.code]"
               :options="getBodypartValues(bodypart)"
               type="bodypart"
             />
@@ -186,7 +184,7 @@
         >
           <SfInput
             name="pet_name"
-            v-model="fName"
+            v-model="name"
             placeholder="Name"
             :required="false"
             :valid="!errors.length"
@@ -208,7 +206,7 @@
             />
 
             <ACustomProductQuantity
-              v-model="fQuantity"
+              v-model="quantity"
               class="_qty-container"
             />
 
@@ -219,12 +217,12 @@
             <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click="fQuantityNotesVisible = true"
+              @click="areQuantityNotesVisible = true"
             >Quantity & Shipping Discounts</a>
 
             <SfModal
-              :visible="fQuantityNotesVisible"
-              @close="fQuantityNotesVisible = false"
+              :visible="areQuantityNotesVisible"
+              @close="areQuantityNotesVisible = false"
             >
               <div class="_popup-content">
                 <p><b>Quantity Discounts</b></p>
@@ -267,7 +265,7 @@
           >
             <SfInput
               name="email"
-              v-model="fEmail"
+              v-model="email"
               placeholder="sample@email.com"
               :required="false"
               :valid="!errors.length"
@@ -279,15 +277,20 @@
         </template>
 
         <div class="_actions">
-          <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
+          <SfButton
+            class="_add-to-cart color-primary"
+            type="submit"
+            :disabled="isSubmitting"
+            @click="shouldMakeAnother = false"
+          >
             Add to Cart
           </SfButton>
 
           <SfButton
             class="_add-to-cart-and-make-another color-secondary"
             type="submit"
-            :disabled="isLoading"
-            @click="fMakeAnother = true"
+            :disabled="isSubmitting"
+            @click="shouldMakeAnother = true"
           >
             Save & Make Another
           </SfButton>
@@ -383,30 +386,21 @@ export default Vue.extend({
   },
   data () {
     return {
-      fQuantity: 1,
-      fStorageItemId: undefined as string | undefined,
-      fSize: undefined as BodypartOption | undefined,
-      fBodypartsValues: {},
-      fName: undefined as string | undefined,
-      fEmail: undefined as string | undefined,
-      fIsLoading: false,
-      fMakeAnother: false,
-      fQuantityNotesVisible: false,
-      fUploadNow: true
+      quantity: 1,
+      storageItemId: undefined as string | undefined,
+      size: undefined as BodypartOption | undefined,
+      bodypartsValues: {} as unknown as Record<string, BodypartOption | undefined>,
+      name: undefined as string | undefined,
+      email: undefined as string | undefined,
+      isSubmitting: false,
+      shouldMakeAnother: false,
+      areQuantityNotesVisible: false,
+      isUploadNow: true
     }
   },
   computed: {
-    isLoading (): boolean {
-      return this.fIsLoading;
-    },
     skinClass (): string {
       return '-skin-petsies';
-    },
-    isUploadDisabled (): boolean {
-      return false;
-    },
-    isUploadNow (): boolean {
-      return this.fUploadNow;
     },
     showEmailStep (): boolean {
       const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
@@ -431,7 +425,7 @@ export default Vue.extend({
       return this.stepNumber;
     },
     getBodypartValues (bodypart: Bodypart): BodypartOption[] {
-      const bodypartsValues = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
+      const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
       if (!bodypartsValues.length) {
         return [];
@@ -439,7 +433,7 @@ export default Vue.extend({
 
       const result: BodypartOption[] = [];
 
-      bodypartsValues.forEach((bodypartValue: BodypartValue) => {
+      for (const bodypartValue of bodypartsValues) {
         result.push({
           id: bodypartValue.id,
           label: bodypartValue.name,
@@ -449,20 +443,24 @@ export default Vue.extend({
           optionId: bodypart.id,
           optionValueId: bodypartValue.id
         });
-      });
+      }
 
       return result;
     },
     onArtworkChange (value?: Item): void {
       if (!value) {
-        this.fStorageItemId = undefined;
+        this.storageItemId = undefined;
         return;
       }
 
-      this.fStorageItemId = value.id;
+      this.storageItemId = value.id;
     },
     async onSubmit (event: Event): Promise<void> {
-      this.fIsLoading = true;
+      if (this.isSubmitting) {
+        return;
+      }
+
+      this.isSubmitting = true;
 
       await this.$store.dispatch(
         'product/setBundleOptions',
@@ -471,27 +469,19 @@ export default Vue.extend({
 
       this.$store.commit(
         budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CUSTOMER_EMAIL_SET,
-        { email: this.fEmail }
+        { email: this.email }
       );
 
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
-          qty: this.fQuantity,
+            qty: this.quantity,
           plushieId: this.plushieId + '',
-          email: this.fEmail,
-          plushieName: this.fName,
+            email: this.email,
+            plushieName: this.name,
           bodyparts: this.getBodypartsData(),
-          customerImagesIds: this.fStorageItemId ? [this.fStorageItemId] : [],
+            customerImagesIds: this.storageItemId ? [this.storageItemId] : [],
           uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
         })
-      }).then(() => {
-        this.onSuccess();
-      }).catch(err => {
-        Logger.error(err, 'budsies')();
-
-        this.onFailure('Unexpected error: ' + err);
-      }).finally(() => {
-        this.fIsLoading = false;
       });
     },
     async onSuccess (): Promise<void> {
@@ -501,9 +491,8 @@ export default Vue.extend({
           uploader.clearInput();
         }
 
-        if (!this.fMakeAnother) {
+        if (!shouldMakeAnother) {
           this.goToCart();
-
           return;
         }
 
@@ -520,8 +509,12 @@ export default Vue.extend({
     getBodypartsData (): Record<string, string> {
       let data: Record<string, string> = {};
 
-      for (let key in this.fBodypartsValues) {
-        const value = this.fBodypartsValues[key];
+      for (let key in this.bodypartsValues) {
+        const value = this.bodypartsValues[key];
+
+        if (value === undefined) {
+          continue;
+        }
 
         data[value.optionId] = value.optionValueId;
       }
@@ -556,25 +549,25 @@ export default Vue.extend({
     });
 
     if (this.uploadedArtworkId) {
-      this.fStorageItemId = this.uploadedArtworkId;
+      this.storageItemId = this.uploadedArtworkId;
     }
 
     const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
     if (customerEmail) {
-      this.fEmail = customerEmail;
+      this.email = customerEmail;
     }
   },
   watch: {
-    fSize: {
+    size: {
       handler () {
-        if (!this.fSize) {
+        if (!this.size) {
           return
         }
 
         this.setBundleOptionValue({
-          optionId: this.fSize.optionId,
+          optionId: this.size.optionId,
           optionQty: 1,
-          optionSelections: [this.fSize.optionValueId]
+          optionSelections: [this.size.optionValueId]
         });
       },
       immediate: false
