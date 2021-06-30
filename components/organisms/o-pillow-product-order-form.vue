@@ -522,6 +522,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
     },
+    prefillEmail (): void {
+      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+      if (customerEmail) {
+        this.email = customerEmail;
+        this.showEmailStep = false;
+      }
+    },
     resetForm (): void {
       this.quantity = this.product.qty;
       this.storageItemId = undefined;
@@ -617,6 +624,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       });
     }
   },
+  beforeMount () {
+    this.$bus.$once('budsies-store-synchronized', this.prefillEmail);
+  },
+  beforeDestroy () {
+    this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
+  },
   created (): void {
     this.resetForm();
 
@@ -624,11 +637,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.storageItemId = this.uploadedArtworkId;
     }
 
-    const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
-    if (customerEmail) {
-      this.email = customerEmail;
-      this.showEmailStep = false;
-    }
+    this.prefillEmail();
   },
   watch: {
     size: {
