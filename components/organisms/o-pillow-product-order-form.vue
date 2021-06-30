@@ -443,17 +443,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       isSubmitting: false,
       shouldMakeAnother: false,
       areQuantityNotesVisible: false,
-      isUploadNow: true
+      isUploadNow: true,
+      showEmailStep: true
     }
   },
   computed: {
     skinClass (): string {
       return '-skin-petsies';
-    },
-    showEmailStep (): boolean {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
-
-      return customerEmail === undefined;
     },
     shortcode (): string | undefined {
       return this.$store.getters['budsies/getPlushieShortcode'](this.plushieId);
@@ -631,6 +627,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
     if (customerEmail) {
       this.email = customerEmail;
+      this.showEmailStep = false;
     }
   },
   watch: {
