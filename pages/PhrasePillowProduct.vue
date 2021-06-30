@@ -64,8 +64,8 @@ export default {
       return this.getDesignProducts(false);
     },
     initialFrontDesign (): string {
-      if (this.$route.params.childSku) {
-        return this.$route.params.childSku;
+      if (this.$route.params.parentSku) {
+        return this.$route.params.parentSku;
       }
 
       const designs = this.frontDesigns;

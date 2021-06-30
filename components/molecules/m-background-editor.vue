@@ -31,7 +31,7 @@
           :style="getVueCroppieContainerStyles()"
         >
           <vue-croppie-component
-            v-if="!isServer"
+            v-if="isCroppieAvailable"
             ref="croppieRef"
             :boundary="{
               width: 'calc(100% - 2px)',
@@ -97,8 +97,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
-    isServer () {
-      return isServer;
+    isCroppieAvailable () {
+      return !isServer;
     }
   },
   data () {
