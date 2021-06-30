@@ -331,8 +331,13 @@
           </SfButton>
 
           <p class="_order-agreement">
-            I agree to <a href="/terms-of-service/" target="_blank">Terms of Service</a>,
-            <a href="/privacy-policy/" target="_blank">Privacy Policy</a>,
+            I agree to
+            <router-link to="/terms-of-service/" target="_blank">
+              Terms of Service
+            </router-link>,
+            <router-link to="/privacy-policy/" target="_blank">
+              Privacy Policy
+            </router-link>,
             and <a href="http://support.mypetsies.com/support/solutions/folders/13000003991" target="_blank">Refund Policy</a>.
             I understand that Petsies happily takes care of all tears, defects, and shipping damage with either a refund or a repair.
             I also understand that my custom Petsies order is backed by the Petsies Guarantee.
