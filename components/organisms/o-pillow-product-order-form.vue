@@ -91,7 +91,7 @@
           </p>
 
           <p>Include this design's magic word in the subject line of the email:</p>
-          <p>{{ shortcode }}</p>
+          <p><b>{{ shortcode }}</b></p>
 
           <p>
             Don't worry, we'll send you a reminder with this code after you complete your order. <br> You may include only one photo per Pillow. <br> <a
