@@ -1,6 +1,7 @@
 <template>
   <div id="printed-product" itemscope itemtype="http://schema.org/Product">
     <o-phrase-pillow-product-order-form
+      :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
       :upload-product-type="backendProductId"
       svg-path="https://vsf-api.petsies.denis.office.optimuspro.ru/img/150/150/resize/phrase_pillow/svg-templates"

@@ -246,7 +246,7 @@
             <div
               class="_final-steps"
               v-if="
-                isEmailRequired || isProductionOptionsAvailable
+                !customerEmail || isProductionOptionsAvailable
               "
             >
               <label class="_label _step"><span class="_step-marker">STEP {{ hasCustomFields ? 4 : 3 }}:</span>
@@ -263,12 +263,12 @@
                 rules="required"
                 name="E-mail"
                 slim
-                v-if="isEmailRequired"
+                v-if="!customerEmail"
               >
                 <div
                   class="_email-field"
                   :class="classes"
-                  v-if="isEmailRequired"
+                  v-if="!customerEmail"
                 >
                   <label v-if="isProductionOptionsAvailable">
                     Enter your email address
@@ -438,9 +438,12 @@ import {
   extend,
   configure
 } from 'vee-validate';
+import { mapMutations } from 'vuex';
 import { required } from 'vee-validate/dist/rules';
-import axios, { AxiosRequestConfig } from 'axios';
 import { SfButton, SfInput } from '@storefront-ui/vue';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import FileProcessingRepository from 'src/modules/file-storage/file-processing.repository';
 import ErrorConverterService from 'src/modules/budsies/services/error-converter.service';
@@ -467,7 +470,8 @@ import Vue, { PropType, VueConstructor } from 'vue';
 import { InjectKey } from 'vue/types/options';
 import Bodypart from 'src/modules/budsies/models/bodypart.model';
 import BodypartValue from 'src/modules/budsies/models/bodypart-value.model';
-import { FileProcessingRepositoryFactory } from 'src/modules/file-storage';
+import { FileProcessingRepositoryFactory, Item } from 'src/modules/file-storage';
+import * as budsiesTypes from 'src/modules/budsies/store/mutation-types';
 
 extend('required', {
   ...required,
@@ -508,14 +512,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     MDesignImages,
     MSubmitAnimator,
     MAccentColorSelector
-    // SubmitButton,
-    // ProductionTime
   },
   inject: {
     fErrorConverterService: { from: 'ErrorConverterService' },
     fFileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' }
   } as unknown as InjectType<InjectedServices>,
   props: {
+    product: {
+      type: Object,
+      required: true
+    },
     imageUploadUrl: {
       type: String,
       required: true
@@ -543,10 +549,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     initialBackDesign: {
       type: String,
       default: undefined
-    },
-    isEmailRequired: {
-      type: Boolean,
-      default: true
     },
     submitAnimationSteps: {
       type: Array as PropType<SubmitAnimationStepsInterface[]>,
@@ -661,6 +663,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   methods: {
+    ...mapMutations('product', {
+      setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
+    }),
     getAccentColorPartValues (bodypart: Bodypart): AccentColorPart[] {
       const bodypartsValues = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
@@ -730,31 +735,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     ): void {
       this.backgroundOffsetSettings = settings;
     },
-    async onSubmit (): Promise<void> {
-      if (this.isDisabled) {
-        return;
-      }
-
-      this.fSubmitErrors = [];
-
-      this.fIsSubmitting = true;
-
-      try {
-        await this.performSubmit();
-      } catch (error) {
-        let errorToParse: any = error;
-
-        if (isAxiosError(error) && error.response) {
-          errorToParse = error.response.data;
-        }
-
-        this.fSubmitErrors = this.fErrorConverterService.describeError(
-          errorToParse
-        );
-
-        this.fIsSubmitting = false;
-      }
-    },
     getBackgroundEditor (): InstanceType<typeof MBackgroundEditor> | undefined {
       return this.$refs['backgroundEditor'] as InstanceType<typeof MBackgroundEditor> | undefined;
     },
@@ -780,14 +760,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return new Blob([ab], { type: mimeString });
     },
-    async performSubmit (): Promise<void> {
-      const submitAnimator = this.getSubmitAnimator();
-      if (!submitAnimator) {
-        throw new Error('Submit animation is not available!');
-      }
-
-      submitAnimator.runProgress();
-
+    async processImages (): Promise<string[]> {
       const backgroundEditor = this.getBackgroundEditor();
       const backPreview = this.getBackPreview();
       const frontPreview = this.getFrontPreview();
@@ -853,60 +826,100 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         )
       ]);
 
-      const formData = new FormData();
-
-      formData.append('back_artwork_storage_id', backStorageItem.id);
-      formData.append('front_artwork_storage_id', frontStorageItem.id);
-      formData.append('background_original', backgroundOriginalItem.id);
-      formData.append('front_design_sku', this.frontDesign);
-      formData.append('back_design_sku', this.backDesign);
-      formData.append('quantity', this.quantity.toString());
-      if (this.productionTime !== undefined) {
-        formData.append('rush_addons', this.productionTime);
+      return [frontStorageItem, backStorageItem, backgroundOriginalItem].map(
+        (item: Item) => item.id
+      );
+    },
+    async onSubmit (): Promise<void> {
+      if (this.isDisabled) {
+        return;
       }
 
-      if (this.isAccentColorSelectorVisible && this.accentColorPartValue) {
-        formData.append(
-          `body_parts[]`,
-          this.accentColorPartValue.toString()
-        );
-      }
+      this.fSubmitErrors = [];
+      this.fIsSubmitting = true;
 
-      if (
-        this.customTextValues &&
-            Object.keys(this.customTextValues).length > 0
-      ) {
-        const customTextValuesToSubmit: Record<
-        string,
-        string | undefined
-        > = {};
-
-        this.customTextFields.forEach((field) => {
-          customTextValuesToSubmit[field.name] = this.customTextValues[field.name];
-        });
-
-        formData.append(
-          'custom_fields_values',
-          JSON.stringify(customTextValuesToSubmit)
-        );
-      }
-
-      if (this.customerEmail) {
-        formData.append('customer_email', this.customerEmail);
-      }
-
-      const options: AxiosRequestConfig = {
-        headers: {
-          Accept: 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
+      try {
+        const submitAnimator = this.getSubmitAnimator();
+        if (!submitAnimator) {
+          throw new Error('Submit animation is not available!');
         }
-      };
 
-      // const result = await axios.post('url', formData, options);
+        submitAnimator.runProgress();
 
-      /* if (result.data.redirectUrl) {
-        this.fWindow.location.href = result.data.redirectUrl;
-      } */
+        const customerImagesIds = await this.processImages();
+
+        await this.$store.dispatch(
+          'product/setBundleOptions',
+          { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
+        );
+
+        this.$store.commit(
+          budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CUSTOMER_EMAIL_SET,
+          { email: this.customerEmail }
+        );
+
+        this.$store.dispatch('cart/addItem', {
+          productToAdd: Object.assign({}, this.product, {
+            qty: this.quantity,
+            email: this.customerEmail,
+            bodyparts: this.getBodypartsData(),
+            customFields: JSON.stringify(this.getCustomFieldsData()),
+            customerImagesIds: customerImagesIds,
+            uploadMethod: 'upload-now'
+          })
+        }).then(() => {
+          this.onSuccess();
+        })
+      } catch (error) {
+        let errorToParse: any = error;
+
+        if (isAxiosError(error) && error.response) {
+          errorToParse = error.response.data;
+        }
+
+        this.fSubmitErrors = this.fErrorConverterService.describeError(
+          errorToParse
+        );
+        this.fIsSubmitting = false;
+      }
+    },
+    async onSuccess (): Promise<void> {
+      try {
+        this.goToCart();
+      } catch (e) {
+        this.$store.dispatch(
+          'notification/spawnNotification',
+          notifications.createNotification({ type: 'danger', message: e.message, timeToLive: 10 * 1000 }),
+          { root: true }
+        );
+      }
+    },
+    goToCart (): void {
+      this.$router.push(localizedRoute('/cart'));
+    },
+    getCustomFieldsData (): Record<string, string | undefined> {
+      const customTextValuesToSubmit: Record<string, string | undefined> = {};
+
+      if (!this.customTextValues || Object.keys(this.customTextValues).length < 1) {
+        return customTextValuesToSubmit;
+      }
+
+      this.customTextFields.forEach((field) => {
+        customTextValuesToSubmit[field.name] = this.customTextValues[field.name];
+      });
+
+      return customTextValuesToSubmit;
+    },
+    getBodypartsData (): Record<string, string> {
+      let data: Record<string, string> = {};
+
+      if (!this.accentColorPartValue) {
+        return data;
+      }
+
+      data[this.accentColorPartValue.optionId] = this.accentColorPartValue.optionValueId;
+
+      return data;
     },
     selectDefaultBackDesignForFront (frontDesignSku?: string): void {
       if (!frontDesignSku || this.fIsBackDesignSelectedByUser) {
@@ -997,8 +1010,55 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
 
+    const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+    if (customerEmail) {
+      this.customerEmail = customerEmail;
+    }
+
     if (this.isProductionOptionsAvailable) {
       this.productionTime = this.productionTimeOptions[0].value;
+    }
+  },
+  watch: {
+    frontDesign: {
+      handler () {
+        if (!this.frontDesign) {
+          return
+        }
+
+        const frontDesign = this.frontDesignProducts.find(product => product.sku === this.frontDesign);
+
+        if (!frontDesign) {
+          return
+        }
+
+        this.setBundleOptionValue({
+          optionId: frontDesign.optionId,
+          optionQty: 1,
+          optionSelections: [frontDesign.optionValueId]
+        });
+      },
+      immediate: false
+    },
+    backDesign: {
+      handler () {
+        if (!this.backDesign) {
+          return
+        }
+
+        const backDesign = this.backDesignProducts.find(product => product.sku === this.backDesign);
+
+        if (!backDesign) {
+          return
+        }
+
+        this.setBundleOptionValue({
+          optionId: backDesign.optionId,
+          optionQty: 1,
+          optionSelections: [backDesign.optionValueId]
+        });
+      },
+      immediate: false
     }
   }
 })
