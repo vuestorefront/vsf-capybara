@@ -683,7 +683,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     text-transform: uppercase;
     color: var(--_c-light-primary);
     font-size: var(--font-xl);
-    font-weight: var(--font-bold);
+    font-weight: var(--font-semibold);
     @include border(--step-border, 0 0 4px 0, solid, var(--_c-light-primary));
 
     &._email-step {
@@ -694,7 +694,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   ._step-title {
     margin-top: var(--spacer-base);
     --heading-title-font-size: var(--font-xl);
-    --heading-title-font-weight: var(--font-bold);
+    --heading-title-font-weight: var(--font-semibold);
 
     &.-required {
       ::v-deep .sf-heading__title::after {
