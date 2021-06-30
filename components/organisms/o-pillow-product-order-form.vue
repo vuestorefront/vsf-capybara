@@ -29,7 +29,7 @@
           title="Upload your photo"
         />
 
-        <div class="_upload-now" v-if="isUploadNow">
+        <div class="_upload-now" v-show="isUploadNow">
           <p>We do not edit your photos. The photo you submit will be printed on the pillow as is.</p>
           <p>
             Don't have your photos? You can finalize your order and <a
@@ -48,7 +48,7 @@
               type="hidden"
               name="uploaded_artwork_ids[]"
               :value="storageItemId"
-              required
+              :required="isUploadNow"
             >
 
             <MArtworkUpload
@@ -74,7 +74,7 @@
           </validation-provider>
         </div>
 
-        <div class="_upload-email" v-if="!isUploadNow">
+        <div class="_upload-email" v-show="!isUploadNow">
           <p>
             Want to upload photos now? Please use <a
               class="_popup-link"
@@ -583,7 +583,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.email,
             plushieName: this.name,
             bodyparts: this.getBodypartsData(),
-            customerImagesIds: this.storageItemId ? [this.storageItemId] : [],
+            customerImagesIds: this.isUploadNow && this.storageItemId ? [this.storageItemId] : [],
             uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
           })
         });
