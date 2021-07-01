@@ -4,7 +4,7 @@
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
       :upload-product-type="backendProductId"
-      svg-path="https://vsf-api.petsies.denis.office.optimuspro.ru/img/150/150/resize/phrase_pillow/svg-templates"
+      :svg-path="svgPath"
       :initial-front-design="initialFrontDesign"
       :initial-back-design="initialBackDesign"
       :front-design-products="frontDesigns"
@@ -54,6 +54,9 @@ export default {
       getCurrentProduct: 'product/getCurrentProduct',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions'
     }),
+    svgPath (): string {
+      return config.images.baseUrl + '/150/150/resize/phrase_pillow/svg-templates';
+    },
     imageUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
     },

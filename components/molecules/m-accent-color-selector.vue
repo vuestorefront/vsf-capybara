@@ -10,10 +10,10 @@
           :id="'accent-color-' + option.id"
           type="radio"
           name="accent-color-option"
-          :value="option.id"
+          :value="option"
+          v-model="selectedOption"
           :disabled="disabled"
-          :checked="value && value.id === option.id"
-          @change="onChange"
+          :checked="selectedOption && selectedOption.id === option.id"
         >
 
         <label
@@ -57,13 +57,14 @@ export default Vue.extend({
   computed: {
     skinClass (): string {
       return `-skin-petsies`;
-    }
-  },
-  methods: {
-    onChange ($event: any): void {
-      const option = this.accentColorPartValues.find(value => value.id === $event.target.value);
-
-      this.$emit('input', option);
+    },
+    selectedOption: {
+      get (): AccentColorPart | undefined {
+        return this.value;
+      },
+      set (value: AccentColorPart): void {
+        this.$emit('input', value);
+      }
     }
   }
 })

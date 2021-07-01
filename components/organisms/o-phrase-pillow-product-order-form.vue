@@ -243,9 +243,7 @@
 
             <div
               class="_final-steps"
-              v-if="
-                !customerEmail || isProductionOptionsAvailable
-              "
+              v-show="showEmailStep || isProductionOptionsAvailable"
             >
               <label class="_label _step"><span class="_step-marker">STEP {{ hasCustomFields ? 4 : 3 }}:</span>
                 <template v-if="isProductionOptionsAvailable">
@@ -261,12 +259,11 @@
                 rules="required|email"
                 name="E-mail"
                 slim
-                v-if="!customerEmail"
+                v-show="showEmailStep"
               >
                 <div
                   class="_email-field"
                   :class="classes"
-                  v-if="!customerEmail"
                 >
                   <label v-if="isProductionOptionsAvailable">
                     Enter your email address
@@ -587,7 +584,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       isSubmitting: false,
       isAccentColorSelectedByUser: false,
       isBackDesignSelectedByUser: false,
-      submitErrors: [] as string[]
+      submitErrors: [] as string[],
+      showEmailStep: true
     }
   },
   computed: {
@@ -802,6 +800,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
     },
+    prefillEmail (): void {
+      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+
+      if (customerEmail) {
+        this.customerEmail = customerEmail;
+        this.showEmailStep = false;
+      }
+    },
     async processImages (): Promise<string[]> {
       const backgroundEditor = this.getBackgroundEditor();
       const backPreview = this.getBackPreview();
@@ -985,6 +991,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.backgroundOffsetSettings = settings;
     }
   },
+  beforeMount () {
+    this.$bus.$once('budsies-store-synchronized', this.prefillEmail);
+  },
+  beforeDestroy () {
+    this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
+  },
   created (): void {
     this.fileProcessingRepository = this.fileProcessingRepositoryFactory.create(
       this.imageUploadUrl
@@ -1002,10 +1014,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
 
-    const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
-    if (customerEmail) {
-      this.customerEmail = customerEmail;
-    }
+    this.prefillEmail();
 
     if (this.isProductionOptionsAvailable) {
       this.productionTime = this.productionTimeOptions[0].value;

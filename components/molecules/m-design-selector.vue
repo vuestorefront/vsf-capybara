@@ -52,7 +52,7 @@
         }"
       >
         <input
-          :id="'design-product-' + design.sku"
+          :id="getInputId(design)"
           v-model.number="selectedValue"
           type="radio"
           :name="fieldName"
@@ -62,7 +62,7 @@
 
         <label
           class="_option-label"
-          :for="'design-product-' + design.sku"
+          :for="getInputId(design)"
         >
           <div class="_image-wrapper">
             <div class="_accent-color-icon" />
@@ -88,6 +88,8 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import DesignProduct from '../interfaces/design-product.interface';
+
+let instanceId = 0;
 
 export default Vue.extend({
   name: 'MDesignSelector',
@@ -115,7 +117,8 @@ export default Vue.extend({
   },
   data () {
     return {
-      isCollapsed: false
+      isCollapsed: false,
+      instanceId: ''
     };
   },
   computed: {
@@ -139,6 +142,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    getInputId (design: DesignProduct): string {
+      return `design-product-${this.instanceId}-${design.sku}`;
+    },
     expandSelector (): void {
       if (this.disabled) {
         return;
@@ -149,6 +155,10 @@ export default Vue.extend({
   },
   created (): void {
     this.isCollapsed = Boolean(this.value) && this.shouldCollapse;
+
+    this.instanceId = instanceId.toString();
+
+    instanceId += 1;
   }
 })
 </script>
@@ -204,14 +214,16 @@ export default Vue.extend({
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    list-style-image: none;
+    padding: 0;
 
     ._design-option {
       flex-shrink: 0;
       flex-grow: 0;
       display: block;
-      padding: 0.75em;
+      padding: 2%;
       min-width: 114px;
-      width: 25%;
+      width: 21%;
 
       > input {
         opacity: 0;

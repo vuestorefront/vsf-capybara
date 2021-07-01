@@ -30,21 +30,22 @@
           class="vue-croppie-container"
           :style="getVueCroppieContainerStyles()"
         >
-          <vue-croppie-component
-            v-if="isCroppieAvailable"
-            ref="croppieRef"
-            :boundary="{
-              width: 'calc(100% - 2px)',
-              height: 'calc(100% - 58px)',
-            }"
-            :viewport="{
-              width: '100%',
-              height: '100%',
-              type: 'square',
-            }"
-            :enable-resize="false"
-            :enforce-boundary="true"
-          />
+          <NoSSR>
+            <vue-croppie-component
+              ref="croppieRef"
+              :boundary="{
+                width: 'calc(100% - 2px)',
+                height: 'calc(100% - 58px)',
+              }"
+              :viewport="{
+                width: '100%',
+                height: '100%',
+                type: 'square',
+              }"
+              :enable-resize="false"
+              :enforce-boundary="true"
+            />
+          </NoSSR>
         </div>
 
         <div
@@ -61,6 +62,7 @@
 <script lang="ts">
 import 'croppie/croppie.css';
 
+import NoSSR from 'vue-no-ssr';
 import Vue, { VueConstructor } from 'vue';
 import { VueCroppieComponent } from 'vue-croppie';
 import EXIF from 'exif-js';
@@ -82,7 +84,7 @@ const DEFAULT_CROPPIE_OFFSET_SIZE = 0;
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MBackgroundEditor',
-  components: { VueCroppieComponent, SfIcon },
+  components: { VueCroppieComponent, SfIcon, NoSSR },
   inject: {
     window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
@@ -105,11 +107,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       croppieHeight: DEFAULT_CROPPIE_EDGE_SIZE,
       croppieBoundaryOffsetSize: DEFAULT_CROPPIE_OFFSET_SIZE,
       croppieBoundaryOffsetPosition: ''
-    }
-  },
-  computed: {
-    isCroppieAvailable () {
-      return !isServer;
     }
   },
   methods: {
