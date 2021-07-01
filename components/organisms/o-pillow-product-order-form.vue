@@ -1,37 +1,44 @@
 <template>
   <div class="o-pillow-product-order-form product" :class="skinClass">
-    <header class="sf-heading sf-heading--no-underline">
-      <h1 class="sf-heading__title">
-        Pillow Order Form
-      </h1>
-    </header>
+    <SfHeading
+      :level="1"
+      title="Pillow Order Form"
+    />
 
     <div class="_top-notes">
-      <p><b>Estimated Delivery: 2 weeks</b></p>
-      <p><i>Please make sure everything is correct before submitting. Your pillow goes straight to print!</i></p>
+      <p><strong>Estimated Delivery: 2 weeks</strong></p>
+      <p><strong>Please make sure everything is correct before submitting. Your pillow goes straight to print!</strong></p>
     </div>
 
-    <SfDivider />
+    <SfDivider class="_step-divider" />
 
-    <validation-observer v-slot="{ passes }" slim>
+    <validation-observer v-slot="{ passes, errors: formErrors }" slim ref="validation-observer">
       <form
         @submit.prevent="(event) => passes(() => onSubmit(event))"
       >
-        <div class="_step-number">
-          Step {{ getNextStepNumber(true) }}
+        <div
+          class="_step-number"
+          ref="artwork-field-anchor"
+        >
+          Step 1
         </div>
-        <h2 class="_step-title -required sf-heading__title">
-          Upload your photo
-        </h2>
-        <div class="_upload-now" v-if="isUploadNow">
+
+        <SfHeading
+          class="_step-title -required "
+          :level="2"
+          title="Upload your photo"
+        />
+
+        <div class="_upload-now" v-show="isUploadNow">
           <p>We do not edit your photos. The photo you submit will be printed on the pillow as is.</p>
           <p>
             Don't have your photos? You can finalize your order and <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click.stop.prevent="fUploadNow = false"
+              @click.stop.prevent="isUploadNow = false"
             >send them to us later.</a>
           </p>
+
           <validation-provider
             v-slot="{ errors }"
             name="'Artwork'"
@@ -40,60 +47,77 @@
             <input
               type="hidden"
               name="uploaded_artwork_ids[]"
-              :value="fStorageItemId"
-              required
+              :value="storageItemId"
+              :required="isUploadNow"
             >
 
             <MArtworkUpload
               ref="artwork-upload"
               class="_file-uploader"
               :product-id="backendProductId"
-              :disabled="isUploadDisabled"
+              :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
               @input="onArtworkChange"
             />
+
+            <p>
+              <strong>
+                Please Note: We recommend high resolution, clear photos for our Petsies Pillows!
+                <br>
+                Low quality, dark or blurry photos may impact photo clarity on your Pillow.
+              </strong>
+            </p>
 
             <div class="_error-text">
               {{ errors[0] }}
             </div>
           </validation-provider>
-          <p><b>Please Note: We recommend high resolution, clear photos for our Petsies Pillows!</b></p>
-          <p><b>Low quality, dark or blurry photos may impact photo clarity on your Pillow.</b></p>
         </div>
 
-        <div class="_upload-email" v-if="!isUploadNow">
+        <div class="_upload-email" v-show="!isUploadNow">
           <p>
             Want to upload photos now? Please use <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click.stop.prevent="fUploadNow = true"
+              @click.stop.prevent="isUploadNow = true"
             >our uploader.</a>
           </p>
+
           <p>
             When you're ready, please email a photo of the design to: <br> <a
               class="_popup-link"
               href="mailto:photos@mypetsies.com"
-              @click="fUploadNow = true"
             >photos@mypetsies.com</a>
           </p>
+
           <p>Include this design's magic word in the subject line of the email:</p>
-          <p>{{ shortcode }}</p>
+          <p><b>{{ shortcode }}</b></p>
+
           <p>
             Don't worry, we'll send you a reminder with this code after you complete your order. <br> You may include only one photo per Pillow. <br> <a
               class="_popup-link"
               href="mailto:photos@mypetsies.com"
-              @click="fUploadNow = true"
             >Photos@mypetsies.com</a> is an automated inbox used only for receiving images.
           </p>
+
           <p>NOTE: Proceed to Step 2 to complete your order. You may send us your photo within the next 5 days.</p>
         </div>
-        <SfDivider />
-        <div class="_step-number">
-          Step {{ getNextStepNumber() }}
+
+        <SfDivider class="_step-divider" />
+
+        <div
+          class="_step-number"
+          ref="size-field-anchor"
+        >
+          Step 2
         </div>
-        <h2 class="_step-title -required sf-heading__title">
-          Size
-        </h2>
+
+        <SfHeading
+          class="_step-title -required "
+          :level="2"
+          title="Size"
+        />
+
         <validation-provider
           v-slot="{ errors }"
           rules="required"
@@ -102,23 +126,34 @@
         >
           <m-bodypart-option-configurator
             name="pillow_size"
-            v-model="fSize"
+            v-model="size"
             :options="sizes"
           />
+
           <div class="_error-text">
             {{ errors[0] }}
           </div>
         </validation-provider>
+
+        <SfDivider class="_step-divider" />
+
+        <div
+          class="_step-number"
+          ref="pillow-type-field-anchor"
+        >
+          Step 3
+        </div>
+
         <div
           v-for="bodypart in bodyparts"
           :key="bodypart.id"
         >
-          <div class="_step-number">
-            Step {{ getNextStepNumber() }}
-          </div>
-          <h2 class="_step-title -required sf-heading__title">
-            {{ bodypart.name }}
-          </h2>
+          <SfHeading
+            class="_step-title -required "
+            :level="2"
+            :title="bodypart.name"
+          />
+
           <validation-provider
             v-slot="{ errors }"
             rules="required"
@@ -127,21 +162,32 @@
           >
             <m-bodypart-option-configurator
               :name="bodypart.code"
-              v-model="fBodypartsValues[bodypart.code]"
+              v-model="bodypartsValues[bodypart.code]"
               :options="getBodypartValues(bodypart)"
               type="bodypart"
             />
+
             <div class="_error-text">
               {{ errors[0] }}
             </div>
           </validation-provider>
         </div>
-        <div class="_step-number">
-          Step {{ getNextStepNumber() }}
+
+        <SfDivider class="_step-divider" />
+
+        <div
+          class="_step-number"
+          ref="pet-name-field-anchor"
+        >
+          Step 4
         </div>
-        <h2 class="_step-title -required sf-heading__title">
-          Your Pet's Name
-        </h2>
+
+        <SfHeading
+          class="_step-title -required "
+          :level="2"
+          title="Your Pet's Name"
+        />
+
         <validation-provider
           v-slot="{ errors }"
           rules="required"
@@ -150,14 +196,14 @@
         >
           <SfInput
             name="pet_name"
-            v-model="fName"
+            v-model="name"
             placeholder="Name"
             :required="false"
+            :valid="!errors.length"
+            :error-message="errors[0]"
           />
-          <div class="_error-text">
-            {{ errors[0] }}
-          </div>
         </validation-provider>
+
         <validation-provider
           v-slot="{ errors, classes }"
           rules="required"
@@ -165,12 +211,14 @@
           slim
         >
           <div class="_quantity-field" :class="classes">
-            <h2 class="_step-title -required sf-heading__title">
-              Quantity
-            </h2>
+            <SfHeading
+              class="_step-title -required "
+              :level="2"
+              title="Quantity"
+            />
 
             <ACustomProductQuantity
-              v-model="fQuantity"
+              v-model="quantity"
               class="_qty-container"
             />
 
@@ -181,88 +229,139 @@
             <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click="fQuantityNotesVisible = true"
+              @click="areQuantityNotesVisible = true"
             >Quantity & Shipping Discounts</a>
-
-            <SfModal
-              :visible="fQuantityNotesVisible"
-              @close="fQuantityNotesVisible = false"
-            >
-              <div class="_popup-content">
-                <p><b>Quantity Discounts</b></p>
-                <p>All quantity discounts applied automatically at checkout:</p>
-                <ul>
-                  <li>10% discount on 10+ Petsies</li>
-                  <li>20% discount on 20+ Petsies</li>
-                </ul>
-                <p><b>Shipping Discounts</b></p>
-                <ul>
-                  <li>First custom Petsie: $13.95 domestic</li>
-                  <li>Each additional Petsie in same order: $5.95</li>
-                  <li>All domestic Petsies ship via USPS 2 day priority mail.</li>
-                  <li>International orders ship via USPS First Class Mail for just $24.95 worldwide, with $5.95 per each additional Petsie in the order.</li>
-                </ul>
-              </div>
-            </SfModal>
           </div>
         </validation-provider>
-        <template v-if="showEmailStep">
-          <div class="_step-number">
-            Step {{ getNextStepNumber() }}
+
+        <div v-show="showEmailStep">
+          <div
+            class="_step-number _email-step"
+            ref="email-field-anchor"
+          >
+            Step 5
           </div>
-          <h2 class="_step-title -required sf-heading__title">
-            Enter your email address
-          </h2>
+
+          <SfHeading
+            class="_step-title -required"
+            :level="2"
+            title="Enter your email address"
+          />
+
           <validation-provider
             v-slot="{ errors }"
-            rules="required"
+            rules="required|email"
             name="'Email'"
             tag="div"
           >
             <SfInput
               name="email"
-              v-model="fEmail"
+              v-model="email"
               placeholder="sample@email.com"
               :required="false"
+              :valid="!errors.length"
+              :error-message="errors[0]"
             />
-            <div class="_error-text">
-              {{ errors[0] }}
-            </div>
-            <p><b>Sometimes our team has questions about your design</b></p>
+
+            <div><b>Sometimes our team has questions about your design</b></div>
           </validation-provider>
-        </template>
+        </div>
+
+        <div class="_form-errors">
+          <template
+            v-for="(fieldErrors, field) in formErrors"
+          >
+            <div
+              class="_error-text"
+              :key="field"
+              v-if="fieldErrors.length > 0"
+            >
+              <a
+                class="_error-link"
+                href="javascript:void(0)"
+                @click.prevent="goToFieldByName(field.toString())"
+              >
+                {{ fieldErrors.join('. ') }}
+              </a>
+            </div>
+          </template>
+        </div>
 
         <div class="_actions">
-          <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
+          <SfButton
+            class="_add-to-cart color-primary"
+            type="submit"
+            :disabled="isSubmitting"
+            @click="shouldMakeAnother = false"
+          >
             Add to Cart
           </SfButton>
+
           <SfButton
             class="_add-to-cart-and-make-another color-secondary"
             type="submit"
-            :disabled="isLoading"
-            @click="fMakeAnother = true"
+            :disabled="isSubmitting"
+            @click="shouldMakeAnother = true"
           >
             Save & Make Another
           </SfButton>
+
+          <p class="_order-agreement">
+            I agree to
+            <router-link to="/terms-of-service/" target="_blank">
+              Terms of Service
+            </router-link>,
+            <router-link to="/privacy-policy/" target="_blank">
+              Privacy Policy
+            </router-link>,
+            and <a href="http://support.mypetsies.com/support/solutions/folders/13000003991" target="_blank">Refund Policy</a>.
+            I understand that Petsies happily takes care of all tears, defects, and shipping damage with either a refund or a repair.
+            I also understand that my custom Petsies order is backed by the Petsies Guarantee.
+          </p>
         </div>
       </form>
     </validation-observer>
+
+    <SfModal
+      :visible="areQuantityNotesVisible"
+      @close="areQuantityNotesVisible = false"
+    >
+      <div class="_popup-content">
+        <p><b>Quantity Discounts</b></p>
+        <p>All quantity discounts applied automatically at checkout:</p>
+
+        <ul>
+          <li>10% discount on 10+ Petsies</li>
+          <li>20% discount on 20+ Petsies</li>
+        </ul>
+
+        <p><b>Shipping Discounts</b></p>
+
+        <ul>
+          <li>First custom Petsie: $13.95 domestic</li>
+          <li>Each additional Petsie in same order: $5.95</li>
+          <li>All domestic Petsies ship via USPS 2 day priority mail.</li>
+          <li>International orders ship via USPS First Class Mail for just $24.95 worldwide, with $5.95 per each additional Petsie in the order.</li>
+        </ul>
+      </div>
+    </SfModal>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue, { PropType, VueConstructor } from 'vue';
 import { mapMutations } from 'vuex';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required } from 'vee-validate/dist/rules';
+import { required, email } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
-import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
-import { SfButton, SfDivider, SfInput, SfModal } from '@storefront-ui/vue';
+import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui/vue';
 
 import { Item } from 'src/modules/file-storage';
+import { InjectType } from 'src/modules/shared';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -277,7 +376,16 @@ extend('required', {
   message: 'The {_field_} field is required'
 });
 
-export default Vue.extend({
+extend('email', {
+  ...email,
+  message: 'Please, provide the correct email address'
+});
+
+interface InjectedServices {
+  window: Window
+}
+
+export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPillowProductOrderForm',
   components: {
     MBodypartOptionConfigurator,
@@ -288,8 +396,12 @@ export default Vue.extend({
     SfButton,
     SfDivider,
     SfInput,
-    SfModal
+    SfModal,
+    SfHeading
   },
+  inject: {
+    window: { from: 'WindowObject' }
+  } as unknown as InjectType<InjectedServices>,
   props: {
     artworkUploadUrl: {
       type: String,
@@ -322,35 +434,22 @@ export default Vue.extend({
   },
   data () {
     return {
-      fQuantity: 1,
-      fStorageItemId: undefined as string | undefined,
-      fSize: undefined as BodypartOption | undefined,
-      fBodypartsValues: {},
-      fName: undefined as string | undefined,
-      fEmail: undefined as string | undefined,
-      fIsLoading: false,
-      fMakeAnother: false,
-      fQuantityNotesVisible: false,
-      fUploadNow: true
+      quantity: 1,
+      storageItemId: undefined as string | undefined,
+      size: undefined as BodypartOption | undefined,
+      bodypartsValues: {} as unknown as Record<string, BodypartOption | undefined>,
+      name: undefined as string | undefined,
+      email: undefined as string | undefined,
+      isSubmitting: false,
+      shouldMakeAnother: false,
+      areQuantityNotesVisible: false,
+      isUploadNow: true,
+      showEmailStep: true
     }
   },
   computed: {
-    isLoading (): boolean {
-      return this.fIsLoading;
-    },
     skinClass (): string {
       return '-skin-petsies';
-    },
-    isUploadDisabled (): boolean {
-      return false;
-    },
-    isUploadNow (): boolean {
-      return this.fUploadNow;
-    },
-    showEmailStep (): boolean {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
-
-      return customerEmail === undefined;
     },
     shortcode (): string | undefined {
       return this.$store.getters['budsies/getPlushieShortcode'](this.plushieId);
@@ -360,17 +459,8 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
-    getNextStepNumber (reset = false): number {
-      if (reset) {
-        this.stepNumber = 0;
-      }
-
-      this.stepNumber += 1;
-
-      return this.stepNumber;
-    },
     getBodypartValues (bodypart: Bodypart): BodypartOption[] {
-      const bodypartsValues = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
+      const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
       if (!bodypartsValues.length) {
         return [];
@@ -378,7 +468,7 @@ export default Vue.extend({
 
       const result: BodypartOption[] = [];
 
-      bodypartsValues.forEach((bodypartValue: BodypartValue) => {
+      for (const bodypartValue of bodypartsValues) {
         result.push({
           id: bodypartValue.id,
           label: bodypartValue.name,
@@ -388,20 +478,92 @@ export default Vue.extend({
           optionId: bodypart.id,
           optionValueId: bodypartValue.id
         });
-      });
+      }
 
       return result;
     },
-    onArtworkChange (value?: Item): void {
-      if (!value) {
-        this.fStorageItemId = undefined;
+    getBodypartsData (): Record<string, string> {
+      let data: Record<string, string> = {};
+
+      for (let key in this.bodypartsValues) {
+        const value = this.bodypartsValues[key];
+
+        if (value === undefined) {
+          continue;
+        }
+
+        data[value.optionId] = value.optionValueId;
+      }
+
+      return data;
+    },
+    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
+      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
+    },
+    getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
+      return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
+    },
+    goToCart (): void {
+      this.$router.push(localizedRoute('/cart'));
+    },
+    goToFieldByName (field: string): void {
+      // Strip quotes
+      let refName = field.replace(/^['"]+|['"]+$/g, '');
+      // Strip spaces & convert to lower case
+      refName = refName.toLowerCase().replace(/ /g, '-');
+
+      refName += '-field-anchor';
+
+      const ref = this.$refs[refName] as HTMLElement | undefined;
+      if (!ref) {
+        Logger.warn(`Reference for the field with error not found. Field: ${field}, ref: ${refName}`, 'budsies')();
         return;
       }
 
-      this.fStorageItemId = value.id;
+      ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
+    prefillEmail (): void {
+      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+      if (customerEmail) {
+        this.email = customerEmail;
+        this.showEmailStep = false;
+      }
+    },
+    resetForm (): void {
+      this.quantity = this.product.qty;
+      this.storageItemId = undefined;
+      this.size = undefined;
+      this.name = undefined;
+
+      for (const bodypart of this.bodyparts) {
+        this.bodypartsValues[bodypart.code] = undefined;
+      }
+
+      const uploader = this.getUploader();
+      if (uploader) {
+        uploader.clearInput();
+      }
+
+      const validator = this.getValidationObserver();
+      validator?.reset();
+    },
+    onArtworkChange (value?: Item): void {
+      if (!value) {
+        this.storageItemId = undefined;
+        return;
+      }
+
+      this.storageItemId = value.id;
     },
     async onSubmit (event: Event): Promise<void> {
-      this.fIsLoading = true;
+      if (this.isSubmitting) {
+        return;
+      }
+
+      this.isSubmitting = true;
+
+      const shouldMakeAnother = this.shouldMakeAnother;
+      this.shouldMakeAnother = false;
 
       await this.$store.dispatch(
         'product/setBundleOptions',
@@ -410,62 +572,49 @@ export default Vue.extend({
 
       this.$store.commit(
         budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CUSTOMER_EMAIL_SET,
-        { email: this.fEmail }
+        { email: this.email }
       );
 
-      this.$store.dispatch('cart/addItem', {
-        productToAdd: Object.assign({}, this.product, {
-          qty: this.fQuantity,
-          plushieId: this.plushieId + '',
-          email: this.fEmail,
-          plushieName: this.fName,
-          bodyparts: this.getBodypartsData(),
-          customerImagesIds: this.fStorageItemId ? [this.fStorageItemId] : [],
-          uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
-        })
-      }).then(() => {
-        this.onSuccess();
-      }).catch(err => {
-        Logger.error(err, 'budsies')();
-
-        this.onFailure('Unexpected error: ' + err);
-      }).finally(() => {
-        this.fIsLoading = false;
-      });
-    },
-    async onSuccess (): Promise<void> {
       try {
-        const uploader = this.getUploader();
-        if (uploader) {
-          uploader.clearInput();
-        }
+        await this.$store.dispatch('cart/addItem', {
+          productToAdd: Object.assign({}, this.product, {
+            qty: this.quantity,
+            plushieId: this.plushieId + '',
+            email: this.email,
+            plushieName: this.name,
+            bodyparts: this.getBodypartsData(),
+            customerImagesIds: this.isUploadNow && this.storageItemId ? [this.storageItemId] : [],
+            uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
+          })
+        });
 
-        if (!this.fMakeAnother) {
+        if (!shouldMakeAnother) {
           this.goToCart();
-
           return;
         }
 
-        this.fMakeAnother = false;
-        this.refreshPage();
-      } catch (e) {
+        this.resetForm();
+        this.window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+
+        const notification = notifications.createNotification({
+          type: 'info',
+          message: 'Product was added to the cart',
+          timeToLive: 5 * 1000
+        });
+
         this.$store.dispatch(
           'notification/spawnNotification',
-          notifications.createNotification({ type: 'danger', message: e.message, timeToLive: 10 * 1000 }),
+          notification,
           { root: true }
         );
+        this.$emit('make-another');
+      } catch (err) {
+        Logger.error(err, 'budsies')();
+
+        this.onFailure('Unexpected error: ' + err);
+      } finally {
+        this.isSubmitting = false;
       }
-    },
-    getBodypartsData (): Record<string, string> {
-      let data: Record<string, string> = {};
-
-      for (let key in this.fBodypartsValues) {
-        const value = this.fBodypartsValues[key];
-
-        data[value.optionId] = value.optionValueId;
-      }
-
-      return data;
     },
     onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
@@ -473,47 +622,34 @@ export default Vue.extend({
         message: message,
         action1: { label: i18n.t('OK') }
       });
-    },
-    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
-      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
-    },
-    goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
-    },
-    refreshPage (): void {
-      this.$router.go(0);
     }
   },
-  mounted (): void {
-    this.stepNumber = 0;
+  beforeMount () {
+    this.$bus.$once('budsies-store-synchronized', this.prefillEmail);
+  },
+  beforeDestroy () {
+    this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
   },
   created (): void {
-    this.fQuantity = this.product.qty;
-
-    this.bodyparts.forEach(bodypart => {
-      this.fBodypartsValues[bodypart.code] = undefined;
-    });
+    this.resetForm();
 
     if (this.uploadedArtworkId) {
-      this.fStorageItemId = this.uploadedArtworkId;
+      this.storageItemId = this.uploadedArtworkId;
     }
 
-    const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
-    if (customerEmail) {
-      this.fEmail = customerEmail;
-    }
+    this.prefillEmail();
   },
   watch: {
-    fSize: {
+    size: {
       handler () {
-        if (!this.fSize) {
+        if (!this.size) {
           return
         }
 
         this.setBundleOptionValue({
-          optionId: this.fSize.optionId,
+          optionId: this.size.optionId,
           optionQty: 1,
-          optionSelections: [this.fSize.optionValueId]
+          optionSelections: [this.size.optionValueId]
         });
       },
       immediate: false
@@ -541,26 +677,38 @@ export default Vue.extend({
 .o-pillow-product-order-form {
   text-align: center;
 
+  b,
+  strong {
+    font-weight: var(--font-semibold);
+  }
+
+  ._step-divider {
+    display: none;
+  }
+
   ._step-number {
     display: inline-block;
     margin-top: var(--spacer-lg);
     text-transform: uppercase;
     color: var(--_c-light-primary);
     font-size: var(--font-xl);
-    font-weight: var(--font-bold);
+    font-weight: var(--font-semibold);
     @include border(--step-border, 0 0 4px 0, solid, var(--_c-light-primary));
+
+    &._email-step {
+      margin-top: var(--spacer-2xl);
+    }
   }
 
   ._step-title {
     margin-top: var(--spacer-base);
-    font-size: var(--font-xl);
-    font-weight: var(--font-bold);
+    --heading-title-font-size: var(--font-xl);
+    --heading-title-font-weight: var(--font-semibold);
 
     &.-required {
-      &:after {
+      ::v-deep .sf-heading__title::after {
         color: var(--c-danger-variant);
         content: "*";
-        margin-left: var(--spacer-2xs);
       }
     }
   }
@@ -574,8 +722,7 @@ export default Vue.extend({
   }
 
   .sf-input {
-    margin-top: var(--spacer-lg);
-    text-align: left;
+    text-align: center;
     display: inline-block;
     --input-width: 20em;
   }
@@ -585,7 +732,7 @@ export default Vue.extend({
   }
 
   .sf-divider {
-    margin-top: var(--spacer-2xl);
+    margin-top: var(--spacer-xl);
   }
 
   .m-bodypart-option-configurator {
@@ -598,7 +745,7 @@ export default Vue.extend({
   }
 
   ._qty-container {
-      margin-top: var(--spacer-base);
+      margin-top: var(--spacer-xs);
   }
 
   ._actions {
@@ -607,12 +754,8 @@ export default Vue.extend({
     align-items: center;
     margin-top: var(--spacer-xl);
 
-    ._add-to-cart,
     ._add-to-cart-and-make-another {
-        margin: var(--spacer-lg) 0 0 0;
-    }
-
-    ._add-to-cart-and-make-another {
+      margin: var(--spacer-lg) 0 0 0;
       font-size: var(--font-sm);
     }
   }
@@ -627,7 +770,23 @@ export default Vue.extend({
 
   ._error-text {
       font-size: var(--font-xs);
-      margin-top: var(--spacer-lg);
+      margin-top: var(--spacer-sm);
+      height: calc(var(--font-xs) * 1.2);
+  }
+
+  ._form-errors {
+    margin-top: var(--spacer-xl);
+    min-height: calc(var(--font-xs) * 1.2 * 4);
+
+    ._error-link {
+      color: inherit;
+    }
+  }
+
+  ._order-agreement {
+    max-width: 50em;
+    font-size: var(--font-xs);
+
   }
 
   &.-skin-petsies {
@@ -635,5 +794,18 @@ export default Vue.extend({
           color: var(--c-danger-variant);
       }
   }
+
+  @media (min-width: $tablet-min) {
+    ._step-divider {
+      display: block;
+    }
+  }
+
+@include for-desktop {
+  .sf-modal {
+    --modal-top: 50%;
+  }
+}
+
 }
 </style>

@@ -7,6 +7,7 @@
       :plushie-id="plushieId"
       :sizes="sizes"
       :bodyparts="bodyparts"
+      @make-another="onMakeAnother"
     />
   </div>
 </template>
@@ -91,11 +92,7 @@ export default {
   async mounted (): Promise<void> {
     // TODO check ID in URL and load plushie instead of create a new one
 
-    const result = this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
-
-    result.then((task: Task) => {
-      this.plushieId = task.result;
-    });
+    this.plushieId = await this.createPlushie();
   },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product')
@@ -114,6 +111,15 @@ export default {
 
     if (isServer) await loadBreadcrumbsPromise;
     catalogHooksExecutors.productPageVisited(product);
+  },
+  methods: {
+    async onMakeAnother (): Promise<void> {
+      this.plushieId = await this.createPlushie();
+    },
+    async createPlushie (): Promise<number> {
+      const task = await this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
+      return task.result;
+    }
   },
   metaInfo () {
     return {
@@ -139,7 +145,7 @@ export default {
 
 #printed-product {
   box-sizing: border-box;
-  padding: 0 1rem;
+  padding: var(--spacer-lg) 1rem 0;
 
   ::v-deep {
     .product__colors button {

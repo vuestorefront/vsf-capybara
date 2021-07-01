@@ -10,9 +10,8 @@
           :id="getInputId(option)"
           :name="name"
           type="radio"
-          :value="option.value"
-          :checked="option.isSelected"
-          @change="onChange"
+          :value="option"
+          v-model="selectedOption"
         >
         <label
           :for="getInputId(option)"
@@ -38,6 +37,8 @@ import { getThumbnailPath } from '@vue-storefront/core/helpers/index';
 
 import BodypartOption from '../interfaces/bodypart-option';
 
+let instanceId = 0;
+
 export default Vue.extend({
   name: 'MBodypartOptionConfigurator',
   props: {
@@ -58,9 +59,28 @@ export default Vue.extend({
       default: () => []
     }
   },
+  data (): Record<string, any> {
+    return {
+      instanceId: ''
+    };
+  },
+  computed: {
+    selectedOption: {
+      get (): BodypartOption {
+        return this.value;
+      },
+      set (value: BodypartOption): void {
+        this.$emit('input', value);
+      }
+    }
+  },
+  created: function (): void {
+    this.instanceId = instanceId.toString();
+    instanceId += 1;
+  },
   methods: {
     getInputId (option: BodypartOption): string {
-      return 'size_value_' + option.id;
+      return `body_part_value_${this.instanceId}_${option.id}`;
     },
     getIconStyle (option: BodypartOption): string {
       const thumb = getThumbnailPath(option.image, 150, 150, this.type);
@@ -99,6 +119,7 @@ export default Vue.extend({
       padding-top: 100%;
       width: 100%;
       position: relative;
+      z-index: 0;
     }
 
     ._name {
