@@ -204,6 +204,13 @@ export default {
       required
     }
   },
+  created () {
+    const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+
+    if (customerEmail) {
+      this.personalDetails.emailAddress = customerEmail;
+    }
+  },
   methods: {
     ...mapActions('ui', {
       openModal: 'openModal'
