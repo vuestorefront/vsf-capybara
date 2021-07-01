@@ -341,6 +341,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     ._helper-text {
         font-size: var(--font-xs);
         font-weight: var(--font-medium);
+        margin-top: var(--spacer-sm);
     }
 
     ._croppie-stage {

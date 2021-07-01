@@ -1,34 +1,35 @@
 <template>
   <div class="o-phrase-pillow-product-order-form" :class="skinClass">
     <div class="_header">
-      <header class="sf-heading sf-heading--no-underline">
-        <h1 class="sf-heading__title">
-          Pillow Customizer
-        </h1>
-      </header>
+      <SfHeading
+        :level="1"
+        title="Pillow Customizer"
+      />
 
       <div class="_notes">
         <p>Ships within 7 days | Made & Printed in the USA</p>
       </div>
 
-      <header class="sf-heading sf-heading--no-underline">
-        <h3 class="sf-heading__title--h3 desktop-only">
-          Your customizations will appear on the left side of the page
-        </h3>
-        <h4 class="sf-heading__title--h4 _accent-header mobile-only">
-          Scroll down for a preview of your customizations
-        </h4>
-      </header>
+      <SfHeading
+        class="desktop-only"
+        :level="3"
+        title="Your customizations will appear on the left side of the page"
+      />
+
+      <SfHeading
+        class="mobile-only _accent-header"
+        :level="4"
+        title="Scroll down for a preview of your customizations"
+      />
     </div>
 
     <validation-observer v-slot="{ passes }" slim>
       <div class="_page-content">
         <div class="_customization-section">
-          <header class="sf-heading sf-heading--no-underline sf-heading--left">
-            <h2 class="sf-heading__title--h2">
-              Customize Your Pillow
-            </h2>
-          </header>
+          <SfHeading
+            :level="2"
+            title="Customize Your Pillow"
+          />
 
           <form
             method="POST"
@@ -45,8 +46,7 @@
                 },
               }"
               :custom-messages="{
-                required:
-                  'Please, upload the background image!',
+                required: 'Please, upload the background image!'
               }"
               :name="'Background Image'"
               slim
@@ -138,14 +138,12 @@
                       :name="field.name"
                       :disabled="isDisabled"
                       :placeholder="field.placeholder"
+                      :valid="!errors.length"
+                      :error-message="errors[0]"
                     />
 
                     <div class="_helper-text">
                       {{ field.helperText }}
-                    </div>
-
-                    <div class="_error-text">
-                      {{ errors[0] }}
                     </div>
                   </div>
                 </validation-provider>
@@ -200,7 +198,7 @@
               v-if="isAccentColorSelectorVisible"
             >
               <div class="_accent-color-field" :class="classes">
-                <label>Accent Color</label>
+                <label class="_label">Accent Color</label>
 
                 <div class="_helper-text">
                   Selected pillow back designs will may be
@@ -229,7 +227,7 @@
               slim
             >
               <div class="_quantity-field" :class="classes">
-                <label>Quantity</label>
+                <label class="_label">Quantity</label>
 
                 <ACustomProductQuantity
                   v-model="quantity"
@@ -260,7 +258,7 @@
 
               <validation-provider
                 v-slot="{ errors, classes }"
-                rules="required"
+                rules="required|email"
                 name="E-mail"
                 slim
                 v-if="!customerEmail"
@@ -281,11 +279,9 @@
                     placeholder="sample@email.com"
                     :required="false"
                     :disabled="isDisabled"
+                    :valid="!errors.length"
+                    :error-message="errors[0]"
                   />
-
-                  <div class="_error-text">
-                    {{ errors[0] }}
-                  </div>
 
                   <div class="_email-disclaimer _helper-text">
                     Sometimes our team has questions about
@@ -327,7 +323,7 @@
             </div>
 
             <div class="_actions-row" v-show="!isSubmitting">
-              <SfButton class="color-primary" type="submit" :disabled="isDisabled">
+              <SfButton class="color-primary _submit-button" type="submit" :disabled="isDisabled">
                 Add to Cart
               </SfButton>
 
@@ -354,18 +350,16 @@
           id="live-preview-section"
           class="_live-preview-section"
         >
-          <header class="sf-heading sf-heading--no-underline sf-heading--left">
-            <h2 class="sf-heading__title--h2">
-              Live Preview
-            </h2>
-          </header>
+          <SfHeading
+            :level="2"
+            title="Live Preview"
+          />
 
           <div class="_front_design_preview_container">
-            <header class="sf-heading sf-heading--no-underline">
-              <h5 class="sf-heading__title--h5">
-                Front Side
-              </h5>
-            </header>
+            <SfHeading
+              :level="3"
+              title="Front Side"
+            />
 
             <MBackgroundEditor
               ref="backgroundEditor"
@@ -390,11 +384,10 @@
           </div>
 
           <div class="_back_design_preview_container">
-            <header class="sf-heading sf-heading--no-underline">
-              <h5 class="sf-heading__title--h5">
-                Back Side
-              </h5>
-            </header>
+            <SfHeading
+              :level="3"
+              title="Back Side"
+            />
 
             <MLivePreview
               ref="backPreview"
@@ -414,11 +407,10 @@
             class="_design-images-container"
             v-if="currentDesignImages.length"
           >
-            <header class="sf-heading sf-heading--no-underline">
-              <h3 class="sf-heading__title--h3">
-                Examples of finished pillows
-              </h3>
-            </header>
+            <SfHeading
+              :level="3"
+              title="Examples of finished pillows"
+            />
 
             <MDesignImages
               class="_design-images"
@@ -439,8 +431,8 @@ import {
   configure
 } from 'vee-validate';
 import { mapMutations } from 'vuex';
-import { required } from 'vee-validate/dist/rules';
-import { SfButton, SfInput } from '@storefront-ui/vue';
+import { required, email } from 'vee-validate/dist/rules';
+import { SfButton, SfInput, SfHeading } from '@storefront-ui/vue';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
@@ -478,6 +470,11 @@ extend('required', {
   message: 'The {_field_} field is required'
 });
 
+extend('email', {
+  ...email,
+  message: 'Please, provide the correct email address'
+});
+
 configure({
   classes: {
     valid: '-valid',
@@ -501,6 +498,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   components: {
     SfButton,
     SfInput,
+    SfHeading,
     ValidationObserver,
     ValidationProvider,
     MBackgroundUploader,
@@ -1080,12 +1078,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         flex-direction: column;
     }
 
-    ._section-header {
-        margin-top: 1em;
-        margin-bottom: 1em;
-        text-align: center;
-    }
-
     ._front_design_preview_container,
     ._customization-section {
         ._error-text {
@@ -1111,15 +1103,25 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     ._helper-text {
       font-size: var(--font-xs);
       font-weight: var(--font-medium);
+      margin-top: var(--spacer-sm);
+    }
+
+    ._label {
+      display: block;
+      text-align: center;
+      font-size: var(--font-lg);
+      font-weight: var(--font-medium);
     }
 
     ._customization-section {
-        label {
-            font-size: 1.125em;
-            font-weight: 500;
+        ._step {
+            display: block;
+            font-size: var(--font-sm);
+            font-weight: var(--font-medium);
             margin: 1em 0 0.5em;
             width: 100%;
             cursor: auto;
+            text-align: center;
 
             ._step-marker {
                 border-bottom: 4px solid;
@@ -1129,17 +1131,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             }
         }
 
-        ._step {
-            margin-top: 2em;
-        }
-
         ._error-text {
-            display: none;
-            font-size: 0.8em;
-        }
-
-        ._helper-text {
-            margin: 0.5em 0;
+            font-size: var(--font-xs);
+            font-weight: var(--font-medium);
+            height: calc(var(--font-xs) * 1.2);
         }
 
         ._background-hint {
@@ -1150,6 +1145,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             ._error-text {
                 display: block;
             }
+        }
+
+        ._actions-row {
+          ._submit-button {
+            margin-left: auto;
+            margin-right: auto;
+          }
         }
 
         ._quantity-field,
@@ -1170,8 +1172,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             ._custom-text-field {
                 margin-top: 1em;
 
-                ._helper-text {
-                    margin-top: 1em;
+                ._custom-input {
+                  text-align: center;
                 }
             }
         }
@@ -1216,33 +1218,28 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             }
         }
 
+        ._label {
+          text-align: left;
+        }
+
         ._front_design_preview_container > .m-background-editor,
         ._back_design_preview_container > .m-live-preview,
         ._design-images-container > .m-design-images {
           width: 80%;
         }
 
-        ._section-header,
+        ._customization-section,
+        ._live-preview-section,
         ._front_design_preview_container,
         ._back_design_preview_container {
             text-align: left;
 
-            h2,
-            h3,
-            h5 {
-                text-align: left;
+            .sf-heading {
+                --heading-text-align: left;
             }
         }
 
         ._header {
-            ._section-header {
-                text-align: center;
-
-                h3 {
-                    text-align: center;
-                }
-            }
-
             ._top-static-block {
                 text-align: center;
             }
@@ -1252,6 +1249,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             label {
                 margin: 0.5em 0;
                 display: block;
+            }
+
+            ._actions-row {
+              ._submit-button {
+                margin-left: 0;
+                margin-right: 0 ;
+              }
             }
 
             ._background-image-field,
@@ -1267,16 +1271,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             }
 
             ._email-field,
-            ._custom-text-field {
-                input {
+            ._custom-text-fields-section {
+              ._custom-text-field {
+                  ._custom-input {
                     text-align: left;
-                }
+                  }
+              }
             }
 
-            ._custom-text-fields-section {
-                ._step {
-                    text-align: left;
-                }
+            ._step {
+                font-size: var(--font-base);
+                text-align: left;
             }
 
             ._background-image-field {
@@ -1298,19 +1303,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
 
     &.-skin-petsies {
-        ._section-header,
         ._header {
             ._accent-header {
-                font-weight: var(--font-bold);
-                font-size: var(--font-base);
-                color: var(--_c-light-primary);
+                --heading-title-font-weight: var(--font-bold);
+                --heading-title-font-size: var(--font-base);
+                --heading-title-color: var(--_c-light-primary);
             }
         }
 
         ._front_design_preview_container,
         ._customization-section {
             ._error-text {
-                color: var(--c-danger-variant);
+                color: var(--c-danger);
             }
         }
 

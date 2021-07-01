@@ -199,6 +199,7 @@ export default Vue.extend({
     ._helper-text {
       font-size: var(--font-xs);
       font-weight: var(--font-medium);
+      margin-top: var(--spacer-xs);
     }
   }
 
