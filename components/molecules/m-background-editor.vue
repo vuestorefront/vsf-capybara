@@ -72,7 +72,7 @@ import { InjectKey, PropType } from 'vue/types/options';
 import { isServer } from '@vue-storefront/core/helpers'
 
 interface InjectedServices {
-  fWindow: Window
+  window: Window
 }
 
 type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
@@ -82,10 +82,10 @@ const DEFAULT_CROPPIE_OFFSET_SIZE = 0;
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MBackgroundEditor',
-  inject: {
-    fWindow: { from: 'WindowObject' }
-  } as unknown as InjectType<InjectedServices>,
   components: { VueCroppieComponent, SfIcon },
+  inject: {
+    window: { from: 'WindowObject' }
+  } as unknown as InjectType<InjectedServices>,
   props: {
     disabled: {
       type: Boolean,
@@ -96,46 +96,26 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       default: undefined
     }
   },
+  data () {
+    return {
+      backgroundImageUrl: undefined as string | undefined,
+      isImageAssigned: false,
+      previousWidth: undefined as number | undefined,
+      croppieWidth: DEFAULT_CROPPIE_EDGE_SIZE,
+      croppieHeight: DEFAULT_CROPPIE_EDGE_SIZE,
+      croppieBoundaryOffsetSize: DEFAULT_CROPPIE_OFFSET_SIZE,
+      croppieBoundaryOffsetPosition: ''
+    }
+  },
   computed: {
     isCroppieAvailable () {
       return !isServer;
     }
   },
-  data () {
-    return {
-      fBackgroundImageUrl: undefined as string | undefined,
-      fIsImageAssigned: false,
-      fPreviousWidth: undefined as number | undefined,
-      fCroppieWidth: DEFAULT_CROPPIE_EDGE_SIZE,
-      fCroppieHeight: DEFAULT_CROPPIE_EDGE_SIZE,
-      fCroppieBoundaryOffsetSize: DEFAULT_CROPPIE_OFFSET_SIZE,
-      fCroppieBoundaryOffsetPosition: ''
-    }
-  },
   methods: {
-    getPreviewContainerStyle (): string {
-      return this.fIsImageAssigned ? '' : 'background-color: #fff';
-    },
-    async setBackgroundImage (imageUrl: string): Promise<void> {
-      this.fBackgroundImageUrl = imageUrl;
-
-      const croppie = this.getCroppieContainer();
-      if (!croppie) {
-        throw Error('Croppie is not initialized yet!');
-      }
-
-      await croppie.bind({
-        url: imageUrl,
-        zoom: 0.5
-      });
-
-      this.fPreviousWidth = this.fWindow.innerWidth;
-
-      this.fIsImageAssigned = true;
-    },
     getCroppedBackground (): Promise<string | undefined> {
       const croppie = this.getCroppieContainer();
-      if (!croppie || !this.fIsImageAssigned) {
+      if (!croppie || !this.isImageAssigned) {
         return Promise.resolve(undefined);
       }
 
@@ -148,32 +128,29 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return croppie.result(options);
     },
-    zoomIn (): void {
-      this.zoom(1.1);
-    },
-    zoomOut (): void {
-      this.zoom(0.9);
+    getPreviewContainerStyle (): string {
+      return this.isImageAssigned ? '' : 'background-color: #fff';
     },
     getVueCroppieContainerStyles () {
       let styles =
             'width: ' +
-            this.fCroppieWidth.toString() +
+            this.croppieWidth.toString() +
             '%; height: ' +
-            this.fCroppieHeight.toString() +
+            this.croppieHeight.toString() +
             '%;';
 
       if (
-        !this.fCroppieBoundaryOffsetSize ||
-            !this.fCroppieBoundaryOffsetPosition
+        !this.croppieBoundaryOffsetSize ||
+            !this.croppieBoundaryOffsetPosition
       ) {
         return styles;
       }
 
-      if (this.fCroppieBoundaryOffsetPosition !== 'left') {
+      if (this.croppieBoundaryOffsetPosition !== 'left') {
         return styles;
       }
 
-      styles += 'margin-left: ' + this.fCroppieBoundaryOffsetSize.toString() + '%;';
+      styles += 'margin-left: ' + this.croppieBoundaryOffsetSize.toString() + '%;';
 
       return styles;
     },
@@ -192,11 +169,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       let styles = 'left: 0;';
 
       if (
-        this.fCroppieBoundaryOffsetSize &&
-            this.fCroppieBoundaryOffsetPosition === 'left'
+        this.croppieBoundaryOffsetSize &&
+            this.croppieBoundaryOffsetPosition === 'left'
       ) {
         styles =
-                'left: ' + this.fCroppieBoundaryOffsetSize.toString() + '%;';
+                'left: ' + this.croppieBoundaryOffsetSize.toString() + '%;';
       }
       return styles;
     },
@@ -204,16 +181,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       let styles = 'right: 0;';
 
       if (
-        this.fCroppieBoundaryOffsetSize &&
-            this.fCroppieBoundaryOffsetPosition === 'right'
+        this.croppieBoundaryOffsetSize &&
+            this.croppieBoundaryOffsetPosition === 'right'
       ) {
-        const offsetSize = this.fCroppieBoundaryOffsetSize - 3;
+        const offsetSize = this.croppieBoundaryOffsetSize - 3;
         styles += 'right: ' + offsetSize.toString() + '%;';
       }
       return styles;
     },
     getCroppieContainer (): VueCroppieComponent | undefined {
       return this.$refs['croppieRef'] as VueCroppieComponent | undefined;
+    },
+    zoomIn (): void {
+      this.zoom(1.1);
+    },
+    zoomOut (): void {
+      this.zoom(0.9);
     },
     zoom (factor: number): void {
       const croppie = this.getCroppieContainer();
@@ -227,26 +210,26 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       croppie.setZoom(currentZoom * factor);
     },
     prepareCroppieDimensions (settings: BackgroundOffsetSettings) {
-      this.fCroppieWidth = DEFAULT_CROPPIE_EDGE_SIZE;
-      this.fCroppieHeight = DEFAULT_CROPPIE_EDGE_SIZE;
-      this.fCroppieBoundaryOffsetSize = DEFAULT_CROPPIE_OFFSET_SIZE;
-      this.fCroppieBoundaryOffsetPosition = '';
+      this.croppieWidth = DEFAULT_CROPPIE_EDGE_SIZE;
+      this.croppieHeight = DEFAULT_CROPPIE_EDGE_SIZE;
+      this.croppieBoundaryOffsetSize = DEFAULT_CROPPIE_OFFSET_SIZE;
+      this.croppieBoundaryOffsetPosition = '';
 
       if (!settings.size || !settings.position) {
         return;
       }
 
       if (settings.position === 'left' || settings.position === 'right') {
-        this.fCroppieWidth = 100 - parseFloat(settings.size);
+        this.croppieWidth = 100 - parseFloat(settings.size);
       } else {
-        this.fCroppieHeight = 100 - parseFloat(settings.size);
+        this.croppieHeight = 100 - parseFloat(settings.size);
       }
 
-      this.fCroppieBoundaryOffsetPosition = settings.position;
-      this.fCroppieBoundaryOffsetSize = parseFloat(settings.size);
+      this.croppieBoundaryOffsetPosition = settings.position;
+      this.croppieBoundaryOffsetSize = parseFloat(settings.size);
     },
     updateZoomSectionStyles (): void {
-      if (!this.fCroppieBoundaryOffsetSize) {
+      if (!this.croppieBoundaryOffsetSize) {
         return;
       }
 
@@ -259,29 +242,46 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       zoomSection.style.marginBottom = '';
 
       if (
-        !this.fCroppieBoundaryOffsetPosition ||
-        this.fCroppieBoundaryOffsetPosition !== 'top'
+        !this.croppieBoundaryOffsetPosition ||
+        this.croppieBoundaryOffsetPosition !== 'top'
       ) {
         return;
       }
 
-      zoomSection.style.marginBottom = this.fCroppieBoundaryOffsetSize.toString() + '%';
+      zoomSection.style.marginBottom = this.croppieBoundaryOffsetSize.toString() + '%';
     },
     reassignBackgroundImage () {
-      if (this.fBackgroundImageUrl === undefined) {
+      if (this.backgroundImageUrl === undefined) {
         return;
       }
 
       // On mobile phones nav bar toggle changes the size of the viewport,
       // which leads to unwanted zoom/position reset.
       // We are interested in width changes only
-      if (this.fWindow.innerWidth === this.fPreviousWidth) {
+      if (this.window.innerWidth === this.previousWidth) {
         return;
       }
 
-      void this.setBackgroundImage(this.fBackgroundImageUrl);
+      void this.setBackgroundImage(this.backgroundImageUrl);
     },
-    fResizeHandler: function () {
+    async setBackgroundImage (imageUrl: string): Promise<void> {
+      this.backgroundImageUrl = imageUrl;
+
+      const croppie = this.getCroppieContainer();
+      if (!croppie) {
+        throw Error('Croppie is not initialized yet!');
+      }
+
+      await croppie.bind({
+        url: imageUrl,
+        zoom: 0.5
+      });
+
+      this.previousWidth = this.window.innerWidth;
+
+      this.isImageAssigned = true;
+    },
+    resizeHandler: function () {
       throttle(
         () => this.reassignBackgroundImage(),
         300
@@ -293,8 +293,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return;
     }
 
-    if (!(this.fWindow as any).EXIF) {
-      (this.fWindow as any).EXIF = EXIF;
+    if (!(this.window as any).EXIF) {
+      (this.window as any).EXIF = EXIF;
     }
   },
   mounted (): void {
@@ -302,14 +302,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return;
     }
 
-    this.fWindow.addEventListener('resize', this.fResizeHandler);
+    this.window.addEventListener('resize', this.resizeHandler);
   },
   beforeDestroy (): void {
     if (isServer) {
       return;
     }
 
-    this.fWindow.removeEventListener('resize', this.fResizeHandler);
+    this.window.removeEventListener('resize', this.resizeHandler);
   },
   watch: {
     backgroundOffsetSettings: {
@@ -322,11 +322,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         this.updateZoomSectionStyles();
 
-        if (this.fBackgroundImageUrl === undefined) {
+        if (this.backgroundImageUrl === undefined) {
           return;
         }
 
-        void this.setBackgroundImage(this.fBackgroundImageUrl);
+        void this.setBackgroundImage(this.backgroundImageUrl);
       },
       immediate: true
     }

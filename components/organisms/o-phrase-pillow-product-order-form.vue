@@ -487,8 +487,8 @@ configure({
 const TARGET_IMAGE_SIZE = 2625;
 
 interface InjectedServices {
-  fErrorConverterService: ErrorConverterService,
-  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory
+  errorConverterService: ErrorConverterService,
+  fileProcessingRepositoryFactory: FileProcessingRepositoryFactory
 }
 
 type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
@@ -512,8 +512,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     MAccentColorSelector
   },
   inject: {
-    fErrorConverterService: { from: 'ErrorConverterService' },
-    fFileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' }
+    errorConverterService: { from: 'ErrorConverterService' },
+    fileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' }
   } as unknown as InjectType<InjectedServices>,
   props: {
     product: {
@@ -578,16 +578,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       isBackgroundImageLoaded: false,
       backgroundOffsetSettings: undefined as BackgroundOffsetSettings | undefined,
       productionTime: undefined as string | undefined,
-      fBackCustomTextFields: [] as CustomTextFieldInterface[],
-      fFrontCustomTextFields: [] as CustomTextFieldInterface[],
-      fFrontAccentColorElementsNumber: 0,
-      fBackAccentColorElementsNumber: 0,
-      fFileProcessingRepository: undefined as FileProcessingRepository | undefined,
-      fIsDisabled: false,
-      fIsSubmitting: false,
-      fIsAccentColorSelectedByUser: false,
-      fIsBackDesignSelectedByUser: false,
-      fSubmitErrors: [] as string[]
+      backCustomTextFields: [] as CustomTextFieldInterface[],
+      frontCustomTextFields: [] as CustomTextFieldInterface[],
+      frontAccentColorElementsNumber: 0,
+      backAccentColorElementsNumber: 0,
+      fileProcessingRepository: undefined as FileProcessingRepository | undefined,
+      isFormDisabled: false,
+      isSubmitting: false,
+      isAccentColorSelectedByUser: false,
+      isBackDesignSelectedByUser: false,
+      submitErrors: [] as string[]
     }
   },
   computed: {
@@ -602,9 +602,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.accentColorPartValue.background;
     },
     customTextFields (): CustomTextFieldInterface[] {
-      const fields = [...this.fFrontCustomTextFields];
+      const fields = [...this.frontCustomTextFields];
 
-      this.fBackCustomTextFields.forEach((element) => {
+      this.backCustomTextFields.forEach((element) => {
         const field = fields.find((item) => item.name === element.name);
 
         if (field) {
@@ -639,21 +639,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return currentDesign.images.map((item) => item.stage);
     },
     isDisabled (): boolean {
-      return this.fIsDisabled || this.fIsSubmitting;
-    },
-    isSubmitting (): boolean {
-      return this.fIsSubmitting;
-    },
-    submitErrors (): string[] {
-      return this.fSubmitErrors;
+      return this.isFormDisabled || this.isSubmitting;
     },
     uploadButtonText (): string {
       return this.isBackgroundImageLoaded ? 'Change photo' : 'Select a photo';
     },
     isAccentColorSelectorVisible (): boolean {
       return (
-        this.fFrontAccentColorElementsNumber > 0 ||
-            this.fBackAccentColorElementsNumber > 0
+        this.frontAccentColorElementsNumber > 0 ||
+            this.backAccentColorElementsNumber > 0
       );
     },
     isProductionOptionsAvailable (): boolean {
@@ -685,54 +679,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return result;
     },
-    onAccentColorSelect (): void {
-      this.fIsAccentColorSelectedByUser = true;
-    },
-    onBackDesignSelect (): void {
-      this.fIsBackDesignSelectedByUser = true;
-
-      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
-    },
-    onFrontDesignSelect (): void {
-      this.selectDefaultBackDesignForFront(this.frontDesign);
-
-      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
-    },
-    onBackgroundImageUploaded (image: string): void {
-      const backgroundEditor = this.getBackgroundEditor();
-
-      if (!backgroundEditor) {
-        throw new Error('Unable to get Background editor element!');
-      }
-
-      this.backgroundDataUri = image;
-      backgroundEditor.setBackgroundImage(this.backgroundDataUri);
-    },
-    onBackCustomTextFieldsPrepared (
-      textFields: CustomTextFieldInterface[]
-    ): void {
-      this.fBackCustomTextFields = textFields;
-    },
-    onFrontCustomTextFieldsPrepared (
-      textFields: CustomTextFieldInterface[]
-    ): void {
-      this.fFrontCustomTextFields = textFields;
-    },
-    onFrontAccentColorElementsCounted (
-      coloredElementsNumber: number
-    ): void {
-      this.fFrontAccentColorElementsNumber = coloredElementsNumber;
-    },
-    onBackAccentColorElementsCounted (
-      coloredElementsNumber: number
-    ): void {
-      this.fBackAccentColorElementsNumber = coloredElementsNumber;
-    },
-    onBackgroundOffsetSettingsPrepared (
-      settings: BackgroundOffsetSettings
-    ): void {
-      this.backgroundOffsetSettings = settings;
-    },
     getBackgroundEditor (): InstanceType<typeof MBackgroundEditor> | undefined {
       return this.$refs['backgroundEditor'] as InstanceType<typeof MBackgroundEditor> | undefined;
     },
@@ -757,6 +703,104 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return new Blob([ab], { type: mimeString });
+    },
+    getCustomFieldsData (): Record<string, string | undefined> {
+      const customTextValuesToSubmit: Record<string, string | undefined> = {};
+
+      if (!this.customTextValues || Object.keys(this.customTextValues).length < 1) {
+        return customTextValuesToSubmit;
+      }
+
+      this.customTextFields.forEach((field) => {
+        customTextValuesToSubmit[field.name] = this.customTextValues[field.name];
+      });
+
+      return customTextValuesToSubmit;
+    },
+    getBodypartsData (): Record<string, string> {
+      let data: Record<string, string> = {};
+
+      if (!this.accentColorPartValue) {
+        return data;
+      }
+
+      data[this.accentColorPartValue.optionId] = this.accentColorPartValue.optionValueId;
+
+      return data;
+    },
+    selectDefaultBackDesignForFront (frontDesignSku?: string): void {
+      if (!frontDesignSku || this.isBackDesignSelectedByUser) {
+        return;
+      }
+
+      const currentDesign = this.frontDesignProducts.find(
+        (product) => product.sku === frontDesignSku
+      );
+
+      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
+        return;
+      }
+
+      const backDesign = this.backDesignProducts.find(
+        (product) => product.id === currentDesign.defaultOtherSideDesign
+      );
+
+      if (!backDesign) {
+        return;
+      }
+
+      this.backDesign = backDesign.sku;
+    },
+    selectDefaultAccentColor (
+      frontDesignSku?: string,
+      backDesignSku?: string
+    ): void {
+      if (this.isAccentColorSelectedByUser) {
+        return;
+      }
+
+      if (!frontDesignSku && !backDesignSku) {
+        return;
+      }
+
+      let accentColorId: number | undefined;
+
+      if (frontDesignSku) {
+        const frontDesign = this.frontDesignProducts.find(
+          (product) => product.sku === frontDesignSku
+        );
+
+        if (frontDesign) {
+          accentColorId = frontDesign.defaultAccentColor;
+        }
+      }
+
+      if (!accentColorId && backDesignSku) {
+        const backDesign = this.backDesignProducts.find(
+          (product) => product.sku === backDesignSku
+        );
+
+        if (backDesign) {
+          accentColorId = backDesign.defaultAccentColor;
+        }
+      }
+
+      if (!accentColorId) {
+        return;
+      }
+
+      const accentColor = this.accentColorPartValues.find(
+        (color) => color.id === accentColorId
+      );
+
+      if (!accentColor) {
+        return;
+      }
+
+      this.accentColorPartValue = accentColor;
+    },
+    goToCart (): void {
+      this.$router.push(localizedRoute('/cart'));
     },
     async processImages (): Promise<string[]> {
       const backgroundEditor = this.getBackgroundEditor();
@@ -807,17 +851,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         backStorageItem,
         backgroundOriginalItem
       ] = await Promise.all([
-        this.fFileProcessingRepository.uploadFile(
+        this.fileProcessingRepository.uploadFile(
           frontDesignBlob,
           ImageType.Artwork,
           this.uploadProductType
         ),
-        this.fFileProcessingRepository.uploadFile(
+        this.fileProcessingRepository.uploadFile(
           backDesignBlob,
           ImageType.Artwork,
           this.uploadProductType
         ),
-        this.fFileProcessingRepository.uploadFile(
+        this.fileProcessingRepository.uploadFile(
           backgroundBlob,
           ImageType.Artwork,
           this.uploadProductType
@@ -833,8 +877,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      this.fSubmitErrors = [];
-      this.fIsSubmitting = true;
+      this.submitErrors = [];
+      this.isSubmitting = true;
 
       try {
         const submitAnimator = this.getSubmitAnimator();
@@ -875,10 +919,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           errorToParse = error.response.data;
         }
 
-        this.fSubmitErrors = this.fErrorConverterService.describeError(
+        this.submitErrors = this.errorConverterService.describeError(
           errorToParse
         );
-        this.fIsSubmitting = false;
+        this.isSubmitting = false;
       }
     },
     async onSuccess (): Promise<void> {
@@ -892,107 +936,57 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         );
       }
     },
-    goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
+    onAccentColorSelect (): void {
+      this.isAccentColorSelectedByUser = true;
     },
-    getCustomFieldsData (): Record<string, string | undefined> {
-      const customTextValuesToSubmit: Record<string, string | undefined> = {};
+    onBackDesignSelect (): void {
+      this.isBackDesignSelectedByUser = true;
 
-      if (!this.customTextValues || Object.keys(this.customTextValues).length < 1) {
-        return customTextValuesToSubmit;
-      }
-
-      this.customTextFields.forEach((field) => {
-        customTextValuesToSubmit[field.name] = this.customTextValues[field.name];
-      });
-
-      return customTextValuesToSubmit;
+      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
     },
-    getBodypartsData (): Record<string, string> {
-      let data: Record<string, string> = {};
+    onFrontDesignSelect (): void {
+      this.selectDefaultBackDesignForFront(this.frontDesign);
 
-      if (!this.accentColorPartValue) {
-        return data;
-      }
-
-      data[this.accentColorPartValue.optionId] = this.accentColorPartValue.optionValueId;
-
-      return data;
+      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
     },
-    selectDefaultBackDesignForFront (frontDesignSku?: string): void {
-      if (!frontDesignSku || this.fIsBackDesignSelectedByUser) {
-        return;
+    onBackgroundImageUploaded (image: string): void {
+      const backgroundEditor = this.getBackgroundEditor();
+
+      if (!backgroundEditor) {
+        throw new Error('Unable to get Background editor element!');
       }
 
-      const currentDesign = this.frontDesignProducts.find(
-        (product) => product.sku === frontDesignSku
-      );
-
-      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
-        return;
-      }
-
-      const backDesign = this.backDesignProducts.find(
-        (product) => product.id === currentDesign.defaultOtherSideDesign
-      );
-
-      if (!backDesign) {
-        return;
-      }
-
-      this.backDesign = backDesign.sku;
+      this.backgroundDataUri = image;
+      backgroundEditor.setBackgroundImage(this.backgroundDataUri);
     },
-    selectDefaultAccentColor (
-      frontDesignSku?: string,
-      backDesignSku?: string
+    onBackCustomTextFieldsPrepared (
+      textFields: CustomTextFieldInterface[]
     ): void {
-      if (this.fIsAccentColorSelectedByUser) {
-        return;
-      }
-
-      if (!frontDesignSku && !backDesignSku) {
-        return;
-      }
-
-      let accentColorId: number | undefined;
-
-      if (frontDesignSku) {
-        const frontDesign = this.frontDesignProducts.find(
-          (product) => product.sku === frontDesignSku
-        );
-
-        if (frontDesign) {
-          accentColorId = frontDesign.defaultAccentColor;
-        }
-      }
-
-      if (!accentColorId && backDesignSku) {
-        const backDesign = this.backDesignProducts.find(
-          (product) => product.sku === backDesignSku
-        );
-
-        if (backDesign) {
-          accentColorId = backDesign.defaultAccentColor;
-        }
-      }
-
-      if (!accentColorId) {
-        return;
-      }
-
-      const accentColor = this.accentColorPartValues.find(
-        (color) => color.id === accentColorId
-      );
-
-      if (!accentColor) {
-        return;
-      }
-
-      this.accentColorPartValue = accentColor;
+      this.backCustomTextFields = textFields;
+    },
+    onFrontCustomTextFieldsPrepared (
+      textFields: CustomTextFieldInterface[]
+    ): void {
+      this.frontCustomTextFields = textFields;
+    },
+    onFrontAccentColorElementsCounted (
+      coloredElementsNumber: number
+    ): void {
+      this.frontAccentColorElementsNumber = coloredElementsNumber;
+    },
+    onBackAccentColorElementsCounted (
+      coloredElementsNumber: number
+    ): void {
+      this.backAccentColorElementsNumber = coloredElementsNumber;
+    },
+    onBackgroundOffsetSettingsPrepared (
+      settings: BackgroundOffsetSettings
+    ): void {
+      this.backgroundOffsetSettings = settings;
     }
   },
   created (): void {
-    this.fFileProcessingRepository = this.fFileProcessingRepositoryFactory.create(
+    this.fileProcessingRepository = this.fileProcessingRepositoryFactory.create(
       this.imageUploadUrl
     );
 

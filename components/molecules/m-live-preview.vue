@@ -20,7 +20,7 @@ import { InjectKey, PropType } from 'vue/types/options';
 const SVG_NAMESPACE_URI = 'http://www.w3.org/2000/svg';
 
 interface InjectedServices {
-  fWindow: Window
+  window: Window
 }
 
 type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
@@ -28,7 +28,7 @@ type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: a
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MLivePreview',
   inject: {
-    fWindow: { from: 'WindowObject' }
+    window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   props: {
     designSku: {
@@ -50,18 +50,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   data () {
     return {
-      fIsLoading: true,
-      fPreviewContent: undefined as string | undefined,
-      fCustomTextFields: [] as CustomTextFieldInterface[]
+      isLoading: true,
+      previewContent: undefined as string | undefined,
+      customTextFields: [] as CustomTextFieldInterface[]
     }
   },
   computed: {
-    isLoading (): boolean | undefined {
-      return this.fIsLoading;
-    },
-    previewContent (): string | undefined {
-      return this.fPreviewContent;
-    },
     fullTemplateFetchUrl (): string {
       return this.templateFetchUrl + '/' + this.designSku + '/template.svg';
     }
@@ -107,7 +101,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       // We are creating the following element:
       // <image class="background-image" xlink:href="<dataURI>" width="<width>" height="<height>"" preserveAspectRatio="xMidYMid slice"/>
 
-      const imageElement = this.fWindow.document.createElementNS(
+      const imageElement = this.window.document.createElementNS(
         SVG_NAMESPACE_URI,
         'image'
       );
@@ -136,101 +130,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       backgroundContainer.appendChild(imageElement);
 
       return this.restoreXmlTag(svgClone.innerHTML);
-    },
-    restoreXmlTag (content: string) {
-      const regex = /<!--\?xml (.+)\?-->/i;
-      return content.replace(regex, '<?xml $1?>');
-    },
-    parsePreviewContent (): Document {
-      if (!this.previewContent) {
-        throw new Error('Preview content is absent!');
-      }
-
-      const parser = new DOMParser();
-
-      return parser.parseFromString(this.previewContent, 'image/svg+xml');
-    },
-    prepareCustomTextFields (svg: Document) {
-      this.fCustomTextFields = [];
-      const fields = svg.getElementsByClassName('custom-text');
-
-      for (let i = 0; i < fields.length; i++) {
-        const name = fields[i].getAttribute('data-name');
-        if (!name) {
-          continue;
-        }
-
-        const label = fields[i].getAttribute('data-label');
-        const placeholder = fields[i].getAttribute('data-placeholder');
-        const helperText = fields[i].getAttribute('data-helper-text');
-
-        this.fCustomTextFields.push({
-          name,
-          label: label || name,
-          placeholder: placeholder || '',
-          helperText: helperText || ''
-        });
-      }
-    },
-    countColoredElements (svg: Document): number {
-      const fields = svg.getElementsByClassName('accent');
-
-      return fields.length;
-    },
-    prepareBackgroundOffsetSettings (
-      svg: Document
-    ): BackgroundOffsetSettings {
-      const settings: BackgroundOffsetSettings = {};
-
-      const backgroundContainer = svg.getElementById('background');
-
-      if (!backgroundContainer) {
-        return settings;
-      }
-
-      const offsetSize = backgroundContainer.getAttribute('data-offset-size');
-      const offsetPosition = backgroundContainer.getAttribute(
-        'data-offset-position'
-      );
-
-      settings.size = offsetSize || undefined;
-      settings.position = offsetPosition || undefined;
-
-      return settings;
-    },
-    async loadSvgTemplate () {
-      this.fIsLoading = true;
-
-      try {
-        const response = await fetch(this.fullTemplateFetchUrl);
-
-        if (!response.ok) {
-          this.fPreviewContent = undefined;
-          throw new Error('SVG template was not loaded!');
-        }
-
-        this.fPreviewContent = await response.text();
-
-        const svgHtmlContent = this.parsePreviewContent();
-
-        this.prepareCustomTextFields(svgHtmlContent);
-        this.$emit('custom-text-fields-prepared', this.fCustomTextFields);
-
-        const accentColorElementsNumber = this.countColoredElements(
-          svgHtmlContent
-        );
-        this.$emit('colored-elements-counted', accentColorElementsNumber);
-
-        const backgroundOffsetSettings = this.prepareBackgroundOffsetSettings(
-          svgHtmlContent
-        );
-        this.$emit(
-          'background-offset-settings-prepared',
-          backgroundOffsetSettings
-        );
-      } finally {
-        this.fIsLoading = false;
-      }
     },
     getSvgContentElement (): HTMLElement | undefined {
       return this.$refs['svgContent'] as HTMLElement;
@@ -299,6 +198,101 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       scale = Math.min(scale, maxFontSize);
 
       field.style.fontSize = scale.toString() + 'px';
+    },
+    restoreXmlTag (content: string) {
+      const regex = /<!--\?xml (.+)\?-->/i;
+      return content.replace(regex, '<?xml $1?>');
+    },
+    parsePreviewContent (): Document {
+      if (!this.previewContent) {
+        throw new Error('Preview content is absent!');
+      }
+
+      const parser = new DOMParser();
+
+      return parser.parseFromString(this.previewContent, 'image/svg+xml');
+    },
+    prepareCustomTextFields (svg: Document) {
+      this.customTextFields = [];
+      const fields = svg.getElementsByClassName('custom-text');
+
+      for (let i = 0; i < fields.length; i++) {
+        const name = fields[i].getAttribute('data-name');
+        if (!name) {
+          continue;
+        }
+
+        const label = fields[i].getAttribute('data-label');
+        const placeholder = fields[i].getAttribute('data-placeholder');
+        const helperText = fields[i].getAttribute('data-helper-text');
+
+        this.customTextFields.push({
+          name,
+          label: label || name,
+          placeholder: placeholder || '',
+          helperText: helperText || ''
+        });
+      }
+    },
+    countColoredElements (svg: Document): number {
+      const fields = svg.getElementsByClassName('accent');
+
+      return fields.length;
+    },
+    prepareBackgroundOffsetSettings (
+      svg: Document
+    ): BackgroundOffsetSettings {
+      const settings: BackgroundOffsetSettings = {};
+
+      const backgroundContainer = svg.getElementById('background');
+
+      if (!backgroundContainer) {
+        return settings;
+      }
+
+      const offsetSize = backgroundContainer.getAttribute('data-offset-size');
+      const offsetPosition = backgroundContainer.getAttribute(
+        'data-offset-position'
+      );
+
+      settings.size = offsetSize || undefined;
+      settings.position = offsetPosition || undefined;
+
+      return settings;
+    },
+    async loadSvgTemplate () {
+      this.isLoading = true;
+
+      try {
+        const response = await fetch(this.fullTemplateFetchUrl);
+
+        if (!response.ok) {
+          this.previewContent = undefined;
+          throw new Error('SVG template was not loaded!');
+        }
+
+        this.previewContent = await response.text();
+
+        const svgHtmlContent = this.parsePreviewContent();
+
+        this.prepareCustomTextFields(svgHtmlContent);
+        this.$emit('custom-text-fields-prepared', this.customTextFields);
+
+        const accentColorElementsNumber = this.countColoredElements(
+          svgHtmlContent
+        );
+        this.$emit('colored-elements-counted', accentColorElementsNumber);
+
+        const backgroundOffsetSettings = this.prepareBackgroundOffsetSettings(
+          svgHtmlContent
+        );
+        this.$emit(
+          'background-offset-settings-prepared',
+          backgroundOffsetSettings
+        );
+      } finally {
+        this.isLoading = false;
+      }
     }
   },
   updated (): void {
@@ -309,7 +303,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     designSku: {
       handler () {
         if (!this.designSku) {
-          this.fPreviewContent = undefined;
+          this.previewContent = undefined;
           return;
         }
 

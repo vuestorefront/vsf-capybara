@@ -42,7 +42,7 @@ import { InjectKey } from 'vue/types/options';
 import { isServer } from '@vue-storefront/core/helpers'
 
 interface InjectedServices {
-  fWindow: Window
+  window: Window
 }
 
 type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
@@ -52,7 +52,7 @@ class UnexpectedReadResultError extends Error {}
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MBackgroundUploader',
   inject: {
-    fWindow: { from: 'WindowObject' }
+    window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   props: {
     disabled: {
@@ -66,85 +66,20 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   data () {
     return {
-      fErrorMessage: undefined as string | undefined,
-      fInstanceId: uuidv4() as string,
-      fIsDragging: false
+      errorMessage: undefined as string | undefined,
+      instanceId: uuidv4() as string,
+      isDragging: false
     }
   },
   computed: {
     skinClass (): string {
       return `-skin-petsies`;
     },
-    errorMessage (): string | undefined {
-      return this.fErrorMessage;
-    },
-    instanceId (): string {
-      return this.fInstanceId;
-    },
     scopeId (): string {
       return (this.$options as any)._scopeId;
-    },
-    isDragging (): boolean {
-      return this.fIsDragging;
     }
   },
   methods: {
-    onFileDropped (event: DragEvent): void {
-      event.preventDefault();
-
-      if (!event.dataTransfer) {
-        return;
-      }
-
-      const file = event.dataTransfer.files[0];
-
-      if (!file) {
-        return;
-      }
-
-      this.readFile(file);
-
-      this.fIsDragging = false;
-    },
-    onFileSelect (event: Event): void {
-      if (!event.target) {
-        return;
-      }
-
-      const files = (event.target as HTMLInputElement).files as FileList;
-
-      if (!files.length) {
-        return;
-      }
-
-      this.readFile(files[0]);
-    },
-    onDragOver (event: DragEvent): void {
-      event.preventDefault();
-      this.fIsDragging = true;
-    },
-    onDragLeave (): void {
-      this.fIsDragging = false;
-    },
-    async readFile (file: File): Promise<void> {
-      const userFriendlyErrorMessage = 'Sorry, something went wrong!';
-
-      this.fErrorMessage = undefined;
-
-      try {
-        const background = await this.readFromDisk(file);
-
-        this.$emit('input', true);
-        this.$emit('background-uploaded', background);
-      } catch (error) {
-        this.fErrorMessage =
-                error &&
-                error.message &&
-                !(error instanceof UnexpectedReadResultError)
-                  ? error.message
-                  : userFriendlyErrorMessage;
-      }
-    },
     readFromDisk (file: File): Promise<string> {
       return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
@@ -166,19 +101,75 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         };
       });
     },
-    fDropHandler: function (e: DragEvent) { this.onFileDropped(e) },
-    fWindowDragOverHandler: (e: DragEvent) => e.preventDefault()
+    async readFile (file: File): Promise<void> {
+      const userFriendlyErrorMessage = 'Sorry, something went wrong!';
+
+      this.errorMessage = undefined;
+
+      try {
+        const background = await this.readFromDisk(file);
+
+        this.$emit('input', true);
+        this.$emit('background-uploaded', background);
+      } catch (error) {
+        this.errorMessage =
+                error &&
+                error.message &&
+                !(error instanceof UnexpectedReadResultError)
+                  ? error.message
+                  : userFriendlyErrorMessage;
+      }
+    },
+    onFileDropped (event: DragEvent): void {
+      event.preventDefault();
+
+      if (!event.dataTransfer) {
+        return;
+      }
+
+      const file = event.dataTransfer.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      this.readFile(file);
+
+      this.isDragging = false;
+    },
+    onFileSelect (event: Event): void {
+      if (!event.target) {
+        return;
+      }
+
+      const files = (event.target as HTMLInputElement).files as FileList;
+
+      if (!files.length) {
+        return;
+      }
+
+      this.readFile(files[0]);
+    },
+    onDragOver (event: DragEvent): void {
+      event.preventDefault();
+      this.isDragging = true;
+    },
+    onDragLeave (): void {
+      this.isDragging = false;
+    },
+    dropHandler: function (e: DragEvent) { this.onFileDropped(e) },
+    windowDragOverHandler: (e: DragEvent) => e.preventDefault()
   },
   mounted () {
     if (isServer) {
       return;
     }
 
-    this.fWindow.addEventListener('drop', this.fDropHandler, {
+    this.window.addEventListener('drop', this.dropHandler, {
       capture: true
     });
 
-    this.fWindow.addEventListener('dragover', this.fWindowDragOverHandler, {
+    this.window.addEventListener('dragover', this.windowDragOverHandler, {
       capture: true
     });
   },
@@ -187,10 +178,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return;
     }
 
-    this.fWindow.removeEventListener('drop', this.fDropHandler);
-    this.fWindow.removeEventListener(
+    this.window.removeEventListener('drop', this.dropHandler);
+    this.window.removeEventListener(
       'dragover',
-      this.fWindowDragOverHandler
+      this.windowDragOverHandler
     );
   }
 })

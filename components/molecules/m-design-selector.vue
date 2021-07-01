@@ -115,15 +115,12 @@ export default Vue.extend({
   },
   data () {
     return {
-      fIsCollapsed: false
+      isCollapsed: false
     };
   },
   computed: {
     skinClass (): string {
       return `-skin-petsies`;
-    },
-    isCollapsed (): boolean {
-      return this.fIsCollapsed;
     },
     selectedDesign (): DesignProduct | undefined {
       if (!this.value) {
@@ -147,11 +144,11 @@ export default Vue.extend({
         return;
       }
 
-      this.fIsCollapsed = false;
+      this.isCollapsed = false;
     }
   },
   created (): void {
-    this.fIsCollapsed = Boolean(this.value) && this.shouldCollapse;
+    this.isCollapsed = Boolean(this.value) && this.shouldCollapse;
   }
 })
 </script>
