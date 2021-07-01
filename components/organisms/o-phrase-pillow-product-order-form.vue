@@ -906,7 +906,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           { email: this.customerEmail }
         );
 
-        this.$store.dispatch('cart/addItem', {
+        await this.$store.dispatch('cart/addItem', {
           productToAdd: Object.assign({}, this.product, {
             qty: this.quantity,
             email: this.customerEmail,
@@ -915,9 +915,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             customerImagesIds: customerImagesIds,
             uploadMethod: 'upload-now'
           })
-        }).then(() => {
-          this.onSuccess();
-        })
+        });
+
+        this.goToCart();
       } catch (error) {
         let errorToParse: any = error;
 
@@ -929,17 +929,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           errorToParse
         );
         this.isSubmitting = false;
-      }
-    },
-    async onSuccess (): Promise<void> {
-      try {
-        this.goToCart();
-      } catch (e) {
-        this.$store.dispatch(
-          'notification/spawnNotification',
-          notifications.createNotification({ type: 'danger', message: e.message, timeToLive: 10 * 1000 }),
-          { root: true }
-        );
       }
     },
     onAccentColorSelect (): void {
