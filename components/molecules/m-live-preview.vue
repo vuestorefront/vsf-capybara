@@ -15,15 +15,15 @@
 import Vue, { VueConstructor } from 'vue';
 import CustomTextFieldInterface from '../interfaces/custom-text-field.interface';
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
-import { InjectKey, PropType } from 'vue/types/options';
+import { PropType } from 'vue/types/options';
+
+import { InjectType } from 'src/modules/shared';
 
 const SVG_NAMESPACE_URI = 'http://www.w3.org/2000/svg';
 
 interface InjectedServices {
   window: Window
 }
-
-type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MLivePreview',

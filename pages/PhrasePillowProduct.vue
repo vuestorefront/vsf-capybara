@@ -23,16 +23,16 @@ import { mapGetters } from 'vuex';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { ProductValue } from 'src/modules/budsies';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import Task from 'core/lib/sync/types/Task';
+import Product from 'core/modules/catalog/types/Product';
+
+import { Bodypart, ProductValue } from 'src/modules/budsies';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
-import Bodypart from 'src/modules/budsies/models/bodypart.model';
-import Task from 'core/lib/sync/types/Task';
-import DesignProduct from 'theme/components/interfaces/design-product.interface';
-import ProductImage from 'theme/components/interfaces/product-image.interface';
-import Product from 'core/modules/catalog/types/Product';
+import DesignProduct from '../components/interfaces/design-product.interface';
+import ProductImage from '../components/interfaces/product-image.interface';
 
 export default {
   name: 'PhrasePillowProduct',

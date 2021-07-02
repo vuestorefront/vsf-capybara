@@ -70,14 +70,14 @@ import throttle from 'lodash.throttle';
 import { SfIcon } from '@storefront-ui/vue';
 
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
-import { InjectKey, PropType } from 'vue/types/options';
+import { PropType } from 'vue/types/options';
 import { isServer } from '@vue-storefront/core/helpers'
+
+import { InjectType } from 'src/modules/shared';
 
 interface InjectedServices {
   window: Window
 }
-
-type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
 
 const DEFAULT_CROPPIE_EDGE_SIZE = 100;
 const DEFAULT_CROPPIE_OFFSET_SIZE = 0;

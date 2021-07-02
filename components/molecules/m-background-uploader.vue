@@ -38,14 +38,12 @@
 <script lang="ts">
 import { v4 as uuidv4 } from 'uuid';
 import Vue, { VueConstructor } from 'vue';
-import { InjectKey } from 'vue/types/options';
+import { InjectType } from 'src/modules/shared';
 import { isServer } from '@vue-storefront/core/helpers'
 
 interface InjectedServices {
   window: Window
 }
-
-type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
 
 class UnexpectedReadResultError extends Error {}
 

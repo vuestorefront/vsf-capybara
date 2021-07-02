@@ -421,6 +421,7 @@
 </template>
 
 <script lang="ts">
+import Vue, { PropType, VueConstructor } from 'vue';
 import {
   ValidationProvider,
   ValidationObserver,
@@ -430,14 +431,24 @@ import {
 import { mapMutations } from 'vuex';
 import { required, email } from 'vee-validate/dist/rules';
 import { SfButton, SfInput, SfHeading } from '@storefront-ui/vue';
-import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
-import FileProcessingRepository from 'src/modules/file-storage/file-processing.repository';
-import ErrorConverterService from 'src/modules/budsies/services/error-converter.service';
-import { ImageType } from 'src/modules/file-storage/image-type.value';
-import isAxiosError from 'src/modules/budsies/services/is-axios-error.typeguard';
+import { InjectType } from 'src/modules/shared';
+import {
+  ErrorConverterService,
+  Bodypart,
+  BodypartValue,
+  isAxiosError,
+  vuexTypes as budsiesTypes
+} from 'src/modules/budsies';
+
+import {
+  FileProcessingRepositoryFactory,
+  FileProcessingRepository,
+  Item,
+  ImageType
+} from 'src/modules/file-storage';
 
 import MFormErrors from '../molecules/m-form-errors.vue';
 import MBackgroundUploader from '../molecules/m-background-uploader.vue';
@@ -448,19 +459,12 @@ import MDesignImages from '../molecules/m-design-images.vue';
 import MSubmitAnimator from '../molecules/m-submit-animator.vue';
 import MAccentColorSelector from '../molecules/m-accent-color-selector.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
-
 import CustomTextFieldInterface from '../interfaces/custom-text-field.interface';
 import DesignProduct from '../interfaces/design-product.interface';
 import AccentColorPart from '../interfaces/accent-color-part.interface';
 import SubmitAnimationStepsInterface from '../interfaces/submit-animation-steps.interface';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
-import Vue, { PropType, VueConstructor } from 'vue';
-import { InjectKey } from 'vue/types/options';
-import Bodypart from 'src/modules/budsies/models/bodypart.model';
-import BodypartValue from 'src/modules/budsies/models/bodypart-value.model';
-import { FileProcessingRepositoryFactory, Item } from 'src/modules/file-storage';
-import * as budsiesTypes from 'src/modules/budsies/store/mutation-types';
 
 extend('required', {
   ...required,
@@ -487,8 +491,6 @@ interface InjectedServices {
   errorConverterService: ErrorConverterService,
   fileProcessingRepositoryFactory: FileProcessingRepositoryFactory
 }
-
-type InjectType<T> = Record<keyof T, InjectKey | { from?: InjectKey, default?: any }>;
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPhrasePillowProductOrderForm',
