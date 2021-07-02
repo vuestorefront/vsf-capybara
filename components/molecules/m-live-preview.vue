@@ -5,7 +5,7 @@
       class="_svg-content"
       v-html="previewContent"
     />
-    <div class="_preview-overlay" v-if="isLoading">
+    <div class="_preview-overlay" v-show="isLoading">
       <div>Loading...</div>
     </div>
   </div>
