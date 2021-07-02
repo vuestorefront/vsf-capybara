@@ -13,7 +13,6 @@
           :value="option"
           v-model="selectedOption"
           :disabled="disabled"
-          :checked="selectedOption && selectedOption.id === option.id"
         >
 
         <label
