@@ -61,10 +61,10 @@ export default {
       return config.images.fileuploaderUploadUrl;
     },
     frontDesigns (): DesignProduct[] {
-      return this.getDesignProducts(true);
+      return this.getDesignProducts('front');
     },
     backDesigns (): DesignProduct[] {
-      return this.getDesignProducts(false);
+      return this.getDesignProducts('back');
     },
     initialFrontDesign (): string {
       if (this.$route.params.parentSku) {
@@ -113,10 +113,12 @@ export default {
         sku: product.sku
       }))
     },
-    getDesignProducts (returnFrontDesigns: boolean): DesignProduct[] {
+    getDesignProducts (type: 'front' | 'back'): DesignProduct[] {
       if (!this.getCurrentProduct.bundle_options) {
         throw new Error('The phrase pillow product has no bundle options');
       }
+
+      const categoryId = type === 'front' ? 80 : 81;
 
       let designs: DesignProduct[] = [];
       for (const option of this.getCurrentProduct.bundle_options) {
@@ -125,7 +127,7 @@ export default {
             continue;
           }
 
-          if (productLink.product.sku.includes('Back') === returnFrontDesigns) {
+          if (!productLink.product.category_ids.includes(categoryId)) {
             continue;
           }
 
