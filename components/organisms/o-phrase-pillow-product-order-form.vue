@@ -33,7 +33,6 @@
 
           <form
             method="POST"
-            action="url"
             @submit.prevent="
               (event) => passes(() => onSubmit(event))
             "
@@ -704,19 +703,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return new Blob([ab], { type: mimeString });
     },
-    getCustomFieldsData (): Record<string, string | undefined> {
-      const customTextValuesToSubmit: Record<string, string | undefined> = {};
-
-      if (!this.customTextValues || Object.keys(this.customTextValues).length < 1) {
-        return customTextValuesToSubmit;
-      }
-
-      this.customTextFields.forEach((field) => {
-        customTextValuesToSubmit[field.name] = this.customTextValues[field.name];
-      });
-
-      return customTextValuesToSubmit;
-    },
     getBodypartsData (): Record<string, string> {
       let data: Record<string, string> = {};
 
@@ -913,7 +899,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             qty: this.quantity,
             email: this.customerEmail,
             bodyparts: this.getBodypartsData(),
-            customFields: JSON.stringify(this.getCustomFieldsData()),
+            customFields: JSON.stringify(this.customTextValues),
             customerImagesIds: customerImagesIds,
             uploadMethod: 'upload-now'
           })
