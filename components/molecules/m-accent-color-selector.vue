@@ -79,6 +79,7 @@ export default Vue.extend({
         justify-content: flex-start;
         margin: -0.5em;
         overflow: hidden;
+        padding: 0;
     }
 
     ._option-value {

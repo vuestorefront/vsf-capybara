@@ -37,8 +37,9 @@ export default Vue.extend({
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
-        margin: -3%;
+        margin: 0 -3%;
         list-style-image: none;
+        padding: 0;
 
         ._image {
             flex-shrink: 0;
