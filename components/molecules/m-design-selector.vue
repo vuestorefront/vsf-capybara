@@ -218,17 +218,21 @@ export default Vue.extend({
     padding: 0;
 
     ._design-option {
+      box-sizing: border-box;
       flex-shrink: 0;
       flex-grow: 0;
       display: block;
       padding: 2%;
       min-width: 114px;
-      width: 21%;
+      width: 25%;
 
       > input {
+        display: block;
         opacity: 0;
         height: 0;
         width: 0;
+        padding: 0;
+        margin: 0;
       }
 
       ._option-label {

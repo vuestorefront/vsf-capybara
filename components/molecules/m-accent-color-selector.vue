@@ -124,6 +124,8 @@ export default Vue.extend({
         height: 0;
         opacity: 0;
         width: 0;
+        padding: 0;
+        margin: 0;
 
         &:checked + ._value-representation {
             background: none;
@@ -135,7 +137,7 @@ export default Vue.extend({
         }
     }
 
-    @include for-desktop {
+    @media (min-width: $tablet-min) {
         ._option-value {
             width: 72px;
         }
