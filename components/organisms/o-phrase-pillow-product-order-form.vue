@@ -11,13 +11,13 @@
       </div>
 
       <SfHeading
-        class="desktop-only"
+        class="-show-for-medium-up"
         :level="3"
         title="Your customizations will appear on the left side of the page"
       />
 
       <SfHeading
-        class="mobile-only _accent-header"
+        class="_accent-header -show-for-small-only"
         :level="4"
         title="Scroll down for a preview of your customizations"
       />
@@ -315,7 +315,9 @@
             </div>
 
             <div class="_bottom-static-block">
-              <slot name="bottom-static-block" />
+              <slot name="bottom-static-block">
+                <sup><em>Please make sure everything is correct before submitting. Your pillow goes straight to print!</em></sup>
+              </slot>
             </div>
 
             <div class="_actions-row" v-show="!isSubmitting">
@@ -801,6 +803,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       const backPreview = this.getBackPreview();
       const frontPreview = this.getFrontPreview();
 
+      if (!this.fileProcessingRepository) {
+        throw new Error('File processing repository is not available!');
+      }
+
       if (!backgroundEditor || !backPreview || !frontPreview) {
         throw new Error('Unable to get preview elements!');
       }
@@ -866,7 +872,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         (item: Item) => item.id
       );
     },
-    async onSubmit (): Promise<void> {
+    async onSubmit (event: Event): Promise<void> {
+      event.preventDefault();
+
       if (this.isDisabled) {
         return;
       }
@@ -1185,9 +1193,23 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         ._background-image-field {
             text-align: center;
         }
+
+        ._bottom-static-block {
+            text-align: center;
+        }
     }
 
-    @include for-desktop {
+    @media (max-width: $mobile-max) {
+      .-show-for-medium-up {
+        display: none !important;
+      }
+    }
+
+    @media (min-width: $tablet-min) {
+        .-show-for-small-only {
+          display: none !important;
+        }
+
         ._page-content {
             flex-direction: row-reverse;
 
@@ -1200,12 +1222,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         ._label {
           text-align: left;
-        }
-
-        ._front_design_preview_container > .m-background-editor,
-        ._back_design_preview_container > .m-live-preview,
-        ._design-images-container > .m-design-images {
-          width: 80%;
         }
 
         ._customization-section,
@@ -1278,8 +1294,21 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
             ._bottom-static-block {
                 margin-top: 1em;
+                text-align: left;
             }
         }
+    }
+
+    @include for-desktop {
+      ._front_design_preview_container > .m-background-editor,
+      ._back_design_preview_container > .m-live-preview,
+      ._design-images-container > .m-design-images {
+        width: 80%;
+      }
+
+      ._actions-row {
+          text-align: left;
+      }
     }
 
     &.-skin-petsies {

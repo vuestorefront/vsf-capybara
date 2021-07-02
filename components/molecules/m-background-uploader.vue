@@ -222,7 +222,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         opacity: 0.6;
     }
 
-    @include for-desktop {
+    @media (min-width: $tablet-min) {
         text-align: left;
 
         ._error-text {
