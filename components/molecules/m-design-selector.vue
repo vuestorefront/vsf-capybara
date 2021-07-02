@@ -8,9 +8,13 @@
       skinClass,
     ]"
   >
-    <div class="_compact-view" v-if="isCollapsed">
+    <div class="_compact-view" v-if="isCollapsed && selectedDesign">
       <div class="_image-wrapper">
-        <img class="_image" :src="selectedDesign.thumbnail">
+        <BaseImage
+          class="_image"
+          :src="selectedDesign.thumbnail"
+          :aspect-ratio="1"
+        />
       </div>
 
       <div
@@ -66,7 +70,11 @@
         >
           <div class="_image-wrapper">
             <div class="_accent-color-icon" />
-            <img class="_image" :src="design.thumbnail">
+            <BaseImage
+              class="_image"
+              :src="design.thumbnail"
+              :aspect-ratio="1"
+            />
           </div>
 
           <div class="_content-wrapper">
@@ -89,10 +97,15 @@
 import Vue, { PropType } from 'vue';
 import DesignProduct from '../interfaces/design-product.interface';
 
+import { BaseImage } from 'src/modules/budsies';
+
 let instanceId = 0;
 
 export default Vue.extend({
   name: 'MDesignSelector',
+  components: {
+    BaseImage
+  },
   props: {
     designProducts: {
       type: Array as PropType<DesignProduct[]>,

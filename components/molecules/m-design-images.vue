@@ -2,7 +2,11 @@
   <div class="m-design-images">
     <ul class="_images-list">
       <li v-for="image in images" :key="image" class="_image">
-        <img :src="image">
+        <BaseImage
+          :src="image"
+          :alt="$t('design variant')"
+          :aspect-ratio="1"
+        />
       </li>
     </ul>
   </div>
@@ -11,8 +15,13 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 
+import { BaseImage } from 'src/modules/budsies';
+
 export default Vue.extend({
   name: 'MDesignImages',
+  components: {
+    BaseImage
+  },
   props: {
     images: {
       type: Array as PropType<string[]>,
