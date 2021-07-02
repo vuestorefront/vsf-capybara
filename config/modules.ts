@@ -16,6 +16,7 @@ import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
 import { extendStore } from '@vue-storefront/core/helpers'
 import { StorefrontModule } from '@vue-storefront/core/lib/modules'
 import { BudsiesModule } from 'src/modules/budsies'
+import { Braintree } from 'src/modules/payment-braintree'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
 import registerStoryblokComponents from 'theme/components/storyblok'
@@ -53,6 +54,7 @@ export function registerClientModules () {
   registerModule(StoryblokModule)
   registerModule(extendUrlModule)
   registerModule(BudsiesModule)
+  registerModule(Braintree)
 }
 
 // Deprecated API, will be removed in 2.0
