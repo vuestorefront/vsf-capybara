@@ -106,7 +106,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       croppieWidth: DEFAULT_CROPPIE_EDGE_SIZE,
       croppieHeight: DEFAULT_CROPPIE_EDGE_SIZE,
       croppieBoundaryOffsetSize: DEFAULT_CROPPIE_OFFSET_SIZE,
-      croppieBoundaryOffsetPosition: ''
+      croppieBoundaryOffsetPosition: '',
+      resizeHandler: undefined as (() => void) | undefined
     }
   },
   methods: {
@@ -277,12 +278,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.previousWidth = this.window.innerWidth;
 
       this.isImageAssigned = true;
-    },
-    resizeHandler: function () {
-      throttle(
-        () => this.reassignBackgroundImage(),
-        300
-      );
     }
   },
   created (): void {
@@ -299,6 +294,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return;
     }
 
+    this.resizeHandler = throttle(
+      () => this.reassignBackgroundImage(),
+      300
+    );
+
     this.window.addEventListener('resize', this.resizeHandler);
   },
   beforeDestroy (): void {
@@ -306,7 +306,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return;
     }
 
-    this.window.removeEventListener('resize', this.resizeHandler);
+    if (this.resizeHandler) {
+      this.window.removeEventListener('resize', this.resizeHandler);
+    }
   },
   watch: {
     backgroundOffsetSettings: {
