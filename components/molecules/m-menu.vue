@@ -69,7 +69,7 @@ export default {
         },
         {
           label: 'Square Photo Pillows',
-          url: '/'
+          url: '/c/custom-photo-pillows-80'
         },
         {
           label: 'Pet Socks',

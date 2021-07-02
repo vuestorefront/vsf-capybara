@@ -8,6 +8,8 @@ const PrintedProduct = () =>
   import(/* webpackChunkName: "vsf-printed-product" */ 'theme/pages/PrintedProduct');
 const PillowProduct = () =>
   import(/* webpackChunkName: "vsf-pillow-product" */ 'theme/pages/PillowProduct');
+const PhrasePillowProduct = () =>
+  import(/* webpackChunkName: "vsf-pillow-product" */ 'theme/pages/PhrasePillowProduct');
 const Typography = () =>
   import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Typography');
 const Category = () =>
@@ -52,7 +54,8 @@ let routes = [
   { name: 'category', path: '/c/:slug', component: Category },
   { name: 'cms-page', path: '/i/:slug', component: Static },
   { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
-  { name: 'pillow-product', path: '/pillow/p/:parentSku/:slug', component: PillowProduct }
+  { name: 'pillow-product', path: '/pillow/p/:parentSku/:slug', component: PillowProduct },
+  { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct }
 ];
 
 export default routes;
