@@ -552,10 +552,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       type: String,
       default: undefined
     },
-    submitAnimationSteps: {
-      type: Array as PropType<SubmitAnimationStepsInterface[]>,
-      required: true
-    },
     submitAnimationUrl: {
       type: String,
       required: true
@@ -657,6 +653,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     isProductionOptionsAvailable (): boolean {
       return this.productionTimeOptions.length !== 0;
+    },
+    submitAnimationSteps (): SubmitAnimationStepsInterface[] {
+      return [
+        { text: 'Uploading your image. So cute!', value: 33 },
+        { text: 'Rendering design to maximize hugs', value: 66 },
+        { text: 'Optimizing pillow softness vectors', value: 100 }
+      ]
     }
   },
   methods: {

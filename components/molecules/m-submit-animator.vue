@@ -10,9 +10,11 @@
     >
       <source :src="animationUrl" type="video/mp4">
     </video>
+
     <div class="_progress-bar">
       <div class="_inner" :style="progressBarStyle" />
     </div>
+
     <div class="_calculation-steps">
       {{ currentStep.text }}
     </div>

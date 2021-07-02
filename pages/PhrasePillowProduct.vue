@@ -9,7 +9,6 @@
       :initial-back-design="initialBackDesign"
       :front-design-products="frontDesigns"
       :back-design-products="backDesigns"
-      :submit-animation-steps="submitAnimationSteps"
       submit-animation-url="/assets/images/phrasePillow/submit-animation.mp4"
       :production-time-options="productionTimeOptions"
       :bodyparts="bodyparts"
@@ -42,12 +41,7 @@ export default {
   },
   data () {
     return {
-      plushieId: undefined as number | undefined,
-      submitAnimationSteps: [
-        { text: 'Uploading your image. So cute!', value: 33 },
-        { text: 'Rendering design to maximize hugs', value: 66 },
-        { text: 'Optimizing pillow softness vectors', value: 100 }
-      ]
+      plushieId: undefined as number | undefined
     };
   },
   computed: {
