@@ -264,9 +264,10 @@
                   class="_email-field"
                   :class="classes"
                 >
-                  <label v-if="isProductionOptionsAvailable">
+                  <label class="_label" v-if="isProductionOptionsAvailable">
                     Enter your email address
                   </label>
+
                   <SfInput
                     class="_email-field-input"
                     name="customer_email"
@@ -289,28 +290,30 @@
               <validation-provider
                 v-slot="{ errors, classes }"
                 name="Production time"
-                slim
+                tag="div"
+                class="_production-time-field"
+                :class="classes"
                 v-if="isProductionOptionsAvailable"
               >
-                <label for="rush_addons">
+                <label class="_label">
                   Choose your production time
                 </label>
-                <div
-                  class="_production-time-field"
-                  :class="classes"
-                >
-                  <!-- <production-time
-                    ref="productionTime"
-                    v-model="productionTime"
-                    :production-time-options="
-                      productionTimeOptions
-                    "
-                  /> -->
-                </div>
 
-                <div class="_error-text">
-                  {{ errors[0] }}
-                </div>
+                <SfSelect
+                  v-model="productionTime"
+                  name="rush_addons"
+                  class="_rush-addons"
+                  :valid="!errors.length"
+                  :error-message="errors[0]"
+                >
+                  <SfSelectOption
+                    v-for="option in productionTimeOptions"
+                    :key="option.id"
+                    :value="option.id"
+                  >
+                    {{ option.text }}
+                  </SfSelectOption>
+                </SfSelect>
               </validation-provider>
             </div>
 
@@ -431,7 +434,7 @@ import {
 } from 'vee-validate';
 import { mapMutations } from 'vuex';
 import { required, email } from 'vee-validate/dist/rules';
-import { SfButton, SfInput, SfHeading } from '@storefront-ui/vue';
+import { SfButton, SfInput, SfHeading, SfSelect } from '@storefront-ui/vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
@@ -499,6 +502,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfButton,
     SfInput,
     SfHeading,
+    SfSelect,
     ValidationObserver,
     ValidationProvider,
     MBackgroundUploader,
@@ -1002,7 +1006,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     this.prefillEmail();
 
     if (this.isProductionOptionsAvailable) {
-      this.productionTime = this.productionTimeOptions[0].value;
+      this.productionTime = this.productionTimeOptions[0].id;
     }
   },
   watch: {
@@ -1042,6 +1046,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           optionId: backDesign.optionId,
           optionQty: 1,
           optionSelections: [backDesign.optionValueId]
+        });
+      },
+      immediate: false
+    },
+    productionTime: {
+      handler () {
+        const productionTime = this.productionTimeOptions.find(product => product.id === this.productionTime);
+
+        if (!productionTime) {
+          return
+        }
+
+        this.setBundleOptionValue({
+          optionId: productionTime.optionId,
+          optionQty: 1,
+          optionSelections: productionTime.optionValueId ? [productionTime.optionValueId] : []
         });
       },
       immediate: false
@@ -1144,6 +1164,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         ._quantity-field,
         ._email-field,
+        ._production-time-field,
         ._actions-row,
         ._animation-row,
         ._accent-color-field,
@@ -1152,6 +1173,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         ._final-steps {
             margin-top: 1.5em;
             text-align: center;
+        }
+
+        ._production-time-field {
+          ::v-deep .sf-select__selected {
+            justify-content: center;
+          }
         }
 
         ._custom-text-fields-section {
@@ -1178,7 +1205,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             }
         }
 
-        ._email-disclaimer,
+        ._email-disclaimer {
+          margin-top: var(--spacer-xs);
+        }
+
+        ._production-time-field {
+          margin-top: 3em;
+        }
+
         ._submit-disclaimer {
             margin-top: 1em;
         }
@@ -1257,6 +1291,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             ._background-image-field,
             ._quantity-field,
             ._email-field,
+            ._production-time-field,
             ._actions-row,
             ._accent-color-field,
             ._front-design-field,
@@ -1272,6 +1307,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
                   ._custom-input {
                     text-align: left;
                   }
+              }
+            }
+
+            ._production-time-field {
+              ::v-deep .sf-select__selected {
+                justify-content: flex-start;
               }
             }
 

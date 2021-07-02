@@ -1,6 +1,7 @@
 export default interface ProductionTimeOption {
-  value: string,
-  selected: boolean,
+  id: string,
   text: string,
-  isDomestic: boolean
+  isDomestic: boolean,
+  optionId: number,
+  optionValueId?: number
 }

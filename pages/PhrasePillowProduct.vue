@@ -11,7 +11,7 @@
       :back-design-products="backDesigns"
       :submit-animation-steps="submitAnimationSteps"
       submit-animation-url="/assets/images/phrasePillow/submit-animation.mp4"
-      :production-time-options="[]"
+      :production-time-options="productionTimeOptions"
       :bodyparts="bodyparts"
     />
   </div>
@@ -28,11 +28,12 @@ import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/m
 import Task from 'core/lib/sync/types/Task';
 import Product from 'core/modules/catalog/types/Product';
 
-import { Bodypart, ProductValue } from 'src/modules/budsies';
+import { Bodypart, ProductValue, RushAddon } from 'src/modules/budsies';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
 import DesignProduct from '../components/interfaces/design-product.interface';
 import ProductImage from '../components/interfaces/product-image.interface';
+import ProductionTimeOption from '../components/interfaces/production-time-option.interface';
 
 export default {
   name: 'PhrasePillowProduct',
@@ -100,6 +101,45 @@ export default {
             `Can't resolve Backend product ID for Magento '${this.getCurrentProduct.id}' product ID`
           );
       }
+    },
+    productionTimeOptions (): ProductionTimeOption[] {
+      const addons: RushAddon[] = this.$store.getters['budsies/getProductRushAddons'](this.getCurrentProduct.id);
+
+      if (!addons.length) {
+        return [];
+      }
+
+      let addonOptions: Record<string, number> = {};
+      let optionId: number;
+
+      for (const option of this.getCurrentProduct.bundle_options) {
+        for (const productLink of option.product_links) {
+          if (productLink.product.type_id !== 'plushToyRushAddon') {
+            continue;
+          }
+
+          optionId = option.option_id;
+          addonOptions[productLink.product.sku] = +productLink.id;
+        }
+      }
+
+      return addons.map(
+        (addon) => {
+          const addonOption = addonOptions[addon.id];
+
+          if (!addonOption && addon.id) {
+            throw new Error('The option product of rush addon is not found: ' + addon.id);
+          }
+
+          return {
+            id: addon.id,
+            text: addon.text,
+            isDomestic: addon.isDomestic,
+            optionId: optionId,
+            optionValueId: addonOption
+          }
+        }
+      );
     }
   },
   methods: {
@@ -166,7 +206,10 @@ export default {
       childSku: null
     });
 
-    await store.dispatch('budsies/loadProductBodyparts', { productId: product.id });
+    await Promise.all([
+      store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
+      store.dispatch('budsies/loadProductRushAddons', { productId: product.id })
+    ]);
 
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',
