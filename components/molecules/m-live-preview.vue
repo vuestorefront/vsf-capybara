@@ -16,6 +16,7 @@ import Vue, { VueConstructor } from 'vue';
 import CustomTextFieldInterface from '../interfaces/custom-text-field.interface';
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
 import { PropType } from 'vue/types/options';
+import { isServer } from '@vue-storefront/core/helpers';
 
 import { InjectType } from 'src/modules/shared';
 
@@ -261,6 +262,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return settings;
     },
     async loadSvgTemplate () {
+      if (isServer) {
+        return;
+      }
+
       this.isLoading = true;
 
       try {
