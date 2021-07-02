@@ -327,7 +327,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         void this.setBackgroundImage(this.backgroundImageUrl);
       },
-      immediate: true
+      immediate: false,
+      deep: true
     }
   }
 })
