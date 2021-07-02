@@ -566,7 +566,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   data () {
     return {
-      customTextValues: {},
+      customTextValues: {} as unknown as Record<string, string | undefined>,
       quantity: 1,
       accentColorPartValues: [] as AccentColorPart[],
       accentColorPartValue: undefined as AccentColorPart | undefined,

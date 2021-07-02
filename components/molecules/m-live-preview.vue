@@ -45,7 +45,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     customTextValues: {
       type: Object as PropType<Record<string, string | undefined>>,
-      default: () => {}
+      default: () => ({})
     }
   },
   data () {
