@@ -39,11 +39,6 @@ export default {
   components: {
     OPhrasePillowProductOrderForm
   },
-  data () {
-    return {
-      plushieId: undefined as number | undefined
-    };
-  },
   computed: {
     ...mapGetters({
       getCurrentProduct: 'product/getCurrentProduct',
@@ -182,15 +177,6 @@ export default {
 
       return designs;
     }
-  },
-  async mounted (): Promise<void> {
-    // TODO check ID in URL and load plushie instead of create a new one
-
-    const result = this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
-
-    result.then((task: Task) => {
-      this.plushieId = task.result;
-    });
   },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product')
