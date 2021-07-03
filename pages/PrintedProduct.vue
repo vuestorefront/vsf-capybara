@@ -28,7 +28,7 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
-import { ProductValue } from 'src/modules/budsies';
+import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 
 import OPrintedProductOrderForm, { GalleryProductImages, SelectOption } from 'theme/components/organisms/o-printed-product-order-form.vue';
 import { AddonOption } from 'theme/components/molecules/m-extra-faces.vue';
@@ -124,7 +124,7 @@ export default {
       return availableStyles;
     },
     getAvailableAddons (): AddonOption[] {
-      const addons = this.$store.getters['budsies/getPrintedProductAddons'](this.getCurrentProduct.id);
+      const addons: ExtraPhotoAddon[] = this.$store.getters['budsies/getPrintedProductAddons'](this.getCurrentProduct.id);
 
       if (!addons.length) {
         return [];
@@ -158,8 +158,8 @@ export default {
             id: addon.id,
             label: addon.label,
             value: addon.value,
-            optionId: addonOption.optionId,
-            optionValueId: addonOption.optionValueId
+            optionId: +addonOption.optionId,
+            optionValueId: +addonOption.optionValueId
           }
         }
       );
@@ -187,7 +187,7 @@ export default {
       childSku: null
     });
 
-    await store.dispatch('budsies/loadPrintedProductAddons', {
+    await store.dispatch('budsies/loadExtraPhotosAddons', {
       productId: product.id
     });
 
