@@ -290,30 +290,33 @@
               <validation-provider
                 v-slot="{ errors, classes }"
                 name="Production time"
-                tag="div"
-                class="_production-time-field"
-                :class="classes"
                 v-if="isProductionOptionsAvailable"
+                slim
               >
-                <label class="_label">
-                  Choose your production time
-                </label>
-
-                <SfSelect
-                  v-model="productionTime"
-                  name="rush_addons"
-                  class="_rush-addons"
-                  :valid="!errors.length"
-                  :error-message="errors[0]"
+                <div
+                  class="_production-time-field"
+                  :class="classes"
                 >
-                  <SfSelectOption
-                    v-for="option in productionTimeOptions"
-                    :key="option.id"
-                    :value="option.id"
+                  <label class="_label">
+                    Choose your production time
+                  </label>
+
+                  <SfSelect
+                    v-model="productionTime"
+                    name="rush_addons"
+                    class="_rush-addons"
+                    :valid="!errors.length"
+                    :error-message="errors[0]"
                   >
-                    {{ option.text }}
-                  </SfSelectOption>
-                </SfSelect>
+                    <SfSelectOption
+                      v-for="option in productionTimeOptions"
+                      :key="option.id"
+                      :value="option.id"
+                    >
+                      {{ option.text }}
+                    </SfSelectOption>
+                  </SfSelect>
+                </div>
               </validation-provider>
             </div>
 
