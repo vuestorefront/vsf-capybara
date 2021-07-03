@@ -31,7 +31,7 @@ import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/m
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 
 import OPrintedProductOrderForm, { GalleryProductImages, SelectOption } from 'theme/components/organisms/o-printed-product-order-form.vue';
-import { AddonOption } from 'theme/components/molecules/m-extra-faces.vue';
+import ExtraPhotoAddonOption from '../components/interfaces/extra-photo-addon-option.interface';
 
 export default {
   name: 'PrintedProduct',
@@ -123,7 +123,7 @@ export default {
 
       return availableStyles;
     },
-    getAvailableAddons (): AddonOption[] {
+    getAvailableAddons (): ExtraPhotoAddonOption[] {
       const addons: ExtraPhotoAddon[] = this.$store.getters['budsies/getPrintedProductAddons'](this.getCurrentProduct.id);
 
       if (!addons.length) {

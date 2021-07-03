@@ -174,8 +174,9 @@ import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
-import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
+import MExtraFaces from '../molecules/m-extra-faces.vue';
 import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
+import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 
 extend('required', {
   ...required,
@@ -265,7 +266,7 @@ export default Vue.extend({
       default: () => []
     },
     addons: {
-      type: Array as PropType<AddonOption[]>,
+      type: Array as PropType<ExtraPhotoAddonOption[]>,
       default: () => []
     },
     defaultStyle: {
