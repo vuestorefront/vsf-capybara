@@ -408,7 +408,8 @@ export default Vue.extend({
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
           qty: this.quantity,
-          customerImagesIds: [this.storageItemId, ...extraFacesArtworks]
+          customerImagesIds: [this.storageItemId, ...extraFacesArtworks],
+          uploadMethod: 'upload-now'
         })
       }).then(() => {
         this.onSuccess();
