@@ -54,6 +54,7 @@
         class="_options-list"
         :name="bodypart.code"
         v-model="bodypartsValues[bodypart.code]"
+        :max-values="bodypart.maxValues"
         :options="getBodypartValues(bodypart)"
         type="bodypart"
         :disabled="disabled"
@@ -262,7 +263,7 @@ export default Vue.extend({
     value: {
       type: Object as PropType<any>,
       default: () => ({
-        bodypartsValues: {} as unknown as Record<string, BodypartOption>,
+        bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[]>,
         addons: [] as AddonOption[],
         description: undefined as string | undefined,
         quantity: 1
@@ -306,10 +307,10 @@ export default Vue.extend({
       }
     },
     bodypartsValues: {
-      get (): Record<string, BodypartOption | undefined> {
+      get (): Record<string, BodypartOption | BodypartOption[] | undefined> {
         return this.value.bodypartsValues;
       },
-      set (value: Record<string, BodypartOption | undefined>): void {
+      set (value: Record<string, BodypartOption | BodypartOption[] | undefined>): void {
         const newValue = { ...this.value, bodypartsValues: value };
         this.$emit('input', newValue);
       }

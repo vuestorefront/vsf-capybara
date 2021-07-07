@@ -13,15 +13,15 @@
         <input
           :id="getInputId(option)"
           :name="name"
-          type="radio"
+          :type="inputType"
           :value="option"
           v-model="selectedOption"
           :disabled="disabled"
+          @click="(event) => onChange(event, option)"
         >
         <label
           :for="getInputId(option)"
         >
-
           <div
             class="_icon"
             :style="getIconStyle(option)"
@@ -54,8 +54,12 @@ export default Vue.extend({
       required: true
     },
     value: {
-      type: Object as PropType<BodypartOption>,
+      type: [Array, Object] as PropType<BodypartOption | BodypartOption[]>,
       default: undefined
+    },
+    maxValues: {
+      type: Number,
+      default: 1
     },
     type: {
       type: String,
@@ -77,12 +81,19 @@ export default Vue.extend({
   },
   computed: {
     selectedOption: {
-      get (): BodypartOption {
+      get (): BodypartOption | BodypartOption[] {
+        if (this.inputType === 'checkbox' && this.value === undefined) {
+          return [];
+        }
+
         return this.value;
       },
-      set (value: BodypartOption): void {
+      set (value: BodypartOption | BodypartOption[]): void {
         this.$emit('input', value);
       }
+    },
+    inputType (): string {
+      return this.maxValues > 1 ? 'checkbox' : 'radio';
     }
   },
   created: function (): void {
@@ -112,10 +123,21 @@ export default Vue.extend({
 
       return '';
     },
-    onChange ($event: any): void {
-      const option = this.options.find(option => option.value === $event.target.value);
+    onChange (event: Event, option: BodypartOption): void {
+      if (!Array.isArray(this.selectedOption)) {
+        return;
+      }
 
-      this.$emit('input', option);
+      const existingItem = this.selectedOption.find(item => item.value === option.value);
+      if (existingItem) {
+        return;
+      }
+
+      if (this.selectedOption.length < this.maxValues) {
+        return;
+      }
+
+      event.preventDefault();
     }
   }
 })
@@ -170,6 +192,7 @@ export default Vue.extend({
       width: 0;
       margin: 0;
       padding: 0;
+      border: 0;
   }
 
   ._visual-selector-value > label {
@@ -193,7 +216,7 @@ export default Vue.extend({
     z-index: 1;
   }
   ._visual-selector-value > input:checked + label ._icon::after {
-    background: url(/assets/images/sprite/ico-tick-green.png) no-repeat center #fff;
+    background: url('/assets/images/sprite/ico-tick-green.png') no-repeat center #fff;
     border: 2px solid #38b677;
     border-radius: 100%;
     content: "";

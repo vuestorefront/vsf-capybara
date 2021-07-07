@@ -120,7 +120,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         email: undefined as string | undefined
       },
       customizeStepData: {
-        bodypartsValues: {} as unknown as Record<string, BodypartOption>,
+        bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[]>,
         addons: [] as AddonOption[],
         description: undefined as string | undefined,
         quantity: 1

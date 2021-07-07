@@ -163,6 +163,7 @@
             <m-bodypart-option-configurator
               :name="bodypart.code"
               v-model="bodypartsValues[bodypart.code]"
+              :max-values="bodypart.maxValues"
               :options="getBodypartValues(bodypart)"
               type="bodypart"
             />
