@@ -132,7 +132,7 @@ export default Vue.extend({
     cursor: pointer;
 
     ._addon-input {
-      padding: 1em;
+      padding: 1em 1.5em;
       transition: background-color .15s cubic-bezier(0.65, 0.05, 0.35, 1);
 
       &.sf-checkbox--is-active {
@@ -146,6 +146,7 @@ export default Vue.extend({
 
     ::v-deep .sf-checkbox__checkmark {
       align-items: flex-start;
+      flex-shrink: 0;
     }
 
     ._addon-wrapper {
@@ -174,7 +175,7 @@ export default Vue.extend({
       }
 
       ._description {
-        font-size: var(--font-xs);
+        font-size: var(--font-sm);
         margin-top: 1em;
       }
 
