@@ -27,6 +27,7 @@
           name="name"
           v-model="name"
           :placeholder="$t('Name')"
+          :disabled="disabled"
           :required="false"
           :valid="!errors.length"
           :error-message="errors[0]"
@@ -46,6 +47,7 @@
           id-field="name"
           :options="[]"
           :required="false"
+          :disabled="disabled"
         />
 
         <div class="_helper-text">
@@ -70,6 +72,7 @@
           name="email"
           v-model="email"
           :placeholder="$t('sample@email.com')"
+          :disabled="disabled"
           :required="false"
           :valid="!errors.length"
           :error-message="errors[0]"
@@ -79,6 +82,7 @@
 
     <SfButton
       class="_button"
+      :disabled="disabled"
       @click="(event) => passes(() => submitStep())"
     >
       {{ $t('Continue') }}
@@ -127,6 +131,10 @@ export default Vue.extend({
     plushieId: {
       type: Number,
       required: true
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

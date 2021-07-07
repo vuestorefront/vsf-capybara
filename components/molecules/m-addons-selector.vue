@@ -19,6 +19,7 @@
         class="_addon-input"
         :value="addon"
         v-model="selectedValues"
+        :disabled="disabled"
       >
         <template #label>
           <div class="_addon-wrapper">
@@ -205,6 +206,12 @@ export default Vue.extend({
           background-image: var(--addon-image-hover, var(--addon-image-regular));
         }
       }
+    }
+  }
+
+  &.-disabled {
+    ._item {
+      opacity: 0.7;
     }
   }
 

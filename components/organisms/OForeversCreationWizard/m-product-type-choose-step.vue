@@ -8,6 +8,7 @@
     <div class="_buttons-wrapper">
       <SfButton
         class="_button"
+        :disabled="disabled"
         @click="createPlushie('dog')"
       >
         <BaseImage
@@ -22,6 +23,7 @@
 
       <SfButton
         class="_button"
+        :disabled="disabled"
         @click="createPlushie('cat')"
       >
         <BaseImage
@@ -36,6 +38,7 @@
 
       <SfButton
         class="_button"
+        :disabled="disabled"
         @click="createPlushie('other')"
       >
         <BaseImage
@@ -75,13 +78,17 @@ export default Vue.extend({
         plushieId: undefined
       })
     },
-    uploadedArtworkId: {
-      type: String,
-      default: undefined
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
     async createPlushie (type: 'dog' | 'cat' | 'other'): Promise<void> {
+      if (this.disabled) {
+        return;
+      }
+
       let productSku: string;
 
       switch (type) {

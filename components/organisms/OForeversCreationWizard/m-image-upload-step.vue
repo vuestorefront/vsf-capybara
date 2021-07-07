@@ -43,7 +43,7 @@
           ref="artwork-upload"
           class="_file-uploader"
           :product-id="backendProductId"
-          :disabled="isSubmitting"
+          :disabled="disabled"
           :upload-url="artworkUploadUrl"
           @input="onArtworkChange"
           v-if="backendProductId"
@@ -105,6 +105,7 @@
     <div class="_buttons">
       <SfButton
         class="_button"
+        :disabled="disabled"
         @click="(event) => passes(() => submitStep())"
       >
         {{ $t('Continue') }}
@@ -117,6 +118,7 @@
 
         <SfButton
           class="_button"
+          :disabled="disabled"
           @click="toggleUploadMethod()"
         >
           {{ isUploadNow ? $t('Send photos later') : $t('Upload Now') }}
@@ -179,12 +181,10 @@ export default Vue.extend({
     plushieId: {
       type: Number,
       required: true
-    }
-  },
-  data () {
-    return {
-      isSubmitting: false
-
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -219,6 +219,10 @@ export default Vue.extend({
   },
   methods: {
     switchUploadMethod (method: 'later' | 'now'): void {
+      if (this.disabled) {
+        return;
+      }
+
       const storageItemId = method === 'now' ? this.value.storageItemId : undefined;
 
       this.$emit('input', {
@@ -241,6 +245,10 @@ export default Vue.extend({
       this.$emit('next-step');
     },
     toggleUploadMethod (): void {
+      if (this.disabled) {
+        return;
+      }
+
       const method = this.value.uploadMethod === 'later' ? 'now' : 'later';
       this.switchUploadMethod(method);
     },

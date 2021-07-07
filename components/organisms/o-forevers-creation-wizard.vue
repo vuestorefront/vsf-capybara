@@ -8,10 +8,15 @@
     <SfSteps
       :active="currentStep"
       :steps="[$t('Type'), $t('Photo'), $t('Pet Info'), $t('Customize')]"
+      :can-go-back="!isSubmitting"
       @change="onChangeStep"
     >
       <SfStep name="Type">
-        <MProductTypeChooseStep v-model="productTypeStepData" @next-step="nextStep" />
+        <MProductTypeChooseStep
+          v-model="productTypeStepData"
+          :disabled="isSubmitting"
+          @next-step="nextStep"
+        />
       </SfStep>
 
       <SfStep name="Photo">
@@ -20,6 +25,7 @@
           :artwork-upload-url="artworkUploadUrl"
           :product="product"
           :plushie-id="plushieId"
+          :disabled="isSubmitting"
           @next-step="nextStep"
         />
       </SfStep>
@@ -28,6 +34,7 @@
         <MPetInfoStep
           v-model="petInfoStepData"
           :plushie-id="plushieId"
+          :disabled="isSubmitting"
           @next-step="nextStep"
         />
       </SfStep>
@@ -39,6 +46,7 @@
           :product="product"
           :addons-bundle-option="addonsBundleOption"
           :add-to-cart="addToCart"
+          :disabled="isSubmitting"
           @next-step="nextStep"
         />
       </SfStep>

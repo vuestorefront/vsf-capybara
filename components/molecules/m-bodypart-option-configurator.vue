@@ -1,5 +1,8 @@
 <template>
-  <div class="m-bodypart-option-configurator">
+  <div
+    class="m-bodypart-option-configurator"
+    :class="{'-disabled': disabled}"
+  >
     <ul class="_visual-selector">
       <li
         class="_visual-selector-value"
@@ -12,6 +15,7 @@
           type="radio"
           :value="option"
           v-model="selectedOption"
+          :disabled="disabled"
         >
         <label
           :for="getInputId(option)"
@@ -57,6 +61,10 @@ export default Vue.extend({
     options: {
       type: Array as PropType<BodypartOption[]>,
       default: () => []
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data (): Record<string, any> {
@@ -167,6 +175,12 @@ export default Vue.extend({
     top: 0;
     width: 24px;
     z-index: 2;
+  }
+
+  &.-disabled {
+    ._visual-selector-value {
+      opacity: 0.7;
+    }
   }
 }
 </style>

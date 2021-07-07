@@ -19,6 +19,7 @@
       :show-pointer="false"
       :max-height="190"
       open-direction="below"
+      :disabled="disabled"
       @input="onInput"
       @open="isOpen = !isOpen"
       @close="isOpen = !isOpen"
@@ -97,6 +98,10 @@ export default Vue.extend({
     options: {
       type: Array as PropType<Record<string, any>[]>,
       default: () => []
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     valid: {
       type: Boolean,

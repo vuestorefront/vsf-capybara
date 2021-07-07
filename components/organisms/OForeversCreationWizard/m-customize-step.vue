@@ -56,6 +56,7 @@
         v-model="bodypartsValues[bodypart.code]"
         :options="getBodypartValues(bodypart)"
         type="bodypart"
+        :disabled="disabled"
       />
 
       <div
@@ -91,6 +92,7 @@
           rows="4"
           v-model="description"
           :placeholder="$t('Tell us about your pet\'s coloration and defining feature(s).')"
+          :disabled="disabled"
           :required="true"
           :valid="!errors.length"
           :error-message="errors[0]"
@@ -124,6 +126,7 @@
 
           <ACustomProductQuantity
             v-model="quantity"
+            :disabled="disabled"
             class="_qty-container"
           />
 
@@ -147,8 +150,9 @@
         />
 
         <MAddonsSelector
-          :addons="addons"
           v-model="selectedAddons"
+          :addons="addons"
+          :disabled="disabled"
         />
       </div>
     </div>
