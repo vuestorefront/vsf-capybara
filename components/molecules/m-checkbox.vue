@@ -38,12 +38,11 @@
 <script>
 
 import { SfIcon } from '@storefront-ui/vue';
-import { focus } from '@storefront-ui/vue';
-// import { focus } from '@storefront-ui/vue/src/utilities/directives';
+import { focus } from '@storefront-ui/vue/src/utilities/directives';
 
 let instanceId = 0;
 export default {
-  name: 'SfCheckbox',
+  name: 'MCheckbox',
   directives: {
     focus
   },
