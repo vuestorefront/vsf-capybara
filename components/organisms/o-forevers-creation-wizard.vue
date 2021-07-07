@@ -7,16 +7,14 @@
 
     <SfSteps
       :active="currentStep"
-      :steps="steps.map(step => step.name)"
-      @change="changeStep"
+      :steps="[$t('Type'), $t('Photo'), $t('Pet Info'), $t('Customize')]"
+      @change="onChangeStep"
     >
-      <!-- <SfStep v-for="step in steps" :key="step.key" :name="step.name"> -->
-      <!-- <component :is="step.component" :is-active="true" /> -->
-      <SfStep key="product_type" name="Type">
+      <SfStep name="Type">
         <MProductTypeChooseStep v-model="productTypeStepData" @next-step="nextStep" />
       </SfStep>
 
-      <SfStep key="photo" name="Photo">
+      <SfStep name="Photo">
         <MImageUploadStep
           v-model="imageUploadStepData"
           :artwork-upload-url="artworkUploadUrl"
@@ -26,7 +24,7 @@
         />
       </SfStep>
 
-      <SfStep key="pet_info" name="Pet Info">
+      <SfStep name="Pet Info">
         <MPetInfoStep
           v-model="petInfoStepData"
           :plushie-id="plushieId"
@@ -34,11 +32,13 @@
         />
       </SfStep>
 
-      <SfStep key="customize" name="Customize">
+      <SfStep name="Customize">
         <MCustomizeStep
           v-model="customizeStepData"
           :plushie-id="plushieId"
           :product="product"
+          :addons-bundle-option="addonsBundleOption"
+          :add-to-cart="addToCart"
           @next-step="nextStep"
         />
       </SfStep>
@@ -48,7 +48,6 @@
 
 <script lang="ts">
 import Vue, { PropType, VueConstructor } from 'vue';
-import { TranslateResult } from 'vue-i18n';
 import { mapMutations } from 'vuex';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -57,11 +56,9 @@ import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 import { SfHeading, SfSteps } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
+import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 
-import { InjectType } from 'src/modules/shared';
 import {
-  Bodypart,
-  BodypartValue,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
 
@@ -70,8 +67,8 @@ import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue'
 import MPetInfoStep from './OForeversCreationWizard/m-pet-info-step.vue';
 import MCustomizeStep from './OForeversCreationWizard/m-customize-step.vue';
 
-import BodypartOption from '../interfaces/bodypart-option';
 import AddonOption from '../interfaces/addon-option.interface';
+import BodypartOption from '../interfaces/bodypart-option';
 
 interface InjectedServices {
   window: Window
@@ -102,57 +99,29 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       currentStep: 0,
 
       productTypeStepData: {
-        product: undefined,
-        plushieId: undefined
+        product: undefined as Product | undefined,
+        plushieId: undefined as number | undefined
       },
       imageUploadStepData: {
-        uploadMethod: 'now',
-        storageItemId: undefined
+        uploadMethod: 'now' as 'now' | 'later',
+        storageItemId: undefined as string | undefined
       },
       petInfoStepData: {
-        name: undefined,
-        breed: undefined,
-        email: undefined
+        name: undefined as string | undefined,
+        breed: undefined as string | undefined,
+        email: undefined as string | undefined
       },
       customizeStepData: {
-        bodypartsValues: {},
-        addons: [],
-        description: undefined,
+        bodypartsValues: {} as unknown as Record<string, BodypartOption>,
+        addons: [] as AddonOption[],
+        description: undefined as string | undefined,
         quantity: 1
       },
 
-      size: undefined as BodypartOption | undefined,
-      isSubmitting: false,
-      shouldMakeAnother: false,
-
-      selectedAddons: [] as string[]
+      isSubmitting: false
     }
   },
   computed: {
-    steps (): Record<string, string | TranslateResult>[] {
-      return [
-        {
-          key: 'product_type',
-          name: this.$t('Type'),
-          component: 'div'
-        },
-        {
-          key: 'photo',
-          name: this.$t('Photo'),
-          component: 'div'
-        },
-        {
-          key: 'pet_info',
-          name: this.$t('Pet Info'),
-          component: 'div'
-        },
-        {
-          key: 'customize',
-          name: this.$t('Customize'),
-          component: 'div'
-        }
-      ]
-    },
     skinClass (): string {
       return '-skin-petsies';
     },
@@ -161,17 +130,70 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     plushieId (): number | undefined {
       return this.productTypeStepData.plushieId;
-    }
+    },
+    addonsBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
 
+      let result;
+
+      for (const option of this.product.bundle_options) {
+        if (option.title === 'Addons') {
+          result = option;
+          break;
+        }
+      }
+
+      return result;
+    }
   },
   methods: {
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
-    changeStep (nextStep: number) {
-      if (nextStep < this.currentStep) {
-        // this.$bus.$emit('checkout-before-edit', this.steps[nextStep].key);
-        this.currentStep = nextStep;
+    async addToCart (): Promise<void> {
+      if (this.isSubmitting) {
+        return;
+      }
+
+      this.isSubmitting = true;
+
+      await this.$store.dispatch(
+        'product/setBundleOptions',
+        { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
+      );
+
+      this.$store.commit(
+        budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CUSTOMER_EMAIL_SET,
+        { email: this.petInfoStepData.email }
+      );
+
+      const storageItemId: any[] = [];
+      if (this.imageUploadStepData.uploadMethod === 'now') {
+        storageItemId.push(this.imageUploadStepData.storageItemId);
+      }
+
+      try {
+        await this.$store.dispatch('cart/addItem', {
+          productToAdd: Object.assign({}, this.product, {
+            qty: this.customizeStepData.quantity,
+            plushieId: this.plushieId + '',
+            email: this.petInfoStepData.email,
+            plushieName: this.petInfoStepData.name,
+            bodyparts: this.getBodypartsData(),
+            customerImagesIds: storageItemId,
+            uploadMethod: this.imageUploadStepData.uploadMethod === 'now' ? 'upload-now' : 'upload-email'
+          })
+        });
+
+        this.goToCart();
+      } catch (err) {
+        Logger.error(err, 'budsies')();
+
+        this.onFailure('Unexpected error: ' + err);
+      } finally {
+        this.isSubmitting = false;
       }
     },
     nextStep (): void {
@@ -184,8 +206,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getBodypartsData (): Record<string, string> {
       let data: Record<string, string> = {};
 
-      for (let key in this.bodypartsValues) {
-        const value = this.bodypartsValues[key];
+      for (let key in this.customizeStepData.bodypartsValues) {
+        const value = this.customizeStepData.bodypartsValues[key];
 
         if (value === undefined) {
           continue;
@@ -196,112 +218,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return data;
     },
-    // getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
-    //   return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
-    // },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
     },
-    goToFieldByName (field: string): void {
-      // Strip quotes
-      let refName = field.replace(/^['"]+|['"]+$/g, '');
-      // Strip spaces & convert to lower case
-      refName = refName.toLowerCase().replace(/ /g, '-');
-
-      refName += '-field-anchor';
-
-      const ref = this.$refs[refName] as HTMLElement | undefined;
-      if (!ref) {
-        Logger.warn(`Reference for the field with error not found. Field: ${field}, ref: ${refName}`, 'budsies')();
-        return;
-      }
-
-      ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    },
-    prefillEmail (): void {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
-      if (customerEmail) {
-        this.email = customerEmail;
-        this.showEmailStep = false;
-      }
-    },
-    resetForm (): void {
-      this.quantity = this.product.qty;
-      this.storageItemId = undefined;
-      this.size = undefined;
-      this.name = undefined;
-
-      for (const bodypart of this.bodyparts) {
-        this.bodypartsValues[bodypart.code] = undefined;
-      }
-
-      const uploader = this.getUploader();
-      if (uploader) {
-        uploader.clearInput();
-      }
-
-      const validator = this.getValidationObserver();
-      validator?.reset();
-    },
-    async onSubmit (event: Event): Promise<void> {
-      if (this.isSubmitting) {
-        return;
-      }
-
-      this.isSubmitting = true;
-
-      const shouldMakeAnother = this.shouldMakeAnother;
-      this.shouldMakeAnother = false;
-
-      await this.$store.dispatch(
-        'product/setBundleOptions',
-        { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
-      );
-
-      this.$store.commit(
-        budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CUSTOMER_EMAIL_SET,
-        { email: this.email }
-      );
-
-      try {
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, {
-            qty: this.quantity,
-            plushieId: this.plushieId + '',
-            email: this.email,
-            plushieName: this.name,
-            bodyparts: this.getBodypartsData(),
-            customerImagesIds: this.isUploadNow && this.storageItemId ? [this.storageItemId] : [],
-            uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
-          })
-        });
-
-        if (!shouldMakeAnother) {
-          this.goToCart();
-          return;
-        }
-
-        // this.resetForm();
-        this.window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-
-        const notification = notifications.createNotification({
-          type: 'info',
-          message: 'Product was added to the cart',
-          timeToLive: 5 * 1000
-        });
-
-        this.$store.dispatch(
-          'notification/spawnNotification',
-          notification,
-          { root: true }
-        );
-        this.$emit('make-another');
-      } catch (err) {
-        Logger.error(err, 'budsies')();
-
-        this.onFailure('Unexpected error: ' + err);
-      } finally {
-        this.isSubmitting = false;
+    onChangeStep (nextStep: number) {
+      if (nextStep < this.currentStep) {
+        // this.$bus.$emit('checkout-before-edit', this.steps[nextStep].key);
+        this.currentStep = nextStep;
       }
     },
     onFailure (message: any): void {
@@ -316,20 +239,32 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     // this.resetForm();
 
     if (this.uploadedArtworkId) {
-      this.storageItemId = this.uploadedArtworkId;
+      this.imageUploadStepData.storageItemId = this.uploadedArtworkId;
+      this.imageUploadStepData.uploadMethod = 'now';
     }
   },
   watch: {
-    size: {
-      handler () {
-        if (!this.size) {
+    product: {
+      async handler () {
+        if (!this.product) {
+          return;
+        }
+
+        await this.$store.dispatch('budsies/loadProductBodyparts', { productId: this.product.id })
+      },
+      immediate: true
+
+    },
+    'customizeStepData.addons': {
+      handler (newValue: AddonOption[]) {
+        if (!this.addonsBundleOption) {
           return
         }
 
         this.setBundleOptionValue({
-          optionId: this.size.optionId,
+          optionId: this.addonsBundleOption.option_id,
           optionQty: 1,
-          optionSelections: [this.size.optionValueId]
+          optionSelections: newValue.map(item => item.optionValueId)
         });
       },
       immediate: false

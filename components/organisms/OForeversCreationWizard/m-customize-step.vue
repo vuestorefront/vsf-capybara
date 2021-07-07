@@ -222,6 +222,7 @@ import { required } from 'vee-validate/dist/rules';
 import { SfHeading, SfButton, SfModal } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 
 import {
   Bodypart,
@@ -257,9 +258,9 @@ export default Vue.extend({
     value: {
       type: Object as PropType<any>,
       default: () => ({
-        bodypartsValues: {},
-        addons: [],
-        description: undefined,
+        bodypartsValues: {} as unknown as Record<string, BodypartOption>,
+        addons: [] as AddonOption[],
+        description: undefined as string | undefined,
         quantity: 1
       })
     },
@@ -273,7 +274,15 @@ export default Vue.extend({
     },
     disabled: {
       type: Boolean,
-      required: false
+      default: false
+    },
+    addonsBundleOption: {
+      type: Object as PropType<BundleOption | undefined>,
+      default: undefined
+    },
+    addToCart: {
+      type: Function as PropType<() => Promise<void>>,
+      required: true
     }
   },
   data () {
@@ -320,35 +329,29 @@ export default Vue.extend({
       }
     },
     addons (): AddonOption[] {
-      if (!this.product?.bundle_options) {
+      if (!this.addonsBundleOption) {
         return []
       }
 
       let result: AddonOption[] = [];
-      for (const option of this.product.bundle_options) {
-        if (option.title !== 'Addons') {
+      for (const productLink of this.addonsBundleOption.product_links) {
+        if (!productLink.product) {
           continue;
         }
 
-        for (const productLink of option.product_links) {
-          if (!productLink.product) {
-            continue;
-          }
+        const images: string[] = getGalleryByProduct(productLink.product).map((i: any) => i.src);
 
-          const images: string[] = getGalleryByProduct(productLink.product).map((i: any) => i.src);
-
-          result.push({
-            id: Number(productLink.product.id),
-            sku: productLink.product.sku,
-            name: productLink.product.name,
-            description: productLink.product.description,
-            price: productLink.product.final_price,
-            images: images,
-            optionId: option.option_id,
-            optionValueId: productLink.id.toString(),
-            videoUrl: (productLink as any).video_url ? (productLink as any).video_url : undefined
-          });
-        }
+        result.push({
+          id: Number(productLink.product.id),
+          sku: productLink.product.sku,
+          name: productLink.product.name,
+          description: productLink.product.description,
+          price: productLink.product.final_price,
+          images: images,
+          optionId: this.addonsBundleOption.option_id,
+          optionValueId: productLink.id.toString(),
+          videoUrl: (productLink as any).video_url ? (productLink as any).video_url : undefined
+        });
       }
 
       return result;
@@ -391,21 +394,8 @@ export default Vue.extend({
 
       return result;
     },
-    submitStep (): void {
-      //
-    }
-  },
-  watch: {
-    product: {
-      async handler () {
-        if (!this.product) {
-          return;
-        }
-
-        await this.$store.dispatch('budsies/loadProductBodyparts', { productId: this.product.id })
-      },
-      immediate: true
-
+    async submitStep (): Promise<void> {
+      await this.addToCart();
     }
   }
 });
