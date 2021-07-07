@@ -4,12 +4,14 @@ const ErrorPage = () =>
   import(/* webpackChunkName: "vsf-error" */ 'theme/pages/Error');
 const Product = () =>
   import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Product');
+const ForeversProduct = () =>
+  import(/* webpackChunkName: "vsf-forevers-product" */ 'theme/pages/ForeversProduct');
 const PrintedProduct = () =>
   import(/* webpackChunkName: "vsf-printed-product" */ 'theme/pages/PrintedProduct');
 const PillowProduct = () =>
   import(/* webpackChunkName: "vsf-pillow-product" */ 'theme/pages/PillowProduct');
 const PhrasePillowProduct = () =>
-  import(/* webpackChunkName: "vsf-pillow-product" */ 'theme/pages/PhrasePillowProduct');
+  import(/* webpackChunkName: "vsf-phrase-pillow-product" */ 'theme/pages/PhrasePillowProduct');
 const Typography = () =>
   import(/* webpackChunkName: "vsf-product" */ 'theme/pages/Typography');
 const Category = () =>
@@ -53,6 +55,7 @@ let routes = [
   { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'category', path: '/c/:slug', component: Category },
   { name: 'cms-page', path: '/i/:slug', component: Static },
+  { name: 'forevers-product', path: '/forevers/p/:parentSku/:slug', component: ForeversProduct },
   { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
   { name: 'pillow-product', path: '/pillow/p/:parentSku/:slug', component: PillowProduct },
   { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct }

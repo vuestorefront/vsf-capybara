@@ -61,7 +61,7 @@ export default {
       customProductsItems: [
         {
           label: 'Petsies Stuffed Animals',
-          url: '/'
+          url: '/forevers/p/ForeversDog_bundle/dog'
         },
         {
           label: 'Pet Shaped Pillows',
