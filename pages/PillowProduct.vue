@@ -60,6 +60,8 @@ export default {
             label: productLink.product.name + ' - $' + productLink.product.price,
             value: productLink.product.sku,
             isSelected: false,
+            contentTypeId: productLink.product.contentTypeId,
+            color: productLink.product.color,
             image: productLink.product.image,
             optionId: option.option_id,
             optionValueId: productLink.id

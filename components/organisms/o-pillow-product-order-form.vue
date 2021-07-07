@@ -474,7 +474,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           label: bodypartValue.name,
           value: bodypartValue.code,
           isSelected: false,
-          image: bodypartValue.image ? bodypartValue.image : '',
+          contentTypeId: bodypartValue.contentTypeId,
+          color: bodypartValue.color,
+          image: bodypartValue.image,
           optionId: bodypart.id,
           optionValueId: bodypartValue.id
         });

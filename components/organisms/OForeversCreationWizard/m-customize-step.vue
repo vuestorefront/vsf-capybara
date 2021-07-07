@@ -47,7 +47,7 @@
           class="_popup-link"
           href="javascript:void(0)"
           @click="areEyeColorNotesVisible = true"
-        >?</a>)
+        ><b>?</b></a>)
       </div>
 
       <m-bodypart-option-configurator
@@ -390,7 +390,9 @@ export default Vue.extend({
           label: bodypartValue.name,
           value: bodypartValue.code,
           isSelected: false,
-          image: bodypartValue.image ? bodypartValue.image : '',
+          contentTypeId: bodypartValue.contentTypeId,
+          color: bodypartValue.color,
+          image: bodypartValue.image,
           optionId: bodypart.id,
           optionValueId: bodypartValue.id
         });

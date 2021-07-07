@@ -1,11 +1,12 @@
 <template>
   <div
     class="m-bodypart-option-configurator"
-    :class="{'-disabled': disabled}"
+    :class="{ '-disabled': disabled }"
   >
     <ul class="_visual-selector">
       <li
         class="_visual-selector-value"
+        :class="{'-color-value': isColorValue(option)}"
         v-for="option in options"
         :key="option.value"
       >
@@ -38,6 +39,8 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { getThumbnailPath } from '@vue-storefront/core/helpers/index';
+
+import { BodyPartValueContentType } from 'src/modules/budsies';
 
 import BodypartOption from '../interfaces/bodypart-option';
 
@@ -87,13 +90,27 @@ export default Vue.extend({
     instanceId += 1;
   },
   methods: {
+    isColorValue (option: BodypartOption): boolean {
+      return option.contentTypeId === BodyPartValueContentType.COLOR;
+    },
     getInputId (option: BodypartOption): string {
       return `body_part_value_${this.instanceId}_${option.id}`;
     },
-    getIconStyle (option: BodypartOption): string {
-      const thumb = getThumbnailPath(option.image, 150, 150, this.type);
+    getIconStyle (option: BodypartOption): string | Record<string, string | number> {
+      if (option.contentTypeId === BodyPartValueContentType.IMAGE && option.image) {
+        const thumb = getThumbnailPath(option.image, 150, 150, this.type);
+        return {
+          'background-image': `url(${thumb})`
+        }
+      }
 
-      return 'background-image: url(' + thumb + ');';
+      if (option.contentTypeId === BodyPartValueContentType.COLOR && option.color) {
+        return {
+          'background-color': option.color
+        }
+      }
+
+      return '';
     },
     onChange ($event: any): void {
       const option = this.options.find(option => option.value === $event.target.value);
@@ -111,6 +128,7 @@ export default Vue.extend({
   ._visual-selector {
     list-style: none;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     padding: 0;
   }
@@ -135,6 +153,14 @@ export default Vue.extend({
       font-weight: var(--font-medium);
       margin-top: var(--spacer-sm);
     }
+
+    &.-color-value {
+      width: 60px;
+
+      ._icon {
+        border: 1px solid #ccc;
+      }
+    }
   }
 
   ._visual-selector-value > input {
@@ -142,6 +168,8 @@ export default Vue.extend({
       height: 0;
       opacity: 0;
       width: 0;
+      margin: 0;
+      padding: 0;
   }
 
   ._visual-selector-value > label {
