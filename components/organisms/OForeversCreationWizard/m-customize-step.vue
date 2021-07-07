@@ -14,7 +14,7 @@
     <validation-provider
       v-slot="{ errors }"
       class="_bodypart _section"
-      rules="required"
+      :rules="bodypart.isRequired ? 'required' : ''"
       :name="`'${bodypart.name}'`"
       v-for="bodypart in bodyparts"
       :key="bodypart.id"
