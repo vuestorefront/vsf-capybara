@@ -162,7 +162,7 @@
           >
             <m-bodypart-option-configurator
               :name="bodypart.code"
-              v-model="bodypartsValues[bodypart.code]"
+              v-model="bodypartsValues[bodypart.id]"
               :max-values="bodypart.maxValues"
               :options="getBodypartValues(bodypart)"
               type="bodypart"
@@ -438,7 +438,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       quantity: 1,
       storageItemId: undefined as string | undefined,
       size: undefined as BodypartOption | undefined,
-      bodypartsValues: {} as unknown as Record<string, BodypartOption | undefined>,
+      bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
       name: undefined as string | undefined,
       email: undefined as string | undefined,
       isSubmitting: false,
@@ -485,17 +485,21 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return result;
     },
-    getBodypartsData (): Record<string, string> {
-      let data: Record<string, string> = {};
+    getBodypartsData (): Record<string, string[]> {
+      let data: Record<string, string[]> = {};
 
-      for (let key in this.bodypartsValues) {
-        const value = this.bodypartsValues[key];
+      for (const bodyPartId in this.bodypartsValues) {
+        let value = this.bodypartsValues[bodyPartId];
 
         if (value === undefined) {
           continue;
         }
 
-        data[value.optionId] = value.optionValueId;
+        if (!Array.isArray(value)) {
+          value = [value]
+        }
+
+        data[bodyPartId] = value.map(item => item.id);
       }
 
       return data;

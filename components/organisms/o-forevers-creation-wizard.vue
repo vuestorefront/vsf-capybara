@@ -120,7 +120,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         email: undefined as string | undefined
       },
       customizeStepData: {
-        bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[]>,
+        bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
         addons: [] as AddonOption[],
         description: undefined as string | undefined,
         quantity: 1
@@ -211,17 +211,21 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.currentStep += 1;
     },
-    getBodypartsData (): Record<string, string> {
-      let data: Record<string, string> = {};
+    getBodypartsData (): Record<string, string[]> {
+      let data: Record<string, string[]> = {};
 
-      for (let key in this.customizeStepData.bodypartsValues) {
-        const value = this.customizeStepData.bodypartsValues[key];
+      for (const bodyPartId in this.customizeStepData.bodypartsValues) {
+        let value = this.customizeStepData.bodypartsValues[bodyPartId];
 
         if (value === undefined) {
           continue;
         }
 
-        data[value.optionId] = value.optionValueId;
+        if (!Array.isArray(value)) {
+          value = [value]
+        }
+
+        data[bodyPartId] = value.map(item => item.id);
       }
 
       return data;
@@ -231,7 +235,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     onChangeStep (nextStep: number) {
       if (nextStep < this.currentStep) {
-        // this.$bus.$emit('checkout-before-edit', this.steps[nextStep].key);
         this.currentStep = nextStep;
       }
     },
@@ -244,8 +247,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   created (): void {
-    // this.resetForm();
-
     if (this.uploadedArtworkId) {
       this.imageUploadStepData.storageItemId = this.uploadedArtworkId;
       this.imageUploadStepData.uploadMethod = 'now';
