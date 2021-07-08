@@ -1,12 +1,11 @@
 <template>
   <validation-observer
-    v-slot="{ passes }"
+    v-slot="{ passes, errors: formErrors }"
     class="forevers-wizard-customization-step"
     tag="div"
     ref="validation-observer"
   >
     <SfHeading
-      class="_step-title"
       :level="2"
       :title="$t('Customize your Petsies plush')"
     />
@@ -21,9 +20,10 @@
       tag="div"
     >
       <SfHeading
-        class="_step-title -required "
+        class="-required "
         :level="3"
         :title="bodypart.name"
+        :ref="getFieldAnchorName(bodypart.name)"
       />
 
       <div
@@ -83,9 +83,10 @@
     >
       <div class="_description-field _section" :class="classes">
         <SfHeading
-          class="_step-title -required "
+          class="-required "
           :level="3"
           :title="$t('Describe Your Pet\'s Physical Features')"
+          ref="description-field-anchor"
         />
 
         <textarea
@@ -107,7 +108,6 @@
 
     <div class="_section">
       <SfHeading
-        class="_step-title"
         :level="2"
         :title="$t('Final Options')"
       />
@@ -120,7 +120,7 @@
       >
         <div class="_quantity-field" :class="classes">
           <SfHeading
-            class="_step-title -required "
+            class="-required "
             :level="3"
             :title="$t('How many Petsies of this exact same design?')"
           />
@@ -129,6 +129,7 @@
             v-model="quantity"
             :disabled="disabled"
             class="_qty-container"
+            ref="quantity-field-anchor"
           />
 
           <div class="_error-text">
@@ -145,7 +146,6 @@
 
       <div class="_addons">
         <SfHeading
-          class="_step-title"
           :level="3"
           :title="$t('Upgrade Your Petsies (optional)')"
         />
@@ -156,6 +156,26 @@
           :disabled="disabled"
         />
       </div>
+    </div>
+
+    <div class="_form-errors">
+      <template
+        v-for="(fieldErrors, field) in formErrors"
+      >
+        <div
+          class="_error-text"
+          :key="field"
+          v-if="fieldErrors.length > 0"
+        >
+          <a
+            class="_error-link"
+            href="javascript:void(0)"
+            @click.prevent="goToFieldByName(field.toString())"
+          >
+            {{ fieldErrors.join('. ') }}
+          </a>
+        </div>
+      </template>
     </div>
 
     <div class="_actions _section">
@@ -228,11 +248,12 @@ import { SfHeading, SfButton, SfModal } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
+import { Logger } from '@vue-storefront/core/lib/logger';
 
+import { isVue } from 'src/modules/shared';
 import {
   Bodypart,
-  BodypartValue,
-  vuexTypes as budsiesTypes
+  BodypartValue
 } from 'src/modules/budsies';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
@@ -399,6 +420,35 @@ export default Vue.extend({
 
       return result;
     },
+    getFieldAnchorName (field: string): string {
+      field = field.toLowerCase().replace(/ /g, '-');
+
+      return `${field}-field-anchor`
+    },
+    goToFieldByName (field: string): void {
+      // Strip quotes
+      let refName = field.replace(/^['"]+|['"]+$/g, '');
+      // Strip spaces & convert to lower case
+      refName = refName.toLowerCase().replace(/ /g, '-');
+
+      refName += '-field-anchor';
+
+      let ref = this.$refs[refName] as (HTMLElement | Vue) | (HTMLElement|Vue)[] | undefined;
+      if (!ref) {
+        Logger.warn(`Reference for the field with error not found. Field: ${field}, ref: ${refName}`, 'budsies')();
+        return;
+      }
+
+      if (Array.isArray(ref)) {
+        ref = ref[0];
+      }
+
+      if (isVue(ref)) {
+        ref = ref.$el as HTMLElement;
+      }
+
+      ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    },
     async submitStep (): Promise<void> {
       await this.addToCart();
     }
@@ -443,6 +493,15 @@ export default Vue.extend({
     font-size: var(--font-xs);
     margin-top: var(--spacer-xs);
     height: calc(var(--font-xs) * 1.2);
+  }
+
+  ._form-errors {
+    margin-top: var(--spacer-xl);
+    min-height: calc(var(--font-xs) * 1.2 * 4);
+
+    ._error-link {
+      color: inherit;
+    }
   }
 
   ._actions {
