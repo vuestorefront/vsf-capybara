@@ -35,7 +35,7 @@
         <input
           type="hidden"
           name="uploaded_artwork_ids[]"
-          :value="value.storageItemsIds"
+          :value="storageItemsIds"
           :required="isUploadNow"
         >
 
@@ -166,7 +166,7 @@ export default Vue.extend({
     MArtworkUpload
   },
   props: {
-    value: {
+    initialValue: {
       type: Object as PropType<any>,
       default: () => ({
         uploadMethod: 'now',
@@ -192,7 +192,9 @@ export default Vue.extend({
   },
   data () {
     return {
-      isUploadProcessingInProgress: false
+      isUploadProcessingInProgress: false,
+      uploadMethod: 'now' as 'now' | 'later',
+      storageItemsIds: [] as string[]
     }
   },
   computed: {
@@ -218,11 +220,11 @@ export default Vue.extend({
       return this.disabled || this.isUploadProcessingInProgress;
     },
     isUploadNow (): boolean {
-      if (!this.value.uploadMethod) {
+      if (!this.uploadMethod) {
         return true;
       }
 
-      return this.value.uploadMethod === 'now';
+      return this.uploadMethod === 'now';
     },
     shortcode (): string | undefined {
       return this.$store.getters['budsies/getPlushieShortcode'](this.plushieId);
@@ -234,7 +236,9 @@ export default Vue.extend({
         return;
       }
 
-      const storageItemsIds = method === 'now' ? this.value.storageItemsIds : [];
+      this.uploadMethod = method;
+
+      const storageItemsIds = method === 'now' ? [...this.storageItemsIds] : [];
 
       this.$emit('input', {
         uploadMethod: method,
@@ -242,26 +246,24 @@ export default Vue.extend({
       });
     },
     onArtworkAdd (value: Item): void {
-      const storageItemsIds = [...this.value.storageItemsIds, value.id];
+      this.storageItemsIds.push(value.id);
 
       this.$emit('input', {
-        uploadMethod: this.value.uploadMethod,
-        storageItemsIds
+        uploadMethod: this.uploadMethod,
+        storageItemsIds: [...this.storageItemsIds]
       });
     },
     onArtworkRemove (storageItemId: string): void {
-      const index = this.value.storageItemsIds.indexOf(storageItemId, 0);
+      const index = this.storageItemsIds.indexOf(storageItemId, 0);
       if (index === -1) {
         return;
       }
 
-      const newValue = [...this.value.storageItemsIds];
-
-      newValue.splice(index, 1);
+      this.storageItemsIds.splice(index, 1);
 
       this.$emit('input', {
-        uploadMethod: this.value.uploadMethod,
-        storageItemsIds: newValue
+        uploadMethod: this.uploadMethod,
+        storageItemsIds: [...this.storageItemsIds]
       });
     },
     onUploaderIsBusyChanged (value: boolean): void {
@@ -275,12 +277,16 @@ export default Vue.extend({
         return;
       }
 
-      const method = this.value.uploadMethod === 'later' ? 'now' : 'later';
+      const method = this.uploadMethod === 'later' ? 'now' : 'later';
       this.switchUploadMethod(method);
     },
     getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
       return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
     }
+  },
+  created (): void {
+    this.uploadMethod = this.initialValue.uploadMethod;
+    this.storageItemsIds = this.initialValue.storageItemsIds;
   },
   watch: {
     plushieId: {

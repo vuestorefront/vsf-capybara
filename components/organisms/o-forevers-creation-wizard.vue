@@ -21,12 +21,14 @@
 
       <SfStep name="Photo">
         <MImageUploadStep
-          v-model="imageUploadStepData"
+          :initial-value="imageUploadStepData"
           :artwork-upload-url="artworkUploadUrl"
           :product="product"
           :plushie-id="plushieId"
           :disabled="isSubmitting"
+          @input="imageUploadStepData = $event"
           @next-step="nextStep"
+          v-if="plushieId"
         />
       </SfStep>
 
