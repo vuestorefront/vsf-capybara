@@ -363,14 +363,13 @@ import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui
 
 import { Item } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
+import { vuexTypes as budsiesTypes, Bodypart, BodypartValue } from 'src/modules/budsies';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
 import BodypartOption from '../interfaces/bodypart-option';
-import Bodypart from 'src/modules/budsies/models/bodypart.model';
-import BodypartValue from 'src/modules/budsies/models/bodypart-value.model';
-import * as budsiesTypes from 'src/modules/budsies/store/mutation-types';
+import SizeOption from '../interfaces/size-option';
 
 extend('required', {
   ...required,
@@ -421,7 +420,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       default: undefined
     },
     sizes: {
-      type: Array as PropType<BodypartOption[]>,
+      type: Array as PropType<SizeOption[]>,
       default: () => []
     },
     bodyparts: {
@@ -437,7 +436,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     return {
       quantity: 1,
       storageItemId: undefined as string | undefined,
-      size: undefined as BodypartOption | undefined,
+      size: undefined as SizeOption | undefined,
       bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
       name: undefined as string | undefined,
       email: undefined as string | undefined,
@@ -477,9 +476,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           isSelected: false,
           contentTypeId: bodypartValue.contentTypeId,
           color: bodypartValue.color,
-          image: bodypartValue.image,
-          optionId: bodypart.id,
-          optionValueId: bodypartValue.id
+          image: bodypartValue.image
         });
       }
 

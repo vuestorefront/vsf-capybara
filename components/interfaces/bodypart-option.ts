@@ -7,7 +7,5 @@ export default interface BodypartOption {
   isSelected: boolean,
   contentTypeId: BodyPartValueContentType,
   color?: string,
-  image?: string,
-  optionId: string,
-  optionValueId: string
+  image?: string
 }

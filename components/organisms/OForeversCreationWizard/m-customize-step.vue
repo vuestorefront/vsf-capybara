@@ -393,9 +393,7 @@ export default Vue.extend({
           isSelected: false,
           contentTypeId: bodypartValue.contentTypeId,
           color: bodypartValue.color,
-          image: bodypartValue.image,
-          optionId: bodypart.id,
-          optionValueId: bodypartValue.id
+          image: bodypartValue.image
         });
       }
 
