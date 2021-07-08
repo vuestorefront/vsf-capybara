@@ -35,7 +35,7 @@
         <input
           type="hidden"
           name="uploaded_artwork_ids[]"
-          :value="value.storageItemId"
+          :value="value.storageItemsIds"
           :required="isUploadNow"
         >
 
@@ -45,8 +45,10 @@
           :product-id="backendProductId"
           :disabled="disabled"
           :upload-url="artworkUploadUrl"
-          @input="onArtworkChange"
+          :allow-multiple="true"
           v-if="backendProductId"
+          @file-added="onArtworkAdd"
+          @file-removed="onArtworkRemove"
         />
         <div v-else>
           {{ $t('Unable to initialize the uploader control...') }}
@@ -167,7 +169,7 @@ export default Vue.extend({
       type: Object as PropType<any>,
       default: () => ({
         uploadMethod: 'now',
-        storageItemId: undefined
+        storageItemsIds: []
       })
     },
     artworkUploadUrl: {
@@ -223,22 +225,34 @@ export default Vue.extend({
         return;
       }
 
-      const storageItemId = method === 'now' ? this.value.storageItemId : undefined;
+      const storageItemsIds = method === 'now' ? this.value.storageItemsIds : [];
 
       this.$emit('input', {
         uploadMethod: method,
-        storageItemId
+        storageItemsIds
       });
     },
-    onArtworkChange (value?: Item): void {
-      let storageItemId;
-      if (value) {
-        storageItemId = value.id;
-      }
+    onArtworkAdd (value: Item): void {
+      const storageItemsIds = [...this.value.storageItemsIds, value.id];
 
       this.$emit('input', {
         uploadMethod: this.value.uploadMethod,
-        storageItemId
+        storageItemsIds
+      });
+    },
+    onArtworkRemove (storageItemId: string): void {
+      const index = this.value.storageItemsIds.indexOf(storageItemId, 0);
+      if (index === -1) {
+        return;
+      }
+
+      const newValue = [...this.value.storageItemsIds];
+
+      newValue.splice(index, 1);
+
+      this.$emit('input', {
+        uploadMethod: this.value.uploadMethod,
+        storageItemsIds: newValue
       });
     },
     submitStep (): void {

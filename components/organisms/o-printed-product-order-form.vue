@@ -93,7 +93,8 @@
                   :product-id="productType"
                   :disabled="isUploadDisabled"
                   :upload-url="artworkUploadUrl"
-                  @input="onArtworkChange"
+                  @file-added="onArtworkAdd"
+                  @file-removed="onArtworkRemove"
                 />
 
                 <div class="_error-text">
@@ -382,13 +383,11 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    onArtworkChange (value?: Item): void {
-      if (!value) {
-        this.fStorageItemId = undefined;
-        return;
-      }
-
+    onArtworkAdd (value: Item): void {
       this.fStorageItemId = value.id;
+    },
+    onArtworkRemove (storageItemId: string): void {
+        this.fStorageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       this.fIsLoading = true;

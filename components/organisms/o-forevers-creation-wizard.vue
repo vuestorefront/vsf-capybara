@@ -112,7 +112,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       },
       imageUploadStepData: {
         uploadMethod: 'now' as 'now' | 'later',
-        storageItemId: undefined as string | undefined
+        storageItemsIds: [] as string[]
       },
       petInfoStepData: {
         name: undefined as string | undefined,
@@ -177,9 +177,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         { email: this.petInfoStepData.email }
       );
 
-      const storageItemId: any[] = [];
+      let storageItemsIds: string[] = [];
       if (this.imageUploadStepData.uploadMethod === 'now') {
-        storageItemId.push(this.imageUploadStepData.storageItemId);
+        storageItemsIds = this.imageUploadStepData.storageItemsIds;
       }
 
       try {
@@ -190,7 +190,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.petInfoStepData.email,
             plushieName: this.petInfoStepData.name,
             bodyparts: this.getBodypartsData(),
-            customerImagesIds: storageItemId,
+            customerImagesIds: storageItemsIds,
             uploadMethod: this.imageUploadStepData.uploadMethod === 'now' ? 'upload-now' : 'upload-email'
           })
         });
@@ -248,7 +248,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   created (): void {
     if (this.uploadedArtworkId) {
-      this.imageUploadStepData.storageItemId = this.uploadedArtworkId;
+      this.imageUploadStepData.storageItemsIds = [ this.uploadedArtworkId ];
       this.imageUploadStepData.uploadMethod = 'now';
     }
   },

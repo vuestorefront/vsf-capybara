@@ -57,7 +57,8 @@
               :product-id="backendProductId"
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
-              @input="onArtworkChange"
+              @file-added="onArtworkAdd"
+              @file-removed="onArtworkRemove"
             />
 
             <p>
@@ -551,13 +552,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       const validator = this.getValidationObserver();
       validator?.reset();
     },
-    onArtworkChange (value?: Item): void {
-      if (!value) {
-        this.storageItemId = undefined;
-        return;
-      }
-
+    onArtworkAdd (value: Item): void {
       this.storageItemId = value.id;
+    },
+    onArtworkRemove (storageItemId: string): void {
+        this.storageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       if (this.isSubmitting) {

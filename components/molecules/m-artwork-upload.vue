@@ -1,5 +1,5 @@
 <template>
-  <div ref="dropzone" class="m-artwork-upload _drop-zone" :class="skinClass">
+  <div ref="dropzone" class="m-artwork-upload _drop-zone" :class="classes">
     <div ref="dropzone-overlay" class="_dropzone-overlay" />
 
     <slot />
@@ -16,7 +16,7 @@
         max-file-size="20MB"
         label-idle="Drag + Drop or <span class='filepond--label-action'> Select File </span>"
         :files="files"
-        :allow-multiple="false"
+        :allow-multiple="allowMultiple"
         :allow-drop="true"
         :drop-on-page="true"
         :drop-on-element="false"
@@ -30,7 +30,6 @@
         @processfiles="onAllFilesProcessed"
         @addfile="onFileAdded"
         @processfileabort="onFileAbort"
-        @removefile="onFileRemoved"
       />
     </div>
   </div>
@@ -113,6 +112,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       type: String,
       required: true
     },
+    allowMultiple: {
+      type: Boolean,
+      default: false
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -129,8 +132,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
-    skinClass (): string {
-      return '-skin-petsies';
+    classes (): string[] {
+      const result = ['-skin-petsies'];
+
+      if (this.allowMultiple) {
+        result.push('-multiple-items');
+      }
+
+      return result;
     },
     files (): FilePondInitialFile[] | undefined {
       if (!this.file) {
@@ -276,7 +285,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           }
 
           load(item.id);
-          this.$emit('input', item);
+          this.$emit('file-added', item);
         })
         .catch((e) => {
           const errors = this.fErrorConverterService.describeError(e);
@@ -308,6 +317,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         }
 
         load();
+
+        this.$emit('file-removed', storageItemId);
       } catch (e) {
         const errors = this.fErrorConverterService.describeError(e);
         error(errors[0]);
@@ -330,9 +341,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.updateStatus();
-    },
-    onFileRemoved (): void {
-      this.$emit('input', undefined);
     },
     getDropzone (): HTMLElement | undefined {
       return this.$refs['dropzone'] as HTMLElement;
@@ -436,6 +444,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     ::v-deep {
         .filepond--root {
+            margin-bottom: 0;
+            box-sizing: content-box;
+
             .filepond--list {
               list-style-image: none;
             }
@@ -448,9 +459,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
                     --button-display: inline;
                 }
             }
-
-            margin-bottom: 0;
-            box-sizing: content-box;
 
             .filepond--drop-label {
                 .filepond--label-action {
@@ -467,6 +475,37 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
                 }
             }
         }
+    }
+
+    &.-multiple-items {
+      ::v-deep {
+        $itemMargin: 0.5em;
+
+        .filepond--root {
+            .filepond--list {
+              list-style-image: none;
+              left: $itemMargin;
+              //left: 0;
+              right: 0;
+            }
+        }
+
+        .filepond--item {
+          $itemsPerLine: 3;
+          //$marginPerItem: $itemMargin * ($itemsPerLine - 1) / $itemsPerLine;
+          $marginPerItem: $itemMargin;
+
+          width: calc(100% / #{$itemsPerLine} - #{$marginPerItem});
+          margin-left: 0;
+          margin-right: $itemMargin;
+          margin-bottom: 0.25em;
+          margin-top: 0.25em;
+
+          &:nth-child(#{$itemsPerLine}n) {
+            margin-right: 0;
+          }
+        }
+      }
     }
 
     &.-skin-petsies {

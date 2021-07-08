@@ -25,7 +25,8 @@
             :upload-url="uploadUrl"
             :disabled="disabled"
             :file="getInitialArtworkUrl(index - 1)"
-            @input="(value) => onArtworkChange(index - 1, value)"
+            @file-added="(value) => onArtworkAdd(index - 1, value)"
+            @file-removed="(storageItemId) => onArtworkRemove(index - 1, storageItemId)"
           />
 
           <div class="_error-text">
@@ -210,16 +211,14 @@ export default Vue.extend({
     getFilesIds (): string[] {
       return this.fUploaderValues.map(item => item.id);
     },
-    onArtworkChange (index: number, value?: Item): void {
-      if (!value) {
-        this.fUploaderValues.splice(index, 1);
-        return;
-      }
-
+    onArtworkAdd (index: number, value: Item): void {
       Vue.set(this.fUploaderValues, index, {
         id: value.id,
         url: value.url
       });
+    },
+    onArtworkRemove (index: number, storageItemId: string): void {
+      this.fUploaderValues.splice(index, 1);
     }
   },
   watch: {
