@@ -18,12 +18,9 @@ import { mapGetters } from 'vuex';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { ProductValue } from 'src/modules/budsies';
+import { Bodypart, BodyPartValueContentType, ProductValue } from 'src/modules/budsies';
 
-import OPillowProductOrderForm from 'theme/components/organisms/o-pillow-product-order-form.vue';
-import BodypartOption from '../components/interfaces/bodypart-option';
-import Bodypart from 'src/modules/budsies/models/bodypart.model';
-import Task from 'core/lib/sync/types/Task';
+import OPillowProductOrderForm from '../components/organisms/o-pillow-product-order-form.vue';
 
 export default {
   name: 'PillowProduct',
@@ -60,8 +57,7 @@ export default {
             label: productLink.product.name + ' - $' + productLink.product.price,
             value: productLink.product.sku,
             isSelected: false,
-            contentTypeId: productLink.product.contentTypeId,
-            color: productLink.product.color,
+            contentTypeId: BodyPartValueContentType.IMAGE,
             image: productLink.product.image,
             optionId: option.option_id,
             optionValueId: productLink.id
