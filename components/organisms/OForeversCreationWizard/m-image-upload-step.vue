@@ -43,12 +43,13 @@
           ref="artwork-upload"
           class="_file-uploader"
           :product-id="backendProductId"
-          :disabled="disabled"
+          :disabled="isDisabled"
           :upload-url="artworkUploadUrl"
           :allow-multiple="true"
           v-if="backendProductId"
           @file-added="onArtworkAdd"
           @file-removed="onArtworkRemove"
+          @is-busy-changed="onUploaderIsBusyChanged"
         />
         <div v-else>
           {{ $t('Unable to initialize the uploader control...') }}
@@ -107,7 +108,7 @@
     <div class="_buttons">
       <SfButton
         class="_button"
-        :disabled="disabled"
+        :disabled="isDisabled"
         @click="(event) => passes(() => submitStep())"
       >
         {{ $t('Continue') }}
@@ -120,7 +121,7 @@
 
         <SfButton
           class="_button"
-          :disabled="disabled"
+          :disabled="isDisabled"
           @click="toggleUploadMethod()"
         >
           {{ isUploadNow ? $t('Send photos later') : $t('Upload Now') }}
@@ -189,6 +190,11 @@ export default Vue.extend({
       default: false
     }
   },
+  data () {
+    return {
+      isUploadProcessingInProgress: false
+    }
+  },
   computed: {
     backendProductId (): string | undefined {
       if (!this.product) {
@@ -208,6 +214,9 @@ export default Vue.extend({
           );
       }
     },
+    isDisabled (): boolean {
+      return this.disabled || this.isUploadProcessingInProgress;
+    },
     isUploadNow (): boolean {
       if (!this.value.uploadMethod) {
         return true;
@@ -221,7 +230,7 @@ export default Vue.extend({
   },
   methods: {
     switchUploadMethod (method: 'later' | 'now'): void {
-      if (this.disabled) {
+      if (this.isDisabled) {
         return;
       }
 
@@ -255,11 +264,14 @@ export default Vue.extend({
         storageItemsIds: newValue
       });
     },
+    onUploaderIsBusyChanged (value: boolean): void {
+      this.isUploadProcessingInProgress = value;
+    },
     submitStep (): void {
       this.$emit('next-step');
     },
     toggleUploadMethod (): void {
-      if (this.disabled) {
+      if (this.isDisabled) {
         return;
       }
 
