@@ -192,6 +192,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.petInfoStepData.email,
             plushieName: this.petInfoStepData.name,
             plushieBreed: this.petInfoStepData.breed,
+            plushieDescription: this.customizeStepData.description,
             bodyparts: this.getBodypartsData(),
             customerImagesIds: storageItemsIds,
             uploadMethod: this.imageUploadStepData.uploadMethod === 'now' ? 'upload-now' : 'upload-email'
@@ -421,6 +422,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   }
 
   @media (min-width: $tablet-min) {
+
     ._step-divider {
       display: block;
     }
