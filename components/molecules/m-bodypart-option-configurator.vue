@@ -153,11 +153,12 @@ export default Vue.extend({
     flex-wrap: wrap;
     justify-content: center;
     padding: 0;
+    row-gap: 4vw;
+    column-gap: 4%;
   }
 
   ._visual-selector-value {
     width: 114px;
-    padding: 0 2%;
 
     ._icon {
       background-position: center center;

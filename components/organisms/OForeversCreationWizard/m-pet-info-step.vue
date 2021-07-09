@@ -200,9 +200,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .forevers-wizard-pet-info-step {
   display: inline-flex;
-  min-width: 30em;
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
@@ -227,6 +228,10 @@ export default Vue.extend({
 
   ._button {
     margin-top: var(--spacer-2xl);
+  }
+
+  @media (min-width: $tablet-min) {
+    min-width: 30em;
   }
 }
 </style>

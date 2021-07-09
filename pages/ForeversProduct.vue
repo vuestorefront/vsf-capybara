@@ -167,8 +167,11 @@ export default Vue.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #forevers-product {
-  //box-sizing: border-box;
-  padding: var(--spacer-lg) 1rem 0;
+  padding: var(--spacer-lg) 0 0;
+
+  @media (min-width: $tablet-min) {
+    padding: var(--spacer-lg) 1rem 0;
+  }
 
   @include for-desktop {
     max-width: 77.5rem;

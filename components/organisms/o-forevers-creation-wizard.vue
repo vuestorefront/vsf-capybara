@@ -295,6 +295,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 @import "~@storefront-ui/shared/styles/components/atoms/SfHeading";
 
 .o-forevers-creation-wizard {
+  --steps-content-padding: var(--spacer-base) var(--spacer-sm) 0;
+
   text-align: center;
 
   .sf-step {

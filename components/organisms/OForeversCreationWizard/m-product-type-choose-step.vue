@@ -131,19 +131,29 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .forevers-wizard-product-type-step {
   ._buttons-wrapper {
     display: inline-grid;
     grid-template-columns: 1fr;
     grid-gap: 1em;
-    padding: 3em;
+    padding: 1em 0;
   }
 
   ._button {
     justify-content: flex-start;
+    flex-direction: row;
+    gap: 1em;
+  }
 
-    ._image {
-        margin-right: 1em;
+  @media (min-width: $tablet-min) {
+    ._buttons-wrapper {
+      padding: 3em;
+    }
+
+    ._button {
+      flex-direction: row;
     }
   }
 }
