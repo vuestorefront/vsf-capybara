@@ -113,6 +113,42 @@
 
       <validation-provider
         v-slot="{ errors, classes }"
+        name="Production time"
+        v-if="isProductionOptionsAvailable"
+        slim
+      >
+        <div
+          class="_production-time-field"
+          :class="classes"
+        >
+          <SfHeading
+            class="-required "
+            :level="3"
+            :title="$t('Choose your production time')"
+          />
+
+          *{{ $t('We will refund the rush fee in the unlikely event we do not meet a promised delivery date') }}.
+
+          <SfSelect
+            v-model="productionTime"
+            name="rush_addons"
+            class="_rush-addons"
+            :valid="!errors.length"
+            :error-message="errors[0]"
+          >
+            <SfSelectOption
+              v-for="option in productionTimeOptions"
+              :key="option.id"
+              :value="option"
+            >
+              {{ option.text }}
+            </SfSelectOption>
+          </SfSelect>
+        </div>
+      </validation-provider>
+
+      <validation-provider
+        v-slot="{ errors, classes }"
         rules="required"
         :name="$t('Quantity')"
         slim
@@ -243,7 +279,7 @@ import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 
-import { SfHeading, SfButton, SfModal } from '@storefront-ui/vue';
+import { SfHeading, SfButton, SfModal, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
@@ -252,7 +288,8 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import { isVue } from 'src/modules/shared';
 import {
   Bodypart,
-  BodypartValue
+  BodypartValue,
+  RushAddon
 } from 'src/modules/budsies';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
@@ -261,6 +298,7 @@ import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-confi
 
 import BodypartOption from '../../interfaces/bodypart-option';
 import AddonOption from '../../interfaces/addon-option.interface';
+import ProductionTimeOption from 'theme/components/interfaces/production-time-option.interface';
 
 extend('required', {
   ...required,
@@ -273,6 +311,7 @@ export default Vue.extend({
     SfHeading,
     SfButton,
     SfModal,
+    SfSelect,
     ValidationProvider,
     ValidationObserver,
     MAddonsSelector,
@@ -286,6 +325,7 @@ export default Vue.extend({
         bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[]>,
         addons: [] as AddonOption[],
         description: undefined as string | undefined,
+        productionTime: undefined as ProductionTimeOption | undefined,
         quantity: 1
       })
     },
@@ -302,6 +342,10 @@ export default Vue.extend({
       default: false
     },
     addonsBundleOption: {
+      type: Object as PropType<BundleOption | undefined>,
+      default: undefined
+    },
+    productionTimeBundleOption: {
       type: Object as PropType<BundleOption | undefined>,
       default: undefined
     },
@@ -353,6 +397,15 @@ export default Vue.extend({
         this.$emit('input', newValue);
       }
     },
+    productionTime: {
+      get (): ProductionTimeOption | undefined {
+        return this.value.productionTime;
+      },
+      set (value: ProductionTimeOption | undefined): void {
+        const newValue = { ...this.value, productionTime: value };
+        this.$emit('input', newValue);
+      }
+    },
     addons (): AddonOption[] {
       if (!this.addonsBundleOption) {
         return []
@@ -393,6 +446,50 @@ export default Vue.extend({
       }
 
       return bodyparts;
+    },
+    isProductionOptionsAvailable (): boolean {
+      return this.productionTimeOptions.length !== 0;
+    },
+    productionTimeOptions (): ProductionTimeOption[] {
+      if (!this.productionTimeBundleOption || !this.product) {
+        return []
+      }
+
+      const addons: RushAddon[] = this.$store.getters['budsies/getProductRushAddons'](this.product.id);
+
+      if (!addons.length) {
+        return [];
+      }
+
+      let addonOptions: Record<string, number> = {};
+
+      for (const productLink of this.productionTimeBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        addonOptions[productLink.product.sku] = +productLink.id;
+      }
+
+      const result: ProductionTimeOption[] = [];
+
+      for (const addon of addons) {
+        const addonOption = addonOptions[addon.id];
+
+        if (!addonOption && addon.id) {
+          throw new Error('The option product of rush addon is not found: ' + addon.id);
+        }
+
+        result.push({
+          id: addon.id,
+          text: addon.text,
+          isDomestic: addon.isDomestic,
+          optionId: this.productionTimeBundleOption.option_id,
+          optionValueId: addonOption
+        })
+      }
+
+      return result;
     }
   },
   methods: {
@@ -451,20 +548,36 @@ export default Vue.extend({
     async submitStep (): Promise<void> {
       await this.addToCart();
     }
+  },
+  mounted () {
+    if (!this.productionTimeOptions.length) {
+      return;
+    }
+
+    this.productionTime = this.productionTimeOptions[0];
   }
 });
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .forevers-wizard-customization-step {
   ._section {
     margin-top: var(--spacer-base);
   }
 
+  ._production-time-field,
   ._quantity-field,
   ._addons {
     margin-top: var(--spacer-base);
+  }
+
+  ._production-time-field {
+    text-align: center;
+
+    ::v-deep .sf-select__selected {
+      justify-content: center;
+    }
   }
 
   ._helper-text {

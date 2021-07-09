@@ -47,6 +47,7 @@
           :plushie-id="plushieId"
           :product="product"
           :addons-bundle-option="addonsBundleOption"
+          :production-time-bundle-option="productionTimeBundleOption"
           :add-to-cart="addToCart"
           :disabled="isSubmitting"
           @next-step="nextStep"
@@ -57,9 +58,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType, VueConstructor } from 'vue';
+import Vue, { VueConstructor } from 'vue';
 import { mapMutations } from 'vuex';
-import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
@@ -79,6 +79,7 @@ import MCustomizeStep from './OForeversCreationWizard/m-customize-step.vue';
 
 import AddonOption from '../interfaces/addon-option.interface';
 import BodypartOption from '../interfaces/bodypart-option';
+import ProductionTimeOption from '../interfaces/production-time-option.interface';
 
 interface InjectedServices {
   window: Window
@@ -125,6 +126,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
         addons: [] as AddonOption[],
         description: undefined as string | undefined,
+        productionTime: undefined as ProductionTimeOption | undefined,
         quantity: 1
       },
 
@@ -150,6 +152,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       for (const option of this.product.bundle_options) {
         if (option.title === 'Addons') {
+          result = option;
+          break;
+        }
+      }
+
+      return result;
+    },
+    productionTimeBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      let result;
+
+      for (const option of this.product.bundle_options) {
+        if (option.title === 'Production time') {
           result = option;
           break;
         }
@@ -265,7 +283,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return;
         }
 
-        await this.$store.dispatch('budsies/loadProductBodyparts', { productId: this.product.id })
+        await Promise.all([
+          this.$store.dispatch('budsies/loadProductBodyparts', { productId: this.product.id }),
+          this.$store.dispatch('budsies/loadProductRushAddons', { productId: this.product.id })
+        ]);
       },
       immediate: true
 
@@ -280,6 +301,20 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           optionId: this.addonsBundleOption.option_id,
           optionQty: 1,
           optionSelections: newValue.map(item => item.optionValueId)
+        });
+      },
+      immediate: false
+    },
+    'customizeStepData.productionTime': {
+      handler (newValue: ProductionTimeOption) {
+        if (!this.productionTimeBundleOption) {
+          return
+        }
+
+        this.setBundleOptionValue({
+          optionId: this.productionTimeBundleOption.option_id,
+          optionQty: 1,
+          optionSelections: newValue.optionValueId ? [newValue.optionValueId] : []
         });
       },
       immediate: false
