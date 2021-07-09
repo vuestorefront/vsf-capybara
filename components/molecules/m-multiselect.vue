@@ -16,7 +16,7 @@
       :track-by="idField"
       :allow-empty="!required"
       :show-labels="false"
-      :show-pointer="false"
+      :show-pointer="true"
       :max-height="190"
       open-direction="below"
       :disabled="disabled"
@@ -204,8 +204,9 @@ export default Vue.extend({
         font-weight: var(--font-normal);
       }
 
-      &:hover {
+      &--highlight {
         background-color: rgba(var(--c-gray-base), 0.1);
+        color: inherit;
       }
     }
 
