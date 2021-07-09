@@ -55,7 +55,7 @@ let routes = [
   { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'category', path: '/c/:slug', component: Category },
   { name: 'cms-page', path: '/i/:slug', component: Static },
-  { name: 'forevers-product', path: '/forevers/p/:parentSku/:slug', component: ForeversProduct },
+  { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
   { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
   { name: 'pillow-product', path: '/pillow/p/:parentSku/:slug', component: PillowProduct },
   { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct }
