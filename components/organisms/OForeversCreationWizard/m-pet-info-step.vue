@@ -71,7 +71,7 @@
         <SfInput
           name="email"
           v-model="email"
-          :placeholder="$t('sample@email.com')"
+          placeholder="sample@email.com"
           :disabled="disabled"
           :required="false"
           :valid="!errors.length"

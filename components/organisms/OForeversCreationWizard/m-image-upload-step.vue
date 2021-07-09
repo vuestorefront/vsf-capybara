@@ -65,7 +65,7 @@
       <SfHeading
         class="_step-title -required "
         :level="2"
-        title="Provide Photos Later"
+        :title="$t('Provide Photos Later')"
         :subtitle="$t('Please provide within 3 days')"
       />
 

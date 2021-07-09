@@ -30,14 +30,14 @@
         class="_helper-text"
         v-if="bodypart.code === 'size'"
       >
-        The Standard size fits most animals. We recommend the Miniature size for smaller dog breeds, miniature cats, hamsters, etc.
+        {{ $t('The Standard size fits most animals. We recommend the Miniature size for smaller dog breeds, miniature cats, hamsters, etc.') }}
       </div>
 
       <div
         class="_helper-text"
         v-if="bodypart.code === 'forevers_color_palette'"
       >
-        You may select up to 3 most prominent color(s) of your animal to assist our team.
+        {{ $t('You may select up to 3 most prominent color(s) of your animal to assist our team.') }}
       </div>
 
       <div
@@ -64,10 +64,9 @@
         class="_helper-text"
         v-if="bodypart.code === 'forevers_color_palette'"
       >
-        Click a selected color to deselect it. <br>
+        {{ $t('Click a selected color to deselect it') }}. <br>
 
-        Your color input is especially helpful when photos are blurry or poorly lit.
-        If left blank, our designers will use their professional judgement.
+        {{ $t('Your color input is especially helpful when photos are blurry or poorly lit. If left blank, our designers will use their professional judgement.') }}
       </div>
 
       <div class="_error-text">
@@ -140,7 +139,7 @@
             class="_popup-link"
             href="javascript:void(0)"
             @click="areQuantityNotesVisible = true"
-          >Quantity & Shipping Discounts</a>
+          >{{ $t('Quantity & Shipping Discounts') }}</a>
         </div>
       </validation-provider>
 
@@ -185,7 +184,7 @@
         :disabled="disabled"
         @click="(event) => passes(() => submitStep())"
       >
-        Add to Cart
+        {{ $t('Add to Cart') }}
       </SfButton>
 
       <p class="_order-agreement">
