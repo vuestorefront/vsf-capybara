@@ -191,6 +191,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieId: this.plushieId + '',
             email: this.petInfoStepData.email,
             plushieName: this.petInfoStepData.name,
+            plushieBreed: this.petInfoStepData.breed,
             bodyparts: this.getBodypartsData(),
             customerImagesIds: storageItemsIds,
             uploadMethod: this.imageUploadStepData.uploadMethod === 'now' ? 'upload-now' : 'upload-email'
@@ -249,6 +250,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   created (): void {
+    this.$store.dispatch('budsies/loadBreeds');
+
     if (this.uploadedArtworkId) {
       this.imageUploadStepData.storageItemsIds = [ this.uploadedArtworkId ];
       this.imageUploadStepData.uploadMethod = 'now';

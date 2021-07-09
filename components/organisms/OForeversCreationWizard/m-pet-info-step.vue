@@ -44,9 +44,9 @@
           class="form__element form__select"
           name="petsie_breed"
           placeholder="Golden Retriever, Labradoodle, etc."
-          id-field="name"
-          :options="[]"
+          :options="breedsList"
           :required="false"
+          :allow-free-text="true"
           :disabled="disabled"
         />
 
@@ -169,6 +169,9 @@ export default Vue.extend({
         const newValue = { ...this.value, email: value };
         this.$emit('input', newValue);
       }
+    },
+    breedsList (): string[] {
+      return this.$store.getters['budsies/getPlushieBreeds'];
     }
   },
   methods: {
