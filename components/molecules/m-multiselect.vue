@@ -5,24 +5,26 @@
       '--invalid': !valid,
       '--focused': isOpen
     }"
+    @keydown.enter.capture="onEnterPressed"
   >
     <multiselect
       class="_input"
       :id="inputId"
-      :value="selectedOption"
-      :options="options"
+      v-model="selectedOption"
+      :options="allOptions"
       :placeholder="placeholder"
       :label="labelField"
       :track-by="idField"
       :allow-empty="!required"
       :show-labels="false"
       :show-pointer="true"
+      :preserve-search="shouldPreserveSearch"
       :max-height="190"
       open-direction="below"
       :disabled="disabled"
-      @input="onInput"
+      ref="multiselect"
       @open="isOpen = !isOpen"
-      @close="isOpen = !isOpen"
+      @close="onClose"
     >
       <template #caret>
         <SfChevron class="sf-select__chevron" />
@@ -56,19 +58,16 @@ import Vue, { PropType } from 'vue';
 import Multiselect from 'vue-multiselect';
 import { SfChevron } from '@storefront-ui/vue';
 
+type Option = Record<string, any> | string;
+
 let instanceId = 0;
 
 export default Vue.extend({
   name: 'MMultiselect',
+  inheritAttrs: false,
   components: {
     Multiselect,
     SfChevron
-  },
-  data (): Record<string, any> {
-    return {
-      isOpen: false,
-      instanceId: ''
-    };
   },
   created: function (): void {
     this.instanceId = instanceId.toString();
@@ -96,7 +95,7 @@ export default Vue.extend({
       default: undefined
     },
     options: {
-      type: Array as PropType<Record<string | number, any>[]>,
+      type: Array as PropType<Option[]>,
       default: () => []
     },
     disabled: {
@@ -107,6 +106,10 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
+    allowFreeText: {
+      type: Boolean,
+      default: false
+    },
     required: {
       type: Boolean,
       default: true
@@ -116,40 +119,116 @@ export default Vue.extend({
       default: 'This field value is not correct.'
     }
   },
+  data () {
+    return {
+      isOpen: false,
+      instanceId: '',
+      customOptions: [] as Option[]
+    }
+  },
   computed: {
+    selectedOption: {
+      get (): Option | undefined {
+        if (!this.value) {
+          return undefined;
+        }
+
+        const option = this.allOptions.find(option => {
+          if (this.idField && typeof option === 'object') {
+            return option[this.idField] === this.value
+          } else {
+            return option === this.value
+          }
+        });
+
+        return option;
+      },
+      set (value: Option | undefined): void {
+        if (!value) {
+          this.$emit('input', undefined)
+          this.$emit('change', undefined)
+        }
+
+        let valueId;
+        if (!this.idField || typeof value !== 'object') {
+          valueId = value;
+        } else {
+          valueId = value[this.idField];
+        }
+
+        this.$emit('input', valueId);
+        this.$emit('change', valueId);
+      }
+    },
     inputId (): string {
       return 'm-multiselect-' + this.instanceId;
     },
-    selectedOption (): Record<string, any> | string | number | undefined {
-      if (!this.value) {
-        return undefined;
-      }
+    allOptions (): any[] {
+      const result = [...this.customOptions, ...this.options];
 
-      if (!this.idField) {
-        return this.value;
-      }
+      result.sort((a, b) => {
+        if (typeof a === 'string' && b === 'string') {
+          return a.localeCompare(b);
+        } else if (typeof a !== 'string' && typeof b !== 'string') {
+          return a[this.labelField].localeCompare(b[this.labelField])
+        }
+      });
 
-      const option = this.options.find(option => option[this.idField] === this.value);
-
-      return option;
+      return result;
+    },
+    shouldPreserveSearch (): boolean {
+      return this.allowFreeText;
     }
   },
   methods: {
-    onInput (value: any): void {
-      if (!value) {
-        this.$emit('input', undefined)
-        this.$emit('change', undefined)
+    getMultiselect (): Multiselect | undefined {
+      return this.$refs['multiselect'] as Multiselect | undefined;
+    },
+    processFreeText (): Option | undefined {
+      const multiselect = this.getMultiselect();
+      if (!multiselect) {
+        return;
       }
 
-      let valueId;
-      if (!this.idField) {
-        valueId = value;
-      } else {
-        valueId = value[this.idField];
+      const searchValue: string = (multiselect as any).search;
+
+      if (!searchValue ||
+        (multiselect as any).filteredOptions.length
+      ) {
+        return;
       }
 
-      this.$emit('input', valueId);
-      this.$emit('change', valueId);
+      let option: Option = searchValue;
+      if (this.idField && this.labelField) {
+        option = {
+          [this.idField]: searchValue,
+          [this.labelField]: searchValue
+        };
+      }
+
+      this.customOptions.push(option);
+      return option;
+    },
+    onClose (): void {
+      this.isOpen = !this.isOpen;
+
+      if (!this.allowFreeText) {
+        return;
+      }
+
+      const newOption = this.processFreeText();
+      if (!newOption) {
+        return;
+      }
+
+      this.selectedOption = newOption;
+    },
+    async onEnterPressed (): Promise<void> {
+      if (!this.allowFreeText) {
+        return;
+      }
+
+      this.processFreeText();
     }
   }
 });
