@@ -153,7 +153,7 @@ export default Vue.extend({
     flex-wrap: wrap;
     justify-content: center;
     padding: 0;
-    row-gap: 4vw;
+    row-gap: 2vw;
     column-gap: 4%;
   }
 
