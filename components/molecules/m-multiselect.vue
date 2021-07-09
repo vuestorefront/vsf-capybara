@@ -85,18 +85,18 @@ export default Vue.extend({
     },
     idField: {
       type: String,
-      default: 'id'
+      default: undefined
     },
     labelField: {
       type: String,
-      default: 'name'
+      default: undefined
     },
     value: {
       type: String as PropType<string | undefined>,
       default: undefined
     },
     options: {
-      type: Array as PropType<Record<string, any>[]>,
+      type: Array as PropType<Record<string | number, any>[]>,
       default: () => []
     },
     disabled: {
@@ -120,24 +120,33 @@ export default Vue.extend({
     inputId (): string {
       return 'm-multiselect-' + this.instanceId;
     },
-    selectedOption (): Record<string, any> | undefined {
+    selectedOption (): Record<string, any> | string | number | undefined {
       if (!this.value) {
         return undefined;
       }
 
-      const option = this.options.find(option => option.code === this.value);
+      if (!this.idField) {
+        return this.value;
+      }
+
+      const option = this.options.find(option => option[this.idField] === this.value);
 
       return option;
     }
   },
   methods: {
-    onInput ($event: any): void {
-      if (!$event) {
+    onInput (value: any): void {
+      if (!value) {
         this.$emit('input', undefined)
         this.$emit('change', undefined)
       }
 
-      const valueId = $event[this.idField];
+      let valueId;
+      if (!this.idField) {
+        valueId = value;
+      } else {
+        valueId = value[this.idField];
+      }
 
       this.$emit('input', valueId);
       this.$emit('change', valueId);
