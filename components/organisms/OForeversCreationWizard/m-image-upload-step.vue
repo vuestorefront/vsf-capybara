@@ -304,7 +304,7 @@ export default Vue.extend({
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .forevers-wizard-image-upload-step {
   ._file-uploader {
     margin-top: var(--spacer-base);

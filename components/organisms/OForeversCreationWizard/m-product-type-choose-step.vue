@@ -130,7 +130,7 @@ export default Vue.extend({
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .forevers-wizard-product-type-step {
