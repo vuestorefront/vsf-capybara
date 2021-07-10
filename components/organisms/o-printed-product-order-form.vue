@@ -108,10 +108,11 @@
             <MExtraFaces
               ref="extra-faces"
               :available-options="addons"
-              :product-id="backendProductId"
+              :backend-product-id="backendProductId"
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
               v-show="hasExtraFaceAddons"
+              @input="extraFacesData = $event"
             />
 
             <validation-provider
@@ -186,6 +187,7 @@ import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MExtraFaces from '../molecules/m-extra-faces.vue';
 import ZoomGalleryImage from '../../interfaces/zoom-gallery-image.interface';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
+import ExtraFacesConfiguratorData from '../interfaces/extra-faces-configurator-data.interface';
 
 extend('required', {
   ...required,
@@ -240,6 +242,11 @@ export default Vue.extend({
       quantity: 1,
       storageItemId: undefined as string | undefined,
       selectedStyle: undefined as string | undefined,
+      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
+      extraFacesData: {
+        addon: undefined,
+        storageItems: []
+      } as ExtraFacesConfiguratorData,
       isSubmitting: false,
       shouldShowDesignSelector: true
     }
@@ -491,12 +498,7 @@ export default Vue.extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      let extraFacesArtworks: string[] = [];
-      const extraFacesComponent = this.getExtraFaces();
-
-      if (extraFacesComponent) {
-        extraFacesArtworks = extraFacesComponent.getFilesIds();
-      }
+      const extraFacesArtworks = this.extraFacesData.storageItems.map(item => item.id);
 
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
@@ -568,25 +570,34 @@ export default Vue.extend({
     }
   },
   watch: {
+    availableStyles: {
+      handler (): void {
+        // SfSelect doesn't support options updating in the current package version
+        this.shouldShowDesignSelector = false;
+
+        this.$nextTick(() => {
+          this.shouldShowDesignSelector = true;
+        });
+      }
+    },
     product: {
       handler (newValue: Product, oldValue: Product | undefined) {
         if (newValue.id === oldValue?.id) {
           return;
         }
-        // SfSelect doesn't support options updating in the current package version
-        this.shouldShowDesignSelector = false;
 
         this.selectedStyle = undefined;
         if (this.availableStyles.length === 1) {
           this.selectedStyle = this.availableStyles[0].value;
         }
 
+        const extraFacesComponent = this.getExtraFaces();
+        if (extraFacesComponent) {
+          extraFacesComponent.reset();
+        }
+
         const validator = this.getValidationObserver();
         validator?.reset();
-
-        this.$nextTick(() => {
-          this.shouldShowDesignSelector = true;
-        })
       },
       immediate: true
     },
@@ -603,6 +614,20 @@ export default Vue.extend({
           optionId: this.styleBundleOption.option_id,
           optionQty: 1,
           optionSelections: selectedDesign ? [selectedDesign.optionValueId] : []
+        });
+      },
+      immediate: false
+    },
+    'extraFacesData.addon': {
+      handler (newValue: ExtraPhotoAddonOption | undefined) {
+        if (!this.addonsBundleOption) {
+          return
+        }
+
+        this.setBundleOptionValue({
+          optionId: this.addonsBundleOption.option_id,
+          optionQty: 1,
+          optionSelections: newValue ? [newValue.optionValueId] : []
         });
       },
       immediate: false

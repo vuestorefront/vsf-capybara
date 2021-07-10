@@ -21,7 +21,7 @@
           >
           <MArtworkUpload
             ref="artwork-upload"
-            :product-id="productId"
+            :product-id="backendProductId"
             :upload-url="uploadUrl"
             :disabled="disabled"
             :file="getInitialArtworkUrl(index - 1)"
@@ -47,7 +47,7 @@
 
     <SfSelect
       v-model="selectedVariant"
-      v-if="showAddonSelector"
+      v-if="shouldShowAddonSelector"
       name="extra_faces_addon"
       class="_extra-faces-selector sf-select--underlined"
       selected=""
@@ -60,7 +60,7 @@
       <SfSelectOption
         v-for="option in availableOptions"
         :key="option.id"
-        :value="option.id"
+        :value="option"
       >
         {{ option.label }}
       </SfSelectOption>
@@ -78,9 +78,10 @@ import * as types from '@vue-storefront/core/modules/catalog/store/product/mutat
 
 import { Item } from 'src/modules/file-storage';
 
+import MArtworkUpload from './m-artwork-upload.vue';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 import UploadedArtwork from '../interfaces/uploaded-artwork.interface';
-import MArtworkUpload from './m-artwork-upload.vue';
+import ExtraFacesConfiguratorData from '../interfaces/extra-faces-configurator-data.interface';
 
 extend('required', {
   ...required,
@@ -99,7 +100,7 @@ export default Vue.extend({
       type: Array as PropType<ExtraPhotoAddonOption[]>,
       default: []
     },
-    productId: {
+    backendProductId: {
       type: String,
       required: true
     },
@@ -122,49 +123,54 @@ export default Vue.extend({
   },
   data () {
     return {
-      fSelectedVariant: undefined as undefined | string,
-      fUploaderValues: [] as UploadedArtwork[],
-      fShouldShowAddonSelector: true
+      fSelectedVariant: undefined as undefined | ExtraPhotoAddonOption,
+      uploaderValues: [] as UploadedArtwork[],
+      shouldShowAddonSelector: true
     }
   },
   computed: {
     selectedVariant: {
-      get: function (): string | undefined {
+      get: function (): ExtraPhotoAddonOption | undefined {
         return this.fSelectedVariant;
       },
-      set: function (value: string | undefined) {
+      set: function (value: ExtraPhotoAddonOption | undefined) {
         this.fSelectedVariant = value;
 
-        if (!value) {
-          return;
+        let extraPhotosCount = 0;
+        if (value) {
+          extraPhotosCount = this.inputsCount;
         }
 
-        this.fUploaderValues.length = Math.min(
-          this.fUploaderValues.length,
-          this.inputsCount
+        this.uploaderValues.length = Math.min(
+          this.uploaderValues.length,
+          extraPhotosCount
         );
+
+        const eventData: ExtraFacesConfiguratorData = {
+          addon: value,
+          storageItems: [...this.uploaderValues]
+        };
+
+        this.$emit('input', eventData)
       }
     },
     skinClass (): string {
       return `-skin-petsies`;
     },
     inputsCount (): number {
-      const matchingOption = this.availableOptions.find(
-        (item) => item.id === this.selectedVariant
-      );
+      if (!this.selectedVariant) {
+        return 0;
+      }
 
-      return matchingOption ? matchingOption.value : 0;
+      return this.selectedVariant.value;
     },
     isUploadersSubtitleVisible (): boolean {
       return this.inputsCount > 0;
-    },
-    showAddonSelector: function (): boolean {
-      return this.fShouldShowAddonSelector
     }
   },
   created (): void {
     for (const artwork of this.initialArtworks) {
-      this.fUploaderValues.push({
+      this.uploaderValues.push({
         id: artwork.id,
         url: artwork.url
       });
@@ -175,7 +181,7 @@ export default Vue.extend({
     );
 
     if (matchingOption) {
-      this.selectedVariant = matchingOption.id;
+      this.selectedVariant = matchingOption;
     }
   },
   methods: {
@@ -195,7 +201,7 @@ export default Vue.extend({
       return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload>[] | undefined;
     },
     getUploadedArtworkId (index: number): string | undefined {
-      const item = this.fUploaderValues[index];
+      const item = this.uploaderValues[index];
       if (!item) {
         return;
       }
@@ -211,50 +217,55 @@ export default Vue.extend({
       return item.url;
     },
     getFilesIds (): string[] {
-      return this.fUploaderValues.map(item => item.id);
+      return this.uploaderValues.map(item => item.id);
+    },
+    reset (): void {
+      this.selectedVariant = undefined;
     },
     onArtworkAdd (index: number, value: Item): void {
-      Vue.set(this.fUploaderValues, index, {
+      Vue.set(this.uploaderValues, index, {
         id: value.id,
         url: value.url
       });
+
+      const eventData: ExtraFacesConfiguratorData = {
+        addon: this.selectedVariant,
+        storageItems: [...this.uploaderValues]
+      };
+
+      this.$emit('input', eventData)
     },
     onArtworkRemove (index: number, storageItemId: string): void {
-      this.fUploaderValues.splice(index, 1);
+      this.uploaderValues.splice(index, 1);
+
+      const eventData: ExtraFacesConfiguratorData = {
+        addon: this.selectedVariant,
+        storageItems: [...this.uploaderValues]
+      };
+
+      this.$emit('input', eventData)
     }
   },
   watch: {
-    productId: {
-      handler () {
-        this.fShouldShowAddonSelector = false;
-
-        this.fSelectedVariant = undefined;
+    availableOptions: {
+      handler (): void {
+        // SfSelect doesn't support options updating in the current package version
+        this.shouldShowAddonSelector = false;
 
         this.$nextTick(() => {
-          this.fShouldShowAddonSelector = true;
-        })
+          this.shouldShowAddonSelector = true;
+        });
+      }
+    },
+    backendProductId: {
+      handler (newValue: string, oldValue: string) {
+        if (newValue === oldValue) {
+          return;
+        }
+
+        this.reset();
       },
       immediate: true
-    },
-    selectedVariant: {
-      handler () {
-        if (!this.selectedVariant) {
-          return;
-        }
-
-        const selectedAddon = this.availableOptions.find(option => option.id === this.selectedVariant);
-
-        if (!selectedAddon) {
-          return;
-        }
-
-        this.setBundleOptionValue({
-          optionId: selectedAddon.optionId,
-          optionQty: 1,
-          optionSelections: [selectedAddon.optionValueId]
-        });
-      },
-      immediate: false
     }
   }
 })
