@@ -49,10 +49,12 @@
                     required
                     class="sf-select--underlined"
                     :size="10"
+                    :disabled="isSubmitting"
                   >
                     <SfSelectOption disabled value="">
                       Select Design Variant
                     </SfSelectOption>
+
                     <SfSelectOption
                       v-for="option in availableStyles"
                       :key="option.value"
@@ -91,7 +93,7 @@
                   ref="artwork-upload"
                   class="_file-uploader"
                   :product-id="productType"
-                  :disabled="isUploadDisabled"
+                  :disabled="isSubmitting"
                   :upload-url="artworkUploadUrl"
                   @file-added="onArtworkAdd"
                   @file-removed="onArtworkRemove"
@@ -107,7 +109,7 @@
               ref="extra-faces"
               :available-options="addons"
               :product-id="productType"
-              :disabled="isUploadDisabled"
+              :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
               v-show="hasExtraFaceAddons"
             />
@@ -122,6 +124,7 @@
                 <ACustomProductQuantity
                   v-model="quantity"
                   class="_qty-container"
+                  :disabled="isSubmitting"
                 />
 
                 <div class="_error-text">
@@ -133,7 +136,7 @@
             <div class="_actions">
               <div class="row">
                 <div class="medium-8 large-6 columns">
-                  <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isLoading">
+                  <SfButton class="_add-to-cart color-primary" type="submit" :disabled="isSubmitting">
                     Add to Cart
                   </SfButton>
                 </div>
@@ -284,14 +287,11 @@ export default Vue.extend({
       quantity: 1,
       fStorageItemId: undefined as string | undefined,
       fSelectedStyle: undefined as string | undefined,
-      fIsLoading: false,
+      isSubmitting: false,
       fShouldShowDesignSelector: true
     }
   },
   computed: {
-    isLoading (): boolean {
-      return this.fIsLoading;
-    },
     skinClass (): string {
       return '-skin-petsies';
     },
@@ -305,9 +305,6 @@ export default Vue.extend({
       }
 
       return productImages['images'];
-    },
-    isUploadDisabled (): boolean {
-      return false;
     },
     price (): number {
       const style = this.availableStyles.find(
@@ -390,7 +387,7 @@ export default Vue.extend({
       this.fStorageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
-      this.fIsLoading = true;
+      this.isSubmitting = true;
 
       await this.$store.dispatch(
         'product/setBundleOptions',
@@ -417,7 +414,7 @@ export default Vue.extend({
 
         this.onFailure('Unexpected error: ' + err);
       }).finally(() => {
-        this.fIsLoading = false;
+        this.isSubmitting = false;
       });
     },
     async onSuccess (): Promise<void> {

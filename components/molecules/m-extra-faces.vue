@@ -51,10 +51,12 @@
       name="extra_faces_addon"
       class="_extra-faces-selector sf-select--underlined"
       selected=""
+      :disabled="disabled"
     >
       <SfSelectOption value="">
         No extra pets
       </SfSelectOption>
+
       <SfSelectOption
         v-for="option in availableOptions"
         :key="option.id"
