@@ -50,7 +50,10 @@ export default {
       childSku: null
     });
 
-    await store.dispatch('budsies/loadProductBodyparts', { productId: product.id });
+    await Promise.all([
+      store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
+      store.dispatch('budsies/loadProductRushAddons', { productId: product.id })
+    ]);
 
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',

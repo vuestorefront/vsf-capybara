@@ -241,6 +241,43 @@
           </div>
         </validation-provider>
 
+        <validation-provider
+          v-slot="{ errors, classes }"
+          name="Production time"
+          v-if="isProductionOptionsAvailable"
+          slim
+        >
+          <div
+            class="_production-time-field"
+            :class="classes"
+          >
+            <SfHeading
+              class="_step-title -required"
+              :level="3"
+              :title="$t('Choose your production time')"
+            />
+
+            *{{ $t('We will refund the rush fee in the unlikely event we do not meet a promised delivery date') }}.
+
+            <SfSelect
+              v-model="productionTime"
+              name="rush_addons"
+              class="_rush-addons"
+              :disabled="isSubmitting"
+              :valid="!errors.length"
+              :error-message="errors[0]"
+            >
+              <SfSelectOption
+                v-for="option in productionTimeOptions"
+                :key="option.id"
+                :value="option"
+              >
+                {{ option.text }}
+              </SfSelectOption>
+            </SfSelect>
+          </div>
+        </validation-provider>
+
         <div v-show="showEmailStep">
           <div
             class="_step-number _email-step"
@@ -366,19 +403,35 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
-import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui/vue';
+import {
+  SfButton,
+  SfDivider,
+  SfInput,
+  SfModal,
+  SfHeading,
+  SfSelect
+} from '@storefront-ui/vue';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import Product from 'core/modules/catalog/types/Product';
 
 import { Item } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
-import { vuexTypes as budsiesTypes, Bodypart, BodypartValue, ImageUploadMethod, BodyPartValueContentType, ProductValue } from 'src/modules/budsies';
+import {
+  vuexTypes as budsiesTypes,
+  Bodypart,
+  BodypartValue,
+  ImageUploadMethod,
+  BodyPartValueContentType,
+  ProductValue,
+  RushAddon
+} from 'src/modules/budsies';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
 import BodypartOption from '../interfaces/bodypart-option';
 import SizeOption from '../interfaces/size-option';
+import ProductionTimeOption from '../interfaces/production-time-option.interface';
 
 extend('required', {
   ...required,
@@ -406,7 +459,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfDivider,
     SfInput,
     SfModal,
-    SfHeading
+    SfHeading,
+    SfSelect
   },
   inject: {
     window: { from: 'WindowObject' }
@@ -441,7 +495,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       shouldMakeAnother: false,
       areQuantityNotesVisible: false,
       showEmailStep: true,
-      uploadMethod: ImageUploadMethod.NOW
+      uploadMethod: ImageUploadMethod.NOW,
+      productionTime: undefined as ProductionTimeOption | undefined
     }
   },
   computed: {
@@ -464,12 +519,64 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     bodyparts (): Bodypart[] {
       return this.$store.getters['budsies/getProductBodyparts'](this.product.id);
     },
+    isProductionOptionsAvailable (): boolean {
+      return this.productionTimeOptions.length !== 0;
+    },
+    productionTimeBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'production time');
+    },
+    productionTimeOptions (): ProductionTimeOption[] {
+      if (!this.productionTimeBundleOption || !this.product) {
+        return []
+      }
+
+      const addons: RushAddon[] = this.$store.getters['budsies/getProductRushAddons'](this.product.id);
+
+      if (!addons.length) {
+        return [];
+      }
+
+      let addonOptions: Record<string, number> = {};
+
+      for (const productLink of this.productionTimeBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        addonOptions[productLink.product.sku] = +productLink.id;
+      }
+
+      const result: ProductionTimeOption[] = [];
+
+      for (const addon of addons) {
+        const addonOption = addonOptions[addon.id];
+
+        if (!addonOption && addon.id) {
+          Logger.warn('The option product of rush addon is not found: ' + addon.id, 'budsies')();
+          continue;
+        }
+
+        result.push({
+          id: addon.id,
+          text: addon.text,
+          isDomestic: addon.isDomestic,
+          optionId: this.productionTimeBundleOption.option_id,
+          optionValueId: addonOption
+        })
+      }
+
+      return result;
+    },
     sizeBundleOption (): BundleOption | undefined {
       if (!this.product?.bundle_options) {
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Product');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'product');
     },
     sizes (): SizeOption[] {
       if (!this.sizeBundleOption) {
@@ -579,7 +686,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
     },
     resetForm (): void {
-      this.quantity = this.product.qty;
+      this.quantity = this.product.qty || 1;
       this.storageItemId = undefined;
       this.size = undefined;
       this.name = undefined;
@@ -591,6 +698,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       const uploader = this.getUploader();
       if (uploader) {
         uploader.clearInput();
+      }
+
+      this.productionTime = undefined;
+      if (this.productionTimeOptions.length) {
+        this.productionTime = this.productionTimeOptions[0];
       }
 
       const validator = this.getValidationObserver();
@@ -723,6 +835,21 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       },
       immediate: false
     },
+    productionTime: {
+      handler (newValue: ProductionTimeOption | undefined) {
+        if (!this.productionTimeBundleOption) {
+          Logger.error('productionTimeBundleOption is not defined while attempt to set it was performed', 'budsies')();
+          return
+        }
+
+        this.setBundleOptionValue({
+          optionId: this.productionTimeBundleOption.option_id,
+          optionQty: 1,
+          optionSelections: newValue?.optionValueId ? [newValue.optionValueId] : []
+        });
+      },
+      immediate: false
+    },
     plushieId: {
       handler () {
         if (!this.plushieId) {
@@ -815,6 +942,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
   ._qty-container {
       margin-top: var(--spacer-xs);
+  }
+
+  ._production-time-field {
+    max-width: 47em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: var(--spacer-xl);
+    text-align: center;
+
+    ::v-deep .sf-select__selected {
+      justify-content: center;
+    }
   }
 
   ._actions {
