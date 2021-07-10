@@ -61,11 +61,17 @@ export default {
       customProductsItems: [
         {
           label: 'Petsies Stuffed Animals',
-          url: '/'
+          url: { name: 'forevers-create' }
         },
         {
           label: 'Pet Shaped Pillows',
-          url: '/pillow/p/customPillow_bundle/pillow'
+          url: {
+            name: 'pillow-product',
+            params: {
+              parentSku: 'customPillow_bundle',
+              slug: 'pillow'
+            }
+          }
         },
         {
           label: 'Square Photo Pillows',
@@ -73,15 +79,33 @@ export default {
         },
         {
           label: 'Pet Socks',
-          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
+          url: {
+            name: 'printed-product',
+            params: {
+              parentSku: 'customPrintedSocks_bundle',
+              slug: 'printed-socks'
+            }
+          }
         },
         {
           label: 'Face Masks',
-          url: '/printed/p/customPrintedMasks_bundle/printed-masks'
+          url: {
+            name: 'printed-product',
+            params: {
+              parentSku: 'customPrintedMasks_bundle',
+              slug: 'printed-masks'
+            }
+          }
         },
         {
           label: 'Pet Keychains',
-          url: '/printed/p/customPrintedKeychains_bundle/face-keychains'
+          url: {
+            name: 'printed-product',
+            params: {
+              parentSku: 'customPrintedKeychains_bundle',
+              slug: 'face-keychains'
+            }
+          }
         }
       ],
       otherProductsItems: [

@@ -188,27 +188,51 @@ export default {
       dropdownActions: [
         {
           label: 'Petsies',
-          url: '/'
+          url: { name: 'forevers-create' }
         },
         {
           label: 'Pet Pillow',
-          url: '/'
+          url: {
+            name: 'pillow-product',
+            params: {
+              parentSku: 'customPillow_bundle',
+              slug: 'pillow'
+            }
+          }
         },
         {
           label: 'Photo Pillow',
-          url: '/'
+          url: '/c/custom-photo-pillows-80'
         },
         {
           label: 'Socks',
-          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
+          url: {
+            name: 'printed-product',
+            params: {
+              parentSku: 'customPrintedSocks_bundle',
+              slug: 'printed-socks'
+            }
+          }
         },
         {
           label: 'Face Masks',
-          url: '/printed/p/customPrintedMasks_bundle/printed-masks'
+          url: {
+            name: 'printed-product',
+            params: {
+              parentSku: 'customPrintedMasks_bundle',
+              slug: 'printed-masks'
+            }
+          }
         },
         {
           label: 'Pet Keychains',
-          url: '/printed/p/customPrintedSocks_bundle/printed-socks'
+          url: {
+            name: 'printed-product',
+            params: {
+              parentSku: 'customPrintedKeychains_bundle',
+              slug: 'face-keychains'
+            }
+          }
         }
       ],
       breadcrumbs: [
@@ -286,6 +310,11 @@ export default {
       const productBundleOptions = product.product_option.extension_attributes.bundle_options;
 
       product.bundle_options.forEach(option => {
+        // Hide Forevers simple products
+        if ([73, 74, 75].includes(product.id) && option.title.toLowerCase() === 'product') {
+          return;
+        }
+
         if (!productBundleOptions.hasOwnProperty(option.option_id)) {
           return
         }
