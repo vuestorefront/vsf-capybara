@@ -342,7 +342,7 @@
                 ref="submitAnimator"
                 :duration="20000"
                 :steps="submitAnimationSteps"
-                :animation-url="submitAnimationUrl"
+                animation-url="/assets/images/phrasePillow/submit-animation.mp4"
                 v-show="isSubmitting"
               />
             </div>
@@ -440,6 +440,11 @@ import { required, email } from 'vee-validate/dist/rules';
 import { SfButton, SfInput, SfHeading, SfSelect } from '@storefront-ui/vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import Product from 'core/modules/catalog/types/Product';
+import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
+import { BundleOption, BundleOptionsProductLink } from 'core/modules/catalog/types/BundleOption';
+import { Logger } from '@vue-storefront/core/lib/logger';
 
 import { InjectType } from 'src/modules/shared';
 import {
@@ -447,7 +452,9 @@ import {
   Bodypart,
   BodypartValue,
   isAxiosError,
-  vuexTypes as budsiesTypes
+  vuexTypes as budsiesTypes,
+  ProductValue,
+  RushAddon
 } from 'src/modules/budsies';
 
 import {
@@ -472,6 +479,7 @@ import AccentColorPart from '../interfaces/accent-color-part.interface';
 import SubmitAnimationStepsInterface from '../interfaces/submit-animation-steps.interface';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
+import ProductImage from '../interfaces/product-image.interface';
 
 extend('required', {
   ...required,
@@ -499,6 +507,19 @@ interface InjectedServices {
   fileProcessingRepositoryFactory: FileProcessingRepositoryFactory
 }
 
+interface SideDesignProduct extends Product {
+  default_other_side_design?: number,
+  default_accent_color?: number
+}
+
+interface SideDesignProductLink extends BundleOptionsProductLink {
+  product?: SideDesignProduct
+}
+
+interface SideDesignBundleOption extends BundleOption {
+  product_links: SideDesignProductLink[]
+}
+
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPhrasePillowProductOrderForm',
   components: {
@@ -524,27 +545,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   } as unknown as InjectType<InjectedServices>,
   props: {
     product: {
-      type: Object,
+      type: Object as PropType<Product>,
       required: true
     },
     imageUploadUrl: {
       type: String,
       required: true
     },
-    uploadProductType: {
-      type: String,
-      required: true
-    },
     svgPath: {
       type: String,
-      required: true
-    },
-    frontDesignProducts: {
-      type: Array as PropType<DesignProduct[]>,
-      required: true
-    },
-    backDesignProducts: {
-      type: Array as PropType<DesignProduct[]>,
       required: true
     },
     initialFrontDesign: {
@@ -554,18 +563,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     initialBackDesign: {
       type: String,
       default: undefined
-    },
-    submitAnimationUrl: {
-      type: String,
-      required: true
-    },
-    productionTimeOptions: {
-      type: Array as PropType<ProductionTimeOption[]>,
-      required: true
-    },
-    bodyparts: {
-      type: Array as PropType<Bodypart[]>,
-      default: () => []
     }
   },
   data () {
@@ -645,6 +642,102 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     isDisabled (): boolean {
       return this.isFormDisabled || this.isSubmitting;
     },
+    backDesignBundleOption (): SideDesignBundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      return this.product.bundle_options.find(item => item.title === 'Back Design Product');
+    },
+    frontDesignBundleOption (): SideDesignBundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      return this.product.bundle_options.find(item => item.title === 'Front Design Product');
+    },
+    frontDesignProducts (): DesignProduct[] {
+      if (!this.frontDesignBundleOption) {
+        return [];
+      }
+
+      return this.getDesignProducts(this.frontDesignBundleOption);
+    },
+    backDesignProducts (): DesignProduct[] {
+      if (!this.backDesignBundleOption) {
+        return [];
+      }
+
+      return this.getDesignProducts(this.backDesignBundleOption);
+    },
+    bodyparts (): Bodypart[] {
+      const bodyparts = this.$store.getters['budsies/getProductBodyparts'](this.product.id);
+
+      if (!bodyparts.length) {
+        return [];
+      }
+
+      return bodyparts;
+    },
+    uploadProductType (): ProductValue {
+      switch (this.product.id) {
+        case 333:
+          return ProductValue.PHRASE_PILLOW;
+        default:
+          throw new Error(
+            `Can't resolve Backend product ID for Magento '${this.product.id}' product ID`
+          );
+      }
+    },
+    productionTimeBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      return this.product.bundle_options.find(item => item.title === 'Production time');
+    },
+    productionTimeOptions (): ProductionTimeOption[] {
+      if (!this.productionTimeBundleOption || !this.product) {
+        return []
+      }
+
+      const addons: RushAddon[] = this.$store.getters['budsies/getProductRushAddons'](this.product.id);
+
+      if (!addons.length) {
+        return [];
+      }
+
+      let addonOptions: Record<string, number> = {};
+
+      for (const productLink of this.productionTimeBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        addonOptions[productLink.product.sku] = +productLink.id;
+      }
+
+      const result: ProductionTimeOption[] = [];
+
+      for (const addon of addons) {
+        const addonOption = addonOptions[addon.id];
+
+        if (!addonOption && addon.id) {
+          Logger.warn('The option product of rush addon is not found: ' + addon.id, 'budsies')();
+          continue;
+        }
+
+        result.push({
+          id: addon.id,
+          text: addon.text,
+          isDomestic: addon.isDomestic,
+          optionId: this.productionTimeBundleOption.option_id,
+          optionValueId: addonOption
+        })
+      }
+
+      return result;
+    },
     uploadButtonText (): string {
       return this.isBackgroundImageLoaded ? 'Change photo' : 'Select a photo';
     },
@@ -689,6 +782,39 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       });
 
       return result;
+    },
+    getDesignProductImages (product: Product): ProductImage[] {
+      const gallery = getGalleryByProduct(product);
+
+      return gallery.map((image: any) => ({
+        thumb: image.src,
+        stage: image.src,
+        big: image.src,
+        sku: product.sku
+      }))
+    },
+    getDesignProducts (bundleOption: SideDesignBundleOption): DesignProduct[] {
+      let designs: DesignProduct[] = [];
+      for (const productLink of bundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        designs.push({
+          id: Number(productLink.product.id),
+          sku: productLink.product.sku,
+          name: productLink.product.name,
+          thumbnail: getThumbnailForProduct(productLink.product as any),
+          price: 0,
+          defaultOtherSideDesign: productLink.product.default_other_side_design,
+          defaultAccentColor: productLink.product.default_accent_color,
+          images: this.getDesignProductImages(productLink.product),
+          optionId: bundleOption.option_id.toString(),
+          optionValueId: productLink.id.toString()
+        });
+      }
+
+      return designs;
     },
     getBackgroundEditor (): InstanceType<typeof MBackgroundEditor> | undefined {
       return this.$refs['backgroundEditor'] as InstanceType<typeof MBackgroundEditor> | undefined;
@@ -999,7 +1125,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     if (this.initialFrontDesign) {
       this.frontDesign = this.initialFrontDesign;
+    } else if (this.frontDesignProducts.length) {
+      this.frontDesign = this.frontDesignProducts[0].sku;
     }
+
+    this.onFrontDesignSelect();
 
     if (this.initialBackDesign) {
       this.backDesign = this.initialBackDesign;
@@ -1017,57 +1147,61 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   watch: {
     frontDesign: {
-      handler () {
-        if (!this.frontDesign) {
-          return
+      handler (newValue: string | undefined) {
+        if (!this.frontDesignBundleOption) {
+          Logger.error('frontDesignBundleOption is not defined while attempt to set it was performed', 'budsies')();
+          return;
         }
 
-        const frontDesign = this.frontDesignProducts.find(product => product.sku === this.frontDesign);
-
-        if (!frontDesign) {
-          return
+        let frontDesign;
+        if (newValue) {
+          frontDesign = this.frontDesignProducts.find(product => product.sku === this.frontDesign);
         }
 
         this.setBundleOptionValue({
-          optionId: frontDesign.optionId,
+          optionId: this.frontDesignBundleOption.option_id,
           optionQty: 1,
-          optionSelections: [frontDesign.optionValueId]
+          optionSelections: frontDesign ? [frontDesign.optionValueId] : []
         });
       },
       immediate: false
     },
     backDesign: {
-      handler () {
-        if (!this.backDesign) {
-          return
+      handler (newValue: string | undefined) {
+        if (!this.backDesignBundleOption) {
+          Logger.error('backDesignBundleOption is not defined while attempt to set it was performed', 'budsies')();
+          return;
         }
 
-        const backDesign = this.backDesignProducts.find(product => product.sku === this.backDesign);
-
-        if (!backDesign) {
-          return
+        let backDesign;
+        if (newValue) {
+          backDesign = this.backDesignProducts.find(product => product.sku === this.backDesign);
         }
 
         this.setBundleOptionValue({
-          optionId: backDesign.optionId,
+          optionId: this.backDesignBundleOption.option_id,
           optionQty: 1,
-          optionSelections: [backDesign.optionValueId]
+          optionSelections: backDesign ? [backDesign.optionValueId] : []
         });
       },
       immediate: false
     },
     productionTime: {
-      handler () {
-        const productionTime = this.productionTimeOptions.find(product => product.id === this.productionTime);
+      handler (newValue: string | undefined) {
+        if (!this.productionTimeBundleOption) {
+          Logger.error('productionTimeBundleOption is not defined while attempt to set it was performed', 'budsies')();
+          return;
+        }
 
-        if (!productionTime) {
-          return
+        let productionTime;
+        if (newValue) {
+          productionTime = this.productionTimeOptions.find(product => product.id === this.productionTime);
         }
 
         this.setBundleOptionValue({
-          optionId: productionTime.optionId,
+          optionId: this.productionTimeBundleOption.option_id,
           optionQty: 1,
-          optionSelections: productionTime.optionValueId ? [productionTime.optionValueId] : []
+          optionSelections: productionTime?.optionValueId ? [productionTime.optionValueId] : []
         });
       },
       immediate: false
