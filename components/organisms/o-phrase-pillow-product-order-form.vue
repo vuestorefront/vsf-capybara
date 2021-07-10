@@ -453,8 +453,7 @@ import {
   BodypartValue,
   isAxiosError,
   vuexTypes as budsiesTypes,
-  ProductValue,
-  RushAddon
+  ProductValue
 } from 'src/modules/budsies';
 
 import {
@@ -480,6 +479,7 @@ import SubmitAnimationStepsInterface from '../interfaces/submit-animation-steps.
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
 import ProductImage from '../interfaces/product-image.interface';
+import getProductionTimeOptions from '../../helpers/get-production-time-options';
 
 extend('required', {
   ...required,
@@ -701,42 +701,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return []
       }
 
-      const addons: RushAddon[] = this.$store.getters['budsies/getProductRushAddons'](this.product.id);
-
-      if (!addons.length) {
-        return [];
-      }
-
-      let addonOptions: Record<string, number> = {};
-
-      for (const productLink of this.productionTimeBundleOption.product_links) {
-        if (!productLink.product) {
-          continue;
-        }
-
-        addonOptions[productLink.product.sku] = +productLink.id;
-      }
-
-      const result: ProductionTimeOption[] = [];
-
-      for (const addon of addons) {
-        const addonOption = addonOptions[addon.id];
-
-        if (!addonOption && addon.id) {
-          Logger.warn('The option product of rush addon is not found: ' + addon.id, 'budsies')();
-          continue;
-        }
-
-        result.push({
-          id: addon.id,
-          text: addon.text,
-          isDomestic: addon.isDomestic,
-          optionId: this.productionTimeBundleOption.option_id,
-          optionValueId: addonOption
-        })
-      }
-
-      return result;
+      return getProductionTimeOptions(this.productionTimeBundleOption, this.product, this.$store);
     },
     uploadButtonText (): string {
       return this.isBackgroundImageLoaded ? 'Change photo' : 'Select a photo';

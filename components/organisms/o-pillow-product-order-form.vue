@@ -422,8 +422,7 @@ import {
   BodypartValue,
   ImageUploadMethod,
   BodyPartValueContentType,
-  ProductValue,
-  RushAddon
+  ProductValue
 } from 'src/modules/budsies';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -432,6 +431,7 @@ import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configur
 import BodypartOption from '../interfaces/bodypart-option';
 import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
+import getProductionTimeOptions from '../../helpers/get-production-time-options';
 
 extend('required', {
   ...required,
@@ -530,46 +530,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.product.bundle_options.find(item => item.title.toLowerCase() === 'production time');
     },
     productionTimeOptions (): ProductionTimeOption[] {
-      if (!this.productionTimeBundleOption || !this.product) {
+      if (!this.productionTimeBundleOption) {
         return []
       }
 
-      const addons: RushAddon[] = this.$store.getters['budsies/getProductRushAddons'](this.product.id);
-
-      if (!addons.length) {
-        return [];
-      }
-
-      let addonOptions: Record<string, number> = {};
-
-      for (const productLink of this.productionTimeBundleOption.product_links) {
-        if (!productLink.product) {
-          continue;
-        }
-
-        addonOptions[productLink.product.sku] = +productLink.id;
-      }
-
-      const result: ProductionTimeOption[] = [];
-
-      for (const addon of addons) {
-        const addonOption = addonOptions[addon.id];
-
-        if (!addonOption && addon.id) {
-          Logger.warn('The option product of rush addon is not found: ' + addon.id, 'budsies')();
-          continue;
-        }
-
-        result.push({
-          id: addon.id,
-          text: addon.text,
-          isDomestic: addon.isDomestic,
-          optionId: this.productionTimeBundleOption.option_id,
-          optionValueId: addonOption
-        })
-      }
-
-      return result;
+      return getProductionTimeOptions(this.productionTimeBundleOption, this.product, this.$store);
     },
     sizeBundleOption (): BundleOption | undefined {
       if (!this.product?.bundle_options) {
