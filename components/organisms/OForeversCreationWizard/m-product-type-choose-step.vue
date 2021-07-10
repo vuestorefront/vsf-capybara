@@ -8,7 +8,7 @@
     <div class="_buttons-wrapper">
       <SfButton
         class="_button"
-        :disabled="disabled"
+        :disabled="isDisabled"
         @click="createPlushie('dog')"
       >
         <BaseImage
@@ -23,7 +23,7 @@
 
       <SfButton
         class="_button"
-        :disabled="disabled"
+        :disabled="isDisabled"
         @click="createPlushie('cat')"
       >
         <BaseImage
@@ -38,7 +38,7 @@
 
       <SfButton
         class="_button"
-        :disabled="disabled"
+        :disabled="isDisabled"
         @click="createPlushie('other')"
       >
         <BaseImage
@@ -57,6 +57,8 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { SfHeading, SfButton } from '@storefront-ui/vue';
+
+import { Logger } from '@vue-storefront/core/lib/logger';
 
 import {
   BaseImage
@@ -82,6 +84,16 @@ export default Vue.extend({
     disabled: {
       type: Boolean,
       default: false
+    }
+  },
+  data () {
+    return {
+      isSubmitting: false
+    }
+  },
+  computed: {
+    isDisabled (): boolean {
+      return this.disabled || this.isSubmitting;
     }
   },
   methods: {
@@ -111,19 +123,27 @@ export default Vue.extend({
         return;
       }
 
-      const product = await this.$store.dispatch('product/loadProduct', {
-        parentSku: productSku,
-        childSku: null
-      });
+      this.isSubmitting = true;
 
-      const [plushieCreationTask] = await Promise.all([
-        await this.$store.dispatch('budsies/createNewPlushie', { productId: product.id })
-      ])
+      try {
+        const product = await this.$store.dispatch('product/loadProduct', {
+          parentSku: productSku,
+          childSku: null
+        });
 
-      const plushieId = plushieCreationTask.result;
+        const [plushieCreationTask] = await Promise.all([
+          await this.$store.dispatch('budsies/createNewPlushie', { productId: product.id })
+        ])
 
-      this.$emit('input', { product, plushieId });
-      this.$emit('next-step');
+        const plushieId = plushieCreationTask.result;
+
+        this.$emit('input', { product, plushieId });
+        this.$emit('next-step');
+      } catch (error) {
+        Logger.error('Unable to create plushie: ' + error, 'budsies')();
+      } finally {
+        this.isSubmitting = false;
+      }
     }
   }
 });
