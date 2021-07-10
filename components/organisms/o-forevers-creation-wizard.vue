@@ -215,10 +215,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           productToAdd: Object.assign({}, this.product, {
             qty: this.customizeStepData.quantity,
             plushieId: this.plushieId + '',
-            email: this.petInfoStepData.email,
-            plushieName: this.petInfoStepData.name,
-            plushieBreed: this.petInfoStepData.breed,
-            plushieDescription: this.customizeStepData.description,
+            email: this.petInfoStepData.email?.trim(),
+            plushieName: this.petInfoStepData.name?.trim(),
+            plushieBreed: this.petInfoStepData.breed?.trim(),
+            plushieDescription: this.customizeStepData.description?.trim(),
             bodyparts: this.getBodypartsData(),
             customerImagesIds: storageItemsIds,
             uploadMethod: this.imageUploadStepData.uploadMethod
