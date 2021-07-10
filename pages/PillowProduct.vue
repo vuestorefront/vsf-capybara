@@ -3,11 +3,9 @@
     <o-pillow-product-order-form
       :artwork-upload-url="artworkUploadUrl"
       :product="getCurrentProduct"
-      :backend-product-id="backendProductId"
       :plushie-id="plushieId"
-      :sizes="sizes"
-      :bodyparts="bodyparts"
       @make-another="onMakeAnother"
+      v-if="getCurrentProduct"
     />
   </div>
 </template>
@@ -40,52 +38,6 @@ export default {
     }),
     artworkUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
-    },
-    sizes (): SizeOption[] {
-      if (!this.getCurrentProduct?.bundle_options) {
-        throw new Error('The pillow product has no bundle options');
-      }
-
-      let availableSizes: SizeOption[] = [];
-      for (const option of this.getCurrentProduct.bundle_options) {
-        for (const productLink of option.product_links) {
-          if (!['bundlePrimaryProduct'].includes(productLink.product.type_id)) {
-            continue;
-          }
-
-          availableSizes.push({
-            id: productLink.product.id,
-            label: productLink.product.name + ' - $' + productLink.product.price,
-            value: productLink.product.sku,
-            isSelected: false,
-            contentTypeId: BodyPartValueContentType.IMAGE,
-            image: productLink.product.image,
-            optionId: option.option_id,
-            optionValueId: productLink.id
-          });
-        }
-      }
-
-      return availableSizes;
-    },
-    bodyparts (): Bodypart[] {
-      const bodyparts = this.$store.getters['budsies/getProductBodyparts'](this.getCurrentProduct.id);
-
-      if (!bodyparts.length) {
-        return [];
-      }
-
-      return bodyparts;
-    },
-    backendProductId (): ProductValue {
-      switch (this.getCurrentProduct.id) {
-        case 253:
-          return ProductValue.PILLOW;
-        default:
-          throw new Error(
-            `Can't resolve Backend product ID for Magento '${this.getCurrentProduct.id}' product ID`
-          );
-      }
     }
   },
   async mounted (): Promise<void> {

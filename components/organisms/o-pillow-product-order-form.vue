@@ -59,6 +59,7 @@
               :upload-url="artworkUploadUrl"
               @file-added="onArtworkAdd"
               @file-removed="onArtworkRemove"
+              v-if="backendProductId"
             />
 
             <p>
@@ -166,7 +167,7 @@
               :name="bodypart.code"
               v-model="bodypartsValues[bodypart.id]"
               :max-values="bodypart.maxValues"
-              :options="getBodypartValues(bodypart)"
+              :options="getBodypartValuesOptions(bodypart)"
               type="bodypart"
               :disabled="isSubmitting"
             />
@@ -366,10 +367,11 @@ import i18n from '@vue-storefront/i18n';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui/vue';
+import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 
 import { Item } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
-import { vuexTypes as budsiesTypes, Bodypart, BodypartValue, ImageUploadMethod } from 'src/modules/budsies';
+import { vuexTypes as budsiesTypes, Bodypart, BodypartValue, ImageUploadMethod, BodyPartValueContentType, ProductValue } from 'src/modules/budsies';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -417,21 +419,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       type: Object,
       required: true
     },
-    backendProductId: {
-      type: String,
-      required: true
-    },
     plushieId: {
       type: Number as PropType<number | undefined>,
       default: undefined
-    },
-    sizes: {
-      type: Array as PropType<SizeOption[]>,
-      default: () => []
-    },
-    bodyparts: {
-      type: Array as PropType<Bodypart[]>,
-      default: () => []
     },
     uploadedArtworkId: {
       type: String,
@@ -460,6 +450,60 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     isUploadNow (): boolean {
       return this.uploadMethod === ImageUploadMethod.NOW;
     },
+    backendProductId (): ProductValue | undefined {
+      switch (this.product.id) {
+        case 253:
+          return ProductValue.PILLOW;
+        default:
+          throw new Error(
+            `Can't resolve Backend product ID for Magento '${this.product.id}' product ID`
+          );
+      }
+    },
+    bodyparts (): Bodypart[] {
+      return this.$store.getters['budsies/getProductBodyparts'](this.product.id);
+    },
+    sizeBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      let result;
+
+      for (const option of this.product.bundle_options) {
+        if (option.title === 'Product') {
+          result = option;
+          break;
+        }
+      }
+
+      return result;
+    },
+    sizes (): SizeOption[] {
+      if (!this.sizeBundleOption) {
+        return [];
+      }
+
+      let availableSizes: SizeOption[] = [];
+      for (const productLink of this.sizeBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        availableSizes.push({
+          id: String(productLink.product.id),
+          label: productLink.product.name + ' - $' + productLink.product.price,
+          value: productLink.product.sku,
+          isSelected: false,
+          contentTypeId: BodyPartValueContentType.IMAGE,
+          image: productLink.product.image,
+          optionId: this.sizeBundleOption.option_id,
+          optionValueId: productLink.id.toString()
+        });
+      }
+
+      return availableSizes;
+    },
     shortcode (): string | undefined {
       return this.$store.getters['budsies/getPlushieShortcode'](this.plushieId);
     }
@@ -468,7 +512,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
-    getBodypartValues (bodypart: Bodypart): BodypartOption[] {
+    getBodypartValuesOptions (bodypart: Bodypart): BodypartOption[] {
       const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
       if (!bodypartsValues.length) {
@@ -549,7 +593,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.name = undefined;
 
       for (const bodypart of this.bodyparts) {
-        this.bodypartsValues[bodypart.code] = undefined;
+        this.bodypartsValues[bodypart.id] = undefined;
       }
 
       const uploader = this.getUploader();
@@ -673,15 +717,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   watch: {
     size: {
-      handler () {
-        if (!this.size) {
+      handler (newValue: SizeOption | undefined) {
+        if (!this.sizeBundleOption) {
+          Logger.error('sizeBundleOption is not defined while attempt to set size was performed', 'budsies')();
           return
         }
 
         this.setBundleOptionValue({
-          optionId: this.size.optionId,
+          optionId: this.sizeBundleOption.option_id,
           optionQty: 1,
-          optionSelections: [this.size.optionValueId]
+          optionSelections: newValue ? [newValue.optionValueId] : []
         });
       },
       immediate: false
