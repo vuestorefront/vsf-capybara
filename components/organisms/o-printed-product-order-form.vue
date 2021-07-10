@@ -4,7 +4,7 @@
       <div>
         <header class="sf-heading sf-heading--no-underline sf-heading--left">
           <h1 class="_product-name-mobile sf-heading__title">
-            {{ productName }}
+            {{ product.name }}
           </h1>
         </header>
 
@@ -14,7 +14,7 @@
       <div>
         <header class="sf-heading sf-heading--no-underline sf-heading--left">
           <h1 class="_product-name-desktop sf-heading__title">
-            {{ productName }}
+            {{ product.name }}
           </h1>
         </header>
 
@@ -26,7 +26,7 @@
           :special-price="specialPrice"
         />
 
-        <validation-observer v-slot="{ passes }" slim>
+        <validation-observer v-slot="{ passes }" slim ref="validation-observer">
           <form
             @submit.prevent="(event) => passes(() => onSubmit(event))"
           >
@@ -44,7 +44,7 @@
                 >
                   <SfSelect
                     v-model="selectedStyle"
-                    v-if="showDesignSelector"
+                    v-if="shouldShowDesignSelector"
                     name="design_option"
                     required
                     class="sf-select--underlined"
@@ -92,7 +92,7 @@
                 <MArtworkUpload
                   ref="artwork-upload"
                   class="_file-uploader"
-                  :product-id="productType"
+                  :product-id="backendProductId"
                   :disabled="isSubmitting"
                   :upload-url="artworkUploadUrl"
                   @file-added="onArtworkAdd"
@@ -108,7 +108,7 @@
             <MExtraFaces
               ref="extra-faces"
               :available-options="addons"
-              :product-id="productType"
+              :product-id="backendProductId"
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
               v-show="hasExtraFaceAddons"
@@ -161,7 +161,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -171,15 +171,20 @@ import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
+import Product from 'core/modules/catalog/types/Product';
+import { getProductPrice } from 'theme/helpers';
+import { BundleOption } from 'core/modules/catalog/types/BundleOption';
+import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 
 import { Item } from 'src/modules/file-storage';
+import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MExtraFaces from '../molecules/m-extra-faces.vue';
-import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
+import ZoomGalleryImage from '../../interfaces/zoom-gallery-image.interface';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 
 extend('required', {
@@ -222,60 +227,8 @@ export default Vue.extend({
       required: true
     },
     product: {
-      type: Object,
+      type: Object as PropType<Product>,
       required: true
-    },
-    productId: {
-      type: String,
-      required: true
-    },
-    productSku: {
-      type: String,
-      required: true
-    },
-    productType: {
-      type: String,
-      required: true
-    },
-    productPrice: {
-      type: Number,
-      default: 0
-    },
-    productSpecialPrice: {
-      type: Number,
-      default: 0
-    },
-    productQuantity: {
-      type: Number,
-      default: 1
-    },
-    productDescription: {
-      type: String,
-      default: ''
-    },
-    productShortDescription: {
-      type: String,
-      default: ''
-    },
-    productName: {
-      type: String,
-      default: ''
-    },
-    productImages: {
-      type: Array as PropType<GalleryProductImages[]>,
-      default: []
-    },
-    availableStyles: {
-      type: Array as PropType<SelectOption[]>,
-      default: () => []
-    },
-    addons: {
-      type: Array as PropType<ExtraPhotoAddonOption[]>,
-      default: () => []
-    },
-    defaultStyle: {
-      type: String,
-      default: ''
     },
     uploadedArtworkId: {
       type: String,
@@ -285,15 +238,131 @@ export default Vue.extend({
   data () {
     return {
       quantity: 1,
-      fStorageItemId: undefined as string | undefined,
-      fSelectedStyle: undefined as string | undefined,
+      storageItemId: undefined as string | undefined,
+      selectedStyle: undefined as string | undefined,
       isSubmitting: false,
-      fShouldShowDesignSelector: true
+      shouldShowDesignSelector: true
     }
   },
   computed: {
+    ...mapGetters({
+      getCurrentCustomOptions: 'product/getCurrentCustomOptions',
+      getProductGallery: 'product/getProductGallery'
+    }),
     skinClass (): string {
       return '-skin-petsies';
+    },
+    addonsBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      let result;
+
+      for (const option of this.product.bundle_options) {
+        if (option.title === 'Extra Faces') {
+          result = option;
+          break;
+        }
+      }
+
+      return result;
+    },
+    addons (): ExtraPhotoAddonOption[] {
+      if (!this.addonsBundleOption) {
+        return []
+      }
+
+      const addons: ExtraPhotoAddon[] = this.$store.getters['budsies/getPrintedProductAddons'](this.product.id);
+
+      if (!addons.length) {
+        return [];
+      }
+
+      let addonOptions: Record<string, number> = {};
+
+      for (const productLink of this.addonsBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        addonOptions[productLink.product.sku] = +productLink.id;
+      }
+
+      const result: ExtraPhotoAddonOption[] = [];
+
+      for (const addon of addons) {
+        const addonOption = addonOptions[addon.id];
+
+        if (!addonOption && addon.id) {
+          throw new Error('The option product of extra photo addon is not found: ' + addon.id);
+        }
+
+        result.push({
+          id: addon.id,
+          label: addon.label,
+          value: addon.value,
+          optionId: this.addonsBundleOption.option_id,
+          optionValueId: addonOption
+        })
+      }
+
+      return result;
+    },
+    styleBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      let result;
+
+      for (const option of this.product.bundle_options) {
+        if (option.title === 'Product') {
+          result = option;
+          break;
+        }
+      }
+
+      return result;
+    },
+    availableStyles () {
+      if (!this.styleBundleOption) {
+        return []
+      }
+
+      let availableStyles: SelectOption[] = [];
+      for (const productLink of this.styleBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        availableStyles.push({
+          optionId: this.styleBundleOption.option_id,
+          optionValueId: +productLink.id,
+          value: productLink.product.sku,
+          label: productLink.product.name,
+          description: productLink.product.description,
+          shortDescription: productLink.product.short_description ? productLink.product.short_description : '',
+          price: productLink.product.regular_price,
+          specialPrice: productLink.product.final_price ? productLink.product.final_price : 0
+        });
+      }
+
+      return availableStyles;
+    },
+    backendProductId (): ProductValue {
+      switch (this.product.id) {
+        case 277:
+          return ProductValue.PRINTED_SOCKS;
+        case 340:
+          return ProductValue.PRINTED_MASKS;
+        case 353:
+          return ProductValue.PRINTED_KEYCHAINS;
+        default:
+          throw new Error(
+            `Can't resolve Backend product ID for Magento '${this.product.id}' product ID`
+          );
+      }
     },
     galleryImages (): ZoomGalleryImage[] {
       const productImages = this.productImages.find(
@@ -306,13 +375,55 @@ export default Vue.extend({
 
       return productImages['images'];
     },
+    bundleProductPrice (): {regular: any, special: any} {
+      return getProductPrice(this.product, this.getCurrentCustomOptions, false);
+    },
+    productImages (): GalleryProductImages[] {
+      const images = this.getProductGallery.map((imageObject: any) => ({
+        stage: imageObject.src,
+        thumb: imageObject.src,
+        big: imageObject.src
+      }));
+
+      let result: GalleryProductImages[] = [
+        {
+          sku: this.product.sku,
+          images: images
+        }
+      ]
+
+      if (!this.styleBundleOption) {
+        return result;
+      }
+
+      for (const productLink of this.styleBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        const gallery = getGalleryByProduct(productLink.product);
+
+        const images = gallery.map((imageObject: any) => ({
+          stage: imageObject.src,
+          thumb: imageObject.src,
+          big: imageObject.src
+        }));
+
+        result.push({
+          sku: productLink.product.sku,
+          images: images
+        });
+      }
+
+      return result;
+    },
     price (): number {
       const style = this.availableStyles.find(
         (item) => item.value === this.selectedStyle
       );
 
       if (!style || !style.price) {
-        return this.productPrice;
+        return this.bundleProductPrice.regular;
       }
 
       return style.price;
@@ -323,18 +434,10 @@ export default Vue.extend({
       );
 
       if (!style || !style.specialPrice) {
-        return this.productSpecialPrice;
+        return this.bundleProductPrice.special;
       }
 
       return style.specialPrice;
-    },
-    selectedStyle: {
-      get: function (): string | undefined {
-        return this.fSelectedStyle;
-      },
-      set: function (value: string | undefined) {
-        this.fSelectedStyle = value;
-      }
     },
     hasStyleSelections (): boolean {
       return !(
@@ -347,16 +450,13 @@ export default Vue.extend({
         this.addons.length > 0
       );
     },
-    storageItemId (): string | undefined {
-      return this.fStorageItemId;
-    },
     description (): string | undefined {
       const style = this.availableStyles.find(
         (item) => item.value === this.selectedStyle
       );
 
       if (!style || !style.description) {
-        return this.productDescription;
+        return this.product.description;
       }
 
       return style.description;
@@ -367,13 +467,10 @@ export default Vue.extend({
       );
 
       if (!style || !style.shortDescription) {
-        return this.productShortDescription;
+        return this.product.short_description;
       }
 
       return style.shortDescription;
-    },
-    showDesignSelector: function (): boolean {
-      return this.fShouldShowDesignSelector
     }
   },
   methods: {
@@ -381,10 +478,10 @@ export default Vue.extend({
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
     onArtworkAdd (value: Item): void {
-      this.fStorageItemId = value.id;
+      this.storageItemId = value.id;
     },
     onArtworkRemove (storageItemId: string): void {
-      this.fStorageItemId = undefined;
+      this.storageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       this.isSubmitting = true;
@@ -448,6 +545,9 @@ export default Vue.extend({
     getGallery (): HTMLElement | undefined {
       return this.$refs['gallery'] as HTMLElement | undefined;
     },
+    getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
+      return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
+    },
     getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
       return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
     },
@@ -458,48 +558,51 @@ export default Vue.extend({
       this.$router.push(localizedRoute('/cart'));
     }
   },
-  async mounted (): Promise<void> {
-    if (
-      this.defaultStyle &&
-          this.availableStyles.find(
-            (item) => item.value === this.defaultStyle
-          )
-    ) {
-      this.selectedStyle = this.defaultStyle;
-    }
-  },
   created (): void {
-    this.quantity = this.productQuantity;
+    if (this.product.qty) {
+      this.quantity = this.product.qty;
+    }
 
     if (this.uploadedArtworkId) {
-      this.fStorageItemId = this.uploadedArtworkId;
+      this.storageItemId = this.uploadedArtworkId;
     }
   },
   watch: {
     product: {
-      handler () {
-        this.fShouldShowDesignSelector = false;
+      handler (newValue: Product, oldValue: Product | undefined) {
+        if (newValue.id === oldValue?.id) {
+          return;
+        }
+        // SfSelect doesn't support options updating in the current package version
+        this.shouldShowDesignSelector = false;
 
-        this.fSelectedStyle = this.defaultStyle ? this.defaultStyle : undefined;
+        this.selectedStyle = undefined;
+        if (this.availableStyles.length === 1) {
+          this.selectedStyle = this.availableStyles[0].value;
+        }
+
+        const validator = this.getValidationObserver();
+        validator?.reset();
 
         this.$nextTick(() => {
-          this.fShouldShowDesignSelector = true;
+          this.shouldShowDesignSelector = true;
         })
       },
       immediate: true
     },
     selectedStyle: {
       handler () {
-        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
-
-        if (!selectedDesign) {
-          return;
+        if (!this.styleBundleOption) {
+          Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
+          return
         }
 
+        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
+
         this.setBundleOptionValue({
-          optionId: selectedDesign.optionId,
+          optionId: this.styleBundleOption.option_id,
           optionQty: 1,
-          optionSelections: [selectedDesign.optionValueId]
+          optionSelections: selectedDesign ? [selectedDesign.optionValueId] : []
         });
       },
       immediate: false
