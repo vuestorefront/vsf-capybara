@@ -18,13 +18,11 @@ import { mapGetters } from 'vuex';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { ProductValue } from 'src/modules/budsies';
+import { Bodypart, BodyPartValueContentType, ProductValue } from 'src/modules/budsies';
 
-import OPillowProductOrderForm from 'theme/components/organisms/o-pillow-product-order-form.vue';
-import BodypartOption from '../components/interfaces/bodypart-option';
-import Bodypart from 'src/modules/budsies/models/bodypart.model';
-import Task from 'core/lib/sync/types/Task';
+import OPillowProductOrderForm from '../components/organisms/o-pillow-product-order-form.vue';
 
+import SizeOption from '../components/interfaces/size-option';
 export default {
   name: 'PillowProduct',
   components: {
@@ -43,12 +41,12 @@ export default {
     artworkUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
     },
-    sizes (): BodypartOption[] {
-      if (!this.getCurrentProduct.bundle_options) {
+    sizes (): SizeOption[] {
+      if (!this.getCurrentProduct?.bundle_options) {
         throw new Error('The pillow product has no bundle options');
       }
 
-      let availableSizes: BodypartOption[] = [];
+      let availableSizes: SizeOption[] = [];
       for (const option of this.getCurrentProduct.bundle_options) {
         for (const productLink of option.product_links) {
           if (!['bundlePrimaryProduct'].includes(productLink.product.type_id)) {
@@ -60,6 +58,7 @@ export default {
             label: productLink.product.name + ' - $' + productLink.product.price,
             value: productLink.product.sku,
             isSelected: false,
+            contentTypeId: BodyPartValueContentType.IMAGE,
             image: productLink.product.image,
             optionId: option.option_id,
             optionValueId: productLink.id

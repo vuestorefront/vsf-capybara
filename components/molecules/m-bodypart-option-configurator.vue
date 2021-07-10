@@ -1,22 +1,27 @@
 <template>
-  <div class="m-bodypart-option-configurator">
+  <div
+    class="m-bodypart-option-configurator"
+    :class="{ '-disabled': disabled }"
+  >
     <ul class="_visual-selector">
       <li
         class="_visual-selector-value"
+        :class="{'-color-value': isColorValue(option)}"
         v-for="option in options"
         :key="option.value"
       >
         <input
           :id="getInputId(option)"
           :name="name"
-          type="radio"
+          :type="inputType"
           :value="option"
           v-model="selectedOption"
+          :disabled="disabled"
+          @click="(event) => onChange(event, option)"
         >
         <label
           :for="getInputId(option)"
         >
-
           <div
             class="_icon"
             :style="getIconStyle(option)"
@@ -35,6 +40,8 @@
 import Vue, { PropType } from 'vue';
 import { getThumbnailPath } from '@vue-storefront/core/helpers/index';
 
+import { BodyPartValueContentType } from 'src/modules/budsies';
+
 import BodypartOption from '../interfaces/bodypart-option';
 
 let instanceId = 0;
@@ -47,8 +54,12 @@ export default Vue.extend({
       required: true
     },
     value: {
-      type: Object as PropType<BodypartOption>,
+      type: [Array, Object] as PropType<BodypartOption | BodypartOption[]>,
       default: undefined
+    },
+    maxValues: {
+      type: Number,
+      default: 1
     },
     type: {
       type: String,
@@ -57,6 +68,10 @@ export default Vue.extend({
     options: {
       type: Array as PropType<BodypartOption[]>,
       default: () => []
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data (): Record<string, any> {
@@ -66,12 +81,19 @@ export default Vue.extend({
   },
   computed: {
     selectedOption: {
-      get (): BodypartOption {
+      get (): BodypartOption | BodypartOption[] {
+        if (this.inputType === 'checkbox' && this.value === undefined) {
+          return [];
+        }
+
         return this.value;
       },
-      set (value: BodypartOption): void {
+      set (value: BodypartOption | BodypartOption[]): void {
         this.$emit('input', value);
       }
+    },
+    inputType (): string {
+      return this.maxValues > 1 ? 'checkbox' : 'radio';
     }
   },
   created: function (): void {
@@ -79,18 +101,43 @@ export default Vue.extend({
     instanceId += 1;
   },
   methods: {
+    isColorValue (option: BodypartOption): boolean {
+      return option.contentTypeId === BodyPartValueContentType.COLOR;
+    },
     getInputId (option: BodypartOption): string {
       return `body_part_value_${this.instanceId}_${option.id}`;
     },
-    getIconStyle (option: BodypartOption): string {
-      const thumb = getThumbnailPath(option.image, 150, 150, this.type);
+    getIconStyle (option: BodypartOption): string | Record<string, string | number> {
+      if (option.contentTypeId === BodyPartValueContentType.IMAGE && option.image) {
+        const thumb = getThumbnailPath(option.image, 150, 150, this.type);
+        return {
+          'background-image': `url(${thumb})`
+        }
+      }
 
-      return 'background-image: url(' + thumb + ');';
+      if (option.contentTypeId === BodyPartValueContentType.COLOR && option.color) {
+        return {
+          'background-color': option.color
+        }
+      }
+
+      return '';
     },
-    onChange ($event: any): void {
-      const option = this.options.find(option => option.value === $event.target.value);
+    onChange (event: Event, option: BodypartOption): void {
+      if (!Array.isArray(this.selectedOption)) {
+        return;
+      }
 
-      this.$emit('input', option);
+      const existingItem = this.selectedOption.find(item => item.value === option.value);
+      if (existingItem) {
+        return;
+      }
+
+      if (this.selectedOption.length < this.maxValues) {
+        return;
+      }
+
+      event.preventDefault();
     }
   }
 })
@@ -103,13 +150,15 @@ export default Vue.extend({
   ._visual-selector {
     list-style: none;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     padding: 0;
+    row-gap: 2vw;
+    column-gap: 4%;
   }
 
   ._visual-selector-value {
     width: 114px;
-    padding: 0 2%;
 
     ._icon {
       background-position: center center;
@@ -127,6 +176,14 @@ export default Vue.extend({
       font-weight: var(--font-medium);
       margin-top: var(--spacer-sm);
     }
+
+    &.-color-value {
+      width: 60px;
+
+      ._icon {
+        border: 1px solid #ccc;
+      }
+    }
   }
 
   ._visual-selector-value > input {
@@ -134,6 +191,9 @@ export default Vue.extend({
       height: 0;
       opacity: 0;
       width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
   }
 
   ._visual-selector-value > label {
@@ -157,7 +217,7 @@ export default Vue.extend({
     z-index: 1;
   }
   ._visual-selector-value > input:checked + label ._icon::after {
-    background: url(/assets/images/sprite/ico-tick-green.png) no-repeat center #fff;
+    background: url('/assets/images/sprite/ico-tick-green.png') no-repeat center #fff;
     border: 2px solid #38b677;
     border-radius: 100%;
     content: "";
@@ -167,6 +227,12 @@ export default Vue.extend({
     top: 0;
     width: 24px;
     z-index: 2;
+  }
+
+  &.-disabled {
+    ._visual-selector-value {
+      opacity: 0.7;
+    }
   }
 }
 </style>

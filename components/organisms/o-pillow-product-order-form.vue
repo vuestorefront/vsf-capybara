@@ -57,7 +57,8 @@
               :product-id="backendProductId"
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
-              @input="onArtworkChange"
+              @file-added="onArtworkAdd"
+              @file-removed="onArtworkRemove"
             />
 
             <p>
@@ -162,7 +163,8 @@
           >
             <m-bodypart-option-configurator
               :name="bodypart.code"
-              v-model="bodypartsValues[bodypart.code]"
+              v-model="bodypartsValues[bodypart.id]"
+              :max-values="bodypart.maxValues"
               :options="getBodypartValues(bodypart)"
               type="bodypart"
             />
@@ -362,14 +364,13 @@ import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui
 
 import { Item } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
+import { vuexTypes as budsiesTypes, Bodypart, BodypartValue } from 'src/modules/budsies';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
 import BodypartOption from '../interfaces/bodypart-option';
-import Bodypart from 'src/modules/budsies/models/bodypart.model';
-import BodypartValue from 'src/modules/budsies/models/bodypart-value.model';
-import * as budsiesTypes from 'src/modules/budsies/store/mutation-types';
+import SizeOption from '../interfaces/size-option';
 
 extend('required', {
   ...required,
@@ -420,7 +421,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       default: undefined
     },
     sizes: {
-      type: Array as PropType<BodypartOption[]>,
+      type: Array as PropType<SizeOption[]>,
       default: () => []
     },
     bodyparts: {
@@ -436,8 +437,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     return {
       quantity: 1,
       storageItemId: undefined as string | undefined,
-      size: undefined as BodypartOption | undefined,
-      bodypartsValues: {} as unknown as Record<string, BodypartOption | undefined>,
+      size: undefined as SizeOption | undefined,
+      bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
       name: undefined as string | undefined,
       email: undefined as string | undefined,
       isSubmitting: false,
@@ -474,25 +475,29 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           label: bodypartValue.name,
           value: bodypartValue.code,
           isSelected: false,
-          image: bodypartValue.image ? bodypartValue.image : '',
-          optionId: bodypart.id,
-          optionValueId: bodypartValue.id
+          contentTypeId: bodypartValue.contentTypeId,
+          color: bodypartValue.color,
+          image: bodypartValue.image
         });
       }
 
       return result;
     },
-    getBodypartsData (): Record<string, string> {
-      let data: Record<string, string> = {};
+    getBodypartsData (): Record<string, string[]> {
+      let data: Record<string, string[]> = {};
 
-      for (let key in this.bodypartsValues) {
-        const value = this.bodypartsValues[key];
+      for (const bodyPartId in this.bodypartsValues) {
+        let value = this.bodypartsValues[bodyPartId];
 
         if (value === undefined) {
           continue;
         }
 
-        data[value.optionId] = value.optionValueId;
+        if (!Array.isArray(value)) {
+          value = [value]
+        }
+
+        data[bodyPartId] = value.map(item => item.id);
       }
 
       return data;
@@ -547,13 +552,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       const validator = this.getValidationObserver();
       validator?.reset();
     },
-    onArtworkChange (value?: Item): void {
-      if (!value) {
-        this.storageItemId = undefined;
-        return;
-      }
-
+    onArtworkAdd (value: Item): void {
       this.storageItemId = value.id;
+    },
+    onArtworkRemove (storageItemId: string): void {
+        this.storageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       if (this.isSubmitting) {

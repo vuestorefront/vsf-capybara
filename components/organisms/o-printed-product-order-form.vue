@@ -93,7 +93,8 @@
                   :product-id="productType"
                   :disabled="isUploadDisabled"
                   :upload-url="artworkUploadUrl"
-                  @input="onArtworkChange"
+                  @file-added="onArtworkAdd"
+                  @file-removed="onArtworkRemove"
                 />
 
                 <div class="_error-text">
@@ -174,8 +175,9 @@ import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MZoomGallery from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
-import MExtraFaces, { AddonOption } from '../molecules/m-extra-faces.vue';
+import MExtraFaces from '../molecules/m-extra-faces.vue';
 import ZoomGalleryImage from 'theme/interfaces/zoom-gallery-image.interface';
+import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 
 extend('required', {
   ...required,
@@ -265,7 +267,7 @@ export default Vue.extend({
       default: () => []
     },
     addons: {
-      type: Array as PropType<AddonOption[]>,
+      type: Array as PropType<ExtraPhotoAddonOption[]>,
       default: () => []
     },
     defaultStyle: {
@@ -381,13 +383,11 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    onArtworkChange (value?: Item): void {
-      if (!value) {
-        this.fStorageItemId = undefined;
-        return;
-      }
-
+    onArtworkAdd (value: Item): void {
       this.fStorageItemId = value.id;
+    },
+    onArtworkRemove (storageItemId: string): void {
+        this.fStorageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       this.fIsLoading = true;

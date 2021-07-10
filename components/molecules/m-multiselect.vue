@@ -5,23 +5,26 @@
       '--invalid': !valid,
       '--focused': isOpen
     }"
+    @keydown.enter.capture="onEnterPressed"
   >
     <multiselect
       class="_input"
       :id="inputId"
-      :value="selectedOption"
-      :options="options"
+      v-model="selectedOption"
+      :options="allOptions"
       :placeholder="placeholder"
       :label="labelField"
       :track-by="idField"
       :allow-empty="!required"
       :show-labels="false"
-      :show-pointer="false"
+      :show-pointer="true"
+      :preserve-search="shouldPreserveSearch"
       :max-height="190"
       open-direction="below"
-      @input="onInput"
+      :disabled="disabled"
+      ref="multiselect"
       @open="isOpen = !isOpen"
-      @close="isOpen = !isOpen"
+      @close="onClose"
     >
       <template #caret>
         <SfChevron class="sf-select__chevron" />
@@ -55,19 +58,16 @@ import Vue, { PropType } from 'vue';
 import Multiselect from 'vue-multiselect';
 import { SfChevron } from '@storefront-ui/vue';
 
+type Option = Record<string, any> | string;
+
 let instanceId = 0;
 
 export default Vue.extend({
   name: 'MMultiselect',
+  inheritAttrs: false,
   components: {
     Multiselect,
     SfChevron
-  },
-  data (): Record<string, any> {
-    return {
-      isOpen: false,
-      instanceId: ''
-    };
   },
   created: function (): void {
     this.instanceId = instanceId.toString();
@@ -84,23 +84,31 @@ export default Vue.extend({
     },
     idField: {
       type: String,
-      default: 'id'
+      default: undefined
     },
     labelField: {
       type: String,
-      default: 'name'
+      default: undefined
     },
     value: {
       type: String as PropType<string | undefined>,
       default: undefined
     },
     options: {
-      type: Array as PropType<Record<string, any>[]>,
+      type: Array as PropType<Option[]>,
       default: () => []
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     valid: {
       type: Boolean,
       default: true
+    },
+    allowFreeText: {
+      type: Boolean,
+      default: false
     },
     required: {
       type: Boolean,
@@ -111,31 +119,116 @@ export default Vue.extend({
       default: 'This field value is not correct.'
     }
   },
+  data () {
+    return {
+      isOpen: false,
+      instanceId: '',
+      customOptions: [] as Option[]
+    }
+  },
   computed: {
+    selectedOption: {
+      get (): Option | undefined {
+        if (!this.value) {
+          return undefined;
+        }
+
+        const option = this.allOptions.find(option => {
+          if (this.idField && typeof option === 'object') {
+            return option[this.idField] === this.value
+          } else {
+            return option === this.value
+          }
+        });
+
+        return option;
+      },
+      set (value: Option | undefined): void {
+        if (!value) {
+          this.$emit('input', undefined)
+          this.$emit('change', undefined)
+        }
+
+        let valueId;
+        if (!this.idField || typeof value !== 'object') {
+          valueId = value;
+        } else {
+          valueId = value[this.idField];
+        }
+
+        this.$emit('input', valueId);
+        this.$emit('change', valueId);
+      }
+    },
     inputId (): string {
       return 'm-multiselect-' + this.instanceId;
     },
-    selectedOption (): Record<string, any> | undefined {
-      if (!this.value) {
-        return undefined;
-      }
+    allOptions (): any[] {
+      const result = [...this.customOptions, ...this.options];
 
-      const option = this.options.find(option => option.code === this.value);
+      result.sort((a, b) => {
+        if (typeof a === 'string' && b === 'string') {
+          return a.localeCompare(b);
+        } else if (typeof a !== 'string' && typeof b !== 'string') {
+          return a[this.labelField].localeCompare(b[this.labelField])
+        }
+      });
 
-      return option;
+      return result;
+    },
+    shouldPreserveSearch (): boolean {
+      return this.allowFreeText;
     }
   },
   methods: {
-    onInput ($event: any): void {
-      if (!$event) {
-        this.$emit('input', undefined)
-        this.$emit('change', undefined)
+    getMultiselect (): Multiselect | undefined {
+      return this.$refs['multiselect'] as Multiselect | undefined;
+    },
+    processFreeText (): Option | undefined {
+      const multiselect = this.getMultiselect();
+      if (!multiselect) {
+        return;
       }
 
-      const valueId = $event[this.idField];
+      const searchValue: string = (multiselect as any).search;
 
-      this.$emit('input', valueId);
-      this.$emit('change', valueId);
+      if (!searchValue ||
+        (multiselect as any).filteredOptions.length
+      ) {
+        return;
+      }
+
+      let option: Option = searchValue;
+      if (this.idField && this.labelField) {
+        option = {
+          [this.idField]: searchValue,
+          [this.labelField]: searchValue
+        };
+      }
+
+      this.customOptions.push(option);
+      return option;
+    },
+    onClose (): void {
+      this.isOpen = !this.isOpen;
+
+      if (!this.allowFreeText) {
+        return;
+      }
+
+      const newOption = this.processFreeText();
+      if (!newOption) {
+        return;
+      }
+
+      this.selectedOption = newOption;
+    },
+    async onEnterPressed (): Promise<void> {
+      if (!this.allowFreeText) {
+        return;
+      }
+
+      this.processFreeText();
     }
   }
 });
@@ -199,8 +292,9 @@ export default Vue.extend({
         font-weight: var(--font-normal);
       }
 
-      &:hover {
+      &--highlight {
         background-color: rgba(var(--c-gray-base), 0.1);
+        color: inherit;
       }
     }
 

@@ -25,7 +25,8 @@
             :upload-url="uploadUrl"
             :disabled="disabled"
             :file="getInitialArtworkUrl(index - 1)"
-            @input="(value) => onArtworkChange(index - 1, value)"
+            @file-added="(value) => onArtworkAdd(index - 1, value)"
+            @file-removed="(storageItemId) => onArtworkRemove(index - 1, storageItemId)"
           />
 
           <div class="_error-text">
@@ -75,25 +76,14 @@ import * as types from '@vue-storefront/core/modules/catalog/store/product/mutat
 
 import { Item } from 'src/modules/file-storage';
 
+import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
+import UploadedArtwork from '../interfaces/uploaded-artwork.interface';
 import MArtworkUpload from './m-artwork-upload.vue';
 
 extend('required', {
   ...required,
   message: 'The {_field_} field is required'
 });
-
-export interface AddonOption {
-  id: string,
-  label: string,
-  value: number,
-  optionId: number,
-  optionValueId: number
-}
-
-export interface UploadedAddonArtwork {
-  id: string,
-  url: string
-}
 
 export default Vue.extend({
   name: 'MExtraFaces',
@@ -104,7 +94,7 @@ export default Vue.extend({
   },
   props: {
     availableOptions: {
-      type: Array as PropType<AddonOption[]>,
+      type: Array as PropType<ExtraPhotoAddonOption[]>,
       default: []
     },
     productId: {
@@ -124,14 +114,14 @@ export default Vue.extend({
       default: ''
     },
     initialArtworks: {
-      type: Array as PropType<UploadedAddonArtwork[]>,
+      type: Array as PropType<UploadedArtwork[]>,
       default: () => []
     }
   },
   data () {
     return {
       fSelectedVariant: undefined as undefined | string,
-      fUploaderValues: [] as UploadedAddonArtwork[],
+      fUploaderValues: [] as UploadedArtwork[],
       fShouldShowAddonSelector: true
     }
   },
@@ -221,16 +211,14 @@ export default Vue.extend({
     getFilesIds (): string[] {
       return this.fUploaderValues.map(item => item.id);
     },
-    onArtworkChange (index: number, value?: Item): void {
-      if (!value) {
-        this.fUploaderValues.splice(index, 1);
-        return;
-      }
-
+    onArtworkAdd (index: number, value: Item): void {
       Vue.set(this.fUploaderValues, index, {
         id: value.id,
         url: value.url
       });
+    },
+    onArtworkRemove (index: number, storageItemId: string): void {
+      this.fUploaderValues.splice(index, 1);
     }
   },
   watch: {
