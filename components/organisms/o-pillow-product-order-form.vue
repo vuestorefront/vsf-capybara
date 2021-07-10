@@ -469,16 +469,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return undefined;
       }
 
-      let result;
-
-      for (const option of this.product.bundle_options) {
-        if (option.title === 'Product') {
-          result = option;
-          break;
-        }
-      }
-
-      return result;
+      return this.product.bundle_options.find(item => item.title === 'Product');
     },
     sizes (): SizeOption[] {
       if (!this.sizeBundleOption) {

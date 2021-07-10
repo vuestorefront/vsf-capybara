@@ -156,32 +156,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return undefined;
       }
 
-      let result;
-
-      for (const option of this.product.bundle_options) {
-        if (option.title === 'Addons') {
-          result = option;
-          break;
-        }
-      }
-
-      return result;
+      return this.product.bundle_options.find(item => item.title === 'Addons');
     },
     productionTimeBundleOption (): BundleOption | undefined {
       if (!this.product?.bundle_options) {
         return undefined;
       }
 
-      let result;
-
-      for (const option of this.product.bundle_options) {
-        if (option.title === 'Production time') {
-          result = option;
-          break;
-        }
-      }
-
-      return result;
+      return this.product.bundle_options.find(item => item.title === 'Production time');
     }
   },
   methods: {

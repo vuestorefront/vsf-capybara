@@ -264,16 +264,7 @@ export default Vue.extend({
         return undefined;
       }
 
-      let result;
-
-      for (const option of this.product.bundle_options) {
-        if (option.title === 'Extra Faces') {
-          result = option;
-          break;
-        }
-      }
-
-      return result;
+      return this.product.bundle_options.find(item => item.title === 'Extra Faces');
     },
     addons (): ExtraPhotoAddonOption[] {
       if (!this.addonsBundleOption) {
@@ -322,16 +313,7 @@ export default Vue.extend({
         return undefined;
       }
 
-      let result;
-
-      for (const option of this.product.bundle_options) {
-        if (option.title === 'Product') {
-          result = option;
-          break;
-        }
-      }
-
-      return result;
+      return this.product.bundle_options.find(item => item.title === 'Product');
     },
     availableStyles () {
       if (!this.styleBundleOption) {
