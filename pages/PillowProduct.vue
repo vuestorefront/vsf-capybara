@@ -1,5 +1,5 @@
 <template>
-  <div id="printed-product" itemscope itemtype="http://schema.org/Product">
+  <div id="pillow-product" itemscope itemtype="http://schema.org/Product">
     <o-pillow-product-order-form
       :artwork-upload-url="artworkUploadUrl"
       :product="getCurrentProduct"
@@ -142,23 +142,13 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-#printed-product {
+#pillow-product {
   box-sizing: border-box;
   padding: var(--spacer-lg) 1rem 0;
 
-  ::v-deep {
-    .product__colors button {
-        border: 1px solid var(--c-light);
-    }
-  }
-
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     max-width: 1272px;
     margin: 0 auto;
-
-    .o-printed-product-order-form {
-      margin-top: var(--spacer-lg);
-    }
   }
 }
 

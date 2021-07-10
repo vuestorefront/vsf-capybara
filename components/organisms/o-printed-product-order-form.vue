@@ -387,7 +387,7 @@ export default Vue.extend({
       this.fStorageItemId = value.id;
     },
     onArtworkRemove (storageItemId: string): void {
-        this.fStorageItemId = undefined;
+      this.fStorageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       this.fIsLoading = true;
@@ -636,13 +636,13 @@ export default Vue.extend({
         }
     }
 
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     ._info {
       flex-direction: row;
     }
 
     ._info > div {
-      max-width: 45%;
+      max-width: 48.5%;
     }
 
     ._product-name-desktop {

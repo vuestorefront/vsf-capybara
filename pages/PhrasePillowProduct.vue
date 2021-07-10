@@ -1,5 +1,5 @@
 <template>
-  <div id="printed-product" itemscope itemtype="http://schema.org/Product">
+  <div id="phrase-pillow-product" itemscope itemtype="http://schema.org/Product">
     <o-phrase-pillow-product-order-form
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
@@ -24,7 +24,6 @@ import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
-import Task from 'core/lib/sync/types/Task';
 import Product from 'core/modules/catalog/types/Product';
 
 import { Bodypart, ProductValue, RushAddon } from 'src/modules/budsies';
@@ -221,23 +220,13 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-#printed-product {
+#phrase-pillow-product {
   box-sizing: border-box;
   padding: 0 1rem;
 
-  ::v-deep {
-    .product__colors button {
-        border: 1px solid var(--c-light);
-    }
-  }
-
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     max-width: 1272px;
     margin: 0 auto;
-
-    .o-printed-product-order-form {
-      margin-top: var(--spacer-lg);
-    }
   }
 }
 

@@ -231,7 +231,7 @@ export default {
     }
   }
 
-  @include for-desktop {
+  @media (min-width: $tablet-min) {
     max-width: 1272px;
     margin: 0 auto;
 
