@@ -35,7 +35,7 @@
             Don't have your photos? You can finalize your order and <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click.stop.prevent="isUploadNow = false"
+              @click.stop.prevent="switchToUploadLater"
             >send them to us later.</a>
           </p>
 
@@ -80,7 +80,7 @@
             Want to upload photos now? Please use <a
               class="_popup-link"
               href="javascript:void(0)"
-              @click.stop.prevent="isUploadNow = true"
+              @click.stop.prevent="switchToUploadNow"
             >our uploader.</a>
           </p>
 
@@ -129,6 +129,7 @@
             name="pillow_size"
             v-model="size"
             :options="sizes"
+            :disabled="isSubmitting"
           />
 
           <div class="_error-text">
@@ -167,6 +168,7 @@
               :max-values="bodypart.maxValues"
               :options="getBodypartValues(bodypart)"
               type="bodypart"
+              :disabled="isSubmitting"
             />
 
             <div class="_error-text">
@@ -200,6 +202,7 @@
             name="pet_name"
             v-model="name"
             placeholder="Name"
+            :disabled="isSubmitting"
             :required="false"
             :valid="!errors.length"
             :error-message="errors[0]"
@@ -222,6 +225,7 @@
             <ACustomProductQuantity
               v-model="quantity"
               class="_qty-container"
+              :disabled="isSubmitting"
             />
 
             <div class="_error-text">
@@ -260,6 +264,7 @@
               name="email"
               v-model="email"
               placeholder="sample@email.com"
+              :disabled="isSubmitting"
               :required="false"
               :valid="!errors.length"
               :error-message="errors[0]"
@@ -364,7 +369,7 @@ import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui
 
 import { Item } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
-import { vuexTypes as budsiesTypes, Bodypart, BodypartValue } from 'src/modules/budsies';
+import { vuexTypes as budsiesTypes, Bodypart, BodypartValue, ImageUploadMethod } from 'src/modules/budsies';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -444,13 +449,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       isSubmitting: false,
       shouldMakeAnother: false,
       areQuantityNotesVisible: false,
-      isUploadNow: true,
-      showEmailStep: true
+      showEmailStep: true,
+      uploadMethod: ImageUploadMethod.NOW
     }
   },
   computed: {
     skinClass (): string {
       return '-skin-petsies';
+    },
+    isUploadNow (): boolean {
+      return this.uploadMethod === ImageUploadMethod.NOW;
     },
     shortcode (): string | undefined {
       return this.$store.getters['budsies/getPlushieShortcode'](this.plushieId);
@@ -552,11 +560,32 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       const validator = this.getValidationObserver();
       validator?.reset();
     },
+    switchToUploadNow (): void {
+      if (this.isSubmitting) {
+        return;
+      }
+
+      this.uploadMethod = ImageUploadMethod.NOW;
+    },
+    switchToUploadLater (): void {
+      if (this.isSubmitting) {
+        return;
+      }
+
+      this.uploadMethod = ImageUploadMethod.EMAIL;
+    },
+    toggleUploadMethod (): void {
+      if (this.isSubmitting) {
+        return;
+      }
+
+      this.uploadMethod = this.uploadMethod === ImageUploadMethod.EMAIL ? ImageUploadMethod.NOW : ImageUploadMethod.EMAIL;
+    },
     onArtworkAdd (value: Item): void {
       this.storageItemId = value.id;
     },
     onArtworkRemove (storageItemId: string): void {
-        this.storageItemId = undefined;
+      this.storageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       if (this.isSubmitting) {
@@ -587,7 +616,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieName: this.name,
             bodyparts: this.getBodypartsData(),
             customerImagesIds: this.isUploadNow && this.storageItemId ? [this.storageItemId] : [],
-            uploadMethod: this.isUploadNow ? 'upload-now' : 'upload-email'
+            uploadMethod: this.uploadMethod
           })
         });
 
