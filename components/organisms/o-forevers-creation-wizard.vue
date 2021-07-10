@@ -69,6 +69,7 @@ import Product from 'core/modules/catalog/types/Product';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 
 import {
+  ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
 
@@ -78,8 +79,11 @@ import MPetInfoStep from './OForeversCreationWizard/m-pet-info-step.vue';
 import MCustomizeStep from './OForeversCreationWizard/m-customize-step.vue';
 
 import AddonOption from '../interfaces/addon-option.interface';
-import BodypartOption from '../interfaces/bodypart-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
+import ForeversWizardProductTypeStepData from '../interfaces/forevers-wizard-product-type-step-data.interface';
+import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-image-upload-step-data.interface';
+import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
+import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 
 interface InjectedServices {
   window: Window
@@ -109,26 +113,30 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     return {
       currentStep: 0,
 
+      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       productTypeStepData: {
-        product: undefined as Product | undefined,
-        plushieId: undefined as number | undefined
-      },
+        product: undefined,
+        plushieId: undefined
+      } as ForeversWizardProductTypeStepData,
+      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       imageUploadStepData: {
-        uploadMethod: 'now' as 'now' | 'later',
-        storageItemsIds: [] as string[]
-      },
+        uploadMethod: ImageUploadMethod.NOW,
+        storageItemsIds: []
+      } as ForeversWizardImageUploadStepData,
+      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       petInfoStepData: {
-        name: undefined as string | undefined,
-        breed: undefined as string | undefined,
-        email: undefined as string | undefined
-      },
+        name: undefined,
+        breed: undefined,
+        email: undefined
+      } as ForeversWizardPetInfoStepData,
+      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       customizeStepData: {
-        bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
-        addons: [] as AddonOption[],
-        description: undefined as string | undefined,
-        productionTime: undefined as ProductionTimeOption | undefined,
+        bodypartsValues: {},
+        addons: [],
+        description: undefined,
+        productionTime: undefined,
         quantity: 1
-      },
+      } as ForeversWizardCustomizeStepData,
 
       isSubmitting: false
     }
@@ -198,7 +206,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       );
 
       let storageItemsIds: string[] = [];
-      if (this.imageUploadStepData.uploadMethod === 'now') {
+      if (this.imageUploadStepData.uploadMethod === ImageUploadMethod.NOW) {
         storageItemsIds = this.imageUploadStepData.storageItemsIds;
       }
 
@@ -213,7 +221,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieDescription: this.customizeStepData.description,
             bodyparts: this.getBodypartsData(),
             customerImagesIds: storageItemsIds,
-            uploadMethod: this.imageUploadStepData.uploadMethod === 'now' ? 'upload-now' : 'upload-email'
+            uploadMethod: this.imageUploadStepData.uploadMethod
           })
         });
 
@@ -273,7 +281,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     if (this.uploadedArtworkId) {
       this.imageUploadStepData.storageItemsIds = [ this.uploadedArtworkId ];
-      this.imageUploadStepData.uploadMethod = 'now';
+      this.imageUploadStepData.uploadMethod = ImageUploadMethod.NOW;
     }
   },
   watch: {

@@ -99,6 +99,8 @@ import { SfHeading, SfButton, SfInput } from '@storefront-ui/vue';
 
 import MMultiselect from '../../molecules/m-multiselect.vue';
 
+import ForeversWizardPetInfoStepData from '../../interfaces/forevers-wizard-pet-info-step-data.interface';
+
 extend('required', {
   ...required,
   message: 'The {_field_} field is required'
@@ -121,7 +123,7 @@ export default Vue.extend({
   },
   props: {
     value: {
-      type: Object as PropType<any>,
+      type: Object as PropType<ForeversWizardPetInfoStepData>,
       default: () => ({
         name: undefined,
         breed: undefined,

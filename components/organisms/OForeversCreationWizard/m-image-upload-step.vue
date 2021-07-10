@@ -17,7 +17,7 @@
         <a
           class="_popup-link"
           href="javascript:void(0)"
-          @click.stop.prevent="switchUploadMethod('later')"
+          @click.stop.prevent="switchToUploadLater()"
         >
           {{ $t('send them to us later') }}.
         </a>
@@ -74,7 +74,7 @@
         <a
           class="_popup-link"
           href="javascript:void(0)"
-          @click.stop.prevent="switchUploadMethod('now')"
+          @click.stop.prevent="switchToUploadNow()"
         >
           {{ $t('our uploader') }}.
         </a>
@@ -144,12 +144,14 @@ import { SfHeading, SfButton } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 
 import {
-  ProductValue,
-  vuexTypes as budsiesTypes
+  ImageUploadMethod,
+  ProductValue
 } from 'src/modules/budsies';
 import { Item } from 'src/modules/file-storage';
 
 import MArtworkUpload from '../../molecules/m-artwork-upload.vue';
+
+import ForeversWizardImageUploadStepData from '../../interfaces/forevers-wizard-image-upload-step-data.interface';
 
 extend('required', {
   ...required,
@@ -167,9 +169,9 @@ export default Vue.extend({
   },
   props: {
     initialValue: {
-      type: Object as PropType<any>,
+      type: Object as PropType<ForeversWizardImageUploadStepData>,
       default: () => ({
-        uploadMethod: 'now',
+        uploadMethod: ImageUploadMethod.NOW,
         storageItemsIds: []
       })
     },
@@ -193,7 +195,7 @@ export default Vue.extend({
   data () {
     return {
       isUploadProcessingInProgress: false,
-      uploadMethod: 'now' as 'now' | 'later',
+      uploadMethod: ImageUploadMethod.NOW,
       storageItemsIds: [] as string[]
     }
   },
@@ -224,26 +226,32 @@ export default Vue.extend({
         return true;
       }
 
-      return this.uploadMethod === 'now';
+      return this.uploadMethod === ImageUploadMethod.NOW;
     },
     shortcode (): string | undefined {
       return this.$store.getters['budsies/getPlushieShortcode'](this.plushieId);
     }
   },
   methods: {
-    switchUploadMethod (method: 'later' | 'now'): void {
+    switchUploadMethod (method: ImageUploadMethod): void {
       if (this.isDisabled) {
         return;
       }
 
       this.uploadMethod = method;
 
-      const storageItemsIds = method === 'now' ? [...this.storageItemsIds] : [];
+      const storageItemsIds = method === ImageUploadMethod.NOW ? [...this.storageItemsIds] : [];
 
       this.$emit('input', {
         uploadMethod: method,
         storageItemsIds
       });
+    },
+    switchToUploadNow (): void {
+      this.switchUploadMethod(ImageUploadMethod.NOW);
+    },
+    switchToUploadLater (): void {
+      this.switchUploadMethod(ImageUploadMethod.EMAIL);
     },
     onArtworkAdd (value: Item): void {
       this.storageItemsIds.push(value.id);
@@ -277,7 +285,7 @@ export default Vue.extend({
         return;
       }
 
-      const method = this.uploadMethod === 'later' ? 'now' : 'later';
+      const method = this.uploadMethod === ImageUploadMethod.EMAIL ? ImageUploadMethod.NOW : ImageUploadMethod.EMAIL;
       this.switchUploadMethod(method);
     },
     getUploader (): InstanceType<typeof MArtworkUpload> | undefined {

@@ -59,9 +59,10 @@ import Vue, { PropType } from 'vue';
 import { SfHeading, SfButton } from '@storefront-ui/vue';
 
 import {
-  BaseImage,
-  vuexTypes as budsiesTypes
+  BaseImage
 } from 'src/modules/budsies';
+
+import ForeversWizardProductTypeStepData from '../../interfaces/forevers-wizard-product-type-step-data.interface';
 
 export default Vue.extend({
   name: 'MProductTypeChooseStep',
@@ -72,7 +73,7 @@ export default Vue.extend({
   },
   props: {
     value: {
-      type: Object as PropType<any>,
+      type: Object as PropType<ForeversWizardProductTypeStepData>,
       default: () => ({
         product: undefined,
         plushieId: undefined
@@ -117,7 +118,6 @@ export default Vue.extend({
 
       const [plushieCreationTask] = await Promise.all([
         await this.$store.dispatch('budsies/createNewPlushie', { productId: product.id })
-        // await this.$store.dispatch('budsies/loadProductBodyparts', { productId: product.id })
       ])
 
       const plushieId = plushieCreationTask.result;

@@ -298,7 +298,8 @@ import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-confi
 
 import BodypartOption from '../../interfaces/bodypart-option';
 import AddonOption from '../../interfaces/addon-option.interface';
-import ProductionTimeOption from 'theme/components/interfaces/production-time-option.interface';
+import ProductionTimeOption from '../../interfaces/production-time-option.interface';
+import ForeversWizardCustomizeStepData from '../../interfaces/forevers-wizard-customize-step-data.interface';
 
 extend('required', {
   ...required,
@@ -320,12 +321,12 @@ export default Vue.extend({
   },
   props: {
     value: {
-      type: Object as PropType<any>,
+      type: Object as PropType<ForeversWizardCustomizeStepData>,
       default: () => ({
-        bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[]>,
-        addons: [] as AddonOption[],
-        description: undefined as string | undefined,
-        productionTime: undefined as ProductionTimeOption | undefined,
+        bodypartsValues: {},
+        addons: [],
+        description: undefined,
+        productionTime: undefined,
         quantity: 1
       })
     },
@@ -362,10 +363,10 @@ export default Vue.extend({
   },
   computed: {
     selectedAddons: {
-      get (): string[] {
+      get (): AddonOption[] {
         return this.value.addons;
       },
-      set (value: string[]): void {
+      set (value: AddonOption[]): void {
         const newValue = { ...this.value, addons: value };
         this.$emit('input', newValue);
       }
