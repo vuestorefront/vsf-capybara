@@ -430,7 +430,7 @@ export default Vue.extend({
           images: images,
           optionId: this.addonsBundleOption.option_id,
           optionValueId: productLink.id.toString(),
-          videoUrl: (productLink as any).video_url ? (productLink as any).video_url : undefined
+          videoUrl: (productLink.product as any).video_url
         });
       }
 

@@ -38,7 +38,14 @@
             </div>
 
             <div class="_image-column">
-              <div class="_image" />
+              <div class="_image" v-if="!shouldShowVideo(addon.id)" @click="switchToVideo($event, addon)" />
+              <StreamingVideo
+                :video-id="getVideoId(addon)"
+                :provider="getVideoProvider(addon)"
+                :auto-play="true"
+                :display-controls="false"
+                v-if="shouldShowVideo(addon.id) && getVideoId(addon) && getVideoProvider(addon)"
+              />
             </div>
           </div>
         </template>
@@ -49,8 +56,12 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import urlParser from 'js-video-url-parser';
+
+import { StreamingVideo } from 'src/modules/shared';
 
 import MCheckbox from './m-checkbox.vue';
+
 import AddonOption from '../interfaces/addon-option.interface';
 
 let instanceId = 0;
@@ -58,7 +69,8 @@ let instanceId = 0;
 export default Vue.extend({
   name: 'MAddonsSelector',
   components: {
-    MCheckbox
+    MCheckbox,
+    StreamingVideo
   },
   props: {
     addons: {
@@ -76,7 +88,9 @@ export default Vue.extend({
   },
   data () {
     return {
-      instanceId: ''
+      instanceId: '',
+      // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
+      showVideoFlags: {} as Record<number, boolean | undefined>
     };
   },
   computed: {
@@ -112,6 +126,43 @@ export default Vue.extend({
       result['--addon-image-hover'] = `url(${item.images[1]})`;
 
       return result;
+    },
+    getVideoId (addon: AddonOption): string | undefined {
+      if (!addon.videoUrl) {
+        return;
+      }
+
+      const info = urlParser.parse(addon.videoUrl);
+
+      if (!info) {
+        return;
+      }
+
+      return info.id;
+    },
+    getVideoProvider (addon: AddonOption): string | undefined {
+      if (!addon.videoUrl) {
+        return;
+      }
+
+      const info = urlParser.parse(addon.videoUrl);
+
+      if (!info) {
+        return;
+      }
+
+      return info.provider;
+    },
+    shouldShowVideo (addonId: number): boolean {
+      return !!this.showVideoFlags[addonId];
+    },
+    switchToVideo (event: Event, addon: AddonOption): void {
+      if (!addon.videoUrl) {
+        return;
+      }
+
+      event.preventDefault();
+      Vue.set(this.showVideoFlags, addon.id, true);
     }
   },
   created (): void {
