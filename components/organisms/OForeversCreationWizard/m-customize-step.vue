@@ -479,7 +479,8 @@ export default Vue.extend({
         const addonOption = addonOptions[addon.id];
 
         if (!addonOption && addon.id) {
-          throw new Error('The option product of rush addon is not found: ' + addon.id);
+          Logger.warn('The option product of rush addon is not found: ' + addon.id, 'budsies')();
+          continue;
         }
 
         result.push({
