@@ -12,15 +12,13 @@
 
 <script lang="ts">
 import config from 'config';
-import { mapGetters } from 'vuex';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { Bodypart, BodyPartValueContentType, ProductValue } from 'src/modules/budsies';
+import Product from 'core/modules/catalog/types/Product';
 
 import OPillowProductOrderForm from '../components/organisms/o-pillow-product-order-form.vue';
 
-import SizeOption from '../components/interfaces/size-option';
 export default {
   name: 'PillowProduct',
   components: {
@@ -32,10 +30,9 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      getCurrentProduct: 'product/getCurrentProduct',
-      getCurrentCustomOptions: 'product/getCurrentCustomOptions'
-    }),
+    getCurrentProduct (): Product | null {
+      return this.$store.getters['product/getCurrentProduct'];
+    },
     artworkUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
     }
@@ -68,6 +65,10 @@ export default {
       this.plushieId = await this.createPlushie();
     },
     async createPlushie (): Promise<number> {
+      if (!this.getCurrentProduct) {
+        throw new Error('Current product is not set!');
+      }
+
       const task = await this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
       return task.result;
     }
@@ -75,14 +76,14 @@ export default {
   metaInfo () {
     return {
       title: htmlDecode(
-        this.getCurrentProduct.meta_title || this.getCurrentProduct.name
+        this.getCurrentProduct?.meta_title || this.getCurrentProduct?.name
       ),
-      meta: this.getCurrentProduct.meta_description
+      meta: this.getCurrentProduct?.meta_description
         ? [
           {
             vmid: 'description',
             name: 'description',
-            content: htmlDecode(this.getCurrentProduct.meta_description)
+            content: htmlDecode(this.getCurrentProduct?.meta_description)
           }
         ]
         : []

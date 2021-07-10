@@ -14,11 +14,6 @@ import Product from 'core/modules/catalog/types/Product';
 
 import OForeversCreationWizard from 'theme/components/organisms/o-forevers-creation-wizard.vue';
 
-type AugumentedProduct = Partial<Product> & {
-  meta_title: string | null,
-  meta_description: string | null
-}
-
 export default Vue.extend({
   name: 'ForeversProduct',
   components: {
@@ -29,7 +24,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    getCurrentProduct (): AugumentedProduct | null {
+    getCurrentProduct (): Product | null {
       return this.$store.getters['product/getCurrentProduct'];
     },
     artworkUploadUrl (): string {

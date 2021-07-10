@@ -1,32 +1,34 @@
 <template>
   <div id="phrase-pillow-product" itemscope itemtype="http://schema.org/Product">
-    <o-phrase-pillow-product-order-form
+    <OPhrasePillowProductOrderForm
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
       :svg-path="svgPath"
       :initial-front-design="initialFrontDesign"
+      v-if="getCurrentProduct"
     />
   </div>
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import config from 'config';
-import { mapGetters } from 'vuex';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import Product from 'core/modules/catalog/types/Product';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
 
-export default {
+export default Vue.extend({
   name: 'PhrasePillowProduct',
   components: {
     OPhrasePillowProductOrderForm
   },
   computed: {
-    ...mapGetters({
-      getCurrentProduct: 'product/getCurrentProduct'
-    }),
+    getCurrentProduct (): Product | null {
+      return this.$store.getters['product/getCurrentProduct'];
+    },
     svgPath (): string {
       return config.images.baseUrl + '/150/150/resize/phrase_pillow/svg-templates';
     },
@@ -68,20 +70,20 @@ export default {
   metaInfo () {
     return {
       title: htmlDecode(
-        this.getCurrentProduct.meta_title || this.getCurrentProduct.name
+        this.getCurrentProduct?.meta_title || this.getCurrentProduct?.name
       ),
-      meta: this.getCurrentProduct.meta_description
+      meta: this.getCurrentProduct?.meta_description
         ? [
           {
             vmid: 'description',
             name: 'description',
-            content: htmlDecode(this.getCurrentProduct.meta_description)
+            content: htmlDecode(this.getCurrentProduct?.meta_description)
           }
         ]
         : []
     };
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

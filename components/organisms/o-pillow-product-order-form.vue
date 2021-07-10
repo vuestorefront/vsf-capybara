@@ -368,6 +368,7 @@ import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 import { SfButton, SfDivider, SfInput, SfModal, SfHeading } from '@storefront-ui/vue';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
+import Product from 'core/modules/catalog/types/Product';
 
 import { Item } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
@@ -416,7 +417,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       required: true
     },
     product: {
-      type: Object,
+      type: Object as PropType<Product>,
       required: true
     },
     plushieId: {
