@@ -133,6 +133,7 @@
             v-model="productionTime"
             name="rush_addons"
             class="_rush-addons"
+            :disabled="disabled"
             :valid="!errors.length"
             :error-message="errors[0]"
           >
