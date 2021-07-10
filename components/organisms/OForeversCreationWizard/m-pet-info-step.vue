@@ -150,7 +150,7 @@ export default Vue.extend({
         return this.value.breed;
       },
       set (value: string): void {
-        const newValue = { ...this.value, breed: value };
+        const newValue: ForeversWizardPetInfoStepData = { ...this.value, breed: value };
         this.$emit('input', newValue);
       }
     },
@@ -159,7 +159,7 @@ export default Vue.extend({
         return this.value.name;
       },
       set (value: string): void {
-        const newValue = { ...this.value, name: value };
+        const newValue: ForeversWizardPetInfoStepData = { ...this.value, name: value };
         this.$emit('input', newValue);
       }
     },
@@ -168,7 +168,7 @@ export default Vue.extend({
         return this.value.email;
       },
       set (value: string): void {
-        const newValue = { ...this.value, email: value };
+        const newValue: ForeversWizardPetInfoStepData = { ...this.value, email: value };
         this.$emit('input', newValue);
       }
     },

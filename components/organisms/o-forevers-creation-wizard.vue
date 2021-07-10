@@ -314,7 +314,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       immediate: false
     },
     'customizeStepData.productionTime': {
-      handler (newValue: ProductionTimeOption) {
+      handler (newValue: ProductionTimeOption | undefined) {
         if (!this.productionTimeBundleOption) {
           return
         }
@@ -322,7 +322,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.setBundleOptionValue({
           optionId: this.productionTimeBundleOption.option_id,
           optionQty: 1,
-          optionSelections: newValue.optionValueId ? [newValue.optionValueId] : []
+          optionSelections: newValue?.optionValueId ? [newValue.optionValueId] : []
         });
       },
       immediate: false

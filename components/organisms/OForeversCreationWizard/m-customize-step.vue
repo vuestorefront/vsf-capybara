@@ -377,7 +377,7 @@ export default Vue.extend({
         return this.value.bodypartsValues;
       },
       set (value: Record<string, BodypartOption | BodypartOption[] | undefined>): void {
-        const newValue = { ...this.value, bodypartsValues: value };
+        const newValue: ForeversWizardCustomizeStepData = { ...this.value, bodypartsValues: value };
         this.$emit('input', newValue);
       }
     },
@@ -386,7 +386,7 @@ export default Vue.extend({
         return this.value.description;
       },
       set (value: string): void {
-        const newValue = { ...this.value, description: value };
+        const newValue: ForeversWizardCustomizeStepData = { ...this.value, description: value };
         this.$emit('input', newValue);
       }
     },
@@ -395,7 +395,7 @@ export default Vue.extend({
         return this.value.quantity;
       },
       set (value: number): void {
-        const newValue = { ...this.value, quantity: value };
+        const newValue: ForeversWizardCustomizeStepData = { ...this.value, quantity: value };
         this.$emit('input', newValue);
       }
     },
@@ -404,7 +404,7 @@ export default Vue.extend({
         return this.value.productionTime;
       },
       set (value: ProductionTimeOption | undefined): void {
-        const newValue = { ...this.value, productionTime: value };
+        const newValue: ForeversWizardCustomizeStepData = { ...this.value, productionTime: value };
         this.$emit('input', newValue);
       }
     },

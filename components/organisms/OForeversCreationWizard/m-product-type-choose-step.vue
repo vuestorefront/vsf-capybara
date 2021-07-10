@@ -137,7 +137,9 @@ export default Vue.extend({
 
         const plushieId = plushieCreationTask.result;
 
-        this.$emit('input', { product, plushieId });
+        const newValue: ForeversWizardProductTypeStepData = { product, plushieId };
+
+        this.$emit('input', newValue);
         this.$emit('next-step');
       } catch (error) {
         Logger.error('Unable to create plushie: ' + error, 'budsies')();

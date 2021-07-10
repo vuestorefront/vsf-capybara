@@ -242,10 +242,12 @@ export default Vue.extend({
 
       const storageItemsIds = method === ImageUploadMethod.NOW ? [...this.storageItemsIds] : [];
 
-      this.$emit('input', {
+      const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: method,
         storageItemsIds
-      });
+      }
+
+      this.$emit('input', newValue);
     },
     switchToUploadNow (): void {
       this.switchUploadMethod(ImageUploadMethod.NOW);
@@ -256,10 +258,12 @@ export default Vue.extend({
     onArtworkAdd (value: Item): void {
       this.storageItemsIds.push(value.id);
 
-      this.$emit('input', {
+      const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: this.uploadMethod,
         storageItemsIds: [...this.storageItemsIds]
-      });
+      }
+
+      this.$emit('input', newValue);
     },
     onArtworkRemove (storageItemId: string): void {
       const index = this.storageItemsIds.indexOf(storageItemId, 0);
@@ -269,10 +273,12 @@ export default Vue.extend({
 
       this.storageItemsIds.splice(index, 1);
 
-      this.$emit('input', {
+      const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: this.uploadMethod,
         storageItemsIds: [...this.storageItemsIds]
-      });
+      }
+
+      this.$emit('input', newValue);
     },
     onUploaderIsBusyChanged (value: boolean): void {
       this.isUploadProcessingInProgress = value;
