@@ -156,14 +156,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Addons');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'addons');
     },
     productionTimeBundleOption (): BundleOption | undefined {
       if (!this.product?.bundle_options) {
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Production time');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'production time');
     }
   },
   methods: {

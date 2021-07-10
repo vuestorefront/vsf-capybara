@@ -264,7 +264,7 @@ export default Vue.extend({
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Extra Faces');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'extra faces');
     },
     addons (): ExtraPhotoAddonOption[] {
       if (!this.addonsBundleOption) {
@@ -313,7 +313,7 @@ export default Vue.extend({
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Product');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'product');
     },
     availableStyles () {
       if (!this.styleBundleOption) {

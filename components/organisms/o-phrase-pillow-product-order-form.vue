@@ -647,14 +647,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Back Design Product');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'back design product');
     },
     frontDesignBundleOption (): SideDesignBundleOption | undefined {
       if (!this.product?.bundle_options) {
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Front Design Product');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'front design product');
     },
     frontDesignProducts (): DesignProduct[] {
       if (!this.frontDesignBundleOption) {
@@ -694,7 +694,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title === 'Production time');
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'production time');
     },
     productionTimeOptions (): ProductionTimeOption[] {
       if (!this.productionTimeBundleOption || !this.product) {
