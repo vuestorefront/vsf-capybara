@@ -14,6 +14,7 @@
         :label="$t('Copy address data from shipping')"
       />
       <SfCheckbox
+        v-if="currentUser"
         v-model="sendToBillingAddress"
         class="form__element form__checkbox"
         name="sendToBillingAddress"
@@ -219,6 +220,13 @@ export default {
     SfSelect,
     SfHeading,
     SfCheckbox
+  },
+  computed: {
+    currentUser () {
+      if (this.$store.state.user.current) {
+        return this.$store.state.user.current
+      }
+    }
   },
   mixins: [Payment],
   validations () {
