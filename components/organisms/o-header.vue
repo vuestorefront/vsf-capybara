@@ -31,21 +31,21 @@
         </SfHeaderNavigationItem>
         <SfHeaderNavigationItem>
           <router-link
-            to="/"
+            to="/giftcards"
           >
             Gift Cards
           </router-link>
         </SfHeaderNavigationItem>
         <SfHeaderNavigationItem>
           <router-link
-            to="/"
+            to="/reviews"
           >
             Reviews
           </router-link>
         </SfHeaderNavigationItem>
         <SfHeaderNavigationItem>
           <router-link
-            to="/"
+            to="/pricing"
           >
             Pricing
           </router-link>
@@ -135,11 +135,11 @@ export default {
       dropdownActions: [
         {
           label: 'Custom Petsies',
-          url: { name: 'forevers-create' }
+          url: '/forevers-pet-plush'
         },
         {
           label: 'Custom Pillows',
-          url: '/c/custom-photo-pillows-80'
+          url: '/custom-pillows'
         },
         {
           label: 'Custom Socks',
@@ -173,7 +173,7 @@ export default {
         },
         {
           label: 'Gift Box',
-          url: '/'
+          url: '/giftbox'
         }
       ]
     }
