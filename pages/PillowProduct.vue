@@ -46,7 +46,7 @@ export default {
     if (context) context.output.cacheTags.add('product')
 
     const product = await store.dispatch('product/loadProduct', {
-      parentSku: route.params.parentSku,
+      parentSku: 'customPillow_bundle',
       childSku: null
     });
 

@@ -57,7 +57,27 @@ let routes = [
   { name: 'cms-page', path: '/i/:slug', component: Static },
   { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
   { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
-  { name: 'pillow-product', path: '/pillow/p/:parentSku/:slug', component: PillowProduct },
+  { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
+  {
+    name: 'photo-pillows-alias-1',
+    path: '/photo-pillow/designs/',
+    redirect: {
+      name: 'category',
+      params: {
+        slug: 'custom-photo-pillows-80'
+      }
+    }
+  },
+  {
+    name: 'photo-pillows-alias-2',
+    path: '/photo-pillows',
+    redirect: {
+      name: 'category',
+      params: {
+        slug: 'custom-photo-pillows-80'
+      }
+    }
+  },
   { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct }
 ];
 

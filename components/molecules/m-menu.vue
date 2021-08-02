@@ -61,21 +61,20 @@ export default {
       customProductsItems: [
         {
           label: 'Petsies Stuffed Animals',
-          url: { name: 'forevers-create' }
+          url: '/forevers-pet-plush'
         },
         {
           label: 'Pet Shaped Pillows',
-          url: {
-            name: 'pillow-product',
-            params: {
-              parentSku: 'customPillow_bundle',
-              slug: 'pillow'
-            }
-          }
+          url: '/pet-pillow'
         },
         {
           label: 'Square Photo Pillows',
-          url: '/c/custom-photo-pillows-80'
+          url: {
+            name: 'category',
+            params: {
+              slug: 'custom-photo-pillows-80'
+            }
+          }
         },
         {
           label: 'Pet Socks',
@@ -111,7 +110,7 @@ export default {
       otherProductsItems: [
         {
           label: 'Gift Boxes',
-          url: '/'
+          url: '/giftbox'
         },
         {
           label: 'Accessories',
@@ -119,7 +118,7 @@ export default {
         },
         {
           label: 'Bulk Orders',
-          url: '/'
+          url: '/bulk-custom-stuffed-animal-manufacture'
         }
       ]
     }

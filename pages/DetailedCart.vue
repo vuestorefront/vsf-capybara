@@ -188,21 +188,20 @@ export default {
       dropdownActions: [
         {
           label: 'Petsies',
-          url: { name: 'forevers-create' }
+          url: '/forevers-pet-plush'
         },
         {
           label: 'Pet Pillow',
-          url: {
-            name: 'pillow-product',
-            params: {
-              parentSku: 'customPillow_bundle',
-              slug: 'pillow'
-            }
-          }
+          url: '/pet-pillow'
         },
         {
           label: 'Photo Pillow',
-          url: '/c/custom-photo-pillows-80'
+          url: {
+            name: 'category',
+            params: {
+              slug: 'custom-photo-pillows-80'
+            }
+          }
         },
         {
           label: 'Socks',

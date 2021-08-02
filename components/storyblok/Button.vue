@@ -48,6 +48,13 @@ export default Blok.extend({
     openLink (): void {
       const url = getUrlFromLink(this.itemData.link_url);
 
+      const isExternalUrl = url.startsWith('//') || url.startsWith('http://') || url.startsWith('https://') || url.startsWith('ftp://');
+
+      if (isExternalUrl) {
+        window.open(url, '_blank');
+        return;
+      }
+
       const route = this.$router.resolve({
         path: localizedRoute(url)
       });
