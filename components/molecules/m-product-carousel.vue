@@ -23,12 +23,8 @@
     }"
   >
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
-      <SfProductCard
-        :title="product.title"
-        :image="product.image"
-        :regular-price="product.price.regular"
-        :special-price="product.price.special"
-        :link="product.link"
+      <m-product-card
+        :product="product"
         :wishlist-icon="false"
         link-tag="router-link"
         :image-height="216"
@@ -38,18 +34,21 @@
   </SfCarousel>
 </template>
 <script>
-import { SfProductCard, SfCarousel } from '@storefront-ui/vue';
+import { SfCarousel } from '@storefront-ui/vue';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import config from 'config';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { productThumbnailPath } from '@vue-storefront/core/helpers';
 import { prepareCategoryProduct } from 'theme/helpers';
+
+import MProductCard from 'theme/components/molecules/m-product-card.vue';
+
 export default {
   name: 'MProductCarousel',
   components: {
-    SfCarousel,
-    SfProductCard
+    MProductCard,
+    SfCarousel
   },
   props: {
     products: {

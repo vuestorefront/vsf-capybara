@@ -26,16 +26,10 @@
       <div class="products">
         <SfHeading :level="3" :title="$t('Product suggestions')" class="products__title sf-heading--left" />
         <div class="products__listing">
-          <SfProductCard
+          <m-product-card
             v-for="product in visibleProducts"
             :key="product.id"
-            :title="product.title"
-            :image="product.image"
-            :regular-price="product.price.regular"
-            :special-price="product.price.special"
-            :max-rating="product.rating.max"
-            :score-rating="product.rating.score"
-            :link="product.link"
+            :product="product"
             link-tag="router-link"
             :wishlist-icon="false"
             class="products__product-card"
@@ -63,16 +57,18 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { prepareCategoryProduct } from 'theme/helpers';
 import VueOfflineMixin from 'vue-offline/mixin';
-import { SfHeading, SfButton, SfList, SfMenuItem, SfProductCard } from '@storefront-ui/vue';
+import { SfHeading, SfButton, SfList, SfMenuItem } from '@storefront-ui/vue';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
+
+import MProductCard from 'theme/components/molecules/m-product-card';
 
 export default {
   name: 'OSearchPanel',
   components: {
+    MProductCard,
     SfButton,
     SfList,
     SfMenuItem,
-    SfProductCard,
     SfHeading
   },
   mixins: [VueOfflineMixin],
