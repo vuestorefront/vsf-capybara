@@ -7,11 +7,12 @@
     />
     <SfHeader
       :active-icon="activeIcon"
-      :class="{
-        'sf-header--has-mobile-search': isSearchPanelVisible,
-        'sf-header--is-sticky': isSearchPanelVisible
-      }"
-      :style="{'z-index': isHoveredMenu ? 200 : 1}"
+      :class="[
+        {
+          'sf-header--has-mobile-search': isSearchPanelVisible,
+        },
+        'sf-header--is-sticky'
+      ]"
     >
       <template #logo>
         <ALogo />
@@ -207,23 +208,31 @@ export default {
 .a-logo {
   margin-right: var(--spacer-lg);
 }
+
 .overlay {
-  position: absolute;
-  z-index: 1;
+  --overlay-z-index: 99;
 }
+
 .o-header {
   --header-navigation-item-margin: 0;
   --header-navigation-item-padding: var(--spacer-lg) var(--spacer-xs);
   --header-navigation-item-color: var(--c-dark);
   box-sizing: border-box;
+
+  .sf-header--is-sticky {
+    z-index: 200;
+  }
+
   &__submenu {
     cursor: pointer;
   }
+
   a {
     &.active {
       font-weight: bold;
     }
   }
+
   ::v-deep .sf-menu-item {
     &__label {
       &:hover {
@@ -231,31 +240,38 @@ export default {
       }
     }
   }
+
   .sf-header-navigation-item {
     &::after {
       bottom: 0;
       width: 0;
     }
+
     &:hover > *:not(.sf-mega-menu) {
       --header-navigation-item-color: var(--c-primary);
     }
+
     &:hover {
       .m-menu {
         opacity: 1;
         visibility: visible;
       }
+
       &::after {
         width: 100%;
       }
     }
   }
+
   ._dropdown-container {
     position: relative;
     align-self: center;
+
     .sf-button {
       --button-font-size: var(--font-sm);
       --button-font-line-height: 1;
     }
+
     .sf-dropdown {
       --dropdown-background: var(--c-primary);
       --c-link: var(--c-light-variant);
@@ -269,20 +285,25 @@ export default {
       }
     }
   }
+
   .sf-header {
     display: none;
   }
+
   ::v-deep .sf-header {
     --header-logo-margin: 0 0 var(--spacer-sm) 0;
+
     &__navigation {
       --header-navigation-margin: 0 var(--spacer-base);
       justify-content: space-evenly;
       flex-grow: 2;
     }
+
     &__actions {
       justify-content: space-between;
     }
   }
+
   .mobile-menu {
     position: fixed;
     opacity: 1;
@@ -291,18 +312,22 @@ export default {
     z-index: 12;
     --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
   }
+
   @include for-desktop {
     .mobile-menu {
       opacity: 0;
       visibility: hidden;
     }
+
     .sf-header {
       display: block;
       --header-navigation-margin: 0 auto;
     }
+
     ::v-deep .sf-header {
       &__icons {
         display: flex;
+
         .sf-header__icon {
           cursor: pointer;
         }
