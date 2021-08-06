@@ -289,7 +289,7 @@ export default {
     visibility: visible;
     top: var(--bottom-navigation-height);
     z-index: 12;
-    --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height) - var(--bar-height));
+    --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height));
   }
   @include for-desktop {
     .mobile-menu {

@@ -1,6 +1,7 @@
 <template>
   <div class="m-menu sf-mega-menu bg-white">
     <SfMegaMenu
+      ref="menu"
       :title="title"
       :visible="visible"
     >
@@ -122,6 +123,11 @@ export default {
         }
       ]
     }
+  },
+  async mounted () {
+    await this.$nextTick();
+    this.$refs.menu.active = this.$refs.menu.items;
+    this.$refs.menu._computedWatchers.isMobile = undefined;
   }
 }
 </script>
@@ -137,22 +143,36 @@ export default {
   opacity: 0;
   visibility: hidden;
   transition: 0.2s;
+
   .router-link-exact-active {
     --menu-item-font-weight: bold;
   }
+
   .sf-menu-item {
     --menu-item-label-color: var(--c-dark);
   }
+
+  .sf-mega-menu {
+    @include for-mobile {
+      overflow: auto;
+    }
+  }
+
   .sf-mega-menu__menu {
     @include for-desktop {
       flex-wrap: wrap;
       flex: 0 1 auto;
     }
   }
+
   .sf-mega-menu__content {
     @include for-desktop {
       --mega-menu-content-padding: var(--spacer-xl) var(--spacer-sm);
     }
+  }
+
+  .sf-bar {
+    display: none;
   }
 }
 </style>
