@@ -78,21 +78,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    $size: 66px;
+    $border-width: 2px;
+
     .m-product-card {
         .card__discount {
             position: absolute;
             box-sizing: border-box;
             right: 5%;
             top: 5%;
-            height: 66px;
-            width: 66px;
+            height: $size;
+            width: $size;
             z-index: 5;
             background: #fff;
             color: var(--_c-light-primary);
-            border: 2px solid var(--_c-light-primary);
-            border-radius: 33px;
+            border: $border-width solid var(--_c-light-primary);
+            border-radius: $size / 2;
             font-weight: 800;
-            line-height: 62px;
+            line-height: $size - $border-width * 2;
             text-align: center;
         }
     }
