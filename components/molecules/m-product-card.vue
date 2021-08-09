@@ -79,8 +79,6 @@ export default {
 
 <style lang="scss" scoped>
     .m-product-card {
-        position: relative;
-
         .card__discount {
             position: absolute;
             box-sizing: border-box;
