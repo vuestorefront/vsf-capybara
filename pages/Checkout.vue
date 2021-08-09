@@ -14,8 +14,13 @@
       </div>
       <div class="checkout__aside desktop-only">
         <transition name="fade">
-          <OOrderSummary v-if="currentStep <= 2" class="checkout__aside-order" />
-          <OOrderReview v-else class="checkout__aside-order" />
+          <div v-if="currentStep <= 2">
+            <OProductsListTable :products-in-cart="productsInCart" :is-header-show="false" />
+            <OOrderSummary class="checkout__aside-order" />
+          </div>
+          <template v-else>
+            <OOrderReview class="checkout__aside-order" />
+          </template>
         </transition>
       </div>
     </div>
@@ -32,6 +37,8 @@ import OOrderReview from 'theme/components/organisms/o-order-review';
 import OOrderSummary from 'theme/components/organisms/o-order-summary';
 import OOrderConfirmation from 'theme/components/organisms/o-order-confirmation';
 import OPersonalDetails from 'theme/components/organisms/o-personal-details';
+import OProductsListTable from 'theme/components/organisms/o-products-list-table';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Checkout',
@@ -43,6 +50,7 @@ export default {
     OOrderSummary,
     OConfirmOrder,
     OPersonalDetails,
+    OProductsListTable,
     OOrderConfirmation
   },
   mixins: [Checkout],
@@ -73,6 +81,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      productsInCart: 'cart/getCartItems'
+    }),
     currentStep () {
       return this.steps.findIndex(step => this.activeSection[step.key]);
     }
