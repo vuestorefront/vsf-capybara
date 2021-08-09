@@ -1,8 +1,5 @@
 <template>
   <div class="m-product-card">
-    <div v-if="discountPercentage" class="card__discount">
-      {{ discountPercentage }}
-    </div>
     <SfProductCard
       :title="product.title"
       :image="product.image"
@@ -15,16 +12,44 @@
       :wishlist-icon="wishlistIcon"
       :image-height="imageHeight"
       :image-width="imageWidth"
-    />
+    >
+      <template #image="{image, title}">
+        <template v-if="Array.isArray(image)">
+          <SfImage
+            v-for="(picture, key) in image.slice(0, 2)"
+            :key="key"
+            class="sf-product-card__picture"
+            :src="picture"
+            :alt="title"
+            :width="imageWidth"
+            :height="imageHeight"
+          />
+        </template>
+
+        <SfImage
+          v-else
+          class="sf-product-card__image"
+          :src="image"
+          :alt="title"
+          :width="imageWidth"
+          :height="imageHeight"
+        />
+
+        <div v-if="product.discount" class="card__discount">
+          {{ product.discount }}
+        </div>
+      </template>
+    </SfProductCard>
   </div>
 </template>
 
 <script>
-import { SfProductCard } from '@storefront-ui/vue';
+import { SfImage, SfProductCard } from '@storefront-ui/vue';
 
 export default {
   name: 'MProductCard',
   components: {
+    SfImage,
     SfProductCard
   },
   props: {
@@ -48,20 +73,6 @@ export default {
       type: [String, Array, Boolean],
       default: 'heart'
     }
-  },
-  computed: {
-    discountPercentage () {
-      console.log(this.product);
-      if (!this.product.price.special || this.product.price.regular === this.product.price.special) {
-        return 0;
-      }
-
-      // todo temporary
-      const specialPrice = Number.parseFloat(this.product.price.special.replace('$', ''));
-      const regularPrice = Number.parseFloat(this.product.price.regular.replace('$', ''));
-
-      return Math.round((1 - specialPrice / regularPrice) * 100);
-    }
   }
 }
 </script>
@@ -73,8 +84,8 @@ export default {
         .card__discount {
             position: absolute;
             box-sizing: border-box;
-            right: 10%;
-            top: 6%;
+            right: 5%;
+            top: 5%;
             height: 66px;
             width: 66px;
             z-index: 5;

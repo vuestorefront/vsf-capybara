@@ -4,7 +4,7 @@ import { currentStoreView } from '@vue-storefront/core/lib/multistore'
 import { productThumbnailPath, getThumbnailPath, isServer } from '@vue-storefront/core/helpers'
 import { htmlDecode } from '@vue-storefront/core/filters'
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers'
-import { getProductPrice } from './price'
+import { getProductDiscount, getProductPrice } from './price'
 
 export * from './price'
 
@@ -55,8 +55,8 @@ export function getTopLevelCategories (categoryList) {
 
 export function prepareCategoryProduct (product) {
   return {
+    discount: getProductDiscount(product),
     id: product.id,
-    title: htmlDecode(product.name),
     image: getThumbnailPath(
       productThumbnailPath(product),
       config.products.thumbnails.width,
@@ -67,7 +67,8 @@ export function prepareCategoryProduct (product) {
     rating: {
       max: 5,
       score: 5
-    }
+    },
+    title: htmlDecode(product.name)
   }
 }
 

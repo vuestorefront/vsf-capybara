@@ -26,6 +26,23 @@ function formatPrice (value) {
   return value ? price(value) : ''
 }
 
+export function getProductDiscount (product, format = true) {
+  const defaultDiscount = format ? '' : 0;
+  if (!product) {
+    return defaultDiscount;
+  }
+
+  const price = getProductPrice(product, {}, false);
+
+  if (!price.special || price.regular === price.special) {
+    return defaultDiscount;
+  }
+
+  const discount = Math.round((1 - price.special / price.regular) * 100);
+
+  return format ? `-${discount}%` : discount;
+}
+
 export function getProductPrice (product, customOptions = {}, format = true) {
   if (!product) {
     return {
