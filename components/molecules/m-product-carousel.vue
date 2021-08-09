@@ -23,7 +23,7 @@
     }"
   >
     <SfCarouselItem v-for="(product, i) in carouselProducts" :key="i">
-      <m-product-card
+      <o-product-card
         :product="product"
         :wishlist-icon="false"
         link-tag="router-link"
@@ -42,12 +42,12 @@ import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { productThumbnailPath } from '@vue-storefront/core/helpers';
 import { prepareCategoryProduct } from 'theme/helpers';
 
-import MProductCard from 'theme/components/molecules/m-product-card.vue';
+import OProductCard from 'theme/components/organisms/o-product-card';
 
 export default {
   name: 'MProductCarousel',
   components: {
-    MProductCard,
+    OProductCard,
     SfCarousel
   },
   props: {

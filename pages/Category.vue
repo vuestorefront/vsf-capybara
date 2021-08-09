@@ -110,7 +110,7 @@
               tag="div"
               class="products__grid"
             >
-              <m-product-card
+              <o-product-card
                 v-for="product in products"
                 :key="product.id"
                 :product="product"
@@ -231,7 +231,7 @@ import {
   SfBreadcrumbs
 } from '@storefront-ui/vue';
 
-import MProductCard from 'theme/components/molecules/m-product-card';
+import OProductCard from 'theme/components/organisms/o-product-card';
 
 const THEME_PAGE_SIZE = 12;
 const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
@@ -272,7 +272,7 @@ export default {
   components: {
     ASortIcon,
     LazyHydrate,
-    MProductCard,
+    OProductCard,
     SfIcon,
     SfList,
     SfColor,

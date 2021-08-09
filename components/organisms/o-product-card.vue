@@ -1,5 +1,5 @@
 <template>
-  <div class="m-product-card">
+  <div class="o-product-card">
     <SfProductCard
       :title="product.title"
       :image="product.image"
@@ -81,7 +81,7 @@ export default {
     $size: 66px;
     $border-width: 2px;
 
-    .m-product-card {
+    .o-product-card {
         .card__discount {
             position: absolute;
             box-sizing: border-box;

@@ -26,7 +26,7 @@
       <div class="products">
         <SfHeading :level="3" :title="$t('Product suggestions')" class="products__title sf-heading--left" />
         <div class="products__listing">
-          <m-product-card
+          <o-product-card
             v-for="product in visibleProducts"
             :key="product.id"
             :product="product"
@@ -60,12 +60,12 @@ import VueOfflineMixin from 'vue-offline/mixin';
 import { SfHeading, SfButton, SfList, SfMenuItem } from '@storefront-ui/vue';
 import { disableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
-import MProductCard from 'theme/components/molecules/m-product-card';
+import OProductCard from 'theme/components/organisms/o-product-card';
 
 export default {
   name: 'OSearchPanel',
   components: {
-    MProductCard,
+    OProductCard,
     SfButton,
     SfList,
     SfMenuItem,
