@@ -55,7 +55,7 @@
         </div>
       </SfTableData>
       <SfTableData class="table__data">
-        {{ product.qty }}
+        {{ getProductQuantity(product) }}
       </SfTableData>
       <SfTableData class="table__data">
         <SfPrice
@@ -113,6 +113,9 @@ export default {
     },
     getProductSpecialPrice (product) {
       return getProductPrice(product, {}).special;
+    },
+    getProductQuantity (product) {
+      return this.isHeaderShow ? product.qty : `x ${product.qty}`;
     },
     isCustomOption (product, productOption) {
       if (!product.custom_options) {
@@ -233,7 +236,24 @@ export default {
   }
 
   &.table--hidden-header {
-      //
+      .product-price {
+        flex-direction: column;
+        align-items: center;
+
+        ::v-deep .sf-price__old {
+            margin: 0;
+        }
+      }
+
+      .table__description {
+        flex-basis: 6rem;
+      }
+
+      .table__image {
+        --image-width: 8.125rem;
+        min-width: var(--image-width);
+        margin-right: 1em;
+      }
   }
 }
 </style>
