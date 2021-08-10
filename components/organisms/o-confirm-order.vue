@@ -440,11 +440,7 @@ export default {
     --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
   }
 }
-.product-price {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
+
 // .a-promo-code {
 //   margin-top: var(--spacer-xl);
 // }

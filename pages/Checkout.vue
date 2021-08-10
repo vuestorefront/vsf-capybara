@@ -18,9 +18,7 @@
             <OProductsListTable :products-in-cart="productsInCart" :is-header-show="false" />
             <OOrderSummary class="checkout__aside-order" />
           </div>
-          <template v-else>
-            <OOrderReview class="checkout__aside-order" />
-          </template>
+          <OOrderReview v-else class="checkout__aside-order" />
         </transition>
       </div>
     </div>

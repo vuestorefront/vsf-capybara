@@ -89,41 +89,20 @@ export default {
     SfTable
   },
   props: {
-    tableHeaders: {
-      type: Array,
-      default: () => []
+    isHeaderShow: {
+      type: Boolean,
+      default: true
     },
     productsInCart: {
       type: Array,
       default: () => []
     },
-    isHeaderShow: {
-      type: Boolean,
-      default: true
+    tableHeaders: {
+      type: Array,
+      default: () => []
     }
   },
   methods: {
-    getProductOptions (product) {
-      return onlineHelper.isOnline && product.totals && product.totals.options
-        ? product.totals.options
-        : product.options || [];
-    },
-    getProductRegularPrice (product) {
-      return getProductPrice(product, {}).regular;
-    },
-    getProductSpecialPrice (product) {
-      return getProductPrice(product, {}).special;
-    },
-    getProductQuantity (product) {
-      return this.isHeaderShow ? product.qty : `x ${product.qty}`;
-    },
-    isCustomOption (product, productOption) {
-      if (!product.custom_options) {
-        return false;
-      }
-
-      return product.custom_options.find(option => option.title === productOption.label) !== undefined;
-    },
     getBundleProductOptions (product) {
       if (!product.bundle_options ||
           product.bundle_options.length < 2 ||
@@ -166,12 +145,33 @@ export default {
 
       return result;
     },
+    getProductOptions (product) {
+      return onlineHelper.isOnline && product.totals && product.totals.options
+        ? product.totals.options
+        : product.options || [];
+    },
+    getProductQuantity (product) {
+      return this.isHeaderShow ? product.qty : `x ${product.qty}`;
+    },
+    getProductRegularPrice (product) {
+      return getProductPrice(product, {}).regular;
+    },
+    getProductSpecialPrice (product) {
+      return getProductPrice(product, {}).special;
+    },
     getThumbnailForProduct (product) {
       if (product.thumbnail && product.thumbnail.includes('://')) {
         return product.thumbnail;
       }
 
       return getThumbnailForProduct(product);
+    },
+    isCustomOption (product, productOption) {
+      if (!product.custom_options) {
+        return false;
+      }
+
+      return product.custom_options.find(option => option.title === productOption.label) !== undefined;
     }
   }
 }
@@ -196,6 +196,12 @@ export default {
     &__row {
       --table-row-box-shadow: none;
     }
+  }
+
+  .product-price {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
 
   @include for-desktop {
@@ -237,9 +243,6 @@ export default {
 
   &.table--hidden-header {
       .product-price {
-        flex-direction: column;
-        align-items: center;
-
         ::v-deep .sf-price__old {
             margin: 0;
         }
