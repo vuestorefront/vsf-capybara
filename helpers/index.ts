@@ -57,6 +57,7 @@ export function prepareCategoryProduct (product) {
   return {
     discount: getProductDiscount(product),
     id: product.id,
+    title: htmlDecode(product.name),
     image: getThumbnailPath(
       productThumbnailPath(product),
       config.products.thumbnails.width,
@@ -67,8 +68,7 @@ export function prepareCategoryProduct (product) {
     rating: {
       max: 5,
       score: 5
-    },
-    title: htmlDecode(product.name)
+    }
   }
 }
 

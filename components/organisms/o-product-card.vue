@@ -5,51 +5,22 @@
       :image="product.image"
       :regular-price="product.price.regular"
       :special-price="product.price.special"
-      :max-rating="product.rating.max"
-      :score-rating="product.rating.score"
       :link="product.link"
       :link-tag="linkTag"
       :wishlist-icon="wishlistIcon"
       :image-height="imageHeight"
       :image-width="imageWidth"
-    >
-      <template #image="{image, title}">
-        <template v-if="Array.isArray(image)">
-          <SfImage
-            v-for="(picture, key) in image.slice(0, 2)"
-            :key="key"
-            class="sf-product-card__picture"
-            :src="picture"
-            :alt="title"
-            :width="imageWidth"
-            :height="imageHeight"
-          />
-        </template>
-
-        <SfImage
-          v-else
-          class="sf-product-card__image"
-          :src="image"
-          :alt="title"
-          :width="imageWidth"
-          :height="imageHeight"
-        />
-
-        <div v-if="product.discount" class="card__discount">
-          {{ product.discount }}
-        </div>
-      </template>
-    </SfProductCard>
+      :badge-label="product.discount"
+    />
   </div>
 </template>
 
 <script>
-import { SfImage, SfProductCard } from '@storefront-ui/vue';
+import { SfProductCard } from '@storefront-ui/vue';
 
 export default {
   name: 'MProductCard',
   components: {
-    SfImage,
     SfProductCard
   },
   props: {
@@ -82,21 +53,21 @@ export default {
     $border-width: 2px;
 
     .o-product-card {
-        .card__discount {
-            position: absolute;
-            box-sizing: border-box;
-            right: 5%;
-            top: 5%;
-            height: $size;
-            width: $size;
-            z-index: 5;
-            background: #fff;
+          --product-card-badge-left: calc(95% - #{$size});
+          --product-card-badge-top: 5%;
+          --badge-height: #{$size};
+          --badge-width: #{$size};
+          --badge-padding: 0;
+          --badge-border: #{$border-width} solid var(--_c-light-primary);
+          --badge-border-radius: #{$size / 2};
+          --badge-font-weight: 800;
+          --badge-background: #fff;
+          --badge-font-size: 1rem;
+
+        ::v-deep .sf-badge {
             color: var(--_c-light-primary);
-            border: $border-width solid var(--_c-light-primary);
-            border-radius: $size / 2;
-            font-weight: 800;
             line-height: $size - $border-width * 2;
-            text-align: center;
+            pointer-events: none;
         }
     }
 </style>
