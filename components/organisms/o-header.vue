@@ -314,6 +314,8 @@ export default {
   }
 
   @include for-desktop {
+    --header-box-shadow: 0px -2px 10px rgba(var(--c-dark-base), 0.15);
+
     .mobile-menu {
       opacity: 0;
       visibility: hidden;
