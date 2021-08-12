@@ -9,8 +9,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'MSocialSharing',
   props: {
     sharingUrl: {
@@ -35,23 +37,23 @@ export default {
     }
   },
   computed: {
-    shareEmailHref () {
+    shareEmailHref (): string {
       const lineBreak = encodeURIComponent('\r\n');
       const emailText = this.sharingDescription + lineBreak + lineBreak + 'Link:' + lineBreak + this.sharingUrl;
       return `mailto:?subject=${this.eMailSubject}&body=${emailText}`;
     },
-    sharePinterestHref () {
+    sharePinterestHref (): string {
       return `http://pinterest.com/pin/create/button/?media=${this.image}` +
       `&description=${this.sharingDescription}&url=${this.sharingUrl}`;
     },
-    shareTwitterHref () {
+    shareTwitterHref (): string {
       return `http://twitter.com/share?text=${this.twitterDescription}&url=${this.sharingUrl}`;
     },
-    shareFacebookHref () {
+    shareFacebookHref (): string {
       return `http://www.facebook.com/sharer.php?u=${this.sharingUrl}`;
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
