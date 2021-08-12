@@ -15,7 +15,7 @@
       <div class="checkout__aside desktop-only">
         <transition name="fade">
           <div v-if="currentStep <= 2">
-            <OProductsListTable :products-in-cart="productsInCart" :is-header-show="false" />
+            <OCartItemsListTable :cart-items="productsInCart" :should-show-header="false" />
             <OOrderSummary class="checkout__aside-order" />
           </div>
           <OOrderReview v-else class="checkout__aside-order" />
@@ -35,7 +35,7 @@ import OOrderReview from 'theme/components/organisms/o-order-review';
 import OOrderSummary from 'theme/components/organisms/o-order-summary';
 import OOrderConfirmation from 'theme/components/organisms/o-order-confirmation';
 import OPersonalDetails from 'theme/components/organisms/o-personal-details';
-import OProductsListTable from 'theme/components/organisms/o-products-list-table';
+import OCartItemsListTable from 'theme/components/organisms/o-cart-items-list-table';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -48,7 +48,7 @@ export default {
     OOrderSummary,
     OConfirmOrder,
     OPersonalDetails,
-    OProductsListTable,
+    OCartItemsListTable,
     OOrderConfirmation
   },
   mixins: [Checkout],

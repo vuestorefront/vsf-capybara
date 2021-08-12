@@ -1,6 +1,9 @@
 <template>
-  <SfTable class="sf-table--bordered table desktop-only" :class="{'table--hidden-header': !isHeaderShow}">
-    <SfTableHeading class="table__row" v-if="isHeaderShow">
+  <SfTable
+    class="sf-table--bordered o-cart-items-list-table desktop-only"
+    :class="{'o-cart-items-list-table--hidden-header': !shouldShowHeader}"
+  >
+    <SfTableHeading class="table__row" v-if="shouldShowHeader">
       <SfTableHeader class="table__header table__image">
         {{ $t('Thumbnail') }}
       </SfTableHeader>
@@ -17,8 +20,8 @@
       </SfTableHeader>
     </SfTableHeading>
     <SfTableRow
-      v-for="product in productsInCart"
-      :key="product.id + product.checksum"
+      v-for="product in cartItems"
+      :key="product.id && product.checksum ? product.id + product.checksum : product.name"
       class="table__row"
     >
       <SfTableData class="table__image">
@@ -68,7 +71,8 @@
   </SfTable>
 </template>
 
-<script>
+<script lang="ts">
+import { PropType } from 'vue';
 import {
   SfIcon,
   SfImage,
@@ -79,9 +83,11 @@ import { onlineHelper } from '@vue-storefront/core/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 
 import { getProductPrice } from 'theme/helpers';
+import CartItem from 'core/modules/cart/types/CartItem';
+import CartItemOption from 'core/modules/cart/types/CartItemOption';
 
 export default {
-  name: 'OProductsListTable',
+  name: 'OCartItemsListTable',
   components: {
     SfIcon,
     SfImage,
@@ -89,21 +95,26 @@ export default {
     SfTable
   },
   props: {
-    isHeaderShow: {
+    shouldShowHeader: {
       type: Boolean,
       default: true
     },
-    productsInCart: {
-      type: Array,
-      default: () => []
-    },
-    tableHeaders: {
-      type: Array,
+    cartItems: {
+      type: Array as PropType<CartItem[]>,
       default: () => []
     }
   },
+  data () {
+    return {
+      tableHeaders: [
+        this.$t('Description'),
+        this.$t('Quantity'),
+        this.$t('Price')
+      ]
+    }
+  },
   methods: {
-    getBundleProductOptions (product) {
+    getBundleProductOptions (product: CartItem) {
       if (!product.bundle_options ||
           product.bundle_options.length < 2 ||
           !product.product_option ||
@@ -113,12 +124,14 @@ export default {
         return [];
       }
 
-      let result = [];
+      let result: string[] = [];
       const productBundleOptions = product.product_option.extension_attributes.bundle_options;
 
       product.bundle_options.forEach(option => {
         // Hide Forevers simple products
-        if ([73, 74, 75].includes(product.id) && option.title.toLowerCase() === 'product') {
+        if (typeof product.id === 'number' &&
+         [73, 74, 75].includes(product.id) &&
+          option.title.toLowerCase() === 'product') {
           return;
         }
 
@@ -135,7 +148,7 @@ export default {
         selections.forEach(selection => {
           const productLink = option.product_links.find(productLink => +productLink.id === selection);
 
-          if (!productLink) {
+          if (!productLink || !productLink.product) {
             return;
           }
 
@@ -145,28 +158,28 @@ export default {
 
       return result;
     },
-    getProductOptions (product) {
+    getProductOptions (product: CartItem): CartItemOption[] {
       return onlineHelper.isOnline && product.totals && product.totals.options
         ? product.totals.options
         : product.options || [];
     },
-    getProductQuantity (product) {
-      return this.isHeaderShow ? product.qty : `x ${product.qty}`;
+    getProductQuantity (product: CartItem): number | string {
+      return this.shouldShowHeader ? product.qty : `x ${product.qty}`;
     },
-    getProductRegularPrice (product) {
+    getProductRegularPrice (product: CartItem): string {
       return getProductPrice(product, {}).regular;
     },
-    getProductSpecialPrice (product) {
+    getProductSpecialPrice (product: CartItem): string {
       return getProductPrice(product, {}).special;
     },
-    getThumbnailForProduct (product) {
+    getThumbnailForProduct (product: CartItem): string {
       if (product.thumbnail && product.thumbnail.includes('://')) {
         return product.thumbnail;
       }
 
       return getThumbnailForProduct(product);
     },
-    isCustomOption (product, productOption) {
+    isCustomOption (product: CartItem, productOption: CartItemOption) {
       if (!product.custom_options) {
         return false;
       }
@@ -180,10 +193,10 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.table {
+.o-cart-items-list-table {
   margin: 0 0 var(--spacer-base) 0;
 
-  &__row {
+  .table__row {
     justify-content: space-between;
     align-items: center;
   }
@@ -204,8 +217,26 @@ export default {
     align-items: flex-end;
   }
 
+  &.o-cart-items-list-table--hidden-header {
+      .product-price {
+        ::v-deep .sf-price__old {
+            margin: 0;
+        }
+      }
+
+      .table__description {
+        flex-basis: 6rem;
+      }
+
+      .table__image {
+        --image-width: 8.125rem;
+        min-width: var(--image-width);
+        margin-right: 1em;
+      }
+  }
+
   @include for-desktop {
-    &__header {
+    .table__header {
       text-align: center;
 
       &:last-child {
@@ -213,11 +244,11 @@ export default {
       }
     }
 
-    &__data {
+    .table__data {
       text-align: center;
     }
 
-    &__description {
+    .table__description {
       text-align: left;
       flex: 1 0 12rem;
 
@@ -235,28 +266,10 @@ export default {
       }
     }
 
-    &__image {
+    .table__image {
       --image-width: 5.125rem;
       text-align: left;
     }
-  }
-
-  &.table--hidden-header {
-      .product-price {
-        ::v-deep .sf-price__old {
-            margin: 0;
-        }
-      }
-
-      .table__description {
-        flex-basis: 6rem;
-      }
-
-      .table__image {
-        --image-width: 8.125rem;
-        min-width: var(--image-width);
-        margin-right: 1em;
-      }
   }
 }
 </style>
