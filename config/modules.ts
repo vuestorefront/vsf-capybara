@@ -6,6 +6,7 @@ import { CheckoutModule } from '@vue-storefront/core/modules/checkout'
 import { NotificationModule } from '@vue-storefront/core/modules/notification'
 import { UrlModule } from '@vue-storefront/core/modules/url'
 import { BreadcrumbsModule } from '@vue-storefront/core/modules/breadcrumbs'
+import { GoogleTagManagerModule } from 'src/modules/google-tag-manager';
 import { UserModule } from '@vue-storefront/core/modules/user'
 import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
@@ -53,6 +54,7 @@ export function registerClientModules () {
   registerModule(StoryblokModule)
   registerModule(extendUrlModule)
   registerModule(BudsiesModule)
+  registerModule(GoogleTagManagerModule)
 }
 
 // Deprecated API, will be removed in 2.0
