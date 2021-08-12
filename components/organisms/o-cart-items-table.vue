@@ -1,7 +1,7 @@
 <template>
   <SfTable
-    class="sf-table--bordered o-cart-items-list-table desktop-only"
-    :class="{'o-cart-items-list-table--hidden-header': !shouldShowHeader}"
+    class="sf-table--bordered o-cart-items-table desktop-only"
+    :class="{'o-cart-items-table--hidden-header': !shouldShowHeader}"
   >
     <SfTableHeading class="table__row" v-if="shouldShowHeader">
       <SfTableHeader class="table__header table__image">
@@ -87,7 +87,7 @@ import CartItem from 'core/modules/cart/types/CartItem';
 import CartItemOption from 'core/modules/cart/types/CartItemOption';
 
 export default {
-  name: 'OCartItemsListTable',
+  name: 'OCartItemsTable',
   components: {
     SfIcon,
     SfImage,
@@ -193,7 +193,7 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.o-cart-items-list-table {
+.o-cart-items-table {
   margin: 0 0 var(--spacer-base) 0;
 
   .table__row {
@@ -217,7 +217,7 @@ export default {
     align-items: flex-end;
   }
 
-  &.o-cart-items-list-table--hidden-header {
+  &.o-cart-items-table--hidden-header {
       .product-price {
         ::v-deep .sf-price__old {
             margin: 0;

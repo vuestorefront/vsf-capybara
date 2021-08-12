@@ -158,7 +158,7 @@
       </SfAccordionItem>
     </SfAccordion>
 
-    <o-cart-items-list-table :cart-items="productsInCart" />
+    <o-cart-items-table :cart-items="productsInCart" />
 
     <div class="summary mobile-only">
       <div class="summary__content">
@@ -262,14 +262,14 @@ import { ModalList } from 'theme/store/ui/modals'
 import { createSmoothscroll } from 'theme/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 
-import OCartItemsListTable from 'theme/components/organisms/o-cart-items-list-table';
+import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 
 export default {
   name: 'OConfirmOrder',
   components: {
     APromoCode,
     MPriceSummary,
-    OCartItemsListTable,
+    OCartItemsTable,
     SfIcon,
     SfImage,
     SfPrice,
