@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
-import { mapMutations } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
@@ -84,6 +84,8 @@ import ForeversWizardProductTypeStepData from '../interfaces/forevers-wizard-pro
 import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-image-upload-step-data.interface';
 import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
+import CartItem from 'core/modules/cart/types/CartItem';
+import BodypartOption from '../interfaces/bodypart-option';
 
 interface InjectedServices {
   window: Window
@@ -107,6 +109,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     uploadedArtworkId: {
       type: String,
       default: undefined
+    },
+    existingPlushieId: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -142,11 +148,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
+    ...mapGetters({
+      cartItems: 'cart/getCartItems',
+      bodyPartsValues: 'budsies/getBodypartBodypartsValues'
+    }),
     skinClass (): string {
       return '-skin-petsies';
     },
     product (): Product | null {
-      return this.$store.getters['product/getCurrentProduct'];
+      const existingProduct = this.getExistingProduct();
+      return existingProduct || this.$store.getters['product/getCurrentProduct'];
     },
     plushieId (): number | undefined {
       return this.productTypeStepData.plushieId;
@@ -216,6 +227,44 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.isSubmitting = false;
       }
     },
+    getExistingProduct (): Product | null {
+      const cartItemIndex =
+       (this.cartItems as CartItem[]).findIndex(({ plushieId }) => plushieId === this.existingPlushieId);
+
+      if (cartItemIndex < 0) {
+        return null;
+      }
+
+      return this.cartItems[cartItemIndex];
+    },
+    fillPlushieData (): void {
+      if (!this.existingPlushieId) {
+        return;
+      }
+
+      this.currentStep = 1; // todo
+
+      this.fillProductTypeStepData(this.product as CartItem);
+      this.fillImageUploadStepData(this.product as CartItem);
+      this.fillPetInfoStepData(this.product as CartItem);
+      this.fillCustomizeStepData(this.product as CartItem);
+    },
+    fillProductTypeStepData (cartItem: CartItem): void {
+      this.productTypeStepData.product = cartItem;
+      this.productTypeStepData.plushieId = cartItem.plushieId ? Number.parseInt(cartItem.plushieId, 10) : undefined;
+    },
+    fillImageUploadStepData (cartItem: CartItem): void {
+      this.imageUploadStepData.uploadMethod = cartItem.uploadMethod as ImageUploadMethod;
+      this.imageUploadStepData.storageItemsIds = cartItem.customerImagesIds ? cartItem.customerImagesIds : [];
+    },
+    fillPetInfoStepData (cartItem: CartItem) {
+      this.petInfoStepData.name = cartItem.plushieName;
+      this.petInfoStepData.breed = cartItem.plushieBreed;
+      this.petInfoStepData.email = cartItem.email;
+    },
+    fillCustomizeStepData (cartItem: CartItem) {
+      this.customizeStepData.bodypartsValues = cartItem.bodyparts as Record<string, BodypartOption | BodypartOption[] | undefined>;
+    },
     nextStep (): void {
       if (this.currentStep === 3) {
         return;
@@ -261,6 +310,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   created (): void {
     this.$store.dispatch('budsies/loadBreeds');
 
+    this.fillPlushieData();
+
     if (this.uploadedArtworkId) {
       this.imageUploadStepData.storageItemsIds = [ this.uploadedArtworkId ];
       this.imageUploadStepData.uploadMethod = ImageUploadMethod.NOW;
@@ -277,6 +328,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           this.$store.dispatch('budsies/loadProductBodyparts', { productId: this.product.id }),
           this.$store.dispatch('budsies/loadProductRushAddons', { productId: this.product.id })
         ]);
+
+        // console.log(this.bodyPartsValues(this.customizeStepData.bodypartsValues[108]));
       },
       immediate: true
 
