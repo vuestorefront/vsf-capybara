@@ -365,10 +365,10 @@ export default Vue.extend({
       getBodypartOptions: 'budsies/getBodypartOptions'
     }),
     selectedAddons: {
-      get (): AddonOption[] {
+      get (): string[] {
         return this.value.addons;
       },
-      set (value: AddonOption[]): void {
+      set (value: string[]): void {
         const newValue = { ...this.value, addons: value };
         this.$emit('input', newValue);
       }

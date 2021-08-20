@@ -4,7 +4,7 @@ import ProductionTimeOption from './production-time-option.interface';
 
 export default interface ForeversWizardCustomizeStepData {
   bodypartsValues: Record<string, BodypartOption | BodypartOption[] | undefined>,
-  addons: AddonOption[],
+  addons: string[],
   description?: string,
   productionTime?: ProductionTimeOption,
   quantity: number

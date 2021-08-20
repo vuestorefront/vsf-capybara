@@ -238,13 +238,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      const addons = getAddonOptions(this.addonsBundleOption);
       Vue.set(
         this.customizeStepData,
         'addons',
-        addons.filter(
-          (addon) => productOption.extension_attributes.bundle_options[addon.optionId].option_selections.includes(Number.parseInt(addon.optionValueId, 10))
-        )
+        productOption.extension_attributes.bundle_options[33].option_selections.map((selection: number) => selection.toString())
       );
     },
     fillBodypartsValues (cartItem: CartItem): void {
@@ -374,7 +371,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     },
     'customizeStepData.addons': {
-      handler (newValue: AddonOption[]) {
+      handler (newValue: string[]) {
         if (!this.addonsBundleOption) {
           return
         }
@@ -382,7 +379,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.setBundleOptionValue({
           optionId: this.addonsBundleOption.option_id,
           optionQty: 1,
-          optionSelections: newValue.map(item => item.optionValueId)
+          optionSelections: newValue
         });
       },
       immediate: false

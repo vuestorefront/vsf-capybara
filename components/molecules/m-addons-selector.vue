@@ -17,7 +17,7 @@
       <MCheckbox
         name="upgrades[]"
         class="_addon-input"
-        :value="addon"
+        :value="addon.optionValueId"
         v-model="selectedValues"
         :disabled="disabled"
       >
