@@ -55,7 +55,7 @@
         :name="bodypart.code"
         v-model="bodypartsValues[bodypart.id]"
         :max-values="bodypart.maxValues"
-        :options="getBodypartValues(bodypart)"
+        :options="getBodypartOptions(bodypart.id)"
         type="bodypart"
         :disabled="disabled"
       />
@@ -279,18 +279,16 @@
 import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
+import { mapGetters } from 'vuex';
 
 import { SfHeading, SfButton, SfModal, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
-import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
+import { getAddonOptions } from 'theme/helpers/addon-option';
 
 import { isVue } from 'src/modules/shared';
-import {
-  Bodypart,
-  BodypartValue
-} from 'src/modules/budsies';
+import { Bodypart } from 'src/modules/budsies';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
@@ -363,6 +361,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    ...mapGetters({
+      getBodypartOptions: 'budsies/getBodypartOptions'
+    }),
     selectedAddons: {
       get (): AddonOption[] {
         return this.value.addons;
@@ -409,32 +410,7 @@ export default Vue.extend({
       }
     },
     addons (): AddonOption[] {
-      if (!this.addonsBundleOption) {
-        return []
-      }
-
-      let result: AddonOption[] = [];
-      for (const productLink of this.addonsBundleOption.product_links) {
-        if (!productLink.product) {
-          continue;
-        }
-
-        const images: string[] = getGalleryByProduct(productLink.product).map((i: any) => i.src);
-
-        result.push({
-          id: Number(productLink.product.id),
-          sku: productLink.product.sku,
-          name: productLink.product.name,
-          description: productLink.product.description,
-          price: productLink.product.final_price,
-          images: images,
-          optionId: this.addonsBundleOption.option_id,
-          optionValueId: productLink.id.toString(),
-          videoUrl: (productLink.product as any).video_url
-        });
-      }
-
-      return result;
+      return getAddonOptions(this.addonsBundleOption);
     },
     bodyparts (): Bodypart[] {
       if (!this.product) {
@@ -461,29 +437,29 @@ export default Vue.extend({
     }
   },
   methods: {
-    getBodypartValues (bodypart: Bodypart): BodypartOption[] {
-      const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
+    // getBodypartOptions (bodypart: Bodypart): BodypartOption[] {
+    //   const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
-      if (!bodypartsValues.length) {
-        return [];
-      }
+    //   if (!bodypartsValues.length) {
+    //     return [];
+    //   }
 
-      const result: BodypartOption[] = [];
+    //   const result: BodypartOption[] = [];
 
-      for (const bodypartValue of bodypartsValues) {
-        result.push({
-          id: bodypartValue.id,
-          label: bodypartValue.name,
-          value: bodypartValue.code,
-          isSelected: false,
-          contentTypeId: bodypartValue.contentTypeId,
-          color: bodypartValue.color,
-          image: bodypartValue.image
-        });
-      }
+    //   for (const bodypartValue of bodypartsValues) {
+    //     result.push({
+    //       id: bodypartValue.id,
+    //       label: bodypartValue.name,
+    //       value: bodypartValue.code,
+    //       isSelected: false,
+    //       contentTypeId: bodypartValue.contentTypeId,
+    //       color: bodypartValue.color,
+    //       image: bodypartValue.image
+    //     });
+    //   }
 
-      return result;
-    },
+    //   return result;
+    // },
     getFieldAnchorName (field: string): string {
       field = field.toLowerCase().replace(/ /g, '-');
 

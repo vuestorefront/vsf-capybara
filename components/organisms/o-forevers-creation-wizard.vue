@@ -23,7 +23,7 @@
         <MImageUploadStep
           :initial-value="imageUploadStepData"
           :artwork-upload-url="artworkUploadUrl"
-          :product="product"
+          :product="activeProduct"
           :plushie-id="plushieId"
           :disabled="isSubmitting"
           @input="imageUploadStepData = $event"
@@ -45,7 +45,7 @@
         <MCustomizeStep
           v-model="customizeStepData"
           :plushie-id="plushieId"
-          :product="product"
+          :product="activeProduct"
           :addons-bundle-option="addonsBundleOption"
           :production-time-bundle-option="productionTimeBundleOption"
           :add-to-cart="addToCart"
@@ -86,6 +86,7 @@ import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-inf
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import CartItem from 'core/modules/cart/types/CartItem';
 import BodypartOption from '../interfaces/bodypart-option';
+import { getAddonOptions } from 'theme/helpers/addon-option';
 
 interface InjectedServices {
   window: Window
@@ -150,31 +151,35 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   computed: {
     ...mapGetters({
       cartItems: 'cart/getCartItems',
-      bodyPartsValues: 'budsies/getBodypartBodypartsValues'
+      bodyPartsOptions: 'budsies/getBodypartOptions'
     }),
     skinClass (): string {
       return '-skin-petsies';
     },
+    activeProduct (): Product | CartItem | null {
+      return this.existingCartitem ? this.existingCartitem : this.product;
+    },
     product (): Product | null {
-      const existingProduct = this.getExistingProduct();
-      return existingProduct || this.$store.getters['product/getCurrentProduct'];
+      return this.$store.getters['product/getCurrentProduct'];
     },
     plushieId (): number | undefined {
       return this.productTypeStepData.plushieId;
     },
     addonsBundleOption (): BundleOption | undefined {
-      if (!this.product?.bundle_options) {
-        return undefined;
-      }
-
-      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'addons');
+      return this.getBundleOption('addons');
     },
     productionTimeBundleOption (): BundleOption | undefined {
-      if (!this.product?.bundle_options) {
-        return undefined;
+      return this.getBundleOption('production time');
+    },
+    existingCartitem (): CartItem | null {
+      const cartItemIndex =
+       (this.cartItems as CartItem[]).findIndex(({ plushieId }) => plushieId === this.existingPlushieId);
+
+      if (cartItemIndex < 0) {
+        return null;
       }
 
-      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'production time');
+      return this.cartItems[cartItemIndex];
     }
   },
   methods: {
@@ -227,43 +232,69 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.isSubmitting = false;
       }
     },
-    getExistingProduct (): Product | null {
-      const cartItemIndex =
-       (this.cartItems as CartItem[]).findIndex(({ plushieId }) => plushieId === this.existingPlushieId);
-
-      if (cartItemIndex < 0) {
-        return null;
+    fillAddons (cartItem: CartItem): void {
+      const productOption = cartItem.product_option;
+      if (!this.addonsBundleOption || !productOption) {
+        return;
       }
 
-      return this.cartItems[cartItemIndex];
+      const addons = getAddonOptions(this.addonsBundleOption);
+      Vue.set(
+        this.customizeStepData,
+        'addons',
+        addons.filter(
+          (addon) => productOption.extension_attributes.bundle_options[addon.optionId].option_selections.includes(Number.parseInt(addon.optionValueId, 10))
+        )
+      );
     },
-    fillPlushieData (): void {
-      if (!this.existingPlushieId) {
+    fillBodypartsValues (cartItem: CartItem): void {
+      if (!cartItem.bodyparts) {
+        return;
+      }
+
+      const bodyparts: Record<string, string[]> = cartItem.bodyparts as Record<string, string[]>;
+
+      Object.keys(bodyparts).forEach((key: string) => {
+        Vue.set(
+          this.customizeStepData.bodypartsValues,
+          key,
+          this.bodyPartsOptions(key).filter(
+            (bodypart: BodypartOption) => bodyparts[key].includes(bodypart.id)
+          )
+        );
+      });
+    },
+    async fillPlushieData (): Promise<void> {
+      if (!this.existingCartitem) {
         return;
       }
 
       this.currentStep = 1; // todo
 
-      this.fillProductTypeStepData(this.product as CartItem);
-      this.fillImageUploadStepData(this.product as CartItem);
-      this.fillPetInfoStepData(this.product as CartItem);
-      this.fillCustomizeStepData(this.product as CartItem);
+      this.fillProductTypeStepData(this.existingCartitem);
+      this.fillImageUploadStepData(this.existingCartitem);
+      this.fillPetInfoStepData(this.existingCartitem);
+
+      await this.loadProductOptions(this.existingCartitem.id);
+
+      this.fillCustomizeStepData(this.existingCartitem);
     },
     fillProductTypeStepData (cartItem: CartItem): void {
-      this.productTypeStepData.product = cartItem;
+      this.productTypeStepData.product = { ...cartItem };
       this.productTypeStepData.plushieId = cartItem.plushieId ? Number.parseInt(cartItem.plushieId, 10) : undefined;
     },
     fillImageUploadStepData (cartItem: CartItem): void {
       this.imageUploadStepData.uploadMethod = cartItem.uploadMethod as ImageUploadMethod;
       this.imageUploadStepData.storageItemsIds = cartItem.customerImagesIds ? cartItem.customerImagesIds : [];
     },
-    fillPetInfoStepData (cartItem: CartItem) {
+    fillPetInfoStepData (cartItem: CartItem): void {
       this.petInfoStepData.name = cartItem.plushieName;
       this.petInfoStepData.breed = cartItem.plushieBreed;
       this.petInfoStepData.email = cartItem.email;
     },
-    fillCustomizeStepData (cartItem: CartItem) {
-      this.customizeStepData.bodypartsValues = cartItem.bodyparts as Record<string, BodypartOption | BodypartOption[] | undefined>;
+    fillCustomizeStepData (cartItem: CartItem): void {
+      this.fillBodypartsValues(cartItem);
+      this.fillAddons(cartItem);
     },
     nextStep (): void {
       if (this.currentStep === 3) {
@@ -291,8 +322,21 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return data;
     },
+    getBundleOption (optionTitle: string): BundleOption | undefined {
+      if (!this.activeProduct?.bundle_options) {
+        return undefined;
+      }
+
+      return this.activeProduct.bundle_options.find((option: BundleOption) => option.title.toLowerCase() === optionTitle);
+    },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
+    },
+    async loadProductOptions (id?: number | string): Promise<void> {
+      await Promise.all([
+        this.$store.dispatch('budsies/loadProductBodyparts', { productId: id }),
+        this.$store.dispatch('budsies/loadProductRushAddons', { productId: id })
+      ]);
     },
     onChangeStep (nextStep: number) {
       if (nextStep < this.currentStep) {
@@ -324,12 +368,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return;
         }
 
-        await Promise.all([
-          this.$store.dispatch('budsies/loadProductBodyparts', { productId: this.product.id }),
-          this.$store.dispatch('budsies/loadProductRushAddons', { productId: this.product.id })
-        ]);
-
-        // console.log(this.bodyPartsValues(this.customizeStepData.bodypartsValues[108]));
+        await this.loadProductOptions(this.product.id);
       },
       immediate: true
 
