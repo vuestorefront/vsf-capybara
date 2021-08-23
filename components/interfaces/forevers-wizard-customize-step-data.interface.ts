@@ -6,6 +6,6 @@ export default interface ForeversWizardCustomizeStepData {
   bodypartsValues: Record<string, BodypartOption | BodypartOption[] | undefined>,
   addons: string[],
   description?: string,
-  productionTime?: ProductionTimeOption,
+  productionTime?: number,
   quantity: number
 }

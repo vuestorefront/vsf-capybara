@@ -238,11 +238,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      Vue.set(
-        this.customizeStepData,
-        'addons',
-        productOption.extension_attributes.bundle_options[33].option_selections.map((selection: number) => selection.toString())
-      );
+      this.customizeStepData.addons = productOption.extension_attributes.bundle_options[this.addonsBundleOption.option_id].option_selections.map((selection: number) => selection.toString(10));
     },
     fillBodypartsValues (cartItem: CartItem): void {
       if (!cartItem.bodyparts) {
@@ -280,6 +276,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.productTypeStepData.product = { ...cartItem };
       this.productTypeStepData.plushieId = cartItem.plushieId ? Number.parseInt(cartItem.plushieId, 10) : undefined;
     },
+    fillProductionTime (cartItem: CartItem): void {
+      const productOption = cartItem.product_option;
+      if (!this.productionTimeBundleOption || !productOption) {
+        return;
+      }
+
+      this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
+    },
     fillImageUploadStepData (cartItem: CartItem): void {
       this.imageUploadStepData.uploadMethod = cartItem.uploadMethod as ImageUploadMethod;
       this.imageUploadStepData.storageItemsIds = cartItem.customerImagesIds ? cartItem.customerImagesIds : [];
@@ -292,6 +296,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     fillCustomizeStepData (cartItem: CartItem): void {
       this.fillBodypartsValues(cartItem);
       this.fillAddons(cartItem);
+      this.fillProductionTime(cartItem);
+      this.customizeStepData.description = cartItem.plushieDescription;
+      this.customizeStepData.quantity = cartItem.qty;
     },
     nextStep (): void {
       if (this.currentStep === 3) {
@@ -393,7 +400,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.setBundleOptionValue({
           optionId: this.productionTimeBundleOption.option_id,
           optionQty: 1,
-          optionSelections: newValue?.optionValueId ? [newValue.optionValueId] : []
+          optionSelections: newValue ? [newValue] : []
         });
       },
       immediate: false

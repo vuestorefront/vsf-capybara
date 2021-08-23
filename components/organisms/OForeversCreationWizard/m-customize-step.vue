@@ -140,7 +140,7 @@
             <SfSelectOption
               v-for="option in productionTimeOptions"
               :key="option.id"
-              :value="option"
+              :value="option.optionValueId"
             >
               {{ option.text }}
             </SfSelectOption>
@@ -401,10 +401,10 @@ export default Vue.extend({
       }
     },
     productionTime: {
-      get (): ProductionTimeOption | undefined {
+      get (): number | undefined {
         return this.value.productionTime;
       },
-      set (value: ProductionTimeOption | undefined): void {
+      set (value: number | undefined): void {
         const newValue: ForeversWizardCustomizeStepData = { ...this.value, productionTime: value };
         this.$emit('input', newValue);
       }
@@ -494,11 +494,11 @@ export default Vue.extend({
     }
   },
   mounted () {
-    if (!this.productionTimeOptions.length) {
+    if (!this.productionTimeOptions.length || this.productionTime) {
       return;
     }
 
-    this.productionTime = this.productionTimeOptions[0];
+    this.productionTime = this.productionTimeOptions[0].optionValueId;
   }
 });
 
