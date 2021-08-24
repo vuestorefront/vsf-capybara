@@ -46,6 +46,7 @@
           :disabled="isDisabled"
           :upload-url="artworkUploadUrl"
           :allow-multiple="true"
+          :initial-files="initialFiles"
           v-if="backendProductId"
           @file-added="onArtworkAdd"
           @file-removed="onArtworkRemove"
@@ -196,7 +197,8 @@ export default Vue.extend({
     return {
       isUploadProcessingInProgress: false,
       uploadMethod: ImageUploadMethod.NOW,
-      storageItemsIds: [] as string[]
+      storageItemsIds: [] as string[],
+      initialFiles: [] as string[]
     }
   },
   computed: {
@@ -266,6 +268,8 @@ export default Vue.extend({
       this.$emit('input', newValue);
     },
     onArtworkRemove (storageItemId: string): void {
+      console.log('onRemove', storageItemId);
+
       const index = this.storageItemsIds.indexOf(storageItemId, 0);
       if (index === -1) {
         return;
@@ -301,6 +305,8 @@ export default Vue.extend({
   created (): void {
     this.uploadMethod = this.initialValue.uploadMethod;
     this.storageItemsIds = this.initialValue.storageItemsIds;
+    this.initialFiles = this.initialValue.storageItemsIds.map((id) => `https://images.st.budsies.com/budsies-staging-artworks/${id}.jpg`);
+    // this.initialFiles = this.initialValue.storageItemsIds.map((id) => id);
   },
   watch: {
     plushieId: {

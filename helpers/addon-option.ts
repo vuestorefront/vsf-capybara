@@ -23,7 +23,7 @@ export function getAddonOptions (addonsBundleOption?: BundleOption): AddonOption
       price: productLink.product.final_price,
       images: images,
       optionId: addonsBundleOption.option_id,
-      optionValueId: productLink.id.toString(),
+      optionValueId: ((typeof productLink.id === 'number') ? productLink.id : Number.parseInt(productLink.id, 10) as number),
       videoUrl: (productLink.product as any).video_url
     });
   }

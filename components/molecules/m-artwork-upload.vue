@@ -30,6 +30,7 @@
         @processfiles="onAllFilesProcessed"
         @addfile="onFileAdded"
         @processfileabort="onFileAbort"
+        @removefile="onFileRemove"
       />
     </div>
   </div>
@@ -40,7 +41,7 @@
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
-import Vue, { VueConstructor } from 'vue';
+import Vue, { PropType, VueConstructor } from 'vue';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
 import { File as FilePond, Status } from 'filepond';
@@ -119,6 +120,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     disabled: {
       type: Boolean,
       default: false
+    },
+    initialFiles: {
+      type: Array as PropType<string[]>,
+      default: () => []
     }
   },
   data () {
@@ -142,18 +147,24 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return result;
     },
     files (): FilePondInitialFile[] | undefined {
-      if (!this.file) {
-        return undefined;
-      }
-
-      return [
-        {
-          source: this.file,
-          options: {
-            type: 'local'
-          }
+      return this.initialFiles.map((file) => ({
+        source: file,
+        options: {
+          type: 'local'
         }
-      ];
+      }));
+      // if (!this.file) {
+      //   return undefined;
+      // }
+
+      // return [
+      //   {
+      //     source: this.file,
+      //     options: {
+      //       type: 'local'
+      //     }
+      //   }
+      // ];
     },
     isBusy (): boolean {
       if (
@@ -173,6 +184,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     );
     this.fDragHoverHandler = (e: DragEvent) => this.onDropzoneDragHover(e);
     this.fDragDropHandler = (e: DragEvent) => this.onDropzoneDrop(e);
+    if (this.initialFiles.length) {
+      this.file = this.initialFiles[0];
+    }
   },
   mounted (): void {
     const dropzone = this.getDropzone();
@@ -195,6 +209,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     });
   },
   methods: {
+    onFileRemove (error, event) {
+      this.$emit('file-removed', event.filenameWithoutExtension);
+    },
     clearInput (): void {
       const fileInput = this.getFileInput();
       if (!fileInput) {

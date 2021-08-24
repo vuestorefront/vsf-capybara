@@ -283,6 +283,7 @@ export default {
       return formatProductLink(product);
     },
     getProductRegularPrice (product) {
+      console.log(getProductPrice(product, {}));
       return getProductPrice(product, {}).regular;
     },
     getProductSpecialPrice (product) {
@@ -292,6 +293,7 @@ export default {
       this.$store.dispatch('cart/removeItem', { product: product });
     },
     getThumbnailForProductExtend (product) {
+      console.log('productThumb', product);
       if (product.thumbnail && product.thumbnail.includes('://')) {
         return product.thumbnail;
       }

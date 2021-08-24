@@ -140,7 +140,7 @@
             <SfSelectOption
               v-for="option in productionTimeOptions"
               :key="option.id"
-              :value="option.optionValueId"
+              :value="option.optionValueId ? option.optionValueId : ''"
             >
               {{ option.text }}
             </SfSelectOption>
@@ -365,10 +365,10 @@ export default Vue.extend({
       getBodypartOptions: 'budsies/getBodypartOptions'
     }),
     selectedAddons: {
-      get (): string[] {
+      get (): number[] {
         return this.value.addons;
       },
-      set (value: string[]): void {
+      set (value: number[]): void {
         const newValue = { ...this.value, addons: value };
         this.$emit('input', newValue);
       }
