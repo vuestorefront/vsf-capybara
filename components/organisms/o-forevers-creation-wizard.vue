@@ -384,7 +384,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       if (this.imageUploadStepData.uploadMethod === ImageUploadMethod.NOW) {
         storageItemsIds = this.imageUploadStepData.storageItemsIds;
       }
-      console.log('product', this.product);
 
       try {
         await this.updateClientAndServerItem({

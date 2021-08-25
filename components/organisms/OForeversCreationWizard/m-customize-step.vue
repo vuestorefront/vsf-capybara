@@ -437,29 +437,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    // getBodypartOptions (bodypart: Bodypart): BodypartOption[] {
-    //   const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
-
-    //   if (!bodypartsValues.length) {
-    //     return [];
-    //   }
-
-    //   const result: BodypartOption[] = [];
-
-    //   for (const bodypartValue of bodypartsValues) {
-    //     result.push({
-    //       id: bodypartValue.id,
-    //       label: bodypartValue.name,
-    //       value: bodypartValue.code,
-    //       isSelected: false,
-    //       contentTypeId: bodypartValue.contentTypeId,
-    //       color: bodypartValue.color,
-    //       image: bodypartValue.image
-    //     });
-    //   }
-
-    //   return result;
-    // },
     getFieldAnchorName (field: string): string {
       field = field.toLowerCase().replace(/ /g, '-');
 

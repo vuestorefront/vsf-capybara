@@ -100,32 +100,6 @@ export default Vue.extend({
       return this.maxValues > 1 ? 'checkbox' : 'radio';
     }
   },
-  // selectedOption: {
-  //     get (): string | string[] | undefined {
-  //       if (this.inputType === 'checkbox' && this.value === undefined) {
-  //         return [];
-  //       }
-
-  //       if (Array.isArray(this.value)) {
-  //         return this.inputType === 'checkbox' ? this.value.map((item) => item.id) : this.value.map((item) => item.id)[0];
-  //       }
-
-  //       return this.value ? this.value.id : undefined;
-  //     },
-  //     set (value: string | string[]): void {
-  //       let item: BodypartOption | BodypartOption[];
-  //       if (Array.isArray(value) && this.inputType === 'checkbox') {
-  //         item = this.options.filter((option) => value.includes(option.id));
-  //       } else {
-  //         item = this.options.filter((option) => value.includes(option.id))[0];
-  //       }
-  //       this.$emit('input', item);
-  //     }
-  //   },
-  //   inputType (): 'checkbox' | 'radio' {
-  //     return this.maxValues > 1 ? 'checkbox' : 'radio';
-  //   }
-  // },
   created: function (): void {
     this.instanceId = instanceId.toString();
     instanceId += 1;
@@ -159,7 +133,6 @@ export default Vue.extend({
       }
 
       const existingItem = this.selectedOption.find(item => item.value === option.value);
-      // const existingItem = this.selectedOption.find(item => item === option.id);
 
       if (existingItem) {
         return;
