@@ -190,7 +190,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       setCurrentProduct: catalogTypes.PRODUCT_SET_CURRENT
     }),
     ...mapActions({
-      updateItem: 'cart/updateItem'
+      updateClientAndServerItem: 'cart/updateClientAndServerItem'
     }),
     async addToCart (): Promise<void> {
       if (this.isSubmitting) {
@@ -387,7 +387,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       console.log('product', this.product);
 
       try {
-        await this.updateItem({
+        await this.updateClientAndServerItem({
           product: Object.assign({}, this.product, {
             qty: this.customizeStepData.quantity,
             plushieId: this.plushieId + '',
@@ -398,12 +398,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             bodyparts: this.getBodypartsData(),
             customerImagesIds: storageItemsIds,
             uploadMethod: this.imageUploadStepData.uploadMethod
-          })
+          }),
+          forceUpdateServerItem: true
         });
-
-        // await CartService.updateItem(this.$store.getters['cart/getCartToken'], this.existingCartitem);
-        await this.$store.dispatch('cart/sync', { forceClientState: false, forceSync: true, forceMerge: true });
-        // await this.$store.dispatch('cart/syncTotals')
 
         this.goToCart();
       } catch (error) {

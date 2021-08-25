@@ -305,8 +305,7 @@ export default Vue.extend({
   created (): void {
     this.uploadMethod = this.initialValue.uploadMethod;
     this.storageItemsIds = this.initialValue.storageItemsIds;
-    this.initialFiles = this.initialValue.storageItemsIds.map((id) => `https://images.st.budsies.com/budsies-staging-artworks/${id}.jpg`);
-    // this.initialFiles = this.initialValue.storageItemsIds.map((id) => id);
+    this.initialFiles = this.initialValue.storageItemsIds.map((id) => `https://images.st.budsies.com/budsies-staging-artworks/${id}.jpg`); // TODO mock
   },
   watch: {
     plushieId: {
