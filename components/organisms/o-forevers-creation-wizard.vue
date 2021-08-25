@@ -62,6 +62,7 @@ import Vue, { VueConstructor } from 'vue';
 import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
+import { setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 import { SfHeading, SfSteps } from '@storefront-ui/vue';
@@ -78,17 +79,12 @@ import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue'
 import MPetInfoStep from './OForeversCreationWizard/m-pet-info-step.vue';
 import MCustomizeStep from './OForeversCreationWizard/m-customize-step.vue';
 
-import AddonOption from '../interfaces/addon-option.interface';
-import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import ForeversWizardProductTypeStepData from '../interfaces/forevers-wizard-product-type-step-data.interface';
 import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-image-upload-step-data.interface';
 import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import CartItem from 'core/modules/cart/types/CartItem';
 import BodypartOption from '../interfaces/bodypart-option';
-import { getAddonOptions } from 'theme/helpers/addon-option';
-import { CartService } from '@vue-storefront/core/data-resolver';
-import { productChecksum } from '@vue-storefront/core/modules/cart/helpers';
 
 interface InjectedServices {
   window: Window
@@ -186,8 +182,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   methods: {
     ...mapMutations('product', {
-      setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION,
-      setCurrentProduct: catalogTypes.PRODUCT_SET_CURRENT
+      setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
     ...mapActions({
       updateClientAndServerItem: 'cart/updateClientAndServerItem'
@@ -271,7 +266,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.currentStep = 1; // todo
 
       this.fillImageUploadStepData(this.existingCartitem);
-      this.setCurrentProduct(this.existingCartitem);
       this.fillProductTypeStepData(this.existingCartitem);
       this.fillPetInfoStepData(this.existingCartitem);
 
@@ -375,11 +369,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.isSubmitting = true;
 
-      await this.$store.dispatch(
-        'product/setBundleOptions',
-        { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }
-      );
-
       let storageItemsIds: string[] = [];
       if (this.imageUploadStepData.uploadMethod === ImageUploadMethod.NOW) {
         storageItemsIds = this.imageUploadStepData.storageItemsIds;
@@ -387,7 +376,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       try {
         await this.updateClientAndServerItem({
-          product: Object.assign({}, this.product, {
+          product: Object.assign({}, this.existingCartitem, {
             qty: this.customizeStepData.quantity,
             plushieId: this.plushieId + '',
             email: this.petInfoStepData.email?.trim(),
@@ -396,7 +385,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieDescription: this.customizeStepData.description?.trim(),
             bodyparts: this.getBodypartsData(),
             customerImagesIds: storageItemsIds,
-            uploadMethod: this.imageUploadStepData.uploadMethod
+            uploadMethod: this.imageUploadStepData.uploadMethod,
+            product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options })
           }),
           forceUpdateServerItem: true
         });

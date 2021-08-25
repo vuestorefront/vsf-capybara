@@ -283,9 +283,9 @@ import { mapGetters } from 'vuex';
 
 import { SfHeading, SfButton, SfModal, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
+import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
-import { getAddonOptions } from 'theme/helpers/addon-option';
 
 import { isVue } from 'src/modules/shared';
 import { Bodypart } from 'src/modules/budsies';
@@ -410,7 +410,32 @@ export default Vue.extend({
       }
     },
     addons (): AddonOption[] {
-      return getAddonOptions(this.addonsBundleOption);
+      if (!this.addonsBundleOption) {
+        return []
+      }
+
+      let result: AddonOption[] = [];
+      for (const productLink of this.addonsBundleOption.product_links) {
+        if (!productLink.product) {
+          continue;
+        }
+
+        const images: string[] = getGalleryByProduct(productLink.product).map((i: any) => i.src);
+
+        result.push({
+          id: Number(productLink.product.id),
+          sku: productLink.product.sku,
+          name: productLink.product.name,
+          description: productLink.product.description,
+          price: productLink.product.final_price,
+          images: images,
+          optionId: this.addonsBundleOption.option_id,
+          optionValueId: ((typeof productLink.id === 'number') ? productLink.id : Number.parseInt(productLink.id, 10) as number),
+          videoUrl: (productLink.product as any).video_url
+        });
+      }
+
+      return result;
     },
     bodyparts (): Bodypart[] {
       if (!this.product) {
