@@ -42,6 +42,7 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
 import Vue, { PropType, VueConstructor } from 'vue';
+import config from 'config';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
 import { File as FilePond, Status } from 'filepond';
@@ -59,7 +60,8 @@ import { ErrorConverterService } from 'src/modules/budsies';
 import {
   FileProcessingRepositoryFactory,
   FileProcessingRepository,
-  ImageType
+  ImageType,
+  Item
 } from 'src/modules/file-storage';
 
 // Create component
@@ -121,8 +123,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       type: Boolean,
       default: false
     },
-    initialFiles: {
-      type: Array as PropType<string[]>,
+    initialItems: {
+      type: Array as PropType<Item[]>,
       default: () => []
     }
   },
@@ -147,24 +149,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return result;
     },
     files (): FilePondInitialFile[] | undefined {
-      return this.initialFiles.map((file) => ({
-        source: file,
+      return this.initialItems.map((item) => ({
+        source: `${config.images.imageHandlerServiceUrl}/${item.url}`,
         options: {
-          type: 'local'
+          type: 'local',
+          name: item.id
         }
       }));
-      // if (!this.file) {
-      //   return undefined;
-      // }
-
-      // return [
-      //   {
-      //     source: this.file,
-      //     options: {
-      //       type: 'local'
-      //     }
-      //   }
-      // ];
     },
     isBusy (): boolean {
       if (
@@ -184,9 +175,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     );
     this.fDragHoverHandler = (e: DragEvent) => this.onDropzoneDragHover(e);
     this.fDragDropHandler = (e: DragEvent) => this.onDropzoneDrop(e);
-    if (this.initialFiles.length) {
-      this.file = this.initialFiles[0];
-    }
   },
   mounted (): void {
     const dropzone = this.getDropzone();
