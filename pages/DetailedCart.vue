@@ -1,6 +1,9 @@
 <template>
-  <div id="detailed-cart">
-    <div class="detailed-cart">
+  <div id="detailed-cart" :class="{ '-loading': isLoading }">
+    <div class="loader-container" v-if="isLoading">
+      <div class="loader" />
+    </div>
+    <div class="detailed-cart" v-else>
       <div class="detailed-cart__main">
         <SfBreadcrumbs
           class="breadcrumbs desktop-only"
@@ -161,7 +164,7 @@ import {
   SfIcon
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
@@ -243,7 +246,8 @@ export default {
           text: 'Cart',
           link: '/cart'
         }
-      ]
+      ],
+      isMounted: false
     };
   },
   props: {
@@ -253,6 +257,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      cartIsLoaded: (state) => state.cart.cartIsLoaded
+    }),
     ...mapGetters({
       products: 'cart/getCartItems'
     }),
@@ -261,7 +268,14 @@ export default {
         (totalItems, product) => totalItems + parseInt(product.qty, 10),
         0
       );
+    },
+    isLoading () {
+      return !this.isMounted || !this.cartIsLoaded;
     }
+  },
+  async mounted () {
+    await this.$nextTick();
+    this.isMounted = true;
   },
   methods: {
     getProductOptions (product) {
@@ -352,12 +366,37 @@ export default {
 @import "~@storefront-ui/vue/styles";
 #detailed-cart {
   box-sizing: border-box;
+
+  &.-loading {
+    height: 100%;
+  }
+
   @include for-desktop {
     max-width: 1272px;
     margin: 0 auto;
     padding: 0 var(--spacer-sm);
   }
 }
+
+.loader-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .loader {
+    position: absolute;
+    width: 4.8em;
+    height: 4.8em;
+    border-radius: 100%;
+    border: 2px solid var(--c-secondary);
+    border-bottom-color: var(--c-primary);
+    animation: rotate 1s linear infinite;
+  }
+}
+
 .breadcrumbs {
   padding: var(--spacer-base) 0;
 }
