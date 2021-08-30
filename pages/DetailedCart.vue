@@ -388,8 +388,8 @@ export default {
 
   .loader {
     position: absolute;
-    width: 2.4em;
-    height: 2.4em;
+    width: 4.8em;
+    height: 4.8em;
     border-radius: 100%;
     border: 2px solid var(--c-secondary);
     border-bottom-color: var(--c-primary);
