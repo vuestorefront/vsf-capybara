@@ -7,7 +7,8 @@
 
         .sf-select__options {
             // For Firefox
-            scrollbar-color: var(--c-light) var(--c-white);
+            scrollbar-color: var(--c-dark-variant) var(--c-white);
+            scrollbar-width: thin;
 
             &::-webkit-scrollbar {
                 width: 6px;
@@ -15,7 +16,7 @@
     
             &::-webkit-scrollbar-thumb {
                 border-radius: 1em;
-                background: var(--c-light);
+                background: var(--c-dark-variant);
             }
         }
     }

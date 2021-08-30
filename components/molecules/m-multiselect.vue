@@ -267,7 +267,8 @@ export default Vue.extend({
       box-shadow: 0 4px 11px rgba(var(--c-dark-base), 0.1);
 
       // For Firefox
-      scrollbar-color: var(--c-light) var(--c-white);
+      scrollbar-color: var(--c-dark-variant) var(--c-white);
+      scrollbar-width: thin;
 
       &::-webkit-scrollbar {
         width: 6px;
@@ -275,7 +276,7 @@ export default Vue.extend({
 
       &::-webkit-scrollbar-thumb {
           border-radius: 1em;
-          background: var(--c-light);
+          background: var(--c-dark-variant);
       }
     }
 
