@@ -4,10 +4,47 @@
     }
     &__dropdown {
         --select-dropdown-z-index: 21;
+
+        .sf-select__options {
+            // For Firefox
+            scrollbar-color: var(--c-light) var(--c-white);
+
+            &::-webkit-scrollbar {
+                width: 6px;
+            } 
+    
+            &::-webkit-scrollbar-thumb {
+                border-radius: 1em;
+                background: var(--c-light);
+            }
+        }
     }
+
     @include for-desktop {
         &__options {
             overflow: auto;
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        // Hack for detect iOS Safari
+        @supports (-webkit-touch-callout: none) {
+            --primary-color: #cacaca;
+            --secondary-color: #e0e0e1;
+
+            --select-option-background: var(--primary-color);
+            --select-option-border-color: var(--secondary-color);
+            --select-dropdown-background: var(--primary-color);
+
+            .sf-select-option {
+                &.sf-select-option--is-active {
+                    --select-option-background: var(--secondary-color);
+                }
+            }
+
+            .sf-select__cancel {
+                --button-background: var(--secondary-color);
+            }
         }
     }
 }

@@ -266,8 +266,16 @@ export default Vue.extend({
       border-radius: 0;
       box-shadow: 0 4px 11px rgba(var(--c-dark-base), 0.1);
 
+      // For Firefox
+      scrollbar-color: var(--c-light) var(--c-white);
+
       &::-webkit-scrollbar {
-          display: none;
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+          border-radius: 1em;
+          background: var(--c-light);
       }
     }
 
@@ -368,6 +376,30 @@ export default Vue.extend({
 
     &__label {
       left: calc(var(--spacer-xl));
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    // Hack for detect iOS Safari
+    @supports (-webkit-touch-callout: none) {
+      --primary-color: #cacaca;
+      --secondary-color: #e0e0e1;
+
+      ::v-deep .multiselect {
+
+        .multiselect__content-wrapper {
+          background-color: var(--primary-color);
+        }
+
+        .multiselect__option {
+          background-color: var(--primary-color);
+          border-color: var(--secondary-color);
+
+          &.multiselect__option--highlight {
+            background-color: var(--secondary-color);
+          }
+        }
+      }
     }
   }
 }
