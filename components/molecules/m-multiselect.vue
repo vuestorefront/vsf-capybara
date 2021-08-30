@@ -383,21 +383,19 @@ export default Vue.extend({
   @media (prefers-color-scheme: dark) {
     // Hack for detect iOS Safari
     @supports (-webkit-touch-callout: none) {
-      --primary-color: #cacaca;
-      --secondary-color: #e0e0e1;
-
       ::v-deep .multiselect {
 
         .multiselect__content-wrapper {
-          background-color: var(--primary-color);
+          background-color: var(--c-dark-variant);
         }
 
         .multiselect__option {
-          background-color: var(--primary-color);
-          border-color: var(--secondary-color);
+          background-color: var(--c-dark-variant);
+          border-color: var(--c-gray-lighten);
 
           &.multiselect__option--highlight {
-            background-color: var(--secondary-color);
+            background-color: var(--c-dark-lighten);
+            color: var(--c-white-darken);
           }
         }
       }

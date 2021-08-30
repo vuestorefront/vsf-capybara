@@ -30,21 +30,21 @@
     @media (prefers-color-scheme: dark) {
         // Hack for detect iOS Safari
         @supports (-webkit-touch-callout: none) {
-            --primary-color: #cacaca;
-            --secondary-color: #e0e0e1;
-
-            --select-option-background: var(--primary-color);
-            --select-option-border-color: var(--secondary-color);
-            --select-dropdown-background: var(--primary-color);
+            --select-option-border-color: var(--c-gray-lighten);
+            --select-dropdown-background: var(--c-dark-variant);
 
             .sf-select-option {
+                color: var(--c-dark-darken);
+
                 &.sf-select-option--is-active {
-                    --select-option-background: var(--secondary-color);
+                    --select-option-background: var(--c-dark-lighten);
+                    color: var(--c-white-darken);
                 }
             }
 
             .sf-select__cancel {
-                --button-background: var(--secondary-color);
+                --button-background: var(--c-dark-darken);
+                --button-color: var(--c-white-darken);
             }
         }
     }
