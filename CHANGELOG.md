@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.5] - ???
+## [1.1.0] - ?
 
 ### Added
 - Added `VueObserveVisibility` and `VueLazyload` dependency
@@ -18,6 +18,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated padding of container on mobile(#613)
 - Updated padding values(#613)
 - Improved HTML markup by spacing between elements(#613)
+- Fix broken mega menu. Requires [one change](https://github.com/vuestorefront/vsf-capybara/issues/509#issuecomment-862174222) in the config. ([#509](https://github.com/vuestorefront/vsf-capybara/issues/509))
+- Using `getProductPrice` helper for calculating product prices in Cart/Checkout
+
+## [1.0.5] - 23.06.2021
+
+### Added
+
+### Changed / Improved
+- Fixed: modalComponents map type errors
+- Fixed: remove product from Cart on Desktop
+- Fixed: close Mega Menu after clicking on the Category
+- Fixed: wrong product image on PDP after clicked on filtered product from PLP
+- Fixed: set missing require for `phoneNumber` on the Checkout
 
 ## [1.0.4] - 04.01.2020
 
