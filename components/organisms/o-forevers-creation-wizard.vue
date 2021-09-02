@@ -282,6 +282,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
+      if (!productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id]) {
+        return;
+      }
+
       this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
     },
     fillImageUploadStepData (cartItem: CartItem): void {
