@@ -86,6 +86,7 @@ export default {
   width: 100%;
   background-color: var(--c-dark-lighten);
   color: var(--c-light-darken);
+  padding-bottom: env(safe-area-inset-bottom);
   .cookie {
     box-sizing: border-box;
     padding: 0 1.5rem;

@@ -45,6 +45,11 @@ body {
       color: var(--c-link-hover);
     }
   }
+  .sf-select {
+    &__dropdown {
+      padding-bottom: env(safe-area-inset-bottom); //safe area padding for dropdown
+   }
+  }
 }
 
 #viewport {
