@@ -145,6 +145,7 @@ import Product from 'core/modules/catalog/types/Product';
 
 import {
   ImageUploadMethod,
+  ProductId,
   ProductValue
 } from 'src/modules/budsies';
 import { Item } from 'src/modules/file-storage';
@@ -206,11 +207,11 @@ export default Vue.extend({
       }
 
       switch (this.product.id) {
-        case 73:
+        case ProductId.FOREVERS_DOG:
           return ProductValue.FOREVERS_DOG;
-        case 74:
+        case ProductId.FOREVERS_CAT:
           return ProductValue.FOREVERS_CAT;
-        case 75:
+        case ProductId.FOREVERS_OTHER:
           return ProductValue.FOREVERS_OTHER;
         default:
           throw new Error(

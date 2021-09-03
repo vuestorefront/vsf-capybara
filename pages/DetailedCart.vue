@@ -169,6 +169,8 @@ import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
+import { ProductId } from 'src/modules/budsies';
+
 export default {
   name: 'DetailedCart',
   components: {
@@ -324,7 +326,9 @@ export default {
 
       product.bundle_options.forEach(option => {
         // Hide Forevers simple products
-        if ([73, 74, 75].includes(product.id) && option.title.toLowerCase() === 'product') {
+        if ([ProductId.FOREVERS_DOG, ProductId.FOREVERS_CAT, ProductId.FOREVERS_OTHER]
+          .includes(product.id) && option.title.toLowerCase() === 'product'
+        ) {
           return;
         }
 
