@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
-
+- Made navbar visible while scrolling on mobile(#622)
+- Added background blur effect on mobile(#622)
 - Updated css styling by replacing flexbox to css grid(#601)
 - Updated spacing between the form elements(#601)
 - Updated spacing around login button and details heading(#601)
