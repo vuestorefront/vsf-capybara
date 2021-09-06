@@ -47,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed / Improved
 - Improved: Z-index for dropdowns(#536)
 
+### Changed / Improved
+- Fixed spacing of a-product-quantity(#614)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
