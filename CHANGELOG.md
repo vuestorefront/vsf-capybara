@@ -43,6 +43,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved: Height for the micro cart on mobile (#576) 
 
 
+
+### Changed / Improved
+- Improved: Z-index for dropdowns(#536)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added

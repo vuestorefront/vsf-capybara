@@ -32,6 +32,7 @@ body {
   --sidebar-aside-z-index: 2;
   --sidebar-z-index: 2;
   --bottom-navigation-height: 3.75rem;
+  --select-dropdown-z-index: 2;
   --bar-height: 3.125rem;
   --notification-font-size: var(--font-sm);
   font-family: var(--font-family-secondary);
