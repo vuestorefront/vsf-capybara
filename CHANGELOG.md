@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix broken mega menu. Requires [one change](https://github.com/vuestorefront/vsf-capybara/issues/509#issuecomment-862174222) in the config. ([#509](https://github.com/vuestorefront/vsf-capybara/issues/509))
 - Using `getProductPrice` helper for calculating product prices in Cart/Checkout
 - Improved: the error message for the zip-code field on shipping and payment page(#589)
+- Fixed spacing of a-product-quantity(#614)
+- Improved: Z-index for dropdowns(#536)
+- Improved: Height for the micro cart on mobile (#576) 
+- Fixed body scroll issue when open micro cart (#482)
 
 ## [1.0.5] - 23.06.2021
 
@@ -35,21 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: close Mega Menu after clicking on the Category
 - Fixed: wrong product image on PDP after clicked on filtered product from PLP
 - Fixed: set missing require for `phoneNumber` on the Checkout
-
-### Changed / Improved
-- Fixed body scroll issue when open micro cart (#482)
-
-
-### Changed / Improved
-- Improved: Height for the micro cart on mobile (#576) 
-
-
-
-### Changed / Improved
-- Improved: Z-index for dropdowns(#536)
-
-### Changed / Improved
-- Fixed spacing of a-product-quantity(#614)
 
 
 ## [1.0.4] - 04.01.2020
