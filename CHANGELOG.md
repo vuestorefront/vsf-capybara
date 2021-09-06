@@ -8,11 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - ?
 
 ### Added
+
 - Added `VueObserveVisibility` and `VueLazyload` dependency
+- Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
 - Made navbar visible while scrolling on mobile(#622)
 - Added background blur effect on mobile(#622)
+- Updated css styling by replacing flexbox to css grid(#601)
+- Updated spacing between the form elements(#601)
+- Updated spacing around login button and details heading(#601)
+- Updated width and position of login button on mobile(#601)
+- Improved HTML markup by spacing between elements(#601)
+- Improved CSS styling by using shorthand methods (#601)
 - Fix broken mega menu. Requires [one change](https://github.com/vuestorefront/vsf-capybara/issues/509#issuecomment-862174222) in the config. ([#509](https://github.com/vuestorefront/vsf-capybara/issues/509))
 - Using `getProductPrice` helper for calculating product prices in Cart/Checkout
 
@@ -27,11 +35,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: wrong product image on PDP after clicked on filtered product from PLP
 - Fixed: set missing require for `phoneNumber` on the Checkout
 
+### Changed / Improved
+- Fixed body scroll issue when open micro cart (#482)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
 
 ### Changed / Improved
+
 - Improved spacing around product carousal on home page(#471)
 - Improved navbar layout (#467)
 - Improved heading in search panel (#478)
@@ -64,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update filters bar on category page (#381)
 - Use i18n wrapper for the login title (#438)
 - Corrected displayed the selected size option on product page (#436)
+- Fixed memory leak (#419)
 - Styling around color selector on filters in category page (#443)
 - Styling around color filters (#442)
 - Carousel time in product carousel (#444)
@@ -73,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Used sku instead of product_id while preparing order line items product (#415)
 - Replaced deprecated action product/list call with findProducts (#417)
 - Fix hydration errors with fresh installation (#462)
-- Fixed console warning related to  value of key 'Sort by' is not a string (#476)
+- Fixed console warning related to value of key 'Sort by' is not a string (#476)
 - Update pwacompat to avoid loading multiple favicons (https://github.com/DivanteLtd/vue-storefront/issues/4559)
 - Fixed changing and deleting shipping details on MyAccount (#4499)
 - Corrected displayed price when choosing configurable product second time (#493)
@@ -81,6 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 03.07.2020
 
 ### Added
+
 ### Changed / Improved
 
 - Update sfui version to 0.7.11
@@ -94,6 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2020.06.02
 
 ### Added
+
 ### Changed / Improved
 
 - Support theme configuration via CLI (#369)
