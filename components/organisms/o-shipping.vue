@@ -18,7 +18,7 @@
         class="form__element form__element--half"
         name="first-name"
         :label="$t('First name')"
-        :required="true"
+        required
         :valid="!$v.shipping.firstName.$error"
         :error-message="
           !$v.shipping.firstName.required
@@ -32,7 +32,7 @@
         class="form__element form__element--half form__element--half-even"
         name="last-name"
         :label="$t('Last name')"
-        :required="true"
+        required
         :valid="!$v.shipping.lastName.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.lastName.$touch()"
@@ -42,7 +42,7 @@
         class="form__element"
         name="street-address"
         :label="$t('Street name')"
-        :required="true"
+        required
         :valid="!$v.shipping.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.streetAddress.$touch()"
@@ -52,7 +52,7 @@
         class="form__element"
         name="apartment-number"
         :label="$t('House/Apartment number')"
-        :required="true"
+        required
         :valid="!$v.shipping.apartmentNumber.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.apartmentNumber.$touch()"
@@ -62,7 +62,7 @@
         class="form__element form__element--half"
         name="city"
         :label="$t('City')"
-        :required="true"
+        required
         :valid="!$v.shipping.city.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.city.$touch()"
@@ -78,7 +78,7 @@
         class="form__element form__element--half"
         name="zipCode"
         :label="$t('Zip-code')"
-        :required="true"
+        required
         :valid="!$v.shipping.zipCode.$error"
         :error-message="
           !$v.shipping.zipCode.required
@@ -92,7 +92,7 @@
         class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
         name="countries"
         :label="$t('Country')"
-        :required="true"
+        required
         :valid="!$v.shipping.country.$error"
         :error-message="$t('Field is required')"
         @change="changeCountry"
@@ -110,6 +110,10 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        required
+        :valid="!$v.shipping.phoneNumber.$error"
+        @blur="$v.shipping.phoneNumber.$touch()"
+        :error-message="$t('Field is required')"
       />
     </div>
     <SfHeading
@@ -211,6 +215,9 @@ export default {
       city: {
         required,
         unicodeAlpha
+      },
+      phoneNumber: {
+        required
       }
     }
   },
