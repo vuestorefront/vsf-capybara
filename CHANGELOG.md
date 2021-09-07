@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved: Z-index for dropdowns(#536)
 - Improved: Height for the micro cart on mobile (#576) 
 - Fixed body scroll issue when open micro cart (#482)
+- Improved speed of carousel in m-product-carousel(#623)
 
 ## [1.0.5] - 23.06.2021
 
@@ -40,9 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: wrong product image on PDP after clicked on filtered product from PLP
 - Fixed: set missing require for `phoneNumber` on the Checkout
 
-
-### Changed / Improved
-- Improved speed of carousel in m-product-carousel(#623)
 
 ## [1.0.4] - 04.01.2020
 
