@@ -41,6 +41,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: set missing require for `phoneNumber` on the Checkout
 
 
+### Changed / Improved
+- Improved speed of carousel in m-product-carousel(#623)
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
