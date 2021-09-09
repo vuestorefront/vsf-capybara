@@ -173,10 +173,4 @@ export default {
     margin: var(--spacer-2xl) 0;
   }
 }
-.section {
-  @include for-desktop {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
 </style>
