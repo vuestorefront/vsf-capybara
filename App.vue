@@ -28,10 +28,13 @@ export default {
 <style lang="scss">
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 body {
-  --overlay-z-index: 1;
+  --overlay-z-index: 2;
   --sidebar-aside-z-index: 2;
   --sidebar-z-index: 2;
   --bottom-navigation-height: 3.75rem;
+  --footer-height: 345px;
+  --_header-height: 80px;
+  --_header-mobile-height: 50px;
   --select-dropdown-z-index: 2;
   --bar-height: 3.125rem;
   --notification-font-size: var(--font-sm);
@@ -49,7 +52,14 @@ body {
   .sf-select {
     &__dropdown {
       padding-bottom: env(safe-area-inset-bottom); //safe area padding for dropdown
-   }
+    }
+  }
+  .global--max-width {
+    min-height: calc(100vh - var(--_header-mobile-height) - var(--bottom-navigation-height));
+    @include for-desktop {
+      min-height: calc(100vh - var(--_header-height) - var(--footer-height));
+      max-width: 1272px;
+    }
   }
 }
 
