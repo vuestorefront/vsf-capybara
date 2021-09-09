@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
+- Removed Horizontal Padding on product bottom section in product page (#534)
 - Made navbar visible while scrolling on mobile(#622)
 - Added background blur effect on mobile(#622)
 - Updated css styling by replacing flexbox to css grid(#601)
