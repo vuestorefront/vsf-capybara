@@ -8,8 +8,8 @@
 
 <script>
 import get from 'lodash-es/get'
-import DefaultLayout from './layouts/Default'
-import MinimalLayout from './layouts/Minimal'
+const DefaultLayout = () => import(/* webpackChunkName: "vsf-layout-default" */ './layouts/Default')
+const MinimalLayout = () => import(/* webpackChunkName: "vsf-layout-minimal" */ './layouts/Minimal')
 
 export default {
   components: {
@@ -32,6 +32,7 @@ body {
   --sidebar-aside-z-index: 2;
   --sidebar-z-index: 2;
   --bottom-navigation-height: 3.75rem;
+  --select-dropdown-z-index: 2;
   --bar-height: 3.125rem;
   --notification-font-size: var(--font-sm);
   font-family: var(--font-family-secondary);
@@ -44,6 +45,11 @@ body {
     &:hover {
       color: var(--c-link-hover);
     }
+  }
+  .sf-select {
+    &__dropdown {
+      padding-bottom: env(safe-area-inset-bottom); //safe area padding for dropdown
+   }
   }
 }
 

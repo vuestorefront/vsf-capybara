@@ -20,8 +20,8 @@
               :key="product.id"
               :image="getThumbnailForProductExtend(product)"
               :title="product.name"
-              :regular-price="getProductPrice(product).regular"
-              :special-price="getProductPrice(product).special"
+              :regular-price="formatPrice(getProductPrice(product).regular)"
+              :special-price="formatPrice(getProductPrice(product).special)"
               :stock="10"
               :qty="product.qty"
               class="collected-product"
@@ -41,6 +41,19 @@
                     </template>
                   </SfProperty>
                 </div>
+              </template>
+              <template #remove>
+                <SfCircleIcon
+                  icon="cross"
+                  aria-label="Remove"
+                  class="sf-circle-icon--small sf-collected-product__remove sf-collected-product__remove--circle-icon"
+                  @click="removeHandler(product)"
+                />
+                <SfButton
+                  class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text"
+                  @click="removeHandler(product)"
+                >{{ $t('Remove') }}</SfButton
+                >
               </template>
               <template #more-actions>
                 <span />
@@ -104,8 +117,8 @@
 import { mapState, mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { onlineHelper } from '@vue-storefront/core/helpers';
-import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-import { getProductPrice, getProductPriceFromTotals } from 'theme/helpers';
+import { getThumbnailForProduct, getProductPrice } from '@vue-storefront/core/modules/cart/helpers';
+import { price } from '@vue-storefront/core/filters';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
@@ -116,7 +129,8 @@ import {
   SfPrice,
   SfImage,
   SfHeading,
-  SfSidebar
+  SfSidebar,
+  SfCircleIcon
 } from '@storefront-ui/vue';
 
 export default {
@@ -127,7 +141,8 @@ export default {
     SfPrice,
     SfImage,
     SfHeading,
-    SfSidebar
+    SfSidebar,
+    SfCircleIcon
   },
   mixins: [VueOfflineMixin, onEscapePress],
   data () {
@@ -169,9 +184,10 @@ export default {
       return getThumbnailForProduct(product);
     },
     getProductPrice (product) {
-      return onlineHelper.isOnline && product.totals && product.totals.options
-        ? getProductPriceFromTotals(product)
-        : getProductPrice(product);
+      return getProductPrice(product)
+    },
+    formatPrice (value) {
+      return value ? price(value) : ''
     },
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
@@ -201,11 +217,6 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .o-microcart-panel {
-  @include for-mobile {
-    ::v-deep .sf-sidebar__aside {
-      max-height: calc(100vh - var(--bottom-navigation-height));
-    }
-  }
   @include for-desktop {
     --sidebar-bottom-padding: var(--spacer-base);
     --sidebar-content-padding: var(--spacer-base);

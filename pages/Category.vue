@@ -616,12 +616,20 @@ export default {
   padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 .navbar {
-  position: relative;
   display: flex;
   border: 1px solid var(--c-light);
   border-width: 0 0 1px 0;
   @include for-desktop {
     border-width: 1px 0 1px 0;
+  }
+  @include for-mobile {
+    // Made it visible while scrolling.
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    // Added background blur effect while scrolling.
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
   }
   &.section {
     padding: var(--spacer-sm);
