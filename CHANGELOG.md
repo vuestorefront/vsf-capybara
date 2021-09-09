@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
+- Removed backdrop filter to position sort by drop down of category page in mobile (#669)
 - Made navbar visible while scrolling on mobile(#622)
 - Added background blur effect on mobile(#622)
 - Updated css styling by replacing flexbox to css grid(#601)
@@ -26,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved: the error message for the zip-code field on shipping and payment page(#589)
 - Fixed spacing of a-product-quantity(#614)
 - Improved: Z-index for dropdowns(#536)
-- Improved: Height for the micro cart on mobile (#576) 
+- Improved: Height for the micro cart on mobile (#576)
 - Fixed body scroll issue when open micro cart (#482)
 - Improved speed of carousel in m-product-carousel(#623)
 
