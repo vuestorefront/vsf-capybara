@@ -629,7 +629,6 @@ export default {
     z-index: 2;
     // Added background blur effect while scrolling.
     background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(10px);
   }
   &.section {
     padding: var(--spacer-sm);
