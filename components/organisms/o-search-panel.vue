@@ -239,15 +239,10 @@ export default {
   }
 
   .no-results {
+    height: 5rem;
+    line-height: 5rem;
     display: flex;
     justify-content: center;
-    height: 5rem;
-    line-height: var(--spacer-base);
-    margin-top: var(--spacer-base);
-    @include for-desktop {
-      margin-top: 0;
-      padding: var(--spacer-xl);
-    }
   }
 
   .load-more {
