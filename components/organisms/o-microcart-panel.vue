@@ -52,8 +52,9 @@
                 <SfButton
                   class="sf-button--text sf-collected-product__remove sf-collected-product__remove--text"
                   @click="removeHandler(product)"
-                >{{ $t('Remove') }}</SfButton
                 >
+                  {{ $t('Remove') }}
+                </SfButton>
               </template>
               <template #more-actions>
                 <span />
@@ -121,6 +122,7 @@ import { getThumbnailForProduct, getProductPrice } from '@vue-storefront/core/mo
 import { price } from '@vue-storefront/core/filters';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 
 import {
   SfButton,
@@ -210,6 +212,10 @@ export default {
   },
   mounted () {
     this.isMicrocartVisible = true;
+    disableBodyScroll(this.$el)
+  },
+  destroyed () {
+    enableBodyScroll(this.$el)
   }
 };
 </script>
