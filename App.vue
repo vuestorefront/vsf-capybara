@@ -28,7 +28,6 @@ export default {
 <style lang="scss">
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 body {
-  --overlay-z-index: 2;
   --sidebar-aside-z-index: 2;
   --sidebar-z-index: 2;
   --bottom-navigation-height: 3.75rem;
