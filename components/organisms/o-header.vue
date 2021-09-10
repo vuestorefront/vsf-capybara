@@ -22,6 +22,7 @@
           :key="category.id"
           @mouseover="isHoveredMenu = true"
           @mouseleave="isHoveredMenu = false"
+          @click="isHoveredMenu = false"
         >
           <router-link
             :class="{active: isCategoryActive(category)}"
@@ -160,6 +161,7 @@ export default {
   }
   .search-container {
     display: flex;
+    --search-bar-font-size: var(--font-base);
     .o-search {
       flex-grow: 1;
     }
