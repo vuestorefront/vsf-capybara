@@ -264,7 +264,8 @@ import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
 import { createSmoothscroll } from 'theme/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
-import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin'
+import { ProductId } from 'src/modules/budsies';
+import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 
@@ -386,7 +387,9 @@ export default {
 
       product.bundle_options.forEach(option => {
         // Hide Forevers simple products
-        if ([73, 74, 75].includes(product.id) && option.title.toLowerCase() === 'product') {
+        if ([ProductId.FOREVERS_DOG, ProductId.FOREVERS_CAT, ProductId.FOREVERS_OTHER]
+          .includes(product.id) && option.title.toLowerCase() === 'product'
+        ) {
           return;
         }
 

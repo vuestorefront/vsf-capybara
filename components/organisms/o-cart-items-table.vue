@@ -85,6 +85,7 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { getProductPrice } from 'theme/helpers';
 import CartItem from 'core/modules/cart/types/CartItem';
 import CartItemOption from 'core/modules/cart/types/CartItemOption';
+import { ProductId } from 'src/modules/budsies';
 
 export default {
   name: 'OCartItemsTable',
@@ -130,8 +131,10 @@ export default {
       product.bundle_options.forEach(option => {
         // Hide Forevers simple products
         if (typeof product.id === 'number' &&
-         [73, 74, 75].includes(product.id) &&
-          option.title.toLowerCase() === 'product') {
+         [ProductId.FOREVERS_DOG, ProductId.FOREVERS_CAT, ProductId.FOREVERS_OTHER]
+           .includes(product.id) &&
+          option.title.toLowerCase() === 'product'
+        ) {
           return;
         }
 
