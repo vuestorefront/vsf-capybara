@@ -120,10 +120,10 @@
     <SfHeading
       :title="$t('Payment method')"
       :level="3"
-      class="sf-heading--left sf-heading--no-underline title"
+      class="sf-heading--left sf-heading--no-underline title -hidden"
     />
     <div class="form">
-      <div class="form__radio-group">
+      <div class="form__radio-group -hidden">
         <SfRadio
           v-for="method in paymentMethods"
           :key="method.code"
@@ -353,5 +353,9 @@ export default {
   @include for-desktop {
     --radio-container-padding: var(--spacer-sm);
   }
+}
+
+.-hidden {
+  display: none;
 }
 </style>

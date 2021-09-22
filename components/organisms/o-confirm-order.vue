@@ -218,9 +218,12 @@
       </div>
       <MPriceSummary class="totals__element" />
     </div>
+    <div class="_braintree-widget">
+      <braintree-dropin v-if="paymentMethod === 'Braintree'" />
+    </div>
     <div class="actions">
       <SfButton
-        class="sf-button--full-width actions__button"
+        class="sf-button--full-width actions__button place-order-btn"
         :disabled="$v.orderReview.$invalid || !productsInCart.length"
         @click="placeOrder"
       >
@@ -261,6 +264,8 @@ import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
 import { createSmoothscroll } from 'theme/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
+import { ProductId } from 'src/modules/budsies';
+import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 
@@ -280,7 +285,8 @@ export default {
     SfAccordion,
     SfCharacteristic,
     SfCollectedProduct,
-    SfProperty
+    SfProperty,
+    BraintreeDropin
   },
   mixins: [OrderReview],
   data () {
@@ -381,7 +387,9 @@ export default {
 
       product.bundle_options.forEach(option => {
         // Hide Forevers simple products
-        if ([73, 74, 75].includes(product.id) && option.title.toLowerCase() === 'product') {
+        if ([ProductId.FOREVERS_DOG, ProductId.FOREVERS_CAT, ProductId.FOREVERS_OTHER]
+          .includes(product.id) && option.title.toLowerCase() === 'product'
+        ) {
           return;
         }
 
@@ -590,5 +598,8 @@ a {
     max-width: 100%;
     width: 20rem;
   }
+}
+._braintree-widget {
+  margin-top: var(--spacer-base);
 }
 </style>
