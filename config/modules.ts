@@ -9,13 +9,12 @@ import { BreadcrumbsModule } from '@vue-storefront/core/modules/breadcrumbs'
 import { UserModule } from '@vue-storefront/core/modules/user'
 import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
-import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
-import { PaymentCashOnDeliveryModule } from 'src/modules/payment-cash-on-delivery'
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
 import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
 import { extendStore } from '@vue-storefront/core/helpers'
 import { StorefrontModule } from '@vue-storefront/core/lib/modules'
 import { BudsiesModule } from 'src/modules/budsies'
+import { Braintree } from 'src/modules/payment-braintree'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
 import registerStoryblokComponents from 'theme/components/storyblok'
@@ -42,8 +41,6 @@ export function registerClientModules () {
   registerModule(CatalogModule)
   registerModule(CheckoutModule) // To Checkout
   registerModule(CartModule)
-  registerModule(PaymentBackendMethodsModule)
-  registerModule(PaymentCashOnDeliveryModule)
   registerModule(NotificationModule)
   registerModule(UserModule) // Trigger on user icon click
   registerModule(CatalogNextModule)
@@ -53,6 +50,7 @@ export function registerClientModules () {
   registerModule(StoryblokModule)
   registerModule(extendUrlModule)
   registerModule(BudsiesModule)
+  registerModule(Braintree)
 }
 
 // Deprecated API, will be removed in 2.0
