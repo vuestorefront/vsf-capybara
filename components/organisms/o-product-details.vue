@@ -4,9 +4,19 @@
     <meta itemprop="price" :content="parseFloat(product.price_incl_tax).toFixed(2)">
     <meta itemprop="availability" :content="availability">
     <meta itemprop="url" :content="product.url_path">
-    <MZoomGallery
-      :images="gallery"
-    />
+    <div class="product-gallery">
+      <MZoomGallery
+        :images="gallery"
+      />
+      <MSocialSharing
+        class="sharing-button"
+        :sharing-url="sharingData.url"
+        :sharing-description="sharingData.description"
+        :e-mail-subject="sharingData.eMailSubject"
+        :twitter-description="sharingData.twitterDescription"
+        :image="sharingData.image"
+      />
+    </div>
     <div class="product__info">
       <MProductShortInfo
         :product="product"
@@ -60,6 +70,7 @@ import MProductOptionsConfigurable from 'theme/components/molecules/m-product-op
 import MProductOptionsBundle from 'theme/components/molecules/m-product-options-bundle';
 import MProductOptionsCustom from 'theme/components/molecules/m-product-options-custom';
 import MProductOptionsGroup from 'theme/components/molecules/m-product-options-group';
+import MSocialSharing from 'theme/components/molecules/m-social-sharing';
 import { ModalList } from 'theme/store/ui/modals';
 import { mapActions } from 'vuex';
 
@@ -73,7 +84,8 @@ export default {
     MProductOptionsConfigurable,
     MProductOptionsBundle,
     MProductOptionsCustom,
-    MProductOptionsGroup
+    MProductOptionsGroup,
+    MSocialSharing
   },
   props: {
     product: {
@@ -114,6 +126,18 @@ export default {
     availability () {
       return this.product.stock && this.product.stock.is_in_stock ? 'InStock' : 'OutOfStock'
     },
+    sharingData () {
+      // todo may contains html tags
+      const rawDescription = this.product.short_description.replace(/(<p>|<\/p>)/g, '');
+
+      return {
+        url: window.location.href,
+        description: rawDescription,
+        eMailSubject: `Check out this cool product: ${this.product.name}`,
+        twitterDescription: rawDescription,
+        image: this.productGallery[0].src
+      }
+    },
     sizeOption () {
       return get(this.productConfiguration, 'size', false)
     }
@@ -135,7 +159,8 @@ export default {
   .m-product-additional-info {
     margin-top: var(--spacer-lg);
   }
-  .m-zoom-gallery {
+
+  .product-gallery {
     flex: 1 1;
     padding: 0 var(--spacer-sm);
 
@@ -146,6 +171,10 @@ export default {
     @include for-desktop {
       max-width: 42%;
     }
+  }
+
+  .sharing-button {
+    padding-top: 0.5em;
   }
 }
 
