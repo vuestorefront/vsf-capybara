@@ -54,8 +54,8 @@ export default {
     error () {
       const isBelowZero = !this.$v.value.numeric || !this.$v.value.minValue || !this.$v.value.required
       if (isBelowZero) return this.$t(`Quantity must be positive integer`)
-      const isBelowMax = this.maxQuantity && this.value && !this.$v.value.maxValue
-      if (isBelowZero) {
+      const isAboveMax = this.maxQuantity && this.value && !this.$v.value.maxValue
+      if (isAboveMax) {
         return this.$t('Quantity must be below {quantity}', {
           quantity: this.maxQuantity
         })
@@ -67,7 +67,7 @@ export default {
     return {
       value: {
         minValue: minValue(1),
-        maxValue: maxValue(this.maxQuantity) && this.unlimitQuantity,
+        maxValue: maxValue(this.maxQuantity) || this.unlimitQuantity,
         numeric,
         required
       }
