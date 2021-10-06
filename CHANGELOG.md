@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed body scroll issue when open micro cart (#482)
 - Improved speed of carousel in m-product-carousel(#623)
 - Height of search result page on mobile (#474)
+- Improved: code to empty the password fields when clicking the update password button (#675)
 
 ## [1.0.5] - 23.06.2021
 
