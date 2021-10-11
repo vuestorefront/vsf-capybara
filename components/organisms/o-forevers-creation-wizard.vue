@@ -59,7 +59,6 @@
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
-import { mapActions, mapGetters, mapMutations } from 'vuex';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
@@ -107,7 +106,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     existingPlushieId: {
       type: String,
-      default: ''
+      default: undefined
     }
   },
   data () {
@@ -143,10 +142,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
-    ...mapGetters({
-      cartItems: 'cart/getCartItems',
-      bodyPartsOptions: 'budsies/getBodypartOptions'
-    }),
+    bodyPartsOptions (): (id: string) => BodypartOption[] {
+      return this.$store.getters['budsies/getBodypartOptions']
+    },
+    cartItems (): CartItem[] {
+      return this.$store.getters['cart/getCartItems']
+    },
     skinClass (): string {
       return '-skin-petsies';
     },
@@ -165,24 +166,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     productionTimeBundleOption (): BundleOption | undefined {
       return this.getBundleOption('production time');
     },
-    existingCartitem (): CartItem | null {
-      const cartItemIndex =
-       (this.cartItems as CartItem[]).findIndex(({ plushieId }) => plushieId === this.existingPlushieId);
-
-      if (cartItemIndex < 0) {
-        return null;
-      }
-
-      return this.cartItems[cartItemIndex];
+    existingCartitem (): CartItem | undefined {
+      return this.cartItems.find(({ plushieId }) => plushieId === this.existingPlushieId);
     }
   },
   methods: {
-    ...mapMutations('product', {
-      setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
-    }),
-    ...mapActions({
-      updateClientAndServerItem: 'cart/updateClientAndServerItem'
-    }),
     async addToCart (): Promise<void> {
       if (this.isSubmitting) {
         return;
@@ -246,6 +234,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       const bodyparts: Record<string, string[]> = cartItem.bodyparts as Record<string, string[]>;
+
+      this.customizeStepData.bodypartsValues = {};
 
       Object.keys(bodyparts).forEach((key: string) => {
         Vue.set(
@@ -365,6 +355,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         action1: { label: i18n.t('OK') }
       });
     },
+    setBundleOptionValue (optionId: number, optionQty: number, optionSelections: number[]): void {
+      this.$store.commit(catalogTypes.PRODUCT_SET_BUNDLE_OPTION, { optionId, optionQty, optionSelections });
+    },
+    async updateClientAndServerItem (payload: {
+      product: CartItem,
+      forceUpdateServerItem?: boolean,
+      forceClientState?: boolean
+    }): Promise<void> {
+      await this.$store.dispatch('cart/updateClientAndServerItem', payload);
+    },
     async updateExistingCartItem (): Promise<void> {
       if (!this.existingCartitem) {
         return;
@@ -423,11 +423,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return
         }
 
-        this.setBundleOptionValue({
-          optionId: this.addonsBundleOption.option_id,
-          optionQty: 1,
-          optionSelections: newValue
-        });
+        this.setBundleOptionValue(
+          this.addonsBundleOption.option_id,
+          1,
+          newValue
+        );
       },
       immediate: false
     },
@@ -437,11 +437,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return
         }
 
-        this.setBundleOptionValue({
-          optionId: this.productionTimeBundleOption.option_id,
-          optionQty: 1,
-          optionSelections: newValue ? [newValue] : []
-        });
+        this.setBundleOptionValue(this.productionTimeBundleOption.option_id,
+          1,
+          newValue ? [newValue] : []
+        );
       },
       immediate: false
     }

@@ -269,8 +269,6 @@ export default Vue.extend({
       this.$emit('input', newValue);
     },
     onArtworkRemove (storageItemId: string): void {
-      console.log('onRemove', storageItemId);
-
       const index = this.storageItems.findIndex(({ id }) => id === storageItemId);
       if (index === -1) {
         return;
