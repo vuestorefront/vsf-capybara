@@ -67,11 +67,13 @@ import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/produc
 import { SfHeading, SfSteps } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
+import CartItem from 'core/modules/cart/types/CartItem';
 
 import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
+import { Item } from 'src/modules/file-storage';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -82,7 +84,6 @@ import ForeversWizardProductTypeStepData from '../interfaces/forevers-wizard-pro
 import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-image-upload-step-data.interface';
 import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
-import CartItem from 'core/modules/cart/types/CartItem';
 import BodypartOption from '../interfaces/bodypart-option';
 
 interface InjectedServices {
@@ -148,6 +149,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     cartItems (): CartItem[] {
       return this.$store.getters['cart/getCartItems']
     },
+    customerImages (): Item[] {
+      if (this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW) {
+        return [];
+      }
+
+      return this.imageUploadStepData.storageItems;
+    },
     skinClass (): string {
       return '-skin-petsies';
     },
@@ -198,9 +206,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieBreed: this.petInfoStepData.breed?.trim(),
             plushieDescription: this.customizeStepData.description?.trim(),
             bodyparts: this.getBodypartsData(),
-            customerImagesIds: this.getStorageItemsIds(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
-            customerImages: this.imageUploadStepData.storageItems
+            customerImages: this.customerImages
           })
         });
 
@@ -212,13 +219,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       } finally {
         this.isSubmitting = false;
       }
-    },
-    getStorageItemsIds (): string[] {
-      if (this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW) {
-        return [];
-      }
-
-      return this.imageUploadStepData.storageItems.map(({ id }) => id);
     },
     fillAddons (cartItem: CartItem): void {
       const productOption = cartItem.product_option;
@@ -356,7 +356,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       });
     },
     setBundleOptionValue (optionId: number, optionQty: number, optionSelections: number[]): void {
-      this.$store.commit(catalogTypes.PRODUCT_SET_BUNDLE_OPTION, { optionId, optionQty, optionSelections });
+      this.$store.commit('product' + '/' + catalogTypes.PRODUCT_SET_BUNDLE_OPTION, { optionId, optionQty, optionSelections });
     },
     async updateClientAndServerItem (payload: {
       product: CartItem,
@@ -382,10 +382,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieBreed: this.petInfoStepData.breed?.trim(),
             plushieDescription: this.customizeStepData.description?.trim(),
             bodyparts: this.getBodypartsData(),
-            customerImagesIds: this.getStorageItemsIds(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
             product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
-            customerImages: this.imageUploadStepData.storageItems
+            customerImages: this.customerImages
           }),
           forceUpdateServerItem: true
         });

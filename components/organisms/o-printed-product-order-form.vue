@@ -82,10 +82,11 @@
                 tag="div"
                 class="_uploader-wrapper"
               >
+                <!-- TODO check name and value -->
                 <input
                   type="hidden"
                   name="uploaded_artwork_ids[]"
-                  :value="storageItemId"
+                  :value="storageItem"
                   required
                 >
 
@@ -231,16 +232,12 @@ export default Vue.extend({
     product: {
       type: Object as PropType<Product>,
       required: true
-    },
-    uploadedArtworkId: {
-      type: String,
-      default: undefined
     }
   },
   data () {
     return {
       quantity: 1,
-      storageItemId: undefined as string | undefined,
+      storageItem: undefined as Item | undefined,
       selectedStyle: undefined as string | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       extraFacesData: {
@@ -468,10 +465,10 @@ export default Vue.extend({
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
     onArtworkAdd (value: Item): void {
-      this.storageItemId = value.id;
+      this.storageItem = value;
     },
     onArtworkRemove (storageItemId: string): void {
-      this.storageItemId = undefined;
+      this.storageItem = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       this.isSubmitting = true;
@@ -481,12 +478,12 @@ export default Vue.extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      const extraFacesArtworks = this.extraFacesData.storageItems.map(item => item.id);
+      const extraFacesArtworks = this.extraFacesData.storageItems;
 
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
           qty: this.quantity,
-          customerImagesIds: [this.storageItemId, ...extraFacesArtworks],
+          customerImages: [this.storageItem, ...extraFacesArtworks],
           uploadMethod: 'upload-now'
         })
       }).then(() => {
@@ -546,10 +543,6 @@ export default Vue.extend({
   created (): void {
     if (this.product.qty) {
       this.quantity = this.product.qty;
-    }
-
-    if (this.uploadedArtworkId) {
-      this.storageItemId = this.uploadedArtworkId;
     }
   },
   watch: {

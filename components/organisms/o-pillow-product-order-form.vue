@@ -44,10 +44,11 @@
             name="'Artwork'"
             tag="div"
           >
+            <!-- TODO check name and value -->
             <input
               type="hidden"
               name="uploaded_artwork_ids[]"
-              :value="storageItemId"
+              :value="storageItem"
               :required="isUploadNow"
             >
 
@@ -477,16 +478,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     plushieId: {
       type: Number as PropType<number | undefined>,
       default: undefined
-    },
-    uploadedArtworkId: {
-      type: String,
-      default: undefined
     }
   },
   data () {
     return {
       quantity: 1,
-      storageItemId: undefined as string | undefined,
+      storageItem: undefined as Item | undefined,
       size: undefined as SizeOption | undefined,
       bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
       name: undefined as string | undefined,
@@ -652,7 +649,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     resetForm (): void {
       this.quantity = this.product.qty || 1;
-      this.storageItemId = undefined;
+      this.storageItem = undefined;
       this.size = undefined;
       this.name = undefined;
 
@@ -695,10 +692,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.uploadMethod = this.uploadMethod === ImageUploadMethod.EMAIL ? ImageUploadMethod.NOW : ImageUploadMethod.EMAIL;
     },
     onArtworkAdd (value: Item): void {
-      this.storageItemId = value.id;
+      this.storageItem = value;
     },
     onArtworkRemove (storageItemId: string): void {
-      this.storageItemId = undefined;
+      this.storageItem = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       if (this.isSubmitting) {
@@ -728,7 +725,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.email,
             plushieName: this.name,
             bodyparts: this.getBodypartsData(),
-            customerImagesIds: this.isUploadNow && this.storageItemId ? [this.storageItemId] : [],
+            customerImages: this.isUploadNow && this.storageItem ? [this.storageItem] : [],
             uploadMethod: this.uploadMethod
           })
         });
@@ -777,11 +774,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   created (): void {
     this.resetForm();
-
-    if (this.uploadedArtworkId) {
-      this.storageItemId = this.uploadedArtworkId;
-    }
-
     this.prefillEmail();
   },
   watch: {
