@@ -61,7 +61,8 @@ import {
   FileProcessingRepositoryFactory,
   FileProcessingRepository,
   ImageType,
-  Item
+  Item,
+  ImageHandlerService
 } from 'src/modules/file-storage';
 
 // Create component
@@ -94,7 +95,8 @@ interface FilePondInitialFile {
 
 interface InjectedServices {
   fErrorConverterService: ErrorConverterService,
-  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory
+  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory,
+  fImageHandlerService: ImageHandlerService
 }
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
@@ -150,7 +152,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     files (): FilePondInitialFile[] | undefined {
       return this.initialItems.map((item) => ({
-        source: `${config.images.imageHandlerServiceUrl}/${item.url}`,
+        source: this.fImageHandlerService.getOriginalImageUrl(item.url),
         options: {
           type: 'local',
           name: item.id
