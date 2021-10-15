@@ -2,6 +2,7 @@
   <div class="default-layout" :class="{'storyblok-preview-mode': isStoryblokPreviewMode}">
     <MLoader />
     <div id="viewport">
+      <Banner />
       <OTopNavigation />
       <OHeader />
       <OMicrocart />
@@ -34,8 +35,11 @@ import Head from 'theme/head';
 import config from 'config';
 import { ModalList } from 'theme/store/ui/modals'
 
+import Banner from 'src/modules/promotion-platform/components/Banner.vue';
+
 export default {
   components: {
+    Banner,
     OHeader,
     OMicrocart,
     OFooter,
