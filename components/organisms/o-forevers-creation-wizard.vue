@@ -26,6 +26,7 @@
           :product="activeProduct"
           :plushie-id="plushieId"
           :disabled="isSubmitting"
+          :customer-images="customerImages"
           @input="imageUploadStepData = $event"
           @next-step="nextStep"
           v-if="plushieId"
@@ -73,7 +74,6 @@ import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
-import { Item } from 'src/modules/file-storage';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -85,6 +85,7 @@ import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-ima
 import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import BodypartOption from '../interfaces/bodypart-option';
+import CustomerImage from '../interfaces/customer-image.interface';
 
 interface InjectedServices {
   window: Window
@@ -122,7 +123,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       imageUploadStepData: {
         uploadMethod: ImageUploadMethod.NOW,
-        storageItems: []
+        storageItemsIds: []
       } as ForeversWizardImageUploadStepData,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       petInfoStepData: {
@@ -139,7 +140,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         quantity: 1
       } as ForeversWizardCustomizeStepData,
 
-      isSubmitting: false
+      isSubmitting: false,
+      customerImages: [] as CustomerImage[]
     }
   },
   computed: {
@@ -149,12 +151,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     cartItems (): CartItem[] {
       return this.$store.getters['cart/getCartItems']
     },
-    customerImages (): Item[] {
+    customerImagesIds (): string[] {
       if (this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW) {
         return [];
       }
 
-      return this.imageUploadStepData.storageItems;
+      return this.imageUploadStepData.storageItemsIds;
     },
     skinClass (): string {
       return '-skin-petsies';
@@ -207,7 +209,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieDescription: this.customizeStepData.description?.trim(),
             bodyparts: this.getBodypartsData(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
-            customerImagesIds: this.customerImages.map((image) => image.id)
+            customerImagesIds: this.customerImagesIds
           })
         });
 
@@ -279,8 +281,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
     },
     fillImageUploadStepData (cartItem: CartItem): void {
+      this.customerImages = cartItem.customerImages ? cartItem.customerImages : [];
+
       this.imageUploadStepData.uploadMethod = cartItem.uploadMethod as ImageUploadMethod;
-      this.imageUploadStepData.storageItems = cartItem.customerImages ? cartItem.customerImages : [];
+      this.imageUploadStepData.storageItemsIds = cartItem.customerImages ? cartItem.customerImages.map((image) => image.id) : [];
     },
     fillPetInfoStepData (cartItem: CartItem): void {
       this.petInfoStepData.name = cartItem.plushieName;
@@ -384,7 +388,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             bodyparts: this.getBodypartsData(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
             product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
-            customerImagesIds: this.customerImages.map((image) => image.id)
+            customerImagesIds: this.customerImagesIds
           }),
           forceUpdateServerItem: true
         });

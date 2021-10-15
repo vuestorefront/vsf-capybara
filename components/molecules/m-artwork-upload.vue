@@ -65,6 +65,8 @@ import {
   ImageHandlerService
 } from 'src/modules/file-storage';
 
+import CustomerImage from '../interfaces/customer-image.interface';
+
 // Create component
 const FilePondComponent = vueFilePond(
   FilePondPluginFileValidateType,
@@ -95,8 +97,7 @@ interface FilePondInitialFile {
 
 interface InjectedServices {
   fErrorConverterService: ErrorConverterService,
-  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory,
-  fImageHandlerService: ImageHandlerService
+  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory
 }
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
@@ -126,7 +127,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       default: false
     },
     initialItems: {
-      type: Array as PropType<Item[]>,
+      type: Array as PropType<CustomerImage[]>,
       default: () => []
     }
   },
@@ -152,7 +153,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     files (): FilePondInitialFile[] | undefined {
       return this.initialItems.map((item) => ({
-        source: this.fImageHandlerService.getOriginalImageUrl(item.url),
+        source: item.url,
         options: {
           type: 'local',
           name: item.id

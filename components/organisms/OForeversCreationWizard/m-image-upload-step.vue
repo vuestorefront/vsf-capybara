@@ -35,7 +35,7 @@
         <input
           type="hidden"
           name="uploaded_artwork_ids[]"
-          :value="storageItems"
+          :value="storageItemsIds"
           :required="isUploadNow"
         >
 
@@ -150,6 +150,7 @@ import {
   ProductValue
 } from 'src/modules/budsies';
 import { Item } from 'src/modules/file-storage';
+import CustomerImage from 'theme/components/interfaces/customer-image.interface';
 
 import MArtworkUpload from '../../molecules/m-artwork-upload.vue';
 
@@ -174,7 +175,7 @@ export default Vue.extend({
       type: Object as PropType<ForeversWizardImageUploadStepData>,
       default: () => ({
         uploadMethod: ImageUploadMethod.NOW,
-        storageItems: []
+        storageItemsIds: []
       })
     },
     artworkUploadUrl: {
@@ -192,14 +193,18 @@ export default Vue.extend({
     disabled: {
       type: Boolean,
       default: false
+    },
+    customerImages: {
+      type: Array as PropType<CustomerImage[]>,
+      default: () => []
     }
   },
   data () {
     return {
       isUploadProcessingInProgress: false,
       uploadMethod: ImageUploadMethod.NOW,
-      storageItems: [] as Item[],
-      initialItems: [] as Item[]
+      storageItemsIds: [] as string[],
+      initialItems: [] as CustomerImage[]
     }
   },
   computed: {
@@ -243,11 +248,11 @@ export default Vue.extend({
 
       this.uploadMethod = method;
 
-      const storageItems = method === ImageUploadMethod.NOW ? [...this.storageItems] : [];
+      const storageItemsIds = method === ImageUploadMethod.NOW ? [...this.storageItemsIds] : [];
 
       const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: method,
-        storageItems
+        storageItemsIds
       }
 
       this.$emit('input', newValue);
@@ -259,26 +264,28 @@ export default Vue.extend({
       this.switchUploadMethod(ImageUploadMethod.EMAIL);
     },
     onArtworkAdd (value: Item): void {
-      this.storageItems.push(value);
+      this.storageItemsIds.push(value.id);
 
       const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: this.uploadMethod,
-        storageItems: [...this.storageItems]
+        storageItemsIds: [...this.storageItemsIds]
       }
 
       this.$emit('input', newValue);
     },
     onArtworkRemove (storageItemId: string): void {
-      const index = this.storageItems.findIndex(({ id }) => id === storageItemId);
+      const index = this.storageItemsIds.findIndex((id) => id === storageItemId);
+      console.log(storageItemId);
+
       if (index === -1) {
         return;
       }
 
-      this.storageItems.splice(index, 1);
+      this.storageItemsIds.splice(index, 1);
 
       const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: this.uploadMethod,
-        storageItems: [...this.storageItems]
+        storageItemsIds: [...this.storageItemsIds]
       }
 
       this.$emit('input', newValue);
@@ -303,8 +310,8 @@ export default Vue.extend({
   },
   created (): void {
     this.uploadMethod = this.initialValue.uploadMethod;
-    this.storageItems = this.initialValue.storageItems;
-    this.initialItems = [ ...this.initialValue.storageItems ];
+    this.storageItemsIds = this.initialValue.storageItemsIds;
+    this.initialItems = [ ...this.customerImages ];
   },
   watch: {
     plushieId: {
