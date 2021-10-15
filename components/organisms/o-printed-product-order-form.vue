@@ -82,11 +82,10 @@
                 tag="div"
                 class="_uploader-wrapper"
               >
-                <!-- TODO check name and value -->
                 <input
                   type="hidden"
                   name="uploaded_artwork_ids[]"
-                  :value="storageItem"
+                  :value="storageItemId"
                   required
                 >
 
@@ -237,7 +236,7 @@ export default Vue.extend({
   data () {
     return {
       quantity: 1,
-      storageItem: undefined as Item | undefined,
+      storageItemId: undefined as string | undefined,
       selectedStyle: undefined as string | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       extraFacesData: {
@@ -465,10 +464,10 @@ export default Vue.extend({
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
     onArtworkAdd (value: Item): void {
-      this.storageItem = value;
+      this.storageItemId = value.id;
     },
     onArtworkRemove (storageItemId: string): void {
-      this.storageItem = undefined;
+      this.storageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       this.isSubmitting = true;
@@ -478,12 +477,12 @@ export default Vue.extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      const extraFacesArtworks = this.extraFacesData.storageItems;
+      const extraFacesArtworks = this.extraFacesData.storageItems.map(item => item.id);
 
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
           qty: this.quantity,
-          customerImages: [this.storageItem, ...extraFacesArtworks],
+          customerImagesIds: [this.storageItemId, ...extraFacesArtworks],
           uploadMethod: 'upload-now'
         })
       }).then(() => {

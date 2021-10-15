@@ -899,7 +899,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.showEmailStep = false;
       }
     },
-    async processImages (): Promise<Item[]> {
+    async processImages (): Promise<string[]> {
       const backgroundEditor = this.getBackgroundEditor();
       const backPreview = this.getBackPreview();
       const frontPreview = this.getFrontPreview();
@@ -969,7 +969,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         )
       ]);
 
-      return [frontStorageItem, backStorageItem, backgroundOriginalItem];
+      return [frontStorageItem, backStorageItem, backgroundOriginalItem].map(
+        (item: Item) => item.id
+      );
     },
     async onSubmit (event: Event): Promise<void> {
       event.preventDefault();
@@ -989,7 +991,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         submitAnimator.runProgress();
 
-        const customerImages = await this.processImages();
+        const customerImagesIds = await this.processImages();
 
         await this.$store.dispatch(
           'product/setBundleOptions',
@@ -1007,7 +1009,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.customerEmail,
             bodyparts: this.getBodypartsData(),
             customFields: JSON.stringify(this.customTextValues),
-            customerImages: customerImages,
+            customerImagesIds: customerImagesIds,
             uploadMethod: 'upload-now'
           })
         });

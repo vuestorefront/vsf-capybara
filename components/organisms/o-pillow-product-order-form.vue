@@ -44,11 +44,10 @@
             name="'Artwork'"
             tag="div"
           >
-            <!-- TODO check name and value -->
             <input
               type="hidden"
               name="uploaded_artwork_ids[]"
-              :value="storageItem"
+              :value="storageItemId"
               :required="isUploadNow"
             >
 
@@ -483,7 +482,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   data () {
     return {
       quantity: 1,
-      storageItem: undefined as Item | undefined,
+      storageItemId: undefined as string | undefined,
       size: undefined as SizeOption | undefined,
       bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
       name: undefined as string | undefined,
@@ -649,7 +648,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     resetForm (): void {
       this.quantity = this.product.qty || 1;
-      this.storageItem = undefined;
+      this.storageItemId = undefined;
       this.size = undefined;
       this.name = undefined;
 
@@ -692,10 +691,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.uploadMethod = this.uploadMethod === ImageUploadMethod.EMAIL ? ImageUploadMethod.NOW : ImageUploadMethod.EMAIL;
     },
     onArtworkAdd (value: Item): void {
-      this.storageItem = value;
+      this.storageItemId = value.id;
     },
     onArtworkRemove (storageItemId: string): void {
-      this.storageItem = undefined;
+      this.storageItemId = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       if (this.isSubmitting) {
@@ -725,7 +724,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.email,
             plushieName: this.name,
             bodyparts: this.getBodypartsData(),
-            customerImages: this.isUploadNow && this.storageItem ? [this.storageItem] : [],
+            customerImagesIds: this.isUploadNow && this.storageItemId ? [this.storageItemId] : [],
             uploadMethod: this.uploadMethod
           })
         });

@@ -207,7 +207,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieDescription: this.customizeStepData.description?.trim(),
             bodyparts: this.getBodypartsData(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
-            customerImages: this.customerImages
+            customerImagesIds: this.customerImages.map((image) => image.id)
           })
         });
 
@@ -384,7 +384,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             bodyparts: this.getBodypartsData(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
             product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
-            customerImages: this.customerImages
+            customerImagesIds: this.customerImages.map((image) => image.id)
           }),
           forceUpdateServerItem: true
         });
