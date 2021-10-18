@@ -15,6 +15,7 @@ import { extendStore } from '@vue-storefront/core/helpers'
 import { StorefrontModule } from '@vue-storefront/core/lib/modules'
 import { BudsiesModule } from 'src/modules/budsies'
 import { Braintree } from 'src/modules/payment-braintree'
+import { PromotionPlatformModule } from 'src/modules/promotion-platform';
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
 import registerStoryblokComponents from 'theme/components/storyblok'
@@ -51,6 +52,7 @@ export function registerClientModules () {
   registerModule(extendUrlModule)
   registerModule(BudsiesModule)
   registerModule(Braintree)
+  registerModule(PromotionPlatformModule)
 }
 
 // Deprecated API, will be removed in 2.0
