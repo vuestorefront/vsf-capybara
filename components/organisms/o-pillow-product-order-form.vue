@@ -47,7 +47,7 @@
             <input
               type="hidden"
               name="uploaded_artwork_ids[]"
-              :value="storageItemId"
+              :value="customerImage"
               :required="isUploadNow"
             >
 
@@ -414,7 +414,7 @@ import {
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import Product from 'core/modules/catalog/types/Product';
 
-import { Item } from 'src/modules/file-storage';
+import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
 import {
   vuexTypes as budsiesTypes,
@@ -432,6 +432,7 @@ import BodypartOption from '../interfaces/bodypart-option';
 import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
+import CustomerImage from '../interfaces/customer-image.interface';
 
 extend('required', {
   ...required,
@@ -444,7 +445,8 @@ extend('email', {
 });
 
 interface InjectedServices {
-  window: Window
+  window: Window,
+  imageHandlerService: ImageHandlerService
 }
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
@@ -463,7 +465,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfSelect
   },
   inject: {
-    window: { from: 'WindowObject' }
+    window: { from: 'WindowObject' },
+    imageHandlerService: { from: 'ImageHandlerService' }
   } as unknown as InjectType<InjectedServices>,
   props: {
     artworkUploadUrl: {
@@ -482,7 +485,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   data () {
     return {
       quantity: 1,
-      storageItemId: undefined as string | undefined,
+      customerImage: undefined as CustomerImage | undefined,
       size: undefined as SizeOption | undefined,
       bodypartsValues: {} as unknown as Record<string, BodypartOption | BodypartOption[] | undefined>,
       name: undefined as string | undefined,
@@ -648,7 +651,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     resetForm (): void {
       this.quantity = this.product.qty || 1;
-      this.storageItemId = undefined;
+      this.customerImage = undefined;
       this.size = undefined;
       this.name = undefined;
 
@@ -691,10 +694,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.uploadMethod = this.uploadMethod === ImageUploadMethod.EMAIL ? ImageUploadMethod.NOW : ImageUploadMethod.EMAIL;
     },
     onArtworkAdd (value: Item): void {
-      this.storageItemId = value.id;
+      this.customerImage = {
+        id: value.id,
+        url: this.imageHandlerService.getOriginalImageUrl(value.url)
+      };
     },
     onArtworkRemove (storageItemId: string): void {
-      this.storageItemId = undefined;
+      this.customerImage = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       if (this.isSubmitting) {
@@ -724,7 +730,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.email,
             plushieName: this.name,
             bodyparts: this.getBodypartsData(),
-            customerImagesIds: this.isUploadNow && this.storageItemId ? [this.storageItemId] : [],
+            customerImages: this.isUploadNow && this.customerImage ? [this.customerImage] : [],
             uploadMethod: this.uploadMethod
           })
         });

@@ -85,7 +85,7 @@
                 <input
                   type="hidden"
                   name="uploaded_artwork_ids[]"
-                  :value="storageItemId"
+                  :value="customerImage"
                   required
                 >
 
@@ -161,7 +161,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue, { PropType, VueConstructor } from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
@@ -177,7 +177,7 @@ import { getProductPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 
-import { Item } from 'src/modules/file-storage';
+import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
@@ -188,11 +188,17 @@ import MExtraFaces from '../molecules/m-extra-faces.vue';
 import ZoomGalleryImage from '../../interfaces/zoom-gallery-image.interface';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 import ExtraFacesConfiguratorData from '../interfaces/extra-faces-configurator-data.interface';
+import CustomerImage from '../interfaces/customer-image.interface';
+import { InjectType } from 'src/modules/shared';
 
 extend('required', {
   ...required,
   message: 'The {_field_} field is required'
 });
+
+interface InjectedServices {
+  imageHandlerService: ImageHandlerService
+}
 
 export interface GalleryProductImages {
   sku: string,
@@ -210,7 +216,7 @@ export interface SelectOption {
   specialPrice: number
 }
 
-export default Vue.extend({
+export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPrintedProductOrderForm',
   components: {
     ValidationObserver,
@@ -223,6 +229,9 @@ export default Vue.extend({
     SfSelect,
     SfButton
   },
+  inject: {
+    imageHandlerService: { from: 'ImageHandlerService' }
+  } as unknown as InjectType<InjectedServices>,
   props: {
     artworkUploadUrl: {
       type: String,
@@ -236,7 +245,7 @@ export default Vue.extend({
   data () {
     return {
       quantity: 1,
-      storageItemId: undefined as string | undefined,
+      customerImage: undefined as CustomerImage | undefined,
       selectedStyle: undefined as string | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       extraFacesData: {
@@ -464,10 +473,13 @@ export default Vue.extend({
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
     onArtworkAdd (value: Item): void {
-      this.storageItemId = value.id;
+      this.customerImage = {
+        id: value.id,
+        url: this.imageHandlerService.getOriginalImageUrl(value.url)
+      };
     },
     onArtworkRemove (storageItemId: string): void {
-      this.storageItemId = undefined;
+      this.customerImage = undefined;
     },
     async onSubmit (event: Event): Promise<void> {
       this.isSubmitting = true;
@@ -477,12 +489,15 @@ export default Vue.extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      const extraFacesArtworks = this.extraFacesData.storageItems.map(item => item.id);
+      const extraFacesArtworks: CustomerImage[] = this.extraFacesData.storageItems.map(item => ({
+        id: item.id,
+        url: this.imageHandlerService.getOriginalImageUrl(item.url)
+      }));
 
       this.$store.dispatch('cart/addItem', {
         productToAdd: Object.assign({}, this.product, {
           qty: this.quantity,
-          customerImagesIds: [this.storageItemId, ...extraFacesArtworks],
+          customerImages: [this.customerImage, ...extraFacesArtworks],
           uploadMethod: 'upload-now'
         })
       }).then(() => {

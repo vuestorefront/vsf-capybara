@@ -26,7 +26,6 @@
           :product="activeProduct"
           :plushie-id="plushieId"
           :disabled="isSubmitting"
-          :customer-images="customerImages"
           @input="imageUploadStepData = $event"
           @next-step="nextStep"
           v-if="plushieId"
@@ -123,7 +122,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       imageUploadStepData: {
         uploadMethod: ImageUploadMethod.NOW,
-        storageItemsIds: []
+        customerImages: []
       } as ForeversWizardImageUploadStepData,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       petInfoStepData: {
@@ -140,8 +139,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         quantity: 1
       } as ForeversWizardCustomizeStepData,
 
-      isSubmitting: false,
-      customerImages: [] as CustomerImage[]
+      isSubmitting: false
     }
   },
   computed: {
@@ -151,12 +149,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     cartItems (): CartItem[] {
       return this.$store.getters['cart/getCartItems']
     },
-    customerImagesIds (): string[] {
+    customerImages (): CustomerImage[] {
       if (this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW) {
         return [];
       }
 
-      return this.imageUploadStepData.storageItemsIds;
+      return this.imageUploadStepData.customerImages;
     },
     skinClass (): string {
       return '-skin-petsies';
@@ -209,7 +207,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             plushieDescription: this.customizeStepData.description?.trim(),
             bodyparts: this.getBodypartsData(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
-            customerImagesIds: this.customerImagesIds
+            customerImages: this.customerImages
           })
         });
 
@@ -281,10 +279,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
     },
     fillImageUploadStepData (cartItem: CartItem): void {
-      this.customerImages = cartItem.customerImages ? cartItem.customerImages : [];
-
       this.imageUploadStepData.uploadMethod = cartItem.uploadMethod as ImageUploadMethod;
-      this.imageUploadStepData.storageItemsIds = cartItem.customerImages ? cartItem.customerImages.map((image) => image.id) : [];
+      this.imageUploadStepData.customerImages = cartItem.customerImages ? cartItem.customerImages : [];
     },
     fillPetInfoStepData (cartItem: CartItem): void {
       this.petInfoStepData.name = cartItem.plushieName;
@@ -388,7 +384,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             bodyparts: this.getBodypartsData(),
             uploadMethod: this.imageUploadStepData.uploadMethod,
             product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
-            customerImagesIds: this.customerImagesIds
+            customerImages: this.customerImages
           }),
           forceUpdateServerItem: true
         });
