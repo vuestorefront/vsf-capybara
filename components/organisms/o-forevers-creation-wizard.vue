@@ -143,7 +143,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
-    bodyPartsOptions (): (id: string) => BodypartOption[] {
+    getBodypartOptions (): (id: string) => BodypartOption[] {
       return this.$store.getters['budsies/getBodypartOptions']
     },
     cartItems (): CartItem[] {
@@ -245,7 +245,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         Vue.set(
           this.customizeStepData.bodypartsValues,
           key,
-          this.bodyPartsOptions(key).filter(
+          this.getBodypartOptions(key).filter(
             (bodypart: BodypartOption) => bodyparts[key].includes(bodypart.id)
           )
         );

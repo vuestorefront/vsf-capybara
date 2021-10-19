@@ -42,7 +42,6 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
 import Vue, { PropType, VueConstructor } from 'vue';
-import config from 'config';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
 import { File as FilePond, Status } from 'filepond';
@@ -60,9 +59,7 @@ import { ErrorConverterService } from 'src/modules/budsies';
 import {
   FileProcessingRepositoryFactory,
   FileProcessingRepository,
-  ImageType,
-  Item,
-  ImageHandlerService
+  ImageType
 } from 'src/modules/file-storage';
 
 import CustomerImage from '../interfaces/customer-image.interface';

@@ -133,7 +133,6 @@ export default Vue.extend({
       }
 
       const existingItem = this.selectedOption.find(item => item.value === option.value);
-
       if (existingItem) {
         return;
       }

@@ -22,7 +22,6 @@ const errorConverterService = new ErrorConverterService();
 const fileProcessingRepositoryFactory = new FileProcessingRepositoryFactory(
   itemFactory
 );
-console.log(config);
 const imageHandlerService = new ImageHandlerService(
   config.images.imageHandlerServiceUrl
 )

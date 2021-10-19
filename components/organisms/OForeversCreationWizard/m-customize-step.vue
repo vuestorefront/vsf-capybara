@@ -279,7 +279,6 @@
 import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
-import { mapGetters } from 'vuex';
 
 import { SfHeading, SfButton, SfModal, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
@@ -361,9 +360,6 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapGetters({
-      getBodypartOptions: 'budsies/getBodypartOptions'
-    }),
     selectedAddons: {
       get (): number[] {
         return this.value.addons;
@@ -449,6 +445,9 @@ export default Vue.extend({
       }
 
       return bodyparts;
+    },
+    getBodypartOptions (): (id: string) => BodypartOption[] {
+      return this.$store.getters['budsies/getBodypartOptions']
     },
     isProductionOptionsAvailable (): boolean {
       return this.productionTimeOptions.length !== 0;
