@@ -226,6 +226,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
+      if (!productOption.extension_attributes.bundle_options[this.addonsBundleOption.option_id]) {
+        return;
+      }
+
       this.customizeStepData.addons = productOption.extension_attributes.bundle_options[this.addonsBundleOption.option_id].option_selections.map((selection: number) => selection);
     },
     fillBodypartsValues (cartItem: CartItem): void {
