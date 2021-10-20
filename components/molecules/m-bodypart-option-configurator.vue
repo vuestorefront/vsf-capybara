@@ -86,13 +86,17 @@ export default Vue.extend({
           return [];
         }
 
+        if (this.inputType !== 'checkbox' && Array.isArray(this.value)) {
+          return this.value[0];
+        }
+
         return this.value;
       },
       set (value: BodypartOption | BodypartOption[]): void {
         this.$emit('input', value);
       }
     },
-    inputType (): string {
+    inputType (): 'checkbox' | 'radio' {
       return this.maxValues > 1 ? 'checkbox' : 'radio';
     }
   },

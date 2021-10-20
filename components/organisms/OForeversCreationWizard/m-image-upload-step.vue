@@ -35,7 +35,7 @@
         <input
           type="hidden"
           name="uploaded_artwork_ids[]"
-          :value="storageItemsIds"
+          :value="customerImages"
           :required="isUploadNow"
         >
 
@@ -46,6 +46,7 @@
           :disabled="isDisabled"
           :upload-url="artworkUploadUrl"
           :allow-multiple="true"
+          :initial-items="initialItems"
           v-if="backendProductId"
           @file-added="onArtworkAdd"
           @file-removed="onArtworkRemove"
@@ -136,7 +137,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue, { PropType, VueConstructor } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 
@@ -148,7 +149,8 @@ import {
   ProductId,
   ProductValue
 } from 'src/modules/budsies';
-import { Item } from 'src/modules/file-storage';
+import { ImageHandlerService, Item } from 'src/modules/file-storage';
+import CustomerImage from 'theme/components/interfaces/customer-image.interface';
 
 import MArtworkUpload from '../../molecules/m-artwork-upload.vue';
 
@@ -159,7 +161,11 @@ extend('required', {
   message: 'The {_field_} field is required'
 });
 
-export default Vue.extend({
+interface InjectedServices {
+  imageHandlerService: ImageHandlerService
+}
+
+export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MImageUploadStep',
   components: {
     SfHeading,
@@ -168,12 +174,15 @@ export default Vue.extend({
     ValidationProvider,
     MArtworkUpload
   },
+  inject: {
+    imageHandlerService: { from: 'ImageHandlerService' }
+  },
   props: {
     initialValue: {
       type: Object as PropType<ForeversWizardImageUploadStepData>,
       default: () => ({
         uploadMethod: ImageUploadMethod.NOW,
-        storageItemsIds: []
+        customerImages: []
       })
     },
     artworkUploadUrl: {
@@ -197,7 +206,8 @@ export default Vue.extend({
     return {
       isUploadProcessingInProgress: false,
       uploadMethod: ImageUploadMethod.NOW,
-      storageItemsIds: [] as string[]
+      customerImages: [] as CustomerImage[],
+      initialItems: [] as CustomerImage[]
     }
   },
   computed: {
@@ -241,11 +251,11 @@ export default Vue.extend({
 
       this.uploadMethod = method;
 
-      const storageItemsIds = method === ImageUploadMethod.NOW ? [...this.storageItemsIds] : [];
+      const customerImages = method === ImageUploadMethod.NOW ? [...this.customerImages] : [];
 
       const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: method,
-        storageItemsIds
+        customerImages
       }
 
       this.$emit('input', newValue);
@@ -257,26 +267,30 @@ export default Vue.extend({
       this.switchUploadMethod(ImageUploadMethod.EMAIL);
     },
     onArtworkAdd (value: Item): void {
-      this.storageItemsIds.push(value.id);
+      this.customerImages.push({
+        id: value.id,
+        url: this.imageHandlerService.getOriginalImageUrl(value.url)
+      });
 
       const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: this.uploadMethod,
-        storageItemsIds: [...this.storageItemsIds]
+        customerImages: [...this.customerImages]
       }
 
       this.$emit('input', newValue);
     },
     onArtworkRemove (storageItemId: string): void {
-      const index = this.storageItemsIds.indexOf(storageItemId, 0);
+      const index = this.customerImages.findIndex(({ id }) => id === storageItemId);
+
       if (index === -1) {
         return;
       }
 
-      this.storageItemsIds.splice(index, 1);
+      this.customerImages.splice(index, 1);
 
       const newValue: ForeversWizardImageUploadStepData = {
         uploadMethod: this.uploadMethod,
-        storageItemsIds: [...this.storageItemsIds]
+        customerImages: [...this.customerImages]
       }
 
       this.$emit('input', newValue);
@@ -301,7 +315,8 @@ export default Vue.extend({
   },
   created (): void {
     this.uploadMethod = this.initialValue.uploadMethod;
-    this.storageItemsIds = this.initialValue.storageItemsIds;
+    this.customerImages = this.initialValue.customerImages;
+    this.initialItems = [ ...this.customerImages ];
   },
   watch: {
     plushieId: {

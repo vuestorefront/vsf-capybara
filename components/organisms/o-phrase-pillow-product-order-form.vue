@@ -460,7 +460,8 @@ import {
   FileProcessingRepositoryFactory,
   FileProcessingRepository,
   Item,
-  ImageType
+  ImageType,
+  ImageHandlerService
 } from 'src/modules/file-storage';
 
 import MFormErrors from '../molecules/m-form-errors.vue';
@@ -480,6 +481,7 @@ import ProductionTimeOption from '../interfaces/production-time-option.interface
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
 import ProductImage from '../interfaces/product-image.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
+import CustomerImage from '../interfaces/customer-image.interface';
 
 extend('required', {
   ...required,
@@ -504,7 +506,8 @@ const TARGET_IMAGE_SIZE = 2625;
 
 interface InjectedServices {
   errorConverterService: ErrorConverterService,
-  fileProcessingRepositoryFactory: FileProcessingRepositoryFactory
+  fileProcessingRepositoryFactory: FileProcessingRepositoryFactory,
+  imageHandlerService: ImageHandlerService
 }
 
 interface SideDesignProduct extends Product {
@@ -541,7 +544,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   inject: {
     errorConverterService: { from: 'ErrorConverterService' },
-    fileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' }
+    fileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' },
+    imageHandlerService: { from: 'ImageHandlerService' }
   } as unknown as InjectType<InjectedServices>,
   props: {
     product: {
@@ -899,7 +903,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.showEmailStep = false;
       }
     },
-    async processImages (): Promise<string[]> {
+    async processImages (): Promise<CustomerImage[]> {
       const backgroundEditor = this.getBackgroundEditor();
       const backPreview = this.getBackPreview();
       const frontPreview = this.getFrontPreview();
@@ -970,7 +974,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       ]);
 
       return [frontStorageItem, backStorageItem, backgroundOriginalItem].map(
-        (item: Item) => item.id
+        (item: Item) => ({
+          id: item.id,
+          url: this.imageHandlerService.getOriginalImageUrl(item.url)
+        })
       );
     },
     async onSubmit (event: Event): Promise<void> {
@@ -991,7 +998,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         submitAnimator.runProgress();
 
-        const customerImagesIds = await this.processImages();
+        const customerImages = await this.processImages();
 
         await this.$store.dispatch(
           'product/setBundleOptions',
@@ -1009,7 +1016,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             email: this.customerEmail,
             bodyparts: this.getBodypartsData(),
             customFields: JSON.stringify(this.customTextValues),
-            customerImagesIds: customerImagesIds,
+            customerImages: customerImages,
             uploadMethod: 'upload-now'
           })
         });
