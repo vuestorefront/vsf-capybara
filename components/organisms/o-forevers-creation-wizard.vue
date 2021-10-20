@@ -8,7 +8,7 @@
     <SfSteps
       :active="currentStep"
       :steps="[$t('Type'), $t('Photo'), $t('Pet Info'), $t('Customize')]"
-      :can-go-back="!isSubmitting"
+      :can-go-back="canGoBack"
       @change="onChangeStep"
     >
       <SfStep name="Type">
@@ -143,6 +143,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
+    canGoBack (): boolean {
+      return !this.isSubmitting && (this.currentStep !== 1 || !this.existingCartitem);
+    },
     getBodypartOptions (): (id: string) => BodypartOption[] {
       return this.$store.getters['budsies/getBodypartOptions']
     },
@@ -267,7 +270,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.fillCustomizeStepData(this.existingCartitem);
     },
     fillProductTypeStepData (cartItem: CartItem): void {
-      this.productTypeStepData.product = { ...cartItem };
+      this.productTypeStepData.product = cartItem;
       this.productTypeStepData.plushieId = cartItem.plushieId ? Number.parseInt(cartItem.plushieId, 10) : undefined;
     },
     fillProductionTime (cartItem: CartItem): void {
