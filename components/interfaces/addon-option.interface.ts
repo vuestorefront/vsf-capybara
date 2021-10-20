@@ -6,6 +6,6 @@ export default interface AddonOption {
   price: number | undefined,
   images: string[],
   optionId: number,
-  optionValueId: string,
+  optionValueId: number,
   videoUrl?: string
 }

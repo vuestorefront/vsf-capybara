@@ -17,7 +17,7 @@
       <MCheckbox
         name="upgrades[]"
         class="_addon-input"
-        :value="addon"
+        :value="addon.optionValueId"
         v-model="selectedValues"
         :disabled="disabled"
       >
@@ -82,7 +82,7 @@ export default Vue.extend({
       default: false
     },
     value: {
-      type: Array as PropType<string[]>,
+      type: Array as PropType<number[]>,
       default: () => []
     }
   },
@@ -98,10 +98,10 @@ export default Vue.extend({
       return `-skin-petsies`;
     },
     selectedValues: {
-      get: function (): string[] {
+      get: function (): number[] {
         return this.value;
       },
-      set: function (value: string[]) {
+      set: function (value: number[]) {
         this.$emit('input', value);
       }
     }

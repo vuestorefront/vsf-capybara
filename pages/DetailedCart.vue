@@ -62,7 +62,7 @@
                   <div />
                 </template>
                 <template #actions>
-                  <SfButton class="sf-button--text actions__button">
+                  <SfButton class="sf-button--text actions__button" @click="editHandler(product)">
                     Edit
                   </SfButton>
                   <SfButton
@@ -280,6 +280,9 @@ export default {
     this.isMounted = true;
   },
   methods: {
+    editHandler (product) {
+      this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } })
+    },
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
         ? product.totals.options
