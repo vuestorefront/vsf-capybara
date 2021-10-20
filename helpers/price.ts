@@ -1,7 +1,10 @@
 import { price } from '@vue-storefront/core/filters';
 import { getCustomOptionValues, getCustomOptionPriceDelta } from '@vue-storefront/core/modules/catalog/helpers/customOption'
 import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
+import store from '@vue-storefront/core/store';
 import get from 'lodash-es/get'
+
+import CampaignContent from 'src/modules/promotion-platform/types/CampaignContent.model';
 
 function calculateBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || []
@@ -24,6 +27,26 @@ function calculateCustomOptionsPriceDelta (product, customOptions) {
 
 function formatPrice (value) {
   return value ? price(value) : ''
+}
+
+function getProductCampaignDiscount (product, format = true): string | number | undefined {
+  const campaignContent: CampaignContent | undefined = store.getters['promotionPlatform/campaignContent'];
+
+  if (!campaignContent || !campaignContent.discountsContent) {
+    return;
+  }
+
+  const discount = campaignContent.discountsContent[product.id];
+
+  if (!discount) {
+    return format ? '' : 0;
+  }
+
+  if (format) {
+    return discount;
+  }
+
+  return Number.parseInt(discount.split('$')[1], 10);
 }
 
 export function getProductDiscount (product, format = true) {
@@ -51,14 +74,16 @@ export function getProductPrice (product, customOptions = {}, format = true) {
     }
   }
 
+  const productCampaignDiscount = getProductCampaignDiscount(product, format);
+
   const priceInclTax = product.price_incl_tax || product.priceInclTax || 0
   const originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
   const specialPrice = product.special_price || product.specialPrice || 0
 
-  const isSpecialPrice = specialPrice && priceInclTax && originalPriceInclTax
+  const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax) || productCampaignDiscount
   const priceDelta = calculateCustomOptionsPriceDelta(product, customOptions)
 
-  const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const special = productCampaignDiscount || (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
   const regular = product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
 
