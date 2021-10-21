@@ -5,7 +5,7 @@
     class="promotion-platform-image-banner-container"
     :class="cssClasses"
     :style="styles"
-    v-html="campaignContent"
+    v-html="imageBannerContent"
   />
 </template>
 
@@ -16,6 +16,11 @@ import PromoCampaignBannerData from './interfaces/promo-campaign-banner-data.int
 
 export default Blok.extend({
   name: 'StoryblokPromoCampaignBannerRenderer',
+  data () {
+    return {
+      isMounted: false
+    }
+  },
   computed: {
     itemData (): PromoCampaignBannerData {
       return this.item as PromoCampaignBannerData;
@@ -38,16 +43,54 @@ export default Blok.extend({
       return this.campaignContent.imageBanner.content;
     },
     shouldShowImageBanner (): boolean {
-      if (!this.imageBannerContent) {
+      if (!this.imageBannerContent || !this.isMounted) {
         return false;
       }
 
-      if (this.itemData.campaign_id && this.promoCampaignId && this.itemData.campaign_id !== this.promoCampaignId) {
+      if (this.itemData.campaign_id && this.promoCampaignId && this.itemData.campaign_id != this.promoCampaignId) {
         return false;
       }
 
       return true;
     }
+  },
+  async mounted () {
+    await this.$nextTick()
+    this.isMounted = true;
   }
 })
 </script>
+
+<style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+.promotion-platform-image-banner-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+
+  ::v-deep {
+    .show-for-medium-up {
+      display: none;
+    }
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  @media (min-width: $tablet-min) {
+    ::v-deep {
+      .show-for-medium-up {
+        display: inherit;
+      }
+
+      .show-for-small-only {
+        display: none;
+      }
+    }
+
+  }
+}
+</style>
