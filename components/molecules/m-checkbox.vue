@@ -59,7 +59,7 @@ export default {
       default: ''
     },
     value: {
-      type: [String, Boolean, Object],
+      type: [String, Boolean, Object, Number],
       default: ''
     },
     label: {
