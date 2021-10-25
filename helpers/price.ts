@@ -1,8 +1,8 @@
 import { price } from '@vue-storefront/core/filters';
 import { getCustomOptionValues, getCustomOptionPriceDelta } from '@vue-storefront/core/modules/catalog/helpers/customOption'
 import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
-import store from '@vue-storefront/core/store';
 import get from 'lodash-es/get'
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 
 function calculateBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || []
@@ -52,7 +52,15 @@ export function getProductPrice (product, customOptions = {}, format = true) {
     }
   }
 
-  const productCampaignDiscount = store.getters['promotionPlatform/getProductCampaignDiscount'](product, format);
+  const productCampaignDiscountData = {
+    value: undefined,
+    product,
+    format
+  }
+
+  EventBus.$emit('updateProductCampaignDiscountData', productCampaignDiscountData);
+
+  const productCampaignDiscount = productCampaignDiscountData.value;
 
   const priceInclTax = product.price_incl_tax || product.priceInclTax || 0
   const originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
