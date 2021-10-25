@@ -1,7 +1,13 @@
 <template>
   <div id="cross-sells" itemscope>
+    <header class="sf-heading sf-heading--no-underline">
+      <h2 class="sf-heading__title">
+        Other pet gifts you might like
+      </h2>
+    </header>
+
     <div class="_actions-container">
-      <SfButton class="sf-button--full-width" @click="goToCart">
+      <SfButton class="sf-button actions__button" @click="goToCart">
         {{ $t("Continue to cart") }}
       </SfButton>
     </div>
@@ -39,37 +45,28 @@
 <script lang="ts">
 import Vue from 'vue';
 import config from 'config';
-import { mapGetters } from 'vuex';
 import { SearchQuery } from 'storefront-query-builder';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import Product, { ProductLink } from 'core/modules/catalog/types/Product';
 import { ProductService } from '@vue-storefront/core/data-resolver/ProductService';
+import { SfButton } from '@storefront-ui/vue';
+import OProductCard from 'theme/components/organisms/o-product-card';
 
 export default Vue.extend({
   name: 'CrossSells',
   components: {
+    SfButton,
+    OProductCard
   },
   data: function () {
     return {
       product: undefined as Product | undefined
     }
   },
-  // computed: {
-  //   ...mapGetters({
-  //     getCrossSellsProducts: 'product/getProductRelated',
-  //     getUpSellsProducts: 'product/getProductRelated'
-  //   }),
-  //   crossSellsProducts () {
-  //     return this.getCrossSellsProducts[this.type] || []
-  //   },
-  //   upSellsProducts () {
-  //     return this.getUpSellsProducts[this.type] || []
-  //   }
-  // },
   async asyncData ({ store, route, context }) {
     this.product = await ProductService.getProductByKey({
       options: {
-        id: route.params.slug
+        slug: route.params.slug
       },
       key: 'slug',
       skipCache: true
@@ -102,6 +99,10 @@ export default Vue.extend({
         return [];
       }
 
+      if (!this.product.product_links || this.product.product_links.length === 0) {
+        return [];
+      }
+
       let sku = this.product.product_links ? this.product.product_links
         .filter(productLink => productLink.link_type === type)
         .map(productLink => productLink.linked_product_sku) : null
@@ -110,6 +111,9 @@ export default Vue.extend({
         return [];
       }
 
+      // let sku = [
+      //   'customPrintedMasks_bundle', 'petsiesPhrasePillow_bundle', 'customPrintedSocks_bundle'
+      // ];
       const { items } = await this.$store.dispatch('product/findProducts', {
         query: this.getSearchQuery(sku)
       });
@@ -133,8 +137,17 @@ export default Vue.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #cross-sells {
+  .sf-heading {
+    margin: 2em 0;
+  }
+
   ._actions-container {
+    text-align: center;
     margin-top: 1em;
+
+    .sf-button {
+      display: inline-block;
+    }
   }
 
   ._cross-sells-list {
