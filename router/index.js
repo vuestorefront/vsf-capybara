@@ -24,6 +24,8 @@ const MyAccount = () =>
   import(/* webpackChunkName: "vsf-my-account" */ 'theme/pages/MyAccount');
 const Static = () =>
   import(/* webpackChunkName: "vsf-static" */ 'theme/pages/Static');
+const CrossSells = () =>
+  import(/* webpackChunkName: "vsf-cross-sells" */ 'theme/pages/CrossSells');
 
 let routes = [
   { name: 'home', path: '/', component: Home, alias: '/pwa.html' },
@@ -58,6 +60,7 @@ let routes = [
   { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
   { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
   { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
+  { name: 'cross-sells', path: '/cross-sells/:slug', component: CrossSells },
   {
     name: 'photo-pillows-alias-1',
     path: '/photo-pillow/designs/',
