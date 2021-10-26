@@ -4,6 +4,8 @@ import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/co
 import get from 'lodash-es/get'
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 
+import UpdateProductDiscountPriceDataEvent from 'theme/interfaces/update-product-discount-price-data-event.interface';
+
 function calculateBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || []
   const selectedBundleOptions = Object.values(get(product, 'product_option.extension_attributes.bundle_options', {}))
@@ -52,24 +54,23 @@ export function getProductPrice (product, customOptions = {}, format = true) {
     }
   }
 
-  const productCampaignDiscountData = {
+  const productDiscountPriceData: UpdateProductDiscountPriceDataEvent = {
     value: undefined,
-    product,
-    format
+    product
   }
 
-  EventBus.$emit('updateProductCampaignDiscountData', productCampaignDiscountData);
+  EventBus.$emit('updateProductDiscountPriceData', productDiscountPriceData);
 
-  const productCampaignDiscount = productCampaignDiscountData.value;
+  const productDiscountPrice = productDiscountPriceData.value;
 
   const priceInclTax = product.price_incl_tax || product.priceInclTax || 0
   const originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
   const specialPrice = product.special_price || product.specialPrice || 0
 
-  const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax) || productCampaignDiscount
+  const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax) || productDiscountPrice
   const priceDelta = calculateCustomOptionsPriceDelta(product, customOptions)
 
-  const special = productCampaignDiscount || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const special = productDiscountPrice || (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
   const regular = product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
 
