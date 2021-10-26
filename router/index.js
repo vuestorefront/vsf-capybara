@@ -60,7 +60,7 @@ let routes = [
   { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
   { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
   { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
-  { name: 'cross-sells', path: '/cross-sells/:slug', component: CrossSells },
+  { name: 'cross-sells', path: '/cross-sells/p/:parentSku/:slug', component: CrossSells },
   {
     name: 'photo-pillows-alias-1',
     path: '/photo-pillow/designs/',

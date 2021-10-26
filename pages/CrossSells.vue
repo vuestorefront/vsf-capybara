@@ -67,10 +67,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import config from 'config';
+import { mapGetters } from 'vuex';
 import { SearchQuery } from 'storefront-query-builder';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import Product, { ProductLink } from 'core/modules/catalog/types/Product';
-import { ProductService } from '@vue-storefront/core/data-resolver/ProductService';
 import { SfButton } from '@storefront-ui/vue';
 import OProductCard from 'theme/components/organisms/o-product-card.vue';
 import { prepareCategoryProduct } from 'theme/helpers';
@@ -83,37 +83,33 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      product: undefined as Product | undefined,
       crossSellsProducts: [] as Product[],
       upSellsProducts: [] as Product[]
     }
   },
   computed: {
-
+    ...mapGetters({
+      getCurrentProduct: 'product/getCurrentProduct'
+    })
+  },
+  async asyncData ({ store, route, context }) {
+    await store.dispatch('product/loadProduct', { parentSku: route.params.parentSku })
   },
   async created () {
-    this.product = await ProductService.getProductByKey({
-      options: {
-        slug: this.$route.params.slug
-      },
-      key: 'slug',
-      skipCache: true
-    });
-
     await this.loadCrossSellsProducts();
     await this.loadUpSellsProducts();
   },
   methods: {
     productLinks (): ProductLink[] {
-      if (!this.product) {
+      if (!this.getCurrentProduct) {
         return [];
       }
 
-      if (!this.product.product_links) {
+      if (!this.getCurrentProduct.product_links) {
         return [];
       }
 
-      return this.product.product_links;
+      return this.getCurrentProduct.product_links;
     },
     getSearchQuery (skus: string[]) {
       let productsQuery = new SearchQuery()
@@ -126,7 +122,7 @@ export default Vue.extend({
       return productsQuery;
     },
     async getProductsList (type: string): Promise<Product[]> {
-      if (!this.product) {
+      if (!this.getCurrentProduct) {
         return [];
       }
 
@@ -148,7 +144,7 @@ export default Vue.extend({
         query: this.getSearchQuery(skus)
       });
 
-      return items.map(prepareCategoryProduct);
+      return items.map((item: Product) => ({ ...prepareCategoryProduct(item), landing_page_url: item.landing_page_url }));
     },
     async loadCrossSellsProducts () {
       this.crossSellsProducts = await this.getProductsList('crosssell');
