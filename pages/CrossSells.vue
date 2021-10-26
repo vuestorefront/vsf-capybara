@@ -1,43 +1,65 @@
 <template>
   <div id="cross-sells" itemscope>
-    <header class="sf-heading sf-heading--no-underline">
-      <h2 class="sf-heading__title">
-        Other pet gifts you might like
-      </h2>
-    </header>
-
     <div class="_actions-container">
+      <header class="sf-heading">
+        <h2 class="sf-heading__title">
+          Other pet gifts you might like
+        </h2>
+      </header>
       <SfButton class="sf-button actions__button" @click="goToCart">
         {{ $t("Continue to cart") }}
       </SfButton>
     </div>
 
-    <div class="_cross-sells-list" v-if="crossSellsProducts">
-      <o-product-card
-        v-for="crossSellsProduct in crossSellsProducts"
-        :key="crossSellsProduct.id"
-        :product="crossSellsProduct"
-        :link="crossSellsProduct.landing_url"
-        link-tag="router-link"
-        :wishlist-icon="false"
-        class="products__product-card"
-        :image-height="352"
-        :image-width="352"
-      />
+    <div class="_cross-sells-list">
+      <div class="products">
+        <transition-group
+          appear
+          name="products__slide"
+          tag="div"
+          class="products__grid"
+        >
+          <o-product-card
+            v-for="crossSellsProduct in crossSellsProducts"
+            :key="crossSellsProduct.id"
+            :product="crossSellsProduct"
+            :link="crossSellsProduct.landing_page_url ? crossSellsProduct.landing_page_url : ''"
+            link-tag="router-link"
+            :wishlist-icon="false"
+            class="products__product-card"
+            :image-height="352"
+            :image-width="352"
+          />
+        </transition-group>
+      </div>
     </div>
 
     <div class="_up-sells-list" v-if="upSellsProducts">
-      <o-product-card
-        v-for="upSellsProduct in upSellsProducts"
-        :key="upSellsProduct.id"
-        :product="upSellsProduct"
-        :link="upSellsProduct.landing_url"
-        link-tag="router-link"
-        :wishlist-icon="false"
-        class="products__product-card"
-        :image-height="352"
-        :image-width="352"
-      />
+      <header class="sf-heading">
+        <h2 class="sf-heading__title">
+          Accessorize Your Pet(sies)
+        </h2>
+      </header>
+      <div class="products">
+        <transition-group
+          appear
+          name="products__slide"
+          tag="div"
+          class="products__grid"
+        >
+          <o-product-card
+            v-for="upSellsProduct in upSellsProducts"
+            :key="upSellsProduct.id"
+            :product="upSellsProduct"
+            :link="upSellsProduct.landing_page_url ? upSellsProduct.landing_page_url : ''"
+            link-tag="router-link"
+            :wishlist-icon="false"
+            class="products__product-card"
+            :image-height="352"
+            :image-width="352"
+          />
+        </transition-group>
+      </div>
     </div>
   </div>
 </template>
@@ -50,7 +72,8 @@ import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import Product, { ProductLink } from 'core/modules/catalog/types/Product';
 import { ProductService } from '@vue-storefront/core/data-resolver/ProductService';
 import { SfButton } from '@storefront-ui/vue';
-import OProductCard from 'theme/components/organisms/o-product-card';
+import OProductCard from 'theme/components/organisms/o-product-card.vue';
+import { prepareCategoryProduct } from 'theme/helpers';
 
 export default Vue.extend({
   name: 'CrossSells',
@@ -60,17 +83,25 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      product: undefined as Product | undefined
+      product: undefined as Product | undefined,
+      crossSellsProducts: [] as Product[],
+      upSellsProducts: [] as Product[]
     }
   },
-  async asyncData ({ store, route, context }) {
+  computed: {
+
+  },
+  async created () {
     this.product = await ProductService.getProductByKey({
       options: {
-        slug: route.params.slug
+        slug: this.$route.params.slug
       },
       key: 'slug',
       skipCache: true
     });
+
+    await this.loadCrossSellsProducts();
+    await this.loadUpSellsProducts();
   },
   methods: {
     productLinks (): ProductLink[] {
@@ -88,43 +119,42 @@ export default Vue.extend({
       let productsQuery = new SearchQuery()
       productsQuery = productsQuery
         .applyFilter({ key: 'sku', value: { 'in': skus } })
-        .applyFilter({ key: 'status', value: { 'in': [1] } })
+        .applyFilter({ key: 'status', value: { 'in': [1] } });
       if (config.products.listOutOfStockProducts === false) {
-        productsQuery = productsQuery.applyFilter({ key: 'stock.is_in_stock', value: { 'eq': true } })
+        productsQuery = productsQuery.applyFilter({ key: 'stock.is_in_stock', value: { 'eq': true } });
       }
-      return productsQuery
+      return productsQuery;
     },
     async getProductsList (type: string): Promise<Product[]> {
       if (!this.product) {
         return [];
       }
 
-      if (!this.product.product_links || this.product.product_links.length === 0) {
+      const productLinks = this.productLinks();
+
+      if (!productLinks || productLinks.length === 0) {
         return [];
       }
 
-      let sku = this.product.product_links ? this.product.product_links
+      let skus = productLinks ? productLinks
         .filter(productLink => productLink.link_type === type)
         .map(productLink => productLink.linked_product_sku) : null
 
-      if (sku === null || (sku.length === 0)) {
+      if (skus === null || (skus.length === 0)) {
         return [];
       }
 
-      // let sku = [
-      //   'customPrintedMasks_bundle', 'petsiesPhrasePillow_bundle', 'customPrintedSocks_bundle'
-      // ];
       const { items } = await this.$store.dispatch('product/findProducts', {
-        query: this.getSearchQuery(sku)
+        query: this.getSearchQuery(skus)
       });
 
-      return items;
+      return items.map(prepareCategoryProduct);
     },
-    async crossSellsProducts (): Promise<Product[]> {
-      return this.getProductsList('crosssell');
+    async loadCrossSellsProducts () {
+      this.crossSellsProducts = await this.getProductsList('crosssell');
     },
-    async upSellsProducts (): Promise<Product[]> {
-      return this.getProductsList('upsell');
+    async loadUpSellsProducts () {
+      this.upSellsProducts = await this.getProductsList('upsell');
     },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
@@ -137,6 +167,12 @@ export default Vue.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #cross-sells {
+  box-sizing: border-box;
+  @include for-desktop {
+    max-width: 1272px;
+    margin: 0 auto;
+  }
+
   .sf-heading {
     margin: 2em 0;
   }
@@ -150,8 +186,83 @@ export default Vue.extend({
     }
   }
 
-  ._cross-sells-list {
-    margin: 1em 0;
+  ._cross-sells-list,
+  ._up-sells-list {
+    margin: 2em 0;
+  }
+
+  .products {
+    box-sizing: border-box;
+    flex: 1;
+    margin: 0;
+    &__grid,
+    &__list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    &__grid {
+      justify-content: space-between;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+    }
+    &__product-card {
+      --product-card-max-width: none;
+      flex: 1 1 50%;
+    }
+    &__product-card-horizontal {
+      flex: 0 0 100%;
+    }
+    &__slide-enter {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    &__slide-enter-active {
+      transition: all 0.2s ease;
+      transition-delay: calc(0.1s * var(--index));
+    }
+
+    @media (min-width: $tablet-min) {
+      &__grid {
+        grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+      }
+
+      &__product-card {
+        flex: 1 1 33%;
+      }
+    }
+
+    @include for-desktop {
+      margin: var(--spacer-sm) 0 0 var(--spacer-sm);
+
+      &__grid {
+        grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+      }
+
+      &__pagination {
+        display: flex;
+        justify-content: center;
+        margin: var(--spacer-xl) 0 0 0;
+      }
+      &__product-card-horizontal {
+        margin: var(--spacer-lg) 0;
+      }
+      &__product-card {
+        flex: 1 1 25%;
+      }
+      &__list {
+        margin: 0 0 0 var(--spacer-sm);
+      }
+    }
+
+    @media (min-width: $desktop-l-min) {
+      &__grid {
+        grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+      }
+
+      &__product-card {
+        flex: 1 1 20%;
+      }
+    }
   }
 }
 </style>
