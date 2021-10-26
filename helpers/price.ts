@@ -1,10 +1,11 @@
+import get from 'lodash-es/get'
+
 import { price } from '@vue-storefront/core/filters';
 import { getCustomOptionValues, getCustomOptionPriceDelta } from '@vue-storefront/core/modules/catalog/helpers/customOption'
 import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
-import get from 'lodash-es/get'
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 
-import UpdateProductDiscountPriceDataEvent from 'theme/interfaces/update-product-discount-price-data-event.interface';
+import UpdateProductDiscountPriceEventData, { UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID } from 'src/modules/shared/types/update-product-discount-price.event';
 
 function calculateBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || []
@@ -54,12 +55,12 @@ export function getProductPrice (product, customOptions = {}, format = true) {
     }
   }
 
-  const productDiscountPriceData: UpdateProductDiscountPriceDataEvent = {
+  const productDiscountPriceData: UpdateProductDiscountPriceEventData = {
     value: undefined,
     product
   }
 
-  EventBus.$emit('updateProductDiscountPriceData', productDiscountPriceData);
+  EventBus.$emit(UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
 
   const productDiscountPrice = productDiscountPriceData.value;
 
