@@ -68,23 +68,24 @@ export function getProductPrice (product, customOptions = {}, format = true) {
   const originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
   const specialPrice = product.special_price || product.specialPrice || 0
 
-  const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax) || productDiscountPrice
+  const isDiscountPrice = !!productDiscountPrice;
+  const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax)
   const priceDelta = calculateCustomOptionsPriceDelta(product, customOptions)
 
-  const special = productDiscountPrice || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
   const regular = product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
 
   if (!format) {
     return {
       regular: isSpecialPrice ? original : regular,
-      special: isSpecialPrice ? special : 0
+      special: isDiscountPrice ? productDiscountPrice : isSpecialPrice ? special : 0
     }
   }
 
   return {
     regular: isSpecialPrice ? formatPrice(original) : formatPrice(regular),
-    special: isSpecialPrice ? formatPrice(special) : ''
+    special: isDiscountPrice ? formatPrice(productDiscountPrice) : isSpecialPrice ? formatPrice(special) : ''
   }
 }
 
