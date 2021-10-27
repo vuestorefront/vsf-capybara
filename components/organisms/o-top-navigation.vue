@@ -137,7 +137,7 @@ export default {
       }
     }
   ::v-deep .sf-bottom-navigation {
-    top: 0;
+    top: auto;
     bottom: auto;
     --bottom-navigation-z-index: 11;
     align-items: center;
