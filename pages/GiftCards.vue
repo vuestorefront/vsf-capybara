@@ -5,6 +5,10 @@
         <GiftCardTemplateComponent
           class="_template"
           :gift-card-template="selectedGiftCardTemplate"
+          :recipient-name="giftCardOrderFormData.recipientName"
+          :sender-name="giftCardOrderFormData.customerName"
+          :price-amount="priceAmount"
+          :custom-message="giftCardOrderFormData.customMessage"
         />
 
         <div class="_giftcard-banner">
@@ -13,7 +17,10 @@
       </div>
 
       <div class="_form _col">
-        <input type="text">
+        <OGiftCardOrderForm
+          :gift-card-order-form-data.sync="giftCardOrderFormData"
+          :gift-card-templates-list="giftCardTemplatesList"
+        />
       </div>
     </div>
   </div>
@@ -24,9 +31,26 @@ import Vue, { VueConstructor } from 'vue';
 import { isServer } from '@vue-storefront/core/helpers';
 
 import GiftCardTemplateComponent from 'src/modules/gift-card/components/GiftCardTemplate.vue';
+import OGiftCardOrderForm from 'theme/components/organisms/o-gift-card-order-form.vue';
+
 import GiftCardTemplate from 'src/modules/gift-card/types/GiftCardTemplate.interface';
 import { ImageHandlerService } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
+
+import GiftCardOrderFormData from 'theme/components/interfaces/gift-card-order-form-data.interface';
+
+const defaultGiftCardOrderFormData: GiftCardOrderFormData = {
+  selectedTemplateId: undefined,
+  priceAmount: 250,
+  shouldSendFriend: false,
+  customerName: '',
+  recipientName: '',
+  recipientEmail: '',
+  shouldRecipientShip: false,
+  customMessage: '',
+  qty: 1,
+  customPriceAmount: 200
+};
 
 interface InjectedServices {
   imageHandlerService: ImageHandlerService
@@ -34,12 +58,19 @@ interface InjectedServices {
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   components: {
-    GiftCardTemplateComponent
+    GiftCardTemplateComponent,
+    OGiftCardOrderForm
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }
   } as unknown as InjectType<InjectedServices>,
   computed: {
+    priceAmount (): number {
+      return (
+        this.giftCardOrderFormData.priceAmount ||
+        this.giftCardOrderFormData.customPriceAmount
+      );
+    },
     selectedGiftCardTemplate (): GiftCardTemplate | undefined {
       if (!this.giftCardTemplatesList.length) {
         return undefined;
@@ -54,14 +85,31 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     giftCardTemplatesList (): GiftCardTemplate[] {
       return this.$store.getters['giftCard/giftCardTemplates'];
+    },
+    firstGiftCardTemplate (): GiftCardTemplate | undefined {
+      return this.giftCardTemplatesList[0];
     }
   },
+  data () {
+    return {
+      giftCardOrderFormData:
+        defaultGiftCardOrderFormData as GiftCardOrderFormData
+    };
+  },
   mounted (): void {
-    void this.$store.dispatch('giftCard/loadGiftCardsTemplates');
+    this.loadData();
   },
   async asyncData ({ store }): Promise<void> {
     await store.dispatch('product/loadProduct', { parentSku: 'GiftCard' });
     if (isServer) {
+    }
+  },
+  methods: {
+    async loadData (): Promise<void> {
+      await this.$store.dispatch('giftCard/loadGiftCardsTemplates');
+
+      this.giftCardOrderFormData.selectedTemplateId =
+        this.firstGiftCardTemplate?.id;
     }
   }
 });
