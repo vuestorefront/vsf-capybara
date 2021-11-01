@@ -39,6 +39,7 @@
           v-model="selectedPriceAmount"
           name="price_amount"
           class="_price-amount sf-select--underlined"
+          :class="{ '-slim': isSelectedPriceAmountSlim }"
           :disabled="isDisabled"
           :valid="!errors.length"
           :error-message="errors[0]"
@@ -54,7 +55,11 @@
 
         <div class="_custom-price-amount" v-if="showCustomPriceAmountInput">
           <label class="_price-label">$</label>
-          <SfInput name="price_amount" v-model.number="customPriceAmount" />
+          <SfInput
+            name="price_amount"
+            :required="true"
+            v-model.number="customPriceAmount"
+          />
         </div>
       </div>
     </validation-provider>
@@ -72,13 +77,19 @@
         <SfInput name="customer_name" v-model.trim="customerName" />
       </div>
 
-      <validation-provider v-slot="{ errors, classes }" slim>
+      <validation-provider
+        v-slot="{ errors, classes }"
+        rules="required"
+        name="'Recipient Name'"
+        slim
+      >
         <div class="_form-field" :class="classes">
           <label>Recipient name:</label>
 
           <SfInput
             name="recipient_name"
             v-model.trim="recipientName"
+            :required="true"
             :valid="!errors.length"
             :error-message="errors[0]"
           />
@@ -87,6 +98,8 @@
 
       <validation-provider
         v-slot="{ errors, classes }"
+        rules="required|email"
+        name="'Recipient Email'"
         slim
         v-if="showRecipientEmailInput"
       >
@@ -96,6 +109,7 @@
           <SfInput
             name="recipient_email"
             v-model.trim="recipientEmail"
+            :required="true"
             :valid="!errors.length"
             :error-message="errors[0]"
           />
@@ -122,7 +136,7 @@
           class="_custom-message"
           name="custom_message"
           rows="4"
-          v-model.trim="customMessage"
+          v-model="customMessage"
           :disabled="isDisabled"
         />
 
@@ -132,9 +146,9 @@
       </div>
     </div>
 
-    <validation-provider v-slot="{ errors, classes }">
+    <validation-provider v-slot="{ errors, classes }" rules="required">
       <div class="_quantity" :class="classes">
-        <label> Quantity </label>
+        <label> Quantity: </label>
 
         <ACustomProductQuantity
           v-model="quantity"
@@ -162,7 +176,8 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
-import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { required, email } from 'vee-validate/dist/rules';
 
 import {
   SfCheckbox,
@@ -179,6 +194,16 @@ import GiftCardTemplate from 'src/modules/gift-card/types/GiftCardTemplate.inter
 import ACustomProductQuantity from 'theme/components/atoms/a-custom-product-quantity.vue';
 
 const maxCharactersRemaining = 240;
+
+extend('required', {
+  ...required,
+  message: 'The {_field_} field is required'
+});
+
+extend('email', {
+  ...email,
+  message: 'Please, provide the correct email address'
+});
 
 export default Vue.extend({
   name: 'OGiftCardOrderForm',
@@ -226,7 +251,10 @@ export default Vue.extend({
       },
       set (value: string) {
         if (value.length >= maxCharactersRemaining) {
-          return;
+          value = value.slice(
+            0,
+            maxCharactersRemaining
+          );
         }
 
         this.updateGiftCardOrderFormData({
@@ -245,6 +273,9 @@ export default Vue.extend({
           customPriceAmount: value
         });
       }
+    },
+    isSelectedPriceAmountSlim () {
+      return this.selectedPriceAmount === 0; // todo
     },
     priceAmountOptionsList (): {
       id: number,
@@ -362,20 +393,36 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .gift-card-order-form {
+  --input-font-size: var(--font-sm);
+  --input-padding: 0.7em 0 0.4em;
+  --input-error-message-font-size: var(--font-2xs);
+
   padding-top: var(--spacer-base);
   font-size: var(--font-sm);
 
   ._checkbox-label {
     padding-left: var(--spacer-sm);
+    padding-top: var(--spacer-2xs);
   }
 
   ._price-amount-field {
-    margin-bottom: var(--spacer-base);
+    ._price-amount {
+      &.-slim {
+        --select-margin: 0;
+
+        ::v-deep {
+          .sf-select__error-message {
+            display: none;
+          }
+        }
+      }
+    }
   }
 
   ._custom-price-amount {
     --input-padding: 9px 0;
     --input-height: 2em;
+    margin-bottom: var(--spacer-xl);
 
     display: flex;
     align-items: center;
@@ -416,6 +463,8 @@ export default Vue.extend({
 
   ._quantity {
     margin-bottom: var(--spacer-base);
+    display: flex;
+    flex-direction: column;
   }
 
   ._ship-description {
