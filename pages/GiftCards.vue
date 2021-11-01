@@ -1,5 +1,22 @@
 <template>
   <div id="gift-cards-page">
+    <SfModal
+      :visible="showPreviewModal"
+      @close="closePreviewModal"
+      class="_preview-modal"
+    >
+      <GiftCardTemplateComponent
+        :gift-card-template="selectedGiftCardTemplate"
+        :recipient-name="giftCardOrderFormData.recipientName"
+        :sender-name="giftCardOrderFormData.customerName"
+        :price-amount="priceAmount"
+        :custom-message="giftCardOrderFormData.customMessage"
+      />
+
+      <template #close>
+        <div class="_close-preview" />
+      </template>
+    </SfModal>
     <div class="_content">
       <div class="_col -left">
         <GiftCardTemplateComponent
@@ -9,6 +26,7 @@
           :sender-name="giftCardOrderFormData.customerName"
           :price-amount="priceAmount"
           :custom-message="giftCardOrderFormData.customMessage"
+          @click.native="onGiftCardTemplateClick"
         />
 
         <div class="_giftcard-banner">
@@ -16,7 +34,7 @@
         </div>
       </div>
 
-      <div class="_form _col">
+      <div class="_form _col -right">
         <OGiftCardOrderForm
           :gift-card-order-form-data.sync="giftCardOrderFormData"
           :gift-card-templates-list="giftCardTemplatesList"
@@ -29,6 +47,8 @@
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
 import { isServer } from '@vue-storefront/core/helpers';
+
+import { SfModal } from '@storefront-ui/vue';
 
 import GiftCardTemplateComponent from 'src/modules/gift-card/components/GiftCardTemplate.vue';
 import OGiftCardOrderForm from 'theme/components/organisms/o-gift-card-order-form.vue';
@@ -59,7 +79,8 @@ interface InjectedServices {
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   components: {
     GiftCardTemplateComponent,
-    OGiftCardOrderForm
+    OGiftCardOrderForm,
+    SfModal
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }
@@ -88,12 +109,35 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     firstGiftCardTemplate (): GiftCardTemplate | undefined {
       return this.giftCardTemplatesList[0];
+    },
+    loggedUser () {
+      return this.$store.state.user.current;
+    },
+    loggedUserFullName (): string {
+      if (!this.loggedUser) {
+        return '';
+      }
+
+      const firstName = this.loggedUser.firstname;
+      const lastName = this.loggedUser.lastname;
+      let fullName = '';
+
+      if (firstName) {
+        fullName = `${firstName} `;
+      }
+
+      if (lastName) {
+        fullName += lastName;
+      }
+
+      return fullName.trim();
     }
   },
   data () {
     return {
       giftCardOrderFormData:
-        defaultGiftCardOrderFormData as GiftCardOrderFormData
+        defaultGiftCardOrderFormData as GiftCardOrderFormData,
+      showPreviewModal: false
     };
   },
   mounted (): void {
@@ -108,8 +152,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     async loadData (): Promise<void> {
       await this.$store.dispatch('giftCard/loadGiftCardsTemplates');
 
+      this.giftCardOrderFormData.customerName = this.loggedUserFullName;
       this.giftCardOrderFormData.selectedTemplateId =
         this.firstGiftCardTemplate?.id;
+    },
+    onGiftCardTemplateClick (): void {
+      this.showPreviewModal = true;
+    },
+    closePreviewModal (): void {
+      this.showPreviewModal = false;
     }
   }
 });
@@ -138,6 +189,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
   ._template {
     // width: 100%;
+    // cursor: pointer;
+    // pointer-events: none;
+    cursor: pointer;
   }
 
   ._col {
@@ -160,6 +214,80 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     text-align: center;
     background-color: #fce0e1;
     width: 100%;
+  }
+
+  ._preview-modal {
+    --modal-content-padding: 0;
+    --modal-close-right: -18px;
+    --modal-close-top: -15px;
+    --modal-width: 29.375rem;
+    --modal-top: 50%;
+    --modal-left: 50%;
+    --modal-bottom: none;
+    --modal-right: none;
+    --modal-transform: translate3d(-50%, -50%, 0);
+    --modal-height: auto;
+    // display: none;
+
+    ._close-preview {
+      width: 35px;
+      height: 35px;
+      background: url("../assets/giftcards/close.png");
+      z-index: 15;
+      position: relative;
+    }
+
+    ::v-deep {
+      .sf-modal__container {
+        width: 900px;
+        max-width: calc(100% - var(--spacer-xl));
+      }
+
+      .sf-modal__bar {
+        display: none !important;
+      }
+
+      .sf-modal__close {
+        display: block !important;
+      }
+    }
+  }
+
+  @media (min-width: $mobile-max) {
+    ._col {
+      &.-left {
+        flex: 7;
+        width: 58%;
+      }
+
+      &.-right {
+        flex: 5;
+        width: 41%;
+      }
+    }
+  }
+
+  @include for-desktop {
+    ._template {
+      // cursor: pointer;
+      // pointer-events: all;
+    }
+
+    // ._preview-modal {
+    //   display: block;
+    // }
+
+    ._col {
+      &.-left {
+        flex: 8;
+        width: 66%;
+      }
+
+      &.-right {
+        flex: 4;
+        width: 33%;
+      }
+    }
   }
 }
 </style>
