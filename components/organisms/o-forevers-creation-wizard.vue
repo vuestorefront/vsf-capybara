@@ -178,7 +178,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.getBundleOption('production time');
     },
     existingCartitem (): CartItem | undefined {
-      return this.cartItems.find(({ plushieId }) => plushieId === this.existingPlushieId);
+      return this.cartItems.find(({ plushieId }) => plushieId && plushieId === this.existingPlushieId);
     }
   },
   methods: {

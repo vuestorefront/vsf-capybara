@@ -7,10 +7,10 @@
     >
       <GiftCardTemplateComponent
         :gift-card-template="selectedGiftCardTemplate"
-        :recipient-name="giftCardOrderFormData.recipientName"
-        :sender-name="giftCardOrderFormData.customerName"
+        :recipient-name="recipientName"
+        :sender-name="customerName"
         :price-amount="priceAmount"
-        :custom-message="giftCardOrderFormData.customMessage"
+        :custom-message="customMessage"
       />
 
       <template #close>
@@ -22,10 +22,10 @@
         <GiftCardTemplateComponent
           class="_template"
           :gift-card-template="selectedGiftCardTemplate"
-          :recipient-name="giftCardOrderFormData.recipientName"
-          :sender-name="giftCardOrderFormData.customerName"
+          :recipient-name="recipientName"
+          :sender-name="customerName"
           :price-amount="priceAmount"
-          :custom-message="giftCardOrderFormData.customMessage"
+          :custom-message="customMessage"
           @click.native="onGiftCardTemplateClick"
         />
 
@@ -38,6 +38,8 @@
         <OGiftCardOrderForm
           :gift-card-order-form-data.sync="giftCardOrderFormData"
           :gift-card-templates-list="giftCardTemplatesList"
+          :is-disabled="isSubmitting"
+          @submit-form="onFormSubmit"
         />
       </div>
     </div>
@@ -47,6 +49,10 @@
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
 import { isServer } from '@vue-storefront/core/helpers';
+import Product from '@vue-storefront/core/modules/catalog/types/Product';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import { Logger } from '@vue-storefront/core/lib/logger';
+import i18n from '@vue-storefront/i18n';
 
 import { SfModal } from '@storefront-ui/vue';
 
@@ -86,29 +92,21 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     imageHandlerService: { from: 'ImageHandlerService' }
   } as unknown as InjectType<InjectedServices>,
   computed: {
-    priceAmount (): number {
-      return (
-        this.giftCardOrderFormData.priceAmount ||
-        this.giftCardOrderFormData.customPriceAmount
-      );
+    customerName (): string {
+      return this.giftCardOrderFormData.shouldSendFriend
+        ? this.giftCardOrderFormData.customerName
+        : '';
     },
-    selectedGiftCardTemplate (): GiftCardTemplate | undefined {
-      if (!this.giftCardTemplatesList.length) {
-        return undefined;
-      }
-
-      const card = this.$store.getters['giftCard/getGiftCardTemplateById'](
-        this.giftCardTemplatesList[0].id
-      );
-      card.backgroundImage =
-        'https://petsies.store.anton.office.optimuspro.ru/skin/frontend/petsies/default/images/giftcard/default.png';
-      return card; // todo mock
-    },
-    giftCardTemplatesList (): GiftCardTemplate[] {
-      return this.$store.getters['giftCard/giftCardTemplates'];
+    customMessage (): string {
+      return this.giftCardOrderFormData.shouldSendFriend
+        ? this.giftCardOrderFormData.customMessage
+        : '';
     },
     firstGiftCardTemplate (): GiftCardTemplate | undefined {
       return this.giftCardTemplatesList[0];
+    },
+    giftCardTemplatesList (): GiftCardTemplate[] {
+      return this.$store.getters['giftCard/giftCardTemplates'];
     },
     loggedUser () {
       return this.$store.state.user.current;
@@ -131,13 +129,46 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return fullName.trim();
+    },
+    priceAmount (): number {
+      return (
+        this.giftCardOrderFormData.priceAmount ||
+        this.giftCardOrderFormData.customPriceAmount
+      );
+    },
+    product (): Product | null {
+      return this.$store.getters['product/getCurrentProduct'];
+    },
+
+    recipientEmail (): string {
+      return this.giftCardOrderFormData.shouldRecipientShip
+        ? this.giftCardOrderFormData.recipientEmail
+        : '';
+    },
+    recipientName (): string {
+      return this.giftCardOrderFormData.shouldSendFriend
+        ? this.giftCardOrderFormData.recipientName
+        : '';
+    },
+    selectedGiftCardTemplate (): GiftCardTemplate | undefined {
+      if (!this.giftCardTemplatesList.length) {
+        return undefined;
+      }
+
+      const card = this.$store.getters['giftCard/getGiftCardTemplateById'](
+        this.giftCardTemplatesList[0].id
+      );
+      card.backgroundImage =
+        'https://petsies.store.anton.office.optimuspro.ru/skin/frontend/petsies/default/images/giftcard/default.png';
+      return card; // todo mock
     }
   },
   data () {
     return {
       giftCardOrderFormData:
         defaultGiftCardOrderFormData as GiftCardOrderFormData,
-      showPreviewModal: false
+      showPreviewModal: false,
+      isSubmitting: false
     };
   },
   mounted (): void {
@@ -149,6 +180,47 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   methods: {
+    async addCartItem (): Promise<void> {
+      if (!this.product) {
+        return;
+      }
+
+      try {
+        await this.$store.dispatch('cart/addItem', {
+          productToAdd: {
+            ...this.product,
+            giftcard_options: {
+              product: this.product.id,
+              qty: this.giftCardOrderFormData.qty,
+              price_amount: this.priceAmount,
+              amount: this.priceAmount,
+              giftcard_template_id:
+                this.giftCardOrderFormData.selectedTemplateId,
+              send_friend: this.giftCardOrderFormData.shouldSendFriend ? 1 : 0,
+              customer_name: this.customerName,
+              recipient_name: this.recipientName,
+              recipient_email: this.recipientEmail,
+              recipient_ship: this.giftCardOrderFormData.shouldRecipientShip
+                ? 'yes'
+                : 'no',
+              message: this.customMessage
+            }
+          }
+        });
+
+        this.goToCart();
+      } catch (err) {
+        Logger.error(err, 'budsies')();
+
+        this.onFailure('Unexpected error: ' + err);
+      }
+    },
+    closePreviewModal (): void {
+      this.showPreviewModal = false;
+    },
+    goToCart (): void {
+      this.$router.push(localizedRoute('/cart'));
+    },
     async loadData (): Promise<void> {
       await this.$store.dispatch('giftCard/loadGiftCardsTemplates');
 
@@ -156,11 +228,20 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.giftCardOrderFormData.selectedTemplateId =
         this.firstGiftCardTemplate?.id;
     },
+    onFailure (message: any): void {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'danger',
+        message: message,
+        action1: { label: i18n.t('OK') }
+      });
+    },
+    async onFormSubmit (): Promise<void> {
+      this.isSubmitting = true;
+      await this.addCartItem();
+      this.isSubmitting = false;
+    },
     onGiftCardTemplateClick (): void {
       this.showPreviewModal = true;
-    },
-    closePreviewModal (): void {
-      this.showPreviewModal = false;
     }
   }
 });
