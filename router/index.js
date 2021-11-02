@@ -24,6 +24,8 @@ const MyAccount = () =>
   import(/* webpackChunkName: "vsf-my-account" */ 'theme/pages/MyAccount');
 const Static = () =>
   import(/* webpackChunkName: "vsf-static" */ 'theme/pages/Static');
+const CartRecovery = () =>
+  import(/* webpackChunkName: "vsf-cart-recovery" */ 'theme/pages/CartRecovery');
 
 let routes = [
   { name: 'home', path: '/', component: Home, alias: '/pwa.html' },
@@ -78,7 +80,8 @@ let routes = [
       }
     }
   },
-  { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct }
+  { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct },
+  { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery }
 ];
 
 export default routes;
