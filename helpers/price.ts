@@ -51,8 +51,8 @@ export function getProductPrice (product, customOptions = {}, format = true) {
     }
   }
 
-  const priceInclTax = product.price_incl_tax || product.priceInclTax || 0
-  const originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
+  const priceInclTax = product.giftcard_options.price_amount || product.price_incl_tax || product.priceInclTax || 0
+  const originalPriceInclTax = product.giftcard_options.price_amount || product.original_price_incl_tax || product.originalPriceInclTax || 0
   const specialPrice = product.special_price || product.specialPrice || 0
 
   const isSpecialPrice = specialPrice && priceInclTax && originalPriceInclTax
@@ -60,7 +60,7 @@ export function getProductPrice (product, customOptions = {}, format = true) {
 
   const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
-  const regular = product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const regular = product.giftcard_options.price_amount || product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
 
   if (!format) {
     return {
