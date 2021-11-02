@@ -79,8 +79,7 @@ body {
 html,
 body,
 #app,
-.default-layout,
-#viewport {
+.default-layout {
   height: 100%;
 }
 
