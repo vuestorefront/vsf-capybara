@@ -189,6 +189,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         await this.$store.dispatch('cart/addItem', {
           productToAdd: {
             ...this.product,
+            qty: this.giftCardOrderFormData.qty,
             giftcard_options: {
               product: this.product.id,
               qty: this.giftCardOrderFormData.qty,
