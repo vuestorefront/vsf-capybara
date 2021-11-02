@@ -48,7 +48,7 @@
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
-import { isServer } from '@vue-storefront/core/helpers';
+import { getThumbnailPath, isServer } from '@vue-storefront/core/helpers';
 import Product from '@vue-storefront/core/modules/catalog/types/Product';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -62,12 +62,13 @@ import OGiftCardOrderForm from 'theme/components/organisms/o-gift-card-order-for
 import GiftCardTemplate from 'src/modules/gift-card/types/GiftCardTemplate.interface';
 import { ImageHandlerService } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
+import { GiftCardTemplateSize } from 'src/modules/gift-card';
 
 import GiftCardOrderFormData from 'theme/components/interfaces/gift-card-order-form-data.interface';
 
 const defaultGiftCardOrderFormData: GiftCardOrderFormData = {
   selectedTemplateId: undefined,
-  priceAmount: 250,
+  priceAmount: 200,
   shouldSendFriend: false,
   customerName: '',
   recipientName: '',
@@ -151,16 +152,26 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         : '';
     },
     selectedGiftCardTemplate (): GiftCardTemplate | undefined {
-      if (!this.giftCardTemplatesList.length) {
+      if (
+        !this.giftCardTemplatesList.length ||
+        !this.giftCardOrderFormData.selectedTemplateId
+      ) {
         return undefined;
       }
 
       const card = this.$store.getters['giftCard/getGiftCardTemplateById'](
-        this.giftCardTemplatesList[0].id
+        this.giftCardOrderFormData.selectedTemplateId
       );
-      card.backgroundImage =
-        'https://petsies.store.anton.office.optimuspro.ru/skin/frontend/petsies/default/images/giftcard/default.png';
-      return card; // todo mock
+
+      return {
+        ...card,
+        backgroundImage: getThumbnailPath(
+          card.backgroundImage,
+          GiftCardTemplateSize.width,
+          GiftCardTemplateSize.height,
+          'giftcard'
+        )
+      };
     }
   },
   data () {
@@ -270,9 +281,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   }
 
   ._template {
-    // width: 100%;
-    // cursor: pointer;
-    // pointer-events: none;
     cursor: pointer;
   }
 
@@ -309,7 +317,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     --modal-right: none;
     --modal-transform: translate3d(-50%, -50%, 0);
     --modal-height: auto;
-    // display: none;
 
     ._close-preview {
       width: 35px;
@@ -350,15 +357,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   }
 
   @include for-desktop {
-    ._template {
-      // cursor: pointer;
-      // pointer-events: all;
-    }
-
-    // ._preview-modal {
-    //   display: block;
-    // }
-
     ._col {
       &.-left {
         flex: 8;
