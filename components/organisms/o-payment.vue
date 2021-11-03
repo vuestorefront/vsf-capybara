@@ -73,7 +73,12 @@
       <MMultiselect
         v-if="isSelectedCountryHasStates && canShowStateSelector"
         v-model.trim="payment.state"
-        class="form__element form__element--half form__element--half-even form__select"
+        class="
+          form__element
+          form__element--half
+          form__element--half-even
+          form__select
+        "
         name="state"
         :label="$t('State / Province')"
         :required="true"
@@ -99,7 +104,12 @@
       />
       <MMultiselect
         v-model="payment.country"
-        class="form__element form__element--half form__element--half-even form__select"
+        class="
+          form__element
+          form__element--half
+          form__element--half-even
+          form__select
+        "
         name="countries"
         :label="$t('Country')"
         :required="true"
@@ -120,10 +130,10 @@
     <SfHeading
       :title="$t('Payment method')"
       :level="3"
-      class="sf-heading--left sf-heading--no-underline title -hidden"
+      class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
-      <div class="form__radio-group -hidden">
+      <div class="form__radio-group">
         <SfRadio
           v-for="method in paymentMethods"
           :key="method.code"
@@ -144,7 +154,10 @@
           {{ $t("Go review the order") }}
         </SfButton>
         <SfButton
-          class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
+          class="
+            sf-button--full-width sf-button--text
+            form__action-button form__action-button--secondary
+          "
           @click="$bus.$emit('checkout-before-edit', 'shipping')"
         >
           {{ $t("Edit shipping") }}
@@ -158,7 +171,10 @@
 </template>
 <script>
 import { required, requiredIf, minLength } from 'vuelidate/lib/validators';
-import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
+import {
+  unicodeAlpha,
+  unicodeAlphaNum
+} from '@vue-storefront/core/helpers/validators';
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 import {
   SfInput,
@@ -197,7 +213,9 @@ export default {
         required
       },
       state: {
-        required: requiredIf(function () { return this.isSelectedCountryHasStates })
+        required: requiredIf(function () {
+          return this.isSelectedCountryHasStates;
+        })
       },
       streetAddress: {
         required,
@@ -263,14 +281,17 @@ export default {
       return this.states[this.payment.country];
     },
     canShowStateSelector () {
-      return this.fCanShowStateSelector
+      return this.fCanShowStateSelector;
     },
     getPaymentCountry () {
       return this.payment.country;
     }
   },
   mounted () {
-    createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
+    createSmoothscroll(
+      document.documentElement.scrollTop || document.body.scrollTop,
+      0
+    );
   },
   watch: {
     getPaymentCountry: {
@@ -283,7 +304,7 @@ export default {
 
         this.$nextTick(() => {
           this.fCanShowStateSelector = true;
-        })
+        });
       },
       immediate: true
     }
@@ -355,7 +376,7 @@ export default {
   }
 }
 
-.-hidden {
-  display: none;
-}
+// .-hidden {
+//   display: none;
+// }
 </style>
