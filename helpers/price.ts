@@ -60,7 +60,7 @@ export function getProductPrice (product, customOptions = {}, format = true) {
 
   const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
-  const regular = product.giftcard_options.price_amount || product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const regular = product.giftcard_options.price_amount * product.qty || product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
 
   if (!format) {
     return {
