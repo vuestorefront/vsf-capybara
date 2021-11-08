@@ -67,7 +67,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import config from 'config';
-import { mapGetters } from 'vuex';
 import { SearchQuery } from 'storefront-query-builder';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import Product, { ProductLink } from 'core/modules/catalog/types/Product';
@@ -88,9 +87,9 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapGetters({
-      getCurrentProduct: 'product/getCurrentProduct'
-    })
+    getCurrentProduct (): Product | null {
+      return this.$store.getters['product/getCurrentProduct']
+    }
   },
   async asyncData ({ store, route, context }) {
     await store.dispatch('product/loadProduct', { parentSku: route.params.parentSku })
