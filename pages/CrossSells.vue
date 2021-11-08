@@ -163,10 +163,6 @@ export default Vue.extend({
 
 #cross-sells {
   box-sizing: border-box;
-  @include for-desktop {
-    max-width: 1272px;
-    margin: 0 auto;
-  }
 
   .sf-heading {
     margin: 2em 0;
@@ -215,8 +211,10 @@ export default Vue.extend({
       transition: all 0.2s ease;
       transition-delay: calc(0.1s * var(--index));
     }
+  }
 
-    @media (min-width: $tablet-min) {
+  @media (min-width: $tablet-min) {
+    .products {
       &__grid {
         grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
       }
@@ -225,8 +223,13 @@ export default Vue.extend({
         flex: 1 1 33%;
       }
     }
+  }
 
-    @include for-desktop {
+  @include for-desktop {
+    max-width: 1272px;
+    margin: 0 auto;
+
+    .products {
       margin: var(--spacer-sm) 0 0 var(--spacer-sm);
 
       &__grid {
@@ -248,8 +251,10 @@ export default Vue.extend({
         margin: 0 0 0 var(--spacer-sm);
       }
     }
+  }
 
-    @media (min-width: $desktop-l-min) {
+  @media (min-width: $desktop-l-min) {
+    .products {
       &__grid {
         grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
       }
