@@ -11,7 +11,7 @@
       </SfButton>
     </div>
 
-    <div class="_cross-sells-list">
+    <div class="_cross-sells-list" v-if="crossSellsProducts">
       <div class="products">
         <transition-group
           appear
@@ -23,7 +23,7 @@
             v-for="crossSellsProduct in crossSellsProducts"
             :key="crossSellsProduct.id"
             :product="crossSellsProduct"
-            :link="crossSellsProduct.landing_page_url ? crossSellsProduct.landing_page_url : ''"
+            :link="crossSellsProduct.landing_page_url ? crossSellsProduct.landing_page_url : undefined"
             link-tag="router-link"
             :wishlist-icon="false"
             class="products__product-card"
@@ -51,7 +51,7 @@
             v-for="upSellsProduct in upSellsProducts"
             :key="upSellsProduct.id"
             :product="upSellsProduct"
-            :link="upSellsProduct.landing_page_url ? upSellsProduct.landing_page_url : ''"
+            :link="upSellsProduct.landing_page_url ? upSellsProduct.landing_page_url : undefined"
             link-tag="router-link"
             :wishlist-icon="false"
             class="products__product-card"
@@ -127,13 +127,13 @@ export default Vue.extend({
 
       const productLinks = this.productLinks();
 
-      if (!productLinks || productLinks.length === 0) {
+      if (productLinks.length === 0) {
         return [];
       }
 
-      let skus = productLinks ? productLinks
+      let skus = productLinks
         .filter(productLink => productLink.link_type === type)
-        .map(productLink => productLink.linked_product_sku) : null
+        .map(productLink => productLink.linked_product_sku)
 
       if (skus === null || (skus.length === 0)) {
         return [];
