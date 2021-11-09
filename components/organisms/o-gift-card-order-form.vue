@@ -4,34 +4,31 @@
     class="gift-card-order-form"
     tag="div"
   >
+    <div class="_form-field" v-if="selectedTemplateId">
+      <label> Select style: </label>
+
+      <SfSelect
+        v-model="selectedTemplateId"
+        name="giftcard_template_id"
+        class="_giftcard-template sf-select--underlined"
+        :disabled="isDisabled"
+      >
+        <SfSelectOption
+          v-for="template in giftCardTemplatesList"
+          :key="template.id"
+          :value="template.id"
+        >
+          {{ template.name }}
+        </SfSelectOption>
+      </SfSelect>
+    </div>
+
     <validation-provider
       v-slot="{ errors, classes }"
       slim
-      v-if="selectedTemplateId"
+      rules="required"
+      name="Price Amount"
     >
-      <div class="_form-field" :class="classes">
-        <label> Select style: </label>
-
-        <SfSelect
-          v-model="selectedTemplateId"
-          name="giftcard_template_id"
-          class="_giftcard-template sf-select--underlined"
-          :disabled="isDisabled"
-          :valid="!errors.length"
-          :error-message="errors[0]"
-        >
-          <SfSelectOption
-            v-for="template in giftCardTemplatesList"
-            :key="template.id"
-            :value="template.id"
-          >
-            {{ template.name }}
-          </SfSelectOption>
-        </SfSelect>
-      </div>
-    </validation-provider>
-
-    <validation-provider v-slot="{ errors, classes }" slim>
       <div class="_form-field _price-amount-field" :class="classes">
         <label> Select value: </label>
 
@@ -54,17 +51,29 @@
         </SfSelect>
 
         <div class="_custom-price-amount" v-if="showCustomPriceAmountInput">
-          <label class="_price-label">$</label>
-          <SfInput
-            name="price_amount"
-            :required="true"
-            v-model.number="customPriceAmount"
-          />
+          <validation-provider
+            v-slot="{ errors }"
+            slim
+            rules="required"
+            name="Price Amount"
+          >
+            <label class="_price-label">$</label>
+            <SfInput
+              name="custom_price_amount"
+              v-model.number="customPriceAmount"
+              :disabled="isDisabled"
+              :required="true"
+              :valid="!errors.length"
+              :error-message="errors[0]"
+            />
+          </validation-provider>
         </div>
       </div>
     </validation-provider>
+    </div>
+    </validation-provider>
 
-    <SfCheckbox v-model="shouldSendFriend" class="_send-friend">
+    <SfCheckbox v-model="shouldSendFriend" class="_send-friend" :disabled="isDisabled">
       <template #label>
         <span class="_checkbox-label"> Send Gift Card to friend </span>
       </template>
@@ -74,7 +83,7 @@
       <div class="_form-field">
         <label> Sender name (optional): </label>
 
-        <SfInput name="customer_name" v-model.trim="customerName" />
+        <SfInput name="customer_name" v-model.trim="customerName" :disabled="isDisabled" />
       </div>
 
       <validation-provider
@@ -90,6 +99,7 @@
             name="recipient_name"
             v-model.trim="recipientName"
             :required="true"
+            :disabled="isDisabled"
             :valid="!errors.length"
             :error-message="errors[0]"
           />
@@ -109,6 +119,7 @@
           <SfInput
             name="recipient_email"
             v-model.trim="recipientEmail"
+            :disabled="isDisabled"
             :required="true"
             :valid="!errors.length"
             :error-message="errors[0]"
@@ -116,7 +127,7 @@
         </div>
       </validation-provider>
 
-      <SfCheckbox v-model="shouldRecipientShip" class="_recipient-ship">
+      <SfCheckbox v-model="shouldRecipientShip" class="_recipient-ship" :disabled="isDisabled">
         <template #label>
           <span class="_checkbox-label">
             Have us send a physical card via post office
@@ -179,14 +190,7 @@ import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
 
-import {
-  SfCheckbox,
-  SfHeading,
-  SfButton,
-  SfModal,
-  SfInput,
-  SfSelect
-} from '@storefront-ui/vue';
+import { SfCheckbox, SfButton, SfInput, SfSelect } from '@storefront-ui/vue';
 
 import GiftCardOrderFormData from 'theme/components/interfaces/gift-card-order-form-data.interface';
 import GiftCardTemplate from 'src/modules/gift-card/types/GiftCardTemplate.interface';
@@ -251,10 +255,7 @@ export default Vue.extend({
       },
       set (value: string) {
         if (value.length >= maxCharactersRemaining) {
-          value = value.slice(
-            0,
-            maxCharactersRemaining
-          );
+          value = value.slice(0, maxCharactersRemaining);
         }
 
         this.updateGiftCardOrderFormData({
