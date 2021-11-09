@@ -48,6 +48,7 @@
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 import { getThumbnailPath, isServer } from '@vue-storefront/core/helpers';
 import Product from '@vue-storefront/core/modules/catalog/types/Product';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
@@ -62,7 +63,7 @@ import OGiftCardOrderForm from 'theme/components/organisms/o-gift-card-order-for
 import GiftCardTemplate from 'src/modules/gift-card/types/GiftCardTemplate.interface';
 import { ImageHandlerService } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
-import { GiftCardTemplateSize } from 'src/modules/gift-card';
+import { GiftCardOptions, GiftCardTemplateSize } from 'src/modules/gift-card';
 
 import GiftCardOrderFormData from 'theme/components/interfaces/gift-card-order-form-data.interface';
 
@@ -184,39 +185,47 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   mounted (): void {
     this.loadData();
+    this.updateCustomerName();
+    this.initEventBusListeners();
+  },
+  beforeDestroy (): void {
+    this.removeEventBusListeners();
   },
   async asyncData ({ store }): Promise<void> {
     await store.dispatch('product/loadProduct', { parentSku: 'GiftCard' });
-    if (isServer) {
-    }
   },
   methods: {
     async addCartItem (): Promise<void> {
-      if (!this.product) {
+      if (!this.product || !this.giftCardOrderFormData.selectedTemplateId) {
         return;
       }
 
       try {
+        const giftCardOptions: GiftCardOptions = {
+          product: this.product.id as number,
+          related_product: '',
+          qty: this.giftCardOrderFormData.qty,
+          price_amount: this.priceAmount,
+          amount: this.priceAmount,
+          giftcard_template_id:
+                this.giftCardOrderFormData.selectedTemplateId,
+          send_friend: this.giftCardOrderFormData.shouldSendFriend ? 1 : '',
+          customer_name: this.customerName,
+          recipient_name: this.recipientName,
+          recipient_email: this.recipientEmail,
+          recipient_ship: this.giftCardOrderFormData.shouldRecipientShip
+            ? 'yes'
+            : 'no',
+          recipient_address: '',
+          message: this.customMessage,
+          notify_success: 0
+        };
+
         await this.$store.dispatch('cart/addItem', {
           productToAdd: {
             ...this.product,
             qty: this.giftCardOrderFormData.qty,
-            giftcard_options: {
-              product: this.product.id,
-              qty: this.giftCardOrderFormData.qty,
-              price_amount: this.priceAmount,
-              amount: this.priceAmount,
-              giftcard_template_id:
-                this.giftCardOrderFormData.selectedTemplateId,
-              send_friend: this.giftCardOrderFormData.shouldSendFriend ? 1 : 0,
-              customer_name: this.customerName,
-              recipient_name: this.recipientName,
-              recipient_email: this.recipientEmail,
-              recipient_ship: this.giftCardOrderFormData.shouldRecipientShip
-                ? 'yes'
-                : 'no',
-              message: this.customMessage
-            }
+            giftcard_options: giftCardOptions
           }
         });
 
@@ -233,10 +242,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
     },
+    initEventBusListeners (): void {
+      EventBus.$on('session-after-started', this.updateCustomerName);
+      EventBus.$on('user-after-logout', this.updateCustomerName);
+    },
     async loadData (): Promise<void> {
       await this.$store.dispatch('giftCard/loadGiftCardsTemplates');
 
-      this.giftCardOrderFormData.customerName = this.loggedUserFullName;
       this.giftCardOrderFormData.selectedTemplateId =
         this.firstGiftCardTemplate?.id;
     },
@@ -254,6 +266,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     onGiftCardTemplateClick (): void {
       this.showPreviewModal = true;
+    },
+    removeEventBusListeners (): void {
+      EventBus.$off('session-after-started', this.updateCustomerName);
+      EventBus.$off('user-after-logout', this.updateCustomerName);
+    },
+    updateCustomerName (): void {
+      this.giftCardOrderFormData.customerName = this.loggedUserFullName;
     }
   }
 });
