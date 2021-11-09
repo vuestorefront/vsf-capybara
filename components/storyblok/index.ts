@@ -17,7 +17,6 @@ export default function registerComponents () {
   add('sharing', () => import('./Sharing.vue'))
   add('expandable_text_block', () => import('./ExpandableText.vue'))
   add('hr', () => import('./HorizontalRule.vue'))
-  // add('giftcard_detailed_information', () => import)
 
   // add('product', () => import('./Product.vue'))
   // add('category', () => import('./Category.vue'))
