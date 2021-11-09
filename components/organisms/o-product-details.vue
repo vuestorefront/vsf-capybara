@@ -75,6 +75,9 @@ import { ModalList } from 'theme/store/ui/modals';
 import { mapActions } from 'vuex';
 
 export default {
+  inject: {
+    window: { from: 'WindowObject' }
+  },
   components: {
     SfButton,
     MZoomGallery,
@@ -131,7 +134,7 @@ export default {
       const rawDescription = this.product.short_description.replace(/(<p>|<\/p>)/g, '');
 
       return {
-        url: window.location.href,
+        url: this.window.location ? this.window.location.href : '',
         description: rawDescription,
         eMailSubject: `Check out this cool product: ${this.product.name}`,
         twitterDescription: rawDescription,
