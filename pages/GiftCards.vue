@@ -49,7 +49,7 @@
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
-import { getThumbnailPath, isServer } from '@vue-storefront/core/helpers';
+import { getThumbnailPath } from '@vue-storefront/core/helpers';
 import Product from '@vue-storefront/core/modules/catalog/types/Product';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -141,7 +141,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     product (): Product | null {
       return this.$store.getters['product/getCurrentProduct'];
     },
-
     recipientEmail (): string {
       return this.giftCardOrderFormData.shouldRecipientShip
         ? this.giftCardOrderFormData.recipientEmail
@@ -184,15 +183,20 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     };
   },
   mounted (): void {
-    this.loadData();
     this.updateCustomerName();
     this.initEventBusListeners();
+
+    this.giftCardOrderFormData.selectedTemplateId =
+        this.firstGiftCardTemplate?.id;
   },
   beforeDestroy (): void {
     this.removeEventBusListeners();
   },
   async asyncData ({ store }): Promise<void> {
-    await store.dispatch('product/loadProduct', { parentSku: 'GiftCard' });
+    await Promise.all([
+      store.dispatch('giftCard/loadGiftCardsTemplates'),
+      store.dispatch('product/loadProduct', { parentSku: 'GiftCard' })
+    ])
   },
   methods: {
     async addCartItem (): Promise<void> {
@@ -245,12 +249,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     initEventBusListeners (): void {
       EventBus.$on('session-after-started', this.updateCustomerName);
       EventBus.$on('user-after-logout', this.updateCustomerName);
-    },
-    async loadData (): Promise<void> {
-      await this.$store.dispatch('giftCard/loadGiftCardsTemplates');
-
-      this.giftCardOrderFormData.selectedTemplateId =
-        this.firstGiftCardTemplate?.id;
+      EventBus.$on('user-after-loggedin', this.updateCustomerName);
     },
     onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
@@ -270,6 +269,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     removeEventBusListeners (): void {
       EventBus.$off('session-after-started', this.updateCustomerName);
       EventBus.$off('user-after-logout', this.updateCustomerName);
+      EventBus.$off('user-after-loggedin', this.updateCustomerName);
     },
     updateCustomerName (): void {
       this.giftCardOrderFormData.customerName = this.loggedUserFullName;
