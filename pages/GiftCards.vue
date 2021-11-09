@@ -17,6 +17,7 @@
         <div class="_close-preview" />
       </template>
     </SfModal>
+
     <div class="_content">
       <div class="_col -left">
         <GiftCardTemplateComponent
@@ -40,15 +41,23 @@
           :gift-card-templates-list="giftCardTemplatesList"
           :is-disabled="isSubmitting"
           @submit-form="onFormSubmit"
+          @show-preview="onShowPreviewModalHandler"
         />
       </div>
+
+      <component
+        v-if="story"
+        :item="story.content"
+        :is="story.content.component"
+        class="_giftcard-detailed-information"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
-import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import { getThumbnailPath } from '@vue-storefront/core/helpers';
 import Product from '@vue-storefront/core/modules/catalog/types/Product';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
@@ -56,6 +65,7 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 
 import { SfModal } from '@storefront-ui/vue';
+import { components } from 'src/modules/vsf-storyblok-module/components';
 
 import GiftCardTemplateComponent from 'src/modules/gift-card/components/GiftCardTemplate.vue';
 import OGiftCardOrderForm from 'theme/components/organisms/o-gift-card-order-form.vue';
@@ -88,7 +98,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   components: {
     GiftCardTemplateComponent,
     OGiftCardOrderForm,
-    SfModal
+    SfModal,
+    Block: components.block
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }
@@ -179,15 +190,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       giftCardOrderFormData:
         defaultGiftCardOrderFormData as GiftCardOrderFormData,
       showPreviewModal: false,
-      isSubmitting: false
+      isSubmitting: false,
+      story: undefined
     };
   },
   mounted (): void {
     this.updateCustomerName();
     this.initEventBusListeners();
+    this.loadGiftCardDetailedInformationStory();
 
     this.giftCardOrderFormData.selectedTemplateId =
-        this.firstGiftCardTemplate?.id;
+      this.firstGiftCardTemplate?.id;
   },
   beforeDestroy (): void {
     this.removeEventBusListeners();
@@ -196,7 +209,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     await Promise.all([
       store.dispatch('giftCard/loadGiftCardsTemplates'),
       store.dispatch('product/loadProduct', { parentSku: 'GiftCard' })
-    ])
+    ]);
   },
   methods: {
     async addCartItem (): Promise<void> {
@@ -211,8 +224,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           qty: this.giftCardOrderFormData.qty,
           price_amount: this.priceAmount,
           amount: this.priceAmount,
-          giftcard_template_id:
-                this.giftCardOrderFormData.selectedTemplateId,
+          giftcard_template_id: this.giftCardOrderFormData.selectedTemplateId,
           send_friend: this.giftCardOrderFormData.shouldSendFriend ? 1 : '',
           customer_name: this.customerName,
           recipient_name: this.recipientName,
@@ -251,6 +263,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       EventBus.$on('user-after-logout', this.updateCustomerName);
       EventBus.$on('user-after-loggedin', this.updateCustomerName);
     },
+    async loadGiftCardDetailedInformationStory (): Promise<void> {
+      const response = await this.$store.dispatch(`storyblok/loadStory`, {
+        fullSlug: 'blocks/giftcard_detailed_information'
+      });
+      this.story = response;
+    },
     onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
@@ -264,6 +282,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.isSubmitting = false;
     },
     onGiftCardTemplateClick (): void {
+      this.showPreviewModal = true;
+    },
+    onShowPreviewModalHandler (): void {
       this.showPreviewModal = true;
     },
     removeEventBusListeners (): void {
@@ -282,19 +303,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #gift-cards-page {
-  padding: 3em 0;
+  padding: var(--spacer-lg) 0;
 
   * {
     box-sizing: border-box;
   }
 
-  @media (min-width: $tablet-min) {
-    max-width: 71.75rem;
-    margin: 0 auto;
-  }
-
   ._content {
-    padding: 0 var(--spacer-xs);
     display: flex;
     flex-wrap: wrap;
   }
@@ -318,11 +333,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   }
 
   ._giftcard-banner {
-    padding: 0.5em 2em;
-    margin-top: 1.5em;
+    padding: var(--spacer-xs) var(--spacer);
+    margin-top: var(--spacer-base);
     text-align: center;
     background-color: #fce0e1;
     width: 100%;
+  }
+
+  ._giftcard-detailed-information {
+    padding: 0 var(--spacer-sm);
+    flex-grow: 1;
   }
 
   ._preview-modal {
@@ -336,6 +356,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     --modal-right: none;
     --modal-transform: translate3d(-50%, -50%, 0);
     --modal-height: auto;
+    --modal-index: 201;
+    --overlay-z-index: 200;
 
     ._close-preview {
       width: 35px;
@@ -361,6 +383,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   }
 
+  @media (min-width: $tablet-min) {
+    max-width: 71.75rem;
+    margin: 0 auto;
+  }
+
   @media (min-width: $mobile-max) {
     ._col {
       &.-left {
@@ -376,6 +403,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   }
 
   @include for-desktop {
+    padding: 3em 0;
+
     ._col {
       &.-left {
         flex: 8;

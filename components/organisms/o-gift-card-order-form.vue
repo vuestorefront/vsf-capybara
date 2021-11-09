@@ -4,58 +4,60 @@
     class="gift-card-order-form"
     tag="div"
   >
-    <div class="_form-field" v-if="selectedTemplateId">
-      <label> Select style: </label>
-
-      <SfSelect
-        v-model="selectedTemplateId"
-        name="giftcard_template_id"
-        class="_giftcard-template sf-select--underlined"
-        :disabled="isDisabled"
-      >
-        <SfSelectOption
-          v-for="template in giftCardTemplatesList"
-          :key="template.id"
-          :value="template.id"
-        >
-          {{ template.name }}
-        </SfSelectOption>
-      </SfSelect>
-    </div>
-
-    <validation-provider
-      v-slot="{ errors, classes }"
-      slim
-      rules="required"
-      name="Price Amount"
-    >
-      <div class="_form-field _price-amount-field" :class="classes">
-        <label> Select value: </label>
+    <div class="_form-block -amount">
+      <div class="_form-field" v-if="selectedTemplateId">
+        <label> Select style: </label>
 
         <SfSelect
-          v-model="selectedPriceAmount"
-          name="price_amount"
-          class="_price-amount sf-select--underlined"
-          :class="{ '-slim': isSelectedPriceAmountSlim }"
+          v-model="selectedTemplateId"
+          name="giftcard_template_id"
+          class="_giftcard-template sf-select--underlined"
           :disabled="isDisabled"
-          :valid="!errors.length"
-          :error-message="errors[0]"
         >
           <SfSelectOption
-            v-for="option in priceAmountOptionsList"
-            :key="option.id"
-            :value="option.id"
+            v-for="template in giftCardTemplatesList"
+            :key="template.id"
+            :value="template.id"
           >
-            {{ option.value }}
+            {{ template.name }}
           </SfSelectOption>
         </SfSelect>
+      </div>
 
-        <div class="_custom-price-amount" v-if="showCustomPriceAmountInput">
+      <validation-provider
+        v-slot="{ errors, classes }"
+        slim
+        rules="required"
+        name="Price Amount"
+      >
+        <div class="_form-field _price-amount-field" :class="classes">
+          <label> Select value: </label>
+
+          <SfSelect
+            v-model="selectedPriceAmount"
+            name="price_amount"
+            class="_price-amount sf-select--underlined"
+            :class="{ '-slim': isSelectedPriceAmountSlim }"
+            :disabled="isDisabled"
+            :valid="!errors.length"
+            :error-message="errors[0]"
+          >
+            <SfSelectOption
+              v-for="option in priceAmountOptionsList"
+              :key="option.id"
+              :value="option.id"
+            >
+              {{ option.value }}
+            </SfSelectOption>
+          </SfSelect>
+
           <validation-provider
             v-slot="{ errors }"
             slim
             rules="required"
             name="Price Amount"
+            class="_custom-price-amount"
+            v-if="showCustomPriceAmountInput"
           >
             <label class="_price-label">$</label>
             <SfInput
@@ -68,96 +70,117 @@
             />
           </validation-provider>
         </div>
-      </div>
-    </validation-provider>
-    </div>
-    </validation-provider>
-
-    <SfCheckbox v-model="shouldSendFriend" class="_send-friend" :disabled="isDisabled">
-      <template #label>
-        <span class="_checkbox-label"> Send Gift Card to friend </span>
-      </template>
-    </SfCheckbox>
-
-    <div v-if="showSendFriendFields" class="_send-friend-fields">
-      <div class="_form-field">
-        <label> Sender name (optional): </label>
-
-        <SfInput name="customer_name" v-model.trim="customerName" :disabled="isDisabled" />
-      </div>
-
-      <validation-provider
-        v-slot="{ errors, classes }"
-        rules="required"
-        name="'Recipient Name'"
-        slim
-      >
-        <div class="_form-field" :class="classes">
-          <label>Recipient name:</label>
-
-          <SfInput
-            name="recipient_name"
-            v-model.trim="recipientName"
-            :required="true"
-            :disabled="isDisabled"
-            :valid="!errors.length"
-            :error-message="errors[0]"
-          />
-        </div>
       </validation-provider>
 
-      <validation-provider
-        v-slot="{ errors, classes }"
-        rules="required|email"
-        name="'Recipient Email'"
-        slim
-        v-if="showRecipientEmailInput"
+      <SfCheckbox
+        v-model="shouldSendFriend"
+        class="_send-friend"
+        :disabled="isDisabled"
       >
-        <div class="_form-field" :class="classes">
-          <label>Recipient email address:</label>
-
-          <SfInput
-            name="recipient_email"
-            v-model.trim="recipientEmail"
-            :disabled="isDisabled"
-            :required="true"
-            :valid="!errors.length"
-            :error-message="errors[0]"
-          />
-        </div>
-      </validation-provider>
-
-      <SfCheckbox v-model="shouldRecipientShip" class="_recipient-ship" :disabled="isDisabled">
         <template #label>
-          <span class="_checkbox-label">
-            Have us send a physical card via post office
-          </span>
+          <span class="_checkbox-label"> Send Gift Card to friend </span>
         </template>
       </SfCheckbox>
-
-      <div class="_ship-description" v-if="!showRecipientEmailInput">
-        All physical gift cards in the same order will be sent to the same
-        shipping address entered during checkout.
-      </div>
-
-      <div class="_custom-message-container">
-        <label class="_label"> Custom message </label>
-
-        <textarea
-          class="_custom-message"
-          name="custom_message"
-          rows="4"
-          v-model="customMessage"
-          :disabled="isDisabled"
-        />
-
-        <span class="_characters-remaining">
-          Characters Remaining: {{ charactersRemaining }}
-        </span>
-      </div>
     </div>
 
-    <validation-provider v-slot="{ errors, classes }" rules="required">
+    <transition name="maxHeight">
+      <div v-if="showSendFriendFields" class="_form-block">
+        <div class="_form-field">
+          <label> Sender name (optional): </label>
+
+          <SfInput
+            name="customer_name"
+            v-model.trim="customerName"
+            :disabled="isDisabled"
+          />
+        </div>
+
+        <validation-provider
+          v-slot="{ errors, classes }"
+          rules="required"
+          name="'Recipient Name'"
+          slim
+        >
+          <div class="_form-field" :class="classes">
+            <label>Recipient name:</label>
+
+            <SfInput
+              name="recipient_name"
+              v-model.trim="recipientName"
+              :required="true"
+              :disabled="isDisabled"
+              :valid="!errors.length"
+              :error-message="errors[0]"
+            />
+          </div>
+        </validation-provider>
+
+        <validation-provider
+          v-slot="{ errors, classes }"
+          rules="required|email"
+          name="'Recipient Email'"
+          slim
+          v-if="showRecipientEmailInput"
+        >
+          <div class="_form-field" :class="classes">
+            <label>Recipient email address:</label>
+
+            <SfInput
+              name="recipient_email"
+              v-model.trim="recipientEmail"
+              :disabled="isDisabled"
+              :required="true"
+              :valid="!errors.length"
+              :error-message="errors[0]"
+            />
+          </div>
+        </validation-provider>
+
+        <SfCheckbox
+          v-model="shouldRecipientShip"
+          class="_recipient-ship"
+          :disabled="isDisabled"
+        >
+          <template #label>
+            <span class="_checkbox-label">
+              Have us send a physical card via post office
+            </span>
+          </template>
+        </SfCheckbox>
+
+        <div class="_ship-description" v-if="!showRecipientEmailInput">
+          All physical gift cards in the same order will be sent to the same
+          shipping address entered during checkout.
+        </div>
+
+        <div class="_custom-message-container">
+          <label class="_label"> Custom message </label>
+
+          <textarea
+            class="_custom-message"
+            name="custom_message"
+            rows="4"
+            v-model="customMessage"
+            :disabled="isDisabled"
+          />
+
+          <span class="_characters-remaining">
+            Characters Remaining: {{ charactersRemaining }}
+          </span>
+        </div>
+      </div>
+    </transition>
+
+    <validation-provider
+      v-slot="{ errors, classes }"
+      tag="div"
+      rules="required"
+      class="_form-block"
+    >
+      <div class="_giftcard-preview" @click="$emit('show-preview')">
+        Preview
+      </div>
+
       <div class="_quantity" :class="classes">
         <label> Quantity: </label>
 
@@ -174,14 +197,16 @@
       </div>
     </validation-provider>
 
-    <SfButton
-      class="_add-to-cart color-primary"
-      type="submit"
-      :disabled="isDisabled"
-      @click="(event) => passes(() => submitForm())"
-    >
-      {{ $t("Add to Cart") }}
-    </SfButton>
+    <div class="_form-block">
+      <SfButton
+        class="_add-to-cart color-primary"
+        type="submit"
+        :disabled="isDisabled"
+        @click="(event) => passes(() => submitForm())"
+      >
+        {{ $t("Add to Cart") }}
+      </SfButton>
+    </div>
   </validation-observer>
 </template>
 
@@ -276,7 +301,7 @@ export default Vue.extend({
       }
     },
     isSelectedPriceAmountSlim () {
-      return this.selectedPriceAmount === 0; // todo
+      return this.selectedPriceAmount === 0;
     },
     priceAmountOptionsList (): {
       id: number,
@@ -361,7 +386,7 @@ export default Vue.extend({
       }
     },
     showCustomPriceAmountInput (): boolean {
-      return this.selectedPriceAmount === 0; // todo
+      return this.selectedPriceAmount === 0;
     },
     showRecipientEmailInput (): boolean {
       return !this.shouldRecipientShip;
@@ -393,6 +418,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
+$send-friend-block-max-height: 500px;
+
 .gift-card-order-form {
   --input-font-size: var(--font-sm);
   --input-padding: 0.7em 0 0.4em;
@@ -406,15 +435,23 @@ export default Vue.extend({
     padding-top: var(--spacer-2xs);
   }
 
+  ._form-block {
+    padding: 0 var(--spacer-lg) var(--spacer-lg);
+
+    &.-amount {
+      padding-bottom: var(--spacer-base);
+    }
+  }
+
   ._price-amount-field {
     ._price-amount {
       &.-slim {
         --select-margin: 0;
+      }
 
-        ::v-deep {
-          .sf-select__error-message {
-            display: none;
-          }
+      ::v-deep {
+        .sf-select__error-message {
+          display: none;
         }
       }
     }
@@ -423,18 +460,14 @@ export default Vue.extend({
   ._custom-price-amount {
     --input-padding: 9px 0;
     --input-height: 2em;
-    margin-bottom: var(--spacer-xl);
 
+    margin-bottom: var(--spacer-base);
     display: flex;
     align-items: center;
 
     ._price-label {
       margin-right: var(--spacer-xs);
     }
-  }
-
-  ._send-friend {
-    margin-bottom: var(--spacer-base);
   }
 
   ._recipient-ship {
@@ -445,7 +478,6 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-bottom: var(--spacer-base);
 
     ._label {
       margin-bottom: var(--spacer-xs);
@@ -459,13 +491,19 @@ export default Vue.extend({
     width: 100%;
     padding: 0.5em;
     font-family: var(--font-family-primary);
-    resize: vertical;
+    resize: none;
   }
 
   ._quantity {
-    margin-bottom: var(--spacer-base);
     display: flex;
     flex-direction: column;
+  }
+
+  ._giftcard-preview {
+    text-align: right;
+    color: var(--c-link);
+    display: none;
+    cursor: pointer;
   }
 
   ._ship-description {
@@ -476,6 +514,25 @@ export default Vue.extend({
     .sf-select__selected {
       --product-option-font-size: var(--font-sm);
       --select-option-font-size: var(--font-sm);
+    }
+  }
+
+  .maxHeight-enter-active,
+  .maxHeight-leave-active {
+    transition: max-height 0.3s linear;
+    max-height: $send-friend-block-max-height;
+    overflow: hidden;
+  }
+
+  .maxHeight-enter,
+  .maxHeight-leave-to {
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  @include for-desktop {
+    ._giftcard-preview {
+      display: block;
     }
   }
 }
