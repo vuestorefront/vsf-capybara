@@ -72,6 +72,7 @@ export default Vue.extend({
 
 #cart-recovery {
   box-sizing: border-box;
+  padding: 0 var(--spacer-xs);
   // Auto margins for vertical center alignment
   margin: auto;
 
