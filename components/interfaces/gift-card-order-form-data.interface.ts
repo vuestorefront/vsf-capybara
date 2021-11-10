@@ -5,7 +5,7 @@ export default interface GiftCardOrderFormData {
   customerName: string,
   recipientName: string,
   recipientEmail: string,
-  shouldRecipientShip: boolean,
+  shouldShipPhysically: boolean,
   customMessage: string,
   qty: number,
   customPriceAmount: number

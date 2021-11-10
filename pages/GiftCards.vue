@@ -84,7 +84,7 @@ const defaultGiftCardOrderFormData: GiftCardOrderFormData = {
   customerName: '',
   recipientName: '',
   recipientEmail: '',
-  shouldRecipientShip: false,
+  shouldShipPhysically: false,
   customMessage: '',
   qty: 1,
   customPriceAmount: 200
@@ -153,7 +153,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.$store.getters['product/getCurrentProduct'];
     },
     recipientEmail (): string {
-      return this.giftCardOrderFormData.shouldRecipientShip
+      return this.giftCardOrderFormData.shouldShipPhysically
         ? this.giftCardOrderFormData.recipientEmail
         : '';
     },
@@ -232,7 +232,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           customer_name: this.customerName,
           recipient_name: this.recipientName,
           recipient_email: this.recipientEmail,
-          recipient_ship: this.giftCardOrderFormData.shouldRecipientShip
+          recipient_ship: this.giftCardOrderFormData.shouldShipPhysically
             ? 'yes'
             : 'no',
           recipient_address: '',

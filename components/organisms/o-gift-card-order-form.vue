@@ -137,7 +137,7 @@
         </validation-provider>
 
         <SfCheckbox
-          v-model="shouldRecipientShip"
+          v-model="shouldShipPhysically"
           class="_recipient-ship"
           :disabled="isDisabled"
         >
@@ -363,14 +363,14 @@ export default Vue.extend({
         });
       }
     },
-    shouldRecipientShip: {
+    shouldShipPhysically: {
       get (): boolean {
-        return this.giftCardOrderFormData.shouldRecipientShip;
+        return this.giftCardOrderFormData.shouldShipPhysically;
       },
       set (value: boolean) {
         this.updateGiftCardOrderFormData({
           ...this.giftCardOrderFormData,
-          shouldRecipientShip: value
+          shouldShipPhysically: value
         });
       }
     },
@@ -389,7 +389,7 @@ export default Vue.extend({
       return this.selectedPriceAmount === 0;
     },
     showRecipientEmailInput (): boolean {
-      return !this.shouldRecipientShip;
+      return !this.shouldShipPhysically;
     },
     showSendFriendFields (): boolean {
       return this.shouldSendFriend;
