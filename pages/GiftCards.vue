@@ -46,7 +46,7 @@
       </div>
 
       <component
-        v-if="story"
+        v-if="showGiftCardDetailedInformation"
         :item="story.content"
         :is="story.content.component"
         class="_giftcard-detailed-information"
@@ -183,6 +183,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           'giftcard'
         )
       };
+    },
+    showGiftCardDetailedInformation (): boolean {
+      return !!(this.story && (this.story as any).content && (this.story as any).content.component);
     }
   },
   data () {
