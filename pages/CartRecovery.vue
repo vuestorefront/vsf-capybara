@@ -42,12 +42,12 @@ export default Vue.extend({
   },
   async mounted () {
     try {
-      const { result } = await this.$store.dispatch('budsies/loadRecoverableCart', {
+      const cartToken = await this.$store.dispatch('budsies/loadRecoverableCart', {
         recoveryId: this.$route.params.id,
         recoveryCode: this.$route.params.code
       });
 
-      this.$store.commit('cart/' + types.CART_LOAD_CART_SERVER_TOKEN, result)
+      this.$store.commit('cart/' + types.CART_LOAD_CART_SERVER_TOKEN, cartToken)
 
       this.$store.dispatch('cart/load', { forceClientState: false })
 
