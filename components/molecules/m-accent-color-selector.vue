@@ -77,7 +77,7 @@ export default Vue.extend({
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-start;
-        margin: -0.5em;
+        margin: -0.5em -0.25em;
         overflow: hidden;
         padding: 0;
     }
