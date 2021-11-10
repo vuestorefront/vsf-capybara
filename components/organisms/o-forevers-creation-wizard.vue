@@ -178,7 +178,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.getBundleOption('production time');
     },
     existingCartitem (): CartItem | undefined {
-      return this.cartItems.find(({ plushieId }) => plushieId === this.existingPlushieId);
+      return this.cartItems.find(({ plushieId }) => plushieId && plushieId === this.existingPlushieId);
     }
   },
   methods: {
@@ -214,7 +214,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           })
         });
 
-        this.goToCart();
+        this.goToCrossSells();
       } catch (err) {
         Logger.error(err, 'budsies')();
 
@@ -334,8 +334,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return this.activeProduct.bundle_options.find((option: BundleOption) => option.title.toLowerCase() === optionTitle);
     },
-    goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
+    goToCrossSells (): void {
+      let route;
+      if (this.product) {
+        route = '/cross-sells/p/' + this.product.sku
+      } else {
+        route = '/cart'
+      }
+
+      this.$router.push(localizedRoute(route));
     },
     async loadProductOptions (id?: number | string): Promise<void> {
       await Promise.all([
@@ -396,7 +403,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           forceUpdateServerItem: true
         });
 
-        this.goToCart();
+        this.goToCrossSells();
       } catch (error) {
         Logger.error(error, 'budsies')();
 

@@ -26,6 +26,10 @@ const Static = () =>
   import(/* webpackChunkName: "vsf-static" */ 'theme/pages/Static');
 const CartRecovery = () =>
   import(/* webpackChunkName: "vsf-cart-recovery" */ 'theme/pages/CartRecovery');
+const CrossSells = () =>
+  import(/* webpackChunkName: "vsf-cross-sells" */ 'theme/pages/CrossSells');
+const GiftCards = () =>
+  import(/* webpackChunkName: "vsf-gift-cards" */ 'theme/pages/GiftCards');
 
 let routes = [
   { name: 'home', path: '/', component: Home, alias: '/pwa.html' },
@@ -60,6 +64,7 @@ let routes = [
   { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
   { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
   { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
+  { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
   {
     name: 'photo-pillows-alias-1',
     path: '/photo-pillow/designs/',
@@ -81,7 +86,8 @@ let routes = [
     }
   },
   { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct },
-  { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery }
+  { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery },
+  { name: 'gift-cards', path: '/giftcards', component: GiftCards }
 ];
 
 export default routes;

@@ -5,7 +5,7 @@
       :image="product.image"
       :regular-price="product.price.regular"
       :special-price="product.price.special"
-      :link="product.link"
+      :link="productLink"
       :link-tag="linkTag"
       :wishlist-icon="wishlistIcon"
       :image-height="imageHeight"
@@ -19,7 +19,7 @@
 import { SfProductCard } from '@storefront-ui/vue';
 
 export default {
-  name: 'MProductCard',
+  name: 'OProductCard',
   components: {
     SfProductCard
   },
@@ -36,6 +36,10 @@ export default {
       type: Object,
       required: true
     },
+    link: {
+      type: String,
+      default: undefined
+    },
     linkTag: {
       type: String,
       default: undefined
@@ -43,6 +47,11 @@ export default {
     wishlistIcon: {
       type: [String, Array, Boolean],
       default: 'heart'
+    }
+  },
+  computed: {
+    productLink (): string {
+      return this.link ? this.link : this.product.link;
     }
   }
 }

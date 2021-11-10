@@ -522,7 +522,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           extraFaces.clearUploaders();
         }
 
-        this.goToCart();
+        this.goToCrossSells();
       } catch (e) {
         this.$store.dispatch(
           'notification/spawnNotification',
@@ -550,8 +550,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     },
-    goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
+    goToCrossSells (): void {
+      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
     }
   },
   created (): void {
