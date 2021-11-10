@@ -89,7 +89,9 @@ body,
   flex-direction: column;
   min-height: 100%;
   .content {
+    display: flex;
     flex: 1 0 auto;
+    flex-direction: column;
   }
   .o-footer {
     flex: 0 0 auto;
