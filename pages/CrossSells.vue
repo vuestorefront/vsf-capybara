@@ -226,11 +226,10 @@ export default Vue.extend({
   }
 
   @include for-desktop {
-    max-width: 1272px;
-    margin: 0 auto;
-
     .products {
-      margin: var(--spacer-sm) 0 0 var(--spacer-sm);
+      max-width: 1272px;
+      margin: var(--spacer-sm) auto;
+      padding: 2em 0;
 
       &__grid {
         grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
@@ -250,6 +249,10 @@ export default Vue.extend({
       &__list {
         margin: 0 0 0 var(--spacer-sm);
       }
+    }
+
+    ._cross-sells-list {
+      background: #e3f9ff;
     }
   }
 
