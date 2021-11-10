@@ -24,6 +24,8 @@ const MyAccount = () =>
   import(/* webpackChunkName: "vsf-my-account" */ 'theme/pages/MyAccount');
 const Static = () =>
   import(/* webpackChunkName: "vsf-static" */ 'theme/pages/Static');
+const CartRecovery = () =>
+  import(/* webpackChunkName: "vsf-cart-recovery" */ 'theme/pages/CartRecovery');
 const CrossSells = () =>
   import(/* webpackChunkName: "vsf-cross-sells" */ 'theme/pages/CrossSells');
 const GiftCards = () =>
@@ -84,6 +86,7 @@ let routes = [
     }
   },
   { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct },
+  { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery },
   { name: 'gift-cards', path: '/giftcards', component: GiftCards }
 ];
 
