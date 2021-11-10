@@ -446,6 +446,9 @@ export default {
   }
   &__main {
     padding: 0 var(--spacer-sm);
+    position: relative;
+    z-index: 1;
+
     @include for-desktop {
       padding: 0;
     }

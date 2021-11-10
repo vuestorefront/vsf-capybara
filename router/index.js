@@ -26,6 +26,8 @@ const Static = () =>
   import(/* webpackChunkName: "vsf-static" */ 'theme/pages/Static');
 const CrossSells = () =>
   import(/* webpackChunkName: "vsf-cross-sells" */ 'theme/pages/CrossSells');
+const GiftCards = () =>
+  import(/* webpackChunkName: "vsf-gift-cards" */ 'theme/pages/GiftCards');
 
 let routes = [
   { name: 'home', path: '/', component: Home, alias: '/pwa.html' },
@@ -81,7 +83,8 @@ let routes = [
       }
     }
   },
-  { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct }
+  { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct },
+  { name: 'gift-cards', path: '/giftcards', component: GiftCards }
 ];
 
 export default routes;
