@@ -336,7 +336,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   }
 
   ._giftcard-banner {
-    padding: var(--spacer-xs) var(--spacer);
+    padding: var(--spacer-xs) var(--spacer-lg);
     margin-top: var(--spacer-base);
     text-align: center;
     background-color: #fce0e1;
