@@ -892,8 +892,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.accentColorPartValue = accentColor;
     },
-    goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
+    goToCrossSells (): void {
+      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
     },
     prefillEmail (): void {
       const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
@@ -1021,7 +1021,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           })
         });
 
-        this.goToCart();
+        this.goToCrossSells();
       } catch (error) {
         let errorToParse: any = error;
 
