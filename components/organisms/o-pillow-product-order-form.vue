@@ -623,8 +623,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
       return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
     },
-    goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
+    goToCrossSells (): void {
+      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
     },
     goToFieldByName (field: string): void {
       // Strip quotes
@@ -736,7 +736,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         });
 
         if (!shouldMakeAnother) {
-          this.goToCart();
+          this.goToCrossSells();
           return;
         }
 
