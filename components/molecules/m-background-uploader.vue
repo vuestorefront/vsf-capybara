@@ -1,5 +1,8 @@
 <template>
-  <div class="m-background-uploader" :class="[{ '-disabled': disabled }, skinClass]">
+  <div
+    class="m-background-uploader"
+    :class="[{ '-disabled': disabled }, skinClass]"
+  >
     <input
       :id="`background-editor-upload-button-${instanceId}`"
       type="file"
@@ -39,7 +42,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import Vue, { VueConstructor } from 'vue';
 import { InjectType } from 'src/modules/shared';
-import { isServer } from '@vue-storefront/core/helpers'
+import { isServer } from '@vue-storefront/core/helpers';
 
 interface InjectedServices {
   window: Window
@@ -67,7 +70,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       errorMessage: undefined as string | undefined,
       instanceId: uuidv4() as string,
       isDragging: false
-    }
+    };
   },
   computed: {
     skinClass (): string {
@@ -111,11 +114,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.$emit('background-uploaded', background);
       } catch (error) {
         this.errorMessage =
-                error &&
-                error.message &&
-                !(error instanceof UnexpectedReadResultError)
-                  ? error.message
-                  : userFriendlyErrorMessage;
+          error &&
+          error.message &&
+          !(error instanceof UnexpectedReadResultError)
+            ? error.message
+            : userFriendlyErrorMessage;
       }
     },
     onFileDropped (event: DragEvent): void {
@@ -155,7 +158,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     onDragLeave (): void {
       this.isDragging = false;
     },
-    dropHandler: function (e: DragEvent) { this.onFileDropped(e) },
+    dropHandler: function (e: DragEvent) {
+      this.onFileDropped(e);
+    },
     windowDragOverHandler: (e: DragEvent) => e.preventDefault()
   },
   mounted () {
@@ -177,58 +182,60 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
 
     this.window.removeEventListener('drop', this.dropHandler);
-    this.window.removeEventListener(
-      'dragover',
-      this.windowDragOverHandler
-    );
+    this.window.removeEventListener('dragover', this.windowDragOverHandler);
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .m-background-uploader {
+  text-align: center;
+
+  ._dropzone {
+    padding: 1.5em;
     text-align: center;
+    border: 1px dashed;
+    font-size: 1.1em;
+    font-weight: 500;
+    display: block;
 
-    ._dropzone {
-        padding: 1.5em;
-        text-align: center;
-        border: 1px dashed;
-        font-size: 1.1em;
-        font-weight: 500;
-        display: block;
+    &.-dragover {
+      background-color: rgba(212, 212, 212, 0.6);
+    }
 
-        &.-dragover {
-            background-color: rgba(212, 212, 212, 0.6);
-        }
+    ._drag-label {
+      margin-right: 0.5em;
+    }
 
-        ._drag-label {
-            margin-right: 0.5em;
-        }
+    ._upload-background-button {
+      --button-font-size: var(--font-xs);
+      display: inline-block;
+    }
+  }
 
-        ._upload-background-button {
-            display: inline-block;
-        }
+  ._error-text {
+    font-size: 0.8em;
+    margin-top: 1em;
+    text-align: center;
+  }
+
+  &.-disabled {
+    opacity: 0.6;
+  }
+
+  @media (min-width: $tablet-min) {
+    text-align: left;
+
+    ._upload-background-button {
+      --button-font-size: var(--font-base);
     }
 
     ._error-text {
-        font-size: 0.8em;
-        margin-top: 1em;
-        text-align: center;
+      text-align: left;
     }
-
-    &.-disabled {
-        opacity: 0.6;
-    }
-
-    @media (min-width: $tablet-min) {
-        text-align: left;
-
-        ._error-text {
-            text-align: left;
-        }
-    }
+  }
 
   &.-skin-petsies {
     ._error-text {

@@ -3,13 +3,13 @@
     <div class="_croppie-stage">
       <div class="_croppie-wrapper">
         <SfIcon
-          class="_zoom-button"
+          class="_zoom-button _zoom-in"
           icon="chevron_up"
           size="xxs"
           @click="zoomIn"
         />
         <SfIcon
-          class="_zoom-button"
+          class="_zoom-button _zoom-out"
           icon="chevron_down"
           size="xxs"
           @click="zoomOut"
@@ -300,6 +300,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 .m-background-editor {
   position: relative;
 
+  * {
+    box-sizing: border-box;
+  }
+
   .vue-croppie-container {
     position: relative;
   }
@@ -311,7 +315,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   }
 
   ._croppie-stage {
-    margin-top: 1em;
     position: relative;
     padding-top: 100%;
 

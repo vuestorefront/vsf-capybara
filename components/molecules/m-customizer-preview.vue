@@ -65,7 +65,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-@import "~@/skin/frontend/budsies/default/scss/base/foundation/components/global";
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .customizer-preview {
     display: flex;
@@ -124,19 +124,24 @@ export default Vue.extend({
         margin: 0;
         touch-action: manipulation;
         outline: none;
+        border: none;
+        padding: 1rem 2rem 1.0625rem 2rem;
+        font-size: 1rem;
+        position: relative;
+        cursor: pointer;
 
         ._flip-button__icon {
             width: 42px;
             height: 42px;
             position: absolute;
-            background: url("../../../budsies/base/images/phrasepillows/arrow.png");
+            background: url("../../assets/images/phrasePillow/arrow.png");
             background-size: cover;
             bottom: 40%;
             right: 0;
         }
     }
 
-    @media #{$medium-up} {
+    @media (min-width: $tablet-min) {
         ._side {
             &.-left {
                 flex: 1;
