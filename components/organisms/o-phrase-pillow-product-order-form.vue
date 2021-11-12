@@ -1826,7 +1826,7 @@ export default (
     text-align: center;
   }
 
-  .live-preview {
+  .m-live-preview {
     width: 100%;
   }
 
