@@ -146,7 +146,10 @@
                 }"
                 @click="onChangeStep(props.step.index)"
               >
-                <div class="_step-name" v-html="props.step.step.name" />
+                <div
+                  class="_step-name"
+                  v-html="customizerStepsData[props.step.step].name"
+                />
               </div>
             </template>
 
@@ -157,7 +160,7 @@
               :name="'Front Design'"
               slim
             >
-              <SfStep :name="customizerStepsData.frontDesign">
+              <SfStep :name="customizerStepsData.frontDesign.id">
                 <div
                   class="_front-design-field _step-container"
                   :class="classes"
@@ -203,7 +206,7 @@
               slim
             >
               <SfStep
-                :name="customizerStepsData.uploadPhoto"
+                :name="customizerStepsData.uploadPhoto.id"
                 class="_step-container"
               >
                 <div class="_background-image-field" :class="classes">
@@ -242,7 +245,7 @@
               :name="'Back Design'"
               slim
             >
-              <SfStep :name="customizerStepsData.backDesign">
+              <SfStep :name="customizerStepsData.backDesign.id">
                 <div
                   class="_back-design-field _step-container"
                   :class="classes"
@@ -277,7 +280,7 @@
             </validation-provider>
 
             <SfStep
-              :name="customizerStepsData.customOptions"
+              :name="customizerStepsData.customOptions.id"
               class="_custom-text-fields-section _step-container"
             >
               <div class="_custom-text-fields-section">
@@ -348,7 +351,7 @@
               </div>
             </SfStep>
 
-            <SfStep :name="customizerStepsData.addToCart">
+            <SfStep :name="customizerStepsData.addToCart.id">
               <div
                 class="_add-to-cart-container"
                 :class="{
