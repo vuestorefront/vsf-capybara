@@ -134,7 +134,7 @@ export default Vue.extend({
             width: 42px;
             height: 42px;
             position: absolute;
-            background: url("../../assets/images/phrasePillow/arrow.png");
+            background: url("/assets/images/phrasePillow/arrow.png");
             background-size: cover;
             bottom: 40%;
             right: 0;

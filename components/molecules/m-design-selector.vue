@@ -181,11 +181,12 @@ export default Vue.extend({
         ._accent-color-icon {
           width: 32px;
           height: 32px;
-          background: url("../../assets/images/phrasePillow/accent-color-icon.png");
+          background: url("/assets/images/phrasePillow/accent-color-icon.png");
           background-size: cover;
           position: absolute;
           right: 0.25em;
           top: 0.25em;
+          z-index: 2;
         }
       }
     }

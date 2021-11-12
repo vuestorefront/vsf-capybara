@@ -104,7 +104,7 @@ export default Vue.extend({
   flex-grow: 1;
 
   @media (min-width: $tablet-min) {
-    max-width: 77.5rem;
+    max-width: 1272px;
     padding: 0 1rem;
     margin: 0 auto;
     width: 100%;

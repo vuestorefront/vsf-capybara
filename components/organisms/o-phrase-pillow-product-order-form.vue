@@ -1421,7 +1421,6 @@ export default (
         ) {
           return;
         }
-        console.log(currentStep);
 
         this.isCustomizerPreviewBackSideFocused =
           currentStep.id === customizerStepsData.backDesign.id;
@@ -1922,7 +1921,8 @@ export default (
       ._back-design-field,
       ._custom-text-field,
       ._final-steps,
-      ._helper-text {
+      ._helper-text,
+      ._bottom-static-block {
         text-align: left;
       }
 
@@ -1950,10 +1950,6 @@ export default (
         ._background-uploader {
           margin-top: 0.4em;
         }
-      }
-
-      ._bottom-static-block {
-        text-align: left;
       }
     }
 
