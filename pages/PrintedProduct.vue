@@ -85,6 +85,7 @@ export default Vue.extend({
 
   @media (min-width: $tablet-min) {
     max-width: 1272px;
+    width: 100%;
     margin: 0 auto;
 
     .o-printed-product-order-form {

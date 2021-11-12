@@ -616,6 +616,7 @@ export default {
   @include for-desktop {
     max-width: 1272px;
     margin: 0 auto;
+    width: 100%;
   }
 
   .category__short-description,
