@@ -388,6 +388,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
   @media (min-width: $tablet-min) {
     max-width: 71.75rem;
+    width: 100%;
     margin: 0 auto;
   }
 

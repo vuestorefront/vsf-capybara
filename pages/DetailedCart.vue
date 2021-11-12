@@ -380,6 +380,7 @@ export default {
 
   @include for-desktop {
     max-width: 1272px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 var(--spacer-sm);
   }

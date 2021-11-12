@@ -96,6 +96,7 @@ export default Vue.extend({
   @media (min-width: $tablet-min) {
     max-width: 1272px;
     margin: 0 auto;
+    width: 100%;
   }
 }
 

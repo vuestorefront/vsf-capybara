@@ -219,6 +219,7 @@ export default {
   box-sizing: border-box;
   @include for-desktop {
     max-width: 1272px;
+    width: 100%;
     margin: 0 auto;
   }
 }

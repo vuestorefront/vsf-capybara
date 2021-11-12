@@ -147,7 +147,8 @@ export default {
     padding: 0 var(--spacer-sm);
     max-width: 1272px;
     margin: 0 auto;
-  }
+    width: 100%;
+}
 }
 .checkout {
   --steps-content-padding: 0 var(--spacer-sm);
