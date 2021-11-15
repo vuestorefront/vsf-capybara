@@ -69,6 +69,7 @@ export default Vue.extend({
   @include for-desktop {
     max-width: 77.5rem;
     margin: 0 auto;
+    width: 100%;
   }
 }
 

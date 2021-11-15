@@ -24,7 +24,6 @@
                 image-width="140"
                 image-height="140"
                 :title="product.name"
-                :link="getProductLink(product)"
                 class="sf-collected-product--detailed collected-product"
                 @input="changeQuantity(product, $event)"
               >
@@ -167,7 +166,6 @@ import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters, mapState } from 'vuex';
 import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 
@@ -295,9 +293,6 @@ export default {
 
       return product.custom_options.find(option => option.title === productOption.label) !== undefined;
     },
-    getProductLink (product) {
-      return formatProductLink(product);
-    },
     getProductRegularPrice (product) {
       return getProductPrice(product, {}).regular;
     },
@@ -380,6 +375,7 @@ export default {
 
   @include for-desktop {
     max-width: 1272px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 var(--spacer-sm);
   }
@@ -446,6 +442,9 @@ export default {
   }
   &__main {
     padding: 0 var(--spacer-sm);
+    position: relative;
+    z-index: 1;
+
     @include for-desktop {
       padding: 0;
     }
@@ -492,6 +491,14 @@ export default {
   --collected-product-title-font-weight: var(--font-semibold);
   border: 1px solid var(--c-light);
   border-width: 1px 0 0 0;
+
+  ::v-deep {
+    .sf-link {
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
   &__properties {
     font-size: var(--font-sm);
     margin-bottom: var(--spacer-sm);
