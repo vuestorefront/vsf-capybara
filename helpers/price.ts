@@ -14,7 +14,7 @@ function calculateBundleOptionsPrice (product) {
     getBundleOptionsValues(selectedBundleOptions as any[], allBundleOptions)
   )
 
-  return price.priceInclTax
+  return price
 }
 
 function calculateCustomOptionsPriceDelta (product, customOptions) {
@@ -64,9 +64,11 @@ export function getProductPrice (product, customOptions = {}, format = true) {
 
   const productDiscountPrice = productDiscountPriceData.value;
 
-  const priceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || product.price_incl_tax || product.priceInclTax || 0
-  const originalPriceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || product.original_price_incl_tax || product.originalPriceInclTax || 0
-  const specialPrice = product.special_price || product.specialPrice || 0
+  const bundleOptionsPrice = calculateBundleOptionsPrice(product);
+
+  const priceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || bundleOptionsPrice.priceInclTax || product.price_incl_tax || product.priceInclTax || 0
+  const originalPriceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || bundleOptionsPrice.originalPriceInclTax || product.original_price_incl_tax || product.originalPriceInclTax || 0
+  const specialPrice = bundleOptionsPrice.specialPrice || product.special_price || product.specialPrice || 0
 
   const isDiscountPrice = !!productDiscountPrice;
   const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax)
@@ -74,17 +76,17 @@ export function getProductPrice (product, customOptions = {}, format = true) {
 
   const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
-  const regular = (product.giftcard_options && product.giftcard_options.price_amount) * product.qty || product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const regular = (product.giftcard_options && product.giftcard_options.price_amount) * product.qty || bundleOptionsPrice.priceInclTax || product.regular_price || (priceInclTax + priceDelta) * product.qty || priceInclTax
 
   if (!format) {
     return {
-      regular: isSpecialPrice ? original : regular,
+      regular: isSpecialPrice || isDiscountPrice ? original : regular,
       special: isDiscountPrice ? productDiscountPrice : isSpecialPrice ? special : 0
     }
   }
 
   return {
-    regular: isSpecialPrice ? formatPrice(original) : formatPrice(regular),
+    regular: isSpecialPrice || isDiscountPrice ? formatPrice(original) : formatPrice(regular),
     special: isDiscountPrice ? formatPrice(productDiscountPrice) : isSpecialPrice ? formatPrice(special) : ''
   }
 }
