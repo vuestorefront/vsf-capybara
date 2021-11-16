@@ -1,5 +1,6 @@
 import get from 'lodash-es/get'
 
+import { isBundleProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { price } from '@vue-storefront/core/filters';
 import { getCustomOptionValues, getCustomOptionPriceDelta } from '@vue-storefront/core/modules/catalog/helpers/customOption'
 import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
@@ -64,30 +65,41 @@ export function getProductPrice (product, customOptions = {}, format = true) {
 
   const productDiscountPrice = productDiscountPriceData.value;
 
-  const bundleOptionsPrice = calculateBundleOptionsPrice(product);
+  let priceInclTax = 0;
+  let originalPriceInclTax = 0;
+  let specialPrice = 0;
 
-  const priceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || bundleOptionsPrice.priceInclTax || product.price_incl_tax || product.priceInclTax || 0
-  const originalPriceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || bundleOptionsPrice.originalPriceInclTax || product.original_price_incl_tax || product.originalPriceInclTax || 0
-  const specialPrice = bundleOptionsPrice.specialPrice || product.special_price || product.specialPrice || 0
+  if (isBundleProduct(product)) {
+    const bundleOptionsPrice = calculateBundleOptionsPrice(product);
+    priceInclTax = bundleOptionsPrice.priceInclTax;
+    originalPriceInclTax = bundleOptionsPrice.originalPriceInclTax;
+    specialPrice = bundleOptionsPrice.specialPrice;
+  } else if (product.giftcard_options) {
+    priceInclTax = product.giftcard_options.price_amount;
+    originalPriceInclTax = product.giftcard_options.price_amount;
+  } else {
+    priceInclTax = product.price_incl_tax || product.priceInclTax || 0
+    originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
+    specialPrice = product.special_price || product.specialPrice || 0
+  }
 
-  const isDiscountPrice = !!productDiscountPrice;
-  const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax)
+  const isSpecialPrice = !!productDiscountPrice || (specialPrice && priceInclTax && originalPriceInclTax)
   const priceDelta = calculateCustomOptionsPriceDelta(product, customOptions)
 
-  const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const special = productDiscountPrice || (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
-  const regular = (product.giftcard_options && product.giftcard_options.price_amount) * product.qty || bundleOptionsPrice.priceInclTax || product.regular_price || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const regular = (priceInclTax + priceDelta) * product.qty || product.regular_price || priceInclTax
 
   if (!format) {
     return {
-      regular: isSpecialPrice || isDiscountPrice ? original : regular,
-      special: isDiscountPrice ? productDiscountPrice : isSpecialPrice ? special : 0
+      regular: isSpecialPrice ? original : regular,
+      special: isSpecialPrice ? special : 0
     }
   }
 
   return {
-    regular: isSpecialPrice || isDiscountPrice ? formatPrice(original) : formatPrice(regular),
-    special: isDiscountPrice ? formatPrice(productDiscountPrice) : isSpecialPrice ? formatPrice(special) : ''
+    regular: isSpecialPrice ? formatPrice(original) : formatPrice(regular),
+    special: isSpecialPrice ? formatPrice(special) : ''
   }
 }
 
