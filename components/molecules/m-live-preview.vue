@@ -1,10 +1,6 @@
 <template>
   <div class="m-live-preview" :class="{ '-loading': isLoading }">
-    <div
-      ref="svgContent"
-      class="_svg-content"
-      v-html="previewContent"
-    />
+    <div ref="svgContent" class="_svg-content" v-html="previewContent" />
     <div class="_preview-overlay" v-show="isLoading">
       <div>Loading...</div>
     </div>
@@ -54,7 +50,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       isLoading: true,
       previewContent: undefined as string | undefined,
       customTextFields: [] as CustomTextFieldInterface[]
-    }
+    };
   },
   computed: {
     fullTemplateFetchUrl (): string {
@@ -74,10 +70,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       const svgClone = svg.cloneNode(true) as HTMLElement;
 
       const svgNode = svgClone
-        .getElementsByTagNameNS(
-          SVG_NAMESPACE_URI,
-          'svg'
-        )
+        .getElementsByTagNameNS(SVG_NAMESPACE_URI, 'svg')
         .item(0);
 
       if (!svgNode) {
@@ -121,11 +114,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         imageElement.setAttributeNS('', 'width', width);
       }
 
-      imageElement.setAttributeNS(
-        '',
-        'preserveAspectRatio',
-        'xMidYMid slice'
-      );
+      imageElement.setAttributeNS('', 'preserveAspectRatio', 'xMidYMid slice');
       imageElement.setAttributeNS('', 'class', 'background-image');
 
       backgroundContainer.appendChild(imageElement);
@@ -240,9 +229,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return fields.length;
     },
-    prepareBackgroundOffsetSettings (
-      svg: Document
-    ): BackgroundOffsetSettings {
+    prepareBackgroundOffsetSettings (svg: Document): BackgroundOffsetSettings {
       const settings: BackgroundOffsetSettings = {};
 
       const backgroundContainer = svg.getElementById('background');
@@ -283,14 +270,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.prepareCustomTextFields(svgHtmlContent);
         this.$emit('custom-text-fields-prepared', this.customTextFields);
 
-        const accentColorElementsNumber = this.countColoredElements(
-          svgHtmlContent
-        );
+        const accentColorElementsNumber =
+          this.countColoredElements(svgHtmlContent);
         this.$emit('colored-elements-counted', accentColorElementsNumber);
 
-        const backgroundOffsetSettings = this.prepareBackgroundOffsetSettings(
-          svgHtmlContent
-        );
+        const backgroundOffsetSettings =
+          this.prepareBackgroundOffsetSettings(svgHtmlContent);
         this.$emit(
           'background-offset-settings-prepared',
           backgroundOffsetSettings
@@ -338,7 +323,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       immediate: true
     }
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -346,50 +331,58 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
 $path: "/assets/fonts/";
 $fonts: (
-    "Adventure Normal": "Adventure-Normal",
-    "Wilderness Typeface": "WildernessTypeface-Regular",
-    "Wilderness Typeface Alt": "WildernessTypeface-Alt",
-    "Vulpes": "Vulpes",
-    "Courier New": "Courier-New",
+  "Adventure Normal": "Adventure-Normal",
+  "Wilderness Typeface": "WildernessTypeface-Regular",
+  "Wilderness Typeface Alt": "WildernessTypeface-Alt",
+  "Vulpes": "Vulpes",
+  "Courier New": "Courier-New",
 );
 
 @each $font-name, $font-file in $fonts {
-    @include font-face($font-name, $path + $font-file, 400, normal);
+  @include font-face($font-name, $path + $font-file, 400, normal);
 
-    @media screen and (-webkit-min-device-pixel-ratio: 0) {
-        @include font-face($font-name, $path + $font-file, 400, normal, svg);
-    }
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    @include font-face($font-name, $path + $font-file, 400, normal, svg);
+  }
 }
 
 .m-live-preview {
-    border: 1px dashed #e6e6e6;
-    position: relative;
+  border: 1px dashed #a3a3a3;
+  position: relative;
+  padding-top: calc(100% - 2px);
+  overflow: hidden;
 
+  ._svg-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    ::v-deep svg {
+      display: block;
+    }
+  }
+
+  ._preview-overlay {
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    display: flex;
+    font-weight: 500;
+    height: 100%;
+    left: 0;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+  }
+
+  &.-loading {
     ._svg-content {
-        ::v-deep svg {
-            display: block;
-        }
+      opacity: 0.5;
     }
-
-    ._preview-overlay {
-        align-items: center;
-        background: rgba(0, 0, 0, 0.3);
-        color: #ffffff;
-        display: flex;
-        font-weight: 500;
-        height: 100%;
-        left: 0;
-        justify-content: center;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 10;
-    }
-
-    &.-loading {
-        ._svg-content {
-            opacity: 0.5;
-        }
-    }
+  }
 }
 </style>

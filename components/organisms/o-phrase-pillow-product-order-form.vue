@@ -1,174 +1,264 @@
 <template>
   <div class="o-phrase-pillow-product-order-form" :class="skinClass">
-    <div class="_header">
-      <SfHeading
-        :level="1"
-        title="Pillow Customizer"
-      />
+    <div class="_header -show-for-medium-up">
+      <SfHeading :level="1" title="Pillow Customizer" class="_main-header" />
 
       <div class="_notes">
         <p>Ships within 7 days | Made & Printed in the USA</p>
       </div>
 
       <SfHeading
-        class="-show-for-medium-up"
         :level="3"
         title="Your customizations will appear on the left side of the page"
       />
-
-      <SfHeading
-        class="_accent-header -show-for-small-only"
-        :level="4"
-        title="Scroll down for a preview of your customizations"
-      />
     </div>
 
-    <validation-observer v-slot="{ passes }" slim>
-      <div class="_page-content">
-        <div class="_customization-section">
-          <SfHeading
-            :level="2"
-            title="Customize Your Pillow"
-          />
-
-          <form
-            method="POST"
-            @submit.prevent="
-              (event) => passes(() => onSubmit(event))
-            "
+    <validation-observer ref="formObserver" class="_form-content" tag="div">
+      <div id="live-preview-section" class="_live-preview-section">
+        <div class="_front_design_preview_container">
+          <MCustomizerPreview
+            :is-back-side-focused.sync="isCustomizerPreviewBackSideFocused"
           >
+            <template #frontSmall>
+              <SfHeading :level="4" title="Front" class="_section-header" />
+
+              <div
+                class="_preview-image-small"
+                v-if="isCustomizerPreviewBackSideFocused"
+              >
+                <img
+                  class="_background"
+                  :style="smallBackgroundImageStyle"
+                  :src="croppedBackground"
+                  v-if="croppedBackground"
+                >
+
+                <MLivePreview
+                  ref="frontPreviewSmall"
+                  :template-fetch-url="svgPath"
+                  :design-sku="frontDesign"
+                  :accent-color="accentColor"
+                  :custom-text-values="customTextValues"
+                  v-if="frontDesign"
+                />
+              </div>
+            </template>
+
+            <template #backSmall>
+              <SfHeading :level="4" title="Back" />
+
+              <div
+                class="_preview-image-small"
+                v-if="!isCustomizerPreviewBackSideFocused"
+              >
+                <MLivePreview
+                  ref="backPreviewSmall"
+                  :template-fetch-url="svgPath"
+                  :design-sku="backDesign"
+                  :accent-color="accentColor"
+                  :custom-text-values="customTextValues"
+                  v-if="backDesign"
+                />
+              </div>
+            </template>
+
+            <template #front>
+              <SfHeading :level="4" title="Front" />
+
+              <MBackgroundEditor
+                ref="backgroundEditor"
+                class="_front-preview"
+                :disabled="isDisabled"
+                :background-offset-settings="backgroundOffsetSettings"
+                @background-image-assigned="onBackgroundImageAssigned"
+              >
+                <slot>
+                  <MLivePreview
+                    ref="frontPreview"
+                    :template-fetch-url="svgPath"
+                    :design-sku="frontDesign"
+                    :accent-color="accentColor"
+                    :custom-text-values="customTextValues"
+                    @custom-text-fields-prepared="
+                      onFrontCustomTextFieldsPrepared
+                    "
+                    @colored-elements-counted="
+                      onFrontAccentColorElementsCounted
+                    "
+                    @background-offset-settings-prepared="
+                      onBackgroundOffsetSettingsPrepared
+                    "
+                    v-if="frontDesign"
+                    v-show="!isCustomizerPreviewBackSideFocused"
+                  />
+                </slot>
+              </MBackgroundEditor>
+            </template>
+
+            <template #back>
+              <SfHeading :level="4" title="Back" />
+
+              <MLivePreview
+                ref="backPreview"
+                class="_back-preview"
+                :template-fetch-url="svgPath"
+                :design-sku="backDesign"
+                :accent-color="accentColor"
+                :custom-text-values="customTextValues"
+                :is-background-loaded="isBackgroundImageLoaded"
+                @custom-text-fields-prepared="onBackCustomTextFieldsPrepared"
+                @colored-elements-counted="onBackAccentColorElementsCounted"
+                v-if="backDesign"
+              />
+            </template>
+          </MCustomizerPreview>
+
+          <div
+            class="_design-images-container -show-for-medium-up"
+            v-if="currentDesignImages.length"
+          >
+            <SfHeading :level="3" title="Examples of finished pillows" />
+
+            <MDesignImages
+              class="_design-images"
+              :images="currentDesignImages"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="_customization-section">
+        <form method="POST" class="_form" @submit.prevent="trySubmitForm">
+          <SfSteps
+            :active="activeStepIndex"
+            :steps="customizerSteps"
+            class="_customizer-steps"
+          >
+            <template #steps="props">
+              <div
+                class="_customizer-step"
+                :class="{
+                  '-active': props.step.current,
+                  '-done': props.step.index <= activeStepIndex,
+                  '-add-to-cart':
+                    props.step.index === customizerSteps.length - 1,
+                  '-invalid': isStepInvalid(props.step.step),
+                }"
+                @click="onChangeStep(props.step.index)"
+              >
+                <div
+                  class="_step-name"
+                  v-html="customizerStepsData[props.step.step].name"
+                />
+              </div>
+            </template>
+
             <validation-provider
               v-slot="{ errors, classes }"
+              :ref="customizerStepsData.frontDesign.id"
+              rules="required"
+              :name="'Front Design'"
+              slim
+            >
+              <SfStep :name="customizerStepsData.frontDesign.id">
+                <div
+                  class="_front-design-field _step-container"
+                  :class="classes"
+                >
+                  <SfHeading
+                    :level="4"
+                    class="_step-title"
+                    title="Try a different design for the front"
+                  />
+
+                  <div class="_helper-text">
+                    (Your uploaded photo and options will be saved)
+                  </div>
+
+                  <MDesignSelector
+                    v-model="frontDesign"
+                    class="_front-selector"
+                    :design-products="frontDesignProducts"
+                    :field-name="'front-design-sku'"
+                    :disabled="isDisabled"
+                    @input="onFrontDesignSelect"
+                  />
+
+                  <div class="_error-text" v-if="errors.length">
+                    {{ errors[0] }}
+                  </div>
+                </div>
+              </SfStep>
+            </validation-provider>
+
+            <validation-provider
+              v-slot="{ errors, classes }"
+              :ref="customizerStepsData.uploadPhoto.id"
               :rules="{
                 required: {
                   allowFalse: false,
                 },
               }"
               :custom-messages="{
-                required: 'Please, upload the background image!'
+                required: 'Please, upload the background image!',
               }"
               :name="'Background Image'"
               slim
             >
-              <div
-                class="_background-image-field"
-                :class="classes"
+              <SfStep
+                :name="customizerStepsData.uploadPhoto.id"
+                class="_step-container"
               >
-                <label class="_step">
-                  <span class="_step-marker">STEP 1:</span>
-                  Upload your photo
-                </label>
+                <div class="_background-image-field" :class="classes">
+                  <m-background-uploader
+                    ref="backgroundUploader"
+                    v-model="isBackgroundImageLoaded"
+                    class="_background-uploader"
+                    :button-text="uploadButtonText"
+                    :disabled="isDisabled"
+                    @background-uploaded="onBackgroundImageUploaded"
+                  />
 
-                <m-background-uploader
-                  ref="backgroundUploader"
-                  v-model="isBackgroundImageLoaded"
-                  class="_background-uploader"
-                  :button-text="uploadButtonText"
-                  :disabled="isDisabled"
-                  @background-uploaded="onBackgroundImageUploaded"
-                />
+                  <div class="_helper-text -show-for-medium-up">
+                    After uploading your photo, use the (+) and (-) icons (or
+                    mouse scroll) to resize your image. Then, click and drag
+                    your photo to move the image to the desired position.
+                  </div>
 
-                <div
-                  class="_background-hint _helper-text"
-                  v-show="isBackgroundImageLoaded"
-                >
-                  Use the move and crop controls in the
-                  <a href="#live-preview-section">pillow preview area</a>
-                  to adjust the look of your pillow. We
-                  recommend adjusting your photo so the text
-                  does not obstruct the face(s).
+                  <div class="_helper-text -show-for-small-only">
+                    After uploading your photo, pinch your fingers or use the
+                    (+) and (-) icons to resize your image. Then, tap and drag
+                    your photo to move the image to the desired position.
+                  </div>
+
+                  <div class="_error-text" v-if="errors.length">
+                    {{ errors[0] }}
+                  </div>
                 </div>
-
-                <div class="_error-text">
-                  {{ errors[0] }}
-                </div>
-              </div>
+              </SfStep>
             </validation-provider>
 
             <validation-provider
               v-slot="{ errors, classes }"
               rules="required"
-              :name="'Front Design'"
+              :ref="customizerStepsData.backDesign.id"
+              :name="'Back Design'"
               slim
             >
-              <div class="_front-design-field" :class="classes">
-                <MDesignSelector
-                  v-model="frontDesign"
-                  class="_front-selector"
-                  :design-products="frontDesignProducts"
-                  :field-name="'front-design-sku'"
-                  :disabled="isDisabled"
-                  @input="onFrontDesignSelect"
-                />
-
-                <div class="_error-text">
-                  {{ errors[0] }}
-                </div>
-              </div>
-            </validation-provider>
-
-            <div
-              class="_custom-text-fields-section"
-              v-show="hasCustomFields"
-            >
-              <label class="_step">
-                <span class="_step-marker">STEP 2:</span>
-                Add custom text
-              </label>
-
-              <div
-                v-for="field in customTextFields"
-                :key="field.name"
-                class="_custom-text-field"
-              >
-                <validation-provider
-                  v-slot="{ errors, classes }"
-                  :name="field.label"
-                  slim
-                >
-                  <div :class="classes">
-                    <label class="_label">{{
-                      field.label
-                    }}</label>
-
-                    <SfInput
-                      v-model="customTextValues[field.name]"
-                      class="_custom-input"
-                      :name="field.name"
-                      :disabled="isDisabled"
-                      :placeholder="field.placeholder"
-                      :valid="!errors.length"
-                      :error-message="errors[0]"
-                    />
-
-                    <div class="_helper-text">
-                      {{ field.helperText }}
-                    </div>
-                  </div>
-                </validation-provider>
-              </div>
-            </div>
-
-            <div>
-              <validation-provider
-                v-slot="{ errors, classes }"
-                rules="required"
-                :name="'Back Design'"
-                slim
-              >
+              <SfStep :name="customizerStepsData.backDesign.id">
                 <div
-                  class="_back-design-field"
+                  class="_back-design-field _step-container"
                   :class="classes"
                 >
-                  <label class="_step"><span class="_step-marker">STEP
-                    {{ hasCustomFields ? 3 : 2 }}:</span>
-                    Select design for the back of
-                    pillow</label>
+                  <SfHeading
+                    :level="4"
+                    class="_step-title"
+                    title="Select design for the back of pillow"
+                  />
 
                   <div class="_helper-text">
-                    You can choose a blank back, a standard
-                    design, or one of our premium options.
-                    Some styles will dynamically change
+                    You can choose a blank back, a standard design, or one of
+                    our premium options. Some styles will dynamically change
                     based on the accent color chosen below.
                   </div>
 
@@ -182,246 +272,238 @@
                     @input="onBackDesignSelect"
                   />
 
-                  <div class="_error-text">
+                  <div class="_error-text" v-if="errors.length">
                     {{ errors[0] }}
                   </div>
                 </div>
-              </validation-provider>
-            </div>
-
-            <validation-provider
-              v-slot="{ errors, classes }"
-              rules="required"
-              :name="'Accent Color'"
-              slim
-              v-if="isAccentColorSelectorVisible"
-            >
-              <div class="_accent-color-field" :class="classes">
-                <label class="_label">Accent Color</label>
-
-                <div class="_helper-text">
-                  Selected pillow back designs will may be
-                  customized with the accent color of your
-                  choosing.
-                </div>
-
-                <MAccentColorSelector
-                  v-model="accentColorPartValue"
-                  class="_accent-color-selector-container"
-                  :accent-color-part-values="accentColorPartValues"
-                  :disabled="isDisabled"
-                  @input="onAccentColorSelect"
-                />
-
-                <div class="_error-text">
-                  {{ errors[0] }}
-                </div>
-              </div>
+              </SfStep>
             </validation-provider>
 
-            <validation-provider
-              v-slot="{ errors, classes }"
-              rules="required"
-              :name="'Quantity'"
-              slim
+            <SfStep
+              :name="customizerStepsData.customOptions.id"
+              class="_custom-text-fields-section _step-container"
             >
-              <div class="_quantity-field" :class="classes">
-                <label class="_label">Quantity</label>
-
-                <ACustomProductQuantity
-                  v-model="quantity"
-                  class="_qty-container"
-                  :disabled="isDisabled"
+              <div class="_custom-text-fields-section">
+                <SfHeading
+                  :level="4"
+                  class="_step-title"
+                  title="Add custom text"
                 />
 
-                <div class="_error-text">
-                  {{ errors[0] }}
-                </div>
-              </div>
-            </validation-provider>
-
-            <div
-              class="_final-steps"
-              v-show="showEmailStep || isProductionOptionsAvailable"
-            >
-              <label class="_label _step"><span class="_step-marker">STEP {{ hasCustomFields ? 4 : 3 }}:</span>
-                <template v-if="isProductionOptionsAvailable">
-                  Final Steps
-                </template>
-                <template v-else>
-                  Enter your email address
-                </template>
-              </label>
-
-              <validation-provider
-                v-slot="{ errors, classes }"
-                rules="required|email"
-                name="E-mail"
-                slim
-                v-show="showEmailStep"
-              >
                 <div
-                  class="_email-field"
-                  :class="classes"
+                  v-for="field in customTextFields"
+                  :key="field.name"
+                  class="_custom-text-field"
                 >
-                  <label class="_label" v-if="isProductionOptionsAvailable">
-                    Enter your email address
-                  </label>
-
-                  <SfInput
-                    class="_email-field-input"
-                    name="customer_email"
-                    type="email"
-                    v-model="customerEmail"
-                    placeholder="sample@email.com"
-                    :required="false"
-                    :disabled="isDisabled"
-                    :valid="!errors.length"
-                    :error-message="errors[0]"
-                  />
-
-                  <div class="_email-disclaimer _helper-text">
-                    Sometimes our team has questions about
-                    your design
-                  </div>
-                </div>
-              </validation-provider>
-
-              <validation-provider
-                v-slot="{ errors, classes }"
-                name="Production time"
-                v-if="isProductionOptionsAvailable"
-                slim
-              >
-                <div
-                  class="_production-time-field"
-                  :class="classes"
-                >
-                  <label class="_label">
-                    Choose your production time
-                  </label>
-
-                  <SfSelect
-                    v-model="productionTime"
-                    name="rush_addons"
-                    class="_rush-addons"
-                    :valid="!errors.length"
-                    :error-message="errors[0]"
+                  <validation-provider
+                    v-slot="{ errors, classes }"
+                    :name="field.label"
+                    slim
                   >
-                    <SfSelectOption
-                      v-for="option in productionTimeOptions"
-                      :key="option.id"
-                      :value="option.id"
-                    >
-                      {{ option.text }}
-                    </SfSelectOption>
-                  </SfSelect>
+                    <div :class="classes">
+                      <label class="_label">{{ field.label }}</label>
+
+                      <SfInput
+                        v-model="customTextValues[field.name]"
+                        class="_custom-input"
+                        :name="field.name"
+                        :disabled="isDisabled"
+                        :placeholder="field.placeholder"
+                        :valid="!errors.length"
+                        :error-message="errors[0]"
+                      />
+
+                      <div class="_helper-text" v-if="field.helperText">
+                        {{ field.helperText }}
+                      </div>
+                    </div>
+                  </validation-provider>
                 </div>
-              </validation-provider>
-            </div>
 
-            <div class="_bottom-static-block">
-              <slot name="bottom-static-block">
-                <sup><em>Please make sure everything is correct before submitting. Your pillow goes straight to print!</em></sup>
-              </slot>
-            </div>
+                <validation-provider
+                  v-slot="{ errors, classes }"
+                  rules="required"
+                  :ref="customizerStepsData.customOptions.id"
+                  :name="'Accent Color'"
+                  slim
+                  v-if="isAccentColorSelectorVisible"
+                >
+                  <div class="_accent-color-field" :class="classes">
+                    <SfHeading
+                      :level="4"
+                      class="_step-title"
+                      title="Choose Your Accent Color"
+                    />
 
-            <div class="_actions-row" v-show="!isSubmitting">
-              <SfButton class="color-primary _submit-button" type="submit" :disabled="isDisabled">
-                Add to Cart
-              </SfButton>
+                    <div class="_error-text" v-if="errors.length">
+                      {{ errors[0] }}
+                    </div>
 
-              <div class="_submit-disclaimer _helper-text">
-                I have seen and approve the Live Preview of my
-                design.
+                    <MAccentColorSelector
+                      v-model="accentColorPartValue"
+                      class="_accent-color-selector-container"
+                      :accent-color-part-values="accentColorPartValues"
+                      :disabled="isDisabled"
+                      @input="onAccentColorSelect"
+                    />
+                  </div>
+                </validation-provider>
               </div>
-            </div>
+            </SfStep>
 
-            <div class="_animation-row">
-              <MSubmitAnimator
-                ref="submitAnimator"
-                :duration="20000"
-                :steps="submitAnimationSteps"
-                animation-url="/assets/images/phrasePillow/submit-animation.mp4"
-                v-show="isSubmitting"
-              />
-            </div>
+            <SfStep :name="customizerStepsData.addToCart.id">
+              <div
+                class="_add-to-cart-container"
+                :class="{
+                  '_step-container': !isSubmitting,
+                }"
+              >
+                <template v-if="!isSubmitting">
+                  <validation-provider
+                    v-slot="{ errors, classes }"
+                    rules="required"
+                    :name="'Quantity'"
+                    slim
+                  >
+                    <div class="_quantity-field" :class="classes">
+                      <SfHeading
+                        :level="4"
+                        class="_step-title"
+                        title="Quantity"
+                      />
 
-            <m-form-errors :form-errors="submitErrors" />
-          </form>
-        </div>
-        <div
-          id="live-preview-section"
-          class="_live-preview-section"
-        >
-          <SfHeading
-            :level="2"
-            title="Live Preview"
-          />
+                      <ACustomProductQuantity
+                        v-model="quantity"
+                        class="_qty-container"
+                        :disabled="isDisabled"
+                      />
 
-          <div class="_front_design_preview_container">
-            <SfHeading
-              :level="3"
-              title="Front Side"
-            />
+                      <div class="_error-text" v-if="errors.length">
+                        {{ errors[0] }}
+                      </div>
+                    </div>
+                  </validation-provider>
 
-            <MBackgroundEditor
-              ref="backgroundEditor"
-              class="_front-preview"
-              :disabled="isDisabled"
-              :background-offset-settings="backgroundOffsetSettings"
-            >
-              <slot>
-                <MLivePreview
-                  ref="frontPreview"
-                  :template-fetch-url="svgPath"
-                  :design-sku="frontDesign"
-                  :accent-color="accentColor"
-                  :custom-text-values="customTextValues"
-                  @custom-text-fields-prepared="onFrontCustomTextFieldsPrepared"
-                  @colored-elements-counted="onFrontAccentColorElementsCounted"
-                  @background-offset-settings-prepared="onBackgroundOffsetSettingsPrepared"
-                  v-if="frontDesign"
-                />
-              </slot>
-            </MBackgroundEditor>
-          </div>
+                  <div
+                    class="_final-steps"
+                    v-show="showEmailStep || isProductionOptionsAvailable"
+                  >
+                    <label class="_label _step">
+                      <SfHeading
+                        :level="4"
+                        class="_step-title"
+                        :title="
+                          isProductionOptionsAvailable
+                            ? 'Final Steps'
+                            : 'Enter your email address'
+                        "
+                      />
+                    </label>
 
-          <div class="_back_design_preview_container">
-            <SfHeading
-              :level="3"
-              title="Back Side"
-            />
+                    <validation-provider
+                      v-slot="{ errors, classes }"
+                      rules="required|email"
+                      name="E-mail"
+                      slim
+                      v-show="showEmailStep"
+                    >
+                      <div class="_email-field" :class="classes">
+                        <label
+                          class="_label"
+                          v-if="isProductionOptionsAvailable"
+                        >
+                          Enter your email address
+                        </label>
 
-            <MLivePreview
-              ref="backPreview"
-              class="_back-preview"
-              :template-fetch-url="svgPath"
-              :design-sku="backDesign"
-              :accent-color="accentColor"
-              :custom-text-values="customTextValues"
-              :is-background-loaded="isBackgroundImageLoaded"
-              @custom-text-fields-prepared="onBackCustomTextFieldsPrepared"
-              @colored-elements-counted="onBackAccentColorElementsCounted"
-              v-if="backDesign"
-            />
-          </div>
+                        <div class="_email-disclaimer _helper-text">
+                          (Sometimes our team has questions about your design)
+                        </div>
 
-          <div
-            class="_design-images-container"
-            v-if="currentDesignImages.length"
-          >
-            <SfHeading
-              :level="3"
-              title="Examples of finished pillows"
-            />
+                        <SfInput
+                          class="_email-field-input"
+                          name="customer_email"
+                          type="email"
+                          v-model="customerEmail"
+                          placeholder="sample@email.com"
+                          :required="false"
+                          :disabled="isDisabled"
+                          :valid="!errors.length"
+                          :error-message="errors[0]"
+                        />
+                      </div>
+                    </validation-provider>
 
-            <MDesignImages
-              class="_design-images"
-              :images="currentDesignImages"
-            />
-          </div>
-        </div>
+                    <validation-provider
+                      v-slot="{ errors, classes }"
+                      name="Production time"
+                      v-if="isProductionOptionsAvailable"
+                      slim
+                    >
+                      <div class="_production-time-field" :class="classes">
+                        <label class="_label">
+                          Choose your production time
+                        </label>
+
+                        <SfSelect
+                          v-model="productionTime"
+                          name="rush_addons"
+                          class="_rush-addons"
+                          :valid="!errors.length"
+                          :error-message="errors[0]"
+                        >
+                          <SfSelectOption
+                            v-for="option in productionTimeOptions"
+                            :key="option.id"
+                            :value="option.id"
+                          >
+                            {{ option.text }}
+                          </SfSelectOption>
+                        </SfSelect>
+                      </div>
+                    </validation-provider>
+                  </div>
+
+                  <div class="_bottom-static-block">
+                    <slot name="bottom-static-block">
+                      <sup>
+                        <em>
+                          Your pillow goes straight to print so make sure the
+                          image is correct. No cancellations after 24 hours.
+                        </em>
+                      </sup>
+                    </slot>
+                  </div>
+
+                  <div class="_actions-row" v-show="!isSubmitting">
+                    <SfButton
+                      class="color-primary _submit-button"
+                      type="submit"
+                      :disabled="isDisabled"
+                    >
+                      Add to Cart
+                    </SfButton>
+
+                    <div class="_submit-disclaimer _helper-text">
+                      I have seen and approve the Live Preview of my design.
+                    </div>
+                  </div>
+                </template>
+
+                <div class="_animation-row">
+                  <MSubmitAnimator
+                    ref="submitAnimator"
+                    :duration="20000"
+                    :steps="submitAnimationSteps"
+                    animation-url="/assets/images/phrasePillow/submit-animation.mp4"
+                    v-show="isSubmitting"
+                  />
+                </div>
+
+                <m-form-errors :form-errors="submitErrors" />
+              </div>
+            </SfStep>
+          </SfSteps>
+        </form>
       </div>
     </validation-observer>
   </div>
@@ -437,13 +519,22 @@ import {
 } from 'vee-validate';
 import { mapMutations } from 'vuex';
 import { required, email } from 'vee-validate/dist/rules';
-import { SfButton, SfInput, SfHeading, SfSelect } from '@storefront-ui/vue';
+import {
+  SfButton,
+  SfInput,
+  SfHeading,
+  SfSelect,
+  SfSteps
+} from '@storefront-ui/vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 import Product from 'core/modules/catalog/types/Product';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-import { BundleOption, BundleOptionsProductLink } from 'core/modules/catalog/types/BundleOption';
+import {
+  BundleOption,
+  BundleOptionsProductLink
+} from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
 
 import { InjectType } from 'src/modules/shared';
@@ -453,7 +544,8 @@ import {
   BodypartValue,
   isAxiosError,
   vuexTypes as budsiesTypes,
-  ProductValue
+  ProductValue,
+  Dictionary
 } from 'src/modules/budsies';
 
 import {
@@ -473,6 +565,8 @@ import MDesignImages from '../molecules/m-design-images.vue';
 import MSubmitAnimator from '../molecules/m-submit-animator.vue';
 import MAccentColorSelector from '../molecules/m-accent-color-selector.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
+import MCustomizerPreview from '../molecules/m-customizer-preview.vue';
+
 import CustomTextFieldInterface from '../interfaces/custom-text-field.interface';
 import DesignProduct from '../interfaces/design-product.interface';
 import AccentColorPart from '../interfaces/accent-color-part.interface';
@@ -482,6 +576,7 @@ import BackgroundOffsetSettings from '../interfaces/background-offset-settings.i
 import ProductImage from '../interfaces/product-image.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
 import CustomerImage from '../interfaces/customer-image.interface';
+import { ValidationResult } from 'vee-validate/dist/types/types';
 
 extend('required', {
   ...required,
@@ -523,13 +618,41 @@ interface SideDesignBundleOption extends BundleOption {
   product_links: SideDesignProductLink[]
 }
 
-export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
+interface StepsInterface {
+  name: string,
+  id: string
+}
+
+interface SmallBackgroundImageStyle {
+  width: string,
+  height: string,
+  top: string,
+  left: string
+}
+
+interface Constants {
+  customizerStepsData: Dictionary<StepsInterface>
+}
+
+const customizerStepsData: Dictionary<StepsInterface> = {
+  frontDesign: { name: 'Front<br>Design', id: 'frontDesign' },
+  uploadPhoto: { name: 'Upload<br>Photo', id: 'uploadPhoto' },
+  backDesign: { name: 'Back<br>Design', id: 'backDesign' },
+  customOptions: { name: 'Custom<br>Options', id: 'customOptions' },
+  addToCart: { name: 'Add to<br>Cart', id: 'addToCart' }
+};
+
+export default (
+  Vue as VueConstructor<Vue & InjectedServices & Constants>
+).extend({
   name: 'OPhrasePillowProductOrderForm',
   components: {
     SfButton,
     SfInput,
     SfHeading,
     SfSelect,
+    SfSteps,
+    MCustomizerPreview,
     ValidationObserver,
     ValidationProvider,
     MBackgroundUploader,
@@ -544,7 +667,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   inject: {
     errorConverterService: { from: 'ErrorConverterService' },
-    fileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' },
+    fileProcessingRepositoryFactory: {
+      from: 'FileProcessingRepositoryFactory'
+    },
     imageHandlerService: { from: 'ImageHandlerService' }
   } as unknown as InjectType<InjectedServices>,
   props: {
@@ -570,6 +695,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   data () {
+    let stepValidateState: Dictionary<'valid' | 'invalid'> = {};
+
     return {
       customTextValues: {} as unknown as Record<string, string | undefined>,
       quantity: 1,
@@ -580,20 +707,28 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       customerEmail: undefined as string | undefined,
       backgroundDataUri: undefined as string | undefined,
       isBackgroundImageLoaded: false,
-      backgroundOffsetSettings: undefined as BackgroundOffsetSettings | undefined,
+      backgroundOffsetSettings: undefined as
+        | BackgroundOffsetSettings
+        | undefined,
       productionTime: undefined as string | undefined,
       backCustomTextFields: [] as CustomTextFieldInterface[],
       frontCustomTextFields: [] as CustomTextFieldInterface[],
       frontAccentColorElementsNumber: 0,
       backAccentColorElementsNumber: 0,
-      fileProcessingRepository: undefined as FileProcessingRepository | undefined,
+      fileProcessingRepository: undefined as
+        | FileProcessingRepository
+        | undefined,
       isFormDisabled: false,
       isSubmitting: false,
       isAccentColorSelectedByUser: false,
       isBackDesignSelectedByUser: false,
       submitErrors: [] as string[],
-      showEmailStep: true
-    }
+      showEmailStep: true,
+      isCustomizerPreviewBackSideFocused: false,
+      croppedBackground: '',
+      activeStepIndex: 0,
+      stepValidateState
+    };
   },
   computed: {
     skinClass (): string {
@@ -625,6 +760,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return fields;
     },
+    customizerSteps (): StepsInterface[] {
+      const keys: string[] = Object.keys(customizerStepsData).filter(
+        (key) =>
+          customizerStepsData[key].id !==
+            customizerStepsData.customOptions.id ||
+          this.hasCustomFields ||
+          this.isAccentColorSelectorVisible
+      );
+
+      return keys.map((key) => customizerStepsData[key]);
+    },
     hasCustomFields (): boolean {
       return this.customTextFields.length !== 0;
     },
@@ -651,14 +797,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'back design product');
+      return this.product.bundle_options.find(
+        (item) => item.title.toLowerCase() === 'back design product'
+      );
     },
     frontDesignBundleOption (): SideDesignBundleOption | undefined {
       if (!this.product?.bundle_options) {
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'front design product');
+      return this.product.bundle_options.find(
+        (item) => item.title.toLowerCase() === 'front design product'
+      );
     },
     frontDesignProducts (): DesignProduct[] {
       if (!this.frontDesignBundleOption) {
@@ -675,7 +825,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.getDesignProducts(this.backDesignBundleOption);
     },
     bodyparts (): Bodypart[] {
-      const bodyparts = this.$store.getters['budsies/getProductBodyparts'](this.product.id);
+      const bodyparts = this.$store.getters['budsies/getProductBodyparts'](
+        this.product.id
+      );
 
       if (!bodyparts.length) {
         return [];
@@ -698,14 +850,48 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return undefined;
       }
 
-      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'production time');
+      return this.product.bundle_options.find(
+        (item) => item.title.toLowerCase() === 'production time'
+      );
     },
     productionTimeOptions (): ProductionTimeOption[] {
       if (!this.productionTimeBundleOption || !this.product) {
-        return []
+        return [];
       }
 
-      return getProductionTimeOptions(this.productionTimeBundleOption, this.product, this.$store);
+      return getProductionTimeOptions(
+        this.productionTimeBundleOption,
+        this.product,
+        this.$store
+      );
+    },
+    smallBackgroundImageStyle (): SmallBackgroundImageStyle {
+      const defaultStyle: SmallBackgroundImageStyle = {
+        width: 'calc(100% - 2px)',
+        height: 'calc(100% - 2px)',
+        top: '1px',
+        left: '1px'
+      };
+
+      const settings = this.backgroundOffsetSettings;
+
+      if (!settings || !settings.size || !settings.position) {
+        return defaultStyle;
+      }
+
+      const style = { ...defaultStyle };
+
+      if (settings.position === 'left' || settings.position === 'right') {
+        style.width = `calc(${100 - parseFloat(settings.size)}% - 2px)`;
+      } else {
+        style.height = `calc(${100 - parseFloat(settings.size)}% - 2px)`;
+      }
+
+      if (settings.position === 'left') {
+        style.left = `calc(${parseFloat(settings.size)}% + 1px)`;
+      }
+
+      return style;
     },
     uploadButtonText (): string {
       return this.isBackgroundImageLoaded ? 'Change photo' : 'Select a photo';
@@ -713,7 +899,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     isAccentColorSelectorVisible (): boolean {
       return (
         this.frontAccentColorElementsNumber > 0 ||
-            this.backAccentColorElementsNumber > 0
+        this.backAccentColorElementsNumber > 0
       );
     },
     isProductionOptionsAvailable (): boolean {
@@ -724,15 +910,23 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         { text: 'Uploading your image. So cute!', value: 33 },
         { text: 'Rendering design to maximize hugs', value: 66 },
         { text: 'Optimizing pillow softness vectors', value: 100 }
-      ]
+      ];
     }
   },
   methods: {
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
+    isStepInvalid (step: StepsInterface): boolean {
+      return (
+        this.stepValidateState[step.id] &&
+        this.stepValidateState[step.id] === 'invalid'
+      );
+    },
     getAccentColorPartValues (bodypart: Bodypart): AccentColorPart[] {
-      const bodypartsValues = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
+      const bodypartsValues = this.$store.getters[
+        'budsies/getBodypartBodypartsValues'
+      ](bodypart.id);
 
       if (!bodypartsValues.length) {
         return [];
@@ -760,7 +954,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         stage: image.src,
         big: image.src,
         sku: product.sku
-      }))
+      }));
     },
     getDesignProducts (bundleOption: SideDesignBundleOption): DesignProduct[] {
       let designs: DesignProduct[] = [];
@@ -786,16 +980,24 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return designs;
     },
     getBackgroundEditor (): InstanceType<typeof MBackgroundEditor> | undefined {
-      return this.$refs['backgroundEditor'] as InstanceType<typeof MBackgroundEditor> | undefined;
+      return this.$refs['backgroundEditor'] as
+        | InstanceType<typeof MBackgroundEditor>
+        | undefined;
     },
     getBackPreview (): InstanceType<typeof MLivePreview> | undefined {
-      return this.$refs['backPreview'] as InstanceType<typeof MLivePreview> | undefined;
+      return this.$refs['backPreview'] as
+        | InstanceType<typeof MLivePreview>
+        | undefined;
     },
     getFrontPreview (): InstanceType<typeof MLivePreview> | undefined {
-      return this.$refs['frontPreview'] as InstanceType<typeof MLivePreview> | undefined;
+      return this.$refs['frontPreview'] as
+        | InstanceType<typeof MLivePreview>
+        | undefined;
     },
     getSubmitAnimator (): InstanceType<typeof MSubmitAnimator> | undefined {
-      return this.$refs['submitAnimator'] as InstanceType<typeof MSubmitAnimator> | undefined;
+      return this.$refs['submitAnimator'] as
+        | InstanceType<typeof MSubmitAnimator>
+        | undefined;
     },
     getBlobFromDataUri (dataUri: string): Blob {
       const byteString = atob(dataUri.split(',')[1]);
@@ -817,7 +1019,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return data;
       }
 
-      data[this.accentColorPartValue.optionId] = this.accentColorPartValue.optionValueId;
+      data[this.accentColorPartValue.optionId] =
+        this.accentColorPartValue.optionValueId;
 
       return data;
     },
@@ -892,8 +1095,38 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.accentColorPartValue = accentColor;
     },
+    async trySubmitForm (): Promise<void> {
+      const isValid = await (
+        this.$refs.formObserver as InstanceType<typeof ValidationObserver>
+      ).validate();
+
+      if (isValid) {
+        await this.onSubmit();
+        return;
+      }
+
+      let errorStepIndex = this.activeStepIndex;
+
+      for (
+        let stepIndex = this.customizerSteps.length - 1;
+        stepIndex >= 0;
+        stepIndex--
+      ) {
+        if (
+          this.stepValidateState[this.customizerSteps[stepIndex].id] ===
+          'invalid'
+        ) {
+          errorStepIndex = stepIndex;
+        }
+      }
+
+      this.activeStepIndex = errorStepIndex;
+    },
     goToCrossSells (): void {
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
+    },
+    onBackgroundImageAssigned (): void {
+      this.updateSmallBackgroundImage();
     },
     prefillEmail (): void {
       const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
@@ -921,13 +1154,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         throw new Error('Background image is unavailable!');
       }
 
-      const backSvg = backPreview.getCustomizedSVG(
-        TARGET_IMAGE_SIZE
-      );
-      const frontSvg = frontPreview.getCustomizedSVG(
-        TARGET_IMAGE_SIZE,
-        image
-      );
+      const backSvg = backPreview.getCustomizedSVG(TARGET_IMAGE_SIZE);
+      const frontSvg = frontPreview.getCustomizedSVG(TARGET_IMAGE_SIZE, image);
 
       if (!backSvg || !frontSvg) {
         throw new Error('Unable to get vector images for conversion!');
@@ -939,39 +1167,34 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       if (
         !this.frontDesign ||
-            !this.backDesign ||
-            (!this.accentColorPartValue && this.isAccentColorSelectorVisible)
+        !this.backDesign ||
+        (!this.accentColorPartValue && this.isAccentColorSelectorVisible)
       ) {
-        throw new Error(
-          'Design variants or accent color are not specified!'
-        );
+        throw new Error('Design variants or accent color are not specified!');
       }
 
       const backDesignBlob = new Blob([backSvg], { type: 'image/svg+xml' });
       const frontDesignBlob = new Blob([frontSvg], { type: 'image/svg+xml' });
       const backgroundBlob = this.getBlobFromDataUri(this.backgroundDataUri);
 
-      const [
-        frontStorageItem,
-        backStorageItem,
-        backgroundOriginalItem
-      ] = await Promise.all([
-        this.fileProcessingRepository.uploadFile(
-          frontDesignBlob,
-          ImageType.Artwork,
-          this.uploadProductType
-        ),
-        this.fileProcessingRepository.uploadFile(
-          backDesignBlob,
-          ImageType.Artwork,
-          this.uploadProductType
-        ),
-        this.fileProcessingRepository.uploadFile(
-          backgroundBlob,
-          ImageType.Artwork,
-          this.uploadProductType
-        )
-      ]);
+      const [frontStorageItem, backStorageItem, backgroundOriginalItem] =
+        await Promise.all([
+          this.fileProcessingRepository.uploadFile(
+            frontDesignBlob,
+            ImageType.Artwork,
+            this.uploadProductType
+          ),
+          this.fileProcessingRepository.uploadFile(
+            backDesignBlob,
+            ImageType.Artwork,
+            this.uploadProductType
+          ),
+          this.fileProcessingRepository.uploadFile(
+            backgroundBlob,
+            ImageType.Artwork,
+            this.uploadProductType
+          )
+        ]);
 
       return [frontStorageItem, backStorageItem, backgroundOriginalItem].map(
         (item: Item) => ({
@@ -980,9 +1203,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         })
       );
     },
-    async onSubmit (event: Event): Promise<void> {
-      event.preventDefault();
-
+    async onSubmit (): Promise<void> {
       if (this.isDisabled) {
         return;
       }
@@ -1000,10 +1221,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         const customerImages = await this.processImages();
 
-        await this.$store.dispatch(
-          'product/setBundleOptions',
-          { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
-        );
+        await this.$store.dispatch('product/setBundleOptions', {
+          product: this.product,
+          bundleOptions: this.$store.state.product.current_bundle_options
+        });
 
         this.$store.commit(
           budsiesTypes.SN_BUDSIES + '/' + budsiesTypes.CUSTOMER_EMAIL_SET,
@@ -1029,13 +1250,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           errorToParse = error.response.data;
         }
 
-        this.submitErrors = this.errorConverterService.describeError(
-          errorToParse
-        );
+        this.submitErrors =
+          this.errorConverterService.describeError(errorToParse);
         this.isSubmitting = false;
       }
     },
     onAccentColorSelect (): void {
+      Vue.set(
+        this.stepValidateState,
+        customizerStepsData.customOptions.id,
+        'valid'
+      );
       this.isAccentColorSelectedByUser = true;
     },
     onBackDesignSelect (): void {
@@ -1055,6 +1280,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         throw new Error('Unable to get Background editor element!');
       }
 
+      Vue.set(
+        this.stepValidateState,
+        customizerStepsData.uploadPhoto.id,
+        'valid'
+      );
+
       this.backgroundDataUri = image;
       backgroundEditor.setBackgroundImage(this.backgroundDataUri);
     },
@@ -1068,20 +1299,67 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     ): void {
       this.frontCustomTextFields = textFields;
     },
-    onFrontAccentColorElementsCounted (
-      coloredElementsNumber: number
-    ): void {
+    onFrontAccentColorElementsCounted (coloredElementsNumber: number): void {
       this.frontAccentColorElementsNumber = coloredElementsNumber;
     },
-    onBackAccentColorElementsCounted (
-      coloredElementsNumber: number
-    ): void {
+    onBackAccentColorElementsCounted (coloredElementsNumber: number): void {
       this.backAccentColorElementsNumber = coloredElementsNumber;
     },
     onBackgroundOffsetSettingsPrepared (
       settings: BackgroundOffsetSettings
     ): void {
       this.backgroundOffsetSettings = settings;
+    },
+    onChangeStep (nextStep: number) {
+      this.activeStepIndex = nextStep;
+    },
+    async updateSmallBackgroundImage (): Promise<void> {
+      if (!this.$refs.backgroundEditor) {
+        return;
+      }
+
+      if (!this.isCustomizerPreviewBackSideFocused) {
+        this.croppedBackground = '';
+        return;
+      }
+
+      await this.$nextTick();
+
+      const backgroundEditor = this.getBackgroundEditor();
+
+      if (!backgroundEditor) {
+        throw new Error('Unable to get background editor!');
+      }
+
+      const image = await backgroundEditor.getCroppedBackground();
+      if (!image) {
+        throw new Error('Background image is unavailable!');
+      }
+
+      this.croppedBackground = image;
+    },
+    async validateStepsBeforeIndex (index: number): Promise<void> {
+      const keys = Object.keys(customizerStepsData).filter(
+        (_, keyIndex) => keyIndex < index
+      );
+
+      for (const key of keys) {
+        if (!this.$refs[customizerStepsData[key].id]) {
+          continue;
+        }
+
+        const validationResult: ValidationResult = await (
+          this.$refs[customizerStepsData[key].id] as InstanceType<
+            typeof ValidationProvider
+          >
+        ).validate();
+
+        Vue.set(
+          this.stepValidateState,
+          customizerStepsData[key].id,
+          validationResult.valid ? 'valid' : 'invalid'
+        );
+      }
     }
   },
   beforeMount () {
@@ -1091,12 +1369,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
   },
   created (): void {
+    this.customizerStepsData = customizerStepsData;
+
     this.fileProcessingRepository = this.fileProcessingRepositoryFactory.create(
       this.imageUploadUrl
     );
 
     if (this.initialFrontDesign) {
       this.frontDesign = this.initialFrontDesign;
+      this.activeStepIndex = 1;
+      this.stepValidateState[customizerStepsData.frontDesign.id] = 'valid';
     } else if (this.frontDesignProducts.length) {
       this.frontDesign = this.frontDesignProducts[0].sku;
     }
@@ -1105,9 +1387,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     if (this.initialBackDesign) {
       this.backDesign = this.initialBackDesign;
+      this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
     }
 
-    this.accentColorPartValues = this.getAccentColorPartValues(this.bodyparts[0]);
+    this.accentColorPartValues = this.getAccentColorPartValues(
+      this.bodyparts[0]
+    );
 
     this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
 
@@ -1118,16 +1403,44 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   watch: {
+    activeStepIndex: {
+      handler (val: number, oldVal: number): void {
+        if (val === oldVal) {
+          return;
+        }
+
+        void this.validateStepsBeforeIndex(val);
+
+        const previousStep = this.customizerSteps[oldVal];
+        const currentStep = this.customizerSteps[val];
+
+        if (
+          [currentStep.id, previousStep.id].indexOf(
+            customizerStepsData.backDesign.id
+          ) === -1
+        ) {
+          return;
+        }
+
+        this.isCustomizerPreviewBackSideFocused =
+          currentStep.id === customizerStepsData.backDesign.id;
+      }
+    },
     frontDesign: {
       handler (newValue: string | undefined) {
         if (!this.frontDesignBundleOption) {
-          Logger.error('frontDesignBundleOption is not defined while attempt to set it was performed', 'budsies')();
+          Logger.error(
+            'frontDesignBundleOption is not defined while attempt to set it was performed',
+            'budsies'
+          )();
           return;
         }
 
         let frontDesign;
         if (newValue) {
-          frontDesign = this.frontDesignProducts.find(product => product.sku === this.frontDesign);
+          frontDesign = this.frontDesignProducts.find(
+            (product) => product.sku === this.frontDesign
+          );
         }
 
         this.setBundleOptionValue({
@@ -1141,13 +1454,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     backDesign: {
       handler (newValue: string | undefined) {
         if (!this.backDesignBundleOption) {
-          Logger.error('backDesignBundleOption is not defined while attempt to set it was performed', 'budsies')();
+          Logger.error(
+            'backDesignBundleOption is not defined while attempt to set it was performed',
+            'budsies'
+          )();
           return;
         }
 
         let backDesign;
         if (newValue) {
-          backDesign = this.backDesignProducts.find(product => product.sku === this.backDesign);
+          backDesign = this.backDesignProducts.find(
+            (product) => product.sku === this.backDesign
+          );
         }
 
         this.setBundleOptionValue({
@@ -1158,354 +1476,585 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       },
       immediate: false
     },
+    isCustomizerPreviewBackSideFocused: {
+      handler (): void {
+        void this.updateSmallBackgroundImage();
+      }
+    },
     productionTime: {
       handler (newValue: string | undefined) {
         if (!this.productionTimeBundleOption) {
-          Logger.error('productionTimeBundleOption is not defined while attempt to set it was performed', 'budsies')();
+          Logger.error(
+            'productionTimeBundleOption is not defined while attempt to set it was performed',
+            'budsies'
+          )();
           return;
         }
 
         let productionTime;
         if (newValue) {
-          productionTime = this.productionTimeOptions.find(product => product.id === this.productionTime);
+          productionTime = this.productionTimeOptions.find(
+            (product) => product.id === this.productionTime
+          );
         }
 
         this.setBundleOptionValue({
           optionId: this.productionTimeBundleOption.option_id,
           optionQty: 1,
-          optionSelections: productionTime?.optionValueId ? [productionTime.optionValueId] : []
+          optionSelections: productionTime?.optionValueId
+            ? [productionTime.optionValueId]
+            : []
         });
       },
       immediate: false
     }
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-phrase-pillow-product-order-form {
-    padding: 2em 0 4em;
+  $color-border: #acacac;
+  $color-white: #fff;
+  $medium-breakpoint: 641px;
 
-    ._notes {
-        text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  font-size: 14px;
+
+  ._main-header {
+    line-height: 100%;
+  }
+
+  ._notes {
+    text-align: center;
+  }
+
+  ._form-content {
+    --heading-title-font-weight: 800;
+    --heading-title-font-size: var(--font-base);
+    --heading-padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  ._customizer-steps {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    ::v-deep {
+      .sf-steps__header {
+        box-shadow: none;
+        --steps-border-width: 0 0 2px 0;
+      }
+
+      .sf-steps__progress {
+        --steps-progress-background: var(--c-dark);
+        --steps-progress-height: 2px;
+      }
+
+      .sf-steps__content {
+        overflow-y: scroll;
+        flex: 1 1;
+        flex-basis: 0px;
+      }
+    }
+  }
+
+  ._front_design_preview_container,
+  ._customization-section {
+    ._error-text {
+      margin-top: 1em;
+    }
+  }
+
+  ._front_design_preview_container {
+    padding: 0.8em;
+    height: 100%;
+    text-align: center;
+
+    ._section-header {
+      h5 {
+        margin: 0.3em 0;
+      }
+    }
+  }
+
+  ._design-images-container {
+    padding: 0 0.8em;
+  }
+
+  ._back_design_preview_container,
+  ._design-images-container {
+    margin-top: 5%;
+  }
+
+  ._front-preview,
+  ._back-preview,
+  ._design-images {
+    width: 100%;
+  }
+
+  ._design-images {
+    margin-top: 1em;
+  }
+
+  ._helper-text {
+    font-size: var(--font-2xs);
+    font-weight: var(--font-medium);
+    margin: var(--spacer-xs) 0;
+    text-align: center;
+  }
+
+  ._label {
+    display: block;
+    text-align: center;
+    font-size: var(--font-base);
+    font-weight: var(--font-medium);
+  }
+
+  ._customization-section {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    padding-left: 0;
+    padding-right: 0;
+
+    ._form {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
     }
 
-    ._page-content {
-        margin-top: 1em;
-        display: flex;
-        flex-direction: column;
-    }
+    ._customizer-step {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 4em;
+      flex: 1;
+      padding: 0.6em 0.4em 0.4em;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
 
-    ._front_design_preview_container,
-    ._customization-section {
-        ._error-text {
-            margin-top: 1em;
+      &.-active {
+        cursor: default;
+      }
+
+      &.-done {
+        &::after {
+          content: "";
+          position: absolute;
+          width: 6px;
+          height: 6px;
+          border-radius: 100%;
+          bottom: -3.8px;
         }
+      }
+
+      ._validation-icon {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        padding: 1px;
+        font-size: 0.8em;
+        color: $color-white;
+        border-radius: 100%;
+      }
     }
 
-    ._front_design_preview_container {
-        text-align: center;
+    ._step-container {
+      padding: 0 0.8em 0;
+
+      ._step-title {
+        margin-top: 0;
+      }
     }
 
-    ._back_design_preview_container,
-    ._design-images-container {
-        margin-top: 5%;
+    ._input-container {
+      padding: 0 2.4em;
     }
 
-    ._front-preview,
-    ._back-preview,
-    ._design-images {
+    ._error-text {
+      font-size: var(--font-xs);
+      font-weight: var(--font-medium);
+      height: calc(var(--font-xs) * 1.2);
+    }
+
+    ._background-hint {
+      margin: 1em 0;
+    }
+
+    .-invalid {
+      ._error-text {
+        display: block;
+      }
+    }
+
+    ._actions-row {
+      ._submit-button {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    ._production-time-field,
+    ._actions-row,
+    ._animation-row,
+    ._final-steps {
+      margin-top: 1.5em;
+      text-align: center;
+    }
+
+    ._production-time-field {
+      ::v-deep .sf-select__selected {
+        justify-content: center;
+      }
+    }
+
+    ._custom-text-fields-section {
+      ._custom-text-field {
+        margin-top: 1em;
+
+        ._custom-input {
+          text-align: center;
+        }
+      }
+    }
+
+    ._back-design-field {
+      ._back-selector {
+        margin-top: 0.5em;
+      }
+    }
+
+    ._accent-color-field {
+      padding: 0;
+      text-align: center;
+
+      ._accent-color-selector-container {
+        margin-top: 1em;
+      }
+
+      ._error-text {
+        margin: 1em 0;
+      }
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+
+    ._email-disclaimer {
+      margin-top: var(--spacer-xs);
+    }
+
+    ._production-time-field {
+      margin-top: 3em;
+    }
+
+    ._submit-disclaimer {
+      margin-top: 1em;
+    }
+
+    ._background-image-field {
+      text-align: center;
+      padding: 0;
+
+      ._background-uploader {
+        padding: 0 2em;
+        margin-bottom: 1.2em;
+      }
+    }
+
+    ._bottom-static-block {
+      text-align: center;
+      margin-top: var(--spacer-base);
+
+      ::v-deep p:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ._front-image-small {
+      display: flex;
+      position: relative;
+      background-color: $color-white;
+      width: 100%;
+
+      ::v-deep svg {
         width: 100%;
+        height: auto;
+      }
+
+      ._background {
+        position: absolute;
+        width: calc(100% - 2px);
+        top: 1px;
+        left: 1px;
+      }
+    }
+  }
+
+  ._preview-image-small {
+    display: flex;
+    position: relative;
+    background-color: $color-white;
+    width: 100%;
+
+    ::v-deep svg {
+      width: 100%;
+      height: auto;
+    }
+
+    ._background {
+      position: absolute;
+      width: calc(100% - 2px);
+      top: 1px;
+      left: 1px;
+    }
+  }
+
+  ._quantity-field {
+    text-align: center;
+  }
+
+  .m-live-preview {
+    width: 100%;
+  }
+
+  @media (max-width: $medium-breakpoint - 1px) {
+    .-show-for-medium-up {
+      display: none !important;
+    }
+  }
+
+  @media (min-width: $medium-breakpoint) {
+    --h1-font-size: 2.625rem;
+    --h3-font-size: 1.625rem;
+    --heading-title-font-weight: bold;
+    --heading-padding: 0;
+
+    font-size: var(--font-size-base);
+
+    .-show-for-small-only {
+      display: none !important;
     }
 
     ._helper-text {
       font-size: var(--font-xs);
-      font-weight: var(--font-medium);
-      margin-top: var(--spacer-sm);
+    }
+
+    ._form-content {
+      flex-direction: row;
+      padding-top: 3.5em;
+      --heading-title-font-size: var(--font-lg);
+    }
+
+    ._live-preview-section {
+      flex: 1;
+      height: auto;
+
+      ._front_design_preview_container {
+        position: sticky;
+        top: 3.4em;
+        height: auto;
+        padding-bottom: 0;
+      }
     }
 
     ._label {
-      display: block;
-      text-align: center;
-      font-size: var(--font-lg);
-      font-weight: var(--font-medium);
+      text-align: left;
+    }
+
+    ._customization-section,
+    ._live-preview-section,
+    ._front_design_preview_container,
+    ._back_design_preview_container {
+      text-align: left;
+
+      .sf-heading {
+        --heading-text-align: left;
+      }
+    }
+
+    ._header {
+      ._top-static-block {
+        text-align: center;
+      }
     }
 
     ._customization-section {
-        ._step {
-            display: block;
-            font-size: var(--font-sm);
-            font-weight: var(--font-medium);
-            margin: 1em 0 0.5em;
-            width: 100%;
-            cursor: auto;
-            text-align: center;
+      flex: 1;
+      height: auto;
+      padding: 0 0.8em;
+      margin-top: -1.6em;
 
-            ._step-marker {
-                border-bottom: 4px solid;
-                font-size: 1.43em;
-                font-weight: bold;
-                text-transform: uppercase;
-            }
-        }
-
-        ._error-text {
-            font-size: var(--font-xs);
-            font-weight: var(--font-medium);
-            height: calc(var(--font-xs) * 1.2);
-        }
-
-        ._background-hint {
-            margin: 1em 0;
-        }
-
-        .-invalid {
-            ._error-text {
-                display: block;
-            }
-        }
-
-        ._actions-row {
-          ._submit-button {
-            margin-left: auto;
-            margin-right: auto;
-          }
-        }
-
-        ._quantity-field,
-        ._email-field,
-        ._production-time-field,
-        ._actions-row,
-        ._animation-row,
-        ._accent-color-field,
-        ._front-design-field,
-        ._back-design-field,
-        ._final-steps {
-            margin-top: 1.5em;
-            text-align: center;
-        }
-
-        ._production-time-field {
-          ::v-deep .sf-select__selected {
-            justify-content: center;
-          }
-        }
-
-        ._custom-text-fields-section {
-            margin-top: 1.5em;
-
-            ._custom-text-field {
-                margin-top: 1em;
-
-                ._custom-input {
-                  text-align: center;
-                }
-            }
-        }
-
-        ._back-design-field {
-            ._back-selector {
-                margin-top: 0.5em;
-            }
-        }
-
-        ._accent-color-field {
-            ._accent-color-selector-container {
-                margin-top: 1em;
-            }
-        }
-
-        ._email-disclaimer {
-          margin-top: var(--spacer-xs);
-        }
-
-        ._production-time-field {
-          margin-top: 3em;
-        }
-
-        ._submit-disclaimer {
-            margin-top: 1em;
-        }
-
-        ._email-field,
-        ._custom-text-field {
-            input {
-                text-align: center;
-            }
-        }
-
-        ._background-image-field {
-            text-align: center;
-        }
-
-        ._bottom-static-block {
-            text-align: center;
-        }
-    }
-
-    @media (max-width: $mobile-max) {
-      .-show-for-medium-up {
-        display: none !important;
+      ._accent-color-field {
+        padding: 0;
       }
-    }
 
-    @media (min-width: $tablet-min) {
-        .-show-for-small-only {
-          display: none !important;
-        }
+      ._form {
+        height: auto;
+      }
 
-        ._page-content {
-            flex-direction: row-reverse;
-
-            ._live-preview-section,
-            ._customization-section {
-                width: 50%;
-                padding: 0 var(--spacer-sm);
-            }
-        }
-
-        ._label {
-          text-align: left;
-        }
-
-        ._customization-section,
-        ._live-preview-section,
-        ._front_design_preview_container,
-        ._back_design_preview_container {
-            text-align: left;
-
-            .sf-heading {
-                --heading-text-align: left;
-            }
-        }
-
-        ._header {
-            ._top-static-block {
-                text-align: center;
-            }
-        }
-
-        ._customization-section {
-            label {
-                margin: 0.5em 0;
-                display: block;
-            }
-
-            ._actions-row {
-              ._submit-button {
-                margin-left: 0;
-                margin-right: 0 ;
-              }
-            }
-
-            ._background-image-field,
-            ._quantity-field,
-            ._email-field,
-            ._production-time-field,
-            ._actions-row,
-            ._accent-color-field,
-            ._front-design-field,
-            ._back-design-field,
-            ._custom-text-field,
-            ._final-steps {
-                text-align: left;
-            }
-
-            ._email-field,
-            ._custom-text-fields-section {
-              ._custom-text-field {
-                  ._custom-input {
-                    text-align: left;
-                  }
-              }
-            }
-
-            ._production-time-field {
-              ::v-deep .sf-select__selected {
-                justify-content: flex-start;
-              }
-            }
-
-            ._step {
-                font-size: var(--font-base);
-                text-align: left;
-            }
-
-            ._background-image-field {
-                ._background-uploader {
-                    margin-top: 1em;
-                }
-            }
-
-            ._email-field {
-                ._email-field-input {
-                    margin-top: 1em;
-                }
-            }
-
-            ._bottom-static-block {
-                margin-top: 1em;
-                text-align: left;
-            }
-        }
-    }
-
-    @include for-desktop {
-      ._front_design_preview_container > .m-background-editor,
-      ._back_design_preview_container > .m-live-preview,
-      ._design-images-container > .m-design-images {
-        width: 80%;
+      ._input-container {
+        padding: 0;
       }
 
       ._actions-row {
-          text-align: left;
+        ._submit-button {
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+
+      ._step-title,
+      ._background-image-field,
+      ._quantity-field,
+      ._email-field,
+      ._production-time-field,
+      ._actions-row,
+      ._accent-color-field,
+      ._front-design-field,
+      ._back-design-field,
+      ._custom-text-field,
+      ._final-steps,
+      ._helper-text,
+      ._bottom-static-block {
+        text-align: left;
+      }
+
+      ._email-field,
+      ._custom-text-fields-section {
+        ._custom-text-field {
+          ._custom-input {
+            text-align: left;
+          }
+        }
+      }
+
+      ._production-time-field {
+        ::v-deep .sf-select__selected {
+          justify-content: flex-start;
+        }
+      }
+
+      ._step {
+        font-size: var(--font-base);
+        text-align: left;
+      }
+
+      ._background-image-field {
+        ._background-uploader {
+          margin-top: 0.4em;
+        }
       }
     }
 
-    &.-skin-petsies {
-        ._header {
-            ._accent-header {
-                --heading-title-font-weight: var(--font-bold);
-                --heading-title-font-size: var(--font-base);
-                --heading-title-color: var(--_c-light-primary);
-            }
+    ._customizer-steps {
+      ::v-deep {
+        .sf-steps__content {
+          overflow-y: visible;
         }
-
-        ._front_design_preview_container,
-        ._customization-section {
-            ._error-text {
-                color: var(--c-danger);
-            }
-        }
-
-        ._front_design_preview_container {
-            &.-invalid {
-                h3 {
-                    color: var(--c-danger-variant);
-                }
-            }
-        }
-
-        ._customization-section {
-            label {
-                ._step-marker {
-                    color: var(--_c-light-primary);
-                }
-            }
-
-            .-invalid {
-                label {
-                    color: var(--c-danger);
-                }
-
-                input[type="text"],
-                input[type="email"] {
-                    border-color: var(--c-danger-variant);
-                }
-            }
-        }
+      }
     }
+  }
+
+  @include for-desktop {
+    ._actions-row {
+      text-align: left;
+    }
+
+    ._live-preview-section {
+      ._front_design_preview_container {
+        top: 4.4em;
+      }
+    }
+
+    ._front-preview {
+      ._front-hint {
+        ._helper-text {
+          font-size: 0.85em;
+          margin: 1.5em 0;
+        }
+      }
+
+      ._hint-image {
+        width: 3.5em;
+        height: 3.5em;
+      }
+    }
+  }
+
+  &.-skin-petsies {
+    $color-customizer-step-background: #ededed;
+    $color-add-to-cart-step-background: #43c5e4;
+    $color-add-to-cart-step-hover-background: #81d8ed;
+
+    ._customizer-step {
+      color: var(--c-dark-variant);
+      font-weight: 800;
+
+      &.-done {
+        color: var(--c-dark);
+
+        &::after {
+          background-color: var(--c-dark);
+        }
+      }
+
+      &.-invalid {
+        color: var(--c-danger-variant);
+      }
+    }
+
+    ._header {
+      padding-left: .9375rem;
+      padding-right: .9375rem;
+      --heading-title-font-line-height: 100%;
+    }
+
+    ._front_design_preview_container,
+    ._customization-section {
+      ._error-text {
+        color: var(--c-danger);
+      }
+    }
+
+    ._front_design_preview_container {
+      &.-invalid {
+        h3 {
+          color: var(--c-danger-variant);
+        }
+      }
+    }
+
+    ._customization-section {
+      label {
+        ._step-marker {
+          color: var(--_c-light-primary);
+        }
+      }
+
+      .-invalid {
+        label {
+          color: var(--c-danger);
+        }
+
+        input[type="text"],
+        input[type="email"] {
+          border-color: var(--c-danger-variant);
+        }
+      }
+    }
+  }
 }
 </style>

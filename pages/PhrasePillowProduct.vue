@@ -1,5 +1,9 @@
 <template>
-  <div id="phrase-pillow-product" itemscope itemtype="http://schema.org/Product">
+  <div
+    id="phrase-pillow-product"
+    itemscope
+    itemtype="http://schema.org/Product"
+  >
     <OPhrasePillowProductOrderForm
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
@@ -30,7 +34,9 @@ export default Vue.extend({
       return this.$store.getters['product/getCurrentProduct'];
     },
     svgPath (): string {
-      return config.images.baseUrl + '/150/150/resize/phrase_pillow/svg-templates';
+      return (
+        config.images.baseUrl + '/150/150/resize/phrase_pillow/svg-templates'
+      );
     },
     imageUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
@@ -47,7 +53,7 @@ export default Vue.extend({
     //
   },
   async asyncData ({ store, route, context }): Promise<void> {
-    if (context) context.output.cacheTags.add('product')
+    if (context) context.output.cacheTags.add('product');
 
     const product = await store.dispatch('product/loadProduct', {
       parentSku: 'petsiesPhrasePillow_bundle',
@@ -56,7 +62,9 @@ export default Vue.extend({
 
     await Promise.all([
       store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
-      store.dispatch('budsies/loadProductRushAddons', { productId: product.id })
+      store.dispatch('budsies/loadProductRushAddons', {
+        productId: product.id
+      })
     ]);
 
     const loadBreadcrumbsPromise = store.dispatch(
@@ -90,14 +98,18 @@ export default Vue.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #phrase-pillow-product {
-  box-sizing: border-box;
-  padding: 0 1rem;
+  $medium-breakpoint: 641px;
 
-  @media (min-width: $tablet-min) {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  @media (min-width: $medium-breakpoint) {
     max-width: 1272px;
     margin: 0 auto;
     width: 100%;
+    margin-top: 60px;
   }
 }
-
 </style>

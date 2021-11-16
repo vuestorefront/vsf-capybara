@@ -9,7 +9,7 @@
       <div class="content">
         <slot />
       </div>
-      <OFooter />
+      <OFooter class="default-layout_footer" :class="{'-hide-on-mobile': hideFooterOnMobile}" />
       <OModal />
       <ONotification />
       <MCookieNotification />
@@ -61,6 +61,9 @@ export default {
     },
     isStoryblokPreviewMode () {
       return this.$route.query.hasOwnProperty('_storyblok')
+    },
+    hideFooterOnMobile () {
+      return this.$route.name === 'pillowSideDesign-product';
     }
   },
   beforeMount () {
@@ -121,11 +124,21 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .default-layout {
   &.storyblok-preview-mode {
     a,
     button {
       pointer-events: none;
+    }
+  }
+
+  @media (max-width: $tablet-min) {
+    .default-layout_footer {
+      &.-hide-on-mobile {
+        display: none;
+      }
     }
   }
 }
