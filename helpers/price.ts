@@ -8,6 +8,12 @@ import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 
 import UpdateProductDiscountPriceEventData, { UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID } from 'src/modules/shared/types/update-product-discount-price.event';
 
+interface ProductPriceData {
+  originalPriceInclTax: number,
+  priceInclTax: number,
+  specialPrice: number
+}
+
 function calculateBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || []
   const selectedBundleOptions = Object.values(get(product, 'product_option.extension_attributes.bundle_options', {}))
@@ -16,6 +22,27 @@ function calculateBundleOptionsPrice (product) {
   )
 
   return price
+}
+
+function getProductPriceData (product): ProductPriceData {
+  let productPriceData: ProductPriceData = {
+    originalPriceInclTax: 0,
+    priceInclTax: 0,
+    specialPrice: 0
+  }
+
+  if (isBundleProduct(product)) {
+    productPriceData = calculateBundleOptionsPrice(product);
+  } else if (product.giftcard_options) {
+    productPriceData.priceInclTax = product.giftcard_options.price_amount;
+    productPriceData.originalPriceInclTax = product.giftcard_options.price_amount;
+  } else {
+    productPriceData.priceInclTax = product.price_incl_tax || product.priceInclTax || 0
+    productPriceData.originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
+    productPriceData.specialPrice = product.special_price || product.specialPrice || 0
+  }
+
+  return productPriceData;
 }
 
 function calculateCustomOptionsPriceDelta (product, customOptions) {
@@ -64,24 +91,11 @@ export function getProductPrice (product, customOptions = {}, format = true) {
   EventBus.$emit(UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
 
   const productDiscountPrice = productDiscountPriceData.value;
+  const productPriceData = getProductPriceData(product);
 
-  let priceInclTax = 0;
-  let originalPriceInclTax = 0;
-  let specialPrice = 0;
-
-  if (isBundleProduct(product)) {
-    const bundleOptionsPrice = calculateBundleOptionsPrice(product);
-    priceInclTax = bundleOptionsPrice.priceInclTax;
-    originalPriceInclTax = bundleOptionsPrice.originalPriceInclTax;
-    specialPrice = bundleOptionsPrice.specialPrice;
-  } else if (product.giftcard_options) {
-    priceInclTax = product.giftcard_options.price_amount;
-    originalPriceInclTax = product.giftcard_options.price_amount;
-  } else {
-    priceInclTax = product.price_incl_tax || product.priceInclTax || 0
-    originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
-    specialPrice = product.special_price || product.specialPrice || 0
-  }
+  let priceInclTax = productPriceData.priceInclTax;
+  let originalPriceInclTax = productPriceData.originalPriceInclTax;
+  let specialPrice = productPriceData.specialPrice;
 
   const isSpecialPrice = !!productDiscountPrice || (specialPrice && priceInclTax && originalPriceInclTax)
   const priceDelta = calculateCustomOptionsPriceDelta(product, customOptions)
