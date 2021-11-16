@@ -1,11 +1,18 @@
 import get from 'lodash-es/get'
 
+import { isBundleProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { price } from '@vue-storefront/core/filters';
 import { getCustomOptionValues, getCustomOptionPriceDelta } from '@vue-storefront/core/modules/catalog/helpers/customOption'
 import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 
 import UpdateProductDiscountPriceEventData, { UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID } from 'src/modules/shared/types/update-product-discount-price.event';
+
+interface ProductPriceData {
+  originalPriceInclTax: number,
+  priceInclTax: number,
+  specialPrice: number
+}
 
 function calculateBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || []
@@ -14,7 +21,28 @@ function calculateBundleOptionsPrice (product) {
     getBundleOptionsValues(selectedBundleOptions as any[], allBundleOptions)
   )
 
-  return price.priceInclTax
+  return price
+}
+
+function getProductPriceData (product): ProductPriceData {
+  let productPriceData: ProductPriceData = {
+    originalPriceInclTax: 0,
+    priceInclTax: 0,
+    specialPrice: 0
+  }
+
+  if (isBundleProduct(product)) {
+    productPriceData = calculateBundleOptionsPrice(product);
+  } else if (product.giftcard_options) {
+    productPriceData.priceInclTax = product.giftcard_options.price_amount;
+    productPriceData.originalPriceInclTax = product.giftcard_options.price_amount;
+  } else {
+    productPriceData.priceInclTax = product.price_incl_tax || product.priceInclTax || 0
+    productPriceData.originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
+    productPriceData.specialPrice = product.special_price || product.specialPrice || 0
+  }
+
+  return productPriceData;
 }
 
 function calculateCustomOptionsPriceDelta (product, customOptions) {
@@ -63,29 +91,29 @@ export function getProductPrice (product, customOptions = {}, format = true) {
   EventBus.$emit(UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
 
   const productDiscountPrice = productDiscountPriceData.value;
+  const productPriceData = getProductPriceData(product);
 
-  const priceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || product.price_incl_tax || product.priceInclTax || 0
-  const originalPriceInclTax = (product.giftcard_options && product.giftcard_options.price_amount) || product.original_price_incl_tax || product.originalPriceInclTax || 0
-  const specialPrice = product.special_price || product.specialPrice || 0
+  let priceInclTax = productPriceData.priceInclTax;
+  let originalPriceInclTax = productPriceData.originalPriceInclTax;
+  let specialPrice = productPriceData.specialPrice;
 
-  const isDiscountPrice = !!productDiscountPrice;
-  const isSpecialPrice = (specialPrice && priceInclTax && originalPriceInclTax)
+  const isSpecialPrice = !!productDiscountPrice || (specialPrice && priceInclTax && originalPriceInclTax)
   const priceDelta = calculateCustomOptionsPriceDelta(product, customOptions)
 
-  const special = (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const special = productDiscountPrice || (priceInclTax + priceDelta) * product.qty || priceInclTax
   const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
-  const regular = (product.giftcard_options && product.giftcard_options.price_amount) * product.qty || product.regular_price || calculateBundleOptionsPrice(product) || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const regular = (priceInclTax + priceDelta) * product.qty || product.regular_price || priceInclTax
 
   if (!format) {
     return {
       regular: isSpecialPrice ? original : regular,
-      special: isDiscountPrice ? productDiscountPrice : isSpecialPrice ? special : 0
+      special: isSpecialPrice ? special : 0
     }
   }
 
   return {
     regular: isSpecialPrice ? formatPrice(original) : formatPrice(regular),
-    special: isDiscountPrice ? formatPrice(productDiscountPrice) : isSpecialPrice ? formatPrice(special) : ''
+    special: isSpecialPrice ? formatPrice(special) : ''
   }
 }
 
