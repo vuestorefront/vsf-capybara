@@ -4,16 +4,25 @@
       <div class="_croppie-wrapper">
         <SfIcon
           class="_zoom-button _zoom-in"
-          icon="chevron_up"
+          icon="minus"
           size="xxs"
           @click="zoomIn"
-        />
+        >
+          <template>
+            <div class="_icon-inner" />
+          </template>
+        </SfIcon>
+
         <SfIcon
           class="_zoom-button _zoom-out"
-          icon="chevron_down"
           size="xxs"
           @click="zoomOut"
-        />
+        >
+          <template>
+            <div class="_icon-inner" />
+          </template>
+        </SfIcon>
+
         <div
           class="vue-croppie-container"
           :style="getVueCroppieContainerStyles()"
@@ -364,12 +373,25 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       width: 24px;
       top: -30px;
 
+      ._icon-inner {
+        width: 100%;
+        height: 100%;
+      }
+
       &._zoom-in {
         right: 0;
+
+        ._icon-inner {
+          background: url('/assets/images/phrasePillow/zoom-in.svg');
+        }
       }
 
       &._zoom-out {
         left: 0;
+
+        ._icon-inner {
+          background: url('/assets/images/phrasePillow/zoom-out.svg');
+        }
       }
     }
   }

@@ -98,14 +98,15 @@ export default Vue.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #phrase-pillow-product {
+  $medium-breakpoint: 641px;
+
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 
-  @media (min-width: $tablet-min) {
+  @media (min-width: $medium-breakpoint) {
     max-width: 1272px;
-    padding: 0 1rem;
     margin: 0 auto;
     width: 100%;
     margin-top: 60px;

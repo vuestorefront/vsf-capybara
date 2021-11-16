@@ -1518,6 +1518,7 @@ export default (
 .o-phrase-pillow-product-order-form {
   $color-border: #acacac;
   $color-white: #fff;
+  $medium-breakpoint: 641px;
 
   display: flex;
   flex-direction: column;
@@ -1829,13 +1830,18 @@ export default (
     width: 100%;
   }
 
-  @media (max-width: $mobile-max) {
+  @media (max-width: $medium-breakpoint - 1px) {
     .-show-for-medium-up {
       display: none !important;
     }
   }
 
-  @media (min-width: $tablet-min) {
+  @media (min-width: $medium-breakpoint) {
+    --h1-font-size: 2.625rem;
+    --h3-font-size: 1.625rem;
+    --heading-title-font-weight: bold;
+    --heading-padding: 0;
+
     font-size: var(--font-size-base);
 
     .-show-for-small-only {
@@ -2011,11 +2017,9 @@ export default (
     }
 
     ._header {
-      ._accent-header {
-        --heading-title-font-weight: var(--font-bold);
-        --heading-title-font-size: var(--font-base);
-        --heading-title-color: var(--_c-light-primary);
-      }
+      padding-left: .9375rem;
+      padding-right: .9375rem;
+      --heading-title-font-line-height: 100%;
     }
 
     ._front_design_preview_container,

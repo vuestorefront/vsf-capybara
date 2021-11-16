@@ -361,8 +361,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     --modal-height: auto;
     --modal-index: 201;
     --overlay-z-index: 200;
-    --modal-content-font-line-height: 1.34;
-    --modal-content-font-size: var(--font-size-base);
 
     ._close-preview {
       width: 35px;
