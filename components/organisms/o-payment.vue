@@ -331,6 +331,11 @@ export default {
     }
   }
 }
+
+.gift-card-payment {
+  width: 100%;
+}
+
 .form {
   &__checkbox {
     --checkbox-label-color: var(--c-dark-variant);
