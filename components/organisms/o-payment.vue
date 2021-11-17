@@ -133,7 +133,7 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
-      <GiftCardPayment :cart-items="cartItems" />
+      <OGiftCardPayment :cart-items="cartItems" />
       <div class="form__radio-group">
         <SfRadio
           v-for="method in paymentMethods"
@@ -186,14 +186,15 @@ import {
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
-import GiftCardPayment from 'src/modules/gift-card/components/Payment.vue';
+
+import OGiftCardPayment from './o-gift-card-payment.vue';
 
 const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
   name: 'OPayment',
   components: {
-    GiftCardPayment,
+    OGiftCardPayment,
     SfInput,
     SfRadio,
     SfButton,
