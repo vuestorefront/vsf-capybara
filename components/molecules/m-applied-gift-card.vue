@@ -99,6 +99,16 @@ export default AppliedGiftCard.extend({});
     cursor: pointer;
   }
 
+  ._code-amount-input,
+  ._amount-edit,
+  ._code-remove {
+    &[disabled] {
+      pointer-events: none;
+      cursor: default;
+      opacity: 0.7;
+    }
+  }
+
   ._code-amount {
     color: var(--c-primary);
     font-weight: var(--font-bold);

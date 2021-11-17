@@ -388,8 +388,4 @@ export default {
     --radio-container-padding: var(--spacer-sm);
   }
 }
-
-// .-hidden {
-//   display: none;
-// }
 </style>
