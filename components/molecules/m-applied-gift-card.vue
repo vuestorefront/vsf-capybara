@@ -15,7 +15,6 @@
 
       <SfInput
         class="_code-amount-input"
-        name="giftCardValue"
         :disabled="isChangingValue"
         v-model="giftCardValueModel"
         v-show="isAmountEditing"
