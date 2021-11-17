@@ -1,7 +1,7 @@
 <template>
   <div class="applied-gift-card">
     <div class="_code -open">
-      GIFT-XXXX-XXXXXX (
+      {{ hiddenGiftCardCode }} (
     </div>
 
     <div class="_code-actions">
