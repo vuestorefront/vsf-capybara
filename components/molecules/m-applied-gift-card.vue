@@ -1,7 +1,11 @@
 <template>
   <div class="applied-gift-card">
+    <div class="_code -text">
+      {{ hiddenGiftCardCode }}
+    </div>
+
     <div class="_code -open">
-      {{ hiddenGiftCardCode }} (
+      (
     </div>
 
     <div class="_code-actions">
@@ -91,13 +95,22 @@ export default AppliedGiftCard.extend({
 
   ._code {
     color: var(--c-success-variant);
-    margin: 0 var(--spacer-xs);
     font-weight: var(--font-bold);
     height: 1.4em;
     line-height: 155%;
 
+    &.-text {
+      margin-right: var(--spacer-xs);
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
     &.-open {
-      margin-left: 0;
+      margin-right: var(--spacer-xs);
+    }
+
+    &.-close {
+      margin: 0 var(--spacer-xs);
     }
   }
 
