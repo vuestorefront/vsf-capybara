@@ -8,39 +8,40 @@
       <div
         class="_code-amount"
         v-show="!isAmountEditing"
-        @click="onEditAmountClick"
+        @click="startEdit"
       >
         ${{ giftCardValue }}
       </div>
 
       <SfInput
         class="_code-amount-input"
-        :disabled="isChangingValue"
-        v-model="giftCardValueModel"
+        :disabled="isSubmitting"
+        v-model="newGiftCardValue"
         v-show="isAmountEditing"
       />
 
       <div
         class="_amount-edit"
-        @click="onEditAmountClick"
-        :disabled="isChangingValue"
+        :disabled="isSubmitting"
       >
         <SfIcon
           icon="check"
           size="xxs"
           :title="editLabel"
-          v-show="!isChangingValue && isAmountEditing"
+          @click="changeAppliedGiftCardValue"
+          v-show="!isSubmittingNewValue && isAmountEditing"
         />
 
         <SfIcon
           size="xxs"
           :title="editLabel"
-          v-show="!isChangingValue && !isAmountEditing"
+          @click="startEdit"
+          v-show="!isSubmittingNewValue && !isAmountEditing"
         >
           <div class="_edit-icon" />
         </SfIcon>
 
-        <div class="_loader" v-show="isChangingValue">
+        <div class="_loader" v-show="isSubmittingNewValue">
           <SfLoader class="_sf-loader" :loading="true" />
         </div>
       </div>
@@ -52,7 +53,7 @@
       <div
         class="_code-remove"
         @click="removeAppliedGiftCard"
-        :disabled="isRemoving"
+        :disabled="isSubmitting"
       >
         <SfIcon icon="cross" size="xxs" title="Remove" v-show="!isRemoving" />
 
@@ -65,9 +66,21 @@
 </template>
 
 <script lang="ts">
+import {
+  SfInput,
+  SfIcon,
+  SfLoader
+} from '@storefront-ui/vue';
+
 import AppliedGiftCard from 'src/modules/gift-card/mixins/AppliedGiftCard';
 
-export default AppliedGiftCard.extend({});
+export default AppliedGiftCard.extend({
+  components: {
+    SfIcon,
+    SfInput,
+    SfLoader
+  }
+});
 </script>
 
 <style lang="scss" scoped>
