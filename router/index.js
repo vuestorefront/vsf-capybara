@@ -87,7 +87,19 @@ let routes = [
   },
   { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct },
   { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery },
-  { name: 'gift-cards', path: '/giftcards', component: GiftCards }
+  { name: 'gift-cards', path: '/giftcards', component: GiftCards },
+  {
+    name: 'giftbox',
+    path: '/giftbox',
+    redirect: {
+      name: 'configurable-product',
+      params: {
+        parentSku: 'gift_box',
+        slug: 'gift-box-240',
+        childSku: 'gift_box_dog'
+      }
+    }
+  }
 ];
 
 export default routes;
