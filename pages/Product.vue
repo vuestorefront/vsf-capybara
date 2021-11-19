@@ -185,7 +185,7 @@ export default {
           product: this.getCurrentProduct,
           qty: this.getCurrentProduct.qty
         });
-        this.manageQuantity = res.isManageStock;
+        this.stock.manageQuantity = res.isManageStock;
         this.stock.max = res.isManageStock ? res.qty : null;
       } finally {
         this.stock.isLoading = false;
