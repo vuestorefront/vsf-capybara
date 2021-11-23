@@ -331,6 +331,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           continue;
         }
 
+        const priceData = getProductPrice(productLink.product, {}, false);
+
         availableStyles.push({
           optionId: this.styleBundleOption.option_id,
           optionValueId: +productLink.id,
@@ -338,8 +340,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           label: productLink.product.name,
           description: productLink.product.description,
           shortDescription: productLink.product.short_description ? productLink.product.short_description : '',
-          price: productLink.product.regular_price,
-          specialPrice: productLink.product.final_price ? productLink.product.final_price : 0
+          price: priceData.regular,
+          specialPrice: priceData.special
         });
       }
 
