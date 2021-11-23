@@ -1,31 +1,28 @@
 <template>
   <div class="m-background-editor" :class="{ '-disabled': disabled }">
-    <div class="_helper-text desktop-only">
-      Use the slider below (or mouse scroll) to resize your image. Then,
-      click and drag your photo to move the image.
-    </div>
-
-    <div class="_helper-text _accent-header mobile-only">
-      Use the slider (or pinch) to resize your image. Then, tap and drag
-      your photo to move the image to the desired position.
-    </div>
-
     <div class="_croppie-stage">
       <div class="_croppie-wrapper">
         <SfIcon
-          class="_zoom-button"
-          icon="chevron_up"
+          class="_zoom-button _zoom-in"
+          icon="minus"
           size="xxs"
-          :style="getZoomInButtonStyles()"
           @click="zoomIn"
-        />
+        >
+          <template>
+            <div class="_icon-inner" />
+          </template>
+        </SfIcon>
+
         <SfIcon
-          class="_zoom-button"
-          icon="chevron_down"
+          class="_zoom-button _zoom-out"
           size="xxs"
-          :style="getZoomOutButtonStyles()"
           @click="zoomOut"
-        />
+        >
+          <template>
+            <div class="_icon-inner" />
+          </template>
+        </SfIcon>
+
         <div
           class="vue-croppie-container"
           :style="getVueCroppieContainerStyles()"
@@ -35,7 +32,7 @@
               ref="croppieRef"
               :boundary="{
                 width: 'calc(100% - 2px)',
-                height: 'calc(100% - 58px)',
+                height: 'calc(100% - 2px)',
               }"
               :viewport="{
                 width: '100%',
@@ -48,10 +45,7 @@
           </NoSSR>
         </div>
 
-        <div
-          class="_preview-container"
-          :style="getPreviewContainerStyle()"
-        >
+        <div class="_preview-container" :style="getPreviewContainerStyle()">
           <slot />
         </div>
       </div>
@@ -71,7 +65,7 @@ import { SfIcon } from '@storefront-ui/vue';
 
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
 import { PropType } from 'vue/types/options';
-import { isServer } from '@vue-storefront/core/helpers'
+import { isServer } from '@vue-storefront/core/helpers';
 
 import { InjectType } from 'src/modules/shared';
 
@@ -108,7 +102,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       croppieBoundaryOffsetSize: DEFAULT_CROPPIE_OFFSET_SIZE,
       croppieBoundaryOffsetPosition: '',
       resizeHandler: undefined as (() => void) | undefined
-    }
+    };
   },
   methods: {
     getCroppedBackground (): Promise<string | undefined> {
@@ -131,15 +125,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     getVueCroppieContainerStyles () {
       let styles =
-            'width: ' +
-            this.croppieWidth.toString() +
-            '%; height: ' +
-            this.croppieHeight.toString() +
-            '%;';
+        'width: ' +
+        this.croppieWidth.toString() +
+        '%; height: ' +
+        this.croppieHeight.toString() +
+        '%;';
 
       if (
         !this.croppieBoundaryOffsetSize ||
-            !this.croppieBoundaryOffsetPosition
+        !this.croppieBoundaryOffsetPosition
       ) {
         return styles;
       }
@@ -148,7 +142,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return styles;
       }
 
-      styles += 'margin-left: ' + this.croppieBoundaryOffsetSize.toString() + '%;';
+      styles +=
+        'margin-left: ' + this.croppieBoundaryOffsetSize.toString() + '%;';
 
       return styles;
     },
@@ -160,32 +155,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return croppie.$el.getElementsByClassName('cr-slider-wrap').item(0) as
-            | HTMLElement
-            | undefined;
-    },
-    getZoomOutButtonStyles () {
-      let styles = 'left: 0;';
-
-      if (
-        this.croppieBoundaryOffsetSize &&
-            this.croppieBoundaryOffsetPosition === 'left'
-      ) {
-        styles =
-                'left: ' + this.croppieBoundaryOffsetSize.toString() + '%;';
-      }
-      return styles;
-    },
-    getZoomInButtonStyles () {
-      let styles = 'right: 0;';
-
-      if (
-        this.croppieBoundaryOffsetSize &&
-            this.croppieBoundaryOffsetPosition === 'right'
-      ) {
-        const offsetSize = this.croppieBoundaryOffsetSize - 3;
-        styles += 'right: ' + offsetSize.toString() + '%;';
-      }
-      return styles;
+        | HTMLElement
+        | undefined;
     },
     getCroppieContainer (): VueCroppieComponent | undefined {
       return this.$refs['croppieRef'] as VueCroppieComponent | undefined;
@@ -246,7 +217,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      zoomSection.style.marginBottom = this.croppieBoundaryOffsetSize.toString() + '%';
+      zoomSection.style.marginBottom =
+        this.croppieBoundaryOffsetSize.toString() + '%';
     },
     reassignBackgroundImage () {
       if (this.backgroundImageUrl === undefined) {
@@ -272,12 +244,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       await croppie.bind({
         url: imageUrl,
-        zoom: 0.5
+        zoom: 0
       });
 
       this.previousWidth = this.window.innerWidth;
 
       this.isImageAssigned = true;
+
+      this.$emit('background-image-assigned');
     }
   },
   created (): void {
@@ -294,10 +268,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return;
     }
 
-    this.resizeHandler = throttle(
-      () => this.reassignBackgroundImage(),
-      300
-    );
+    this.resizeHandler = throttle(() => this.reassignBackgroundImage(), 300);
 
     this.window.addEventListener('resize', this.resizeHandler);
   },
@@ -331,83 +302,114 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       deep: true
     }
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
 .m-background-editor {
+  position: relative;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .vue-croppie-container {
     position: relative;
+  }
 
-    ._helper-text {
-        font-size: var(--font-xs);
-        font-weight: var(--font-medium);
-        margin-top: var(--spacer-sm);
+  ._helper-text {
+    font-size: var(--font-xs);
+    font-weight: var(--font-medium);
+    margin-top: var(--spacer-sm);
+  }
+
+  ._croppie-stage {
+    position: relative;
+    padding-top: 100%;
+
+    ._croppie-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
 
-    ._croppie-stage {
-        margin-top: 1em;
-        position: relative;
-        padding-top: calc(100% + 56px);
+    .croppie-container {
+      display: flex;
+      flex-flow: column;
 
-        ._croppie-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+      ::v-deep .cr-slider-wrap {
+        display: none;
+        order: 1;
+        height: 26px;
+
+        .cr-slider {
+          height: 19px;
+          max-width: 95%;
         }
+      }
 
-        .croppie-container {
-            display: flex;
-            flex-flow: column;
+      ::v-deep .cr-boundary {
+        margin-left: 1px;
+        margin-top: 1px;
+        order: 2;
 
-            ::v-deep .cr-slider-wrap {
-                order: 1;
-                height: 26px;
-
-                .cr-slider {
-                    height: 19px;
-                    max-width: 95%;
-                }
-            }
-
-            ::v-deep .cr-boundary {
-                margin-left: 1px;
-                order: 2;
-
-                .cr-viewport {
-                    border: none;
-                }
-            }
+        .cr-viewport {
+          border: none;
         }
-
-        ._zoom-button {
-            background-size: cover;
-            box-sizing: content-box;
-            cursor: pointer;
-            font-size: 24px;
-            height: 24px;
-            line-height: 1;
-            padding: 16px 6px;
-            position: absolute;
-            width: 24px;
-        }
+      }
     }
 
-    ._preview-container {
-        height: calc(100% - 56px);
-        left: 0;
-        pointer-events: none;
-        position: absolute;
-        top: 55px;
+    ._zoom-button {
+      background-size: cover;
+      box-sizing: content-box;
+      cursor: pointer;
+      font-size: 24px;
+      height: 24px;
+      line-height: 1;
+      padding: 0 6px 8px;
+      position: absolute;
+      width: 24px;
+      top: -30px;
+
+      ._icon-inner {
         width: 100%;
-        z-index: 10;
-    }
+        height: 100%;
+      }
 
-    &.-disabled {
-        ._croppie-stage {
-            pointer-events: none;
+      &._zoom-in {
+        right: 0;
+
+        ._icon-inner {
+          background: url('/assets/images/phrasePillow/zoom-in.svg');
         }
+      }
+
+      &._zoom-out {
+        left: 0;
+
+        ._icon-inner {
+          background: url('/assets/images/phrasePillow/zoom-out.svg');
+        }
+      }
     }
+  }
+
+  ._preview-container {
+    height: 100%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+  }
+
+  &.-disabled {
+    ._croppie-stage {
+      pointer-events: none;
+    }
+  }
 }
 </style>

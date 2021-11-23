@@ -30,6 +30,7 @@
         @processfiles="onAllFilesProcessed"
         @addfile="onFileAdded"
         @processfileabort="onFileAbort"
+        @removefile="onFileRemove"
       />
     </div>
   </div>
@@ -40,7 +41,7 @@
 import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 
-import Vue, { VueConstructor } from 'vue';
+import Vue, { PropType, VueConstructor } from 'vue';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
 import { File as FilePond, Status } from 'filepond';
@@ -60,6 +61,8 @@ import {
   FileProcessingRepository,
   ImageType
 } from 'src/modules/file-storage';
+
+import CustomerImage from '../interfaces/customer-image.interface';
 
 // Create component
 const FilePondComponent = vueFilePond(
@@ -119,6 +122,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     disabled: {
       type: Boolean,
       default: false
+    },
+    initialItems: {
+      type: Array as PropType<CustomerImage[]>,
+      default: () => []
     }
   },
   data () {
@@ -142,18 +149,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return result;
     },
     files (): FilePondInitialFile[] | undefined {
-      if (!this.file) {
-        return undefined;
-      }
-
-      return [
-        {
-          source: this.file,
-          options: {
-            type: 'local'
-          }
+      return this.initialItems.map((item) => ({
+        source: item.url,
+        options: {
+          type: 'local',
+          name: item.id
         }
-      ];
+      }));
     },
     isBusy (): boolean {
       if (
@@ -195,6 +197,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     });
   },
   methods: {
+    onFileRemove (error, event) {
+      this.$emit('file-removed', event.filenameWithoutExtension);
+    },
     clearInput (): void {
       const fileInput = this.getFileInput();
       if (!fileInput) {

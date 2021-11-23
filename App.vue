@@ -8,11 +8,12 @@
 
 <script>
 import get from 'lodash-es/get'
+import config from 'config';
 
 import DefaultLayout from './layouts/Default'
 import MinimalLayout from './layouts/Minimal'
 
-import { FileProcessingRepositoryFactory, itemFactory } from 'src/modules/file-storage'
+import { FileProcessingRepositoryFactory, ImageHandlerService, itemFactory } from 'src/modules/file-storage'
 import { ErrorConverterService } from 'src/modules/budsies'
 import { isServer } from '@vue-storefront/core/helpers'
 
@@ -21,6 +22,9 @@ const errorConverterService = new ErrorConverterService();
 const fileProcessingRepositoryFactory = new FileProcessingRepositoryFactory(
   itemFactory
 );
+const imageHandlerService = new ImageHandlerService(
+  config.images.imageHandlerServiceUrl
+)
 
 export default {
   components: {
@@ -35,6 +39,7 @@ export default {
   provide: {
     ErrorConverterService: errorConverterService,
     FileProcessingRepositoryFactory: fileProcessingRepositoryFactory,
+    ImageHandlerService: imageHandlerService,
     WindowObject: windowObject
   }
 };
@@ -74,8 +79,7 @@ body {
 html,
 body,
 #app,
-.default-layout,
-#viewport {
+.default-layout {
   height: 100%;
 }
 
@@ -85,7 +89,9 @@ body,
   flex-direction: column;
   min-height: 100%;
   .content {
+    display: flex;
     flex: 1 0 auto;
+    flex-direction: column;
   }
   .o-footer {
     flex: 0 0 auto;

@@ -2,6 +2,7 @@
   <div id="forevers-product" itemscope itemtype="http://schema.org/Product">
     <o-forevers-creation-wizard
       :artwork-upload-url="artworkUploadUrl"
+      :existing-plushie-id="existingPlushieId"
     />
   </div>
 </template>
@@ -29,6 +30,9 @@ export default Vue.extend({
     },
     artworkUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
+    },
+    existingPlushieId (): string {
+      return this.$route.query?.id;
     }
   },
   async asyncData ({ store, route, context }): Promise<void> {
@@ -65,6 +69,7 @@ export default Vue.extend({
   @include for-desktop {
     max-width: 77.5rem;
     margin: 0 auto;
+    width: 100%;
   }
 }
 

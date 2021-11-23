@@ -2,13 +2,14 @@
   <div class="default-layout" :class="{'storyblok-preview-mode': isStoryblokPreviewMode}">
     <MLoader />
     <div id="viewport">
+      <PromotionPlatformBanner />
       <OTopNavigation />
       <OHeader />
       <OMicrocart />
       <div class="content">
         <slot />
       </div>
-      <OFooter />
+      <OFooter class="default-layout_footer" :class="{'-hide-on-mobile': hideFooterOnMobile}" />
       <OModal />
       <ONotification />
       <MCookieNotification />
@@ -34,8 +35,11 @@ import Head from 'theme/head';
 import config from 'config';
 import { ModalList } from 'theme/store/ui/modals'
 
+import PromotionPlatformBanner from 'src/modules/promotion-platform/components/Banner.vue';
+
 export default {
   components: {
+    PromotionPlatformBanner,
     OHeader,
     OMicrocart,
     OFooter,
@@ -57,6 +61,9 @@ export default {
     },
     isStoryblokPreviewMode () {
       return this.$route.query.hasOwnProperty('_storyblok')
+    },
+    hideFooterOnMobile () {
+      return this.$route.name === 'pillowSideDesign-product';
     }
   },
   beforeMount () {
@@ -117,11 +124,21 @@ export default {
 </script>
 
 <style lang="scss">
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .default-layout {
   &.storyblok-preview-mode {
     a,
     button {
       pointer-events: none;
+    }
+  }
+
+  @media (max-width: $tablet-min) {
+    .default-layout_footer {
+      &.-hide-on-mobile {
+        display: none;
+      }
     }
   }
 }

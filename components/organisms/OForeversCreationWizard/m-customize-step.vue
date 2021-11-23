@@ -55,7 +55,7 @@
         :name="bodypart.code"
         v-model="bodypartsValues[bodypart.id]"
         :max-values="bodypart.maxValues"
-        :options="getBodypartValues(bodypart)"
+        :options="getBodypartOptions(bodypart.id)"
         type="bodypart"
         :disabled="disabled"
       />
@@ -140,7 +140,7 @@
             <SfSelectOption
               v-for="option in productionTimeOptions"
               :key="option.id"
-              :value="option"
+              :value="option.optionValueId ? option.optionValueId : ''"
             >
               {{ option.text }}
             </SfSelectOption>
@@ -287,10 +287,7 @@ import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
 
 import { isVue } from 'src/modules/shared';
-import {
-  Bodypart,
-  BodypartValue
-} from 'src/modules/budsies';
+import { Bodypart } from 'src/modules/budsies';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
@@ -364,10 +361,10 @@ export default Vue.extend({
   },
   computed: {
     selectedAddons: {
-      get (): AddonOption[] {
+      get (): number[] {
         return this.value.addons;
       },
-      set (value: AddonOption[]): void {
+      set (value: number[]): void {
         const newValue = { ...this.value, addons: value };
         this.$emit('input', newValue);
       }
@@ -400,10 +397,10 @@ export default Vue.extend({
       }
     },
     productionTime: {
-      get (): ProductionTimeOption | undefined {
+      get (): number | undefined {
         return this.value.productionTime;
       },
-      set (value: ProductionTimeOption | undefined): void {
+      set (value: number | undefined): void {
         const newValue: ForeversWizardCustomizeStepData = { ...this.value, productionTime: value };
         this.$emit('input', newValue);
       }
@@ -429,7 +426,7 @@ export default Vue.extend({
           price: productLink.product.final_price,
           images: images,
           optionId: this.addonsBundleOption.option_id,
-          optionValueId: productLink.id.toString(),
+          optionValueId: ((typeof productLink.id === 'number') ? productLink.id : Number.parseInt(productLink.id, 10) as number),
           videoUrl: (productLink.product as any).video_url
         });
       }
@@ -449,6 +446,9 @@ export default Vue.extend({
 
       return bodyparts;
     },
+    getBodypartOptions (): (id: string) => BodypartOption[] {
+      return this.$store.getters['budsies/getBodypartOptions']
+    },
     isProductionOptionsAvailable (): boolean {
       return this.productionTimeOptions.length !== 0;
     },
@@ -461,29 +461,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    getBodypartValues (bodypart: Bodypart): BodypartOption[] {
-      const bodypartsValues: BodypartValue[] = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
-
-      if (!bodypartsValues.length) {
-        return [];
-      }
-
-      const result: BodypartOption[] = [];
-
-      for (const bodypartValue of bodypartsValues) {
-        result.push({
-          id: bodypartValue.id,
-          label: bodypartValue.name,
-          value: bodypartValue.code,
-          isSelected: false,
-          contentTypeId: bodypartValue.contentTypeId,
-          color: bodypartValue.color,
-          image: bodypartValue.image
-        });
-      }
-
-      return result;
-    },
     getFieldAnchorName (field: string): string {
       field = field.toLowerCase().replace(/ /g, '-');
 
@@ -518,11 +495,11 @@ export default Vue.extend({
     }
   },
   mounted () {
-    if (!this.productionTimeOptions.length) {
+    if (!this.productionTimeOptions.length || this.productionTime) {
       return;
     }
 
-    this.productionTime = this.productionTimeOptions[0];
+    this.productionTime = this.productionTimeOptions[0].optionValueId;
   }
 });
 

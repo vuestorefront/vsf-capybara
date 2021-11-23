@@ -157,73 +157,9 @@
         </div>
       </SfAccordionItem>
     </SfAccordion>
-    <SfTable class="sf-table--bordered table desktop-only">
-      <SfTableHeading class="table__row">
-        <SfTableHeader class="table__header table__image">
-          {{ $t('Thumbnail') }}
-        </SfTableHeader>
-        <SfTableHeader
-          v-for="tableHeader in tableHeaders"
-          :key="tableHeader"
-          class="table__header"
-          :class="{
-            table__description: tableHeader === $t('Description'),
-            table__price: tableHeader === $t('Price')
-          }"
-        >
-          {{ tableHeader }}
-        </SfTableHeader>
-      </SfTableHeading>
-      <SfTableRow
-        v-for="product in productsInCart"
-        :key="product.id + product.checksum"
-        class="table__row"
-      >
-        <SfTableData class="table__image">
-          <SfImage :src="getThumbnailForProduct(product)" />
-        </SfTableData>
-        <SfTableData class="table__description">
-          <div class="product-title">
-            {{ product.name | htmlDecode }}
-          </div>
-          <div
-            class="bundle-product-option"
-            v-for="option in getBundleProductOptions(product)"
-            :key="option"
-          >
-            <SfIcon
-              icon="check"
-              size="xxs"
-              color="blue-primary"
-              class="bundle-product-option__icon"
-            />
-            {{ option }}
-          </div>
-          <div
-            class="product-options"
-            v-for="option in getProductOptions(product)"
-            :key="option.label"
-          >
-            <template v-if="isCustomOption(product, option)">
-              {{ option.label }}: {{ option.value }}
-            </template>
-            <template v-else>
-              {{ option.value }}
-            </template>
-          </div>
-        </SfTableData>
-        <SfTableData class="table__data">
-          {{ product.qty }}
-        </SfTableData>
-        <SfTableData class="table__data">
-          <SfPrice
-            :regular="getProductRegularPrice(product)"
-            :special="getProductSpecialPrice(product)"
-            class="product-price"
-          />
-        </SfTableData>
-      </SfTableRow>
-    </SfTable>
+
+    <o-cart-items-table :cart-items="productsInCart" />
+
     <div class="summary mobile-only">
       <div class="summary__content">
         <SfHeading
@@ -282,9 +218,12 @@
       </div>
       <MPriceSummary class="totals__element" />
     </div>
+    <div class="_braintree-widget">
+      <braintree-dropin v-if="paymentMethod === 'Braintree'" />
+    </div>
     <div class="actions">
       <SfButton
-        class="sf-button--full-width actions__button"
+        class="sf-button--full-width actions__button place-order-btn"
         :disabled="$v.orderReview.$invalid || !productsInCart.length"
         @click="placeOrder"
       >
@@ -325,10 +264,17 @@ import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
 import { createSmoothscroll } from 'theme/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
+import { ProductId } from 'src/modules/budsies';
+import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
+
+import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 
 export default {
   name: 'OConfirmOrder',
   components: {
+    APromoCode,
+    MPriceSummary,
+    OCartItemsTable,
     SfIcon,
     SfImage,
     SfPrice,
@@ -340,17 +286,11 @@ export default {
     SfCharacteristic,
     SfCollectedProduct,
     SfProperty,
-    APromoCode,
-    MPriceSummary
+    BraintreeDropin
   },
   mixins: [OrderReview],
   data () {
     return {
-      tableHeaders: [
-        this.$t('Description'),
-        this.$t('Quantity'),
-        this.$t('Price')
-      ],
       characteristics: [
         {
           title: this.$t('Safety'),
@@ -447,7 +387,9 @@ export default {
 
       product.bundle_options.forEach(option => {
         // Hide Forevers simple products
-        if ([73, 74, 75].includes(product.id) && option.title.toLowerCase() === 'product') {
+        if ([ProductId.FOREVERS_DOG, ProductId.FOREVERS_CAT, ProductId.FOREVERS_OTHER]
+          .includes(product.id) && option.title.toLowerCase() === 'product'
+        ) {
           return;
         }
 
@@ -501,58 +443,7 @@ export default {
     --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
   }
 }
-.table {
-  margin: 0 0 var(--spacer-base) 0;
-  &__row {
-    justify-content: space-between;
-    align-items: center;
-  }
-  .sf-table {
-    &__data {
-      --table-data-color: var(--c-text);
-    }
-    &__row {
-      --table-row-box-shadow: none;
-    }
-  }
-  @include for-desktop {
-    &__header {
-      text-align: center;
-      &:last-child {
-        text-align: right;
-      }
-    }
-    &__data {
-      text-align: center;
-    }
-    &__description {
-      text-align: left;
-      flex: 1 0 12rem;
 
-      .product-title {
-        font-weight: var(--font-semibold);
-
-      }
-
-      .bundle-product-option {
-        font-size: var(--font-xs);
-
-        &__icon {
-          display: inline-block;
-        }
-      }
-    }
-    &__image {
-      --image-width: 5.125rem;
-      text-align: left;
-    }
-  }
-}
-.product-price {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
 // .a-promo-code {
 //   margin-top: var(--spacer-xl);
 // }
@@ -707,5 +598,8 @@ a {
     max-width: 100%;
     width: 20rem;
   }
+}
+._braintree-widget {
+  margin-top: var(--spacer-base);
 }
 </style>

@@ -1,6 +1,9 @@
 <template>
-  <div id="detailed-cart">
-    <div class="detailed-cart">
+  <div id="detailed-cart" :class="{ '-loading': isLoading }">
+    <div class="loader-container" v-if="isLoading">
+      <div class="loader" />
+    </div>
+    <div class="detailed-cart" v-else>
       <div class="detailed-cart__main">
         <SfBreadcrumbs
           class="breadcrumbs desktop-only"
@@ -21,7 +24,6 @@
                 image-width="140"
                 image-height="140"
                 :title="product.name"
-                :link="getProductLink(product)"
                 class="sf-collected-product--detailed collected-product"
                 @input="changeQuantity(product, $event)"
               >
@@ -59,7 +61,7 @@
                   <div />
                 </template>
                 <template #actions>
-                  <SfButton class="sf-button--text actions__button">
+                  <SfButton class="sf-button--text actions__button" @click="editHandler(product)">
                     Edit
                   </SfButton>
                   <SfButton
@@ -161,11 +163,12 @@ import {
   SfIcon
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
+import { ProductId } from 'src/modules/budsies';
+
 export default {
   name: 'DetailedCart',
   components: {
@@ -243,7 +246,8 @@ export default {
           text: 'Cart',
           link: '/cart'
         }
-      ]
+      ],
+      isMounted: false
     };
   },
   props: {
@@ -253,6 +257,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      cartIsLoaded: (state) => state.cart.cartIsLoaded
+    }),
     ...mapGetters({
       products: 'cart/getCartItems'
     }),
@@ -261,9 +268,19 @@ export default {
         (totalItems, product) => totalItems + parseInt(product.qty, 10),
         0
       );
+    },
+    isLoading () {
+      return !this.isMounted || !this.cartIsLoaded;
     }
   },
+  async mounted () {
+    await this.$nextTick();
+    this.isMounted = true;
+  },
   methods: {
+    editHandler (product) {
+      this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } })
+    },
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
         ? product.totals.options
@@ -275,9 +292,6 @@ export default {
       }
 
       return product.custom_options.find(option => option.title === productOption.label) !== undefined;
-    },
-    getProductLink (product) {
-      return formatProductLink(product);
     },
     getProductRegularPrice (product) {
       return getProductPrice(product, {}).regular;
@@ -310,7 +324,9 @@ export default {
 
       product.bundle_options.forEach(option => {
         // Hide Forevers simple products
-        if ([73, 74, 75].includes(product.id) && option.title.toLowerCase() === 'product') {
+        if ([ProductId.FOREVERS_DOG, ProductId.FOREVERS_CAT, ProductId.FOREVERS_OTHER]
+          .includes(product.id) && option.title.toLowerCase() === 'product'
+        ) {
           return;
         }
 
@@ -352,12 +368,38 @@ export default {
 @import "~@storefront-ui/vue/styles";
 #detailed-cart {
   box-sizing: border-box;
+
+  &.-loading {
+    height: 100%;
+  }
+
   @include for-desktop {
     max-width: 1272px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 var(--spacer-sm);
   }
 }
+
+.loader-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .loader {
+    position: absolute;
+    width: 4.8em;
+    height: 4.8em;
+    border-radius: 100%;
+    border: 2px solid var(--c-secondary);
+    border-bottom-color: var(--c-primary);
+    animation: rotate 1s linear infinite;
+  }
+}
+
 .breadcrumbs {
   padding: var(--spacer-base) 0;
 }
@@ -400,6 +442,9 @@ export default {
   }
   &__main {
     padding: 0 var(--spacer-sm);
+    position: relative;
+    z-index: 1;
+
     @include for-desktop {
       padding: 0;
     }
@@ -446,6 +491,14 @@ export default {
   --collected-product-title-font-weight: var(--font-semibold);
   border: 1px solid var(--c-light);
   border-width: 1px 0 0 0;
+
+  ::v-deep {
+    .sf-link {
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
   &__properties {
     font-size: var(--font-sm);
     margin-bottom: var(--spacer-sm);

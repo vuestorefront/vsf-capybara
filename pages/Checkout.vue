@@ -14,7 +14,10 @@
       </div>
       <div class="checkout__aside desktop-only">
         <transition name="fade">
-          <OOrderSummary v-if="currentStep <= 2" class="checkout__aside-order" />
+          <div v-if="currentStep <= 2">
+            <OCartItemsTable :cart-items="productsInCart" :should-show-header="false" />
+            <OOrderSummary class="checkout__aside-order" />
+          </div>
           <OOrderReview v-else class="checkout__aside-order" />
         </transition>
       </div>
@@ -32,6 +35,8 @@ import OOrderReview from 'theme/components/organisms/o-order-review';
 import OOrderSummary from 'theme/components/organisms/o-order-summary';
 import OOrderConfirmation from 'theme/components/organisms/o-order-confirmation';
 import OPersonalDetails from 'theme/components/organisms/o-personal-details';
+import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Checkout',
@@ -43,6 +48,7 @@ export default {
     OOrderSummary,
     OConfirmOrder,
     OPersonalDetails,
+    OCartItemsTable,
     OOrderConfirmation
   },
   mixins: [Checkout],
@@ -73,6 +79,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      productsInCart: 'cart/getCartItems'
+    }),
     currentStep () {
       return this.steps.findIndex(step => this.activeSection[step.key]);
     }
@@ -138,7 +147,8 @@ export default {
     padding: 0 var(--spacer-sm);
     max-width: 1272px;
     margin: 0 auto;
-  }
+    width: 100%;
+}
 }
 .checkout {
   --steps-content-padding: 0 var(--spacer-sm);

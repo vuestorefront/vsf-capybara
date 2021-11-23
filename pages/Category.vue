@@ -110,14 +110,10 @@
               tag="div"
               class="products__grid"
             >
-              <SfProductCard
+              <o-product-card
                 v-for="product in products"
                 :key="product.id"
-                :title="product.title"
-                :image="product.image"
-                :regular-price="product.price.regular"
-                :special-price="product.price.special"
-                :link="product.link"
+                :product="product"
                 link-tag="router-link"
                 :wishlist-icon="false"
                 class="products__product-card"
@@ -232,9 +228,10 @@ import {
   SfMenuItem,
   SfAccordion,
   SfPagination,
-  SfBreadcrumbs,
-  SfProductCard
+  SfBreadcrumbs
 } from '@storefront-ui/vue';
+
+import OProductCard from 'theme/components/organisms/o-product-card';
 
 const THEME_PAGE_SIZE = 12;
 const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
@@ -273,8 +270,9 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
 export default {
   name: 'CategoryPage',
   components: {
-    LazyHydrate,
     ASortIcon,
+    LazyHydrate,
+    OProductCard,
     SfIcon,
     SfList,
     SfColor,
@@ -286,8 +284,7 @@ export default {
     SfMenuItem,
     SfAccordion,
     SfPagination,
-    SfBreadcrumbs,
-    SfProductCard
+    SfBreadcrumbs
   },
   mixins: [onBottomScroll],
   data () {
@@ -615,9 +612,11 @@ export default {
 
 #category {
   box-sizing: border-box;
+
   @include for-desktop {
     max-width: 1272px;
     margin: 0 auto;
+    width: 100%;
   }
 
   .category__short-description,

@@ -41,6 +41,7 @@ import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
+import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers'
 
 export default {
   name: 'Product',
@@ -72,7 +73,6 @@ export default {
     ...mapGetters({
       getCurrentCategory: 'category-next/getCurrentCategory',
       getCurrentProduct: 'product/getCurrentProduct',
-      getProductGallery: 'product/getProductGallery',
       getCurrentProductConfiguration: 'product/getCurrentProductConfiguration',
       getOriginalProduct: 'product/getOriginalProduct',
       attributesByCode: 'attribute/attributeListByCode',
@@ -95,6 +95,15 @@ export default {
     },
     isOnline () {
       return onlineHelper.isOnline;
+    },
+    getProductGallery () {
+      const currentConfiguration = this.getCurrentProductConfiguration;
+
+      if (!currentConfiguration || Object.keys(currentConfiguration).length === 0) {
+        return this.$store.getters['product/getProductGallery'];
+      }
+
+      return this.getCurrentConfigurationProductGallery(currentConfiguration);
     },
     getCustomAttributes () {
       return Object.values(this.attributesByCode)
@@ -152,6 +161,22 @@ export default {
       await filterChangedProduct(selectedConfiguration, this.$store, this.$router)
       this.getQuantity();
     },
+    getCurrentConfigurationProductGallery (currentConfiguration) {
+      const idByCodeDictionary = {}
+
+      const attributeCodes = this.getCurrentProduct.configurable_options.map((option) => option.attribute_code);
+      attributeCodes.forEach((code) => {
+        if (currentConfiguration[code] && currentConfiguration[code].id) {
+          idByCodeDictionary[code] = currentConfiguration[code].id;
+        }
+      })
+
+      const child = this.getCurrentProduct.configurable_children.find((item) => {
+        return attributeCodes.every((code) => item[code].toString() === idByCodeDictionary[code]);
+      })
+
+      return getMediaGallery(child);
+    },
     async getQuantity () {
       if (this.stock.isLoading) return; // stock info is already loading
       this.stock.isLoading = true;
@@ -160,7 +185,7 @@ export default {
           product: this.getCurrentProduct,
           qty: this.getCurrentProduct.qty
         });
-        this.manageQuantity = res.isManageStock;
+        this.stock.manageQuantity = res.isManageStock;
         this.stock.max = res.isManageStock ? res.qty : null;
       } finally {
         this.stock.isLoading = false;
@@ -194,6 +219,7 @@ export default {
   box-sizing: border-box;
   @include for-desktop {
     max-width: 1272px;
+    width: 100%;
     margin: 0 auto;
   }
 }

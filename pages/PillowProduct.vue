@@ -104,6 +104,7 @@ export default {
 
   @media (min-width: $tablet-min) {
     max-width: 1272px;
+    width: 100%;
     margin: 0 auto;
   }
 }
