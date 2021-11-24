@@ -17,6 +17,7 @@ import Vue from 'vue';
 import * as types from '@vue-storefront/core/modules/cart/store/mutation-types'
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { Logger } from '@vue-storefront/core/lib/logger';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import {
   SfButton,
   SfHeading
@@ -49,7 +50,9 @@ export default Vue.extend({
 
       this.$store.commit('cart/' + types.CART_LOAD_CART_SERVER_TOKEN, cartToken)
 
-      this.$store.dispatch('cart/load', { forceClientState: false })
+      await this.$store.dispatch('cart/load', { forceClientState: false })
+
+      EventBus.$emit('after-cart-recovery', cartToken)
 
       this.$router.push(localizedRoute('/cart'))
     } catch (error) {
