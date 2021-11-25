@@ -17,6 +17,8 @@ export default function registerComponents () {
   add('sharing', () => import('./Sharing.vue'))
   add('expandable_text_block', () => import('./ExpandableText.vue'))
   add('hr', () => import('./HorizontalRule.vue'))
+  add('affirm_educational_message', () => import('./AffirmEducationalMessage.vue'))
+  add('affirm_monthly_payment', () => import('./AffirmMonthlyPayment.vue'))
 
   // add('product', () => import('./Product.vue'))
   // add('category', () => import('./Category.vue'))
