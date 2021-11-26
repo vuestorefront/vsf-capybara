@@ -53,9 +53,6 @@
           :stock="productStock"
         />
       </div>
-      <MProductAdditionalInfo
-        :product="product"
-      />
     </div>
   </div>
 </template>

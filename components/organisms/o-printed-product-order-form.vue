@@ -148,14 +148,14 @@
       </div>
     </div>
 
-    <div class="_description">
+    <div class="_description" v-if="showDescription">
       <header class="sf-heading">
         <h3 class="sf-heading__title sf-heading__title--h3">
           Product Details
         </h3>
       </header>
 
-      <div class="_product-description" v-html="description" />
+      <Blok :item="story.content" class="_additional-info-story" />
     </div>
   </div>
 </template>
@@ -176,6 +176,7 @@ import Product from 'core/modules/catalog/types/Product';
 import { getProductPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import BlockData from 'src/modules/vsf-storyblok-module/types/block-data.interface';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
@@ -216,6 +217,8 @@ export interface SelectOption {
   specialPrice: number
 }
 
+const storyParentFolderName = 'product-descriptions'
+
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPrintedProductOrderForm',
   components: {
@@ -253,7 +256,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         storageItems: []
       } as ExtraFacesConfiguratorData,
       isSubmitting: false,
-      shouldShowDesignSelector: true
+      shouldShowDesignSelector: true,
+      story: false as false | {content: BlockData}
     }
   },
   computed: {
@@ -468,7 +472,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.shortDescription;
+    },
+    showDescription () {
+      return this.story && this.story.content;
     }
+  },
+  mounted () {
+    this.loadProductStory();
   },
   methods: {
     ...mapMutations('product', {
@@ -554,6 +564,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     goToCrossSells (): void {
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
+    },
+    async loadProductStory () {
+      const response = await this.$store.dispatch(`storyblok/loadStory`, {
+        fullSlug: `${storyParentFolderName}/${this.product.sku}`
+      });
+
+      this.story = response;
     }
   },
   created (): void {
