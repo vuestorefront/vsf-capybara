@@ -45,6 +45,9 @@ import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers'
 
 export default {
   name: 'Product',
+  inject: {
+    window: { from: 'WindowObject' }
+  },
   components: {
     LazyHydrate,
     MRelatedProducts,
@@ -130,6 +133,9 @@ export default {
       }
     }
   },
+  mounted () {
+    this.updateDataLayer();
+  },
   async asyncData ({ store, route, context }) {
     if (context) context.output.cacheTags.add('product')
     const product = await store.dispatch('product/loadProduct', {
@@ -190,6 +196,35 @@ export default {
       } finally {
         this.stock.isLoading = false;
       }
+    },
+    updateDataLayer () {
+      if (!this.window.dataLayer) {
+        return;
+      }
+
+      const product = this.getCurrentProduct;
+      const productCategoriesNames = product.category.map((category) => category.name).join('|');
+
+      this.window.dataLayer.push(
+        {
+          pageCategory: 'product-detail'
+        },
+        {
+          ecommerce: {
+            detail: {
+              actionField: {
+                list: 'Catalog'
+              },
+              products: {
+                name: product.name,
+                id: product.parentSku,
+                price: product.final_price,
+                category: productCategoriesNames
+              }
+            }
+          }
+        }
+      );
     }
   },
   metaInfo () {

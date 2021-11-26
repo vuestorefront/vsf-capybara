@@ -101,6 +101,7 @@
                   >
                     <router-link
                       :to="action.url"
+                      @click.native="onDropdownActionClick(action)"
                     >
                       {{ action.label }}
                     </router-link>
@@ -171,6 +172,9 @@ import { ProductId } from 'src/modules/budsies';
 
 export default {
   name: 'DetailedCart',
+  inject: {
+    window: { from: 'WindowObject' }
+  },
   components: {
     SfPrice,
     SfList,
@@ -261,7 +265,8 @@ export default {
       cartIsLoaded: (state) => state.cart.cartIsLoaded
     }),
     ...mapGetters({
-      products: 'cart/getCartItems'
+      products: 'cart/getCartItems',
+      coupon: 'cart/getCoupon'
     }),
     totalItems () {
       return this.products.reduce(
@@ -274,6 +279,7 @@ export default {
     }
   },
   async mounted () {
+    this.updateDataLayer();
     await this.$nextTick();
     this.isMounted = true;
   },
@@ -360,6 +366,33 @@ export default {
         product: product,
         qty: newQuantity
       }).finally(() => { this.isUpdatingQuantity = false });
+    },
+    onDropdownActionClick (action) {
+      this.sendMakeAnotherFromCartEvent(action);
+    },
+    sendMakeAnotherFromCartEvent (action) {
+      if (!this.$gtm) {
+        return;
+      }
+
+      this.$gtm.trackEvent({
+        event: 'makeAnotherFromCart',
+        'makeAnotherFromCart.product': action.label
+      })
+    },
+    updateDataLayer () {
+      if (!this.window.dataLayer) {
+        return;
+      }
+
+      this.window.dataLayer.push({
+        actionName: 'Add to Cart',
+        couponCode: this.coupon ? this.coupon.code : '',
+        products: this.products.map((productsNames, product, index) => {
+          productsNames += index === 0 ? product.name : `,${product.name}`;
+          return productsNames;
+        }, '')
+      })
     }
   }
 };

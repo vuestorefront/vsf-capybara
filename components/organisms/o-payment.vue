@@ -150,7 +150,7 @@
         <SfButton
           class="sf-button--full-width form__action-button"
           :disabled="$v.payment.$invalid"
-          @click="sendDataToCheckout"
+          @click="onContinueButtonClick"
         >
           {{ $t("Go review the order") }}
         </SfButton>
@@ -300,6 +300,13 @@ export default {
       document.documentElement.scrollTop || document.body.scrollTop,
       0
     );
+  },
+  methods: {
+    onContinueButtonClick () {
+      this.$emit('sendEvent', 'opcBilling');
+      this.$emit('sendEvent', 'opcPayment');
+      this.sendDataToCheckout();
+    }
   },
   watch: {
     getPaymentCountry: {

@@ -47,7 +47,17 @@ export default {
   },
   methods: {
     goToCheckout () {
+      this.sendEvent();
       this.$router.push(localizedRoute('/checkout'));
+    },
+    sendEvent () {
+      if (!this.$gtm) {
+        return;
+      }
+
+      this.$gtm.trackEvent({
+        event: 'goToCheckoutFromCart'
+      })
     }
   }
 };

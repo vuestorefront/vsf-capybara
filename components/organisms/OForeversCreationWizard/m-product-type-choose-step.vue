@@ -139,6 +139,7 @@ export default Vue.extend({
 
         const newValue: ForeversWizardProductTypeStepData = { product, plushieId };
 
+        this.sendEvent(type);
         this.$emit('input', newValue);
         this.$emit('next-step');
       } catch (error) {
@@ -146,6 +147,16 @@ export default Vue.extend({
       } finally {
         this.isSubmitting = false;
       }
+    },
+    sendEvent (type: string) {
+      if (!this.$gtm) {
+        return;
+      }
+
+      this.$gtm.trackEvent({
+        event: 'foreversWizardTypeChange',
+        'foreversWizardTypeChange.typeName': type
+      })
     }
   }
 });

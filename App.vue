@@ -9,6 +9,7 @@
 <script>
 import get from 'lodash-es/get'
 import config from 'config';
+import { mapState } from 'vuex';
 
 import DefaultLayout from './layouts/Default'
 import MinimalLayout from './layouts/Minimal'
@@ -32,6 +33,9 @@ export default {
     MinimalLayout
   },
   computed: {
+    ...mapState({
+      loggedUser: (state) => state.user.current
+    }),
     layout () {
       return `${get(this.$route, 'meta.layout', 'default')}-layout`
     }
@@ -41,6 +45,24 @@ export default {
     FileProcessingRepositoryFactory: fileProcessingRepositoryFactory,
     ImageHandlerService: imageHandlerService,
     WindowObject: windowObject
+  },
+  created () {
+    this.$router.afterEach(() => {
+      this.updateDataLayer();
+    })
+  },
+  methods: {
+    updateDataLayer () {
+      if (!windowObject.dataLayer || !this.loggedUser) {
+        return;
+      }
+
+      windowObject.dataLayer.push({
+        customerEmail: this.loggedUser.email,
+        customerFullName: `${this.loggedUser.firstname} ${this.loggedUser.lastname}`,
+        customerId: this.loggedUser.id
+      })
+    }
   }
 };
 </script>

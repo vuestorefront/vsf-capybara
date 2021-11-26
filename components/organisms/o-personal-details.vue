@@ -131,7 +131,7 @@
         <SfButton
           class="sf-button--full-width form__action-button"
           :disabled="createAccount ? $v.$invalid : $v.personalDetails.$invalid"
-          @click="sendDataToCheckout"
+          @click="onContinueButtonClick"
         >
           {{
             $t(isVirtualCart ? "Continue to payment" : "Continue to shipping")
@@ -220,6 +220,10 @@ export default {
     },
     openTermsAndConditionsModal () {
       this.openModal({ name: ModalList.TermsAndConditions })
+    },
+    onContinueButtonClick () {
+      this.$emit('sendEvent', 'opcLogin');
+      this.sendDataToCheckout();
     }
   }
 };

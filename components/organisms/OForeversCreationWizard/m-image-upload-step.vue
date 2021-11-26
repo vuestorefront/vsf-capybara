@@ -299,6 +299,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.isUploadProcessingInProgress = value;
     },
     submitStep (): void {
+      this.sendEvent();
       this.$emit('next-step');
     },
     toggleUploadMethod (): void {
@@ -311,6 +312,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
       return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
+    },
+    sendEvent () {
+      if (!this.$gtm) {
+        return;
+      }
+
+      this.$gtm.trackEvent({
+        event: 'foreversWizardPhotosProvide',
+        'foreversWizardPhotosProvide.methodName': this.uploadMethod === ImageUploadMethod.EMAIL ? 'email' : 'now'
+      });
     }
   },
   created (): void {

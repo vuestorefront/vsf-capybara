@@ -184,7 +184,18 @@ export default Vue.extend({
         this.showEmailStep = false;
       }
     },
+    sendEvent (): void {
+      if (!this.$gtm) {
+        return;
+      }
+
+      this.$gtm.trackEvent({
+        event: 'foreversWizardInfoFill'
+      }
+      )
+    },
     submitStep (): void {
+      this.sendEvent();
       this.$emit('next-step');
     }
   },

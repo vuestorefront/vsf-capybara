@@ -73,6 +73,7 @@ import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
+import { InjectType } from 'src/modules/shared';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -92,6 +93,9 @@ interface InjectedServices {
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OForeversCreationWizard',
+  inject: {
+    window: { from: 'WindowObject' }
+  } as unknown as InjectType<InjectedServices>,
   components: {
     SfSteps,
     SfHeading,
@@ -379,6 +383,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }): Promise<void> {
       await this.$store.dispatch('cart/updateClientAndServerItem', payload);
     },
+    updateDataLayer (): void {
+      if (!this.window.dataLayer) {
+        return;
+      }
+
+      this.window.dataLayer.push({
+        actionName: 'Creation Wizard'
+      })
+    },
     async updateExistingCartItem (): Promise<void> {
       if (!this.existingCartitem) {
         return;
@@ -417,6 +430,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     this.$store.dispatch('budsies/loadBreeds');
 
     this.fillPlushieData();
+  },
+  mounted (): void {
+    this.updateDataLayer();
   },
   watch: {
     product: {
