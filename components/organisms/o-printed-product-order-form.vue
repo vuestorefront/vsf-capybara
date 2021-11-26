@@ -155,7 +155,9 @@
         </h3>
       </header>
 
-      <Blok :item="story.content" class="_additional-info-story" />
+      <Blok v-if="showStory" :item="story.content" class="_additional-info-story" />
+
+      <div class="_product-description" v-else v-html="description" />
     </div>
   </div>
 </template>
@@ -257,7 +259,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       } as ExtraFacesConfiguratorData,
       isSubmitting: false,
       shouldShowDesignSelector: true,
-      story: false as false | {content: BlockData}
+      story: false as false | {content: BlockData},
+      isStoryLoaded: false
     }
   },
   computed: {
@@ -474,7 +477,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return style.shortDescription;
     },
     showDescription () {
-      return this.story && this.story.content;
+      return this.isStoryLoaded;
+    },
+    showStory () {
+      return !!(this.isStoryLoaded && this.story && this.story.content);
     }
   },
   mounted () {
@@ -570,6 +576,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         fullSlug: `${storyParentFolderName}/${this.product.sku}`
       });
 
+      this.isStoryLoaded = true;
       this.story = response;
     }
   },
