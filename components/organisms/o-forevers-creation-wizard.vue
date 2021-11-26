@@ -418,6 +418,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     this.fillPlushieData();
   },
+  beforeDestroy (): void {
+    this.$store.commit(`product/${catalogTypes.PRODUCT_RESET_CURRENT}`);
+  },
   watch: {
     product: {
       async handler () {
