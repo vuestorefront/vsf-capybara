@@ -612,11 +612,13 @@ export default {
 
 #category {
   box-sizing: border-box;
+  padding-top: var(--spacer-base);
 
   @include for-desktop {
     max-width: 1272px;
-    margin: 0 auto;
     width: 100%;
+    margin: 0 auto;
+    padding-top: 0;
   }
 
   .category__short-description,
