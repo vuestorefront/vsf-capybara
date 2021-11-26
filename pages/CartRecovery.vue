@@ -54,6 +54,8 @@ export default Vue.extend({
 
       EventBus.$emit('after-cart-recovery', cartToken)
 
+      await this.$store.dispatch('cart/syncTotals')
+
       this.$router.push(localizedRoute('/cart'))
     } catch (error) {
       this.isShowError = true;
