@@ -74,9 +74,7 @@ export default {
         isLoading: false,
         max: 0,
         manageQuantity: true
-      },
-      story: false,
-      isStoryLoaded: false
+      }
     };
   },
   computed: {
