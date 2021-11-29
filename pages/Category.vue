@@ -268,40 +268,6 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
   }
 };
 
-const loadPageData = async (store, page) => {
-  const { includeFields, excludeFields } = config.entities.productList;
-  const { filters } = store.getters['category-next/getCurrentSearchQuery'];
-  const filterQuery = buildFilterProductsQuery(
-    store.getters['category-next/getCurrentCategory'],
-    filters
-  );
-  const sortOrder = store.getters['category-next/getCurrentSearchQuery'].sort ||
-        `${config.products.defaultSortBy.attribute}:${config.products.defaultSortBy.order}`
-  const start = (page - 1) * THEME_PAGE_SIZE;
-
-  const searchResult = await quickSearchByQuery({
-    query: filterQuery,
-    sort: sortOrder,
-    start: start,
-    size: THEME_PAGE_SIZE,
-    includeFields: includeFields,
-    excludeFields: excludeFields
-  });
-
-  const getMoreCategoryProducts = await store.dispatch(
-    'category-next/processCategoryProducts',
-    {
-      products: searchResult.items,
-      filters: filters
-    }
-  );
-
-  return {
-    page,
-    getMoreCategoryProducts
-  }
-}
-
 export default {
   name: 'CategoryPage',
   components: {
@@ -327,7 +293,6 @@ export default {
       loading: true,
       loadingProducts: false,
       currentPage: 1,
-      getMoreCategoryProducts: [],
       browserWidth: 0,
       isFilterSidebarOpen: false,
       unsubscribeFromStoreAction: null,
@@ -345,7 +310,8 @@ export default {
       getSystemFilterNames: 'category-next/getSystemFilterNames',
       getCategories: 'category/getCategories',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
-      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
+      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
+      getCurrentPageProducts: 'category-next/getCurrentPageProducts'
     }),
     isLazyHydrateEnabled () {
       return config.ssr.lazyHydrateFor.includes('category-next.products');
@@ -405,7 +371,7 @@ export default {
             return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
           })
           .map(prepareCategoryProduct)
-        : this.getMoreCategoryProducts.map(prepareCategoryProduct);
+        : this.getCurrentPageProducts.map(prepareCategoryProduct);
     },
     totalPages () {
       return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
@@ -478,26 +444,17 @@ export default {
       }
     }
   },
+  created () {
+    this.currentPage = this.$route.query.page ? Number.parseInt(this.$route.query.page, 10) : 1;
+  },
+  serverPrefetch () {
+    const page = this.$route.query.page ? Number.parseInt(this.$route.query.page, 10) : 1;
+    return this.$store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE });
+  },
   async asyncData ({ store, route, context }) {
     // this is for SSR purposes to prefetch data - and it's always executed before parent component methods
     if (context) context.output.cacheTags.add('category')
     await composeInitialPageState(store, route);
-
-    const queryPage = route.query.page ? Number.parseInt(route.query.page, 10) : 1;
-
-    if (!queryPage) {
-      return;
-    }
-
-    const { page, getMoreCategoryProducts } = await loadPageData(
-      store,
-      queryPage
-    )
-
-    return {
-      currentPage: page,
-      getMoreCategoryProducts
-    }
   },
   async beforeRouteEnter (to, from, next) {
     if (isServer) next();
@@ -558,9 +515,8 @@ export default {
         return;
       }
 
-      const pageData = await loadPageData(this.$store, page);
+      await this.$store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE });
 
-      this.getMoreCategoryProducts = pageData.getMoreCategoryProducts;
       this.currentPage = page;
     },
     initPagination () {
