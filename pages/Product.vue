@@ -16,13 +16,10 @@
       :product-stock="stock"
     />
 
-    <div class="_additional-info" v-if="showAdditionalInfo">
-      <SfHeading :title="$t('Additional Details')" :level="3" />
-
-      <Blok v-if="showStory" :item="story.content" class="_additional-info-story" />
-
-      <div class="_additional-info-fallback" v-else v-html="getCurrentProduct.description" />
-    </div>
+    <MDescriptionStory
+      :fallback-description="getCurrentProduct.description"
+      :story-full-slug="productStoryFullSlug"
+    />
 
     <div class="product__bottom">
       <lazy-hydrate when-idle>
@@ -48,24 +45,23 @@ import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
-import { SfHeading, SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
-import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
-import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers'
+import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
+import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
+import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
 
-import { components } from 'src/modules/vsf-storyblok-module/components';
+import MDescriptionStory from 'theme/components/molecules/m-description-story.vue';
 
-const storyParentFolderName = 'product-descriptions'
+const storyParentFolderName = 'product-descriptions';
 
 export default {
   name: 'Product',
   components: {
-    Blok: components.block,
     LazyHydrate,
     MRelatedProducts,
     SfSection,
-    SfHeading,
     OProductDetails,
-    SfBreadcrumbs
+    SfBreadcrumbs,
+    MDescriptionStory
   },
   provide () {
     return {
@@ -137,15 +133,9 @@ export default {
           return a.attribute_id > b.attribute_id;
         });
     },
-    showAdditionalInfo () {
-      return this.isStoryLoaded;
-    },
-    showStory () {
-      return !!(this.isStoryLoaded && this.story && this.story.content);
+    productStoryFullSlug () {
+      return `${storyParentFolderName}/${this.getCurrentProduct.sku}`;
     }
-  },
-  mounted () {
-    this.loadProductStory();
   },
   watch: {
     isOnline: {
@@ -216,14 +206,6 @@ export default {
       } finally {
         this.stock.isLoading = false;
       }
-    },
-    async loadProductStory () {
-      const response = await this.$store.dispatch(`storyblok/loadStory`, {
-        fullSlug: `${storyParentFolderName}/${this.getCurrentProduct.sku}`
-      });
-
-      this.isStoryLoaded = true;
-      this.story = response;
     }
   },
   metaInfo () {
@@ -268,12 +250,13 @@ export default {
 }
 
 .breadcrumbs {
-  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
+  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base)
+    var(--spacer-sm);
 }
 
 ::v-deep {
   .product__colors button {
-      border: 1px solid var(--c-light);
+    border: 1px solid var(--c-light);
   }
 }
 

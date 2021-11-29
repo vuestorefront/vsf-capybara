@@ -148,17 +148,10 @@
       </div>
     </div>
 
-    <div class="_description" v-if="showDescription">
-      <header class="sf-heading">
-        <h3 class="sf-heading__title sf-heading__title--h3">
-          Product Details
-        </h3>
-      </header>
-
-      <Blok v-if="showStory" :item="story.content" class="_additional-info-story" />
-
-      <div class="_product-description" v-else v-html="description" />
-    </div>
+    <MDescriptionStory
+      :fallback-description="product.description"
+      :story-full-slug="productStoryFullSlug"
+    />
   </div>
 </template>
 
@@ -178,13 +171,13 @@ import Product from 'core/modules/catalog/types/Product';
 import { getProductPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
-import BlockData from 'src/modules/vsf-storyblok-module/types/block-data.interface';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
+import MDescriptionStory from '../molecules/m-description-story.vue';
 import MZoomGallery from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MExtraFaces from '../molecules/m-extra-faces.vue';
@@ -232,7 +225,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     MArtworkUpload,
     MExtraFaces,
     SfSelect,
-    SfButton
+    SfButton,
+    MDescriptionStory
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }
@@ -258,9 +252,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         storageItems: []
       } as ExtraFacesConfiguratorData,
       isSubmitting: false,
-      shouldShowDesignSelector: true,
-      story: false as false | {content: BlockData},
-      isStoryLoaded: false
+      shouldShowDesignSelector: true
     }
   },
   computed: {
@@ -476,15 +468,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return style.shortDescription;
     },
-    showDescription () {
-      return this.isStoryLoaded;
-    },
-    showStory () {
-      return !!(this.isStoryLoaded && this.story && this.story.content);
+    productStoryFullSlug () {
+      return `${storyParentFolderName}/${this.product.sku}`;
     }
-  },
-  mounted () {
-    this.loadProductStory();
   },
   methods: {
     ...mapMutations('product', {
@@ -570,14 +556,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     goToCrossSells (): void {
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
-    },
-    async loadProductStory () {
-      const response = await this.$store.dispatch(`storyblok/loadStory`, {
-        fullSlug: `${storyParentFolderName}/${this.product.sku}`
-      });
-
-      this.isStoryLoaded = true;
-      this.story = response;
     }
   },
   created (): void {

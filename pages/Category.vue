@@ -185,9 +185,9 @@
       </template>
     </SfSidebar>
 
-    <div
-      class="category__description"
-      v-html="getCurrentCategory.description"
+    <MDescriptionStory
+      :fallback-description="getCurrentCategory.description"
+      :story-full-slug="categoryStoryFullSlug"
     />
   </div>
 </template>
@@ -231,10 +231,13 @@ import {
   SfBreadcrumbs
 } from '@storefront-ui/vue';
 
+import MDescriptionStory from 'theme/components/molecules/m-description-story.vue';
 import OProductCard from 'theme/components/organisms/o-product-card';
 
 const THEME_PAGE_SIZE = 12;
 const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
+
+const storyParentFolderName = 'category-descriptions';
 
 const composeInitialPageState = async (store, route, forceLoad = false) => {
   try {
@@ -284,7 +287,8 @@ export default {
     SfMenuItem,
     SfAccordion,
     SfPagination,
-    SfBreadcrumbs
+    SfBreadcrumbs,
+    MDescriptionStory
   },
   mixins: [onBottomScroll],
   data () {
@@ -424,6 +428,9 @@ export default {
         castArray(this.getCurrentFilters[filter.type]).find(
           variant => variant && variant.id === filter.id
         ) !== undefined;
+    },
+    categoryStoryFullSlug () {
+      return `${storyParentFolderName}/${this.getCurrentCategory.url_key}`;
     }
   },
   watch: {
@@ -619,8 +626,7 @@ export default {
     width: 100%;
   }
 
-  .category__short-description,
-  .category__description {
+  .category__short-description {
     margin: var(--spacer-sm) auto 0 auto;
     max-width: 60em;
     padding: 0 var(--spacer-xs);
