@@ -424,6 +424,7 @@ import {
   BodyPartValueContentType,
   ProductValue
 } from 'src/modules/budsies';
+import { getProductPrice } from 'theme/helpers';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -553,9 +554,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           continue;
         }
 
+        const price = getProductPrice(productLink.product, {}, false);
+
         availableSizes.push({
           id: String(productLink.product.id),
-          label: productLink.product.name + ' - $' + productLink.product.price,
+          label: productLink.product.name + ' - $' + (price.special ? price.special : price.regular),
           value: productLink.product.sku,
           isSelected: false,
           contentTypeId: BodyPartValueContentType.IMAGE,
@@ -775,6 +778,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     this.$bus.$once('budsies-store-synchronized', this.prefillEmail);
   },
   beforeDestroy () {
+    this.$store.commit(`product/${catalogTypes.PRODUCT_RESET_CURRENT}`);
     this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
   },
   created (): void {

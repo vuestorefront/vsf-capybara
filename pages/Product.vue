@@ -217,10 +217,13 @@ export default {
 
 #product {
   box-sizing: border-box;
+  padding-top: var(--spacer-base);
+
   @include for-desktop {
     max-width: 1272px;
     width: 100%;
     margin: 0 auto;
+    padding-top: 0;
   }
 }
 
