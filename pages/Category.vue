@@ -234,8 +234,6 @@ import OProductCard from 'theme/components/organisms/o-product-card';
 const THEME_PAGE_SIZE = 12;
 const LAZY_LOADING_ACTIVATION_BREAKPOINT = 1024;
 
-const storyParentFolderName = 'category-descriptions';
-
 const composeInitialPageState = async (store, route, forceLoad = false) => {
   try {
     const filters = getSearchOptionsFromRouteParams(route.params);

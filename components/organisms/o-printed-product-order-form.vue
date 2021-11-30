@@ -209,8 +209,6 @@ export interface SelectOption {
   specialPrice: number
 }
 
-const storyParentFolderName = 'product-descriptions'
-
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPrintedProductOrderForm',
   components: {
@@ -464,9 +462,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.shortDescription;
-    },
-    productStoryFullSlug () {
-      return `${storyParentFolderName}/${this.product.sku}`;
     }
   },
   methods: {
