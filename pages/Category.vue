@@ -185,7 +185,10 @@
       </template>
     </SfSidebar>
 
-    <MCategoryDescriptionStory :category="getCurrentCategory" />
+    <MCategoryDescriptionStory
+      :category="getCurrentCategory"
+      v-if="getCurrentCategory"
+    />
   </div>
 </template>
 
