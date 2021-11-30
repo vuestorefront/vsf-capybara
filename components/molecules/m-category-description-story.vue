@@ -40,13 +40,21 @@ export default DescriptionStoryMixin.extend({
     fallbackDescription (): string | undefined {
       return this.category.description;
     },
-    storyFullSlug (): string {
+    storyFullSlug (): string | undefined {
+      if (!this.category.url_path) {
+        return undefined;
+      }
+
       const normalizedPath = this.category.url_path.replace('/', '_');
       return `${storyParentFolderName}/${normalizedPath}`;
     }
   },
   watch: {
-    'category.url_key' (): void {
+    'category.url_path' (value?: string): void {
+      if (!value) {
+        return;
+      }
+
       this.loadStory();
     }
   }
