@@ -49,7 +49,8 @@ export default DescriptionStoryMixin.extend({
 
 <style lang="scss" scoped>
 .m-product-description-story {
-  ._fallback-container {
+  ._fallback-container,
+  ._fallback {
     padding-top: var(--spacer-base);
   }
 }
