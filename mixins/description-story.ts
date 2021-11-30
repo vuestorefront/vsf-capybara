@@ -21,13 +21,18 @@ export default Vue.extend({
       return this.storyData.story;
     },
     isStoryLoading (): boolean {
-      return !!(this.storyData && this.storyData.loading);
+      return !!this.storyData?.loading;
     },
     showFallback (): boolean {
-      return !!this.fallbackDescription &&
-       (!this.story || !this.story.content) &&
-        !!this.storyData &&
-        !this.storyData.loading;
+      if (!this.fallbackDescription) {
+        return false;
+      }
+
+      if (this.isStoryLoading) {
+        return false;
+      }
+
+      return !this.story;
     },
     showStory (): boolean {
       return !!(this.story && this.story.content);
@@ -47,12 +52,12 @@ export default Vue.extend({
     await this.loadStory();
   },
   methods: {
-    async loadStory (): Promise<Record<string, any>> {
+    async loadStory (): Promise<void> {
       if (!this.storyFullSlug) {
         throw new Error('\'storyFullSlug\' property is not defined');
       }
 
-      return this.$store.dispatch(`storyblok/loadStory`, {
+      await this.$store.dispatch(`storyblok/loadStory`, {
         fullSlug: this.storyFullSlug
       });
     }
