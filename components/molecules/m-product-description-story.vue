@@ -1,5 +1,14 @@
 <template>
   <div class="m-product-description-story">
+    <div v-if="showFallback" class="_fallback-container">
+      <SfHeading :title="$t('Additional Details')" :level="3" />
+
+      <div
+        class="_fallback"
+        v-html="fallbackDescription"
+      />
+    </div>
+
     <Blok v-if="showStory" :item="story.content" class="_story" />
   </div>
 </template>
@@ -26,9 +35,20 @@ export default DescriptionStoryMixin.extend({
     Blok: components.block
   },
   computed: {
+    fallbackDescription (): string | undefined {
+      return this.product.description;
+    },
     storyFullSlug (): string {
       return `${storyParentFolderName}/${this.product.sku}`;
     }
   }
 })
 </script>
+
+<style lang="scss" scoped>
+.m-product-description-story {
+  ._fallback-container {
+    padding-top: var(--spacer-base);
+  }
+}
+</style>

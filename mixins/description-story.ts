@@ -3,7 +3,14 @@ import { StoryblokStories } from 'src/modules/vsf-storyblok-module/types/State';
 
 export default Vue.extend({
   computed: {
+    fallbackDescription (): string | undefined {
+      return undefined;
+    },
     storyData (): StoryblokStories | undefined {
+      if (!this.storyFullSlug) {
+        return;
+      }
+
       return this.$store.state.storyblok.stories[this.storyFullSlug];
     },
     story (): Record<string, any> | undefined {
@@ -16,11 +23,17 @@ export default Vue.extend({
     isStoryLoading (): boolean {
       return !!(this.storyData && this.storyData.loading);
     },
+    showFallback (): boolean {
+      return !!this.fallbackDescription &&
+       (!this.story || !this.story.content) &&
+        !!this.storyData &&
+        !this.storyData.loading;
+    },
     showStory (): boolean {
       return !!(this.story && this.story.content);
     },
-    storyFullSlug (): string {
-      throw new Error('\'storyFullSlug\' computed property not implemented yet');
+    storyFullSlug (): string | undefined {
+      return undefined;
     }
   },
   serverPrefetch () {
@@ -35,6 +48,10 @@ export default Vue.extend({
   },
   methods: {
     async loadStory (): Promise<Record<string, any>> {
+      if (!this.storyFullSlug) {
+        throw new Error('\'storyFullSlug\' property is not defined');
+      }
+
       return this.$store.dispatch(`storyblok/loadStory`, {
         fullSlug: this.storyFullSlug
       });
