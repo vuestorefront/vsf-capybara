@@ -43,6 +43,11 @@ export default DescriptionStoryMixin.extend({
     storyFullSlug (): string {
       return `${storyParentFolderName}/${this.category.url_key}`;
     }
+  },
+  watch: {
+    'category.url_key' (): void {
+      this.loadStory();
+    }
   }
 })
 </script>

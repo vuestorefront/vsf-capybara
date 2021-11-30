@@ -43,6 +43,11 @@ export default DescriptionStoryMixin.extend({
     storyFullSlug (): string {
       return `${storyParentFolderName}/${this.product.sku}`;
     }
+  },
+  watch: {
+    'product.sku' (): void {
+      this.loadStory();
+    }
   }
 })
 </script>
