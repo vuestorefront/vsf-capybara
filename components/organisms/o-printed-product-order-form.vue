@@ -148,10 +148,7 @@
       </div>
     </div>
 
-    <MDescriptionStory
-      :fallback-description="product.description"
-      :story-full-slug="productStoryFullSlug"
-    />
+    <MProductDescriptionStory :product="product" />
   </div>
 </template>
 
@@ -177,7 +174,7 @@ import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
-import MDescriptionStory from '../molecules/m-description-story.vue';
+import MProductDescriptionStory from '../molecules/m-product-description-story.vue';
 import MZoomGallery from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MExtraFaces from '../molecules/m-extra-faces.vue';
@@ -226,7 +223,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     MExtraFaces,
     SfSelect,
     SfButton,
-    MDescriptionStory
+    MProductDescriptionStory
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }

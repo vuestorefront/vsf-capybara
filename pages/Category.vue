@@ -185,10 +185,7 @@
       </template>
     </SfSidebar>
 
-    <MDescriptionStory
-      :fallback-description="getCurrentCategory.description"
-      :story-full-slug="categoryStoryFullSlug"
-    />
+    <MCategoryDescriptionStory :category="getCurrentCategory" />
   </div>
 </template>
 
@@ -231,7 +228,7 @@ import {
   SfBreadcrumbs
 } from '@storefront-ui/vue';
 
-import MDescriptionStory from 'theme/components/molecules/m-description-story.vue';
+import MCategoryDescriptionStory from 'theme/components/molecules/m-category-description-story.vue';
 import OProductCard from 'theme/components/organisms/o-product-card';
 
 const THEME_PAGE_SIZE = 12;
@@ -288,7 +285,7 @@ export default {
     SfAccordion,
     SfPagination,
     SfBreadcrumbs,
-    MDescriptionStory
+    MCategoryDescriptionStory
   },
   mixins: [onBottomScroll],
   data () {
@@ -428,9 +425,6 @@ export default {
         castArray(this.getCurrentFilters[filter.type]).find(
           variant => variant && variant.id === filter.id
         ) !== undefined;
-    },
-    categoryStoryFullSlug () {
-      return `${storyParentFolderName}/${this.getCurrentCategory.url_key}`;
     }
   },
   watch: {

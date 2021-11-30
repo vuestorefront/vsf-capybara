@@ -16,9 +16,8 @@
       :product-stock="stock"
     />
 
-    <MDescriptionStory
-      :fallback-description="getCurrentProduct.description"
-      :story-full-slug="productStoryFullSlug"
+    <MProductDescriptionStory
+      :product="getCurrentProduct"
     />
 
     <div class="product__bottom">
@@ -49,9 +48,7 @@ import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
 
-import MDescriptionStory from 'theme/components/molecules/m-description-story.vue';
-
-const storyParentFolderName = 'product-descriptions';
+import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
 
 export default {
   name: 'Product',
@@ -61,7 +58,7 @@ export default {
     SfSection,
     OProductDetails,
     SfBreadcrumbs,
-    MDescriptionStory
+    MProductDescriptionStory
   },
   provide () {
     return {
@@ -130,9 +127,6 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
-    },
-    productStoryFullSlug () {
-      return `${storyParentFolderName}/${this.getCurrentProduct.sku}`;
     }
   },
   watch: {
