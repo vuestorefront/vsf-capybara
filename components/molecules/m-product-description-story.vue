@@ -19,6 +19,7 @@ import Product from '@vue-storefront/core/modules/catalog/types/Product';
 
 import DescriptionStoryMixin from 'theme/mixins/description-story';
 
+import { SfHeading } from '@storefront-ui/vue';
 import { components } from 'src/modules/vsf-storyblok-module/components';
 
 const storyParentFolderName = 'product-descriptions';
@@ -32,7 +33,8 @@ export default DescriptionStoryMixin.extend({
     }
   },
   components: {
-    Blok: components.block
+    Blok: components.block,
+    SfHeading
   },
   computed: {
     fallbackDescription (): string | undefined {
