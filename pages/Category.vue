@@ -185,10 +185,7 @@
       </template>
     </SfSidebar>
 
-    <div
-      class="category__description"
-      v-html="getCurrentCategory.description"
-    />
+    <MCategoryDescriptionStory :category="getCurrentCategory" />
   </div>
 </template>
 
@@ -231,6 +228,7 @@ import {
   SfBreadcrumbs
 } from '@storefront-ui/vue';
 
+import MCategoryDescriptionStory from 'theme/components/molecules/m-category-description-story.vue';
 import OProductCard from 'theme/components/organisms/o-product-card';
 
 const THEME_PAGE_SIZE = 12;
@@ -284,7 +282,8 @@ export default {
     SfMenuItem,
     SfAccordion,
     SfPagination,
-    SfBreadcrumbs
+    SfBreadcrumbs,
+    MCategoryDescriptionStory
   },
   mixins: [onBottomScroll],
   data () {
@@ -621,8 +620,7 @@ export default {
     padding-top: 0;
   }
 
-  .category__short-description,
-  .category__description {
+  .category__short-description {
     margin: var(--spacer-sm) auto 0 auto;
     max-width: 60em;
     padding: 0 var(--spacer-xs);
