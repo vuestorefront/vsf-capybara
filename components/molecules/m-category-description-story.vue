@@ -41,7 +41,8 @@ export default DescriptionStoryMixin.extend({
       return this.category.description;
     },
     storyFullSlug (): string {
-      return `${storyParentFolderName}/${this.category.url_key}`;
+      const normalizedPath = this.category.url_path.replace('/', '_');
+      return `${storyParentFolderName}/${normalizedPath}`;
     }
   },
   watch: {
