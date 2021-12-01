@@ -12,7 +12,8 @@ export default function generateImageSourcesList (
   for (const spec of breakpointsSpecs) {
     const filters = doesSupportWebp ? '/filters:format(webp)' : '';
 
-    const [, resource] = spec.src.split('//a.storyblok.com');
+    // "https://s3.amazonaws.com/a.storyblok.com/f/109999/500x500/c01cfb137f/pet_socks.png"
+    const [, resource] = spec.src.split('/a.storyblok.com');
     let dimensions = parseImageDimensions(spec.src);
     const ratio = forcedAspectRation || (dimensions.height / dimensions.width);
 
