@@ -68,7 +68,7 @@ export default Blok.extend({
       let searchQuery = new SearchQuery()
       searchQuery = searchQuery.applyFilter({ key: 'category_ids', value: { 'in': [this.category.id] } })
 
-      let { items } = await ProductService.getProducts({
+      let { items } = await this.$store.dispatch('product/findProducts', {
         query: searchQuery,
         size: +this.itemData.products_count
       })

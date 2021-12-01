@@ -107,13 +107,16 @@ export default Blok.extend({
   },
   methods: {
     async loadData () {
-      this.product = await ProductService.getProductByKey({
-        options: {
-          id: this.itemData.product_id
-        },
-        key: 'id',
-        skipCache: true
-      })
+      this.product = await this.$store.dispatch(
+        'product/single',
+        {
+          options: {
+            id: this.itemData.product_id
+          },
+          key: 'id',
+          skipCache: true
+        }
+      )
     }
   },
   watch: {
