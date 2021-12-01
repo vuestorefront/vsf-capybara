@@ -255,9 +255,7 @@ export default {
     onZipCodeBlur () {
       this.$v.shipping.zipCode.$touch();
 
-      if (this.fZipCodeChanged) {
-        this.fZipCodeChanged = false;
-      } else {
+      if (!this.fZipCodeChanged) {
         return;
       }
 
@@ -268,6 +266,8 @@ export default {
       if (this.$v.shipping.zipCode.$invalid) {
         return;
       }
+
+      this.fZipCodeChanged = false;
 
       this.$bus.$emit('checkout-before-shippingMethods', this.shipping.country)
     },
