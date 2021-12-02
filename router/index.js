@@ -1,5 +1,3 @@
-const Home = () =>
-  import(/* webpackChunkName: "vsf-home" */ 'theme/pages/Home');
 const ErrorPage = () =>
   import(/* webpackChunkName: "vsf-error" */ 'theme/pages/Error');
 const Product = () =>
@@ -32,7 +30,6 @@ const GiftCards = () =>
   import(/* webpackChunkName: "vsf-gift-cards" */ 'theme/pages/GiftCards');
 
 let routes = [
-  { name: 'home', path: '/', component: Home, alias: '/pwa.html' },
   { name: 'detailed-cart', path: '/cart', component: DetailedCart },
   { name: 'checkout', path: '/checkout', component: Checkout },
   { name: 'legal', path: '/legal', component: Static },
