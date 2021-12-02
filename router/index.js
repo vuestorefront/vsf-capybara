@@ -59,9 +59,33 @@ let routes = [
   { name: 'category', path: '/c/:slug', component: Category },
   { name: 'cms-page', path: '/i/:slug', component: Static },
   { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
-  { name: 'printed-product', path: '/printed/p/:parentSku/:slug', component: PrintedProduct },
+  { name: 'printed-product', path: '/printed/p/:sku', component: PrintedProduct, props: true },
   { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
   { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
+  {
+    name: 'printed-socks-creation-page',
+    path: '/plushie/index/printedSocks/',
+    component: PrintedProduct,
+    props: {
+      sku: 'customPrintedSocks_bundle'
+    }
+  },
+  {
+    name: 'printed-masks-creation-page',
+    path: '/plushie/index/printedMasks/',
+    component: PrintedProduct,
+    props: {
+      sku: 'customPrintedMasks_bundle'
+    }
+  },
+  {
+    name: 'printed-keychains-creation-page',
+    path: '/plushie/index/printedKeychains/',
+    component: PrintedProduct,
+    props: {
+      sku: 'customPrintedKeychains_bundle'
+    }
+  },
   {
     name: 'photo-pillows-alias-1',
     path: '/photo-pillow/designs/',
