@@ -24,7 +24,6 @@
 </template>
 
 <script lang="ts">
-import { ProductService } from '@vue-storefront/core/data-resolver/ProductService';
 import { productThumbnailPath } from '@vue-storefront/core/helpers';
 import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';

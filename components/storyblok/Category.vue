@@ -8,7 +8,6 @@
 
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
-import { ProductService } from '@vue-storefront/core/data-resolver/ProductService'
 import { CategoryService } from '@vue-storefront/core/data-resolver/CategoryService'
 import { SearchQuery } from 'storefront-query-builder'
 import ProductModel from 'core/modules/catalog/types/Product';
