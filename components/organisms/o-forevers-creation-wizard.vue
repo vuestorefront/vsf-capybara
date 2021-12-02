@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { VueConstructor } from 'vue';
+import Vue from 'vue';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
@@ -73,7 +73,6 @@ import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
-import { InjectType } from 'src/modules/shared';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -87,15 +86,8 @@ import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-custo
 import BodypartOption from '../interfaces/bodypart-option';
 import CustomerImage from '../interfaces/customer-image.interface';
 
-interface InjectedServices {
-  window: Window
-}
-
-export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
+export default Vue.extend({
   name: 'OForeversCreationWizard',
-  inject: {
-    window: { from: 'WindowObject' }
-  } as unknown as InjectType<InjectedServices>,
   components: {
     SfSteps,
     SfHeading,
@@ -382,15 +374,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       forceClientState?: boolean
     }): Promise<void> {
       await this.$store.dispatch('cart/updateClientAndServerItem', payload);
-    },
-    updateDataLayer (): void {
-      if (!this.window.dataLayer) {
-        return;
-      }
-
-      this.window.dataLayer.push({
-        actionName: 'Creation Wizard'
-      })
     },
     async updateExistingCartItem (): Promise<void> {
       if (!this.existingCartitem) {

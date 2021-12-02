@@ -259,11 +259,6 @@ export default {
           customerEmail: orderAdditionalData.personalDetails.emailAddress,
           customerFullName: `${orderAdditionalData.personalDetails.firstName} ${orderAdditionalData.personalDetails.lastName}`,
           customerId: this.currentUser ? this.currentUser.id : ''
-        },
-        {
-          actionName: 'Purchase Success',
-          couponCode,
-          products: order.products.map((product) => product.name).join()
         }
       );
     }
