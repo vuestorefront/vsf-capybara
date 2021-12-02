@@ -115,7 +115,7 @@ export default {
 
 .o-top-navigation {
   position: relative;
-  min-height: calc(var(--bottom-navigation-height) + var(--spacer-base));
+  min-height: var(--bottom-navigation-height);
   z-index: 10;
 
   .a-logo {

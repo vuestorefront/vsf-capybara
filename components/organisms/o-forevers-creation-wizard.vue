@@ -434,6 +434,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   mounted (): void {
     this.updateDataLayer();
   },
+  beforeDestroy (): void {
+    this.$store.commit(`product/${catalogTypes.PRODUCT_RESET_CURRENT}`);
+  },
   watch: {
     product: {
       async handler () {

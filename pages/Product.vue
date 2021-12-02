@@ -15,6 +15,11 @@
       :product-attributes="getCustomAttributes"
       :product-stock="stock"
     />
+
+    <MProductDescriptionStory
+      :product="getCurrentProduct"
+    />
+
     <div class="product__bottom">
       <lazy-hydrate when-idle>
         <SfSection :title-heading="$t('We found other products you might like')">
@@ -40,8 +45,10 @@ import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
 import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
-import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events'
-import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers'
+import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
+import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
+
+import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
 
 export default {
   name: 'Product',
@@ -53,7 +60,8 @@ export default {
     MRelatedProducts,
     SfSection,
     OProductDetails,
-    SfBreadcrumbs
+    SfBreadcrumbs,
+    MProductDescriptionStory
   },
   provide () {
     return {
@@ -252,10 +260,13 @@ export default {
 
 #product {
   box-sizing: border-box;
+  padding-top: var(--spacer-base);
+
   @include for-desktop {
     max-width: 1272px;
     width: 100%;
     margin: 0 auto;
+    padding-top: 0;
   }
 }
 
@@ -269,12 +280,13 @@ export default {
 }
 
 .breadcrumbs {
-  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
+  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base)
+    var(--spacer-sm);
 }
 
 ::v-deep {
   .product__colors button {
-      border: 1px solid var(--c-light);
+    border: 1px solid var(--c-light);
   }
 }
 

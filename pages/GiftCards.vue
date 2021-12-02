@@ -45,11 +45,9 @@
         />
       </div>
 
-      <component
-        v-if="showGiftCardDetailedInformation"
-        :item="story.content"
-        :is="story.content.component"
+      <MProductDescriptionStory
         class="_giftcard-detailed-information"
+        :product="product"
       />
     </div>
   </div>
@@ -65,10 +63,10 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 
 import { SfModal } from '@storefront-ui/vue';
-import { components } from 'src/modules/vsf-storyblok-module/components';
 
 import GiftCardTemplateComponent from 'src/modules/gift-card/components/GiftCardTemplate.vue';
 import OGiftCardOrderForm from 'theme/components/organisms/o-gift-card-order-form.vue';
+import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
 
 import GiftCardTemplate from 'src/modules/gift-card/types/GiftCardTemplate.interface';
 import { ImageHandlerService } from 'src/modules/file-storage';
@@ -99,7 +97,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     GiftCardTemplateComponent,
     OGiftCardOrderForm,
     SfModal,
-    Block: components.block
+    MProductDescriptionStory
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }
@@ -183,9 +181,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           'giftcard'
         )
       };
-    },
-    showGiftCardDetailedInformation (): boolean {
-      return !!(this.story && (this.story as any).content && (this.story as any).content.component);
     }
   },
   data () {
@@ -193,14 +188,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       giftCardOrderFormData:
         defaultGiftCardOrderFormData as GiftCardOrderFormData,
       showPreviewModal: false,
-      isSubmitting: false,
-      story: undefined
+      isSubmitting: false
     };
   },
   mounted (): void {
     this.updateCustomerName();
     this.initEventBusListeners();
-    this.loadGiftCardDetailedInformationStory();
 
     this.giftCardOrderFormData.selectedTemplateId =
       this.firstGiftCardTemplate?.id;
@@ -265,12 +258,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       EventBus.$on('session-after-started', this.updateCustomerName);
       EventBus.$on('user-after-logout', this.updateCustomerName);
       EventBus.$on('user-after-loggedin', this.updateCustomerName);
-    },
-    async loadGiftCardDetailedInformationStory (): Promise<void> {
-      const response = await this.$store.dispatch(`storyblok/loadStory`, {
-        fullSlug: 'blocks/giftcard_detailed_information'
-      });
-      this.story = response;
     },
     onFailure (message: any): void {
       this.$store.dispatch('notification/spawnNotification', {
