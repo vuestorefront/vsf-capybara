@@ -23,33 +23,59 @@ export default Vue.extend({
   components: {
     OPrintedProductOrderForm
   },
+  props: {
+    sku: {
+      type: String,
+      required: true
+    }
+  },
   computed: {
     getCurrentProduct (): Product | null {
-      return this.$store.getters['product/getCurrentProduct'];
+      const product = this.$store.getters['product/getCurrentProduct'];
+      if (!product?.sku) {
+        return null;
+      }
+
+      return product;
     },
     artworkUploadUrl () {
       return config.images.fileuploaderUploadUrl;
     }
   },
-  async asyncData ({ store, route, context }) {
-    if (context) context.output.cacheTags.add('product')
+  async serverPrefetch () {
+    if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('product')
 
-    const product = await store.dispatch('product/loadProduct', {
-      parentSku: route.params.parentSku,
-      childSku: null
-    });
+    await (this as any).loadData();
+  },
+  async mounted () {
+    if (!this.getCurrentProduct) {
+      await this.loadData();
+    }
+  },
+  methods: {
+    async loadData (): Promise<void> {
+      const product = await this.$store.dispatch('product/loadProduct', {
+        parentSku: this.sku,
+        childSku: null
+      });
 
-    await store.dispatch('budsies/loadExtraPhotosAddons', {
-      productId: product.id
-    });
+      await this.$store.dispatch('budsies/loadExtraPhotosAddons', {
+        productId: product.id
+      });
 
-    const loadBreadcrumbsPromise = store.dispatch(
-      'product/loadProductBreadcrumbs',
-      { product }
-    );
+      const loadBreadcrumbsPromise = this.$store.dispatch(
+        'product/loadProductBreadcrumbs',
+        { product }
+      );
 
-    if (isServer) await loadBreadcrumbsPromise;
-    catalogHooksExecutors.productPageVisited(product);
+      if (isServer) await loadBreadcrumbsPromise;
+      catalogHooksExecutors.productPageVisited(product);
+    }
+  },
+  watch: {
+    sku: async function () {
+      await this.loadData();
+    }
   },
   metaInfo () {
     return {
