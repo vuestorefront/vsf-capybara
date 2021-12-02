@@ -63,6 +63,30 @@ let routes = [
   { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
   { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
   {
+    name: 'printed-socks-creation-page',
+    path: '/plushie/index/printedSocks/',
+    component: PrintedProduct,
+    props: {
+      sku: 'customPrintedSocks_bundle'
+    }
+  },
+  {
+    name: 'printed-masks-creation-page',
+    path: '/plushie/index/printedMasks/',
+    component: PrintedProduct,
+    props: {
+      sku: 'customPrintedMasks_bundle'
+    }
+  },
+  {
+    name: 'printed-keychains-creation-page',
+    path: '/plushie/index/printedKeychains/',
+    component: PrintedProduct,
+    props: {
+      sku: 'customPrintedKeychains_bundle'
+    }
+  },
+  {
     name: 'photo-pillows-alias-1',
     path: '/photo-pillow/designs/',
     redirect: {
