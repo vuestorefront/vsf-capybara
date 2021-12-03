@@ -61,7 +61,7 @@
                   <div />
                 </template>
                 <template #actions>
-                  <SfButton class="sf-button--text actions__button" @click="editHandler(product)">
+                  <SfButton v-if="showEditButton(product.sku)" class="sf-button--text actions__button" @click="editHandler(product)">
                     Edit
                   </SfButton>
                   <SfButton
@@ -169,6 +169,16 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 
+const foreversProductsSkus = [
+  'ForeversDog_bundle',
+  'ForeversCat_bundle',
+  'ForeversOther_bundle'
+]
+
+const editableProductsSkus = [
+  ...foreversProductsSkus
+];
+
 export default {
   name: 'DetailedCart',
   components: {
@@ -209,31 +219,19 @@ export default {
         {
           label: 'Socks',
           url: {
-            name: 'printed-product',
-            params: {
-              parentSku: 'customPrintedSocks_bundle',
-              slug: 'printed-socks'
-            }
+            name: 'printed-socks-creation-page'
           }
         },
         {
           label: 'Face Masks',
           url: {
-            name: 'printed-product',
-            params: {
-              parentSku: 'customPrintedMasks_bundle',
-              slug: 'printed-masks'
-            }
+            name: 'printed-masks-creation-page'
           }
         },
         {
           label: 'Pet Keychains',
           url: {
-            name: 'printed-product',
-            params: {
-              parentSku: 'customPrintedKeychains_bundle',
-              slug: 'face-keychains'
-            }
+            name: 'printed-keychains-creation-page'
           }
         }
       ],
@@ -279,7 +277,9 @@ export default {
   },
   methods: {
     editHandler (product) {
-      this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } })
+      if (foreversProductsSkus.includes(product.sku)) {
+        this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } })
+      }
     },
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
@@ -360,6 +360,9 @@ export default {
         product: product,
         qty: newQuantity
       }).finally(() => { this.isUpdatingQuantity = false });
+    },
+    showEditButton (productSku) {
+      return editableProductsSkus.includes(productSku);
     }
   }
 };

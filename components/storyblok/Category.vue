@@ -8,7 +8,6 @@
 
 <script lang="ts">
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
-import { ProductService } from '@vue-storefront/core/data-resolver/ProductService'
 import { CategoryService } from '@vue-storefront/core/data-resolver/CategoryService'
 import { SearchQuery } from 'storefront-query-builder'
 import ProductModel from 'core/modules/catalog/types/Product';
@@ -68,7 +67,7 @@ export default Blok.extend({
       let searchQuery = new SearchQuery()
       searchQuery = searchQuery.applyFilter({ key: 'category_ids', value: { 'in': [this.category.id] } })
 
-      let { items } = await ProductService.getProducts({
+      let { items } = await this.$store.dispatch('product/findProducts', {
         query: searchQuery,
         size: +this.itemData.products_count
       })

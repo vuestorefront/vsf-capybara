@@ -80,31 +80,19 @@ export default {
         {
           label: 'Pet Socks',
           url: {
-            name: 'printed-product',
-            params: {
-              parentSku: 'customPrintedSocks_bundle',
-              slug: 'printed-socks'
-            }
+            name: 'printed-socks-creation-page'
           }
         },
         {
           label: 'Face Masks',
           url: {
-            name: 'printed-product',
-            params: {
-              parentSku: 'customPrintedMasks_bundle',
-              slug: 'printed-masks'
-            }
+            name: 'printed-masks-creation-page'
           }
         },
         {
           label: 'Pet Keychains',
           url: {
-            name: 'printed-product',
-            params: {
-              parentSku: 'customPrintedKeychains_bundle',
-              slug: 'face-keychains'
-            }
+            name: 'printed-keychains-creation-page'
           }
         }
       ],
