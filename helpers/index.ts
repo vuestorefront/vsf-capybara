@@ -58,7 +58,7 @@ export function prepareCategoryProduct (product) {
     id: product.id,
     title: htmlDecode(product.name),
     image: getThumbnailPath(
-      productThumbnailPath(product),
+      productThumbnailPath(product) || config.images.productPlaceholder ,
       config.products.thumbnails.width,
       config.products.thumbnails.height
     ),
