@@ -53,7 +53,7 @@
         "webp": "/assets/banner/webp/bannerK.webp",
         "fallback": "/assets/banner/png/bannerK.png"
       },
-      "link": "/gear/gear-3"
+      "link": "/gear.html"
     },
     {
       "title": "THE OFFICE LIFE",
@@ -62,7 +62,7 @@
         "webp": "/assets/banner/webp/bannerC.webp",
         "fallback": "/assets/banner/png/bannerC.png"
       },
-      "link": "/men/tops-men/tees-men/tees-16"
+      "link": "/men/tops-men/tees-men.html"
     }
   ],
   "menuAsideBanners": [
