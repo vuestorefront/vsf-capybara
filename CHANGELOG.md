@@ -35,9 +35,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed body scroll issue when open micro cart (#482)
 - Improved speed of carousel in m-product-carousel(#623)
 - Height of search result page on mobile (#474)
+- Replaced: the slack community link with discord link(676)
 - Updated the links of banners in product page (#445)
 - Improved: code to empty the password fields when clicking the update password button ([#679] (https://github.com/vuestorefront/vsf-capybara/issues/679))
 - Updated: code to make the tab index work on the authentication modals(#434)
+
 
 ## [1.0.5] - 23.06.2021
 
