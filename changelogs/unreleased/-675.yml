@@ -1,6 +1,0 @@
----
-title: Improved code to reset the password fields after password changes
-ticket_id: "#675"
-merge_request:684
-author: Bashu Tiwari
-type: fixed
