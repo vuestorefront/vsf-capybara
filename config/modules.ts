@@ -18,7 +18,6 @@ import { BudsiesModule } from 'src/modules/budsies'
 import { Braintree } from 'src/modules/payment-braintree'
 import { PromotionPlatformModule } from 'src/modules/promotion-platform'
 import { GiftCardModule } from 'src/modules/gift-card'
-import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
 import registerStoryblokComponents from 'theme/components/storyblok'
@@ -58,7 +57,6 @@ export function registerClientModules () {
   registerModule(Braintree)
   registerModule(PromotionPlatformModule)
   registerModule(GiftCardModule)
-  registerModule(PaymentBackendMethodsModule)
 }
 
 // Deprecated API, will be removed in 2.0

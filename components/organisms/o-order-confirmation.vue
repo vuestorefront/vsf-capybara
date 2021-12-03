@@ -127,9 +127,6 @@ export default {
   beforeCreate () {
     registerModule(MailerModule);
   },
-  mounted () {
-    this.updateDataLayer();
-  },
   destroyed () {
     this.$store.dispatch('checkout/setThankYouPage', false);
   },
