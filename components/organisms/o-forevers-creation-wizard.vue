@@ -414,9 +414,6 @@ export default Vue.extend({
 
     this.fillPlushieData();
   },
-  mounted (): void {
-    this.updateDataLayer();
-  },
   beforeDestroy (): void {
     this.$store.commit(`product/${catalogTypes.PRODUCT_RESET_CURRENT}`);
   },

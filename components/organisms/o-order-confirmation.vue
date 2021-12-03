@@ -97,9 +97,6 @@ import { SfHeading, SfButton } from '@storefront-ui/vue';
 
 export default {
   name: 'OOrderConfirmation',
-  inject: {
-    window: { from: 'WindowObject' }
-  },
   components: { SfHeading, SfButton },
   mixins: [VueOfflineMixin, EmailForm],
   data () {
