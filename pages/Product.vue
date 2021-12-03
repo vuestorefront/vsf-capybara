@@ -47,8 +47,6 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
-import { PRODUCT_PAGE_VIEWED } from 'src/modules/shared/types/product-page-viewed.event';
-import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 
 import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
 
@@ -139,9 +137,6 @@ export default {
         }
       }
     }
-  },
-  mounted () {
-    EventBus.$emit(PRODUCT_PAGE_VIEWED, this.getCurrentProduct);
   },
   async asyncData ({ store, route, context }) {
     if (context) context.output.cacheTags.add('product')
