@@ -140,6 +140,9 @@
 import Vue, { PropType, VueConstructor } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
+
+import ForeversWizardEvents from 'src/modules/shared/types/forevers-wizard-events';
 
 import { SfHeading, SfButton } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
@@ -299,7 +302,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.isUploadProcessingInProgress = value;
     },
     submitStep (): void {
-      this.sendEvent();
+      EventBus.$emit(
+        ForeversWizardEvents.PHOTOS_PROVIDE,
+        this.uploadMethod === ImageUploadMethod.EMAIL ? 'email' : 'now'
+      );
+
       this.$emit('next-step');
     },
     toggleUploadMethod (): void {
@@ -312,16 +319,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
       return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
-    },
-    sendEvent () {
-      if (!this.$gtm) {
-        return;
-      }
-
-      this.$gtm.trackEvent({
-        event: 'foreversWizardPhotosProvide',
-        'foreversWizardPhotosProvide.methodName': this.uploadMethod === ImageUploadMethod.EMAIL ? 'email' : 'now'
-      });
     }
   },
   created (): void {

@@ -94,6 +94,9 @@
 import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
+
+import ForeversWizardEvents from 'src/modules/shared/types/forevers-wizard-events';
 
 import { SfHeading, SfButton, SfInput } from '@storefront-ui/vue';
 
@@ -184,18 +187,8 @@ export default Vue.extend({
         this.showEmailStep = false;
       }
     },
-    sendEvent (): void {
-      if (!this.$gtm) {
-        return;
-      }
-
-      this.$gtm.trackEvent({
-        event: 'foreversWizardInfoFill'
-      }
-      )
-    },
     submitStep (): void {
-      this.sendEvent();
+      EventBus.$emit(ForeversWizardEvents.INFO_FILL);
       this.$emit('next-step');
     }
   },

@@ -28,6 +28,10 @@ import {
   SfButton
 } from '@storefront-ui/vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
+
+import CartEvents from 'src/modules/shared/types/cart-events';
+
 import APromoCode from 'theme/components/atoms/a-promo-code.vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary.vue';
 export default {
@@ -47,17 +51,8 @@ export default {
   },
   methods: {
     goToCheckout () {
-      this.sendEvent();
+      EventBus.$emit(CartEvents.GO_TO_CHECKOUT_FROM_CART)
       this.$router.push(localizedRoute('/checkout'));
-    },
-    sendEvent () {
-      if (!this.$gtm) {
-        return;
-      }
-
-      this.$gtm.trackEvent({
-        event: 'goToCheckoutFromCart'
-      })
     }
   }
 };

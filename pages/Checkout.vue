@@ -8,7 +8,7 @@
           @change="changeStep"
         >
           <SfStep v-for="step in steps" :key="step.key" :name="step.name">
-            <component :is="step.component" :is-active="true" @sendEvent="onStepSendEvent" />
+            <component :is="step.component" :is-active="true" />
           </SfStep>
         </SfSteps>
       </div>
@@ -133,16 +133,6 @@ export default {
         message: this.$t(
           'There is no Internet connection. You can still place your order. We will notify you if any of ordered products is not available because we cannot check it right now.'
         )
-      });
-    },
-    onStepSendEvent (sectionName) {
-      if (!this.$gtm) {
-        return;
-      }
-
-      this.$gtm.trackEvent({
-        event: 'checkoutSectionChange',
-        'checkoutSectionChange.sectionName': sectionName
       });
     }
   }

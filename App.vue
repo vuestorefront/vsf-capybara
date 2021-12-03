@@ -45,24 +45,6 @@ export default {
     FileProcessingRepositoryFactory: fileProcessingRepositoryFactory,
     ImageHandlerService: imageHandlerService,
     WindowObject: windowObject
-  },
-  created () {
-    this.$router.afterEach(() => {
-      this.updateDataLayer();
-    })
-  },
-  methods: {
-    updateDataLayer () {
-      if (!windowObject.dataLayer || !this.loggedUser) {
-        return;
-      }
-
-      windowObject.dataLayer.push({
-        customerEmail: this.loggedUser.email,
-        customerFullName: `${this.loggedUser.firstname} ${this.loggedUser.lastname}`,
-        customerId: this.loggedUser.id
-      })
-    }
   }
 };
 </script>

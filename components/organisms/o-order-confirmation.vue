@@ -86,7 +86,7 @@
 
 <script>
 import get from 'lodash-es/get';
-import { mapGetters, mapState } from 'vuex';
+import { mapState } from 'vuex';
 import config from 'config';
 import VueOfflineMixin from 'vue-offline/mixin';
 import { EmailForm } from '@vue-storefront/core/modules/mailer/components/EmailForm';
@@ -94,7 +94,6 @@ import { isServer } from '@vue-storefront/core/helpers';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { MailerModule } from '@vue-storefront/core/modules/mailer';
 import { SfHeading, SfButton } from '@storefront-ui/vue';
-import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 
 export default {
   name: 'OOrderConfirmation',
@@ -111,14 +110,8 @@ export default {
   },
   computed: {
     ...mapState({
-      lastOrder: state => get(state, 'order.last_order_confirmation.order'),
       lastOrderConfirmation: state => get(state, 'order.last_order_confirmation.confirmation') || {},
-      checkoutPersonalEmailAddress: state => state.checkout.personalDetails.emailAddress,
-      currentUser: state => state.user.current
-    }),
-    ...mapGetters({
-      ordersHistory: 'user/getOrdersHistory',
-      sessionOrderHashes: 'order/getSessionOrderHashes'
+      checkoutPersonalEmailAddress: state => state.checkout.personalDetails.emailAddress
     }),
     isNotificationSupported () {
       if (isServer || !('Notification' in window)) return false;
@@ -183,84 +176,6 @@ export default {
         message,
         action1: { label: this.$t('OK') }
       });
-    },
-    prepareProductCategories (product) {
-      return product.category.map((category) => category.name).join('|');
-    },
-    preparePurchaseProduct (product) {
-      return {
-        category: this.prepareProductCategories(product),
-        coupon: '',
-        name: product.name,
-        price: product.price,
-        quantity: product.qty,
-        id: product.sku
-      }
-    },
-    prepareTransactionProduct (product) {
-      return {
-        category: this.prepareProductCategories(product),
-        name: product.name,
-        price: product.price,
-        quantity: product.qty,
-        sku: product.sku
-      }
-    },
-    updateDataLayer () {
-      if (!this.window.dataLayer) {
-        return;
-      }
-
-      const order = this.lastOrder;
-      const orderAdditionalData = this.lastOrder.additionalData;
-      const transactionProductsData = order.products.map((product) => this.prepareTransactionProduct(product));
-      const purchaseProductsData = order.products.map((product) => this.preparePurchaseProduct(product))
-      const couponCode = orderAdditionalData.coupon_code ? orderAdditionalData.coupon_code : '';
-      const isNewCustomer = this.ordersHistory.length <= 1 || this.sessionOrderHashes <= 1;
-      const storeView = currentStoreView();
-      const storeName = storeView.name ? storeView.name : '';
-
-      this.window.dataLayer.push(
-        {
-          pageCategory: 'order-success'
-        },
-        {
-          transactionId: this.lastOrderConfirmation.magentoOrderId,
-          transactionAffiliation: storeName,
-          transactionTotal: orderAdditionalData.base_grand_total,
-          transactionTax: orderAdditionalData.base_tax_amount,
-          transactionShipping: orderAdditionalData.base_shipping_amount,
-          transactionProducts: transactionProductsData,
-          ecommerce: {
-            purchase: {
-              actionField: {
-                affiliation: storeName,
-                coupon: couponCode,
-                id: this.lastOrderConfirmation.magentoOrderId,
-                revenue: orderAdditionalData.base_grand_total,
-                shipping: orderAdditionalData.base_shipping_amount,
-                tax: orderAdditionalData.base_tax_amount
-              },
-              products: purchaseProductsData
-            }
-          }
-        },
-        {
-          shareasaleSSCID: '', // TODO
-          transactionAffiliateTotal: orderAdditionalData.base_subtotal - orderAdditionalData.base_discount_amount,
-          transactionCurrency: orderAdditionalData.order_currency_code,
-          transactionIsNewCustomer: isNewCustomer,
-          transactionItemsPrices: order.products.map((product) => product.price).join(),
-          transactionItemsQuantities: order.products.map((product) => product.qty).join(),
-          transactionSKUs: order.products.map((product) => product.sku).join(),
-          transactionValue: orderAdditionalData.base_grand_total - orderAdditionalData.base_shipping_amount - orderAdditionalData.base_tax_amount
-        },
-        {
-          customerEmail: orderAdditionalData.personalDetails.emailAddress,
-          customerFullName: `${orderAdditionalData.personalDetails.firstName} ${orderAdditionalData.personalDetails.lastName}`,
-          customerId: this.currentUser ? this.currentUser.id : ''
-        }
-      );
     }
   }
 };

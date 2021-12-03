@@ -169,6 +169,8 @@ import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
+import CartEvents from 'src/modules/shared/types/cart-events';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 
 export default {
   name: 'DetailedCart',
@@ -364,17 +366,7 @@ export default {
       }).finally(() => { this.isUpdatingQuantity = false });
     },
     onDropdownActionClick (action) {
-      this.sendMakeAnotherFromCartEvent(action);
-    },
-    sendMakeAnotherFromCartEvent (action) {
-      if (!this.$gtm) {
-        return;
-      }
-
-      this.$gtm.trackEvent({
-        event: 'makeAnotherFromCart',
-        'makeAnotherFromCart.product': action.label
-      })
+      EventBus.$emit(CartEvents.MAKE_ANOTHER_FROM_CART, action.label);
     }
   }
 };

@@ -249,8 +249,6 @@ export default {
   },
   methods: {
     saveDataToCheckout () {
-      this.$emit('sendEvent', 'opcShipping');
-      this.$emit('sendEvent', 'opcShippingMethod');
       this.sendDataToCheckout();
       this.$store.dispatch('cart/syncTotals', { forceServerSync: true });
     }
