@@ -89,7 +89,7 @@
             ? $t('Field is required')
             : $t('Name must have at least 3 letters.')
         "
-        @blur="$v.shipping.zipCode.$touch()"
+        @blur="onZipCodeBlur"
       />
       <MMultiselect
         v-model="shipping.country"
@@ -222,7 +222,8 @@ export default {
   data: () => {
     return {
       states: States,
-      fCanShowStateSelector: true
+      fCanShowStateSelector: true,
+      fZipCodeChanged: false
     };
   },
   computed: {
@@ -245,9 +246,31 @@ export default {
     },
     getShippingCountry () {
       return this.shipping.country;
+    },
+    getZipCode () {
+      return this.shipping.zipCode;
     }
   },
   methods: {
+    onZipCodeBlur () {
+      this.$v.shipping.zipCode.$touch();
+
+      if (!this.fZipCodeChanged) {
+        return;
+      }
+
+      if (this.$v.shipping.country.$invalid) {
+        return;
+      }
+
+      if (this.$v.shipping.zipCode.$invalid) {
+        return;
+      }
+
+      this.fZipCodeChanged = false;
+
+      this.$bus.$emit('checkout-before-shippingMethods', this.shipping.country)
+    },
     saveDataToCheckout () {
       this.sendDataToCheckout();
       this.$store.dispatch('cart/syncTotals', { forceServerSync: true });
@@ -268,6 +291,12 @@ export default {
         this.$nextTick(() => {
           this.fCanShowStateSelector = true;
         })
+      },
+      immediate: true
+    },
+    getZipCode: {
+      handler () {
+        this.fZipCodeChanged = true;
       },
       immediate: true
     }

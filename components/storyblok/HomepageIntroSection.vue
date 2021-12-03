@@ -143,6 +143,10 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
 .storyblok-homepage-intro-section {
   position: relative;
 
+  ._intro-column {
+    line-height: 0;
+  }
+
   ._content {
     display: flex;
     flex-direction: column;
