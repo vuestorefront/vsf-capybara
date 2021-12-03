@@ -45,7 +45,7 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .o-modal {
   position: relative;
-  z-index: 2;
+  z-index: 201;
 }
 .modal {
   box-sizing: border-box;
