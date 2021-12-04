@@ -69,7 +69,7 @@
 
 <script>
 import UserOrder from '@vue-storefront/core/modules/order/components/UserOrdersHistory';
-import OMyAccountOrderDetails from 'theme/components/organisms/o-my-account-order-details'
+import OMyAccountOrderDetails from 'theme/components/myaccount/o-my-account-order-details'
 import { SfTabs, SfTable, SfButton } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 

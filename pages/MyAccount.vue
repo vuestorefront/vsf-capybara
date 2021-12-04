@@ -43,10 +43,10 @@
 <script>
 import MyAccount from '@vue-storefront/core/pages/MyAccount';
 
-import OMyAccountProfile from 'theme/components/organisms/o-my-account-profile';
-import OMyAccountShippingDetails from 'theme/components/organisms/o-my-account-shipping-details'
-import OMyAccountOrdersHistory from 'theme/components/organisms/o-my-account-orders-history';
-import OMyAccountPlaceholder from 'theme/components/organisms/o-my-account-placeholder';
+import OMyAccountProfile from 'theme/components/myaccount/o-my-account-profile';
+import OMyAccountShippingDetails from 'theme/components/myaccount/o-my-account-shipping-details'
+import OMyAccountOrdersHistory from 'theme/components/myaccount/o-my-account-orders-history';
+import OMyAccountPlaceholder from 'theme/components/myaccount/o-my-account-placeholder';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 
