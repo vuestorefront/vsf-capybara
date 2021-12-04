@@ -67,12 +67,22 @@
         :error-message="$t('Field is required')"
         @blur="$v.shipping.city.$touch()"
       />
-      <SfInput
+      <SfSelect
         v-model.trim="shipping.state"
-        class="form__element form__element--half form__element--half-even"
+        class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
         name="state"
         :label="$t('State / Province')"
-      />
+        :required="true"
+        :error-message="$t('Field is required')"
+      >
+        <SfSelectOption
+          v-for="state in stateOptions"
+          :key="state.code"
+          :value="state.code"
+        >
+          {{ state.name }}
+        </SfSelectOption>
+      </SfSelect>
       <SfInput
         v-model.trim="shipping.zipCode"
         class="form__element form__element--half"
@@ -164,6 +174,7 @@
 import { required, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { Shipping } from '@vue-storefront/core/modules/checkout/components/Shipping';
+import config from 'config';
 import {
   SfInput,
   SfRadio,
@@ -173,9 +184,15 @@ import {
   SfCheckbox
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
+const States = require('@vue-storefront/i18n/resource/states.json')
 
 export default {
   name: 'OShipping',
+  data () {
+    return {
+      states: States
+    }
+  },
   components: {
     SfInput,
     SfRadio,
@@ -223,6 +240,12 @@ export default {
   },
   mounted () {
     createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
+  },
+  computed: {
+    stateOptions () {
+      let countryCode = this.shipping.country ? this.shipping.country : config.i18n.defaultCountry
+      return this.states[countryCode] ? this.states[countryCode] : []
+    }
   }
 };
 </script>
