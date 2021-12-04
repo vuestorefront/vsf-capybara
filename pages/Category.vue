@@ -205,7 +205,7 @@ import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
-import ASortIcon from 'theme/components/atoms/a-sort-icon';
+import ASortIcon from 'theme/components/category/a-sort-icon';
 import {
   SfIcon,
   SfList,
