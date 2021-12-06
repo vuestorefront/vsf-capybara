@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { VueConstructor } from 'vue';
+import Vue from 'vue';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
@@ -86,11 +86,7 @@ import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-custo
 import BodypartOption from '../interfaces/bodypart-option';
 import CustomerImage from '../interfaces/customer-image.interface';
 
-interface InjectedServices {
-  window: Window
-}
-
-export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
+export default Vue.extend({
   name: 'OForeversCreationWizard',
   components: {
     SfSteps,

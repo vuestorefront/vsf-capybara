@@ -12,7 +12,7 @@
       >
         <SfList>
           <SfListItem v-for="link in linkGroup.children" :key="link.name">
-            <router-link v-if="link.link" :to="localizedRoute(link.link)" exact>
+            <router-link v-if="link.link" :to="localizedRoute(link.link)" :target="link.target" exact>
               <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
             </router-link>
             <SfMenuItem
@@ -20,33 +20,6 @@
               class="sf-footer__menu-item"
               :label="$t(link.name)"
               @click="link.clickHandler"
-            />
-          </SfListItem>
-        </SfList>
-      </SfFooterColumn>
-      <SfFooterColumn :title="$t('Others')">
-        <SfList>
-          <SfListItem>
-            <router-link to="/legal" exact>
-              <SfMenuItem
-                class="sf-footer__menu-item"
-                :label="$t('Terms of Service')"
-              />
-            </router-link>
-          </SfListItem>
-          <SfListItem>
-            <router-link to="/privacy" exact>
-              <SfMenuItem
-                class="sf-footer__menu-item"
-                :label="$t('Privacy policy')"
-              />
-            </router-link>
-          </SfListItem>
-          <SfListItem v-if="multistoreEnabled">
-            <SfMenuItem
-              @click.native="showLanguageSwitcher"
-              class="sf-footer__menu-item"
-              :label="currentLanguage"
             />
           </SfListItem>
         </SfList>
@@ -69,7 +42,29 @@
           />
         </div>
       </SfFooterColumn>
+
+      <div class="_additional-information">
+        <router-link to="//support.mypetsies.com/support/home" target="_blank" exact>
+          <SfMenuItem
+            class="sf-footer__menu-item"
+            :label="$t('Contact Us')"
+          />
+        </router-link>
+
+        <div class="_legal-information">
+          ©{{ new Date().getFullYear() }} Budsies Co LLC. All Rights Reserved.
+          |
+          <router-link to="/terms-of-service" exact>
+            {{ $t('Terms of Service') }}
+          </router-link>
+          |
+          <router-link to="/privacy-policy" exact>
+            {{ $t('Privacy Policy') }}
+          </router-link>
+        </div>
+      </div>
     </SfFooter>
+
     <ABackToTop bottom="20px" right="20px" visibleoffset="200" class="desktop-only" />
   </footer>
 </template>
@@ -133,8 +128,51 @@ export default {
     },
     links () {
       return {
-        orders: {
-          name: 'Orders',
+        about: {
+          name: 'Company',
+          children: [
+            {
+              name: 'About',
+              link: '/about-petsies'
+            },
+            {
+              name: 'Blog',
+              link: '/blog',
+              target: '_blank'
+            },
+            {
+              name: 'Refund & Return Policy',
+              link: '/craftsmanship-promise'
+            },
+            {
+              name: 'Media',
+              link: '//support.mypetsies.com/support/solutions/folders/13000003990',
+              target: '_blank'
+            }
+          ]
+        },
+        services: {
+          name: 'Services',
+          children: [
+            { name: 'Custom Forevers', link: '/forevers-pet-plush' },
+            { name: 'Custom Pillows', link: '/custom-pillows' },
+            { name: 'Custom Socks', link: { name: 'printed-socks-creation-page' } },
+            { name: 'Custom Face Masks', link: { name: 'printed-masks-creation-page' } },
+            { name: 'Custom Bulk', link: '/bulk-custom-stuffed-animal-manufacture' },
+            { name: 'Gift Cards', link: '/giftcards' },
+            { name: 'Gift Box', link: '/giftbox' },
+            { name: 'Accessories',
+              link: {
+                name: 'category',
+                params: {
+                  slug: 'petsies-accessories-11'
+                }
+              }
+            }
+          ]
+        },
+        account: {
+          name: 'Account',
           children: [
             {
               name: 'My account',
@@ -142,31 +180,19 @@ export default {
                 ? { link: '/my-account' }
                 : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
             },
-            { name: 'Delivery', link: '/delivery' },
-            { name: 'Return policy', link: '/returns' }
+            { name: 'My Cart', link: { name: 'detailed-cart' } },
+            { name: 'Rising Starts', link: '/rising-stars' }
           ]
         },
-        help: {
-          name: 'Help',
+        quickLInks: {
+          name: 'Quick Links',
           children: [
-            { name: 'Customer service', link: '/customer-service' },
-            { name: 'Size guide', link: '/size-guide' },
-            { name: 'Contact us', link: '/contact' },
-            { name: 'Typography', link: '/typography-text' }
-          ]
-        },
-        about: {
-          name: 'About us',
-          children: [
-            {
-              name: 'About us',
-              link: getPathForStaticPage('/about-us')
-            },
-            {
-              name: 'Customer service',
-              link: getPathForStaticPage('/customer-service')
-            },
-            { name: 'Store locator', link: '/store-locator' }
+            { name: 'Veterinarians', link: '/partners' },
+            { name: 'Become a Partner', link: '/partners' },
+            { name: 'Resellers', link: '/partners' },
+            { name: 'Affiliates', link: '/affiliates' },
+            { name: 'Corporate Buying', link: '/partners' },
+            { name: 'FAQ', link: '//support.mypetsies.com/support/home', target: '_blank' }
           ]
         }
       };
@@ -293,9 +319,36 @@ export default {
       }
     }
   }
+
+  ._additional-information {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: var(--spacer-xl);
+    padding: 0 var(--spacer-xl);
+    text-align: center;
+    width: 100%;
+  }
+
+  ._legal-information {
+    color: var(--c-light-variant);
+    font-size: var(--font-xs);
+    margin-top: var(--spacer-xs);
+
+    a {
+      color: inherit;
+    }
+  }
+
   @include for-desktop {
     max-width: 100%;
     ::v-deep .sf-footer-column__content {
+      padding: 0;
+    }
+
+    ._additional-information {
       padding: 0;
     }
   }
