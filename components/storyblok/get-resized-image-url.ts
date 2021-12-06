@@ -7,7 +7,9 @@ export default function getResizedImageUrl (
 ): string {
   const filters = doesSupportWebp ? '/filters:format(webp)' : '';
 
-  const [, resource] = imageUrl.split('//a.storyblok.com');
+  // "https://s3.amazonaws.com/a.storyblok.com/f/109999/500x500/c01cfb137f/pet_socks.png"
+  // "https://a.storyblok.com/f/109999/1080x1080/485ba42bde/petsies_homepage_images_1_.png"
+  const [, resource] = imageUrl.split('/a.storyblok.com');
   let dimensions = parseImageDimensions(imageUrl);
   const ratio = dimensions.height / dimensions.width;
 
