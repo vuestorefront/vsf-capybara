@@ -215,6 +215,8 @@ import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
+import store from '@vue-storefront/core/store'
+
 import ASortIcon from 'theme/components/atoms/a-sort-icon';
 import {
   SfIcon,
@@ -435,44 +437,51 @@ export default {
         this.changePage();
       }
     },
-    $route: {
-      immediate: true,
-      handler (to, from) {
-        if (to.query.page && (!from || to.path === from.path)) {
-          this.changePage(parseInt(to.query.page) || 1);
-        } else {
-          this.initPagination()
-        }
+    $route (to, from) {
+      if (to.query.page && (!from || to.path === from.path)) {
+        this.changePage(parseInt(to.query.page) || 1);
+      } else {
+        this.initPagination()
       }
     }
   },
-  created () {
-    this.currentPage = this.$route.query.page ? Number.parseInt(this.$route.query.page, 10) : 1;
-  },
-  serverPrefetch () {
+  async serverPrefetch () {
+    if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('category');
+
     const page = this.$route.query.page ? Number.parseInt(this.$route.query.page, 10) : 1;
-    return this.$store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE });
-  },
-  async asyncData ({ store, route, context }) {
-    // this is for SSR purposes to prefetch data - and it's always executed before parent component methods
-    if (context) context.output.cacheTags.add('category')
-    await composeInitialPageState(store, route);
+
+    await composeInitialPageState(this.$store, this.$route)
+
+    if (page === 1) {
+      return;
+    }
+
+    return this.changePage(page);
   },
   async beforeRouteEnter (to, from, next) {
     if (isServer) next();
+
+    const page = to.query.page ? Number.parseInt(to.query.page, 10) : 1;
+
     // SSR no need to invoke SW caching here
-    else if (!from.name) {
-      // SSR but client side invocation, we need to cache products and invoke requests from asyncData for offline support
+    if (!from.name) {
       next(async vm => {
         vm.loading = true;
-        await composeInitialPageState(vm.$store, to, true);
+        vm.currentPage = page;
         await vm.$store.dispatch('category-next/cacheProducts', { route: to }); // await here is because we must wait for the hydration
         vm.loading = false;
       });
     } else {
       // Pure CSR, with no initial category state
+      await composeInitialPageState(store, to);
+
+      if (page !== 1) {
+        await store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE, route: to });
+      }
+
       next(async vm => {
         vm.loading = true;
+        vm.currentPage = page;
         vm.$store.dispatch('category-next/cacheProducts', { route: to });
         vm.loading = false;
       });
@@ -517,7 +526,7 @@ export default {
         return;
       }
 
-      await this.$store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE });
+      await this.$store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE, route: this.$route });
 
       this.currentPage = page;
     },
