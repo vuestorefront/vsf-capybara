@@ -101,6 +101,7 @@
                   >
                     <router-link
                       :to="action.url"
+                      @click.native="onDropdownActionClick(action)"
                     >
                       {{ action.label }}
                     </router-link>
@@ -168,6 +169,8 @@ import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
+import CartEvents from 'src/modules/shared/types/cart-events';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 
 const foreversProductsSkus = [
   'ForeversDog_bundle',
@@ -360,6 +363,9 @@ export default {
         product: product,
         qty: newQuantity
       }).finally(() => { this.isUpdatingQuantity = false });
+    },
+    onDropdownActionClick (action) {
+      EventBus.$emit(CartEvents.MAKE_ANOTHER_FROM_CART, action.label);
     },
     showEditButton (productSku) {
       return editableProductsSkus.includes(productSku);

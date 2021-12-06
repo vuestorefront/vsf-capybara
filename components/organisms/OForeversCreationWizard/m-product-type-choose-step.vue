@@ -57,9 +57,10 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue';
 import { SfHeading, SfButton } from '@storefront-ui/vue';
-
 import { Logger } from '@vue-storefront/core/lib/logger';
+import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 
+import ForeversWizardEvents from 'src/modules/shared/types/forevers-wizard-events';
 import {
   BaseImage
 } from 'src/modules/budsies';
@@ -139,6 +140,7 @@ export default Vue.extend({
 
         const newValue: ForeversWizardProductTypeStepData = { product, plushieId };
 
+        EventBus.$emit(ForeversWizardEvents.TYPE_CHANGE, type);
         this.$emit('input', newValue);
         this.$emit('next-step');
       } catch (error) {
