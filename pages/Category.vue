@@ -468,7 +468,6 @@ export default {
       next(async vm => {
         vm.loading = true;
         vm.currentPage = page;
-        await composeInitialPageState(store, to);
         await vm.$store.dispatch('category-next/cacheProducts', { route: to }); // await here is because we must wait for the hydration
         vm.loading = false;
       });
