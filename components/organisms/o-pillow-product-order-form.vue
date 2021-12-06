@@ -889,10 +889,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     --input-width: 20em;
   }
 
-  .sf-modal {
-    --modal-top: 3.75rem;
-  }
-
   .sf-divider {
     margin-top: var(--spacer-xl);
   }
