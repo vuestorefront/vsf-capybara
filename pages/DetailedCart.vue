@@ -262,8 +262,7 @@ export default {
       cartIsLoaded: (state) => state.cart.cartIsLoaded
     }),
     ...mapGetters({
-      products: 'cart/getCartItems',
-      coupon: 'cart/getCoupon'
+      products: 'cart/getCartItems'
     }),
     totalItems () {
       return this.products.reduce(

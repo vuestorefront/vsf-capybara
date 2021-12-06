@@ -9,7 +9,6 @@
 <script>
 import get from 'lodash-es/get'
 import config from 'config';
-import { mapState } from 'vuex';
 
 import DefaultLayout from './layouts/Default'
 import MinimalLayout from './layouts/Minimal'
@@ -33,9 +32,6 @@ export default {
     MinimalLayout
   },
   computed: {
-    ...mapState({
-      loggedUser: (state) => state.user.current
-    }),
     layout () {
       return `${get(this.$route, 'meta.layout', 'default')}-layout`
     }
