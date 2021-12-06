@@ -103,7 +103,12 @@ export default {
         },
         {
           label: 'Accessories',
-          url: '/c/petsies-accessories-11'
+          url: {
+            name: 'category',
+            params: {
+              slug: 'petsies-accessories-11'
+            }
+          }
         },
         {
           label: 'Bulk Orders',
