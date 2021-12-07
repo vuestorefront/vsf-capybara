@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the links of banners in product page (#445)
 - Improved: code to empty the password fields when clicking the update password button ([#679] (https://github.com/vuestorefront/vsf-capybara/issues/679))
 - Updated: code to make the tab index work on the authentication modals(#434)
+- Fixed Product detail page UI is not rendered properly when description of the product is not available (#681)
 
 
 ## [1.0.5] - 23.06.2021
