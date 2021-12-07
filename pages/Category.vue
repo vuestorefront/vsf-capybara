@@ -271,6 +271,10 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
   }
 };
 
+const getPageFromRoute = (route) => {
+  return route.query.page ? Number.parseInt(route.query.page, 10) : 1;
+};
+
 export default {
   name: 'CategoryPage',
   components: {
@@ -439,7 +443,7 @@ export default {
     },
     $route (to, from) {
       if (to.query.page && (!from || to.path === from.path)) {
-        this.changePage(parseInt(to.query.page) || 1);
+        this.changePage(getPageFromRoute(to));
       } else {
         this.initPagination()
       }
@@ -448,9 +452,9 @@ export default {
   async serverPrefetch () {
     if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('category');
 
-    const page = this.$route.query.page ? Number.parseInt(this.$route.query.page, 10) : 1;
+    const page = getPageFromRoute(this.$route);
 
-    await composeInitialPageState(this.$store, this.$route)
+    await composeInitialPageState(this.$store, this.$route);
 
     if (page === 1) {
       return;
@@ -458,10 +462,25 @@ export default {
 
     return this.changePage(page);
   },
+  async beforeRouteUpdate (to, from, next) {
+    if (to.params.slug === from.params.slug) {
+      next();
+      return;
+    }
+
+    const page = getPageFromRoute(to);
+    await composeInitialPageState(store, to);
+
+    if (page !== 1) {
+      await store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE, route: to });
+    }
+
+    next();
+  },
   async beforeRouteEnter (to, from, next) {
     if (isServer) next();
 
-    const page = to.query.page ? Number.parseInt(to.query.page, 10) : 1;
+    const page = getPageFromRoute(to);
 
     // SSR no need to invoke SW caching here
     if (!from.name) {
