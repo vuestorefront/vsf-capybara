@@ -73,7 +73,7 @@ import Product, { ProductLink } from 'core/modules/catalog/types/Product';
 import { SfButton } from '@storefront-ui/vue';
 import OProductCard from 'theme/components/organisms/o-product-card.vue';
 import { prepareCategoryProduct } from 'theme/helpers';
-import { PRODUCT_HARD_RESET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 export default Vue.extend({
   name: 'CrossSells',
@@ -100,7 +100,7 @@ export default Vue.extend({
     await this.loadUpSellsProducts();
   },
   beforeDestroy () {
-    this.$store.commit(`product/${PRODUCT_HARD_RESET_CURRENT}`);
+    this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
   },
   methods: {
     productLinks (): ProductLink[] {

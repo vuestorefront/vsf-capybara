@@ -11,7 +11,7 @@
 import Vue from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
-import { PRODUCT_HARD_RESET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import Product from 'core/modules/catalog/types/Product';
 
@@ -38,7 +38,7 @@ export default Vue.extend({
     }
   },
   beforeDestroy (): void {
-    this.$store.commit(`product/${PRODUCT_HARD_RESET_CURRENT}`);
+    this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
   },
   metaInfo () {
     return {
