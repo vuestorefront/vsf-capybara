@@ -174,6 +174,9 @@ export default {
     display: block;
     margin: var(--spacer-xl) 0 var(--spacer-base) auto;
   }
+  &__tabs {
+    --tabs-title-z-index: 0;
+  }
 }
 
 .section {
