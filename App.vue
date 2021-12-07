@@ -74,4 +74,9 @@ body {
     }
   }
 }
+
+.sf-input input {
+  outline: none;
+  padding-left: 3px;
+}
 </style>
