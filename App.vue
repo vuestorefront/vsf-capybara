@@ -75,7 +75,7 @@ body {
   }
 }
 
-.sf-input input {
+.sf-input input, .sf-search-bar__input {
   outline: none;
   padding-left: 3px;
 }
