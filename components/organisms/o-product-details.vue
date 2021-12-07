@@ -160,6 +160,7 @@ export default {
       max-width: 32.625rem;
       margin: 0 0 0 7.5rem;
       padding: 0;
+      flex-grow: 1;
     }
   }
   &__add-to-cart {
