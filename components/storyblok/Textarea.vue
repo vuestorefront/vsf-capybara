@@ -28,5 +28,33 @@ export default Blok.extend({
     display: inline-block;
     text-align: left;
   }
+
+  ::v-deep .storyblok-rich-text {
+    .-accent-color {
+      color: var(--c-warning);
+    }
+
+    .-action-color {
+      color: var(--c-primary);
+    }
+
+    .-large-text {
+      font-size: 24px;
+    }
+
+    .-small-text {
+      font-size: 10px;
+    }
+
+    .-large-accent-text {
+      color: var(--c-warning);
+      font-size: 24px;
+    }
+
+    .-large-action-text {
+      color: var(--c-primary);
+      font-size: 24px;
+    }
+  }
 }
 </style>
