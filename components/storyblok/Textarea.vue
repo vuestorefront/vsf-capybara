@@ -31,29 +31,29 @@ export default Blok.extend({
 
   ::v-deep .storyblok-rich-text {
     .-accent-color {
-      color: #f78f9e;
+      color: var(--c-warning);
     }
 
     .-action-color {
-      color: #43c5e4;
+      color: var(--c-primary);
     }
 
     .-large-text {
       font-size: 24px;
     }
 
+    .-small-text {
+      font-size: 10px;
+    }
+
     .-large-accent-text {
-      color: #f78f9e;
+      color: var(--c-warning);
       font-size: 24px;
     }
 
     .-large-action-text {
-      color: #43c5e4;
+      color: var(--c-primary);
       font-size: 24px;
-    }
-
-    .-small-text {
-      font-size: 10px;
     }
   }
 }
