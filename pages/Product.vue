@@ -47,6 +47,7 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
+import { PRODUCT_HARD_RESET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
 
@@ -153,6 +154,9 @@ export default {
     );
     if (isServer) await loadBreadcrumbsPromise;
     catalogHooksExecutors.productPageVisited(product);
+  },
+  beforeDestroy () {
+    this.$store.commit(`product/${PRODUCT_HARD_RESET_CURRENT}`);
   },
   beforeRouteEnter (to, from, next) {
     if (isServer) {

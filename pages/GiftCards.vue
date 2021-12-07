@@ -61,6 +61,7 @@ import Product from '@vue-storefront/core/modules/catalog/types/Product';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
+import { PRODUCT_HARD_RESET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import { SfModal } from '@storefront-ui/vue';
 
@@ -200,6 +201,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   beforeDestroy (): void {
     this.removeEventBusListeners();
+    this.$store.commit(`product/${PRODUCT_HARD_RESET_CURRENT}`);
   },
   async asyncData ({ store }): Promise<void> {
     await Promise.all([

@@ -11,6 +11,8 @@
 import Vue from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
+import { PRODUCT_HARD_RESET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
 import Product from 'core/modules/catalog/types/Product';
 
 import OForeversCreationWizard from 'theme/components/organisms/o-forevers-creation-wizard.vue';
@@ -35,7 +37,8 @@ export default Vue.extend({
       return this.$route.query?.id;
     }
   },
-  async asyncData ({ store, route, context }): Promise<void> {
+  beforeDestroy (): void {
+    this.$store.commit(`product/${PRODUCT_HARD_RESET_CURRENT}`);
   },
   metaInfo () {
     return {

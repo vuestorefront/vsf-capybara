@@ -414,9 +414,6 @@ export default Vue.extend({
 
     this.fillPlushieData();
   },
-  beforeDestroy (): void {
-    this.$store.commit(`product/${catalogTypes.PRODUCT_RESET_CURRENT}`);
-  },
   watch: {
     product: {
       async handler () {

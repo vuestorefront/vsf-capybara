@@ -20,6 +20,8 @@ import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import { PRODUCT_HARD_RESET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
 import Product from 'core/modules/catalog/types/Product';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
@@ -49,9 +51,6 @@ export default Vue.extend({
       return undefined;
     }
   },
-  methods: {
-    //
-  },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product');
 
@@ -74,6 +73,9 @@ export default Vue.extend({
 
     if (isServer) await loadBreadcrumbsPromise;
     catalogHooksExecutors.productPageVisited(product);
+  },
+  beforeDestroy () {
+    this.$store.commit(`product/${PRODUCT_HARD_RESET_CURRENT}`);
   },
   metaInfo () {
     return {
