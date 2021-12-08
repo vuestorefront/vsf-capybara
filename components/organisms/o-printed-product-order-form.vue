@@ -555,9 +555,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.quantity = this.product.qty;
     }
   },
-  beforeDestroy (): void {
-    this.$store.commit(`product/${types.PRODUCT_RESET_CURRENT}`);
-  },
   watch: {
     availableStyles: {
       handler (): void {
