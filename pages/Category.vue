@@ -215,6 +215,8 @@ import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
+import store from '@vue-storefront/core/store'
+
 import ASortIcon from 'theme/components/atoms/a-sort-icon';
 import {
   SfIcon,
@@ -243,6 +245,7 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
     const cachedCategory = store.getters['category-next/getCategoryFrom'](
       route.path
     );
+
     const currentCategory =
       cachedCategory && !forceLoad
         ? cachedCategory
@@ -266,6 +269,10 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
   } catch (e) {
     //
   }
+};
+
+const getPageFromRoute = (route) => {
+  return route.query.page ? Number.parseInt(route.query.page, 10) : 1;
 };
 
 export default {
@@ -294,7 +301,6 @@ export default {
       loading: true,
       loadingProducts: false,
       currentPage: 1,
-      getMoreCategoryProducts: [],
       browserWidth: 0,
       isFilterSidebarOpen: false,
       unsubscribeFromStoreAction: null,
@@ -312,7 +318,8 @@ export default {
       getSystemFilterNames: 'category-next/getSystemFilterNames',
       getCategories: 'category/getCategories',
       getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
-      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
+      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
+      getCurrentPageProducts: 'category-next/getCurrentPageProducts'
     }),
     isLazyHydrateEnabled () {
       return config.ssr.lazyHydrateFor.includes('category-next.products');
@@ -321,7 +328,7 @@ export default {
       return this.getCategoryProductsTotal === 0;
     },
     isLazyLoadingEnabled () {
-      return this.browserWidth < LAZY_LOADING_ACTIVATION_BREAKPOINT;
+      return !isServer && this.browserWidth < LAZY_LOADING_ACTIVATION_BREAKPOINT;
     },
     breadcrumbs () {
       return this.getBreadcrumbsRoutes
@@ -372,7 +379,7 @@ export default {
             return this.isLazyLoadingEnabled || i < THEME_PAGE_SIZE;
           })
           .map(prepareCategoryProduct)
-        : this.getMoreCategoryProducts.map(prepareCategoryProduct);
+        : this.getCurrentPageProducts.map(prepareCategoryProduct);
     },
     totalPages () {
       return Math.ceil(this.getCategoryProductsTotal / THEME_PAGE_SIZE);
@@ -433,38 +440,47 @@ export default {
       if (this.currentPage > 1) {
         this.changePage();
       }
-    },
-    $route: {
-      immediate: true,
-      handler (to, from) {
-        if (to.query.page && to.path === from.path) {
-          this.changePage(parseInt(to.query.page) || 1);
-        } else {
-          this.initPagination()
-        }
-      }
     }
   },
-  async asyncData ({ store, route, context }) {
-    // this is for SSR purposes to prefetch data - and it's always executed before parent component methods
-    if (context) context.output.cacheTags.add('category')
-    await composeInitialPageState(store, route);
+  async serverPrefetch () {
+    if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('category');
+
+    return this.onCategoryChangedHandler(this.$route);
+  },
+  async beforeRouteUpdate (to, from, next) {
+    if (to.params.slug === from.params.slug) {
+      await this.updatePage(to);
+      next();
+      return;
+    }
+
+    await this.onCategoryChangedHandler(to);
+    next();
   },
   async beforeRouteEnter (to, from, next) {
     if (isServer) next();
+
+    const page = getPageFromRoute(to);
+
     // SSR no need to invoke SW caching here
-    else if (!from.name) {
-      // SSR but client side invocation, we need to cache products and invoke requests from asyncData for offline support
+    if (!from.name) {
       next(async vm => {
         vm.loading = true;
-        await composeInitialPageState(vm.$store, to, true);
+        vm.currentPage = page;
         await vm.$store.dispatch('category-next/cacheProducts', { route: to }); // await here is because we must wait for the hydration
         vm.loading = false;
       });
     } else {
       // Pure CSR, with no initial category state
+      await composeInitialPageState(store, to);
+
+      if (page !== 1) {
+        await store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE, route: to });
+      }
+
       next(async vm => {
         vm.loading = true;
+        vm.currentPage = page;
         vm.$store.dispatch('category-next/cacheProducts', { route: to });
         vm.loading = false;
       });
@@ -481,6 +497,7 @@ export default {
     this.getBrowserWidth();
   },
   beforeDestroy () {
+    this.$store.dispatch('category-next/resetCurrentCategoryData');
     this.unsubscribeFromStoreAction();
     this.$bus.$off('product-after-list', this.initPagination);
     window.removeEventListener('resize', this.getBrowserWidth);
@@ -499,40 +516,7 @@ export default {
       this.loadingProducts = false;
     },
     async changePage (page = this.currentPage) {
-      const start = (page - 1) * THEME_PAGE_SIZE;
-
-      if (
-        start < 0 ||
-        start >= this.getCategoryProductsTotal ||
-        this.getCategoryProductsTotal < THEME_PAGE_SIZE
-      ) {
-        return;
-      }
-
-      const { includeFields, excludeFields } = config.entities.productList;
-      const { filters } = this.getCurrentSearchQuery;
-      const filterQuery = buildFilterProductsQuery(
-        this.getCurrentCategory,
-        filters
-      );
-
-      const searchResult = await quickSearchByQuery({
-        query: filterQuery,
-        sort: this.sortOrder,
-        start: start,
-        size: THEME_PAGE_SIZE,
-        includeFields: includeFields,
-        excludeFields: excludeFields
-      });
-
-      this.getMoreCategoryProducts = await this.$store.dispatch(
-        'category-next/processCategoryProducts',
-        {
-          products: searchResult.items,
-          filters: filters
-        }
-      );
-
+      await this.$store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE, route: this.$route });
       this.currentPage = page;
     },
     initPagination () {
@@ -580,6 +564,17 @@ export default {
       return category.position === 0
         ? this.getCurrentCategory.path === category.path
         : this.getCurrentCategory.path.startsWith(category.path);
+    },
+    async onCategoryChangedHandler (categoryRoute) {
+      await composeInitialPageState(store, categoryRoute);
+      await this.updatePage(categoryRoute);
+    },
+    async updatePage (route) {
+      if (route.query.page) {
+        await this.changePage(getPageFromRoute(route));
+      } else {
+        this.initPagination();
+      }
     }
   },
   metaInfo () {
