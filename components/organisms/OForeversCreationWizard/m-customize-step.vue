@@ -423,7 +423,7 @@ export default Vue.extend({
           id: Number(productLink.product.id),
           sku: productLink.product.sku,
           name: productLink.product.name,
-          description: productLink.product.description,
+          description: productLink.product.short_description || '',
           price: price.special ? price.special : price.regular,
           images: images,
           optionId: this.addonsBundleOption.option_id,
