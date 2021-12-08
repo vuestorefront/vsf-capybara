@@ -440,41 +440,21 @@ export default {
       if (this.currentPage > 1) {
         this.changePage();
       }
-    },
-    $route (to, from) {
-      if (to.query.page && (!from || to.path === from.path)) {
-        this.changePage(getPageFromRoute(to));
-      } else {
-        this.initPagination()
-      }
     }
   },
   async serverPrefetch () {
     if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('category');
 
-    const page = getPageFromRoute(this.$route);
-
-    await composeInitialPageState(this.$store, this.$route);
-
-    if (page === 1) {
-      return;
-    }
-
-    return this.changePage(page);
+    return this.onCategoryChangedHandler(this.$route);
   },
   async beforeRouteUpdate (to, from, next) {
     if (to.params.slug === from.params.slug) {
+      await this.updatePage(to);
       next();
       return;
     }
 
-    const page = getPageFromRoute(to);
-    await composeInitialPageState(store, to);
-
-    if (page !== 1) {
-      await store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE, route: to });
-    }
-
+    await this.onCategoryChangedHandler(to);
     next();
   },
   async beforeRouteEnter (to, from, next) {
@@ -517,6 +497,7 @@ export default {
     this.getBrowserWidth();
   },
   beforeDestroy () {
+    this.$store.dispatch('category-next/resetCurrentCategoryData');
     this.unsubscribeFromStoreAction();
     this.$bus.$off('product-after-list', this.initPagination);
     window.removeEventListener('resize', this.getBrowserWidth);
@@ -535,18 +516,7 @@ export default {
       this.loadingProducts = false;
     },
     async changePage (page = this.currentPage) {
-      const start = (page - 1) * THEME_PAGE_SIZE;
-
-      if (
-        start < 0 ||
-        start >= this.getCategoryProductsTotal ||
-        this.getCategoryProductsTotal < THEME_PAGE_SIZE
-      ) {
-        return;
-      }
-
       await this.$store.dispatch('category-next/fetchPageProducts', { page, pageSize: THEME_PAGE_SIZE, route: this.$route });
-
       this.currentPage = page;
     },
     initPagination () {
@@ -594,6 +564,17 @@ export default {
       return category.position === 0
         ? this.getCurrentCategory.path === category.path
         : this.getCurrentCategory.path.startsWith(category.path);
+    },
+    async onCategoryChangedHandler (categoryRoute) {
+      await composeInitialPageState(store, categoryRoute);
+      await this.updatePage(categoryRoute);
+    },
+    async updatePage (route) {
+      if (route.query.page) {
+        await this.changePage(getPageFromRoute(route));
+      } else {
+        this.initPagination();
+      }
     }
   },
   metaInfo () {
