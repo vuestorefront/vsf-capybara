@@ -73,6 +73,8 @@ export default Blok.extend({
 
 <style lang="scss" scoped>
 .storyblok-button {
+  --button-wrap: normal;
+
   ._button {
     display: inline-block;
   }
