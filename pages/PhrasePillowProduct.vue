@@ -26,6 +26,8 @@ import Product from 'core/modules/catalog/types/Product';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
 
+const phrasePillowSku = 'petsiesPhrasePillow_bundle';
+
 export default Vue.extend({
   name: 'PhrasePillowProduct',
   components: {
@@ -49,17 +51,25 @@ export default Vue.extend({
       }
 
       return undefined;
+    },
+    getProductBySkuDictionary (): Record<string, Product> {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product');
 
-    const product = await store.dispatch('product/loadProduct', {
-      parentSku: 'petsiesPhrasePillow_bundle',
-      childSku: null
-    });
+    const product = await store.dispatch('product/single',
+      {
+        options: {
+          sku: phrasePillowSku
+        },
+        key: 'sku'
+      }
+    );
 
     await Promise.all([
+      store.dispatch('product/loadProductData', { product }),
       store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
       store.dispatch('budsies/loadProductRushAddons', {
         productId: product.id
@@ -71,11 +81,25 @@ export default Vue.extend({
       { product }
     );
 
-    if (isServer) await loadBreadcrumbsPromise;
+    if (isServer) {
+      await Promise.all([
+        await store.dispatch('product/setCurrent', product),
+        loadBreadcrumbsPromise
+      ])
+    }
     catalogHooksExecutors.productPageVisited(product);
+  },
+  mounted () {
+    this.setCurrentProduct();
   },
   beforeDestroy () {
     this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+  },
+  methods: {
+    async setCurrentProduct (): Promise<void> {
+      const product = this.getProductBySkuDictionary[phrasePillowSku];
+      await this.$store.dispatch('product/setCurrent', product);
+    }
   },
   metaInfo () {
     return {

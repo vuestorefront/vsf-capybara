@@ -56,7 +56,7 @@
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
-import { getThumbnailPath } from '@vue-storefront/core/helpers';
+import { getThumbnailPath, isServer } from '@vue-storefront/core/helpers';
 import Product from '@vue-storefront/core/modules/catalog/types/Product';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { Logger } from '@vue-storefront/core/lib/logger';
@@ -89,6 +89,8 @@ const defaultGiftCardOrderFormData: GiftCardOrderFormData = {
   customPriceAmount: 200
 };
 
+const giftCardSku = 'GiftCard';
+
 interface InjectedServices {
   imageHandlerService: ImageHandlerService
 }
@@ -116,6 +118,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     firstGiftCardTemplate (): GiftCardTemplate | undefined {
       return this.giftCardTemplatesList[0];
+    },
+    getProductBySkuDictionary (): Record<string, Product> {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     },
     giftCardTemplatesList (): GiftCardTemplate[] {
       return this.$store.getters['giftCard/giftCardTemplates'];
@@ -192,7 +197,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       isSubmitting: false
     };
   },
-  mounted (): void {
+  async mounted (): Promise<void> {
+    await this.setCurrentProduct();
     this.updateCustomerName();
     this.initEventBusListeners();
 
@@ -200,14 +206,27 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.firstGiftCardTemplate?.id;
   },
   beforeDestroy (): void {
-    this.removeEventBusListeners();
     this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    this.removeEventBusListeners();
   },
   async asyncData ({ store }): Promise<void> {
-    await Promise.all([
+    const response = await Promise.all([
       store.dispatch('giftCard/loadGiftCardsTemplates'),
-      store.dispatch('product/loadProduct', { parentSku: 'GiftCard' })
+      store.dispatch('product/single', {
+        options: {
+          sku: giftCardSku
+        },
+        key: 'sku'
+      })
     ]);
+
+    const product = response[1];
+
+    await store.dispatch('product/loadProductData', { product });
+
+    if (isServer) {
+      await store.dispatch('product/setCurrent', product);
+    }
   },
   methods: {
     async addCartItem (): Promise<void> {
@@ -283,6 +302,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       EventBus.$off('session-after-started', this.updateCustomerName);
       EventBus.$off('user-after-logout', this.updateCustomerName);
       EventBus.$off('user-after-loggedin', this.updateCustomerName);
+    },
+    async setCurrentProduct (): Promise<void> {
+      const product = this.getProductBySkuDictionary[giftCardSku];
+      await this.$store.dispatch('product/setCurrent', product)
     },
     updateCustomerName (): void {
       this.giftCardOrderFormData.customerName = this.loggedUserFullName;

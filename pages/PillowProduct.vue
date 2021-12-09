@@ -21,6 +21,8 @@ import Product from 'core/modules/catalog/types/Product';
 
 import OPillowProductOrderForm from '../components/organisms/o-pillow-product-order-form.vue';
 
+const pillowSku = 'customPillow_bundle';
+
 export default {
   name: 'PillowProduct',
   components: {
@@ -37,22 +39,30 @@ export default {
     },
     artworkUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
+    },
+    getProductBySkuDictionary (): Record<string, Product> {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   async mounted (): Promise<void> {
     // TODO check ID in URL and load plushie instead of create a new one
-
+    await this.setCurrentProduct();
     this.plushieId = await this.createPlushie();
   },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product')
 
-    const product = await store.dispatch('product/loadProduct', {
-      parentSku: 'customPillow_bundle',
-      childSku: null
-    });
+    const product = await store.dispatch('product/single',
+      {
+        options: {
+          sku: pillowSku
+        },
+        key: 'sku'
+      }
+    );
 
     await Promise.all([
+      store.dispatch('product/loadProductData', { product }),
       store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
       store.dispatch('budsies/loadProductRushAddons', { productId: product.id })
     ]);
@@ -62,7 +72,12 @@ export default {
       { product }
     );
 
-    if (isServer) await loadBreadcrumbsPromise;
+    if (isServer) {
+      await Promise.all([
+        await store.dispatch('product/setCurrent', product),
+        loadBreadcrumbsPromise
+      ])
+    }
     catalogHooksExecutors.productPageVisited(product);
   },
   beforeDestroy () {
@@ -79,6 +94,10 @@ export default {
 
       const task = await this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
       return task.result;
+    },
+    async setCurrentProduct (): Promise<void> {
+      const product = this.getProductBySkuDictionary[pillowSku];
+      await this.$store.dispatch('product/setCurrent', product);
     }
   },
   metaInfo () {

@@ -1,37 +1,39 @@
 <template>
   <div id="product" itemscope itemtype="http://schema.org/Product">
-    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
-      <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
-          {{ breadcrumb.text }}
-        </router-link>
-      </template>
-    </SfBreadcrumbs>
-    <OProductDetails
-      :product="getCurrentProduct"
-      :product-gallery="getProductGallery"
-      :product-configuration="getCurrentProductConfiguration"
-      :product-custom-options="getCurrentCustomOptions"
-      :product-attributes="getCustomAttributes"
-      :product-stock="stock"
-    />
+    <template v-if="getCurrentProduct">
+      <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
+        <template #link="{breadcrumb}">
+          <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
+            {{ breadcrumb.text }}
+          </router-link>
+        </template>
+      </SfBreadcrumbs>
+      <OProductDetails
+        :product="getCurrentProduct"
+        :product-gallery="getProductGallery"
+        :product-configuration="getCurrentProductConfiguration"
+        :product-custom-options="getCurrentCustomOptions"
+        :product-attributes="getCustomAttributes"
+        :product-stock="stock"
+      />
 
-    <MProductDescriptionStory
-      :product="getCurrentProduct"
-    />
+      <MProductDescriptionStory
+        :product="getCurrentProduct"
+      />
 
-    <div class="product__bottom">
-      <lazy-hydrate when-idle>
-        <SfSection :title-heading="$t('We found other products you might like')">
-          <MRelatedProducts type="upsell" />
-        </SfSection>
-      </lazy-hydrate>
-      <lazy-hydrate when-idle>
-        <SfSection :title-heading="$t('Similar Products')">
-          <MRelatedProducts type="related" />
-        </SfSection>
-      </lazy-hydrate>
-    </div>
+      <div class="product__bottom">
+        <lazy-hydrate when-idle>
+          <SfSection :title-heading="$t('We found other products you might like')">
+            <MRelatedProducts type="upsell" />
+          </SfSection>
+        </lazy-hydrate>
+        <lazy-hydrate when-idle>
+          <SfSection :title-heading="$t('Similar Products')">
+            <MRelatedProducts type="related" />
+          </SfSection>
+        </lazy-hydrate>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -50,6 +52,30 @@ import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
+
+const loadProduct = async ({ route, store }) => {
+  const childSku = route && route.params && route.params.childSku
+    ? route.params.childSku
+    : null
+
+  const product = await store.dispatch('product/single',
+    {
+      options: {
+        sku: route.params.parentSku,
+        childSku
+      },
+      key: 'sku'
+    }
+  );
+
+  await store.dispatch('product/loadProductData', { product })
+  const loadBreadcrumbsPromise = store.dispatch(
+    'product/loadProductBreadcrumbs',
+    { product }
+  );
+
+  return { product, loadBreadcrumbsPromise }
+}
 
 export default {
   name: 'Product',
@@ -128,6 +154,9 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
+    },
+    getProductBySkuDictionary () {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   watch: {
@@ -137,35 +166,35 @@ export default {
           this.getQuantity();
         }
       }
+    },
+    async $route (val, oldVal) {
+      if (val.path === oldVal.path) {
+        return;
+      }
+
+      await loadProduct({ store: this.$store, route: val });
+      this.setCurrentProduct();
     }
   },
   async asyncData ({ store, route, context }) {
     if (context) context.output.cacheTags.add('product')
-    const product = await store.dispatch('product/loadProduct', {
-      parentSku: route.params.parentSku,
-      childSku:
-        route && route.params && route.params.childSku
-          ? route.params.childSku
-          : null
-    });
-    const loadBreadcrumbsPromise = store.dispatch(
-      'product/loadProductBreadcrumbs',
-      { product }
-    );
-    if (isServer) await loadBreadcrumbsPromise;
+
+    const { product, loadBreadcrumbsPromise } = await loadProduct({ store, route });
+
+    if (isServer) {
+      await Promise.all([
+        store.dispatch('product/setCurrent', product),
+        loadBreadcrumbsPromise
+      ])
+    }
     catalogHooksExecutors.productPageVisited(product);
+  },
+  async mounted () {
+    await this.setCurrentProduct();
+    this.getQuantity();
   },
   beforeDestroy () {
     this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
-  },
-  beforeRouteEnter (to, from, next) {
-    if (isServer) {
-      next();
-    } else {
-      next(vm => {
-        vm.getQuantity();
-      });
-    }
   },
   methods: {
     async configurableOptionCallback (variant) {
@@ -202,20 +231,28 @@ export default {
       } finally {
         this.stock.isLoading = false;
       }
+    },
+    async setCurrentProduct () {
+      const childSku = this.$route && this.$route.params && this.$route.params.childSku
+        ? this.$route.params.childSku
+        : null;
+      const sku = childSku || this.$route.params.parentSku
+      const product = this.getProductBySkuDictionary[sku];
+      await this.$store.dispatch('product/setCurrent', product);
     }
   },
   metaInfo () {
     const storeView = currentStoreView();
     return {
       title: htmlDecode(
-        this.getCurrentProduct.meta_title || this.getCurrentProduct.name
+        this.getCurrentProduct?.meta_title || this.getCurrentProduct?.name
       ),
-      meta: this.getCurrentProduct.meta_description
+      meta: this.getCurrentProduct?.meta_description
         ? [
           {
             vmid: 'description',
             name: 'description',
-            content: htmlDecode(this.getCurrentProduct.meta_description)
+            content: htmlDecode(this.getCurrentProduct?.meta_description)
           }
         ]
         : []

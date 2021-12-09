@@ -10,15 +10,42 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { Route } from 'vue-router';
+import { Store } from 'vuex';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import store from '@vue-storefront/core/store'
 
 import Product from 'core/modules/catalog/types/Product';
 
 import OPrintedProductOrderForm from 'theme/components/organisms/o-printed-product-order-form.vue';
+
+const loadData = async (route: Route, store: Store<any>) => {
+  const product = await store.dispatch('product/single', {
+    options: {
+      sku: (route.matched[0].props as {default: {sku: string}}).default.sku
+    },
+    key: 'sku'
+  });
+
+  await Promise.all([
+    store.dispatch('budsies/loadExtraPhotosAddons', {
+      productId: product.id
+    }),
+    store.dispatch('product/loadProductData', { product })
+  ]);
+
+  const loadBreadcrumbsPromise = store.dispatch(
+    'product/loadProductBreadcrumbs',
+    { product }
+  );
+
+  if (isServer) await loadBreadcrumbsPromise;
+  catalogHooksExecutors.productPageVisited(product);
+}
 
 export default Vue.extend({
   name: 'PrintedProduct',
@@ -34,7 +61,7 @@ export default Vue.extend({
   computed: {
     getCurrentProduct (): Product | null {
       const product = this.$store.getters['product/getCurrentProduct'];
-      if (!product?.sku) {
+      if (!product?.sku || product.sku !== this.sku) {
         return null;
       }
 
@@ -42,44 +69,49 @@ export default Vue.extend({
     },
     artworkUploadUrl () {
       return config.images.fileuploaderUploadUrl;
+    },
+    getProductBySkuDictionary (): Record<string, Product> {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   async serverPrefetch () {
     if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('product')
 
-    await (this as any).loadData();
+    await loadData(this.$route, this.$store);
+    await (this as any).setCurrentProduct();
   },
   async mounted () {
     if (!this.getCurrentProduct) {
-      await this.loadData();
+      await this.setCurrentProduct();
     }
   },
   beforeDestroy () {
     this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
   },
+  async beforeRouteEnter (to, from, next) {
+    if (isServer) {
+      next();
+      return;
+    }
+
+    if (!from) {
+      next();
+      return;
+    }
+
+    await loadData(to, store);
+    next();
+  },
   methods: {
-    async loadData (): Promise<void> {
-      const product = await this.$store.dispatch('product/loadProduct', {
-        parentSku: this.sku,
-        childSku: null
-      });
-
-      await this.$store.dispatch('budsies/loadExtraPhotosAddons', {
-        productId: product.id
-      });
-
-      const loadBreadcrumbsPromise = this.$store.dispatch(
-        'product/loadProductBreadcrumbs',
-        { product }
-      );
-
-      if (isServer) await loadBreadcrumbsPromise;
-      catalogHooksExecutors.productPageVisited(product);
+    async setCurrentProduct (): Promise<void> {
+      const product = this.getProductBySkuDictionary[this.sku];
+      await this.$store.dispatch('product/setCurrent', product);
     }
   },
   watch: {
     sku: async function () {
-      await this.loadData();
+      await loadData(this.$route, this.$store);
+      await this.setCurrentProduct();
     }
   },
   metaInfo () {

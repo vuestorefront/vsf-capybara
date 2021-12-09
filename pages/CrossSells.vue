@@ -74,6 +74,7 @@ import { SfButton } from '@storefront-ui/vue';
 import OProductCard from 'theme/components/organisms/o-product-card.vue';
 import { prepareCategoryProduct } from 'theme/helpers';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import { isServer } from '@vue-storefront/core/helpers';
 
 export default Vue.extend({
   name: 'CrossSells',
@@ -90,14 +91,42 @@ export default Vue.extend({
   computed: {
     getCurrentProduct (): Product | null {
       return this.$store.getters['product/getCurrentProduct']
+    },
+    getProductBySkuDictionary (): Record<string, Product> {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   async asyncData ({ store, route, context }) {
-    await store.dispatch('product/loadProduct', { parentSku: route.params.parentSku })
+    const product = await store.dispatch(
+      'product/single',
+      {
+        options: {
+          sku: route.params.parentSku
+        },
+        key: 'sku'
+      }
+    );
+
+    await store.dispatch('product/loadProductData', { product });
+
+    if (isServer) {
+      await store.dispatch('product/setCurrent', product);
+    }
   },
   async created () {
+    if (!isServer) {
+      return;
+    }
+
     await this.loadCrossSellsProducts();
     await this.loadUpSellsProducts();
+  },
+  async mounted () {
+    await this.setCurrentProduct();
+    await Promise.all([
+      this.loadCrossSellsProducts(),
+      this.loadUpSellsProducts()
+    ])
   },
   beforeDestroy () {
     this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
@@ -157,6 +186,10 @@ export default Vue.extend({
     },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
+    },
+    async setCurrentProduct (): Promise<void> {
+      const product = this.getProductBySkuDictionary[this.$route.params.parentSku];
+      await this.$store.dispatch('product/setCurrent', product);
     }
   }
 });
