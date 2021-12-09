@@ -7,11 +7,11 @@
     />
     <SfHeader
       :active-icon="activeIcon"
+      class="_header"
       :class="[
         {
           'sf-header--has-mobile-search': isSearchPanelVisible,
-        },
-        'sf-header--is-sticky'
+        }
       ]"
     >
       <template #logo>
@@ -207,7 +207,8 @@ export default {
   --header-navigation-item-color: var(--c-dark);
   box-sizing: border-box;
 
-  .sf-header--is-sticky {
+  ._header {
+    position: relative;
     z-index: 200;
   }
 
@@ -293,12 +294,21 @@ export default {
   }
 
   .mobile-menu {
-    position: fixed;
+    position: relative;
     opacity: 1;
     visibility: visible;
-    top: var(--bottom-navigation-height);
     z-index: 12;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
     --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height));
+
+    &::v-deep {
+      .sf-mega-menu__menu {
+        overflow: visible;
+      }
+    }
   }
 
   @include for-desktop {

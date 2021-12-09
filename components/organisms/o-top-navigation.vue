@@ -1,6 +1,6 @@
 <template>
   <div class="o-top-navigation">
-    <SfBottomNavigation>
+    <SfBottomNavigation class="_bottom-navigation">
       <SfBottomNavigationItem
         v-for="item in navigationItems"
         :key="item.icon"
@@ -117,6 +117,10 @@ export default {
   position: relative;
   min-height: var(--bottom-navigation-height);
   z-index: 10;
+
+  ._bottom-navigation {
+    position: relative;
+  }
 
   .a-logo {
     display: none;
