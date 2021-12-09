@@ -51,31 +51,8 @@
             Pricing
           </router-link>
         </SfHeaderNavigationItem>
-        <div
-          class="_dropdown-container"
-          @mouseover="isDropdownOpen = true"
-          @mouseleave="isDropdownOpen = false"
-        >
-          <SfButton>
-            Make your own
-          </SfButton>
-          <SfDropdown
-            :is-open="isDropdownOpen"
-          >
-            <SfList>
-              <SfListItem
-                v-for="action in dropdownActions"
-                :key="action.label"
-              >
-                <router-link
-                  :to="action.url"
-                >
-                  {{ action.label }}
-                </router-link>
-              </SfListItem>
-            </SfList>
-          </SfDropdown>
-        </div>
+
+        <MMakeYourOwnDropdown />
       </template>
       <template #search>
         <div />
@@ -105,7 +82,7 @@
 </template>
 
 <script>
-import { SfHeader, SfOverlay, SfButton, SfDropdown, SfList } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
@@ -113,21 +90,20 @@ import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
+import MMakeYourOwnDropdown from 'theme/components/molecules/m-make-your-own-dropdown';
 
 export default {
   name: 'OHeader',
   components: {
     SfHeader,
-    SfButton,
-    SfDropdown,
-    SfList,
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
     ADetailedCartIcon,
     OSearch,
     MMenu,
-    SfOverlay
+    SfOverlay,
+    MMakeYourOwnDropdown
   },
   data () {
     return {
