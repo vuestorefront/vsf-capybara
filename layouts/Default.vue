@@ -1,15 +1,23 @@
 <template>
-  <div class="default-layout" :class="{'storyblok-preview-mode': isStoryblokPreviewMode}">
+  <div
+    class="default-layout"
+    :class="{ 'storyblok-preview-mode': isStoryblokPreviewMode }"
+  >
     <MLoader />
     <div id="viewport">
-      <PromotionPlatformBanner />
-      <OTopNavigation />
-      <OHeader />
+      <div class="_floating-elements">
+        <PromotionPlatformBanner />
+        <OTopNavigation />
+        <OHeader class="_main-header" />
+      </div>
       <OMicrocart />
       <div class="content">
         <slot />
       </div>
-      <OFooter class="default-layout_footer" :class="{'-hide-on-mobile': hideFooterOnMobile}" />
+      <OFooter
+        class="default-layout_footer"
+        :class="{ '-hide-on-mobile': hideFooterOnMobile }"
+      />
       <OModal />
       <ONotification />
       <MCookieNotification />
@@ -33,7 +41,7 @@ import MOfflineBadge from 'theme/components/molecules/m-offline-badge';
 import { isServer } from '@vue-storefront/core/helpers';
 import Head from 'theme/head';
 import config from 'config';
-import { ModalList } from 'theme/store/ui/modals'
+import { ModalList } from 'theme/store/ui/modals';
 
 import PromotionPlatformBanner from 'src/modules/promotion-platform/components/Banner.vue';
 
@@ -57,10 +65,12 @@ export default {
   },
   computed: {
     quicklinkEnabled () {
-      return typeof config.quicklink !== 'undefined' && config.quicklink.enabled
+      return (
+        typeof config.quicklink !== 'undefined' && config.quicklink.enabled
+      );
     },
     isStoryblokPreviewMode () {
-      return this.$route.query.hasOwnProperty('_storyblok')
+      return this.$route.query.hasOwnProperty('_storyblok');
     },
     hideFooterOnMobile () {
       return this.$route.name === 'pillowSideDesign-product';
@@ -110,7 +120,7 @@ export default {
             ? config.entities.category.includeFields
             : null,
         skipCache: isServer
-      })
+      });
     }
   },
   serverPrefetch () {
@@ -134,10 +144,34 @@ export default {
     }
   }
 
+  ._floating-elements {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+
+    ._main-header {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+  }
+
   @media (max-width: $tablet-min) {
     .default-layout_footer {
       &.-hide-on-mobile {
         display: none;
+      }
+    }
+  }
+
+  @include for-desktop {
+    ._floating-elements {
+      ._main-header {
+        overflow: visible;
       }
     }
   }
