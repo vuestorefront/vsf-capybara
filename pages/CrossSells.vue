@@ -223,6 +223,16 @@ export default Vue.extend({
     box-sizing: border-box;
     flex: 1;
     margin: 0;
+
+    &::v-deep {
+      .sf-product-card {
+        --image-width: 100%;
+
+        margin: 0 auto;
+        height: 100%;
+      }
+    }
+
     &__grid,
     &__list {
       display: flex;
@@ -231,10 +241,11 @@ export default Vue.extend({
     &__grid {
       justify-content: space-between;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
     }
     &__product-card {
       --product-card-max-width: none;
+      margin: 0 var(--spacer-xs);
       flex: 1 1 50%;
     }
     &__product-card-horizontal {
@@ -253,7 +264,7 @@ export default Vue.extend({
   @media (min-width: $tablet-min) {
     .products {
       &__grid {
-        grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(33%, 1fr));
       }
 
       &__product-card {
@@ -269,7 +280,7 @@ export default Vue.extend({
       padding: 2em 0;
 
       &__grid {
-        grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(25%, 1fr));
       }
 
       &__pagination {
@@ -296,7 +307,7 @@ export default Vue.extend({
   @media (min-width: $desktop-l-min) {
     .products {
       &__grid {
-        grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(20%, 1fr));
       }
 
       &__product-card {
