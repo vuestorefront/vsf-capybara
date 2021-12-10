@@ -46,6 +46,7 @@
       </div>
 
       <MProductDescriptionStory
+        v-if="showStory"
         class="_giftcard-detailed-information"
         :product="product"
       />
@@ -187,6 +188,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           'giftcard'
         )
       };
+    },
+    showStory (): boolean {
+      return !!this.product && this.product.sku === giftCardSku;
     }
   },
   data () {
