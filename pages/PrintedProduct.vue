@@ -31,12 +31,9 @@ const loadData = async (route: Route, store: Store<any>) => {
     key: 'sku'
   });
 
-  await Promise.all([
-    store.dispatch('budsies/loadExtraPhotosAddons', {
-      productId: product.id
-    }),
-    store.dispatch('product/loadProductData', { product })
-  ]);
+  await store.dispatch('budsies/loadExtraPhotosAddons', {
+    productId: product.id
+  });
 
   const loadBreadcrumbsPromise = store.dispatch(
     'product/loadProductBreadcrumbs',
@@ -106,6 +103,7 @@ export default Vue.extend({
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[this.sku];
       await this.$store.dispatch('product/setCurrent', product);
+      await this.$store.dispatch('product/loadProductData', { product });
     }
   },
   watch: {

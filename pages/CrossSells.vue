@@ -107,10 +107,9 @@ export default Vue.extend({
       }
     );
 
-    await store.dispatch('product/loadProductData', { product });
-
     if (isServer) {
       await store.dispatch('product/setCurrent', product);
+      await store.dispatch('product/loadProductData', { product });
     }
   },
   async created () {
@@ -190,6 +189,7 @@ export default Vue.extend({
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[this.$route.params.parentSku];
       await this.$store.dispatch('product/setCurrent', product);
+      await this.$store.dispatch('product/loadProductData', { product });
     }
   }
 });

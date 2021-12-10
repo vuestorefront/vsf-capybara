@@ -222,10 +222,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     const product = response[1];
 
-    await store.dispatch('product/loadProductData', { product });
-
     if (isServer) {
       await store.dispatch('product/setCurrent', product);
+      await store.dispatch('product/loadProductData', { product });
     }
   },
   methods: {
@@ -306,6 +305,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[giftCardSku];
       await this.$store.dispatch('product/setCurrent', product)
+      await this.$store.dispatch('product/loadProductData', { product });
     },
     updateCustomerName (): void {
       this.giftCardOrderFormData.customerName = this.loggedUserFullName;
