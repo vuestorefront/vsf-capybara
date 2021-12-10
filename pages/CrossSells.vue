@@ -117,8 +117,10 @@ export default Vue.extend({
       return;
     }
 
-    await this.loadCrossSellsProducts();
-    await this.loadUpSellsProducts();
+    await Promise.all([
+      this.loadCrossSellsProducts,
+      this.loadUpSellsProducts
+    ]);
   },
   async mounted () {
     await this.setCurrentProduct();
