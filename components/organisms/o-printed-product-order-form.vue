@@ -245,7 +245,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     return {
       quantity: 1,
       customerImage: undefined as CustomerImage | undefined,
-      // selectedStyle: undefined as string | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       extraFacesData: {
         addon: undefined,
@@ -555,6 +554,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
     },
     selectStyle (styleValue: string): void {
+      if (styleValue === this.selectedStyle) {
+        return;
+      }
+
       this.$emit('style-selected', styleValue);
     }
   },
