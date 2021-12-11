@@ -43,7 +43,8 @@
                   tag="div"
                 >
                   <SfSelect
-                    v-model="selectedStyle"
+                    :selected="selectedStyle"
+                    @change="selectStyle"
                     v-if="shouldShowDesignSelector"
                     name="design_option"
                     required
@@ -234,13 +235,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     product: {
       type: Object as PropType<Product>,
       required: true
+    },
+    selectedStyle: {
+      type: String as PropType<string | undefined>,
+      default: undefined
     }
   },
   data () {
     return {
       quantity: 1,
       customerImage: undefined as CustomerImage | undefined,
-      selectedStyle: undefined as string | undefined,
+      // selectedStyle: undefined as string | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       extraFacesData: {
         addon: undefined,
@@ -462,14 +467,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.shortDescription;
-    },
-    productDesignFromQuery: {
-      set: function (selectedStyle: string): void {
-        this.$router.push({ query: { ...this.$route.query, product_design: selectedStyle } })
-      },
-      get: function (): string | undefined {
-        return this.$route.query.product_design ? this.$route.query.product_design as string : undefined;
-      }
     }
   },
   methods: {
@@ -557,25 +554,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     goToCrossSells (): void {
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
     },
-    activateAvailableStyle (styleValue: string): void {
-      const style = this.availableStyles.find(
-        (item) => item.value === styleValue
-      );
-
-      if (!style) {
-        return;
-      }
-
-      this.selectedStyle = style.value;
+    selectStyle (styleValue: string): void {
+      this.$emit('style-selected', styleValue);
     }
   },
   created (): void {
     if (this.product.qty) {
       this.quantity = this.product.qty;
-    }
-
-    if (this.productDesignFromQuery) {
-      this.activateAvailableStyle(this.productDesignFromQuery);
     }
   },
   beforeDestroy (): void {
@@ -598,9 +583,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return;
         }
 
-        this.selectedStyle = undefined;
-        if (this.availableStyles.length === 1) {
-          this.selectedStyle = this.availableStyles[0].value;
+        if (!this.selectedStyle && this.availableStyles.length === 1) {
+          this.selectStyle(this.availableStyles[0].value);
         }
 
         const extraFacesComponent = this.getExtraFaces();
@@ -618,10 +602,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         if (!this.styleBundleOption) {
           Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
           return
-        }
-
-        if (this.productDesignFromQuery && this.productDesignFromQuery !== this.selectedStyle) {
-          this.productDesignFromQuery = this.selectedStyle;
         }
 
         const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
@@ -645,16 +625,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           optionQty: 1,
           optionSelections: newValue ? [newValue.optionValueId] : []
         });
-      },
-      immediate: false
-    },
-    productDesignFromQuery: {
-      handler (newValue: string | undefined) {
-        if (!newValue) {
-          return;
-        }
-
-        this.activateAvailableStyle(newValue);
       },
       immediate: false
     }
