@@ -43,7 +43,8 @@
                   tag="div"
                 >
                   <SfSelect
-                    v-model="selectedStyle"
+                    :selected="selectedStyle"
+                    @change="selectStyle"
                     v-if="shouldShowDesignSelector"
                     name="design_option"
                     required
@@ -234,13 +235,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     product: {
       type: Object as PropType<Product>,
       required: true
+    },
+    selectedStyle: {
+      type: String as PropType<string | undefined>,
+      default: undefined
     }
   },
   data () {
     return {
       quantity: 1,
       customerImage: undefined as CustomerImage | undefined,
-      selectedStyle: undefined as string | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
       extraFacesData: {
         addon: undefined,
@@ -548,6 +552,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     goToCrossSells (): void {
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
+    },
+    selectStyle (styleValue: string): void {
+      if (styleValue === this.selectedStyle) {
+        return;
+      }
+
+      this.$emit('style-selected', styleValue);
     }
   },
   created (): void {
@@ -575,9 +586,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return;
         }
 
-        this.selectedStyle = undefined;
-        if (this.availableStyles.length === 1) {
-          this.selectedStyle = this.availableStyles[0].value;
+        if (!this.selectedStyle && this.availableStyles.length === 1) {
+          this.selectStyle(this.availableStyles[0].value);
         }
 
         const extraFacesComponent = this.getExtraFaces();

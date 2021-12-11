@@ -3,13 +3,15 @@
     <o-printed-product-order-form
       :artwork-upload-url="artworkUploadUrl"
       :product="getCurrentProduct"
+      :selected-style="productDesign"
+      @style-selected="onStyleSelected"
       v-if="getCurrentProduct"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
@@ -27,6 +29,10 @@ export default Vue.extend({
     sku: {
       type: String,
       required: true
+    },
+    productDesign: {
+      type: String as PropType<string | undefined>,
+      default: undefined
     }
   },
   computed: {
@@ -70,6 +76,13 @@ export default Vue.extend({
 
       if (isServer) await loadBreadcrumbsPromise;
       catalogHooksExecutors.productPageVisited(product);
+    },
+    onStyleSelected (value?: string): void {
+      if (value === this.productDesign) {
+        return;
+      }
+
+      this.$router.push({ query: { ...this.$route.query, product_design: value } });
     }
   },
   watch: {
