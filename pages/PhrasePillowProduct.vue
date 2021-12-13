@@ -59,12 +59,10 @@ export default Vue.extend({
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product');
 
-    const product = await store.dispatch('product/single',
+    const product = await store.dispatch('product/loadProduct',
       {
-        options: {
-          sku: phrasePillowSku
-        },
-        key: 'sku'
+        parentSku: phrasePillowSku,
+        setCurrent: false
       }
     );
 
@@ -85,7 +83,6 @@ export default Vue.extend({
         await store.dispatch('product/setCurrent', product),
         loadBreadcrumbsPromise
       ]);
-      await store.dispatch('product/loadProductData', { product });
     }
     catalogHooksExecutors.productPageVisited(product);
   },
@@ -99,7 +96,6 @@ export default Vue.extend({
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[phrasePillowSku];
       await this.$store.dispatch('product/setCurrent', product);
-      await this.$store.dispatch('product/loadProductData', { product })
     }
   },
   metaInfo () {

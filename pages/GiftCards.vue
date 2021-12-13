@@ -216,11 +216,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   async asyncData ({ store }): Promise<void> {
     const response = await Promise.all([
       store.dispatch('giftCard/loadGiftCardsTemplates'),
-      store.dispatch('product/single', {
-        options: {
-          sku: giftCardSku
-        },
-        key: 'sku'
+      store.dispatch('product/loadProduct', {
+        parentSku: giftCardSku,
+        setCurrent: false
       })
     ]);
 
@@ -228,7 +226,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     if (isServer) {
       await store.dispatch('product/setCurrent', product);
-      await store.dispatch('product/loadProductData', { product });
     }
   },
   methods: {
@@ -309,7 +306,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[giftCardSku];
       await this.$store.dispatch('product/setCurrent', product)
-      await this.$store.dispatch('product/loadProductData', { product });
     },
     updateCustomerName (): void {
       this.giftCardOrderFormData.customerName = this.loggedUserFullName;

@@ -24,11 +24,9 @@ import Product from 'core/modules/catalog/types/Product';
 import OPrintedProductOrderForm from 'theme/components/organisms/o-printed-product-order-form.vue';
 
 const loadData = async (route: Route, store: Store<any>) => {
-  const product = await store.dispatch('product/single', {
-    options: {
-      sku: (route.matched[0].props as {default: {sku: string}}).default.sku
-    },
-    key: 'sku'
+  const product = await store.dispatch('product/loadProduct', {
+    parentSku: (route.matched[0].props as {default: {sku: string}}).default.sku,
+    setCurrent: false
   });
 
   await store.dispatch('budsies/loadExtraPhotosAddons', {
@@ -103,7 +101,6 @@ export default Vue.extend({
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[this.sku];
       await this.$store.dispatch('product/setCurrent', product);
-      await this.$store.dispatch('product/loadProductData', { product });
     }
   },
   watch: {

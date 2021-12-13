@@ -98,18 +98,15 @@ export default Vue.extend({
   },
   async asyncData ({ store, route, context }) {
     const product = await store.dispatch(
-      'product/single',
+      'product/loadProduct',
       {
-        options: {
-          sku: route.params.parentSku
-        },
-        key: 'sku'
+        parentSku: route.params.parentSku,
+        setCurrent: false
       }
     );
 
     if (isServer) {
       await store.dispatch('product/setCurrent', product);
-      await store.dispatch('product/loadProductData', { product });
     }
   },
   async created () {
@@ -191,7 +188,6 @@ export default Vue.extend({
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[this.$route.params.parentSku];
       await this.$store.dispatch('product/setCurrent', product);
-      await this.$store.dispatch('product/loadProductData', { product });
     }
   }
 });

@@ -58,13 +58,10 @@ const loadProduct = async ({ route, store }) => {
     ? route.params.childSku
     : null
 
-  const product = await store.dispatch('product/single',
+  const product = await store.dispatch('product/loadProduct',
     {
-      options: {
-        sku: route.params.parentSku,
-        childSku
-      },
-      key: 'sku'
+      parentSku: route.params.parentSku,
+      childSku
     }
   );
 
@@ -185,7 +182,6 @@ export default {
         store.dispatch('product/setCurrent', product),
         loadBreadcrumbsPromise
       ]);
-      await store.dispatch('product/loadProductData', { product });
     }
     catalogHooksExecutors.productPageVisited(product);
   },
@@ -239,7 +235,6 @@ export default {
       const sku = childSku || this.$route.params.parentSku
       const product = this.getProductBySkuDictionary[sku];
       await this.$store.dispatch('product/setCurrent', product);
-      await this.$store.dispatch('product/loadProductData', { product });
     }
   },
   metaInfo () {

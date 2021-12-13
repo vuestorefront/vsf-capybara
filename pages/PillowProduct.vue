@@ -52,12 +52,10 @@ export default {
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product')
 
-    const product = await store.dispatch('product/single',
+    const product = await store.dispatch('product/loadProduct',
       {
-        options: {
-          sku: pillowSku
-        },
-        key: 'sku'
+        parentSku: pillowSku,
+        setCurrent: false
       }
     );
 
@@ -76,7 +74,6 @@ export default {
         await store.dispatch('product/setCurrent', product),
         loadBreadcrumbsPromise
       ]);
-      await store.dispatch('product/loadProductData', { product });
     }
     catalogHooksExecutors.productPageVisited(product);
   },
@@ -98,7 +95,6 @@ export default {
     async setCurrentProduct (): Promise<void> {
       const product = this.getProductBySkuDictionary[pillowSku];
       await this.$store.dispatch('product/setCurrent', product);
-      await this.$store.dispatch('product/loadProductData', { product });
     }
   },
   metaInfo () {
