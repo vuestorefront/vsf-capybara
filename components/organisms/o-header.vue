@@ -52,7 +52,12 @@
           </router-link>
         </SfHeaderNavigationItem>
 
-        <MMakeYourOwnDropdown />
+        <div class="_cta-button-container" v-show="showCtaButtonContainer">
+          <MMakeYourOwnDropdown v-show="showMakeYourOwnDropdown" />
+          <SfButton v-show="showGoToCheckoutButton" @click="goToCheckout">
+            Go to Checkout
+          </SfButton>
+        </div>
       </template>
       <template #search>
         <div />
@@ -82,7 +87,7 @@
 </template>
 
 <script>
-import { SfHeader, SfOverlay } from '@storefront-ui/vue';
+import { SfButton, SfHeader, SfOverlay } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
@@ -91,9 +96,11 @@ import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
 import MMakeYourOwnDropdown from 'theme/components/molecules/m-make-your-own-dropdown';
+import HeaderCtaButton from 'theme/mixins/header-cta-button';
 
 export default {
   name: 'OHeader',
+  mixins: [HeaderCtaButton],
   components: {
     SfHeader,
     ALogo,
@@ -103,7 +110,8 @@ export default {
     OSearch,
     MMenu,
     SfOverlay,
-    MMakeYourOwnDropdown
+    MMakeYourOwnDropdown,
+    SfButton
   },
   data () {
     return {
@@ -228,7 +236,8 @@ export default {
     }
   }
 
-  ._dropdown-container {
+  ._dropdown-container,
+  ._cta-button-container {
     position: relative;
     align-self: center;
 
@@ -236,7 +245,9 @@ export default {
       --button-font-size: var(--font-sm);
       --button-font-line-height: 1;
     }
+  }
 
+  ._dropdown-container {
     .sf-dropdown {
       --dropdown-background: var(--c-primary);
       --c-link: var(--c-light-variant);

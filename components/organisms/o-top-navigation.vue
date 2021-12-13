@@ -12,7 +12,12 @@
       />
       <ALogo />
 
-      <MMakeYourOwnDropdown size="small" />
+      <div class="_cta-button-container" v-show="showCtaButtonContainer">
+        <MMakeYourOwnDropdown v-show="showMakeYourOwnDropdown" size="small" />
+        <SfButton v-show="showGoToCheckoutButton" @click="goToCheckout">
+          Go to Checkout
+        </SfButton>
+      </div>
 
       <ADetailedCartIcon class="sf-header__action" />
     </SfBottomNavigation>
@@ -26,14 +31,17 @@ import AHomeIcon from 'theme/components/atoms/a-home-icon';
 import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon.vue';
-import { SfBottomNavigation } from '@storefront-ui/vue';
+import { SfBottomNavigation, SfButton } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo.vue';
 import MMakeYourOwnDropdown from 'theme/components/molecules/m-make-your-own-dropdown.vue';
+import HeaderCtaButton from 'theme/mixins/header-cta-button';
 
 export default {
   name: 'OTopNavigation',
+  mixins: [HeaderCtaButton],
   components: {
     SfBottomNavigation,
+    SfButton,
     ALogo,
     ADetailedCartIcon,
     MMakeYourOwnDropdown
@@ -125,6 +133,14 @@ export default {
 
   .a-logo {
     display: none;
+  }
+
+  ._cta-button-container {
+    .sf-button {
+      --button-font-size: var(--font-2xs);
+      --button-font-line-height: 1;
+      --button-padding: calc(var(--spacer-2xs) * 3) var(--spacer-sm);
+    }
   }
 
   .a-microcart-icon {
