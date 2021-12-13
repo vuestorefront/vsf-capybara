@@ -7,11 +7,11 @@
     />
     <SfHeader
       :active-icon="activeIcon"
+      class="_header"
       :class="[
         {
           'sf-header--has-mobile-search': isSearchPanelVisible,
-        },
-        'sf-header--is-sticky'
+        }
       ]"
     >
       <template #logo>
@@ -51,31 +51,8 @@
             Pricing
           </router-link>
         </SfHeaderNavigationItem>
-        <div
-          class="_dropdown-container"
-          @mouseover="isDropdownOpen = true"
-          @mouseleave="isDropdownOpen = false"
-        >
-          <SfButton>
-            Make your own
-          </SfButton>
-          <SfDropdown
-            :is-open="isDropdownOpen"
-          >
-            <SfList>
-              <SfListItem
-                v-for="action in dropdownActions"
-                :key="action.label"
-              >
-                <router-link
-                  :to="action.url"
-                >
-                  {{ action.label }}
-                </router-link>
-              </SfListItem>
-            </SfList>
-          </SfDropdown>
-        </div>
+
+        <MMakeYourOwnDropdown />
       </template>
       <template #search>
         <div />
@@ -105,7 +82,7 @@
 </template>
 
 <script>
-import { SfHeader, SfOverlay, SfButton, SfDropdown, SfList } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
@@ -113,21 +90,20 @@ import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
+import MMakeYourOwnDropdown from 'theme/components/molecules/m-make-your-own-dropdown';
 
 export default {
   name: 'OHeader',
   components: {
     SfHeader,
-    SfButton,
-    SfDropdown,
-    SfList,
     ALogo,
     AAccountIcon,
     AMicrocartIcon,
     ADetailedCartIcon,
     OSearch,
     MMenu,
-    SfOverlay
+    SfOverlay,
+    MMakeYourOwnDropdown
   },
   data () {
     return {
@@ -207,7 +183,8 @@ export default {
   --header-navigation-item-color: var(--c-dark);
   box-sizing: border-box;
 
-  .sf-header--is-sticky {
+  ._header {
+    position: relative;
     z-index: 200;
   }
 
@@ -293,12 +270,21 @@ export default {
   }
 
   .mobile-menu {
-    position: fixed;
+    position: relative;
     opacity: 1;
     visibility: visible;
-    top: var(--bottom-navigation-height);
     z-index: 12;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex-grow: 1;
     --mega-menu-aside-menu-height: calc(100vh - var(--bottom-navigation-height));
+
+    &::v-deep {
+      .sf-mega-menu__menu {
+        overflow: visible;
+      }
+    }
   }
 
   @include for-desktop {

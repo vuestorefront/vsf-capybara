@@ -1,6 +1,6 @@
 <template>
   <div class="o-top-navigation">
-    <SfBottomNavigation>
+    <SfBottomNavigation class="_bottom-navigation">
       <SfBottomNavigationItem
         v-for="item in navigationItems"
         :key="item.icon"
@@ -11,9 +11,9 @@
         @click.native="item.onClick"
       />
       <ALogo />
-      <SfButton>
-        Make your own
-      </SfButton>
+
+      <MMakeYourOwnDropdown size="small" />
+
       <ADetailedCartIcon class="sf-header__action" />
     </SfBottomNavigation>
   </div>
@@ -26,16 +26,17 @@ import AHomeIcon from 'theme/components/atoms/a-home-icon';
 import ASearchIcon from 'theme/components/atoms/a-search-icon';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon.vue';
-import { SfBottomNavigation, SfButton } from '@storefront-ui/vue';
+import { SfBottomNavigation } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo.vue';
+import MMakeYourOwnDropdown from 'theme/components/molecules/m-make-your-own-dropdown.vue';
 
 export default {
   name: 'OTopNavigation',
   components: {
     SfBottomNavigation,
-    SfButton,
     ALogo,
-    ADetailedCartIcon
+    ADetailedCartIcon,
+    MMakeYourOwnDropdown
   },
   data () {
     return {
@@ -118,15 +119,14 @@ export default {
   min-height: var(--bottom-navigation-height);
   z-index: 10;
 
+  ._bottom-navigation {
+    position: relative;
+  }
+
   .a-logo {
     display: none;
   }
 
-  .sf-button {
-    --button-font-size: var(--font-2xs);
-    --button-font-line-height: 1;
-    --button-padding: calc(var(--spacer-2xs) * 3) var(--spacer-sm);
-  }
   .a-microcart-icon {
     margin: 0;
     padding: var(--spacer-sm) var(--spacer-xs);
