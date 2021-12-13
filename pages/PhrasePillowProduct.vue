@@ -76,13 +76,6 @@ export default Vue.extend({
     },
     imageUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
-    },
-    initialFrontDesign (): string | undefined {
-      if (this.$route.params.parentSku) {
-        return this.$route.params.parentSku;
-      }
-
-      return undefined;
     }
   },
   methods: {
