@@ -42,14 +42,6 @@ function getProductPriceData (product): ProductPriceData {
     productPriceData.specialPrice = product.special_price || product.specialPrice || 0
   }
 
-  if (isBundleProduct(product)) {
-    return productPriceData;
-  }
-
-  productPriceData.originalPriceInclTax = productPriceData.originalPriceInclTax * product.qty || productPriceData.originalPriceInclTax;
-  productPriceData.priceInclTax = productPriceData.priceInclTax * product.qty || productPriceData.priceInclTax;
-  productPriceData.specialPrice = productPriceData.specialPrice * product.qty || productPriceData.specialPrice;
-
   return productPriceData;
 }
 
@@ -59,7 +51,7 @@ function calculateCustomOptionsPriceDelta (product, customOptions) {
     product
   )
 
-  return priceDelta.priceInclTax * product.qty || priceDelta.priceInclTax;
+  return priceDelta.priceInclTax;
 }
 
 function formatPrice (value) {
@@ -110,9 +102,9 @@ export function getProductPrice (product, customOptions = {}, format = true) {
   const isSpecialPrice = !!productDiscountPrice || (specialPrice && priceInclTax && originalPriceInclTax)
   const priceDelta = calculateCustomOptionsPriceDelta(product, customOptions)
 
-  const special = productDiscountPrice || priceInclTax + priceDelta || priceInclTax
-  const original = originalPriceInclTax + priceDelta || originalPriceInclTax
-  const regular = priceInclTax + priceDelta || product.regular_price || priceInclTax
+  const special = productDiscountPrice || (priceInclTax + priceDelta) * product.qty || priceInclTax
+  const original = (originalPriceInclTax + priceDelta) * product.qty || originalPriceInclTax
+  const regular = (priceInclTax + priceDelta) * product.qty || product.regular_price || priceInclTax
 
   if (!format) {
     return {
