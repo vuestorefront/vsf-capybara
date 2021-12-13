@@ -941,10 +941,10 @@ export default (
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
-    isStepInvalid (step: string): boolean {
+    isStepInvalid (stepId: string): boolean {
       return (
-        this.stepValidateState[step] &&
-        this.stepValidateState[step] === 'invalid'
+        this.stepValidateState[stepId] &&
+        this.stepValidateState[stepId] === 'invalid'
       );
     },
     getAccentColorPartValues (bodypart: Bodypart): AccentColorPart[] {
