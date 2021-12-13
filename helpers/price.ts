@@ -51,7 +51,7 @@ function calculateCustomOptionsPriceDelta (product, customOptions) {
     product
   )
 
-  return priceDelta.priceInclTax
+  return priceDelta.priceInclTax;
 }
 
 function formatPrice (value) {
@@ -90,7 +90,9 @@ export function getProductPrice (product, customOptions = {}, format = true) {
 
   EventBus.$emit(UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
 
-  const productDiscountPrice = productDiscountPriceData.value;
+  const productDiscountPrice = productDiscountPriceData.value
+    ? productDiscountPriceData.value * (product.qty || 1)
+    : productDiscountPriceData.value;
   const productPriceData = getProductPriceData(product);
 
   let priceInclTax = productPriceData.priceInclTax;
