@@ -5,55 +5,64 @@
       :title="$t('Create Your Custom Forevers Plush')"
     />
 
-    <SfSteps
-      :active="currentStep"
-      :steps="[$t('Type'), $t('Photo'), $t('Pet Info'), $t('Customize')]"
-      :can-go-back="canGoBack"
-      @change="onChangeStep"
-    >
-      <SfStep name="Type">
-        <MProductTypeChooseStep
-          v-model="productTypeStepData"
-          :disabled="isSubmitting"
-          @next-step="nextStep"
-        />
-      </SfStep>
+    <div class="_content">
+      <div class="_steps-container">
+        <SfSteps
+          class="_steps"
+          :active="currentStep"
+          :steps="steps"
+          :can-go-back="canGoBack"
+          @change="onChangeStep"
+        >
+          <SfStep name="Type">
+            <MProductTypeChooseStep
+              v-model="productTypeStepData"
+              :disabled="isSubmitting"
+              @next-step="nextStep"
+            />
+          </SfStep>
 
-      <SfStep name="Photo">
-        <MImageUploadStep
-          :initial-value="imageUploadStepData"
-          :artwork-upload-url="artworkUploadUrl"
-          :product="activeProduct"
-          :plushie-id="plushieId"
-          :disabled="isSubmitting"
-          @input="imageUploadStepData = $event"
-          @next-step="nextStep"
-          v-if="plushieId"
-        />
-      </SfStep>
+          <SfStep name="Photo">
+            <MImageUploadStep
+              :initial-value="imageUploadStepData"
+              :artwork-upload-url="artworkUploadUrl"
+              :product="activeProduct"
+              :plushie-id="plushieId"
+              :disabled="isSubmitting"
+              @input="imageUploadStepData = $event"
+              @next-step="nextStep"
+              v-if="plushieId"
+            />
+          </SfStep>
 
-      <SfStep name="Pet Info">
-        <MPetInfoStep
-          v-model="petInfoStepData"
-          :plushie-id="plushieId"
-          :disabled="isSubmitting"
-          @next-step="nextStep"
-        />
-      </SfStep>
+          <SfStep name="Pet Info">
+            <MPetInfoStep
+              v-model="petInfoStepData"
+              :plushie-id="plushieId"
+              :disabled="isSubmitting"
+              @next-step="nextStep"
+            />
+          </SfStep>
 
-      <SfStep name="Customize">
-        <MCustomizeStep
-          v-model="customizeStepData"
-          :plushie-id="plushieId"
-          :product="activeProduct"
-          :addons-bundle-option="addonsBundleOption"
-          :production-time-bundle-option="productionTimeBundleOption"
-          :add-to-cart="onAddToCartHandler"
-          :disabled="isSubmitting"
-          @next-step="nextStep"
-        />
-      </SfStep>
-    </SfSteps>
+          <SfStep name="Customize">
+            <div class="_customize-step">
+              <MCustomizeStep
+                v-model="customizeStepData"
+                :plushie-id="plushieId"
+                :product="activeProduct"
+                :addons-bundle-option="addonsBundleOption"
+                :production-time-bundle-option="productionTimeBundleOption"
+                :add-to-cart="onAddToCartHandler"
+                :disabled="isSubmitting"
+                @next-step="nextStep"
+              />
+            </div>
+          </SfStep>
+        </SfSteps>
+      </div>
+
+      <MFloatingPhoto v-show="showFloatingPhoto" :image="customerImages[0]" :pet-name="petInfoStepData.name" />
+    </div>
   </div>
 </template>
 
@@ -78,6 +87,7 @@ import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-cho
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
 import MPetInfoStep from './OForeversCreationWizard/m-pet-info-step.vue';
 import MCustomizeStep from './OForeversCreationWizard/m-customize-step.vue';
+import MFloatingPhoto from './OForeversCreationWizard/m-floating-photo.vue';
 
 import ForeversWizardProductTypeStepData from '../interfaces/forevers-wizard-product-type-step-data.interface';
 import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-image-upload-step-data.interface';
@@ -85,6 +95,7 @@ import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-inf
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import BodypartOption from '../interfaces/bodypart-option';
 import CustomerImage from '../interfaces/customer-image.interface';
+import { LocaleMessage, TranslateResult } from 'vue-i18n';
 
 export default Vue.extend({
   name: 'OForeversCreationWizard',
@@ -94,7 +105,8 @@ export default Vue.extend({
     MProductTypeChooseStep,
     MImageUploadStep,
     MPetInfoStep,
-    MCustomizeStep
+    MCustomizeStep,
+    MFloatingPhoto
   },
   props: {
     artworkUploadUrl: {
@@ -175,6 +187,17 @@ export default Vue.extend({
     },
     existingCartitem (): CartItem | undefined {
       return this.cartItems.find(({ plushieId }) => plushieId && plushieId === this.existingPlushieId);
+    },
+    steps (): TranslateResult[] {
+      return [
+        this.$t('Type'),
+        this.$t('Photo'),
+        this.$t('Pet Info'),
+        this.$t('Customize')
+      ]
+    },
+    showFloatingPhoto (): boolean {
+      return (this.currentStep === this.steps.length - 1);
     }
   },
   methods: {
@@ -468,6 +491,7 @@ export default Vue.extend({
 
 .o-forevers-creation-wizard {
   --steps-content-padding: var(--spacer-base) var(--spacer-sm) 0;
+  $floating-photo-width: 14%;
 
   text-align: center;
 
@@ -595,6 +619,31 @@ export default Vue.extend({
       }
   }
 
+  .m-floating-photo {
+    position: absolute;
+    top: 0;
+    display: none;
+    width: $floating-photo-width;
+    right: 0;
+    height: 100%;
+  }
+
+  ._content {
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  ._steps-container {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+  }
+
+  ._steps {
+    flex-grow: 1;
+  }
+
   @media (min-width: $tablet-min) {
 
     ._step-divider {
@@ -603,6 +652,18 @@ export default Vue.extend({
   }
 
 @include for-desktop {
+  .m-floating-photo {
+    display: block;
+  }
+
+  ._steps-container {
+    max-width: calc(100% - #{$floating-photo-width} * 2 - 50px);
+  }
+
+  ._steps {
+    max-width: 77.5rem;
+  }
+
   .sf-modal {
     --modal-top: 50%;
   }

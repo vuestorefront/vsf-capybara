@@ -61,14 +61,13 @@ export default Vue.extend({
 
 #forevers-product {
   padding: var(--spacer-lg) 0 0;
+  box-sizing: border-box;
 
   @media (min-width: $tablet-min) {
     padding: var(--spacer-lg) 1rem 0;
   }
 
   @include for-desktop {
-    max-width: 77.5rem;
-    margin: 0 auto;
     width: 100%;
   }
 }
