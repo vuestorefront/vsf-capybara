@@ -8,24 +8,60 @@
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
       :svg-path="svgPath"
-      :initial-front-design="initialFrontDesign"
+      :initial-back-design="backDesign"
+      :initial-front-design="frontDesign"
+      @back-design-selected="onBackDesignSelected"
+      @front-design-selected="onFrontDesignSelected"
       v-if="getCurrentProduct"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import store from '@vue-storefront/core/store'
 import Product from 'core/modules/catalog/types/Product';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
 
+const loadProduct = async () => {
+  const product = await store.dispatch('product/loadProduct', {
+    parentSku: 'petsiesPhrasePillow_bundle',
+    childSku: null
+  });
+
+  await Promise.all([
+    store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
+    store.dispatch('budsies/loadProductRushAddons', {
+      productId: product.id
+    })
+  ]);
+
+  const loadBreadcrumbsPromise = store.dispatch(
+    'product/loadProductBreadcrumbs',
+    { product }
+  );
+
+  if (isServer) await loadBreadcrumbsPromise;
+  catalogHooksExecutors.productPageVisited(product);
+}
+
 export default Vue.extend({
   name: 'PhrasePillowProduct',
+  props: {
+    backDesign: {
+      type: String as PropType<string | undefined>,
+      default: undefined
+    },
+    frontDesign: {
+      type: String as PropType<string | undefined>,
+      default: undefined
+    }
+  },
   components: {
     OPhrasePillowProductOrderForm
   },
@@ -50,30 +86,35 @@ export default Vue.extend({
     }
   },
   methods: {
-    //
+    onBackDesignSelected (value?: string): void {
+      if (value === this.backDesign) {
+        return;
+      }
+      this.$router.push({ query: { ...this.$route.query, back_design: value } });
+    },
+    onFrontDesignSelected (value?: string): void {
+      if (value === this.frontDesign || !value) {
+        return;
+      }
+
+      this.$router.push({ params: { parentSku: value } });
+    }
   },
-  async asyncData ({ store, route, context }): Promise<void> {
-    if (context) context.output.cacheTags.add('product');
+  async serverPrefetch (): Promise<void> {
+    if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('product');
 
-    const product = await store.dispatch('product/loadProduct', {
-      parentSku: 'petsiesPhrasePillow_bundle',
-      childSku: null
-    });
+    return loadProduct();
+  },
+  async beforeRouteEnter (to, from, next): Promise<void> {
+    if (isServer) next();
 
-    await Promise.all([
-      store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
-      store.dispatch('budsies/loadProductRushAddons', {
-        productId: product.id
-      })
-    ]);
+    if (from.name === 'pillowSideDesign-product') {
+      next();
+      return;
+    }
 
-    const loadBreadcrumbsPromise = store.dispatch(
-      'product/loadProductBreadcrumbs',
-      { product }
-    );
-
-    if (isServer) await loadBreadcrumbsPromise;
-    catalogHooksExecutors.productPageVisited(product);
+    await loadProduct();
+    next();
   },
   metaInfo () {
     return {

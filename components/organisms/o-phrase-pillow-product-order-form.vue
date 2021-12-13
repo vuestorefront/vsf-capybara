@@ -176,7 +176,7 @@
                   </div>
 
                   <MDesignSelector
-                    v-model="frontDesign"
+                    :value="frontDesign"
                     class="_front-selector"
                     :design-products="frontDesignProducts"
                     :field-name="'front-design-sku'"
@@ -263,7 +263,7 @@
                   </div>
 
                   <MDesignSelector
-                    v-model="backDesign"
+                    :value="backDesign"
                     class="_back-selector"
                     :design-products="backDesignProducts"
                     :field-name="'back-design-sku'"
@@ -702,8 +702,6 @@ export default (
       quantity: 1,
       accentColorPartValues: [] as AccentColorPart[],
       accentColorPartValue: undefined as AccentColorPart | undefined,
-      frontDesign: undefined as string | undefined,
-      backDesign: undefined as string | undefined,
       customerEmail: undefined as string | undefined,
       backgroundDataUri: undefined as string | undefined,
       isBackgroundImageLoaded: false,
@@ -911,22 +909,46 @@ export default (
         { text: 'Rendering design to maximize hugs', value: 66 },
         { text: 'Optimizing pillow softness vectors', value: 100 }
       ];
+    },
+    backDesign (): string | undefined {
+      if (!this.frontDesign || this.isBackDesignSelectedByUser || this.initialBackDesign) {
+        return this.initialBackDesign;
+      }
+
+      const currentDesign = this.frontDesignProducts.find(
+        (product) => product.sku === this.frontDesign
+      );
+
+      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
+        return this.initialBackDesign;
+      }
+
+      const backDesign = this.backDesignProducts.find(
+        (product) => product.id === currentDesign.defaultOtherSideDesign
+      );
+
+      if (!backDesign) {
+        return this.initialBackDesign;
+      }
+
+      return backDesign.sku;
+    },
+    frontDesign (): string | undefined {
+      return this.initialFrontDesign;
     }
   },
   methods: {
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
-    isStepInvalid (step: StepsInterface): boolean {
+    isStepInvalid (step: string): boolean {
       return (
-        this.stepValidateState[step.id] &&
-        this.stepValidateState[step.id] === 'invalid'
+        this.stepValidateState[step] &&
+        this.stepValidateState[step] === 'invalid'
       );
     },
     getAccentColorPartValues (bodypart: Bodypart): AccentColorPart[] {
-      const bodypartsValues = this.$store.getters[
-        'budsies/getBodypartBodypartsValues'
-      ](bodypart.id);
+      const bodypartsValues = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
       if (!bodypartsValues.length) {
         return [];
@@ -1023,29 +1045,6 @@ export default (
         this.accentColorPartValue.optionValueId;
 
       return data;
-    },
-    selectDefaultBackDesignForFront (frontDesignSku?: string): void {
-      if (!frontDesignSku || this.isBackDesignSelectedByUser) {
-        return;
-      }
-
-      const currentDesign = this.frontDesignProducts.find(
-        (product) => product.sku === frontDesignSku
-      );
-
-      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
-        return;
-      }
-
-      const backDesign = this.backDesignProducts.find(
-        (product) => product.id === currentDesign.defaultOtherSideDesign
-      );
-
-      if (!backDesign) {
-        return;
-      }
-
-      this.backDesign = backDesign.sku;
     },
     selectDefaultAccentColor (
       frontDesignSku?: string,
@@ -1263,15 +1262,14 @@ export default (
       );
       this.isAccentColorSelectedByUser = true;
     },
-    onBackDesignSelect (): void {
+    onBackDesignSelect (value?: string): void {
       this.isBackDesignSelectedByUser = true;
-
-      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
+      this.$emit('back-design-selected', value);
+      this.selectDefaultAccentColor(this.frontDesign, value);
     },
-    onFrontDesignSelect (): void {
-      this.selectDefaultBackDesignForFront(this.frontDesign);
-
-      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
+    onFrontDesignSelect (value?: string): void {
+      this.$emit('front-design-selected', value);
+      this.selectDefaultAccentColor(value, this.backDesign);
     },
     onBackgroundImageUploaded (image: string): void {
       const backgroundEditor = this.getBackgroundEditor();
@@ -1377,17 +1375,13 @@ export default (
     );
 
     if (this.initialFrontDesign) {
-      this.frontDesign = this.initialFrontDesign;
       this.activeStepIndex = 1;
       this.stepValidateState[customizerStepsData.frontDesign.id] = 'valid';
     } else if (this.frontDesignProducts.length) {
-      this.frontDesign = this.frontDesignProducts[0].sku;
+      this.onFrontDesignSelect(this.frontDesignProducts[0].sku);
     }
 
-    this.onFrontDesignSelect();
-
     if (this.initialBackDesign) {
-      this.backDesign = this.initialBackDesign;
       this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
     }
 

@@ -117,7 +117,27 @@ let routes = [
       }
     }
   },
-  { name: 'pillowSideDesign-product', path: '/phrase-pillow/p/:parentSku/:slug/', component: PhrasePillowProduct },
+  {
+    path: '/phrasepillow/index/customize',
+    redirect: (route) => ({
+      name: 'pillowSideDesign-product',
+      params: {
+        parentSku: route.query.front_design
+      },
+      query: {
+        back_design: route.query.back_design
+      }
+    })
+  },
+  {
+    name: 'pillowSideDesign-product',
+    path: '/phrase-pillow/p/:parentSku?/:slug?',
+    component: PhrasePillowProduct,
+    props: (route) => ({
+      backDesign: route.query.back_design,
+      frontDesign: route.params.parentSku
+    })
+  },
   { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery },
   { name: 'gift-cards', path: '/giftcards', component: GiftCards },
   {
