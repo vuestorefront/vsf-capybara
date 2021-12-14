@@ -11,6 +11,8 @@
 import Vue from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
+import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
 import Product from 'core/modules/catalog/types/Product';
 
 import OForeversCreationWizard from 'theme/components/organisms/o-forevers-creation-wizard.vue';
@@ -22,6 +24,7 @@ export default Vue.extend({
   },
   data () {
     return {
+      isRouterLeaving: false
     };
   },
   computed: {
@@ -35,7 +38,16 @@ export default Vue.extend({
       return this.$route.query?.id;
     }
   },
-  async asyncData ({ store, route, context }): Promise<void> {
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
+  beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    }
   },
   metaInfo () {
     return {
