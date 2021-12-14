@@ -26,6 +26,7 @@
   </div>
 </template>
 <script>
+import { affirm } from 'config';
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
 import OPayment from 'theme/components/organisms/o-payment';
@@ -135,6 +136,17 @@ export default {
         )
       });
     }
+  },
+  metaInfo: {
+    script: [
+      {
+        vmid: 'affirmscript',
+        src: 'https://cdn1-sandbox.affirm.com/js/v2/affirm.js',
+        async: true,
+        crossorigin: 'anonymous',
+        callback: () => (window.affirm.apiKey.setPublicApiKey(affirm.key))
+      }
+    ]
   }
 };
 </script>
