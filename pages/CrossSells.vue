@@ -11,7 +11,7 @@
       </SfButton>
     </div>
 
-    <div class="_cross-sells-list" v-if="crossSellsProducts">
+    <div class="_cross-sells-list" v-if="crossSellsProducts.length">
       <div class="products">
         <transition-group
           appear
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="_up-sells-list" v-if="upSellsProducts">
+    <div class="_up-sells-list" v-if="upSellsProducts.length">
       <header class="sf-heading">
         <h2 class="sf-heading__title">
           Accessorize Your Pet(sies)
