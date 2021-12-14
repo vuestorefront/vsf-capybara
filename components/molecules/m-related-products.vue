@@ -35,8 +35,6 @@ export default {
     }
   },
   beforeMount () {
-    this.$bus.$on('product-after-load', this.refreshList);
-
     if (config.usePriceTiers) {
       this.$bus.$on('user-after-loggedin', this.refreshList);
       this.$bus.$on('user-after-logout', this.refreshList);
@@ -49,7 +47,6 @@ export default {
       this.$bus.$off('user-after-loggedin', this.refreshList);
       this.$bus.$off('user-after-logout', this.refreshList);
     }
-    this.$bus.$off('product-after-load', this.refreshList);
   },
   methods: {
     async refreshList () {
@@ -78,6 +75,13 @@ export default {
           items: response.items
         });
         this.$forceUpdate();
+      }
+    }
+  },
+  watch: {
+    getCurrentProduct (val) {
+      if (val) {
+        this.refreshList();
       }
     }
   }
