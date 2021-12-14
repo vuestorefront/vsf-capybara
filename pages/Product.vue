@@ -18,6 +18,7 @@
       />
 
       <MProductDescriptionStory
+        class="_product-full-description"
         :product="getCurrentProduct"
       />
 
@@ -277,6 +278,10 @@ export default {
 #product {
   box-sizing: border-box;
   padding-top: var(--spacer-base);
+
+  ._product-full-description {
+    margin-top: var(--spacer-xl);
+  }
 
   @include for-desktop {
     max-width: 1272px;
