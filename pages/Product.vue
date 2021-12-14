@@ -53,24 +53,15 @@ import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/stor
 
 import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
 
-const loadProduct = async ({ route, store }) => {
+const getSkusFromRoute = (route) => {
   const childSku = route && route.params && route.params.childSku
     ? route.params.childSku
-    : null
+    : null;
 
-  const product = await store.dispatch('product/loadProduct',
-    {
-      parentSku: route.params.parentSku,
-      childSku
-    }
-  );
-
-  const loadBreadcrumbsPromise = store.dispatch(
-    'product/loadProductBreadcrumbs',
-    { product }
-  );
-
-  return { product, loadBreadcrumbsPromise }
+  return {
+    parentSku: route.params.parentSku,
+    childSku
+  };
 }
 
 export default {
@@ -168,14 +159,25 @@ export default {
         return;
       }
 
-      await loadProduct({ store: this.$store, route: val });
-      this.setCurrentProduct();
+      await this.setCurrentProduct();
+      this.getQuantity();
     }
   },
   async asyncData ({ store, route, context }) {
     if (context) context.output.cacheTags.add('product')
 
-    const { product, loadBreadcrumbsPromise } = await loadProduct({ store, route });
+    const { parentSku, childSku } = getSkusFromRoute(route);
+
+    const product = await store.dispatch('product/loadProduct', {
+      parentSku,
+      childSku,
+      setCurrent: false
+    });
+
+    const loadBreadcrumbsPromise = store.dispatch(
+      'product/loadProductBreadcrumbs',
+      { product }
+    );
 
     if (isServer) {
       await Promise.all([
@@ -190,7 +192,7 @@ export default {
     this.getQuantity();
   },
   beforeDestroy () {
-    this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
   },
   methods: {
     async configurableOptionCallback (variant) {
@@ -229,10 +231,13 @@ export default {
       }
     },
     async setCurrentProduct () {
-      const childSku = this.$route && this.$route.params && this.$route.params.childSku
-        ? this.$route.params.childSku
-        : null;
-      const sku = childSku || this.$route.params.parentSku
+      const { parentSku, childSku } = getSkusFromRoute(this.$route);
+      const sku = childSku || parentSku;
+
+      if (this.getCurrentProduct?.sku === sku) {
+        return;
+      }
+
       const product = this.getProductBySkuDictionary[sku];
       await this.$store.dispatch('product/setCurrent', product);
     }

@@ -66,15 +66,20 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { Route } from 'vue-router';
 import config from 'config';
 import { SearchQuery } from 'storefront-query-builder';
+import { isServer } from '@vue-storefront/core/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import Product, { ProductLink } from 'core/modules/catalog/types/Product';
 import { SfButton } from '@storefront-ui/vue';
 import OProductCard from 'theme/components/organisms/o-product-card.vue';
 import { prepareCategoryProduct } from 'theme/helpers';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
-import { isServer } from '@vue-storefront/core/helpers';
+
+const getSkuFromRoute = (route: Route): string | undefined => {
+  return route.params.parentSku;
+}
 
 export default Vue.extend({
   name: 'CrossSells',
@@ -90,7 +95,14 @@ export default Vue.extend({
   },
   computed: {
     getCurrentProduct (): Product | null {
-      return this.$store.getters['product/getCurrentProduct']
+      const product = this.$store.getters['product/getCurrentProduct'];
+      const sku = getSkuFromRoute(this.$route);
+
+      if (!product?.sku || product.sku !== sku) {
+        return null;
+      }
+
+      return product;
     },
     getProductBySkuDictionary (): Record<string, Product> {
       return this.$store.getters['product/getProductBySkuDictionary'];
@@ -100,7 +112,7 @@ export default Vue.extend({
     const product = await store.dispatch(
       'product/loadProduct',
       {
-        parentSku: route.params.parentSku,
+        parentSku: getSkuFromRoute(route),
         setCurrent: false
       }
     );
@@ -127,7 +139,7 @@ export default Vue.extend({
     ])
   },
   beforeDestroy () {
-    this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
   },
   methods: {
     productLinks (): ProductLink[] {
@@ -186,8 +198,47 @@ export default Vue.extend({
       this.$router.push(localizedRoute('/cart'));
     },
     async setCurrentProduct (): Promise<void> {
-      const product = this.getProductBySkuDictionary[this.$route.params.parentSku];
+      const sku = getSkuFromRoute(this.$route);
+
+      if (!sku || this.getCurrentProduct?.sku === sku) {
+        return;
+      }
+
+      const product = this.getProductBySkuDictionary[sku];
       await this.$store.dispatch('product/setCurrent', product);
+    }
+  },
+  watch: {
+    $route: {
+      async handler (val, oldVal) {
+        if (isServer) {
+          return;
+        }
+
+        if (val.path === oldVal?.path) {
+          return;
+        }
+
+        await this.setCurrentProduct();
+      },
+      immediate: true
+    },
+    getCurrentProduct: {
+      async handler (val) {
+        if (isServer) {
+          return;
+        }
+
+        if (!val) {
+          this.crossSellsProducts = [];
+          this.upSellsProducts = [];
+          return;
+        }
+
+        this.loadCrossSellsProducts();
+        this.loadUpSellsProducts();
+      },
+      immediate: true
     }
   }
 });

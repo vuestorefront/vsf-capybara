@@ -155,7 +155,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       );
     },
     product (): Product | null {
-      return this.$store.getters['product/getCurrentProduct'];
+      const product = this.$store.getters['product/getCurrentProduct'];
+
+      if (product?.sku !== giftCardSku) {
+        return null;
+      }
+
+      return product;
     },
     recipientEmail (): string {
       return this.giftCardOrderFormData.shouldShipPhysically
@@ -190,7 +196,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       };
     },
     showStory (): boolean {
-      return !!this.product && this.product.sku === giftCardSku;
+      return !!this.product;
     }
   },
   data () {
@@ -210,19 +216,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.firstGiftCardTemplate?.id;
   },
   beforeDestroy (): void {
-    this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
     this.removeEventBusListeners();
   },
   async asyncData ({ store }): Promise<void> {
-    const response = await Promise.all([
+    const [, product] = await Promise.all([
       store.dispatch('giftCard/loadGiftCardsTemplates'),
       store.dispatch('product/loadProduct', {
         parentSku: giftCardSku,
         setCurrent: false
       })
     ]);
-
-    const product = response[1];
 
     if (isServer) {
       await store.dispatch('product/setCurrent', product);
@@ -304,6 +308,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       EventBus.$off('user-after-loggedin', this.updateCustomerName);
     },
     async setCurrentProduct (): Promise<void> {
+      if (this.product) {
+        return;
+      }
+
       const product = this.getProductBySkuDictionary[giftCardSku];
       await this.$store.dispatch('product/setCurrent', product)
     },

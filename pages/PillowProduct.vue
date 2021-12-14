@@ -35,7 +35,13 @@ export default {
   },
   computed: {
     getCurrentProduct (): Product | null {
-      return this.$store.getters['product/getCurrentProduct'];
+      const product = this.$store.getters['product/getCurrentProduct'];
+
+      if (product?.sku !== pillowSku) {
+        return null;
+      }
+
+      return product;
     },
     artworkUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
@@ -61,24 +67,18 @@ export default {
 
     await Promise.all([
       store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
-      store.dispatch('budsies/loadProductRushAddons', { productId: product.id })
+      store.dispatch('budsies/loadProductRushAddons', { productId: product.id }),
+      store.dispatch('product/loadProductBreadcrumbs', { product })
     ]);
 
-    const loadBreadcrumbsPromise = store.dispatch(
-      'product/loadProductBreadcrumbs',
-      { product }
-    );
-
     if (isServer) {
-      await Promise.all([
-        await store.dispatch('product/setCurrent', product),
-        loadBreadcrumbsPromise
-      ]);
+      await store.dispatch('product/setCurrent', product);
     }
+
     catalogHooksExecutors.productPageVisited(product);
   },
   beforeDestroy () {
-    this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
   },
   methods: {
     async onMakeAnother (): Promise<void> {
@@ -93,6 +93,10 @@ export default {
       return task.result;
     },
     async setCurrentProduct (): Promise<void> {
+      if (this.getCurrentProduct) {
+        return;
+      }
+
       const product = this.getProductBySkuDictionary[pillowSku];
       await this.$store.dispatch('product/setCurrent', product);
     }

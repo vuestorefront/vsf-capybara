@@ -35,7 +35,13 @@ export default Vue.extend({
   },
   computed: {
     getCurrentProduct (): Product | null {
-      return this.$store.getters['product/getCurrentProduct'];
+      const product = this.$store.getters['product/getCurrentProduct'];
+
+      if (product?.sku !== phrasePillowSku) {
+        return null;
+      }
+
+      return product;
     },
     svgPath (): string {
       return (
@@ -70,30 +76,28 @@ export default Vue.extend({
       store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
       store.dispatch('budsies/loadProductRushAddons', {
         productId: product.id
-      })
+      }),
+      store.dispatch('product/loadProductBreadcrumbs', { product })
     ]);
 
-    const loadBreadcrumbsPromise = store.dispatch(
-      'product/loadProductBreadcrumbs',
-      { product }
-    );
-
     if (isServer) {
-      await Promise.all([
-        await store.dispatch('product/setCurrent', product),
-        loadBreadcrumbsPromise
-      ]);
+      await store.dispatch('product/setCurrent', product);
     }
+
     catalogHooksExecutors.productPageVisited(product);
   },
   mounted () {
     this.setCurrentProduct();
   },
   beforeDestroy () {
-    this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
   },
   methods: {
     async setCurrentProduct (): Promise<void> {
+      if (this.getCurrentProduct) {
+        return;
+      }
+
       const product = this.getProductBySkuDictionary[phrasePillowSku];
       await this.$store.dispatch('product/setCurrent', product);
     }
