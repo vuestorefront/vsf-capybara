@@ -77,6 +77,6 @@ body {
 
 .sf-input input, .sf-search-bar__input {
   outline: none;
-  padding-left: 3px;
+  padding-left: var(--spacer-2xs);
 }
 </style>
