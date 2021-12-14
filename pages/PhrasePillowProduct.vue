@@ -33,6 +33,11 @@ export default Vue.extend({
   components: {
     OPhrasePillowProductOrderForm
   },
+  data () {
+    return {
+      isRouterLeaving: false
+    };
+  },
   computed: {
     getCurrentProduct (): Product | null {
       const product = this.$store.getters['product/getCurrentProduct'];
@@ -89,8 +94,16 @@ export default Vue.extend({
   mounted () {
     this.setCurrentProduct();
   },
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
   beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
       this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    }
   },
   methods: {
     async setCurrentProduct (): Promise<void> {

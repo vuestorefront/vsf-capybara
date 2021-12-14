@@ -204,7 +204,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       giftCardOrderFormData:
         defaultGiftCardOrderFormData as GiftCardOrderFormData,
       showPreviewModal: false,
-      isSubmitting: false
+      isSubmitting: false,
+      isRouterLeaving: false
     };
   },
   async mounted (): Promise<void> {
@@ -215,9 +216,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     this.giftCardOrderFormData.selectedTemplateId =
       this.firstGiftCardTemplate?.id;
   },
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
   beforeDestroy (): void {
-      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
     this.removeEventBusListeners();
+
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    }
   },
   async asyncData ({ store }): Promise<void> {
     const [, product] = await Promise.all([

@@ -85,7 +85,8 @@ export default {
         isLoading: false,
         max: 0,
         manageQuantity: true
-      }
+      },
+      isRouterLeaving: false
     };
   },
   computed: {
@@ -191,8 +192,16 @@ export default {
     await this.setCurrentProduct();
     this.getQuantity();
   },
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
   beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
       this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    }
   },
   methods: {
     async configurableOptionCallback (variant) {

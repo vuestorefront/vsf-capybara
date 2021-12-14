@@ -90,7 +90,8 @@ export default Vue.extend({
   data: function () {
     return {
       crossSellsProducts: [] as Product[],
-      upSellsProducts: [] as Product[]
+      upSellsProducts: [] as Product[],
+      isRouterLeaving: false
     }
   },
   computed: {
@@ -121,25 +122,16 @@ export default Vue.extend({
       await store.dispatch('product/setCurrent', product);
     }
   },
-  async created () {
-    if (!isServer) {
-      return;
-    }
-
-    await Promise.all([
-      this.loadCrossSellsProducts,
-      this.loadUpSellsProducts
-    ]);
-  },
-  async mounted () {
-    await this.setCurrentProduct();
-    await Promise.all([
-      this.loadCrossSellsProducts(),
-      this.loadUpSellsProducts()
-    ])
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
   },
   beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
       this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    }
   },
   methods: {
     productLinks (): ProductLink[] {
