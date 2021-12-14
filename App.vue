@@ -74,4 +74,9 @@ body {
     }
   }
 }
+
+.sf-input input, .sf-search-bar__input {
+  outline: none;
+  padding-left: var(--spacer-2xs);
+}
 </style>
