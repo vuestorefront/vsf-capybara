@@ -1,8 +1,8 @@
 <template>
   <div class="m-floating-photo">
-    <div class="_content" v-if="showFloatingPhoto">
+    <div class="_content">
       <div class="_photo">
-        <img class="_image" :src="image.url" alt="">
+        <img class="_image" :src="imageUrl" alt="">
       </div>
 
       <SfHeading :title="petName" class="_name" :level="3" />
@@ -11,31 +11,24 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 
 import { SfHeading } from '@storefront-ui/vue';
-
-import CustomerImage from '../../interfaces/customer-image.interface';
 
 export default Vue.extend({
   name: 'MFloatingPhoto',
   props: {
-    image: {
-      type: Object as PropType<CustomerImage | undefined>,
-      default: undefined
+    imageUrl: {
+      type: String,
+      required: true
     },
     petName: {
-      type: String as PropType<string | undefined>,
-      default: undefined
+      type: String,
+      default: ''
     }
   },
   components: {
     SfHeading
-  },
-  computed: {
-    showFloatingPhoto (): boolean {
-      return !!(this.image && this.image.url);
-    }
   }
 });
 </script>

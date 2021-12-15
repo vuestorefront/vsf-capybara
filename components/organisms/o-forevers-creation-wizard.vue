@@ -61,7 +61,11 @@
         </SfSteps>
       </div>
 
-      <MFloatingPhoto v-show="showFloatingPhoto" :image="customerImages[0]" :pet-name="petInfoStepData.name" />
+      <MFloatingPhoto
+        v-if="showFloatingPhoto"
+        :image-url="floatingPhotoImageUrl"
+        :pet-name="petInfoStepData.name"
+      />
     </div>
   </div>
 </template>
@@ -95,7 +99,7 @@ import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-inf
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import BodypartOption from '../interfaces/bodypart-option';
 import CustomerImage from '../interfaces/customer-image.interface';
-import { LocaleMessage, TranslateResult } from 'vue-i18n';
+import { TranslateResult } from 'vue-i18n';
 
 export default Vue.extend({
   name: 'OForeversCreationWizard',
@@ -197,7 +201,10 @@ export default Vue.extend({
       ]
     },
     showFloatingPhoto (): boolean {
-      return (this.currentStep === this.steps.length - 1);
+      return (this.currentStep === this.steps.length - 1) && !!this.floatingPhotoImageUrl;
+    },
+    floatingPhotoImageUrl (): string | undefined {
+      return this.customerImages[0] ? this.customerImages[0].url : undefined;
     }
   },
   methods: {
