@@ -102,6 +102,9 @@
                 class="collected-product"
               >
                 <template #configuration>
+                  <div class="collected-product__option" v-if="getPlushieName(product)">
+                    {{ getPlushieName(product) | htmlDecode }}
+                  </div>
                   <div
                     class="collected-product__option"
                     v-for="option in getBundleProductOptions(product)"
@@ -347,6 +350,17 @@ export default {
     ...mapActions('ui', {
       openModal: 'openModal'
     }),
+    getPlushieName (product) {
+      if (!product.plushieName) {
+        return '';
+      }
+
+      if (!product.plushieBreed) {
+        return product.plushieName;
+      }
+
+      return product.plushieName + ', ' + product.plushieBreed;
+    },
     getThumbnailForProduct (product) {
       if (product.thumbnail && product.thumbnail.includes('://')) {
         return product.thumbnail;

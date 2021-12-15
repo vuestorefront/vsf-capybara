@@ -28,6 +28,12 @@
                 @input="changeQuantity(product, $event)"
               >
                 <template #configuration>
+                  <div class="collected-product__properties" v-if="getPlushieName(product)">
+                    {{ getPlushieName(product) | htmlDecode }}
+                  </div>
+                  <div class="collected-product__properties" v-if="getPlushieDesc(product)">
+                    {{ getPlushieDesc(product) | htmlDecode }}
+                  </div>
                   <div class="collected-product__properties">
                     <div
                       v-for="option in getBundleProductOptions(product)"
@@ -279,6 +285,24 @@ export default {
     this.isMounted = true;
   },
   methods: {
+    getPlushieName (product) {
+      if (!product.plushieName) {
+        return '';
+      }
+
+      if (!product.plushieBreed) {
+        return product.plushieName;
+      }
+
+      return product.plushieName + ', ' + product.plushieBreed;
+    },
+    getPlushieDesc (product) {
+      if (!product.plushieDescription) {
+        return '';
+      }
+
+      return product.plushieDescription;
+    },
     editHandler (product) {
       if (foreversProductsSkus.includes(product.sku)) {
         this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } })
@@ -476,7 +500,7 @@ export default {
         flex-direction: row;
       }
       ::v-deep &__details {
-        flex-grow: 1.5;
+        flex-grow: 3;
       }
       ::v-deep &__actions {
         flex-grow: 1;
@@ -509,7 +533,7 @@ export default {
   }
 
   &__properties {
-    font-size: var(--font-sm);
+    font-size: var(--font-xs);
     margin-bottom: var(--spacer-sm);
 
     &__icon {

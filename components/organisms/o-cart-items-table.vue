@@ -31,6 +31,9 @@
         <div class="product-title">
           {{ product.name | htmlDecode }}
         </div>
+        <div class="custom-plushie-name" v-if="getPlushieName(product)">
+          {{ getPlushieName(product) | htmlDecode }}
+        </div>
         <div
           class="bundle-product-option"
           v-for="option in getBundleProductOptions(product)"
@@ -182,6 +185,17 @@ export default {
 
       return getThumbnailForProduct(product);
     },
+    getPlushieName (product: CartItem) {
+      if (!product.plushieName) {
+        return '';
+      }
+
+      if (!product.plushieBreed) {
+        return product.plushieName;
+      }
+
+      return product.plushieName + ', ' + product.plushieBreed;
+    },
     isCustomOption (product: CartItem, productOption: CartItemOption) {
       if (!product.custom_options) {
         return false;
@@ -257,10 +271,10 @@ export default {
 
       .product-title {
         font-weight: var(--font-semibold);
-
       }
 
-      .bundle-product-option {
+      .bundle-product-option,
+      .custom-plushie-name {
         font-size: var(--font-xs);
 
         &__icon {
