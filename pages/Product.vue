@@ -1,37 +1,40 @@
 <template>
   <div id="product" itemscope itemtype="http://schema.org/Product">
-    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
-      <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
-          {{ breadcrumb.text }}
-        </router-link>
-      </template>
-    </SfBreadcrumbs>
-    <OProductDetails
-      :product="getCurrentProduct"
-      :product-gallery="getProductGallery"
-      :product-configuration="getCurrentProductConfiguration"
-      :product-custom-options="getCurrentCustomOptions"
-      :product-attributes="getCustomAttributes"
-      :product-stock="stock"
-    />
+    <template v-if="getCurrentProduct">
+      <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
+        <template #link="{breadcrumb}">
+          <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
+            {{ breadcrumb.text }}
+          </router-link>
+        </template>
+      </SfBreadcrumbs>
+      <OProductDetails
+        :product="getCurrentProduct"
+        :product-gallery="getProductGallery"
+        :product-configuration="getCurrentProductConfiguration"
+        :product-custom-options="getCurrentCustomOptions"
+        :product-attributes="getCustomAttributes"
+        :product-stock="stock"
+      />
 
-    <MProductDescriptionStory
-      :product="getCurrentProduct"
-    />
+      <MProductDescriptionStory
+        class="_product-full-description"
+        :product="getCurrentProduct"
+      />
 
-    <div class="product__bottom">
-      <lazy-hydrate when-idle>
-        <SfSection :title-heading="$t('We found other products you might like')">
-          <MRelatedProducts type="upsell" />
-        </SfSection>
-      </lazy-hydrate>
-      <lazy-hydrate when-idle>
-        <SfSection :title-heading="$t('Similar Products')">
-          <MRelatedProducts type="related" />
-        </SfSection>
-      </lazy-hydrate>
-    </div>
+      <div class="product__bottom">
+        <lazy-hydrate when-idle>
+          <SfSection :title-heading="$t('We found other products you might like')">
+            <MRelatedProducts type="upsell" />
+          </SfSection>
+        </lazy-hydrate>
+        <lazy-hydrate when-idle>
+          <SfSection :title-heading="$t('Similar Products')">
+            <MRelatedProducts type="related" />
+          </SfSection>
+        </lazy-hydrate>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -47,8 +50,20 @@ import OProductDetails from 'theme/components/organisms/o-product-details';
 import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
+import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import MProductDescriptionStory from 'theme/components/molecules/m-product-description-story.vue';
+
+const getSkusFromRoute = (route) => {
+  const childSku = route && route.params && route.params.childSku
+    ? route.params.childSku
+    : null;
+
+  return {
+    parentSku: route.params.parentSku,
+    childSku
+  };
+}
 
 export default {
   name: 'Product',
@@ -71,7 +86,8 @@ export default {
         isLoading: false,
         max: 0,
         manageQuantity: true
-      }
+      },
+      isRouterLeaving: false
     };
   },
   computed: {
@@ -127,6 +143,9 @@ export default {
         .sort((a, b) => {
           return a.attribute_id > b.attribute_id;
         });
+    },
+    getProductBySkuDictionary () {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   watch: {
@@ -136,31 +155,53 @@ export default {
           this.getQuantity();
         }
       }
+    },
+    async $route (val, oldVal) {
+      if (val.path === oldVal.path) {
+        return;
+      }
+
+      await this.setCurrentProduct();
+      this.getQuantity();
     }
   },
   async asyncData ({ store, route, context }) {
     if (context) context.output.cacheTags.add('product')
+
+    const { parentSku, childSku } = getSkusFromRoute(route);
+
     const product = await store.dispatch('product/loadProduct', {
-      parentSku: route.params.parentSku,
-      childSku:
-        route && route.params && route.params.childSku
-          ? route.params.childSku
-          : null
+      parentSku,
+      childSku,
+      setCurrent: false
     });
+
     const loadBreadcrumbsPromise = store.dispatch(
       'product/loadProductBreadcrumbs',
       { product }
     );
-    if (isServer) await loadBreadcrumbsPromise;
+
+    if (isServer) {
+      await Promise.all([
+        store.dispatch('product/setCurrent', product),
+        loadBreadcrumbsPromise
+      ]);
+    }
     catalogHooksExecutors.productPageVisited(product);
   },
-  beforeRouteEnter (to, from, next) {
-    if (isServer) {
-      next();
-    } else {
-      next(vm => {
-        vm.getQuantity();
-      });
+  async mounted () {
+    await this.setCurrentProduct();
+    this.getQuantity();
+  },
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
+  beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
     }
   },
   methods: {
@@ -198,20 +239,31 @@ export default {
       } finally {
         this.stock.isLoading = false;
       }
+    },
+    async setCurrentProduct () {
+      const { parentSku, childSku } = getSkusFromRoute(this.$route);
+      const sku = childSku || parentSku;
+
+      if (this.getCurrentProduct?.sku === sku) {
+        return;
+      }
+
+      const product = this.getProductBySkuDictionary[sku];
+      await this.$store.dispatch('product/setCurrent', product);
     }
   },
   metaInfo () {
     const storeView = currentStoreView();
     return {
       title: htmlDecode(
-        this.getCurrentProduct.meta_title || this.getCurrentProduct.name
+        this.getCurrentProduct?.meta_title || this.getCurrentProduct?.name
       ),
-      meta: this.getCurrentProduct.meta_description
+      meta: this.getCurrentProduct?.meta_description
         ? [
           {
             vmid: 'description',
             name: 'description',
-            content: htmlDecode(this.getCurrentProduct.meta_description)
+            content: htmlDecode(this.getCurrentProduct?.meta_description)
           }
         ]
         : []
@@ -226,6 +278,10 @@ export default {
 #product {
   box-sizing: border-box;
   padding-top: var(--spacer-base);
+
+  ._product-full-description {
+    margin-top: var(--spacer-xl);
+  }
 
   @include for-desktop {
     max-width: 1272px;

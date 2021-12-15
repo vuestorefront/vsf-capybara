@@ -11,7 +11,7 @@
       </SfButton>
     </div>
 
-    <div class="_cross-sells-list" v-if="crossSellsProducts">
+    <div class="_cross-sells-list" v-if="crossSellsProducts.length">
       <div class="products">
         <transition-group
           appear
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="_up-sells-list" v-if="upSellsProducts">
+    <div class="_up-sells-list" v-if="upSellsProducts.length">
       <header class="sf-heading">
         <h2 class="sf-heading__title">
           Accessorize Your Pet(sies)
@@ -66,13 +66,20 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { Route } from 'vue-router';
 import config from 'config';
 import { SearchQuery } from 'storefront-query-builder';
+import { isServer } from '@vue-storefront/core/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import Product, { ProductLink } from 'core/modules/catalog/types/Product';
 import { SfButton } from '@storefront-ui/vue';
 import OProductCard from 'theme/components/organisms/o-product-card.vue';
 import { prepareCategoryProduct } from 'theme/helpers';
+import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
+const getSkuFromRoute = (route: Route): string | undefined => {
+  return route.params.parentSku;
+}
 
 export default Vue.extend({
   name: 'CrossSells',
@@ -83,20 +90,48 @@ export default Vue.extend({
   data: function () {
     return {
       crossSellsProducts: [] as Product[],
-      upSellsProducts: [] as Product[]
+      upSellsProducts: [] as Product[],
+      isRouterLeaving: false
     }
   },
   computed: {
     getCurrentProduct (): Product | null {
-      return this.$store.getters['product/getCurrentProduct']
+      const product = this.$store.getters['product/getCurrentProduct'];
+      const sku = getSkuFromRoute(this.$route);
+
+      if (!product?.sku || product.sku !== sku) {
+        return null;
+      }
+
+      return product;
+    },
+    getProductBySkuDictionary (): Record<string, Product> {
+      return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   async asyncData ({ store, route, context }) {
-    await store.dispatch('product/loadProduct', { parentSku: route.params.parentSku })
+    const product = await store.dispatch(
+      'product/loadProduct',
+      {
+        parentSku: getSkuFromRoute(route),
+        setCurrent: false
+      }
+    );
+
+    if (isServer) {
+      await store.dispatch('product/setCurrent', product);
+    }
   },
-  async created () {
-    await this.loadCrossSellsProducts();
-    await this.loadUpSellsProducts();
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
+  beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    }
   },
   methods: {
     productLinks (): ProductLink[] {
@@ -153,6 +188,49 @@ export default Vue.extend({
     },
     goToCart (): void {
       this.$router.push(localizedRoute('/cart'));
+    },
+    async setCurrentProduct (): Promise<void> {
+      const sku = getSkuFromRoute(this.$route);
+
+      if (!sku || this.getCurrentProduct?.sku === sku) {
+        return;
+      }
+
+      const product = this.getProductBySkuDictionary[sku];
+      await this.$store.dispatch('product/setCurrent', product);
+    }
+  },
+  watch: {
+    $route: {
+      async handler (val, oldVal) {
+        if (isServer) {
+          return;
+        }
+
+        if (val.path === oldVal?.path) {
+          return;
+        }
+
+        await this.setCurrentProduct();
+      },
+      immediate: true
+    },
+    getCurrentProduct: {
+      async handler (val) {
+        if (isServer) {
+          return;
+        }
+
+        if (!val) {
+          this.crossSellsProducts = [];
+          this.upSellsProducts = [];
+          return;
+        }
+
+        this.loadCrossSellsProducts();
+        this.loadUpSellsProducts();
+      },
+      immediate: true
     }
   }
 });

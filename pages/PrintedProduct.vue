@@ -14,8 +14,9 @@
 import Vue, { PropType } from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
-import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
+import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
 import Product from 'core/modules/catalog/types/Product';
 
 import OPrintedProductOrderForm from 'theme/components/organisms/o-printed-product-order-form.vue';
@@ -35,10 +36,15 @@ export default Vue.extend({
       default: undefined
     }
   },
+  data () {
+    return {
+      isRouterLeaving: false
+    };
+  },
   computed: {
     getCurrentProduct (): Product | null {
       const product = this.$store.getters['product/getCurrentProduct'];
-      if (!product?.sku) {
+      if (!product?.sku || product.sku !== this.sku) {
         return null;
       }
 
@@ -58,23 +64,29 @@ export default Vue.extend({
       await this.loadData();
     }
   },
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
+  beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
+    }
+  },
   methods: {
     async loadData (): Promise<void> {
       const product = await this.$store.dispatch('product/loadProduct', {
         parentSku: this.sku,
-        childSku: null
+        setCurrent: true
       });
 
-      await this.$store.dispatch('budsies/loadExtraPhotosAddons', {
-        productId: product.id
-      });
+      await Promise.all([
+        this.$store.dispatch('budsies/loadExtraPhotosAddons', { productId: product.id }),
+        this.$store.dispatch('product/loadProductBreadcrumbs', { product })
+      ]);
 
-      const loadBreadcrumbsPromise = this.$store.dispatch(
-        'product/loadProductBreadcrumbs',
-        { product }
-      );
-
-      if (isServer) await loadBreadcrumbsPromise;
       catalogHooksExecutors.productPageVisited(product);
     },
     onStyleSelected (value?: string): void {

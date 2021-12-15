@@ -1,5 +1,5 @@
 <template>
-  <div class="m-product-description-story">
+  <div class="m-product-description-story" v-if="showStory || showFallback">
     <div v-if="showFallback" class="_fallback-container">
       <SfHeading :title="$t('Additional Details')" :level="3" />
 

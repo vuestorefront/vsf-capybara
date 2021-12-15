@@ -23,32 +23,13 @@ import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import store from '@vue-storefront/core/store'
+import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+
 import Product from 'core/modules/catalog/types/Product';
 
 import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
 
-const loadProduct = async () => {
-  const product = await store.dispatch('product/loadProduct', {
-    parentSku: 'petsiesPhrasePillow_bundle',
-    childSku: null
-  });
-
-  await Promise.all([
-    store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
-    store.dispatch('budsies/loadProductRushAddons', {
-      productId: product.id
-    })
-  ]);
-
-  const loadBreadcrumbsPromise = store.dispatch(
-    'product/loadProductBreadcrumbs',
-    { product }
-  );
-
-  if (isServer) await loadBreadcrumbsPromise;
-  catalogHooksExecutors.productPageVisited(product);
-}
+const phrasePillowSku = 'petsiesPhrasePillow_bundle';
 
 export default Vue.extend({
   name: 'PhrasePillowProduct',
@@ -65,9 +46,20 @@ export default Vue.extend({
   components: {
     OPhrasePillowProductOrderForm
   },
+  data () {
+    return {
+      isRouterLeaving: false
+    };
+  },
   computed: {
     getCurrentProduct (): Product | null {
-      return this.$store.getters['product/getCurrentProduct'];
+      const product = this.$store.getters['product/getCurrentProduct'];
+
+      if (product?.sku !== phrasePillowSku) {
+        return null;
+      }
+
+      return product;
     },
     svgPath (): string {
       return (
@@ -76,9 +68,58 @@ export default Vue.extend({
     },
     imageUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
+    },
+    getProductBySkuDictionary (): Record<string, Product> {
+      return this.$store.getters['product/getProductBySkuDictionary'];
+    }
+  },
+  async asyncData ({ store, route, context }): Promise<void> {
+    if (context) context.output.cacheTags.add('product');
+
+    const product = await store.dispatch('product/loadProduct',
+      {
+        parentSku: phrasePillowSku,
+        setCurrent: false
+      }
+    );
+
+    await Promise.all([
+      store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
+      store.dispatch('budsies/loadProductRushAddons', {
+        productId: product.id
+      }),
+      store.dispatch('product/loadProductBreadcrumbs', { product })
+    ]);
+
+    if (isServer) {
+      await store.dispatch('product/setCurrent', product);
+    }
+
+    catalogHooksExecutors.productPageVisited(product);
+  },
+  mounted () {
+    this.setCurrentProduct();
+  },
+  beforeRouteLeave (to, from, next) {
+    this.isRouterLeaving = true
+    next();
+  },
+  beforeDestroy () {
+    // Hot-reload workaround (old component instance is destroyed after new one has been created)
+    // https://github.com/vuejs/vue/issues/6518
+    if (this.isRouterLeaving) {
+      this.$store.commit(`product/${PRODUCT_UNSET_CURRENT}`);
     }
   },
   methods: {
+    async setCurrentProduct (): Promise<void> {
+      if (this.getCurrentProduct) {
+        return;
+      }
+
+      const product = this.getProductBySkuDictionary[phrasePillowSku];
+      await this.$store.dispatch('product/setCurrent', product);
+    },
     onBackDesignSelected (value?: string): void {
       if (value === this.backDesign) {
         return;
@@ -90,24 +131,8 @@ export default Vue.extend({
         return;
       }
 
-      this.$router.push({ params: { parentSku: value } });
+      return undefined;
     }
-  },
-  async serverPrefetch (): Promise<void> {
-    if (this.$ssrContext) this.$ssrContext.output.cacheTags.add('product');
-
-    return loadProduct();
-  },
-  async beforeRouteEnter (to, from, next): Promise<void> {
-    if (isServer) next();
-
-    if (from.name === 'pillowSideDesign-product') {
-      next();
-      return;
-    }
-
-    await loadProduct();
-    next();
   },
   metaInfo () {
     return {

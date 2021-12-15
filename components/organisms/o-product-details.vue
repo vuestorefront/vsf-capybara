@@ -133,7 +133,7 @@ export default {
     },
     sharingData () {
       // todo may contains html tags
-      const rawDescription = this.product.short_description.replace(/(<p>|<\/p>)/g, '');
+      const rawDescription = this.product.short_description ? this.product.short_description.replace(/(<p>|<\/p>)/g, '') : '';
 
       return {
         url: this.window.location ? this.window.location.href : '',

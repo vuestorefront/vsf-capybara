@@ -1364,7 +1364,6 @@ export default (
     this.$bus.$once('budsies-store-synchronized', this.prefillEmail);
   },
   beforeDestroy () {
-    this.$store.commit(`product/${catalogTypes.PRODUCT_RESET_CURRENT}`);
     this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
   },
   created (): void {
