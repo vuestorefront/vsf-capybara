@@ -45,18 +45,16 @@
           </SfStep>
 
           <SfStep name="Customize">
-            <div class="_customize-step">
-              <MCustomizeStep
-                v-model="customizeStepData"
-                :plushie-id="plushieId"
-                :product="activeProduct"
-                :addons-bundle-option="addonsBundleOption"
-                :production-time-bundle-option="productionTimeBundleOption"
-                :add-to-cart="onAddToCartHandler"
-                :disabled="isSubmitting"
-                @next-step="nextStep"
-              />
-            </div>
+            <MCustomizeStep
+              v-model="customizeStepData"
+              :plushie-id="plushieId"
+              :product="activeProduct"
+              :addons-bundle-option="addonsBundleOption"
+              :production-time-bundle-option="productionTimeBundleOption"
+              :add-to-cart="onAddToCartHandler"
+              :disabled="isSubmitting"
+              @next-step="nextStep"
+            />
           </SfStep>
         </SfSteps>
       </div>
