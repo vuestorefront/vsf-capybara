@@ -642,6 +642,11 @@ const customizerStepsData: Dictionary<StepsInterface> = {
   addToCart: { name: 'Add to<br>Cart', id: 'addToCart' }
 };
 
+export interface DesignSelectedEventPayload {
+  frontDesign: string | undefined,
+  backDesign: string | undefined
+}
+
 export default (
   Vue as VueConstructor<Vue & InjectedServices & Constants>
 ).extend({
@@ -685,11 +690,11 @@ export default (
       type: String,
       required: true
     },
-    initialFrontDesign: {
+    frontDesign: {
       type: String,
       default: undefined
     },
-    initialBackDesign: {
+    backDesign: {
       type: String,
       default: undefined
     }
@@ -909,32 +914,6 @@ export default (
         { text: 'Rendering design to maximize hugs', value: 66 },
         { text: 'Optimizing pillow softness vectors', value: 100 }
       ];
-    },
-    backDesign (): string | undefined {
-      if (!this.frontDesign || this.isBackDesignSelectedByUser || this.initialBackDesign) {
-        return this.initialBackDesign;
-      }
-
-      const currentDesign = this.frontDesignProducts.find(
-        (product) => product.sku === this.frontDesign
-      );
-
-      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
-        return this.initialBackDesign;
-      }
-
-      const backDesign = this.backDesignProducts.find(
-        (product) => product.id === currentDesign.defaultOtherSideDesign
-      );
-
-      if (!backDesign) {
-        return this.initialBackDesign;
-      }
-
-      return backDesign.sku;
-    },
-    frontDesign (): string | undefined {
-      return this.initialFrontDesign;
     }
   },
   methods: {
@@ -1045,6 +1024,32 @@ export default (
         this.accentColorPartValue.optionValueId;
 
       return data;
+    },
+    selectDefaultBackDesignForFront (frontDesignSku?: string): void {
+      if (!frontDesignSku) {
+        return;
+      }
+
+      const currentDesign = this.frontDesignProducts.find(
+        (product) => product.sku === frontDesignSku
+      );
+
+      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
+        return;
+      }
+
+      const backDesign = this.backDesignProducts.find(
+        (product) => product.id === currentDesign.defaultOtherSideDesign
+      );
+
+      if (!backDesign) {
+        return;
+      }
+
+      this.$emit(
+        'design-selected',
+        { frontDesign: frontDesignSku, backDesign: backDesign.sku }
+      );
     },
     selectDefaultAccentColor (
       frontDesignSku?: string,
@@ -1264,11 +1269,12 @@ export default (
     },
     onBackDesignSelect (value?: string): void {
       this.isBackDesignSelectedByUser = true;
-      this.$emit('back-design-selected', value);
+      this.$emit('design-selected', { frontDesign: this.frontDesign, backDesign: value });
       this.selectDefaultAccentColor(this.frontDesign, value);
     },
     onFrontDesignSelect (value?: string): void {
-      this.$emit('front-design-selected', value);
+      this.$emit('design-selected', { frontDesign: value, backDesign: this.backDesign });
+      this.selectDefaultBackDesignForFront(value);
       this.selectDefaultAccentColor(value, this.backDesign);
     },
     onBackgroundImageUploaded (image: string): void {
@@ -1373,14 +1379,14 @@ export default (
       this.imageUploadUrl
     );
 
-    if (this.initialFrontDesign) {
+    if (this.frontDesign) {
       this.activeStepIndex = 1;
       this.stepValidateState[customizerStepsData.frontDesign.id] = 'valid';
     } else if (this.frontDesignProducts.length) {
       this.onFrontDesignSelect(this.frontDesignProducts[0].sku);
     }
 
-    if (this.initialBackDesign) {
+    if (this.backDesign) {
       this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
     }
 

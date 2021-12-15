@@ -118,18 +118,6 @@ let routes = [
     }
   },
   {
-    path: '/phrasepillow/index/customize',
-    redirect: (route) => ({
-      name: 'pillowSideDesign-product',
-      params: {
-        parentSku: route.query.front_design
-      },
-      query: {
-        back_design: route.query.back_design
-      }
-    })
-  },
-  {
     name: 'pillowSideDesign-product',
     path: '/phrase-pillow/p/:parentSku?/:slug?',
     component: PhrasePillowProduct,
