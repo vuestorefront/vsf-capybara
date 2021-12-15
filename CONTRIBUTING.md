@@ -15,7 +15,7 @@ We have some rules you need to follow. They were created for maintaining readabi
 7. Use [Pull Request template](https://github.com/DivanteLtd/vsf-capybara/blob/master/PULL_REQUEST_TEMPLATE.md) (it's automatically added to each PR) and fill as much fields as possible to describe your solution.
 8. Reference any relevant issues or other information in your PR.
 9. Wait for review and adjust your PR according to it.
-10. Congrats! Your PR should now me merged in!
+10. Congrats! Your PR should now be merged in!
 
 If you can't handle some parts of the issue then please ask for help in the comment. If you have any problems during the implementation of some complex issue, feel free to implement just a part of it.
 
