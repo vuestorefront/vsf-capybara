@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { SfButton, SfHeader, SfOverlay } from '@storefront-ui/vue';
+import { SfHeader, SfOverlay } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo';
 import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import AMicrocartIcon from 'theme/components/atoms/a-microcart-icon';
@@ -103,7 +103,6 @@ export default {
     OSearch,
     MMenu,
     SfOverlay,
-    SfButton,
     MCtaButton
   },
   data () {
