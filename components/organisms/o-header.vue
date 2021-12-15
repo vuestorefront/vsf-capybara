@@ -229,7 +229,6 @@ export default {
   }
 
   .m-cta-button {
-    position: relative;
     align-self: center;
   }
 
