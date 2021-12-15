@@ -39,6 +39,7 @@
             <MPetInfoStep
               v-model="petInfoStepData"
               :plushie-id="plushieId"
+              :product="activeProduct"
               :disabled="isSubmitting"
               @next-step="nextStep"
             />

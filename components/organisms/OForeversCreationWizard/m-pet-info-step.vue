@@ -34,7 +34,7 @@
         />
       </validation-provider>
 
-      <div class="_field">
+      <div class="_field" v-show="showBreedStep">
         <label>
           {{ $t('Your Pet\'s Breed') }}
         </label>
@@ -103,6 +103,8 @@ import { SfHeading, SfButton, SfInput } from '@storefront-ui/vue';
 import MMultiselect from '../../molecules/m-multiselect.vue';
 
 import ForeversWizardPetInfoStepData from '../../interfaces/forevers-wizard-pet-info-step-data.interface';
+import Product from 'core/modules/catalog/types/Product';
+import { ProductId } from 'src/modules/budsies';
 
 extend('required', {
   ...required,
@@ -137,6 +139,10 @@ export default Vue.extend({
       type: Number,
       required: true
     },
+    product: {
+      type: Object as PropType<Product>,
+      required: true
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -153,6 +159,7 @@ export default Vue.extend({
         return this.value.breed;
       },
       set (value: string): void {
+        this.value.breed = value;
         const newValue: ForeversWizardPetInfoStepData = { ...this.value, breed: value };
         this.$emit('input', newValue);
       }
@@ -162,6 +169,7 @@ export default Vue.extend({
         return this.value.name;
       },
       set (value: string): void {
+        this.value.name = value;
         const newValue: ForeversWizardPetInfoStepData = { ...this.value, name: value };
         this.$emit('input', newValue);
       }
@@ -171,12 +179,25 @@ export default Vue.extend({
         return this.value.email;
       },
       set (value: string): void {
+        this.value.email = value;
         const newValue: ForeversWizardPetInfoStepData = { ...this.value, email: value };
         this.$emit('input', newValue);
       }
     },
     breedsList (): string[] {
       return this.$store.getters['budsies/getPlushieBreeds'];
+    },
+    showBreedStep (): boolean {
+      if (!this.product) {
+        return true;
+      }
+
+      switch (this.product.id) {
+        case ProductId.FOREVERS_DOG:
+          return true;
+        default:
+          return false;
+      }
     }
   },
   methods: {
@@ -186,6 +207,13 @@ export default Vue.extend({
         this.email = customerEmail;
         this.showEmailStep = false;
       }
+    },
+    clearBreed (): void {
+      if (this.showBreedStep) {
+        return;
+      }
+
+      this.breed = undefined;
     },
     submitStep (): void {
       EventBus.$emit(ForeversWizardEvents.INFO_FILL);
@@ -199,6 +227,7 @@ export default Vue.extend({
     this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
   },
   created (): void {
+    this.clearBreed();
     this.prefillEmail();
   }
 });
