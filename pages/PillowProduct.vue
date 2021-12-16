@@ -68,8 +68,7 @@ export default {
 
     await Promise.all([
       store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
-      store.dispatch('budsies/loadProductRushAddons', { productId: product.id }),
-      store.dispatch('product/loadProductBreadcrumbs', { product })
+      store.dispatch('budsies/loadProductRushAddons', { productId: product.id })
     ]);
 
     if (isServer) {
