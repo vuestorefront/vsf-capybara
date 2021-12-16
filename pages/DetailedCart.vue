@@ -28,6 +28,12 @@
                 @input="changeQuantity(product, $event)"
               >
                 <template #configuration>
+                  <div class="collected-product__properties" v-if="getPlushieName(product)">
+                    {{ getPlushieName(product) | htmlDecode }}
+                  </div>
+                  <div class="collected-product__properties" v-if="getPlushieDesc(product)">
+                    {{ getPlushieDesc(product) | htmlDecode }}
+                  </div>
                   <div class="collected-product__properties">
                     <div
                       v-for="option in getBundleProductOptions(product)"
@@ -171,6 +177,7 @@ import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
+import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 const foreversProductsSkus = [
   'ForeversDog_bundle',
@@ -264,6 +271,7 @@ export default {
     ...mapGetters({
       products: 'cart/getCartItems'
     }),
+    ...mapMobileObserver(),
     totalItems () {
       return this.products.reduce(
         (totalItems, product) => totalItems + parseInt(product.qty, 10),
@@ -279,6 +287,26 @@ export default {
     this.isMounted = true;
   },
   methods: {
+    getPlushieName (product) {
+      if (!product.plushieName) {
+        return '';
+      }
+
+      let name = product.plushieName;
+
+      if (product.plushieBreed) {
+        name += ', ' + product.plushieBreed;
+      }
+
+      return this.truncate(name);
+    },
+    getPlushieDesc (product) {
+      if (!product.plushieDescription) {
+        return '';
+      }
+
+      return this.truncate(product.plushieDescription, 150, 50);
+    },
     editHandler (product) {
       if (foreversProductsSkus.includes(product.sku)) {
         this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } })
@@ -369,6 +397,15 @@ export default {
     },
     showEditButton (productSku) {
       return editableProductsSkus.includes(productSku);
+    },
+    truncate (text, desktopLength = 75, mobileLength = 50) {
+      const maxLength = this.isMobile ? mobileLength : desktopLength;
+
+      if (text.length <= maxLength) {
+        return text;
+      }
+
+      return text.substring(0, maxLength) + '...';
     }
   }
 };
@@ -476,7 +513,7 @@ export default {
         flex-direction: row;
       }
       ::v-deep &__details {
-        flex-grow: 1.5;
+        flex-grow: 3;
       }
       ::v-deep &__actions {
         flex-grow: 1;
@@ -509,7 +546,7 @@ export default {
   }
 
   &__properties {
-    font-size: var(--font-sm);
+    font-size: var(--font-xs);
     margin-bottom: var(--spacer-sm);
 
     &__icon {
