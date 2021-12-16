@@ -8,7 +8,7 @@
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
       :svg-path="svgPath"
-      :back-design="backDesign"
+      :selected-back-design="backDesign"
       :front-design="frontDesign"
       @design-selected="onDesignSelected"
       v-if="getCurrentProduct"

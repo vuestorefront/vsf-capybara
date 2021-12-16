@@ -124,7 +124,10 @@ let routes = [
     props: (route) => ({
       backDesign: route.query.back_design,
       frontDesign: route.params.parentSku
-    })
+    }),
+    meta: {
+      preventScrollBehaviorOnTheSameRoute: true
+    }
   },
   { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery },
   { name: 'gift-cards', path: '/giftcards', component: GiftCards },
