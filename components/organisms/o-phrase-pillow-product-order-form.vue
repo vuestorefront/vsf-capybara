@@ -694,7 +694,7 @@ export default (
       type: String,
       default: undefined
     },
-    backDesign: {
+    selectedBackDesign: {
       type: String,
       default: undefined
     }
@@ -724,13 +724,13 @@ export default (
       isFormDisabled: false,
       isSubmitting: false,
       isAccentColorSelectedByUser: false,
-      isBackDesignSelectedByUser: false,
       submitErrors: [] as string[],
       showEmailStep: true,
       isCustomizerPreviewBackSideFocused: false,
       croppedBackground: '',
       activeStepIndex: 0,
-      stepValidateState
+      stepValidateState,
+      defaultBackDesign: undefined as string | undefined
     };
   },
   computed: {
@@ -914,6 +914,13 @@ export default (
         { text: 'Rendering design to maximize hugs', value: 66 },
         { text: 'Optimizing pillow softness vectors', value: 100 }
       ];
+    },
+    backDesign (): string | undefined {
+      if (this.selectedBackDesign) {
+        return this.selectedBackDesign;
+      }
+
+      return this.defaultBackDesign;
     }
   },
   methods: {
@@ -1025,8 +1032,9 @@ export default (
 
       return data;
     },
-    selectDefaultBackDesignForFront (frontDesignSku?: string): void {
-      if (!frontDesignSku) {
+    selectDefaultBackDesignForFront (frontDesignSku?: string): string | undefined {
+      if (!frontDesignSku || this.selectedBackDesign) {
+        this.defaultBackDesign = undefined;
         return;
       }
 
@@ -1035,6 +1043,7 @@ export default (
       );
 
       if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
+        this.defaultBackDesign = undefined;
         return;
       }
 
@@ -1043,13 +1052,11 @@ export default (
       );
 
       if (!backDesign) {
+        this.defaultBackDesign = undefined;
         return;
       }
 
-      this.$emit(
-        'design-selected',
-        { frontDesign: frontDesignSku, backDesign: backDesign.sku }
-      );
+      this.defaultBackDesign = backDesign.sku;
     },
     selectDefaultAccentColor (
       frontDesignSku?: string,
@@ -1268,12 +1275,11 @@ export default (
       this.isAccentColorSelectedByUser = true;
     },
     onBackDesignSelect (value?: string): void {
-      this.isBackDesignSelectedByUser = true;
       this.$emit('design-selected', { frontDesign: this.frontDesign, backDesign: value });
       this.selectDefaultAccentColor(this.frontDesign, value);
     },
     onFrontDesignSelect (value?: string): void {
-      this.$emit('design-selected', { frontDesign: value, backDesign: this.backDesign });
+      this.$emit('design-selected', { frontDesign: value, backDesign: this.selectedBackDesign });
       this.selectDefaultBackDesignForFront(value);
       this.selectDefaultAccentColor(value, this.backDesign);
     },
@@ -1379,22 +1385,25 @@ export default (
       this.imageUploadUrl
     );
 
+    let frontDesign;
+
     if (this.frontDesign) {
       this.activeStepIndex = 1;
       this.stepValidateState[customizerStepsData.frontDesign.id] = 'valid';
+      frontDesign = this.frontDesign;
     } else if (this.frontDesignProducts.length) {
-      this.onFrontDesignSelect(this.frontDesignProducts[0].sku);
-    }
-
-    if (this.backDesign) {
-      this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
+      frontDesign = this.frontDesignProducts[0].sku;
     }
 
     this.accentColorPartValues = this.getAccentColorPartValues(
       this.bodyparts[0]
     );
 
-    this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
+    this.onFrontDesignSelect(frontDesign);
+
+    if (this.backDesign) {
+      this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
+    }
 
     this.prefillEmail();
 
