@@ -1028,7 +1028,7 @@ export default (
 
       return data;
     },
-    selectDefaultBackDesignForFront (frontDesignSku?: string): string | undefined {
+    selectDefaultBackDesignForFront (frontDesignSku?: string): void {
       if (!frontDesignSku || this.selectedBackDesign) {
         this.defaultBackDesign = undefined;
         return;
