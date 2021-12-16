@@ -293,23 +293,17 @@ export default {
       }
 
       if (!product.plushieBreed) {
-        return product.plushieName;
+        return this.truncate(product.plushieName);
       }
 
-      return product.plushieName + ', ' + product.plushieBreed;
+      return this.truncate(product.plushieName) + ', ' + this.truncate(product.plushieBreed);
     },
     getPlushieDesc (product) {
       if (!product.plushieDescription) {
         return '';
       }
 
-      const maxLength = this.isMobile ? 150 : 300;
-
-      if (product.plushieDescription.length <= maxLength) {
-        return product.plushieDescription;
-      }
-
-      return product.plushieDescription.substring(0, maxLength) + '...';
+      return this.truncate(product.plushieDescription, 300, 150);
     },
     editHandler (product) {
       if (foreversProductsSkus.includes(product.sku)) {
@@ -401,6 +395,15 @@ export default {
     },
     showEditButton (productSku) {
       return editableProductsSkus.includes(productSku);
+    },
+    truncate (text, desktopLength = 75, mobileLength = 50) {
+      const maxLength = this.isMobile ? mobileLength : desktopLength;
+
+      if (text.length <= maxLength) {
+        return text;
+      }
+
+      return text.substring(0, maxLength) + '...';
     }
   }
 };

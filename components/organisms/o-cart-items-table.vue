@@ -89,6 +89,7 @@ import { getProductPrice } from 'theme/helpers';
 import CartItem from 'core/modules/cart/types/CartItem';
 import CartItemOption from 'core/modules/cart/types/CartItemOption';
 import { ProductId } from 'src/modules/budsies';
+import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 export default {
   name: 'OCartItemsTable',
@@ -116,6 +117,9 @@ export default {
         this.$t('Price')
       ]
     }
+  },
+  computed: {
+    ...mapMobileObserver()
   },
   methods: {
     getBundleProductOptions (product: CartItem) {
@@ -185,16 +189,16 @@ export default {
 
       return getThumbnailForProduct(product);
     },
-    getPlushieName (product: CartItem) {
+    getPlushieName (product: CartItem): string {
       if (!product.plushieName) {
         return '';
       }
 
       if (!product.plushieBreed) {
-        return product.plushieName;
+        return this.truncate(product.plushieName);
       }
 
-      return product.plushieName + ', ' + product.plushieBreed;
+      return this.truncate(product.plushieName) + ', ' + this.truncate(product.plushieBreed);
     },
     isCustomOption (product: CartItem, productOption: CartItemOption) {
       if (!product.custom_options) {
@@ -202,6 +206,15 @@ export default {
       }
 
       return product.custom_options.find(option => option.title === productOption.label) !== undefined;
+    },
+    truncate (text: string, desktopLength = 75, mobileLength = 50): string {
+      const maxLength = this.isMobile ? mobileLength : desktopLength;
+
+      if (text.length <= maxLength) {
+        return text;
+      }
+
+      return text.substring(0, maxLength) + '...';
     }
   }
 }
