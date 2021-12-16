@@ -177,6 +177,7 @@ import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
+import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 const foreversProductsSkus = [
   'ForeversDog_bundle',
@@ -270,6 +271,7 @@ export default {
     ...mapGetters({
       products: 'cart/getCartItems'
     }),
+    ...mapMobileObserver(),
     totalItems () {
       return this.products.reduce(
         (totalItems, product) => totalItems + parseInt(product.qty, 10),
@@ -301,7 +303,13 @@ export default {
         return '';
       }
 
-      return product.plushieDescription;
+      const maxLength = this.isMobile ? 150 : 300;
+
+      if (product.plushieDescription.length <= maxLength) {
+        return product.plushieDescription;
+      }
+
+      return product.plushieDescription.substring(0, maxLength) + '...';
     },
     editHandler (product) {
       if (foreversProductsSkus.includes(product.sku)) {
