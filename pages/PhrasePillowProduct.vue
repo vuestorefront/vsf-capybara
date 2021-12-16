@@ -81,8 +81,7 @@ export default Vue.extend({
       store.dispatch('budsies/loadProductBodyparts', { productId: product.id }),
       store.dispatch('budsies/loadProductRushAddons', {
         productId: product.id
-      }),
-      store.dispatch('product/loadProductBreadcrumbs', { product })
+      })
     ]);
 
     if (isServer) {

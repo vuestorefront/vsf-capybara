@@ -83,8 +83,7 @@ export default Vue.extend({
       });
 
       await Promise.all([
-        this.$store.dispatch('budsies/loadExtraPhotosAddons', { productId: product.id }),
-        this.$store.dispatch('product/loadProductBreadcrumbs', { product })
+        this.$store.dispatch('budsies/loadExtraPhotosAddons', { productId: product.id })
       ]);
 
       catalogHooksExecutors.productPageVisited(product);
