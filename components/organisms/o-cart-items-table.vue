@@ -194,11 +194,13 @@ export default {
         return '';
       }
 
-      if (!product.plushieBreed) {
-        return this.truncate(product.plushieName);
+      let name = product.plushieName;
+
+      if (product.plushieBreed) {
+        name += ', ' + product.plushieBreed;
       }
 
-      return this.truncate(product.plushieName) + ', ' + this.truncate(product.plushieBreed);
+      return this.truncate(name);
     },
     isCustomOption (product: CartItem, productOption: CartItemOption) {
       if (!product.custom_options) {

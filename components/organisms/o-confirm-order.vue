@@ -357,11 +357,13 @@ export default {
         return '';
       }
 
-      if (!product.plushieBreed) {
-        return this.truncate(product.plushieName);
+      let name = product.plushieName;
+
+      if (product.plushieBreed) {
+        name += ', ' + product.plushieBreed;
       }
 
-      return this.truncate(product.plushieName) + ', ' + this.truncate(product.plushieBreed);
+      return this.truncate(name);
     },
     getThumbnailForProduct (product) {
       if (product.thumbnail && product.thumbnail.includes('://')) {
