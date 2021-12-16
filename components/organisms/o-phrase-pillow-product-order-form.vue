@@ -916,11 +916,7 @@ export default (
       ];
     },
     backDesign (): string | undefined {
-      if (this.selectedBackDesign) {
-        return this.selectedBackDesign;
-      }
-
-      return this.defaultBackDesign;
+      return this.selectedBackDesign ? this.selectedBackDesign : this.defaultBackDesign;
     }
   },
   methods: {
