@@ -202,10 +202,6 @@ export default Vue.extend({
       }
     },
     clearBreed (): void {
-      if (this.showBreedStep) {
-        return;
-      }
-
       this.breed = undefined;
     },
     submitStep (): void {
@@ -221,7 +217,9 @@ export default Vue.extend({
   },
   created (): void {
     this.prefillEmail();
-    this.$nextTick().then(this.clearBreed);
+    if (!this.showBreedStep) {
+      this.$nextTick().then(this.clearBreed);
+    }
   }
 });
 
