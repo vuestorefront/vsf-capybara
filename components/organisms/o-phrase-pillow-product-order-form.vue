@@ -1030,7 +1030,6 @@ export default (
     },
     selectDefaultBackDesignForFront (frontDesignSku?: string): void {
       if (!frontDesignSku || this.selectedBackDesign) {
-        this.defaultBackDesign = undefined;
         return;
       }
 
@@ -1039,7 +1038,6 @@ export default (
       );
 
       if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
-        this.defaultBackDesign = undefined;
         return;
       }
 
@@ -1048,7 +1046,6 @@ export default (
       );
 
       if (!backDesign) {
-        this.defaultBackDesign = undefined;
         return;
       }
 
