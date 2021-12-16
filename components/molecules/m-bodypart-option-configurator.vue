@@ -158,11 +158,11 @@ export default Vue.extend({
     justify-content: center;
     padding: 0;
     row-gap: 2vw;
-    column-gap: 4%;
   }
 
   ._visual-selector-value {
     width: 114px;
+    margin: 0 2%;
 
     ._icon {
       background-position: center center;
