@@ -108,7 +108,7 @@ export default Vue.extend({
           return;
         }
 
-        this.qty = 1
+        this.qty = (newProduct.stock.min_qty !== 0) ? newProduct.stock.min_qty : 1
       }
     }
   }
