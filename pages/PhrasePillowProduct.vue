@@ -8,14 +8,16 @@
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
       :svg-path="svgPath"
-      :initial-front-design="initialFrontDesign"
+      :back-design="backDesign"
+      :front-design="frontDesign"
+      @design-selected="onDesignSelected"
       v-if="getCurrentProduct"
     />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
@@ -24,12 +26,22 @@ import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/stor
 
 import Product from 'core/modules/catalog/types/Product';
 
-import OPhrasePillowProductOrderForm from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
+import OPhrasePillowProductOrderForm, { DesignSelectedEventPayload } from 'theme/components/organisms/o-phrase-pillow-product-order-form.vue';
 
 const phrasePillowSku = 'petsiesPhrasePillow_bundle';
 
 export default Vue.extend({
   name: 'PhrasePillowProduct',
+  props: {
+    backDesign: {
+      type: String as PropType<string | undefined>,
+      default: undefined
+    },
+    frontDesign: {
+      type: String as PropType<string | undefined>,
+      default: undefined
+    }
+  },
   components: {
     OPhrasePillowProductOrderForm
   },
@@ -56,19 +68,18 @@ export default Vue.extend({
     imageUploadUrl (): string {
       return config.images.fileuploaderUploadUrl;
     },
-    initialFrontDesign (): string | undefined {
-      if (this.$route.params.parentSku) {
-        return this.$route.params.parentSku;
-      }
-
-      return undefined;
-    },
     getProductBySkuDictionary (): Record<string, Product> {
       return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product');
+
+    const currentProduct = store.getters['product/getCurrentProduct'];
+
+    if (currentProduct && currentProduct.sku === phrasePillowSku) {
+      return;
+    }
 
     const product = await store.dispatch('product/loadProduct',
       {
@@ -105,6 +116,31 @@ export default Vue.extend({
     }
   },
   methods: {
+    onDesignSelected (value: DesignSelectedEventPayload): void {
+      if (value.frontDesign === this.frontDesign && value.backDesign === this.backDesign) {
+        return;
+      }
+
+      const routeData = {
+        query: this.$route.query
+      }
+
+      if (value.frontDesign) {
+        routeData.query = {
+          ...routeData.query,
+          front_design: value.frontDesign
+        }
+      }
+
+      if (value.backDesign) {
+        routeData.query = {
+          ...routeData.query,
+          back_design: value.backDesign
+        }
+      }
+
+      this.$router.push(routeData);
+    },
     async setCurrentProduct (): Promise<void> {
       if (this.getCurrentProduct) {
         return;
