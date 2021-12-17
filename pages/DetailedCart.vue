@@ -425,10 +425,6 @@ export default {
     &__remove {
       position: static;
     }
-
-    ::v-deep &__actions {
-      align-items: flex-start;
-    }
   }
   ._dropdown-container {
     display: inline-block;
@@ -537,6 +533,7 @@ export default {
 .actions {
   &__button {
     margin-bottom: var(--spacer-xs);
+    align-self: flex-start;
   }
 }
 .empty-cart {
