@@ -1,13 +1,5 @@
 <template>
   <div id="category">
-    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
-      <template #link="{breadcrumb}">
-        <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
-          {{ breadcrumb.text }}
-        </router-link>
-      </template>
-    </SfBreadcrumbs>
-
     <div class="page-header">
       <SfHeading :level="1" :title="$t(getCurrentCategory.name)" class="navbar__title" />
     </div>
@@ -229,8 +221,7 @@ import {
   SfHeading,
   SfMenuItem,
   SfAccordion,
-  SfPagination,
-  SfBreadcrumbs
+  SfPagination
 } from '@storefront-ui/vue';
 
 import MCategoryDescriptionStory from 'theme/components/molecules/m-category-description-story.vue';
@@ -255,16 +246,7 @@ const composeInitialPageState = async (store, route, forceLoad = false) => {
       category: currentCategory,
       pageSize: THEME_PAGE_SIZE
     });
-    const breadCrumbsLoader = store.dispatch(
-      'category-next/loadCategoryBreadcrumbs',
-      {
-        category: currentCategory,
-        currentRouteName: currentCategory.name,
-        omitCurrent: true
-      }
-    );
 
-    if (isServer) await breadCrumbsLoader;
     catalogHooksExecutors.categoryPageVisited(currentCategory);
   } catch (e) {
     //
@@ -292,7 +274,6 @@ export default {
     SfMenuItem,
     SfAccordion,
     SfPagination,
-    SfBreadcrumbs,
     MCategoryDescriptionStory
   },
   mixins: [onBottomScroll],
@@ -317,8 +298,6 @@ export default {
       getCurrentFilters: 'category-next/getCurrentFilters',
       getSystemFilterNames: 'category-next/getSystemFilterNames',
       getCategories: 'category/getCategories',
-      getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
-      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent',
       getCurrentPageProducts: 'category-next/getCurrentPageProducts'
     }),
     isLazyHydrateEnabled () {
@@ -329,18 +308,6 @@ export default {
     },
     isLazyLoadingEnabled () {
       return !isServer && this.browserWidth < LAZY_LOADING_ACTIVATION_BREAKPOINT;
-    },
-    breadcrumbs () {
-      return this.getBreadcrumbsRoutes
-        .map(route => ({
-          text: htmlDecode(route.name),
-          route: {
-            link: route.route_link
-          }
-        }))
-        .concat({
-          text: htmlDecode(this.getBreadcrumbsCurrent)
-        });
     },
     categories () {
       return getTopLevelCategories(this.getCategories)
@@ -615,7 +582,6 @@ export default {
     max-width: 1272px;
     width: 100%;
     margin: 0 auto;
-    padding-top: 0;
   }
 
   .category__short-description {
@@ -663,9 +629,6 @@ export default {
       padding: 0;
     }
   }
-}
-.breadcrumbs {
-  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 .navbar {
   position: relative;

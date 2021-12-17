@@ -102,6 +102,9 @@
                 class="collected-product"
               >
                 <template #configuration>
+                  <div class="collected-product__option" v-if="getPlushieName(product)">
+                    {{ getPlushieName(product) | htmlDecode }}
+                  </div>
                   <div
                     class="collected-product__option"
                     v-for="option in getBundleProductOptions(product)"
@@ -268,6 +271,7 @@ import { ProductId } from 'src/modules/budsies';
 import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
+import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 export default {
   name: 'OConfirmOrder',
@@ -327,6 +331,7 @@ export default {
       paymentMethods: 'checkout/getPaymentMethods',
       personalDetails: 'checkout/getPersonalDetails'
     }),
+    ...mapMobileObserver(),
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
         method => this.shippingDetails.shippingMethod === method.method_code
@@ -347,6 +352,19 @@ export default {
     ...mapActions('ui', {
       openModal: 'openModal'
     }),
+    getPlushieName (product) {
+      if (!product.plushieName) {
+        return '';
+      }
+
+      let name = product.plushieName;
+
+      if (product.plushieBreed) {
+        name += ', ' + product.plushieBreed;
+      }
+
+      return this.truncate(name);
+    },
     getThumbnailForProduct (product) {
       if (product.thumbnail && product.thumbnail.includes('://')) {
         return product.thumbnail;
@@ -426,6 +444,15 @@ export default {
     },
     openTermsAndConditionsModal () {
       this.openModal({ name: ModalList.TermsAndConditions })
+    },
+    truncate (text, desktopLength = 75, mobileLength = 50) {
+      const maxLength = this.isMobile ? mobileLength : desktopLength;
+
+      if (text.length <= maxLength) {
+        return text;
+      }
+
+      return text.substring(0, maxLength) + '...';
     }
   },
   mounted () {
