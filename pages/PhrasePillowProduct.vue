@@ -8,7 +8,7 @@
       :product="getCurrentProduct"
       :image-upload-url="imageUploadUrl"
       :svg-path="svgPath"
-      :selected-back-design="backDesign"
+      :back-design="backDesign"
       :front-design="frontDesign"
       @design-selected="onDesignSelected"
       v-if="getCurrentProduct"
@@ -117,14 +117,18 @@ export default Vue.extend({
   },
   methods: {
     onDesignSelected (value: DesignSelectedEventPayload): void {
+      if (value.frontDesign === this.frontDesign && value.backDesign === this.backDesign) {
+        return;
+      }
+
       const routeData = {
-        params: this.$route.params,
         query: this.$route.query
       }
 
       if (value.frontDesign) {
-        routeData.params = {
-          parentSku: value.frontDesign
+        routeData.query = {
+          ...routeData.query,
+          front_design: value.frontDesign
         }
       }
 

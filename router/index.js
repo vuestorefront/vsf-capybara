@@ -118,16 +118,24 @@ let routes = [
     }
   },
   {
-    name: 'pillowSideDesign-product',
-    path: '/phrase-pillow/p/:parentSku?/:slug?',
+    path: '/phrasepillow/index/customize',
+    name: 'phrase-pillow-customize',
     component: PhrasePillowProduct,
     props: (route) => ({
       backDesign: route.query.back_design,
-      frontDesign: route.params.parentSku
-    }),
-    meta: {
-      preventScrollBehaviorOnTheSameRoute: true
-    }
+      frontDesign: route.query.front_design
+    })
+  },
+  {
+    name: 'pillowSideDesign-product',
+    path: '/phrase-pillow/p/:parentSku?/:slug?',
+    redirect: (route) => ({
+      name: 'phrase-pillow-customize',
+      query: {
+        back_design: route.query.back_design,
+        front_design: route.params.parentSku
+      }
+    })
   },
   { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery },
   { name: 'gift-cards', path: '/giftcards', component: GiftCards },

@@ -54,10 +54,10 @@
                 <MLivePreview
                   ref="backPreviewSmall"
                   :template-fetch-url="svgPath"
-                  :design-sku="backDesign"
+                  :design-sku="selectedBackDesign"
                   :accent-color="accentColor"
                   :custom-text-values="customTextValues"
-                  v-if="backDesign"
+                  v-if="selectedBackDesign"
                 />
               </div>
             </template>
@@ -102,13 +102,13 @@
                 ref="backPreview"
                 class="_back-preview"
                 :template-fetch-url="svgPath"
-                :design-sku="backDesign"
+                :design-sku="selectedBackDesign"
                 :accent-color="accentColor"
                 :custom-text-values="customTextValues"
                 :is-background-loaded="isBackgroundImageLoaded"
                 @custom-text-fields-prepared="onBackCustomTextFieldsPrepared"
                 @colored-elements-counted="onBackAccentColorElementsCounted"
-                v-if="backDesign"
+                v-if="selectedBackDesign"
               />
             </template>
           </MCustomizerPreview>
@@ -263,7 +263,7 @@
                   </div>
 
                   <MDesignSelector
-                    :value="backDesign"
+                    :value="selectedBackDesign"
                     class="_back-selector"
                     :design-products="backDesignProducts"
                     :field-name="'back-design-sku'"
@@ -694,7 +694,7 @@ export default (
       type: String,
       default: undefined
     },
-    selectedBackDesign: {
+    backDesign: {
       type: String,
       default: undefined
     }
@@ -915,14 +915,17 @@ export default (
         { text: 'Optimizing pillow softness vectors', value: 100 }
       ];
     },
-    backDesign (): string | undefined {
-      return this.selectedBackDesign ? this.selectedBackDesign : this.defaultBackDesign;
+    selectedBackDesign (): string | undefined {
+      return this.backDesign ? this.backDesign : this.defaultBackDesign;
     }
   },
   methods: {
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
+    emitDesignSelectedEvent (payload: DesignSelectedEventPayload): void {
+      this.$emit('design-selected', payload);
+    },
     isStepInvalid (stepId: string): boolean {
       return (
         this.stepValidateState[stepId] &&
@@ -1029,7 +1032,7 @@ export default (
       return data;
     },
     selectDefaultBackDesignForFront (frontDesignSku?: string): void {
-      if (!frontDesignSku || this.selectedBackDesign) {
+      if (!frontDesignSku || this.backDesign) {
         return;
       }
 
@@ -1171,7 +1174,7 @@ export default (
 
       if (
         !this.frontDesign ||
-        !this.backDesign ||
+        !this.selectedBackDesign ||
         (!this.accentColorPartValue && this.isAccentColorSelectorVisible)
       ) {
         throw new Error('Design variants or accent color are not specified!');
@@ -1268,13 +1271,13 @@ export default (
       this.isAccentColorSelectedByUser = true;
     },
     onBackDesignSelect (value?: string): void {
-      this.$emit('design-selected', { frontDesign: this.frontDesign, backDesign: value });
+      this.emitDesignSelectedEvent({ frontDesign: this.frontDesign, backDesign: value });
       this.selectDefaultAccentColor(this.frontDesign, value);
     },
     onFrontDesignSelect (value?: string): void {
-      this.$emit('design-selected', { frontDesign: value, backDesign: this.selectedBackDesign });
+      this.emitDesignSelectedEvent({ frontDesign: value, backDesign: this.backDesign });
       this.selectDefaultBackDesignForFront(value);
-      this.selectDefaultAccentColor(value, this.backDesign);
+      this.selectDefaultAccentColor(value, this.selectedBackDesign);
     },
     onBackgroundImageUploaded (image: string): void {
       const backgroundEditor = this.getBackgroundEditor();
@@ -1394,7 +1397,7 @@ export default (
 
     this.onFrontDesignSelect(frontDesign);
 
-    if (this.backDesign) {
+    if (this.selectedBackDesign) {
       this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
     }
 
@@ -1453,7 +1456,7 @@ export default (
       },
       immediate: false
     },
-    backDesign: {
+    selectedBackDesign: {
       handler (newValue: string | undefined) {
         if (!this.backDesignBundleOption) {
           Logger.error(
@@ -1466,7 +1469,7 @@ export default (
         let backDesign;
         if (newValue) {
           backDesign = this.backDesignProducts.find(
-            (product) => product.sku === this.backDesign
+            (product) => product.sku === this.selectedBackDesign
           );
         }
 
