@@ -700,7 +700,9 @@ export default (
     }
   },
   data () {
-    let stepValidateState: Dictionary<'valid' | 'invalid'> = {};
+    let stepValidateState: Dictionary<'valid' | 'invalid'> = {
+      [customizerStepsData.frontDesign.id]: 'valid'
+    };
 
     return {
       customTextValues: {} as unknown as Record<string, string | undefined>,
@@ -727,7 +729,7 @@ export default (
       showEmailStep: true,
       isCustomizerPreviewBackSideFocused: false,
       croppedBackground: '',
-      activeStepIndex: 0,
+      activeStepIndex: 1,
       stepValidateState
     };
   },
@@ -1368,21 +1370,13 @@ export default (
       this.imageUploadUrl
     );
 
-    let frontDesign;
-
-    if (this.frontDesign) {
-      this.activeStepIndex = 1;
-      this.stepValidateState[customizerStepsData.frontDesign.id] = 'valid';
-      frontDesign = this.frontDesign;
-    } else if (this.frontDesignProducts.length) {
-      frontDesign = this.frontDesignProducts[0].sku;
+    if (!this.frontDesign && this.frontDesignProducts.length) {
+      this.onFrontDesignSelect(this.frontDesignProducts[0].sku);
     }
 
     this.accentColorPartValues = this.getAccentColorPartValues(
       this.bodyparts[0]
     );
-
-    this.onFrontDesignSelect(frontDesign);
 
     if (this.selectedBackDesign) {
       this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
