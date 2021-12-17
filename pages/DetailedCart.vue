@@ -425,6 +425,10 @@ export default {
     &__remove {
       position: static;
     }
+
+    ::v-deep &__actions {
+      align-items: flex-start;
+    }
   }
   ._dropdown-container {
     display: inline-block;
