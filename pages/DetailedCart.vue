@@ -570,6 +570,7 @@ export default {
 .actions {
   &__button {
     margin-bottom: var(--spacer-xs);
+    align-self: flex-start;
   }
 }
 .empty-cart {
