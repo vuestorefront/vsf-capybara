@@ -451,7 +451,7 @@ export default Vue.extend({
       return this.$store.getters['budsies/getBodypartOptions']
     },
     isProductionOptionsAvailable (): boolean {
-      return this.productionTimeOptions.length !== 0;
+      return this.productionTimeOptions.length > 1;
     },
     productionTimeOptions (): ProductionTimeOption[] {
       if (!this.productionTimeBundleOption) {
