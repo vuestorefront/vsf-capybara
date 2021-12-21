@@ -30,8 +30,8 @@ const GiftCards = () =>
   import(/* webpackChunkName: "vsf-gift-cards" */ 'theme/pages/GiftCards');
 
 let routes = [
-  { name: 'detailed-cart', path: '/cart', component: DetailedCart },
-  { name: 'checkout', path: '/checkout', component: Checkout },
+  { name: 'detailed-cart', path: '/checkout/cart', component: DetailedCart },
+  { name: 'checkout', path: '/checkout/onepage', component: Checkout },
   { name: 'legal', path: '/legal', component: Static },
   { name: 'privacy', path: '/privacy', component: Static },
   { name: 'my-account', path: '/my-account', component: MyAccount },
@@ -60,6 +60,20 @@ let routes = [
   { name: 'cms-page', path: '/i/:slug', component: Static },
   { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
   {
+    name: 'forevers-create-alias-1',
+    path: '/plushie/index/creationwizard/category_id/13',
+    redirect: {
+      name: 'forevers-create'
+    }
+  },
+  {
+    name: 'forevers-create-alias-2',
+    path: '/plushie/index/creationwizard/category_id/13/attributeId/:productId',
+    redirect: {
+      name: 'forevers-create'
+    }
+  },
+  {
     name: 'printed-product',
     path: '/printed/p/:sku',
     component: PrintedProduct,
@@ -69,6 +83,13 @@ let routes = [
     })
   },
   { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
+  {
+    name: 'pillow-product-alias',
+    path: '/plushie/index/create/id/12/type/pillow/',
+    redirect: {
+      name: 'pillow-product'
+    }
+  },
   { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
   {
     name: 'printed-socks-creation-page',
@@ -114,6 +135,16 @@ let routes = [
       name: 'category',
       params: {
         slug: 'custom-photo-pillows-80'
+      }
+    }
+  },
+  {
+    name: 'accessories-category-alias',
+    path: '/accessories',
+    redirect: {
+      name: 'category',
+      params: {
+        slug: 'petsies-accessories-11'
       }
     }
   },
