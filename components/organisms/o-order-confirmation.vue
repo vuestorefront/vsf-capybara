@@ -94,6 +94,7 @@ import { isServer } from '@vue-storefront/core/helpers';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { MailerModule } from '@vue-storefront/core/modules/mailer';
 import { SfHeading, SfButton } from '@storefront-ui/vue';
+import { createSmoothscroll } from 'theme/helpers';
 
 export default {
   name: 'OOrderConfirmation',
@@ -123,6 +124,9 @@ export default {
   },
   beforeCreate () {
     registerModule(MailerModule);
+  },
+  mounted () {
+    createSmoothscroll(document.documentElement.scrollTop || document.body.scrollTop, 0);
   },
   destroyed () {
     this.$store.dispatch('checkout/setThankYouPage', false);

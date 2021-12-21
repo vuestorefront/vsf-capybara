@@ -168,7 +168,10 @@ export default Vue.extend({
   ._button {
     justify-content: flex-start;
     flex-direction: row;
-    gap: 1em;
+
+    ._image {
+      margin-right: 1em;
+    }
   }
 
   @media (min-width: $tablet-min) {
