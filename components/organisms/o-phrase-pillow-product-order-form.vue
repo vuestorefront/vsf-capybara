@@ -1435,7 +1435,7 @@ export default (
           optionSelections: frontDesign ? [frontDesign.optionValueId] : []
         });
       },
-      immediate: false
+      immediate: true
     },
     selectedBackDesign: {
       handler (newValue: string | undefined) {
@@ -1460,7 +1460,7 @@ export default (
           optionSelections: backDesign ? [backDesign.optionValueId] : []
         });
       },
-      immediate: false
+      immediate: true
     },
     isCustomizerPreviewBackSideFocused: {
       handler (): void {
