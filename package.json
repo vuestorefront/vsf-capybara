@@ -32,7 +32,7 @@
     "js-video-url-parser": "^0.4.3",
     "lodash.throttle": "^4.1.1",
     "quicklink": "^2.0.0-alpha",
-    "storefront-query-builder": "https://github.com/DivanteLtd/storefront-query-builder.git",
+    "storefront-query-builder": "https://github.com/vuestorefront/storefront-query-builder.git",
     "supports-webp": "^2.0.1",
     "uuid": "^8.0.0",
     "vee-validate": "^3.3.0",
