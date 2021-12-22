@@ -50,7 +50,7 @@
     "vue-slick-carousel": "1.0.6",
     "vue-star-rating": "^1.7.0",
     "vue2-filters": "^0.11.0",
-    "vuelidate": "0.6.2",
+    "vuelidate": "^0.7.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
