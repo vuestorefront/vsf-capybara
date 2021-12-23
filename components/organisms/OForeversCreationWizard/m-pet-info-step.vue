@@ -195,7 +195,7 @@ export default Vue.extend({
   },
   methods: {
     prefillEmail (): void {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+      const customerEmail = this.$store.getters['budsies/getPrefilledCustomerEmail'];
       if (customerEmail) {
         this.email = customerEmail;
         this.showEmailStep = false;
