@@ -224,18 +224,9 @@
         {{ $t('Add to Cart') }}
       </SfButton>
 
-      <p class="_order-agreement">
-        I agree to
-        <router-link to="/terms-of-service/" target="_blank">
-          Terms of Service
-        </router-link>,
-        <router-link to="/privacy-policy/" target="_blank">
-          Privacy Policy
-        </router-link>,
-        and <a href="http://support.mypetsies.com/support/solutions/folders/13000003991" target="_blank">Refund Policy</a>.
-        I understand that Petsies happily takes care of all tears, defects, and shipping damage with either a refund or a repair.
-        I also understand that my custom Petsies order is backed by the Petsies Guarantee.
-      </p>
+      <MBlockStory
+        story-slug="order_submit_agreement_petsies"
+      />
     </div>
 
     <SfModal
@@ -293,6 +284,7 @@ import { getProductPrice } from 'theme/helpers';
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
 import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-configurator.vue';
+import MBlockStory from '../../molecules/m-block-story.vue';
 
 import BodypartOption from '../../interfaces/bodypart-option';
 import AddonOption from '../../interfaces/addon-option.interface';
@@ -316,7 +308,8 @@ export default Vue.extend({
     ValidationObserver,
     MAddonsSelector,
     ACustomProductQuantity,
-    MBodypartOptionConfigurator
+    MBodypartOptionConfigurator,
+    MBlockStory
   },
   props: {
     value: {
