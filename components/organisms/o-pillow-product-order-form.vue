@@ -5,10 +5,9 @@
       title="Pillow Order Form"
     />
 
-    <div class="_top-notes">
-      <p><strong>Estimated Delivery: 2 weeks</strong></p>
-      <p><strong>Please make sure everything is correct before submitting. Your pillow goes straight to print!</strong></p>
-    </div>
+    <MBlockStory
+      story-slug="pillow_creation_page_top"
+    />
 
     <SfDivider class="_step-divider" />
 
@@ -367,6 +366,10 @@
       </form>
     </validation-observer>
 
+    <MBlockStory
+      story-slug="pillow_creation_page_bottom"
+    />
+
     <SfModal
       :visible="areQuantityNotesVisible"
       @close="areQuantityNotesVisible = false"
@@ -434,6 +437,7 @@ import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
 import CustomerImage from '../interfaces/customer-image.interface';
+import MBlockStory from 'theme/components/molecules/m-block-story.vue';
 
 extend('required', {
   ...required,
@@ -463,7 +467,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfInput,
     SfModal,
     SfHeading,
-    SfSelect
+    SfSelect,
+    MBlockStory
   },
   inject: {
     window: { from: 'WindowObject' },
