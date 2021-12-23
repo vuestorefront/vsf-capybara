@@ -1128,7 +1128,7 @@ export default (
       this.updateSmallBackgroundImage();
     },
     prefillEmail (): void {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+      const customerEmail = this.$store.getters['budsies/getPrefilledCustomerEmail'];
 
       if (customerEmail) {
         this.customerEmail = customerEmail;

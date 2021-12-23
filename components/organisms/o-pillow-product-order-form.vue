@@ -646,7 +646,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       ref.scrollIntoView({ behavior: 'smooth', block: 'center' });
     },
     prefillEmail (): void {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+      const customerEmail = this.$store.getters['budsies/getPrefilledCustomerEmail'];
       if (customerEmail) {
         this.email = customerEmail;
         this.showEmailStep = false;
