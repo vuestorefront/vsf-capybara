@@ -1327,11 +1327,9 @@ export default (
       }
 
       const image = await backgroundEditor.getCroppedBackground();
-      if (!image) {
-        throw new Error('Background image is unavailable!');
+      if (image) {
+        this.croppedBackground = image;
       }
-
-      this.croppedBackground = image;
     },
     async validateStepsBeforeIndex (index: number): Promise<void> {
       const keys = Object.keys(customizerStepsData).filter(
@@ -1435,7 +1433,7 @@ export default (
           optionSelections: frontDesign ? [frontDesign.optionValueId] : []
         });
       },
-      immediate: false
+      immediate: true
     },
     selectedBackDesign: {
       handler (newValue: string | undefined) {
@@ -1460,7 +1458,7 @@ export default (
           optionSelections: backDesign ? [backDesign.optionValueId] : []
         });
       },
-      immediate: false
+      immediate: true
     },
     isCustomizerPreviewBackSideFocused: {
       handler (): void {
