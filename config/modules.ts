@@ -10,6 +10,7 @@ import { GoogleTagManagerModule } from 'src/modules/google-tag-manager';
 import { UserModule } from '@vue-storefront/core/modules/user'
 import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
+import { mappingFallbackForProduct } from '@vue-storefront/core/modules/catalog/mappingFallback'
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
 import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
 import { extendStore } from '@vue-storefront/core/helpers'
@@ -26,8 +27,14 @@ const extendUrlVuex = {
   actions: {
     async mapFallbackUrl (context, payload: any) {
       const result = await forStoryblok(context, payload);
+      const productResult = await mappingFallbackForProduct(context, payload);
+
       if (result) {
         return result
+      }
+
+      if (productResult) {
+        return productResult;
       }
     }
   }
