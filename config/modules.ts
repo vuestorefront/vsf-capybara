@@ -8,7 +8,6 @@ import { UrlModule } from '@vue-storefront/core/modules/url'
 import { BreadcrumbsModule } from '@vue-storefront/core/modules/breadcrumbs'
 import { GoogleTagManagerModule } from 'src/modules/google-tag-manager';
 import { UserModule } from '@vue-storefront/core/modules/user'
-import { CmsModule } from '@vue-storefront/core/modules/cms'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
 import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
@@ -48,7 +47,6 @@ export function registerClientModules () {
   registerModule(UserModule) // Trigger on user icon click
   registerModule(CatalogNextModule)
   registerModule(BreadcrumbsModule)
-  registerModule(CmsModule)
   registerModule(NewsletterModule)
   registerModule(StoryblokModule)
   registerModule(extendUrlModule)
