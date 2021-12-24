@@ -27,6 +27,7 @@
 </template>
 <script>
 import Checkout from '@vue-storefront/core/pages/Checkout';
+import { isServer } from '@vue-storefront/core/helpers'
 import { SfSteps } from '@storefront-ui/vue';
 import OPayment from 'theme/components/organisms/o-payment';
 import OShipping from 'theme/components/organisms/o-shipping';
@@ -37,6 +38,8 @@ import OOrderConfirmation from 'theme/components/organisms/o-order-confirmation'
 import OPersonalDetails from 'theme/components/organisms/o-personal-details';
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapGetters } from 'vuex';
+
+const successParamValue = 'success';
 
 export default {
   name: 'Checkout',
@@ -86,27 +89,53 @@ export default {
   },
   computed: {
     ...mapGetters({
-      productsInCart: 'cart/getCartItems',
-      ordersHistory: 'user/getOrdersHistory',
-      sessionOrderHashes: 'order/getSessionOrderHashes'
+      productsInCart: 'cart/getCartItems'
     }),
     currentStep () {
       return this.steps.findIndex(step => this.activeSection[step.key]);
     },
-    hasOrders () {
-      return this.ordersHistory.length > 0 || this.sessionOrderHashes.length > 0;
-    },
     isSuccess () {
-      return this.success === 'success';
+      return this.success === successParamValue;
     },
     showThankYouPage () {
-      return this.isThankYouPage || (this.isSuccess && this.hasOrders);
+      return this.isThankYouPage && this.isSuccess;
     }
   },
+  created () {
+    if (this.isSuccess && !this.showThankYouPage) {
+      this.$router.replace({ name: 'cart' });
+    }
+  },
+  beforeMount () {
+    this.$bus.$on('order-after-placed', this.onOrderAfterPlacedHandler);
+  },
+  beforeDestroy () {
+    this.$bus.$off('order-after-placed', this.onOrderAfterPlacedHandler)
+  },
   methods: {
+    activateHashSection () {
+      if (!isServer && !this.showThankYouPage) {
+        var urlStep = window.location.hash.replace('#', '');
+        if (this.activeSection.hasOwnProperty(urlStep) && this.activeSection[urlStep] === false) {
+          this.activateSection(urlStep);
+        } else if (urlStep === '') {
+          this.activateSection('personalDetails');
+        }
+      }
+    },
     changeStep (nextStep) {
       if (nextStep < this.currentStep) {
         this.$bus.$emit('checkout-before-edit', this.steps[nextStep].key);
+      }
+    },
+    async onOrderAfterPlacedHandler () {
+      if (!this.isSuccess) {
+        await this.$router.push({
+          name: 'checkout',
+          params: {
+            success: successParamValue
+          }
+        });
       }
     },
     showNotification ({ type, message }) {
