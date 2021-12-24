@@ -77,8 +77,8 @@ import OProductCard from 'theme/components/organisms/o-product-card.vue';
 import { prepareCategoryProduct } from 'theme/helpers';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
-const getSkuFromRoute = (route: Route): string | undefined => {
-  return route.params.parentSku;
+const getProductIdFromRoute = (route: Route): string | undefined => {
+  return route.params.productId;
 }
 
 export default Vue.extend({
@@ -97,9 +97,9 @@ export default Vue.extend({
   computed: {
     getCurrentProduct (): Product | null {
       const product = this.$store.getters['product/getCurrentProduct'];
-      const sku = getSkuFromRoute(this.$route);
+      const id = getProductIdFromRoute(this.$route);
 
-      if (!product?.sku || product.sku !== sku) {
+      if (!product?.id || product.id.toString() !== id) {
         return null;
       }
 
@@ -107,13 +107,27 @@ export default Vue.extend({
     },
     getProductBySkuDictionary (): Record<string, Product> {
       return this.$store.getters['product/getProductBySkuDictionary'];
+    },
+    productByIdDictionary (): Record<string, Product> {
+      const productByIdDictionary: Record<string, Product> = {};
+
+      Object.values(this.getProductBySkuDictionary).forEach((product: Product) => {
+        if (!product.id) {
+          return;
+        }
+
+        productByIdDictionary[product.id] = product;
+      })
+
+      return productByIdDictionary;
     }
   },
   async asyncData ({ store, route, context }) {
     const product = await store.dispatch(
       'product/loadProduct',
       {
-        parentSku: getSkuFromRoute(route),
+        options: { id: getProductIdFromRoute(route) },
+        key: 'id',
         setCurrent: false
       }
     );
@@ -190,13 +204,13 @@ export default Vue.extend({
       this.$router.push(localizedRoute('/cart'));
     },
     async setCurrentProduct (): Promise<void> {
-      const sku = getSkuFromRoute(this.$route);
+      const id = getProductIdFromRoute(this.$route);
 
-      if (!sku || this.getCurrentProduct?.sku === sku) {
+      if (!id || this.getCurrentProduct?.id === id) {
         return;
       }
 
-      const product = this.getProductBySkuDictionary[sku];
+      const product = this.productByIdDictionary[id];
       await this.$store.dispatch('product/setCurrent', product);
     }
   },

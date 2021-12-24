@@ -362,7 +362,7 @@ export default Vue.extend({
     goToCrossSells (): void {
       let route;
       if (this.product) {
-        route = '/cross-sells/p/' + this.product.sku
+        route = '/cross-sells/p/' + this.product.id
       } else {
         route = '/cart'
       }

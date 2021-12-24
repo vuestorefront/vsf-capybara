@@ -551,7 +551,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     },
     goToCrossSells (): void {
-      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
+      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.id));
     },
     selectStyle (styleValue: string): void {
       if (styleValue === this.selectedStyle) {

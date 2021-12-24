@@ -90,7 +90,18 @@ let routes = [
       name: 'pillow-product'
     }
   },
-  { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
+  { name: 'cross-sells', path: '/cross-sells/p/:productId', component: CrossSells },
+  {
+    path: '/crosssell/index/index/product_id/:productId',
+    redirect: (route) => {
+      return {
+        name: 'cross-sells',
+        params: {
+          productId: route.params.productId
+        }
+      }
+    }
+  },
   {
     name: 'printed-socks-creation-page',
     path: '/plushie/index/printedSocks/',
