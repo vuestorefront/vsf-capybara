@@ -1,6 +1,6 @@
 <template>
   <div id="checkout">
-    <div v-if="!isThankYouPage" class="checkout">
+    <div v-if="!showThankYouPage" class="checkout">
       <div class="checkout__main">
         <SfSteps
           :active="currentStep"
@@ -22,7 +22,7 @@
         </transition>
       </div>
     </div>
-    <OOrderConfirmation v-if="isThankYouPage" />
+    <OOrderConfirmation v-if="showThankYouPage" />
   </div>
 </template>
 <script>
@@ -40,6 +40,12 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'Checkout',
+  props: {
+    success: {
+      type: String,
+      default: undefined
+    }
+  },
   components: {
     SfSteps,
     OPayment,
@@ -80,10 +86,21 @@ export default {
   },
   computed: {
     ...mapGetters({
-      productsInCart: 'cart/getCartItems'
+      productsInCart: 'cart/getCartItems',
+      ordersHistory: 'user/getOrdersHistory',
+      sessionOrderHashes: 'order/getSessionOrderHashes'
     }),
     currentStep () {
       return this.steps.findIndex(step => this.activeSection[step.key]);
+    },
+    hasOrders () {
+      return this.ordersHistory.length > 0 || this.sessionOrderHashes.length > 0;
+    },
+    isSuccess () {
+      return this.success === 'success';
+    },
+    showThankYouPage () {
+      return this.isThankYouPage || (this.isSuccess && this.hasOrders);
     }
   },
   methods: {

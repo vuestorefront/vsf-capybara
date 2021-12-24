@@ -31,7 +31,12 @@ const GiftCards = () =>
 
 let routes = [
   { name: 'detailed-cart', path: '/checkout/cart', component: DetailedCart },
-  { name: 'checkout', path: '/checkout/onepage', component: Checkout },
+  {
+    name: 'checkout',
+    path: '/checkout/onepage/:success?',
+    component: Checkout,
+    props: true
+  },
   { name: 'legal', path: '/legal', component: Static },
   { name: 'privacy', path: '/privacy', component: Static },
   { name: 'my-account', path: '/my-account', component: MyAccount },
