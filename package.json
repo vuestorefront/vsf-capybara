@@ -32,7 +32,7 @@
     "js-video-url-parser": "^0.4.3",
     "lodash.throttle": "^4.1.1",
     "quicklink": "^2.0.0-alpha",
-    "storefront-query-builder": "https://github.com/DivanteLtd/storefront-query-builder.git",
+    "storefront-query-builder": "https://github.com/vuestorefront/storefront-query-builder.git",
     "supports-webp": "^2.0.1",
     "uuid": "^8.0.0",
     "vee-validate": "^3.3.0",
@@ -50,7 +50,7 @@
     "vue-slick-carousel": "1.0.6",
     "vue-star-rating": "^1.7.0",
     "vue2-filters": "^0.11.0",
-    "vuelidate": "0.6.2",
+    "vuelidate": "^0.7.5",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
