@@ -101,11 +101,6 @@ export default {
       return this.isThankYouPage && this.isSuccess;
     }
   },
-  created () {
-    if (this.isSuccess && !this.showThankYouPage) {
-      this.$router.replace({ name: 'cart' });
-    }
-  },
   beforeMount () {
     this.$bus.$on('order-after-placed', this.onOrderAfterPlacedHandler);
   },
