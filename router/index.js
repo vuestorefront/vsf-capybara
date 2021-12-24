@@ -58,7 +58,12 @@ let routes = [
   { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
   { name: 'category', path: '/c/:slug', component: Category },
   { name: 'cms-page', path: '/i/:slug', component: Static },
-  { name: 'forevers-create', path: '/forevers/create', component: ForeversProduct },
+  {
+    name: 'forevers-create',
+    path: '/forevers/create/:productId?',
+    component: ForeversProduct,
+    props: true
+  },
   {
     name: 'forevers-create-alias-1',
     path: '/plushie/index/creationwizard/category_id/13',
@@ -69,9 +74,12 @@ let routes = [
   {
     name: 'forevers-create-alias-2',
     path: '/plushie/index/creationwizard/category_id/13/attributeId/:productId',
-    redirect: {
-      name: 'forevers-create'
-    }
+    redirect: (route) => ({
+      name: 'forevers-create',
+      params: {
+        productId: route.params.productId
+      }
+    })
   },
   {
     name: 'printed-product',
@@ -85,7 +93,7 @@ let routes = [
   { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
   {
     name: 'pillow-product-alias',
-    path: '/plushie/index/create/id/12/type/pillow/',
+    path: '/plushie/index/create/id/12/type/pillow',
     redirect: {
       name: 'pillow-product'
     }
@@ -131,7 +139,7 @@ let routes = [
   },
   {
     name: 'photo-pillows-alias-1',
-    path: '/photo-pillow/designs/',
+    path: '/photo-pillow/designs',
     redirect: {
       name: 'category',
       params: {
