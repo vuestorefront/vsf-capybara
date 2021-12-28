@@ -4,7 +4,9 @@
       <SfHeading :level="1" title="Pillow Customizer" class="_main-header" />
 
       <div class="_notes">
-        <p>Ships within 7 days | Made & Printed in the USA</p>
+        <MBlockStory
+          story-slug="petsies_phrase_pillows_top"
+        />
       </div>
 
       <SfHeading
@@ -464,14 +466,9 @@
                   </div>
 
                   <div class="_bottom-static-block">
-                    <slot name="bottom-static-block">
-                      <sup>
-                        <em>
-                          Your pillow goes straight to print so make sure the
-                          image is correct. No cancellations after 24 hours.
-                        </em>
-                      </sup>
-                    </slot>
+                    <MBlockStory
+                      story-slug="petsies_phrase_pillows_bottom"
+                    />
                   </div>
 
                   <div class="_actions-row" v-show="!isSubmitting">
@@ -566,6 +563,7 @@ import MSubmitAnimator from '../molecules/m-submit-animator.vue';
 import MAccentColorSelector from '../molecules/m-accent-color-selector.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MCustomizerPreview from '../molecules/m-customizer-preview.vue';
+import MBlockStory from '../molecules/m-block-story.vue';
 
 import CustomTextFieldInterface from '../interfaces/custom-text-field.interface';
 import DesignProduct from '../interfaces/design-product.interface';
@@ -668,7 +666,8 @@ export default (
     MFormErrors,
     MDesignImages,
     MSubmitAnimator,
-    MAccentColorSelector
+    MAccentColorSelector,
+    MBlockStory
   },
   inject: {
     errorConverterService: { from: 'ErrorConverterService' },
@@ -1757,15 +1756,6 @@ export default (
       ._background-uploader {
         padding: 0 2em;
         margin-bottom: 1.2em;
-      }
-    }
-
-    ._bottom-static-block {
-      text-align: center;
-      margin-top: var(--spacer-base);
-
-      ::v-deep p:last-child {
-        margin-bottom: 0;
       }
     }
 
