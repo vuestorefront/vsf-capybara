@@ -17,6 +17,7 @@ import { BudsiesModule } from 'src/modules/budsies'
 import { Braintree } from 'src/modules/payment-braintree'
 import { PromotionPlatformModule } from 'src/modules/promotion-platform'
 import { GiftCardModule } from 'src/modules/gift-card'
+import { AmazonPay } from 'src/modules/vsf-amazon-pay'
 
 import { registerModule } from '@vue-storefront/core/lib/modules'
 import registerStoryblokComponents from 'theme/components/storyblok'
@@ -60,4 +61,5 @@ export function registerClientModules () {
 // Deprecated API, will be removed in 2.0
 export const registerModules: VueStorefrontModule[] = [
   // Example
+  AmazonPay
 ]

@@ -34,6 +34,7 @@ import CartEvents from 'src/modules/shared/types/cart-events';
 
 import APromoCode from 'theme/components/atoms/a-promo-code.vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary.vue';
+import AmazonPayButton from 'src/modules/vsf-amazon-pay/components/Button.vue'
 export default {
   name: 'OrderSummary',
   components: {
@@ -41,7 +42,8 @@ export default {
     SfLoader,
     APromoCode,
     SfHeading,
-    SfButton
+    SfButton,
+    AmazonPayButton
   },
   props: {
     isUpdatingQuantity: {
