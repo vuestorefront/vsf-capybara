@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from 'vue';
+import Vue from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
@@ -19,12 +19,6 @@ import OForeversCreationWizard from 'theme/components/organisms/o-forevers-creat
 
 export default Vue.extend({
   name: 'ForeversProduct',
-  props: {
-    productId: {
-      type: String as PropType<string | undefined>,
-      default: undefined
-    }
-  },
   components: {
     OForeversCreationWizard
   },

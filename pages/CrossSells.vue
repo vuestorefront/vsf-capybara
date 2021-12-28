@@ -110,8 +110,6 @@ export default Vue.extend({
     }
   },
   async asyncData ({ store, route, context }) {
-    console.log(getSkuFromRoute);
-
     const product = await store.dispatch(
       'product/loadProduct',
       {
