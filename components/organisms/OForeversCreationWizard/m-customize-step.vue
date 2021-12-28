@@ -111,42 +111,12 @@
         :title="$t('Final Options')"
       />
 
-      <validation-provider
-        v-slot="{ errors, classes }"
-        name="Production time"
-        v-if="isProductionOptionsAvailable"
-        slim
-      >
-        <div
-          class="_production-time-field"
-          :class="classes"
-        >
-          <SfHeading
-            class="-required "
-            :level="3"
-            :title="$t('Choose your production time')"
-          />
-
-          *{{ $t('We will refund the rush fee in the unlikely event we do not meet a promised delivery date') }}.
-
-          <SfSelect
-            v-model="productionTime"
-            name="rush_addons"
-            class="_rush-addons"
-            :disabled="disabled"
-            :valid="!errors.length"
-            :error-message="errors[0]"
-          >
-            <SfSelectOption
-              v-for="option in productionTimeOptions"
-              :key="option.id"
-              :value="option.optionValueId ? option.optionValueId : ''"
-            >
-              {{ option.text }}
-            </SfSelectOption>
-          </SfSelect>
-        </div>
-      </validation-provider>
+      <MProductionTimeSelector
+        v-model="productionTimeOption"
+        :production-time-options="productionTimeOptions"
+        :product-id="product.id"
+        :disabled="disabled"
+      />
 
       <validation-provider
         v-slot="{ errors, classes }"
@@ -285,6 +255,7 @@ import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
 import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-configurator.vue';
 import MBlockStory from '../../molecules/m-block-story.vue';
+import MProductionTimeSelector from '../../molecules/m-production-time-selector.vue';
 
 import BodypartOption from '../../interfaces/bodypart-option';
 import AddonOption from '../../interfaces/addon-option.interface';
@@ -309,7 +280,8 @@ export default Vue.extend({
     MAddonsSelector,
     ACustomProductQuantity,
     MBodypartOptionConfigurator,
-    MBlockStory
+    MBlockStory,
+    MProductionTimeSelector
   },
   props: {
     value: {
@@ -350,7 +322,8 @@ export default Vue.extend({
   data () {
     return {
       areQuantityNotesVisible: false,
-      areEyeColorNotesVisible: false
+      areEyeColorNotesVisible: false,
+      productionTimeOption: undefined as ProductionTimeOption | undefined
     }
   },
   computed: {
@@ -443,9 +416,6 @@ export default Vue.extend({
     getBodypartOptions (): (id: string) => BodypartOption[] {
       return this.$store.getters['budsies/getBodypartOptions']
     },
-    isProductionOptionsAvailable (): boolean {
-      return this.productionTimeOptions.length > 1;
-    },
     productionTimeOptions (): ProductionTimeOption[] {
       if (!this.productionTimeBundleOption) {
         return []
@@ -488,12 +458,27 @@ export default Vue.extend({
       await this.addToCart();
     }
   },
+  watch: {
+    productionTimeOption: {
+      handler (newValue: ProductionTimeOption | undefined) {
+        this.productionTime = newValue?.optionValueId
+      },
+      immediate: false
+    }
+  },
   mounted () {
-    if (!this.productionTimeOptions.length || this.productionTime) {
+    if (!this.productionTimeOptions.length) {
       return;
     }
 
-    this.productionTime = this.productionTimeOptions[0].optionValueId;
+    if (this.productionTime) {
+      this.productionTimeOption = this.productionTimeOptions.find(
+        (option) => option.optionId === this.productionTime
+      )
+    } else {
+      this.productionTime = this.productionTimeOptions[0].optionValueId;
+      this.productionTimeOption = this.productionTimeOptions[0];
+    }
   }
 });
 
@@ -509,14 +494,6 @@ export default Vue.extend({
   ._quantity-field,
   ._addons {
     margin-top: var(--spacer-base);
-  }
-
-  ._production-time-field {
-    text-align: center;
-
-    ::v-deep .sf-select__selected {
-      justify-content: center;
-    }
   }
 
   ._helper-text {
