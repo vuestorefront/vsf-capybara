@@ -466,6 +466,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.shortDescription;
+    },
+    hasOnlyOneAvailableStyle (): boolean {
+      return this.availableStyles.length === 1;
     }
   },
   methods: {
@@ -583,7 +586,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return;
         }
 
-        if (!this.selectedStyle && this.availableStyles.length === 1) {
+        if (!this.selectedStyle && this.hasOnlyOneAvailableStyle) {
           this.selectStyle(this.availableStyles[0].value);
         }
 
@@ -598,13 +601,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       immediate: true
     },
     selectedStyle: {
-      handler () {
-        if (!this.styleBundleOption) {
-          Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
-          return
+      handler (val: string | undefined, oldVal: string | undefined) {
+        if (val === oldVal) {
+          return;
         }
 
-        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
+        if (!this.styleBundleOption) {
+          Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
+          return;
+        }
+
+        if (!val && this.hasOnlyOneAvailableStyle) {
+          this.selectStyle(this.availableStyles[0].value);
+          return;
+        }
+
+        const selectedDesign = this.availableStyles.find(design => design.value === val);
 
         this.setBundleOptionValue({
           optionId: this.styleBundleOption.option_id,
@@ -612,7 +624,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           optionSelections: selectedDesign ? [selectedDesign.optionValueId] : []
         });
       },
-      immediate: false
+      immediate: true
     },
     'extraFacesData.addon': {
       handler (newValue: ExtraPhotoAddonOption | undefined) {
