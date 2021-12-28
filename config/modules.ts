@@ -9,7 +9,6 @@ import { BreadcrumbsModule } from '@vue-storefront/core/modules/breadcrumbs'
 import { GoogleTagManagerModule } from 'src/modules/google-tag-manager';
 import { UserModule } from '@vue-storefront/core/modules/user'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
-import { mappingFallbackForProduct } from '@vue-storefront/core/modules/catalog/mappingFallback'
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
 import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
 import { extendStore } from '@vue-storefront/core/helpers'
@@ -29,12 +28,6 @@ const extendUrlVuex = {
 
       if (result) {
         return result
-      }
-
-      const productResult = await mappingFallbackForProduct(context, payload);
-
-      if (productResult) {
-        return productResult;
       }
     }
   }
