@@ -65,9 +65,8 @@ let routes = [
   { name: 'cms-page', path: '/i/:slug', component: Static },
   {
     name: 'forevers-create',
-    path: '/forevers/create/:productId?',
-    component: ForeversProduct,
-    props: true
+    path: '/forevers/create',
+    component: ForeversProduct
   },
   {
     name: 'forevers-create-alias-1',
@@ -78,11 +77,11 @@ let routes = [
   },
   {
     name: 'forevers-create-alias-2',
-    path: '/plushie/index/creationwizard/category_id/13/attributeId/:productId',
+    path: '/plushie/index/creationwizard/category_id/13/attributeId/:plushieId',
     redirect: (route) => ({
       name: 'forevers-create',
-      params: {
-        productId: route.params.productId
+      query: {
+        existingPlushieId: route.params.plushieId
       }
     })
   },
@@ -95,22 +94,55 @@ let routes = [
       productDesign: route.query.product_design
     })
   },
-  { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
+  { name: 'pillow-product',
+    path: '/pillows/create/:plushieId?',
+    component: PillowProduct,
+    props: (route) => ({
+      plushieId: route.params.plushieId ? Number.parseInt(route.params.plushieId) : undefined
+    })
+  },
   {
     name: 'pillow-product-alias',
-    path: '/plushie/index/create/id/12/type/pillow',
-    redirect: {
-      name: 'pillow-product'
-    }
+    path: '/plushie/index/create/id/:plushieId/type/pillow',
+    redirect: (route) => ({
+      name: 'pillow-product',
+      params: {
+        plushieId: route.params.plushieId
+      }
+    })
   },
-  { name: 'cross-sells', path: '/cross-sells/p/:productId', component: CrossSells },
+  { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
   {
+    name: 'cross-sells-alias',
     path: '/crosssell/index/index/product_id/:productId',
-    redirect: (route) => {
+    redirect: ({ params }) => {
+      let parentSku = '';
+
+      switch (params.productId) {
+        case '73':
+          parentSku = 'ForeversDog_bundle';
+          break;
+        case '253':
+          parentSku = 'customPillow_bundle';
+          break;
+        case '277':
+          parentSku = 'customPrintedSocks_bundle';
+          break;
+        case '333':
+          parentSku = 'petsiesPhrasePillow_bundle';
+          break;
+        case '340':
+          parentSku = 'customPrintedMasks_bundle';
+          break;
+        case '353':
+          parentSku = 'customPrintedKeychains_bundle';
+          break;
+      }
+
       return {
         name: 'cross-sells',
         params: {
-          productId: route.params.productId
+          parentSku
         }
       }
     }
