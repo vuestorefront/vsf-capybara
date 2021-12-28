@@ -103,7 +103,7 @@ export default {
     goToAccount () {
       this.$store.commit('ui/closeMenu')
       if (this.isLoggedIn) {
-        this.$router.push(this.localizedRoute('/my-account'))
+        this.$router.push(this.localizedRoute({ name: 'my-account' }))
       } else {
         this.openModal({ name: ModalList.Auth, payload: 'login' })
       }

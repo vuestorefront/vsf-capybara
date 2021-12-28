@@ -627,7 +627,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
     },
     goToCrossSells (): void {
-      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.id));
+      this.$router.push(localizedRoute({
+        name: 'cross-sells',
+        params: {
+          parentSku: this.product.sku
+        }
+      }));
     },
     goToFieldByName (field: string): void {
       // Strip quotes

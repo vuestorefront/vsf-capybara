@@ -1122,7 +1122,12 @@ export default (
       this.activeStepIndex = errorStepIndex;
     },
     goToCrossSells (): void {
-      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.id));
+      this.$router.push(localizedRoute({
+        name: 'cross-sells',
+        params: {
+          parentSku: this.product.sku
+        }
+      }));
     },
     onBackgroundImageAssigned (): void {
       this.updateSmallBackgroundImage();
