@@ -78,12 +78,9 @@ let routes = [
   {
     name: 'forevers-create-alias-2',
     path: '/plushie/index/creationwizard/category_id/13/attributeId/:plushieId',
-    redirect: (route) => ({
-      name: 'forevers-create',
-      query: {
-        existingPlushieId: route.params.plushieId
-      }
-    })
+    redirect: {
+      name: 'forevers-create'
+    }
   },
   {
     name: 'printed-product',
