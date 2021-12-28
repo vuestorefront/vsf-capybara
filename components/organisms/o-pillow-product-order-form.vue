@@ -240,42 +240,12 @@
           </div>
         </validation-provider>
 
-        <validation-provider
-          v-slot="{ errors, classes }"
-          name="Production time"
-          v-if="isProductionOptionsAvailable"
-          slim
-        >
-          <div
-            class="_production-time-field"
-            :class="classes"
-          >
-            <SfHeading
-              class="_step-title -required"
-              :level="3"
-              :title="$t('Choose your production time')"
-            />
-
-            *{{ $t('We will refund the rush fee in the unlikely event we do not meet a promised delivery date') }}.
-
-            <SfSelect
-              v-model="productionTime"
-              name="rush_addons"
-              class="_rush-addons"
-              :disabled="isSubmitting"
-              :valid="!errors.length"
-              :error-message="errors[0]"
-            >
-              <SfSelectOption
-                v-for="option in productionTimeOptions"
-                :key="option.id"
-                :value="option"
-              >
-                {{ option.text }}
-              </SfSelectOption>
-            </SfSelect>
-          </div>
-        </validation-provider>
+        <MProductionTimeSelector
+          v-model="productionTime"
+          :production-time-options="productionTimeOptions"
+          :product-id="product.id"
+          :disabled="isSubmitting"
+        />
 
         <div v-show="showEmailStep">
           <div
@@ -438,6 +408,7 @@ import ProductionTimeOption from '../interfaces/production-time-option.interface
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
 import CustomerImage from '../interfaces/customer-image.interface';
 import MBlockStory from 'theme/components/molecules/m-block-story.vue';
+import MProductionTimeSelector from 'theme/components/molecules/m-production-time-selector.vue';
 
 extend('required', {
   ...required,
@@ -468,7 +439,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfModal,
     SfHeading,
     SfSelect,
-    MBlockStory
+    MBlockStory,
+    MProductionTimeSelector
   },
   inject: {
     window: { from: 'WindowObject' },
@@ -523,9 +495,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     bodyparts (): Bodypart[] {
       return this.$store.getters['budsies/getProductBodyparts'](this.product.id);
-    },
-    isProductionOptionsAvailable (): boolean {
-      return this.productionTimeOptions.length !== 0;
     },
     productionTimeBundleOption (): BundleOption | undefined {
       if (!this.product?.bundle_options) {
@@ -908,18 +877,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
   ._qty-container {
       margin-top: var(--spacer-xs);
-  }
-
-  ._production-time-field {
-    max-width: 47em;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: var(--spacer-xl);
-    text-align: center;
-
-    ::v-deep .sf-select__selected {
-      justify-content: center;
-    }
   }
 
   ._actions {
