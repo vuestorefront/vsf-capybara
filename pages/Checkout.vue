@@ -109,13 +109,8 @@ export default {
   },
   methods: {
     activateHashSection () {
-      if (!isServer && !this.showThankYouPage) {
-        var urlStep = window.location.hash.replace('#', '');
-        if (this.activeSection.hasOwnProperty(urlStep) && this.activeSection[urlStep] === false) {
-          this.activateSection(urlStep);
-        } else if (urlStep === '') {
-          this.activateSection('personalDetails');
-        }
+      if (!this.showThankYouPage) {
+        Checkout.methods.activateHashSection.bind(this)();
       }
     },
     changeStep (nextStep) {
