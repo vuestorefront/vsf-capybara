@@ -40,7 +40,9 @@
                   v-slot="{ errors }"
                   rules="required"
                   name="'Style Option'"
+                  mode="passive"
                   tag="div"
+                  ref="style-option-validation-provider"
                 >
                   <SfSelect
                     :selected="selectedStyle"
@@ -550,6 +552,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     },
+    getStyleOptionValidationProvider (): InstanceType<typeof ValidationProvider> | undefined {
+      return this.$refs['style-option-validation-provider'] as InstanceType<typeof ValidationProvider> | undefined;
+    },
     goToCrossSells (): void {
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
     },
@@ -559,6 +564,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.$emit('style-selected', styleValue);
+      const styleOptionValidationProvider = this.getStyleOptionValidationProvider();
+
+      if (styleOptionValidationProvider) {
+        styleOptionValidationProvider.validate(styleValue);
+      }
     }
   },
   created (): void {
@@ -749,6 +759,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     .sf-select {
       --select-padding: 0;
+    }
+
+    .sf-select-option[disabled] {
+      pointer-events: none;
+      opacity: 0.8;
     }
 
     &.-skin-petsies {
