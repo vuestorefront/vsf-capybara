@@ -66,7 +66,8 @@ export default {
         { plushieId: this.plushieId }
       );
 
-      if (task.code === 200) {
+      // TODO try to find existing cart item with corresponding plushie id for cart item editing purpose.
+      if (task.code === 200 && task.result.status_id === 1) {
         return;
       }
     }
