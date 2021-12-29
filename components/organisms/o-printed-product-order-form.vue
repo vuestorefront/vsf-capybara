@@ -564,11 +564,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.$emit('style-selected', styleValue);
-      const styleOptionValidationProvider = this.getStyleOptionValidationProvider();
-
-      if (styleOptionValidationProvider) {
-        styleOptionValidationProvider.validate(styleValue);
-      }
     }
   },
   created (): void {
@@ -620,6 +615,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           optionId: this.styleBundleOption.option_id,
           optionQty: 1,
           optionSelections: selectedDesign ? [selectedDesign.optionValueId] : []
+        });
+
+        const styleOptionValidationProvider = this.getStyleOptionValidationProvider();
+
+        if (!styleOptionValidationProvider) {
+          return;
+        }
+
+        this.$nextTick().then(() => {
+          styleOptionValidationProvider.validate();
         });
       },
       immediate: false
