@@ -1,13 +1,6 @@
 <template>
   <div id="product" itemscope itemtype="http://schema.org/Product">
     <template v-if="getCurrentProduct">
-      <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs">
-        <template #link="{breadcrumb}">
-          <router-link :to="breadcrumb.route.link" class="sf-breadcrumbs__breadcrumb">
-            {{ breadcrumb.text }}
-          </router-link>
-        </template>
-      </SfBreadcrumbs>
       <OProductDetails
         :product="getCurrentProduct"
         :product-gallery="getProductGallery"
@@ -18,6 +11,7 @@
       />
 
       <MProductDescriptionStory
+        class="_product-full-description"
         :product="getCurrentProduct"
       />
 
@@ -46,7 +40,7 @@ import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
-import { SfSection, SfBreadcrumbs } from '@storefront-ui/vue';
+import { SfSection } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
@@ -71,7 +65,6 @@ export default {
     MRelatedProducts,
     SfSection,
     OProductDetails,
-    SfBreadcrumbs,
     MProductDescriptionStory
   },
   provide () {
@@ -100,22 +93,8 @@ export default {
       getOriginalProduct: 'product/getOriginalProduct',
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
-      promotedOffers: 'promoted/getPromotedOffers',
-      getBreadcrumbsRoutes: 'breadcrumbs/getBreadcrumbsRoutes',
-      getBreadcrumbsCurrent: 'breadcrumbs/getBreadcrumbsCurrent'
+      promotedOffers: 'promoted/getPromotedOffers'
     }),
-    breadcrumbs () {
-      return this.getBreadcrumbsRoutes
-        .map(route => ({
-          text: htmlDecode(route.name),
-          route: {
-            link: route.route_link
-          }
-        }))
-        .concat({
-          text: htmlDecode(this.getBreadcrumbsCurrent)
-        });
-    },
     isOnline () {
       return onlineHelper.isOnline;
     },
@@ -175,17 +154,8 @@ export default {
       setCurrent: false
     });
 
-    const loadBreadcrumbsPromise = store.dispatch(
-      'product/loadProductBreadcrumbs',
-      { product }
-    );
+    if (isServer) await store.dispatch('product/setCurrent', product)
 
-    if (isServer) {
-      await Promise.all([
-        store.dispatch('product/setCurrent', product),
-        loadBreadcrumbsPromise
-      ]);
-    }
     catalogHooksExecutors.productPageVisited(product);
   },
   async mounted () {
@@ -278,11 +248,14 @@ export default {
   box-sizing: border-box;
   padding-top: var(--spacer-base);
 
+  ._product-full-description {
+    margin-top: var(--spacer-xl);
+  }
+
   @include for-desktop {
     max-width: 1272px;
     width: 100%;
     margin: 0 auto;
-    padding-top: 0;
   }
 }
 
@@ -293,11 +266,6 @@ export default {
     padding: 0;
     max-width: 1272px;
   }
-}
-
-.breadcrumbs {
-  padding: var(--spacer-base) var(--spacer-base) var(--spacer-base)
-    var(--spacer-sm);
 }
 
 ::v-deep {

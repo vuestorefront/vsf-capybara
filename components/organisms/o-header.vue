@@ -52,7 +52,7 @@
           </router-link>
         </SfHeaderNavigationItem>
 
-        <MMakeYourOwnDropdown />
+        <MCtaButton />
       </template>
       <template #search>
         <div />
@@ -90,7 +90,7 @@ import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon';
 import OSearch from 'theme/components/organisms/o-search';
 import { mapState, mapGetters } from 'vuex';
 import MMenu from 'theme/components/molecules/m-menu';
-import MMakeYourOwnDropdown from 'theme/components/molecules/m-make-your-own-dropdown';
+import MCtaButton from 'theme/components/molecules/m-cta-button.vue';
 
 export default {
   name: 'OHeader',
@@ -103,7 +103,7 @@ export default {
     OSearch,
     MMenu,
     SfOverlay,
-    MMakeYourOwnDropdown
+    MCtaButton
   },
   data () {
     return {
@@ -228,27 +228,8 @@ export default {
     }
   }
 
-  ._dropdown-container {
-    position: relative;
+  .m-cta-button {
     align-self: center;
-
-    .sf-button {
-      --button-font-size: var(--font-sm);
-      --button-font-line-height: 1;
-    }
-
-    .sf-dropdown {
-      --dropdown-background: var(--c-primary);
-      --c-link: var(--c-light-variant);
-      --c-link-hover: var(--c-light-variant);
-      --list-item-padding: var(--spacer-xs) var(--spacer-sm);
-
-      .sf-list__item {
-        &:hover {
-          background-color: var(--c-light);
-        }
-      }
-    }
   }
 
   .sf-header {

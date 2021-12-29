@@ -34,7 +34,7 @@
         />
       </validation-provider>
 
-      <div class="_field">
+      <div class="_field" v-show="showBreedStep">
         <label>
           {{ $t('Your Pet\'s Breed') }}
         </label>
@@ -103,6 +103,8 @@ import { SfHeading, SfButton, SfInput } from '@storefront-ui/vue';
 import MMultiselect from '../../molecules/m-multiselect.vue';
 
 import ForeversWizardPetInfoStepData from '../../interfaces/forevers-wizard-pet-info-step-data.interface';
+import Product from 'core/modules/catalog/types/Product';
+import { ProductId } from 'src/modules/budsies';
 
 extend('required', {
   ...required,
@@ -135,6 +137,10 @@ export default Vue.extend({
     },
     plushieId: {
       type: Number,
+      required: true
+    },
+    product: {
+      type: Object as PropType<Product>,
       required: true
     },
     disabled: {
@@ -177,15 +183,26 @@ export default Vue.extend({
     },
     breedsList (): string[] {
       return this.$store.getters['budsies/getPlushieBreeds'];
+    },
+    showBreedStep (): boolean {
+      switch (this.product.id) {
+        case ProductId.FOREVERS_DOG:
+          return true;
+        default:
+          return false;
+      }
     }
   },
   methods: {
     prefillEmail (): void {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+      const customerEmail = this.$store.getters['budsies/getPrefilledCustomerEmail'];
       if (customerEmail) {
         this.email = customerEmail;
         this.showEmailStep = false;
       }
+    },
+    clearBreed (): void {
+      this.breed = undefined;
     },
     submitStep (): void {
       EventBus.$emit(ForeversWizardEvents.INFO_FILL);
@@ -200,6 +217,9 @@ export default Vue.extend({
   },
   created (): void {
     this.prefillEmail();
+    if (!this.showBreedStep) {
+      this.$nextTick().then(this.clearBreed);
+    }
   }
 });
 

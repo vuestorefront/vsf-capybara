@@ -54,10 +54,10 @@
                 <MLivePreview
                   ref="backPreviewSmall"
                   :template-fetch-url="svgPath"
-                  :design-sku="backDesign"
+                  :design-sku="selectedBackDesign"
                   :accent-color="accentColor"
                   :custom-text-values="customTextValues"
-                  v-if="backDesign"
+                  v-if="selectedBackDesign"
                 />
               </div>
             </template>
@@ -102,13 +102,13 @@
                 ref="backPreview"
                 class="_back-preview"
                 :template-fetch-url="svgPath"
-                :design-sku="backDesign"
+                :design-sku="selectedBackDesign"
                 :accent-color="accentColor"
                 :custom-text-values="customTextValues"
                 :is-background-loaded="isBackgroundImageLoaded"
                 @custom-text-fields-prepared="onBackCustomTextFieldsPrepared"
                 @colored-elements-counted="onBackAccentColorElementsCounted"
-                v-if="backDesign"
+                v-if="selectedBackDesign"
               />
             </template>
           </MCustomizerPreview>
@@ -176,7 +176,7 @@
                   </div>
 
                   <MDesignSelector
-                    v-model="frontDesign"
+                    :value="frontDesign"
                     class="_front-selector"
                     :design-products="frontDesignProducts"
                     :field-name="'front-design-sku'"
@@ -263,7 +263,7 @@
                   </div>
 
                   <MDesignSelector
-                    v-model="backDesign"
+                    :value="selectedBackDesign"
                     class="_back-selector"
                     :design-products="backDesignProducts"
                     :field-name="'back-design-sku'"
@@ -340,7 +340,7 @@
                     </div>
 
                     <MAccentColorSelector
-                      v-model="accentColorPartValue"
+                      :value="selectedAccentColorPartValue"
                       class="_accent-color-selector-container"
                       :accent-color-part-values="accentColorPartValues"
                       :disabled="isDisabled"
@@ -642,6 +642,11 @@ const customizerStepsData: Dictionary<StepsInterface> = {
   addToCart: { name: 'Add to<br>Cart', id: 'addToCart' }
 };
 
+export interface DesignSelectedEventPayload {
+  frontDesign: string | undefined,
+  backDesign: string | undefined
+}
+
 export default (
   Vue as VueConstructor<Vue & InjectedServices & Constants>
 ).extend({
@@ -685,25 +690,25 @@ export default (
       type: String,
       required: true
     },
-    initialFrontDesign: {
+    frontDesign: {
       type: String,
       default: undefined
     },
-    initialBackDesign: {
+    backDesign: {
       type: String,
       default: undefined
     }
   },
   data () {
-    let stepValidateState: Dictionary<'valid' | 'invalid'> = {};
+    let stepValidateState: Dictionary<'valid' | 'invalid'> = {
+      [customizerStepsData.frontDesign.id]: 'valid'
+    };
 
     return {
       customTextValues: {} as unknown as Record<string, string | undefined>,
       quantity: 1,
       accentColorPartValues: [] as AccentColorPart[],
       accentColorPartValue: undefined as AccentColorPart | undefined,
-      frontDesign: undefined as string | undefined,
-      backDesign: undefined as string | undefined,
       customerEmail: undefined as string | undefined,
       backgroundDataUri: undefined as string | undefined,
       isBackgroundImageLoaded: false,
@@ -720,13 +725,11 @@ export default (
         | undefined,
       isFormDisabled: false,
       isSubmitting: false,
-      isAccentColorSelectedByUser: false,
-      isBackDesignSelectedByUser: false,
       submitErrors: [] as string[],
       showEmailStep: true,
       isCustomizerPreviewBackSideFocused: false,
       croppedBackground: '',
-      activeStepIndex: 0,
+      activeStepIndex: 1,
       stepValidateState
     };
   },
@@ -735,11 +738,11 @@ export default (
       return '-skin-petsies';
     },
     accentColor (): string | undefined {
-      if (!this.accentColorPartValue) {
+      if (!this.selectedAccentColorPartValue) {
         return undefined;
       }
 
-      return this.accentColorPartValue.background;
+      return this.selectedAccentColorPartValue.background;
     },
     customTextFields (): CustomTextFieldInterface[] {
       const fields = [...this.frontCustomTextFields];
@@ -911,22 +914,89 @@ export default (
         { text: 'Rendering design to maximize hugs', value: 66 },
         { text: 'Optimizing pillow softness vectors', value: 100 }
       ];
+    },
+    defaultBackDesign (): string | undefined {
+      if (!this.frontDesign || this.backDesign) {
+        return;
+      }
+
+      const currentDesign = this.frontDesignProducts.find(
+        (product) => product.sku === this.frontDesign
+      );
+
+      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
+        return;
+      }
+
+      const backDesign = this.backDesignProducts.find(
+        (product) => product.id === currentDesign.defaultOtherSideDesign
+      );
+
+      if (!backDesign) {
+        return;
+      }
+
+      return backDesign.sku;
+    },
+    selectedBackDesign (): string | undefined {
+      return this.backDesign ? this.backDesign : this.defaultBackDesign;
+    },
+    defaultAccentColorPartValue (): AccentColorPart | undefined {
+      if ((!this.frontDesign && !this.selectedBackDesign) || this.accentColorPartValue) {
+        return;
+      }
+
+      let accentColorId: number | undefined;
+
+      if (this.frontDesign) {
+        const frontDesign = this.frontDesignProducts.find(
+          (product) => product.sku === this.frontDesign
+        );
+
+        if (frontDesign) {
+          accentColorId = frontDesign.defaultAccentColor;
+        }
+      }
+
+      if (!accentColorId && this.selectedBackDesign) {
+        const backDesign = this.backDesignProducts.find(
+          (product) => product.sku === this.selectedBackDesign
+        );
+
+        if (backDesign) {
+          accentColorId = backDesign.defaultAccentColor;
+        }
+      }
+
+      if (!accentColorId) {
+        return;
+      }
+
+      const accentColor = this.accentColorPartValues.find(
+        (color) => color.id === accentColorId
+      );
+
+      return accentColor;
+    },
+    selectedAccentColorPartValue (): AccentColorPart | undefined {
+      return this.accentColorPartValue ? this.accentColorPartValue : this.defaultAccentColorPartValue;
     }
   },
   methods: {
     ...mapMutations('product', {
       setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
     }),
-    isStepInvalid (step: StepsInterface): boolean {
+    emitDesignSelectedEvent (payload: DesignSelectedEventPayload): void {
+      this.$emit('design-selected', payload);
+    },
+    isStepInvalid (stepId: string): boolean {
       return (
-        this.stepValidateState[step.id] &&
-        this.stepValidateState[step.id] === 'invalid'
+        this.stepValidateState[stepId] &&
+        this.stepValidateState[stepId] === 'invalid'
       );
     },
     getAccentColorPartValues (bodypart: Bodypart): AccentColorPart[] {
-      const bodypartsValues = this.$store.getters[
-        'budsies/getBodypartBodypartsValues'
-      ](bodypart.id);
+      const bodypartsValues = this.$store.getters['budsies/getBodypartBodypartsValues'](bodypart.id);
 
       if (!bodypartsValues.length) {
         return [];
@@ -1015,85 +1085,14 @@ export default (
     getBodypartsData (): Record<string, string> {
       let data: Record<string, string> = {};
 
-      if (!this.accentColorPartValue) {
+      if (!this.selectedAccentColorPartValue) {
         return data;
       }
 
-      data[this.accentColorPartValue.optionId] =
-        this.accentColorPartValue.optionValueId;
+      data[this.selectedAccentColorPartValue.optionId] =
+        this.selectedAccentColorPartValue.optionValueId;
 
       return data;
-    },
-    selectDefaultBackDesignForFront (frontDesignSku?: string): void {
-      if (!frontDesignSku || this.isBackDesignSelectedByUser) {
-        return;
-      }
-
-      const currentDesign = this.frontDesignProducts.find(
-        (product) => product.sku === frontDesignSku
-      );
-
-      if (!currentDesign || !currentDesign.defaultOtherSideDesign) {
-        return;
-      }
-
-      const backDesign = this.backDesignProducts.find(
-        (product) => product.id === currentDesign.defaultOtherSideDesign
-      );
-
-      if (!backDesign) {
-        return;
-      }
-
-      this.backDesign = backDesign.sku;
-    },
-    selectDefaultAccentColor (
-      frontDesignSku?: string,
-      backDesignSku?: string
-    ): void {
-      if (this.isAccentColorSelectedByUser) {
-        return;
-      }
-
-      if (!frontDesignSku && !backDesignSku) {
-        return;
-      }
-
-      let accentColorId: number | undefined;
-
-      if (frontDesignSku) {
-        const frontDesign = this.frontDesignProducts.find(
-          (product) => product.sku === frontDesignSku
-        );
-
-        if (frontDesign) {
-          accentColorId = frontDesign.defaultAccentColor;
-        }
-      }
-
-      if (!accentColorId && backDesignSku) {
-        const backDesign = this.backDesignProducts.find(
-          (product) => product.sku === backDesignSku
-        );
-
-        if (backDesign) {
-          accentColorId = backDesign.defaultAccentColor;
-        }
-      }
-
-      if (!accentColorId) {
-        return;
-      }
-
-      const accentColor = this.accentColorPartValues.find(
-        (color) => color.id === accentColorId
-      );
-
-      if (!accentColor) {
-        return;
-      }
-
-      this.accentColorPartValue = accentColor;
     },
     async trySubmitForm (): Promise<void> {
       const isValid = await (
@@ -1129,7 +1128,7 @@ export default (
       this.updateSmallBackgroundImage();
     },
     prefillEmail (): void {
-      const customerEmail = this.$store.getters['budsies/getCustomerEmail'];
+      const customerEmail = this.$store.getters['budsies/getPrefilledCustomerEmail'];
 
       if (customerEmail) {
         this.customerEmail = customerEmail;
@@ -1167,8 +1166,8 @@ export default (
 
       if (
         !this.frontDesign ||
-        !this.backDesign ||
-        (!this.accentColorPartValue && this.isAccentColorSelectorVisible)
+        !this.selectedBackDesign ||
+        (!this.selectedAccentColorPartValue && this.isAccentColorSelectorVisible)
       ) {
         throw new Error('Design variants or accent color are not specified!');
       }
@@ -1255,23 +1254,19 @@ export default (
         this.isSubmitting = false;
       }
     },
-    onAccentColorSelect (): void {
+    onAccentColorSelect (value: AccentColorPart): void {
       Vue.set(
         this.stepValidateState,
         customizerStepsData.customOptions.id,
         'valid'
       );
-      this.isAccentColorSelectedByUser = true;
+      this.accentColorPartValue = value;
     },
-    onBackDesignSelect (): void {
-      this.isBackDesignSelectedByUser = true;
-
-      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
+    onBackDesignSelect (value?: string): void {
+      this.emitDesignSelectedEvent({ frontDesign: this.frontDesign, backDesign: value });
     },
-    onFrontDesignSelect (): void {
-      this.selectDefaultBackDesignForFront(this.frontDesign);
-
-      this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
+    onFrontDesignSelect (value?: string): void {
+      this.emitDesignSelectedEvent({ frontDesign: value, backDesign: this.backDesign });
     },
     onBackgroundImageUploaded (image: string): void {
       const backgroundEditor = this.getBackgroundEditor();
@@ -1332,11 +1327,9 @@ export default (
       }
 
       const image = await backgroundEditor.getCroppedBackground();
-      if (!image) {
-        throw new Error('Background image is unavailable!');
+      if (image) {
+        this.croppedBackground = image;
       }
-
-      this.croppedBackground = image;
     },
     async validateStepsBeforeIndex (index: number): Promise<void> {
       const keys = Object.keys(customizerStepsData).filter(
@@ -1375,26 +1368,17 @@ export default (
       this.imageUploadUrl
     );
 
-    if (this.initialFrontDesign) {
-      this.frontDesign = this.initialFrontDesign;
-      this.activeStepIndex = 1;
-      this.stepValidateState[customizerStepsData.frontDesign.id] = 'valid';
-    } else if (this.frontDesignProducts.length) {
-      this.frontDesign = this.frontDesignProducts[0].sku;
-    }
-
-    this.onFrontDesignSelect();
-
-    if (this.initialBackDesign) {
-      this.backDesign = this.initialBackDesign;
-      this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
+    if (!this.frontDesign && this.frontDesignProducts.length) {
+      this.onFrontDesignSelect(this.frontDesignProducts[0].sku);
     }
 
     this.accentColorPartValues = this.getAccentColorPartValues(
       this.bodyparts[0]
     );
 
-    this.selectDefaultAccentColor(this.frontDesign, this.backDesign);
+    if (this.selectedBackDesign) {
+      this.stepValidateState[customizerStepsData.backDesign.id] = 'valid';
+    }
 
     this.prefillEmail();
 
@@ -1449,9 +1433,9 @@ export default (
           optionSelections: frontDesign ? [frontDesign.optionValueId] : []
         });
       },
-      immediate: false
+      immediate: true
     },
-    backDesign: {
+    selectedBackDesign: {
       handler (newValue: string | undefined) {
         if (!this.backDesignBundleOption) {
           Logger.error(
@@ -1464,7 +1448,7 @@ export default (
         let backDesign;
         if (newValue) {
           backDesign = this.backDesignProducts.find(
-            (product) => product.sku === this.backDesign
+            (product) => product.sku === this.selectedBackDesign
           );
         }
 
@@ -1474,7 +1458,7 @@ export default (
           optionSelections: backDesign ? [backDesign.optionValueId] : []
         });
       },
-      immediate: false
+      immediate: true
     },
     isCustomizerPreviewBackSideFocused: {
       handler (): void {

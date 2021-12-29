@@ -12,7 +12,7 @@
       />
       <ALogo />
 
-      <MMakeYourOwnDropdown size="small" />
+      <MCtaButton size="small" />
 
       <ADetailedCartIcon class="sf-header__action" />
     </SfBottomNavigation>
@@ -28,7 +28,7 @@ import AAccountIcon from 'theme/components/atoms/a-account-icon';
 import ADetailedCartIcon from 'theme/components/atoms/a-detailed-cart-icon.vue';
 import { SfBottomNavigation } from '@storefront-ui/vue';
 import ALogo from 'theme/components/atoms/a-logo.vue';
-import MMakeYourOwnDropdown from 'theme/components/molecules/m-make-your-own-dropdown.vue';
+import MCtaButton from 'theme/components/molecules/m-cta-button.vue';
 
 export default {
   name: 'OTopNavigation',
@@ -36,7 +36,7 @@ export default {
     SfBottomNavigation,
     ALogo,
     ADetailedCartIcon,
-    MMakeYourOwnDropdown
+    MCtaButton
   },
   data () {
     return {

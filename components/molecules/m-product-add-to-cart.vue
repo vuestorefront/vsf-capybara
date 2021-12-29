@@ -31,12 +31,16 @@
     </SfAddToCart>
   </div>
 </template>
-<script>
+
+<script lang="ts">
+import Vue from 'vue';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { SfAddToCart, SfAlert } from '@storefront-ui/vue';
-import AProductQuantity from 'theme/components/atoms/a-product-quantity';
-import AAddToCart from 'theme/components/atoms/a-add-to-cart';
-export default {
+import AProductQuantity from 'theme/components/atoms/a-product-quantity.vue';
+import AAddToCart from 'theme/components/atoms/a-add-to-cart.vue';
+import Product from 'core/modules/catalog/types/Product';
+
+export default Vue.extend({
   name: 'MProductAddToCart',
   components: {
     SfAddToCart,
@@ -96,8 +100,19 @@ export default {
     handleQuantityValidationError (error) {
       this.qtyValidationError = error
     }
+  },
+  watch: {
+    product: {
+      handler (newProduct: Product, oldProduct: Product) {
+        if (newProduct.parentSku === oldProduct.parentSku) {
+          return;
+        }
+
+        this.qty = (newProduct.stock.min_qty !== 0) ? newProduct.stock.min_qty : 1
+      }
+    }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
