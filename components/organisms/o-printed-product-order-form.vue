@@ -40,7 +40,9 @@
                   v-slot="{ errors }"
                   rules="required"
                   name="'Style Option'"
+                  mode="passive"
                   tag="div"
+                  ref="style-option-validation-provider"
                 >
                   <SfSelect
                     :selected="selectedStyle"
@@ -466,6 +468,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.shortDescription;
+    },
+    hasOnlyOneAvailableStyle (): boolean {
+      return this.availableStyles.length === 1;
     }
   },
   methods: {
@@ -550,6 +555,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     },
+    getStyleOptionValidationProvider (): InstanceType<typeof ValidationProvider> | undefined {
+      return this.$refs['style-option-validation-provider'] as InstanceType<typeof ValidationProvider> | undefined;
+    },
     goToCrossSells (): void {
       this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
     },
@@ -583,7 +591,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return;
         }
 
-        if (!this.selectedStyle && this.availableStyles.length === 1) {
+        if (!this.selectedStyle && this.hasOnlyOneAvailableStyle) {
           this.selectStyle(this.availableStyles[0].value);
         }
 
@@ -598,21 +606,40 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       immediate: true
     },
     selectedStyle: {
-      handler () {
-        if (!this.styleBundleOption) {
-          Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
-          return
+      handler (val: string | undefined, oldVal: string | undefined) {
+        if (val === oldVal) {
+          return;
         }
 
-        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
+        if (!this.styleBundleOption) {
+          Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
+          return;
+        }
+
+        if (!val && this.hasOnlyOneAvailableStyle) {
+          this.selectStyle(this.availableStyles[0].value);
+          return;
+        }
+
+        const selectedDesign = this.availableStyles.find(design => design.value === val);
 
         this.setBundleOptionValue({
           optionId: this.styleBundleOption.option_id,
           optionQty: 1,
           optionSelections: selectedDesign ? [selectedDesign.optionValueId] : []
         });
+
+        const styleOptionValidationProvider = this.getStyleOptionValidationProvider();
+
+        if (!styleOptionValidationProvider) {
+          return;
+        }
+
+        this.$nextTick().then(() => {
+          styleOptionValidationProvider.validate();
+        });
       },
-      immediate: false
+      immediate: true
     },
     'extraFacesData.addon': {
       handler (newValue: ExtraPhotoAddonOption | undefined) {
@@ -749,6 +776,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     .sf-select {
       --select-padding: 0;
+    }
+
+    .sf-select-option[disabled] {
+      pointer-events: none;
+      opacity: 0.8;
     }
 
     &.-skin-petsies {
