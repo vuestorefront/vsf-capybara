@@ -217,11 +217,6 @@ export default {
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 .o-microcart-panel {
-  @include for-mobile {
-    ::v-deep .sf-sidebar__aside {
-      max-height: calc(100vh - var(--bottom-navigation-height));
-    }
-  }
   @include for-desktop {
     --sidebar-bottom-padding: var(--spacer-base);
     --sidebar-content-padding: var(--spacer-base);
