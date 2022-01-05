@@ -6,6 +6,7 @@
     >
       {{ $t(noResultsMessage) }}
     </div>
+
     <div v-else class="container">
       <div class="categories">
         <SfHeading :level="3" :title="$t('Categories')" class="categories__title sf-heading--left" />
@@ -23,6 +24,7 @@
           </SfListItem>
         </SfList>
       </div>
+
       <div class="products">
         <SfHeading :level="3" :title="$t('Product suggestions')" class="products__title sf-heading--left" />
         <div class="products__listing">
@@ -42,6 +44,7 @@
             @click.native="$store.commit('ui/setSearchpanel', false)"
           />
         </div>
+
         <SfButton
           v-if="OnlineOnly && readMore && visibleProducts.length >= pageSize"
           class="sf-button--full-width load-more"
@@ -158,6 +161,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .o-search-panel {
@@ -166,7 +170,6 @@ export default {
   right: 0;
   top: var(--_header-height);
   background: var(--c-white);
-  overflow: auto;
   max-height: calc(66vh - var(--_header-height));
 
   @include for-mobile {
@@ -175,7 +178,16 @@ export default {
     max-height: none;
   }
 
+  .no-results {
+    height: 5rem;
+    line-height: 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
   .container {
+    max-height: inherit;
+    overflow: auto;
     display: flex;
     padding: 0 var(--spacer-sm);
     max-width: 1272px;
@@ -185,14 +197,15 @@ export default {
     }
     @include for-mobile {
       flex-direction: column;
-      padding: 0 var(--spacer-xl);
     }
   }
 
   .categories {
     @include for-desktop {
+      position: sticky;
+      top: 0;
       flex: 0 0 20%;
-      padding-right: 3rem;
+      padding-right: var(--spacer-xl);
       border-right: 1px solid var(--c-light);
     }
 
@@ -203,11 +216,11 @@ export default {
     }
     &__listing {
       @include for-desktop {
-        margin-top: 2rem;
+        margin-top: var(--spacer-lg);
       }
 
       .sf-list__item {
-        padding: 0.3rem 0;
+        padding: var(--spacer-2xs) 0;
       }
       .sf-menu-item.selected {
         --menu-item-font-weight: 500;
@@ -218,6 +231,7 @@ export default {
 
   .products {
     width: 100%;
+    height: max-content;
     &__title {
       padding: 0;
       justify-content: start;
@@ -235,15 +249,8 @@ export default {
     }
 
     @include for-desktop {
-      padding-left: 3rem;
+      padding-left: var(--spacer-xl);
     }
-  }
-
-  .no-results {
-    height: 5rem;
-    line-height: 5rem;
-    display: flex;
-    justify-content: center;
   }
 
   .load-more {
