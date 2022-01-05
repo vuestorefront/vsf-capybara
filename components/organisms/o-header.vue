@@ -161,6 +161,7 @@ export default {
   }
   .search-container {
     display: flex;
+    --search-bar-font-size: var(--font-base);
     .o-search {
       flex-grow: 1;
     }
