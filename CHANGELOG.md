@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
+- Refactored address form styling of my account page(#608)
 - Removed Horizontal Padding on product bottom section in product page (#534)
 - Removed backdrop filter to position sort by drop down of category page in mobile (#669)
 - Improved search on mobile (#542)
