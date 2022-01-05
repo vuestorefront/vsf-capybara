@@ -22,7 +22,7 @@ We have prepared [short introduction](https://github.com/DivanteLtd/vsf-capybara
         </a>
       </td>
       <td align="left" valign="top">
-        Try out our open demo and if you like it <strong> first give us some star on Github ★</strong> and then contact us on <a href="https://slack.vuestorefront.io">Vue Storefront Official Slack</a> or via contributors@vuestorefront.io. <br /><br /> This demo site is connected to Magento2. <br />
+        Try out our open demo and if you like it <strong> first give us some star on Github ★</strong> and then contact us on <a href="https://discord.vuestorefront.io/">Vue Storefront Official Discord</a> or via contributors@vuestorefront.io. <br /><br /> This demo site is connected to Magento2. <br />
       </td>
     </tr>
   </tbody>
@@ -36,7 +36,7 @@ We have prepared [short introduction](https://github.com/DivanteLtd/vsf-capybara
 
 Capybara theme provides out of the box ready to use elements, like Cart, Checkout, Modals or Product-related components - to name only a few of them, which all are based on awesome Storefront UI. It provides new look & feel for the Vue Storefront with simpler development experience. You can just grab it and use it, or you can play around to re-design existing components and build something new easily.
 
-If you're new and need some guidance feel free to visit out [forum](https://forum.vuestorefront.io/) or reach anyone from the core team on our slack:
+If you're new and need some guidance feel free to visit out [forum](https://forum.vuestorefront.io/) or reach anyone from the core team on our discord:
 - Tomasz Kikowski - [@qiqqq](https://github.com/qiqqq)
 - Tomasz Kostuch - [@gibkigonzo](https://github.com/gibkigonzo)
 - Paweł Smyrek - [@psmyrek](https://github.com/psmyrek)
