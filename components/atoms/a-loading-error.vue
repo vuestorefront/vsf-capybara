@@ -50,7 +50,7 @@ export default {
     justify-content: center;
   }
   .sf-button {
-    margin: 0 1em;
+    margin: 0 var(--spacer-sm);
   }
 }
 </style>

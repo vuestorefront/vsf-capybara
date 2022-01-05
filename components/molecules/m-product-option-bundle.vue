@@ -69,7 +69,7 @@ export default {
 }
 ::v-deep {
   .a-product-quantity {
-    margin-top: 1rem;
+    margin-top: var(--spacer-sm);
     height: 3rem;
     min-height: 3rem;
   }

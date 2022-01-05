@@ -19,7 +19,7 @@
             class="sf-button--text navbar__button"
             @click="isFilterSidebarOpen = true"
           >
-            <SfIcon size="xxs" class="navbar__filters-icon" color="dark-secondary" icon="filter" />
+            <SfIcon size="xxs" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
             {{ $t("Filters") }}
           </SfButton>
           <template v-if="activeFiltersCount">
@@ -694,7 +694,10 @@ export default {
   &__button {
     display: flex;
     align-items: center;
-    font-size: 1rem;
+    font-size: var(--font-base);
+    grid-column: 1;
+    justify-self: start;
+    
     &:hover {
       .sf-icon {
         fill: var(--c-primary);

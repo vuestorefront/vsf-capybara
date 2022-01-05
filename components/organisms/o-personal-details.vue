@@ -245,6 +245,16 @@ export default {
 }
 
 .log-in {
+  &__info {
+    margin: var(--spacer-lg) 0;
+    color: var(--c-dark-variant);
+    font: var(--font-light) var(--font-base) / 1.6 var(--font-family-primary);
+    @include for-desktop {
+      font-weight: var(--font-weight--normal);
+      font-size: var(--font-sm);
+    }
+  }
+  
   &__button {
     width: 100%;
   }
@@ -273,12 +283,51 @@ export default {
 .info { grid-area: info;
 
   &__heading {
-    font-family: var(--font-family-secondary);
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight--light);
   }
 
   &__characteristic {
     --characteristic-description-font-size: var(--font-xs);
     margin: var(--spacer-base) 0;
+  }
+
+  &__action {
+    margin: var(--spacer-sm) 0;
+    &-button {
+      &:first-child {
+        --button-height: 4.0625rem;
+      }
+      &--secondary {
+        margin: var(--spacer-base) 0;
+      }
+    }
+  }
+  @include for-mobile {
+    &__checkbox {
+      --checkbox-font-family: var(--font-family-primary);
+      --checkbox-font-weight: var(--font-light);
+      --checkbox-font-size: var(--font-sm);
+    }
+  }
+  @include for-desktop {
+    margin: 0 var(--spacer-2xl) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    &__element {
+      margin: 0 0 var(--spacer-base) 0;
+      flex: 0 0 100%;
+      &--half {
+        flex: 1 1 50%;
+        &-even {
+          padding: 0 0 0 var(--spacer-lg);
+        }
+      }
+    }
+  }
+  .terms {
+    margin: 0 0 0 var(--spacer-xs);
   }
 }
 

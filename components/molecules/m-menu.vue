@@ -118,7 +118,7 @@ export default {
   visibility: hidden;
   transition: 0.2s;
   .router-link-exact-active {
-    --menu-item-font-weight: bold;
+    --menu-item-font-weight: var(--font-bold);
   }
 }
 .aside-menu {

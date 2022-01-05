@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
+
+- Replaced icon size, font styling, margin and padding's hard coded values with variables(#619)
 - Improved category list and product list styling through css grid(#617)
 - Improved color of filter icon(#617)
 - Improved font size of sortby dropdown(#617)

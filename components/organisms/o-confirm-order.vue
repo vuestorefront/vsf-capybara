@@ -476,7 +476,7 @@ export default {
   }
   &__terms {
     &--link {
-      margin: 0 0 0 0.4em;
+      margin: 0 0 0 var(--spacer-xs);
     }
   }
 }
@@ -557,7 +557,7 @@ export default {
   &__terms {
     margin: var(--spacer-xs) 0;
     &--link {
-      margin: 0 0 0 0.4em;
+      margin: 0 0 0 var(--spacer-xs);
     }
   }
   &__total {
@@ -568,7 +568,7 @@ export default {
   margin: 0 0 var(--spacer-base) 0;
   color: var(--c-text);
   &__label {
-    font-weight: 400;
+    font-weight: var(--font-normal);
   }
 }
 .actions {

@@ -89,7 +89,7 @@ export default {
   padding-bottom: env(safe-area-inset-bottom);
   .cookie {
     box-sizing: border-box;
-    padding: 0 1.5rem;
+    padding: 0 var(--spacer-base);
     margin: auto;
     display: flex;
     justify-content: space-between;
@@ -98,7 +98,7 @@ export default {
     max-width: 100%;
     height: 3rem;
     &__message-link {
-      padding-left: 1rem;
+      padding-left: var(--spacer-sm);
       --c-link: var(--c-gray);
       --c-link-hover: var(--c-light);
     }

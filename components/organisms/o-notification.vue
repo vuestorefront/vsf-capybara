@@ -79,11 +79,11 @@ export default {
 }
 .notification {
   &:not(:first-child) {
-    margin-top: 1rem;
+    margin-top: var(--spacer-sm);
   }
   .sf-notification__action {
     cursor: pointer;
-    margin: 0.3rem 1rem 0 0;
+    margin: var(--spacer-2xs) var(--spacer-sm) 0 0;
   }
   @include for-desktop {
     max-width: 32rem;

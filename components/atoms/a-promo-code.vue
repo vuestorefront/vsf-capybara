@@ -78,7 +78,7 @@ export default {
   }
   &__button {
     --button-height: 2rem;
-    --button-font-size: 0.6875rem;
+    --button-font-size: var(--font-2xs);
   }
 }
 </style>

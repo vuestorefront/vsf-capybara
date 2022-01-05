@@ -223,7 +223,7 @@ export default {
         padding: var(--spacer-2xs) 0;
       }
       .sf-menu-item.selected {
-        --menu-item-font-weight: 500;
+        --menu-item-font-weight: var(--font-medium);
         text-decoration: underline;
       }
     }
