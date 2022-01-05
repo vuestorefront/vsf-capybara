@@ -4,6 +4,7 @@
       :key="gallery.length"
       ref="gallery"
       :images="gallery"
+      :current="currentIndex + 1"
     />
   </div>
 </template>

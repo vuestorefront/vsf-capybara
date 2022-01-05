@@ -67,7 +67,7 @@ export default {
   &--message {
     color: #fff;
     text-align: center;
-    margin-top: 10px;
+    margin-top: var(--spacer-xs);
   }
 }
 </style>

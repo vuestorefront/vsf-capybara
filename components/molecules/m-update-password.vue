@@ -4,33 +4,35 @@
       {{ $t('If you want to change the password to access your account, enter the following information:') }}<br>
       <template v-if="currentUser">
         {{ $t('Your current email address is') }}
-        <span class="message__label">{{ typeof currentUser.email !== 'undefined' ? currentUser.email : '' }}</span>
+        <span>{{ typeof currentUser.email !== 'undefined' ? currentUser.email : '' }}</span>
       </template>
     </p>
+
     <div class="form">
       <SfInput
         v-model="oldPassword"
         type="password"
+        class="current-password"
         name="currentPassword"
         :label="$t('Current Password')"
         required
         :valid="!$v.oldPassword.$error"
         :error-message="$t('Field is required.')"
-        class="form__element"
       />
       <SfInput
         v-model="password"
         type="password"
+        class="new-password"
         name="newPassword"
         :label="$t('New Password')"
         required
         :valid="!$v.password.$error"
         :error-message="$t('Field is required.')"
-        class="form__element form__element--half"
       />
       <SfInput
         v-model="rPassword"
         type="password"
+        class="repeat-password"
         name="repeatPassword"
         :label="$t('Repeat Password')"
         required
@@ -40,9 +42,9 @@
             ? $t('Field is required.')
             : $t('Passwords must be identical.')
         "
-        class="form__element form__element--half form__element--half-even"
       />
-      <SfButton class="form__button" @click.native="updatePassword">
+
+      <SfButton class="action" @click.native="updatePassword">
         {{ $t('Update password') }}
       </SfButton>
     </div>
@@ -104,46 +106,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.form {
-  @include for-desktop {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  &__element {
-    margin: 0 0 var(--spacer-lg) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-lg);
-        }
-      }
-    }
-  }
-  &__button {
-    --button-width: 100%;
-    @include for-desktop {
-      --button-width: auto;
-    }
-  }
-}
 .message {
-  margin: 0 0 var(--spacer-xl) 0;
   color: var(--c-dark-variant);
+  line-height: 1.4;
+  margin: 0 0 var(--spacer-xl) 0;
 }
-a {
-  color: var(--c-primary);
-  text-decoration: none;
-  &:hover {
-    color: var(--c-text);
+
+.form {
+  display: grid;
+  grid: "current" "new" "repeat";
+  grid-gap: var(--spacer-base) var(--spacer-lg);
+  align-items: center;
+}
+
+.current-password { grid-area: current; }
+
+.new-password { grid-area: new; }
+
+.repeat-password { grid-area: repeat; }
+
+@include for-desktop {
+  .form {
+    grid: "current  current"
+          "new      repeat";
+  }
+
+  .action {
+    width: max-content;
   }
 }
 </style>

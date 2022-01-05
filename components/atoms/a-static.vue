@@ -45,9 +45,9 @@ export default {
 
 <style lang="scss" scoped>
 .a-static {
-  font-size: 16px;
+  font-size: var(--font-base);
   line-height: 1.6;
-  font-weight: 400;
+  font-weight: var(--font-normal);
   table {
     width: 100%;
     margin: var(--spacer-2xl) 0;

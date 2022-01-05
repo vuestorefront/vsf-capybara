@@ -11,9 +11,11 @@
           <p class="message">
             {{ $t('Keep your addresses and contact details updated.') }}
           </p>
+
           <div class="form">
             <SfInput
               v-model="editedAddress.firstname"
+              class="first-name"
               name="firstname"
               :label="$t('First Name')"
               required
@@ -23,52 +25,52 @@
                   ? $t('Field is required.')
                   : $t('Name must have at least 2 letters.')
               "
-              class="form__element form__element--half"
             />
             <SfInput
               v-model="editedAddress.lastname"
+              class="last-name"
               name="lastname"
               :label="$t('Last Name')"
               required
               :valid="!$v.editedAddress.lastname.$error"
               :error-message="$t('Field is required.')"
-              class="form__element form__element--half form__element--half-even"
             />
             <SfInput
               v-model="editedAddress.streetName"
+              class="street-name"
               name="streetName"
               :label="$t('Street Name')"
               required
               :valid="!$v.editedAddress.streetName.$error"
               :error-message="$t('Field is required.')"
-              class="form__element"
             />
             <SfInput
               v-model="editedAddress.apartment"
+              class="apartment"
               name="apartment"
               :label="$t('House/Apartment number')"
               required
               :valid="!$v.editedAddress.apartment.$error"
               :error-message="$t('Field is required.')"
-              class="form__element"
             />
             <SfInput
               v-model="editedAddress.city"
+              class="city"
               name="city"
               :label="$t('City')"
               required
               :valid="!$v.editedAddress.city.$error"
               :error-message="$t('Field is required.')"
-              class="form__element form__element--half"
             />
             <SfInput
               v-model="editedAddress.state"
+              class="state"
               name="state"
               :label="$t('State/Province')"
-              class="form__element form__element--half form__element--half-even"
             />
             <SfInput
               v-model="editedAddress.postcode"
+              class="postcode"
               name="postcode"
               :label="$t('Zip-code')"
               required
@@ -78,16 +80,15 @@
                   ? $t('Field is required.')
                   : $t('Zip-code must have at least 3 letters.')
               "
-              class="form__element form__element--half"
             />
             <SfSelect
               v-model="editedAddress.country"
+              class="sf-select--underlined country"
               name="country"
               :label="$t('Country')"
               required
               :valid="!$v.editedAddress.country.$error"
               :error-message="$t('Field is required.')"
-              class="sf-select--underlined form__select form__element form__element--half form__select form__element--half-even"
             >
               <SfSelectOption
                 v-for="country in countries"
@@ -99,16 +100,18 @@
             </SfSelect>
             <SfInput
               v-model="editedAddress.telephone"
+              class="telephone"
               name="telephone"
               :label="$t('Phone number')"
-              class="form__element"
             />
+
             <SfButton class="action-button" @click="updateAddress">
               {{ $t('Update the address') }}
             </SfButton>
           </div>
         </SfTab>
       </SfTabs>
+
       <SfTabs
         v-else
         key="address-list"
@@ -119,44 +122,46 @@
           <p class="message">
             {{ $t('Manage all the shipping addresses you want (work place, home address ...) This way you won\'t have to enter the shipping address manually with each order.') }}
           </p>
-          <transition-group tag="div" name="fade" class="shipping-list">
+
+          <transition-group tag="div" name="fade" class="address-list">
             <div
               v-for="(address, key) in addresses"
               :key="address.street.join(' ')"
-              class="shipping"
+              class="card"
             >
-              <div class="shipping__content">
-                <p class="shipping__address">
-                  <span class="shipping__client-name">{{ address.firstname }} {{ address.lastname }}</span><br>
-                  {{ address.street.join(' ') }}<br>
-                  {{ address.postcode }}
-                  {{ address.city }},<br>{{ getCountryById(address.country_id) }}
-                </p>
-                <p class="shipping__address">
-                  {{ address.telephone }}
-                </p>
-              </div>
-              <div class="shipping__actions">
+              <SfButton
+                @click="changeAddress(key)"
+                class="sf-button--pure sf-button--full-width update"
+              >
+                <div class="content">
+                  <p class="address">
+                    {{ address.firstname }} {{ address.lastname }}<br>
+                    {{ address.street.join(' ') }}<br>
+                    {{ address.postcode }}
+                    {{ address.city }},<br>{{ getCountryById(address.country_id) }}
+                  </p>
+                  <p class="address">
+                    {{ address.telephone }}
+                  </p>
+                </div>
+              </SfButton>
+
+              <SfButton
+                @click="deleteAddress(key)"
+                class="sf-button--pure delete"
+              >
                 <SfIcon
                   icon="cross"
                   color="gray"
-                  size="14px"
+                  size="xxs"
                   role="button"
                   class="mobile-only"
                   @click="deleteAddress(key)"
                 />
-                <SfButton @click="changeAddress(key)">
-                  {{ $t('Change') }}
-                </SfButton>
-                <SfButton
-                  class="shipping__button-delete desktop-only"
-                  @click="deleteAddress(key)"
-                >
-                  {{ $t('Delete') }}
-                </SfButton>
-              </div>
+              </SfButton>
             </div>
           </transition-group>
+
           <SfButton class="action-button" @click="changeAddress(-1)">
             {{ $t('Add new address') }}
           </SfButton>
@@ -309,51 +314,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.shipping-list {
-  margin: 0 0 var(--spacer-base) 0;
-}
-.shipping {
-  display: flex;
-  padding: var(--spacer-base) 0;
-  border: 1px solid var(--c-light);
-  border-width: 1px 0 0 0;
-  &:last-child {
-    border-width: 1px 0 1px 0;
-  }
-  &__content {
-    flex: 1;
-    color: var(--c-text);
-  }
-  &__actions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    @include for-desktop {
-      flex-direction: row;
-      justify-content: flex-end;
-      align-items: center;
-    }
-  }
-  &__button-delete {
-    --button-background: var(--c-light);
-    --button-color: var(--c-dark-variant);
-    &:hover {
-      --button-background: var(--_c-light-primary);
-    }
-    @include for-desktop {
-      margin: 0 0 0 var(--spacer-base);
-    }
-  }
-  &__address {
-    margin: 0 0 var(--spacer-base) 0;
-    &:last-child {
-      margin: 0;
-    }
-  }
-}
+
 .tab-orphan {
   @include for-mobile {
     --tabs-content-border-width: 0;
@@ -361,40 +325,100 @@ export default {
     --tabs-content-padding: 0;
   }
 }
-.form {
-  @include for-desktop {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  &__element {
-    margin: 0 0 var(--spacer-base) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-lg);
-        }
-      }
-    }
-  }
-  &__select {
-    padding-bottom: calc(var(--font-xs) * 1.2);
-  }
-  --select-dropdown-position: relative;
-}
+
+// Add/Update Address
+
 .message {
   margin: 0 0 var(--spacer-base) 0;
 }
-.action-button {
-  --button-width: 100%;
-  @include for-desktop {
-    --button-width: auto;
+
+.form {
+  display: grid;
+  grid-gap: var(--spacer-base) var(--spacer-lg);
+  align-items: start;
+  --select-dropdown-position: relative;
+}
+
+@include for-desktop {
+  .form {
+    grid: "fn       ln"
+          "sn       sn"
+          "an       an"
+          "city     state"
+          "postcode country"
+          "phone    phone";
+  }
+
+  .first-name { grid-area: fn; }
+
+  .last-name { grid-area: ln; }
+
+  .street-name { grid-area: sn; }
+
+  .apartment { grid-area: an;}
+
+  .city { grid-area: city; }
+
+  .state { grid-area: state; }
+
+  .postcode { grid-area: postcode; }
+
+  .country { grid-area: country; }
+
+  .telephone { grid-area: phone; }
+
+  .action-button {
+    width: max-content;
   }
 }
+
+::v-deep {
+  .sf-select__dropdown {
+    overflow-y: scroll;
+  }
+}
+
+// Shipping Details
+
+.address-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(343px, 1fr));
+  grid-gap: var(--spacer-base) var(--spacer-lg);
+  margin-bottom: var(--spacer-base);
+}
+
+.card {
+  position: relative;
+  transition: box-shadow 150ms linear;
+  padding: var(--spacer-sm);
+  border: 1px solid var(--c-light);
+
+  &:hover {
+    box-shadow: 0px 4px 35px 0px var(--c-light);
+  }
+}
+
+.address {
+   font: var(--font-normal) var(--font-base) / 1.6 var(--font-family-primary);
+   color: var(--c-link);
+   margin: 0;
+}
+
+.update {
+  text-align: unset;
+  justify-content: unset;
+ }
+
+.delete {
+  position: absolute;
+  top: var(--spacer-sm);
+  right: var(--spacer-sm);
+
+  &:hover {
+    .sf-icon{
+      fill: var(--c-dark);
+    }
+  }
+}
+
 </style>

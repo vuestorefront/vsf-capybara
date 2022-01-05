@@ -1,7 +1,7 @@
 <template>
   <SfCircleIcon
     icon="search"
-    icon-size="20px"
+    icon-size="xs"
     icon-color="black"
     class="sf-header__circle-icon a-search-icon"
     role="button"

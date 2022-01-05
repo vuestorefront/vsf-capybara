@@ -248,6 +248,14 @@ export default {
   }
 }
 
+.product__bottom {
+  box-sizing: border-box;
+  @include for-desktop {
+    padding: 0;
+    max-width: 1272px;
+  }
+}
+
 .breadcrumbs {
   padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }

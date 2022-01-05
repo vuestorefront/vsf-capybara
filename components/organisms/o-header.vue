@@ -22,6 +22,7 @@
           :key="category.id"
           @mouseover="isHoveredMenu = true"
           @mouseleave="isHoveredMenu = false"
+          @click="isHoveredMenu = false"
         >
           <router-link
             :class="{active: isCategoryActive(category)}"
@@ -151,15 +152,16 @@ export default {
   z-index: 1;
 }
 .o-header {
-  --header-navigation-item-margin: 0 2rem 0 0;
+  --header-navigation-item-margin: 0 var(--spacer-lg) 0 0;
   box-sizing: border-box;
   a {
     &.active {
-      font-weight: bold;
+      font-weight: var(--font-bold);
     }
   }
   .search-container {
     display: flex;
+    --search-bar-font-size: var(--font-base);
     .o-search {
       flex-grow: 1;
     }

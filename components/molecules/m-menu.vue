@@ -61,6 +61,11 @@ export default {
       default: () => []
     }
   },
+  methods: {
+    positionSort (a, b) {
+      return a.position - b.position;
+    }
+  },
   computed: {
     ...mapState({
       isWebpSupported: state => state.ui.isWebpSupported
@@ -72,27 +77,24 @@ export default {
     }),
     categories () {
       return this.categoriesIds
-        .map(({ id, children_data: childrenData = [] }) => {
-          const subCategories = childrenData
-            .map(subCategory => prepareCategoryMenuItem(
-              this.getCategories.find(category => category.id === subCategory.id)
-            ))
-            .filter(Boolean)
-            .sort((a, b) => a.position - b.position)
+        .map(category => {
+          const subCategories = category.children_data
+            .map(subCategory => prepareCategoryMenuItem(subCategory))
+            .sort(this.positionSort)
 
-          const category = this.getCategories.find(category => category.id === id)
-          const viewAllMenuItem = prepareCategoryMenuItem({
-            ...category,
+          const subheader = prepareCategoryMenuItem(category);
+          const viewAllMenuItem = {
+            ...subheader,
             name: this.$t('View all'),
             position: 0
-          });
+          };
 
           return {
-            ...prepareCategoryMenuItem(category),
+            ...subheader,
             items: [viewAllMenuItem, ...subCategories]
           };
         })
-        .sort((a, b) => a.position - b.position);
+        .sort(this.positionSort);
     },
     currentCategoryTitle () {
       return this.getCurrentCategory.name || ''
@@ -116,7 +118,7 @@ export default {
   visibility: hidden;
   transition: 0.2s;
   .router-link-exact-active {
-    --menu-item-font-weight: bold;
+    --menu-item-font-weight: var(--font-bold);
   }
 }
 .aside-menu {

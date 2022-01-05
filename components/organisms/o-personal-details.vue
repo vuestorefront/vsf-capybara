@@ -1,22 +1,24 @@
 <template>
   <div class="o-personal-details">
-    <div v-if="!currentUser" class="log-in desktop-only">
+    <div v-if="!currentUser" class="log-in">
       <SfButton class="log-in__button color-secondary" @click="login">
         {{ $t('Log in to your account') }}
       </SfButton>
       <p class="log-in__info">
-        {{ $t('or fill the details below') }}:
+        {{ $t("or fill the details below") }}:
       </p>
     </div>
+
     <SfHeading
       :title="`1. ${$t('Details')}`"
-      :level="2"
-      class="sf-heading--left sf-heading--no-underline title"
+      :level="3"
+      class="sf-heading--left"
     />
+
     <div class="form">
       <SfInput
         v-model.trim="personalDetails.firstName"
-        class="form__element form__element--half"
+        class="first-name"
         name="first-name"
         :label="$t('First name')"
         :required="true"
@@ -30,7 +32,7 @@
       />
       <SfInput
         v-model.trim="personalDetails.lastName"
-        class="form__element form__element--half form__element--half-even"
+        class="last-name "
         name="last-name"
         :label="$t('Last name')"
         :required="true"
@@ -40,7 +42,7 @@
       />
       <SfInput
         v-model.trim="personalDetails.emailAddress"
-        class="form__element"
+        class="email"
         name="email-address"
         :label="$t('Email address')"
         :required="true"
@@ -52,6 +54,7 @@
         "
         @blur="$v.personalDetails.emailAddress.$touch()"
       />
+
       <div class="info">
         <p class="info__heading">
           {{ $t('Enjoy these perks with your free account!') }}
@@ -65,12 +68,12 @@
           class="info__characteristic"
         />
       </div>
+
       <template v-if="!currentUser">
-        <div class="form__element">
+        <div class="account">
           <SfCheckbox
             v-model="createAccount"
             :label="$t('I want to create an account')"
-            class="form__checkbox"
             name="createAccount"
           />
         </div>
@@ -78,7 +81,6 @@
           <SfInput
             v-model="password"
             type="password"
-            class="form__element"
             name="password"
             :has-show-password="true"
             :label="$t('Password')"
@@ -98,7 +100,6 @@
           <SfInput
             v-model="rPassword"
             type="password"
-            class="form__element"
             name="password-confirm"
             :has-show-password="true"
             :label="$t('Repeat password')"
@@ -111,10 +112,9 @@
             "
             @blur="$v.rPassword.$touch()"
           />
-          <div class="form__element form__group">
+          <div>
             <SfCheckbox
               v-model="acceptConditions"
-              class="form__element form__checkbox"
               name="acceptConditions"
               :required="true"
               @blur="$v.acceptConditions.$touch()"
@@ -123,7 +123,10 @@
                 <span class="sf-checkbox__label no-flex">
                   {{ $t("I accept ") }}
                 </span>
-                <SfButton class="sf-button sf-button--text terms" @click.prevent="openTermsAndConditionsModal">
+                <SfButton
+                  class="sf-button sf-button--text terms"
+                  @click.prevent="openTermsAndConditionsModal"
+                >
                   {{ $t("Terms and conditions") }}
                 </SfButton>
               </template>
@@ -131,24 +134,14 @@
           </div>
         </template>
       </template>
-      <div class="form__action">
-        <SfButton
-          class="sf-button--full-width form__action-button"
-          :disabled="createAccount ? $v.$invalid : $v.personalDetails.$invalid"
-          @click="sendDataToCheckout"
-        >
-          {{
-            $t(isVirtualCart ? "Continue to payment" : "Continue to shipping")
-          }}
-        </SfButton>
-        <SfButton
-          v-if="!currentUser"
-          class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary mobile-only"
-          @click="login"
-        >
-          {{ $t("or login to your account") }}
-        </SfButton>
-      </div>
+
+      <SfButton
+        class="action-button"
+        :disabled="createAccount ? $v.$invalid : $v.personalDetails.$invalid"
+        @click="sendDataToCheckout"
+      >
+        {{ $t(isVirtualCart ? "Continue to payment" : "Continue to shipping") }}
+      </SfButton>
     </div>
   </div>
 </template>
@@ -208,7 +201,7 @@ export default {
     password: {
       required,
       minLength: minLength(8),
-      complex: value => {
+      complex: (value) => {
         // Check if minimum 3 different classes of characters are used in password.
         // Classes of characters: lower case, upper case, digits and special characters.
         return (
@@ -217,7 +210,7 @@ export default {
             /(?=[A-Z])/.test(value),
             /(?=[0-9])/.test(value),
             /(?=\W)/.test(value)
-          ].filter(result => result).length >= 3
+          ].filter((result) => result).length >= 3
         );
       }
     },
@@ -234,64 +227,71 @@ export default {
       openModal: 'openModal'
     }),
     login () {
-      this.openModal({ name: ModalList.Auth, payload: 'login' })
+      this.openModal({ name: ModalList.Auth, payload: 'login' });
     },
     openTermsAndConditionsModal () {
-      this.openModal({ name: ModalList.TermsAndConditions })
+      this.openModal({ name: ModalList.TermsAndConditions });
     }
   }
 };
 </script>
+
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.title {
-  --heading-padding: var(--spacer-base) 0;
-  @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
-    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
-  }
+.o-personal-details{
+  margin-top: var(--spacer-xl);
 }
+
 .log-in {
   &__info {
     margin: var(--spacer-lg) 0;
     color: var(--c-dark-variant);
     font: var(--font-light) var(--font-base) / 1.6 var(--font-family-primary);
     @include for-desktop {
-      font-weight: var(--font-normal);
+      font-weight: var(--font-weight--normal);
       font-size: var(--font-sm);
     }
   }
+  
   &__button {
-    margin: var(--spacer-2xl) 0 var(--spacer-xl) 0;
+    width: 100%;
+  }
+
+  &__info {
+    margin: var(--spacer-xl) 0;
+    font: var(--font-normal) var(--font-base) / 1.6 var(--font-family-secondary);
   }
 }
-.info {
-  margin: 0 0 var(--spacer-xl) 0;
-  flex: 1;
+
+.form {
+  display: grid;
+  grid: "fn" "ln" "email" "info" "account";
+  grid-gap: var(--spacer-base) var(--spacer-lg);
+  align-items: center;
+
+  margin: var(--spacer-base) 0;
+}
+
+.first-name { grid-area: fn; }
+
+.last-name { grid-area: ln; }
+
+.email { grid-area: email; }
+
+.info { grid-area: info;
+
   &__heading {
     font-family: var(--font-family-primary);
-    font-weight: var(--font-light);
+    font-weight: var(--font-weight--light);
   }
+
   &__characteristic {
     --characteristic-description-font-size: var(--font-xs);
-    margin: 0 0 var(--spacer-sm) var(--spacer-2xs);
-  }
-  @include for-desktop {
-    margin: 0;
-    &__heading {
-      margin: 0 0 var(--spacer-sm) 0;
-      font-size: var(--font-xs);
-    }
-    &__characteristic {
-      margin: var(--spacer-base) 0;
-    }
-  }
-}
-.form {
-  &__checkbox {
     margin: var(--spacer-base) 0;
   }
+
   &__action {
     margin: var(--spacer-sm) 0;
     &-button {
@@ -327,10 +327,40 @@ export default {
     }
   }
   .terms {
-    margin: 0 0 0 0.4em;
+    margin: 0 0 0 var(--spacer-xs);
   }
 }
+
+.account { grid-area: account; }
+
+// sf-checkbox__label has flex:1 creating a gap between the label and button
 .no-flex {
   flex: unset;
 }
+
+//Adding space between terms and condition label and button
+.terms {
+  margin-left: var(--spacer-xs);
+}
+
+@include for-desktop {
+  .log-in__button {
+    width: unset;
+  }
+
+  .form {
+    grid: "fn      ln"
+          "email   email"
+          "info    info"
+          "account account";
+  }
+
+  .action-button {
+    // Force action button into its own row
+    grid-column: 1 / -1;
+
+    width: max-content;
+  }
+}
+
 </style>

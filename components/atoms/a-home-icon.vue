@@ -2,7 +2,7 @@
   <div class="a-home-icon">
     <SfCircleIcon
       icon="home"
-      icon-size="20px"
+      icon-size="xs"
       icon-color="black"
       class="sf-header__circle-icon"
       role="button"

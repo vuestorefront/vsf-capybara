@@ -9,7 +9,7 @@
       <SfCircleIcon
         class="icon"
         icon="chevron_down"
-        icon-size="20px"
+        icon-size="xs"
         icon-color="white"
       />
     </div>
