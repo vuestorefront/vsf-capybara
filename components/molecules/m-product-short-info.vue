@@ -6,6 +6,7 @@
         :level="3"
         class="sf-heading--no-underline sf-heading--left"
       />
+
       <SfIcon
         icon="drag"
         size="xl"
@@ -26,6 +27,7 @@
         {{ $t("Read all {count} review", { count: reviewsCount }) }}
       </AProductRating>
     </div>
+
     <div
       class="product__description desktop-only"
       v-html="product.short_description || product.description"
@@ -78,32 +80,47 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 @import "~@storefront-ui/shared/styles/helpers/typography";
 
 .product {
   &__header {
     display: flex;
     justify-content: space-between;
-    @include for-desktop {
-      margin: 0 auto;
-    }
   }
+
   &__drag-icon {
     animation: moveicon 1s ease-in-out infinite;
   }
+
+  @keyframes moveicon {
+  0% {
+    transform: translate3d(0, 0, 0);
+   }
+  50% {
+    transform: translate3d(0, 30%, 0);
+   }
+  100% {
+    transform: translate3d(0, 0, 0);
+   }
+ }
+
   &__price-and-rating {
     margin: var(--spacer-xs) 0 var(--spacer-base);
     align-items: center;
     @include for-desktop {
       display: flex;
       justify-content: space-between;
-      margin: var(--spacer-sm) 0 var(--spacer-lg) 0;
+      margin: var(--spacer-sm) 0 var(--spacer-lg);
     }
   }
+
   &__description {
-    color: var(--c-link);
+    color: var(--c-text);
     @include font(
       --product-description-font,
       var(--font-light),
@@ -113,16 +130,9 @@ export default {
     );
   }
 }
-
-@keyframes moveicon {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, 30%, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
+.a-product-rating {
+  @include for-mobile {
+    margin-top: var(--spacer-xs);
   }
 }
 </style>

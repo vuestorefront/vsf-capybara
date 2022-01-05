@@ -7,6 +7,7 @@
         </router-link>
       </template>
     </SfBreadcrumbs>
+
     <OProductDetails
       :product="getCurrentProduct"
       :product-gallery="getProductGallery"
@@ -15,12 +16,14 @@
       :product-attributes="getCustomAttributes"
       :product-stock="stock"
     />
+
     <div class="product__bottom">
       <lazy-hydrate when-idle>
         <SfSection :title-heading="$t('We found other products you might like')">
           <MRelatedProducts type="upsell" />
         </SfSection>
       </lazy-hydrate>
+
       <lazy-hydrate when-idle>
         <SfSection v-show="banners.length">
           <router-link :key="i" :to="banner.link" v-for="(banner, i) in banners">
@@ -28,16 +31,18 @@
               :subtitle="banner.subtitle"
               :title="banner.title"
               :image="banner.image"
-              class="banner sf-banner--slim"
+              class="banner"
             />
           </router-link>
         </SfSection>
       </lazy-hydrate>
+
       <lazy-hydrate when-idle>
         <SfSection :title-heading="$t('Similar Products')">
           <MRelatedProducts type="related" />
         </SfSection>
       </lazy-hydrate>
+
       <SfSection
         v-if="isOnline"
         title-heading="Share Your Look"
@@ -232,6 +237,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 #product {
@@ -254,16 +260,7 @@ export default {
   padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 
-::v-deep {
-  .product__colors button {
-      border: 1px solid var(--c-light);
-  }
-}
-
 .banner {
   margin: var(--spacer-xl) 0;
-  @include for-desktop {
-    margin: var(--spacer-2xl) 0;
-  }
 }
 </style>

@@ -6,6 +6,7 @@
       :message="product.errors | formatProductMessages"
       type="danger"
     />
+
     <template v-for="attribute in productAttributes">
       <SfSelect
         :key="attribute.id"
@@ -23,6 +24,7 @@
           <SfProductOption :label="attributeOption.label" />
         </SfSelectOption>
       </SfSelect>
+
       <div v-else :key="attribute.id" class="product__colors">
         <p class="product__color-label">
           {{ attribute.label }}:
@@ -114,43 +116,27 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
-.m-product-options-configurable {
-  border-bottom: 1px solid #f1f2f3;
-  padding-bottom: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  @include for-desktop {
-    border: 0;
-    padding-bottom: 0;
-  }
-}
-.attribute {
-  margin-bottom: var(--spacer-xl);
-}
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .product {
   &__select-size {
-    flex: 100%;
-    @include for-desktop {
-      margin: 0;
-    }
+    width: 100%;
+    margin-top: var(--spacer-base);
   }
+
   &__colors {
     display: flex;
-    flex: 100%;
-    order: 1;
+    width: 100%;
     align-items: center;
-    margin: var(--spacer-xl) 0 0;
-    @include for-desktop {
-      margin: var(--spacer-xl) 0 0;
-    }
   }
+
   &__color-label {
-    margin: 0 var(--spacer-base) 0 0;
+    margin-right: var(--spacer-base);
   }
+
   &__color {
+    border: 1px solid var(--c-light);
     margin: 0 var(--spacer-2xs);
   }
 }

@@ -8,6 +8,7 @@
     <SfTab :title="$t('Description')">
       <div itemprop="description" v-html="product.description" />
     </SfTab>
+
     <SfTab :title="$t('Read reviews')" ref="reviewTab">
       <div class="review-header">
         <SfHeading
@@ -25,6 +26,7 @@
       <SfDivider v-show="reviewsCount" />
       <MReviewList v-show="reviewsCount" :reviews="reviews" />
     </SfTab>
+
     <SfTab v-if="attributes.length" :title="$t('Additional Information')">
       <AProductAttribute
         v-for="(attribute, i) in attributes"
@@ -102,23 +104,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .product {
   &__tabs {
     margin: var(--spacer-lg) auto var(--spacer-2xl);
     @include for-desktop {
-      margin-top: var(--spacer-2xl);
+      margin-top: var(--spacer-xl);
       --tabs-content-tab-padding: var(--spacer-xl) 0 0 0;
     }
   }
   &__property {
     margin: var(--spacer-base) 0;
   }
-}
-
-[itemprop="description"] > *:first-child {
-  margin-top: 0;
 }
 
 .review-header {
