@@ -62,6 +62,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: set missing require for `phoneNumber` on the Checkout
 
 
+### Changed / Improved
+- Improved css styling by replacing flexbox to css grid(#604)
+- Improved spacing between the form elements through grid gap(#604)
+- Improved button width on desktop(#604)
+- Removed maximum width of notice text(#604)
+- Updated color of hover text(#604)
+- Improved HTML markup by spacing between elements(#604)
+- Improved CSS styling by using shorthand methods (#604)
+
+
 ## [1.0.4] - 04.01.2020
 
 ### Added
