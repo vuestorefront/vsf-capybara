@@ -11,9 +11,11 @@
           <p class="message">
             {{ $t('Keep your addresses and contact details updated.') }}
           </p>
+
           <div class="form">
             <SfInput
               v-model="editedAddress.firstname"
+              class="first-name"
               name="firstname"
               :label="$t('First Name')"
               required
@@ -23,52 +25,52 @@
                   ? $t('Field is required.')
                   : $t('Name must have at least 2 letters.')
               "
-              class="form__element form__element--half"
             />
             <SfInput
               v-model="editedAddress.lastname"
+              class="last-name"
               name="lastname"
               :label="$t('Last Name')"
               required
               :valid="!$v.editedAddress.lastname.$error"
               :error-message="$t('Field is required.')"
-              class="form__element form__element--half form__element--half-even"
             />
             <SfInput
               v-model="editedAddress.streetName"
+              class="street-name"
               name="streetName"
               :label="$t('Street Name')"
               required
               :valid="!$v.editedAddress.streetName.$error"
               :error-message="$t('Field is required.')"
-              class="form__element"
             />
             <SfInput
               v-model="editedAddress.apartment"
+              class="apartment"
               name="apartment"
               :label="$t('House/Apartment number')"
               required
               :valid="!$v.editedAddress.apartment.$error"
               :error-message="$t('Field is required.')"
-              class="form__element"
             />
             <SfInput
               v-model="editedAddress.city"
+              class="city"
               name="city"
               :label="$t('City')"
               required
               :valid="!$v.editedAddress.city.$error"
               :error-message="$t('Field is required.')"
-              class="form__element form__element--half"
             />
             <SfInput
               v-model="editedAddress.state"
+              class="state"
               name="state"
               :label="$t('State/Province')"
-              class="form__element form__element--half form__element--half-even"
             />
             <SfInput
               v-model="editedAddress.postcode"
+              class="postcode"
               name="postcode"
               :label="$t('Zip-code')"
               required
@@ -78,16 +80,15 @@
                   ? $t('Field is required.')
                   : $t('Zip-code must have at least 3 letters.')
               "
-              class="form__element form__element--half"
             />
             <SfSelect
               v-model="editedAddress.country"
+              class="sf-select--underlined country"
               name="country"
               :label="$t('Country')"
               required
               :valid="!$v.editedAddress.country.$error"
               :error-message="$t('Field is required.')"
-              class="sf-select--underlined form__select form__element form__element--half form__select form__element--half-even"
             >
               <SfSelectOption
                 v-for="country in countries"
@@ -99,16 +100,18 @@
             </SfSelect>
             <SfInput
               v-model="editedAddress.telephone"
+              class="telephone"
               name="telephone"
               :label="$t('Phone number')"
-              class="form__element"
             />
+
             <SfButton class="action-button" @click="updateAddress">
               {{ $t('Update the address') }}
             </SfButton>
           </div>
         </SfTab>
       </SfTabs>
+
       <SfTabs
         v-else
         key="address-list"
@@ -311,6 +314,69 @@ export default {
 
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+
+.tab-orphan {
+  @include for-mobile {
+    --tabs-content-border-width: 0;
+    --tabs-title-display: none;
+    --tabs-content-padding: 0;
+  }
+}
+
+// Add/Update Address
+
+.message {
+  margin: 0 0 var(--spacer-base) 0;
+}
+
+.form {
+  display: grid;
+  grid-gap: var(--spacer-base) var(--spacer-lg);
+  align-items: start;
+  --select-dropdown-position: relative;
+}
+
+@include for-desktop {
+  .form {
+    grid: "fn       ln"
+          "sn       sn"
+          "an       an"
+          "city     state"
+          "postcode country"
+          "phone    phone";
+  }
+
+  .first-name { grid-area: fn; }
+
+  .last-name { grid-area: ln; }
+
+  .street-name { grid-area: sn; }
+
+  .apartment { grid-area: an;}
+
+  .city { grid-area: city; }
+
+  .state { grid-area: state; }
+
+  .postcode { grid-area: postcode; }
+
+  .country { grid-area: country; }
+
+  .telephone { grid-area: phone; }
+
+  .action-button {
+    width: max-content;
+  }
+}
+
+::v-deep {
+  .sf-select__dropdown {
+    overflow-y: scroll;
+  }
+}
+
+// Shipping Details
+
 .address-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(343px, 1fr));
@@ -352,47 +418,4 @@ export default {
   }
 }
 
-.tab-orphan {
-  @include for-mobile {
-    --tabs-content-border-width: 0;
-    --tabs-title-display: none;
-    --tabs-content-padding: 0;
-  }
-}
-.form {
-  @include for-desktop {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  &__element {
-    margin: 0 0 var(--spacer-base) 0;
-    @include for-desktop {
-      flex: 0 0 100%;
-    }
-    &--half {
-      @include for-desktop {
-        flex: 1 1 50%;
-      }
-      &-even {
-        @include for-desktop {
-          padding: 0 0 0 var(--spacer-lg);
-        }
-      }
-    }
-  }
-  &__select {
-    padding-bottom: calc(var(--font-xs) * 1.2);
-  }
-  --select-dropdown-position: relative;
-}
-.message {
-  margin: 0 0 var(--spacer-base) 0;
-}
-.action-button {
-  --button-width: 100%;
-  @include for-desktop {
-    --button-width: auto;
-  }
-}
 </style>

@@ -200,6 +200,7 @@ import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next
 import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 import { getProductPrice } from 'theme/helpers';
+
 import {
   localizedRoute,
   currentStoreView
@@ -423,7 +424,7 @@ export default {
     $route: {
       immediate: true,
       handler (to, from) {
-        if (to.query.page && to.path === from.path) {
+        if (to.query.page || (from && to.path === from.path)) {
           this.changePage(parseInt(to.query.page) || 1);
         } else {
           this.initPagination()
@@ -616,12 +617,19 @@ export default {
   padding: var(--spacer-base) var(--spacer-base) var(--spacer-base) var(--spacer-sm);
 }
 .navbar {
-  position: relative;
   display: flex;
   border: 1px solid var(--c-light);
   border-width: 0 0 1px 0;
   @include for-desktop {
     border-width: 1px 0 1px 0;
+  }
+  @include for-mobile {
+    // Made it visible while scrolling.
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    // Added background blur effect while scrolling.
+    background: rgb(255, 255, 255);
   }
   &.section {
     padding: var(--spacer-sm);
