@@ -5,10 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - ?
+
+## [1.0.6] - ???
 
 ### Added
+
 - Added `VueObserveVisibility` and `VueLazyload` dependency
+- Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
 - Improved css styling by replacing flexbox to css grid(#606)
@@ -18,8 +21,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed styling of 'a' tag as their was no 'a' tag in the file(#606)
 - Improved HTML markup by spacing between elements(#606)
 - Improved CSS styling by using shorthand methods (#606)
+- Improved css styling by replacing flexbox to css grid(#610)
+- Added auto fill property to grid column(#610)
+- Removed update button(#610)
+- Added update click functionality to address card itself(#610)
+- Added border to address card(#610)
+- Improved delete button by using it with icon for deleting address on desktop also(#610)
+- Added hover effect to delete icon button(#610)
+- Improved HTML markup by spacing between elements(#610)
+- Refactored address form styling of my account page(#608)
+- Removed Horizontal Padding on product bottom section in product page (#534)
+- Removed backdrop filter to position sort by drop down of category page in mobile (#669)
+- Improved search on mobile (#542)
+- Added min height to the main content of the page (#503)
+- Made navbar visible while scrolling on mobile(#622)
+- Added background blur effect on mobile(#622)
+- Updated css styling by replacing flexbox to css grid(#601)
+- Updated spacing between the form elements(#601)
+- Updated spacing around login button and details heading(#601)
+- Updated width and position of login button on mobile(#601)
+- Improved HTML markup by spacing between elements(#601)
+- Improved CSS styling by using shorthand methods (#601)
 - Fix broken mega menu. Requires [one change](https://github.com/vuestorefront/vsf-capybara/issues/509#issuecomment-862174222) in the config. ([#509](https://github.com/vuestorefront/vsf-capybara/issues/509))
 - Using `getProductPrice` helper for calculating product prices in Cart/Checkout
+- Improved: the error message for the zip-code field on shipping and payment page(#589)
+- Fixed spacing of a-product-quantity(#614)
+- Improved: Z-index for dropdowns(#536)
+- Improved: Height for the micro cart on mobile (#576)
+- Fixed body scroll issue when open micro cart (#482)
+- Improved speed of carousel in m-product-carousel(#623)
+- Height of search result page on mobile (#474)
+- Replaced: the slack community link with discord link(676)
+- Updated the links of banners in product page (#445)
+- Improved: code to empty the password fields when clicking the update password button ([#679] (https://github.com/vuestorefront/vsf-capybara/issues/679))
+- Updated: code to make the tab index work on the authentication modals(#434)
+- Improved css styling by replacing flexbox to css grid(#604)
+- Improved spacing between the form elements through grid gap(#604)
+- Improved button width on desktop(#604)
+- Removed maximum width of notice text(#604)
+- Updated color of hover text(#604)
+- Improved HTML markup by spacing between elements(#604)
+- Improved CSS styling by using shorthand methods (#604)
+
 
 ## [1.0.5] - 23.06.2021
 
@@ -31,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: close Mega Menu after clicking on the Category
 - Fixed: wrong product image on PDP after clicked on filtered product from PLP
 - Fixed: set missing require for `phoneNumber` on the Checkout
+
 
 ## [1.0.4] - 04.01.2020
 
@@ -69,6 +113,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update filters bar on category page (#381)
 - Use i18n wrapper for the login title (#438)
 - Corrected displayed the selected size option on product page (#436)
+- Fixed memory leak (#419)
 - Styling around color selector on filters in category page (#443)
 - Styling around color filters (#442)
 - Carousel time in product carousel (#444)
@@ -78,7 +123,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Used sku instead of product_id while preparing order line items product (#415)
 - Replaced deprecated action product/list call with findProducts (#417)
 - Fix hydration errors with fresh installation (#462)
-- Fixed console warning related to  value of key 'Sort by' is not a string (#476)
+- Fixed console warning related to value of key 'Sort by' is not a string (#476)
 - Update pwacompat to avoid loading multiple favicons (https://github.com/DivanteLtd/vue-storefront/issues/4559)
 - Fixed changing and deleting shipping details on MyAccount (#4499)
 - Corrected displayed price when choosing configurable product second time (#493)
@@ -86,6 +131,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 03.07.2020
 
 ### Added
+
 ### Changed / Improved
 
 - Update sfui version to 0.7.11
@@ -99,6 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2020.06.02
 
 ### Added
+
 ### Changed / Improved
 
 - Support theme configuration via CLI (#369)

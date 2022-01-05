@@ -244,7 +244,6 @@ export default {
 
 .product__bottom {
   box-sizing: border-box;
-  padding: 0 var(--spacer-sm);
   @include for-desktop {
     padding: 0;
     max-width: 1272px;
