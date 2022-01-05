@@ -14,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added safe Area of Elements in the Bottom Elements(#499)
 
 ### Changed / Improved
+- Improved css styling by replacing flexbox to css grid(#606)
+- Improved spacing between the form elements through grid gap(#606)
+- Improved button width on desktop(#606)
+- Improved line height of message text(#606)
+- Removed styling of 'a' tag as their was no 'a' tag in the file(#606)
+- Improved HTML markup by spacing between elements(#606)
+- Improved CSS styling by using shorthand methods (#606)
 - Improved css styling by replacing flexbox to css grid(#610)
 - Added auto fill property to grid column(#610)
 - Removed update button(#610)
@@ -48,6 +55,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the links of banners in product page (#445)
 - Improved: code to empty the password fields when clicking the update password button ([#679] (https://github.com/vuestorefront/vsf-capybara/issues/679))
 - Updated: code to make the tab index work on the authentication modals(#434)
+- Improved css styling by replacing flexbox to css grid(#604)
+- Improved spacing between the form elements through grid gap(#604)
+- Improved button width on desktop(#604)
+- Removed maximum width of notice text(#604)
+- Updated color of hover text(#604)
+- Improved HTML markup by spacing between elements(#604)
+- Improved CSS styling by using shorthand methods (#604)
 
 
 ## [1.0.5] - 23.06.2021
@@ -60,16 +74,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed: close Mega Menu after clicking on the Category
 - Fixed: wrong product image on PDP after clicked on filtered product from PLP
 - Fixed: set missing require for `phoneNumber` on the Checkout
-
-
-### Changed / Improved
-- Improved css styling by replacing flexbox to css grid(#604)
-- Improved spacing between the form elements through grid gap(#604)
-- Improved button width on desktop(#604)
-- Removed maximum width of notice text(#604)
-- Updated color of hover text(#604)
-- Improved HTML markup by spacing between elements(#604)
-- Improved CSS styling by using shorthand methods (#604)
 
 
 ## [1.0.4] - 04.01.2020
