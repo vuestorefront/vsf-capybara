@@ -312,9 +312,6 @@ export default {
   }
   @include for-desktop {
     margin: 0 var(--spacer-2xl) 0 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
     &__element {
       margin: 0 0 var(--spacer-base) 0;
       flex: 0 0 100%;
