@@ -155,7 +155,6 @@
                   color="gray"
                   size="xxs"
                   role="button"
-                  class="mobile-only"
                   @click="deleteAddress(key)"
                 />
               </SfButton>

@@ -667,14 +667,14 @@ export default {
   }
   
 
-  @include for-mobile {
+/*   @include for-mobile {
     // Made it visible while scrolling.
     position: sticky;
     top: 0;
     z-index: 2;
     // Added background blur effect while scrolling.
     background: rgb(255, 255, 255);
-  }
+  } */
 
   &.section {
     padding: var(--spacer-sm);
