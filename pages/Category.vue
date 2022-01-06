@@ -666,7 +666,7 @@ export default {
     border-width: 1px 0 1px 0;
   }
   
-  &__filter {
+
   @include for-mobile {
     // Made it visible while scrolling.
     position: sticky;
@@ -675,19 +675,21 @@ export default {
     // Added background blur effect while scrolling.
     background: rgb(255, 255, 255);
   }
+
   &.section {
     padding: var(--spacer-sm);
     @include for-desktop {
       padding: 0;
     }
   }
+
   &__aside {
     align-items: center;
     display: flex;
     grid-area: filter;
   }
 
-    &__filters-icon {
+  &__filters-icon {
     margin-right: var(--spacer-xs);
   }
 

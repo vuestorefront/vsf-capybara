@@ -5,8 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - ???
 
-## [1.0.6] - ???
+### Added
+
+### Changed / Improved
+
+
+## [1.0.6] - 06.01.2022
 
 ### Added
 
@@ -15,50 +21,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed / Improved
 
+- Fixed mega menu z-index (#692)
 - Replaced icon size, font styling, margin and padding's hard coded values with variables(#619)
-- Improved category list and product list styling through css grid(#617)
-- Improved color of filter icon(#617)
-- Improved font size of sortby dropdown(#617)
-- Updated styling of colors in filter(#617)
-- Removed section class from navbar and main(#617)
-- Updated alignment of pagination(#617)
-- Removed filter clear button on mobile(#617)
-- Improved spacing between HTML markup(#617)
-- Removed auto overflow from o-search-panel(#613)
-- Added  auto overflow to container(#613)
-- Improved position of categories(#613)
-- Improved height of products(#613)
-- Updated padding of container on mobile(#613)
-- Updated padding values(#613)
-- Improved HTML markup by spacing between elements(#613)
-- Improved css styling by replacing flexbox to css grid(#606)
-- Improved spacing between the form elements through grid gap(#606)
-- Improved button width on desktop(#606)
-- Improved line height of message text(#606)
-- Removed styling of 'a' tag as their was no 'a' tag in the file(#606)
-- Improved HTML markup by spacing between elements(#606)
-- Improved CSS styling by using shorthand methods (#606)
-- Improved css styling by replacing flexbox to css grid(#610)
-- Added auto fill property to grid column(#610)
-- Removed update button(#610)
-- Added update click functionality to address card itself(#610)
-- Added border to address card(#610)
-- Improved delete button by using it with icon for deleting address on desktop also(#610)
-- Added hover effect to delete icon button(#610)
-- Improved HTML markup by spacing between elements(#610)
+- Refactored styling of category page(#617)
+- Fixed the position of categories during scrolling in o-search-panel (#613)
+- Refactored m-update-password styling(#606)
+- Refactored shipping details styling of o-my-account-shipping -details(#610)
 - Refactored address form styling of my account page(#608)
 - Removed Horizontal Padding on product bottom section in product page (#534)
 - Removed backdrop filter to position sort by drop down of category page in mobile (#669)
 - Improved search on mobile (#542)
 - Added min height to the main content of the page (#503)
 - Made navbar visible while scrolling on mobile(#622)
-- Added background blur effect on mobile(#622)
-- Updated css styling by replacing flexbox to css grid(#601)
-- Updated spacing between the form elements(#601)
-- Updated spacing around login button and details heading(#601)
-- Updated width and position of login button on mobile(#601)
-- Improved HTML markup by spacing between elements(#601)
-- Improved CSS styling by using shorthand methods (#601)
+- Updated o-personal-details (#601)
 - Fix broken mega menu. Requires [one change](https://github.com/vuestorefront/vsf-capybara/issues/509#issuecomment-862174222) in the config. ([#509](https://github.com/vuestorefront/vsf-capybara/issues/509))
 - Using `getProductPrice` helper for calculating product prices in Cart/Checkout
 - Improved: the error message for the zip-code field on shipping and payment page(#589)
@@ -72,13 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated the links of banners in product page (#445)
 - Improved: code to empty the password fields when clicking the update password button ([#679] (https://github.com/vuestorefront/vsf-capybara/issues/679))
 - Updated: code to make the tab index work on the authentication modals(#434)
-- Improved css styling by replacing flexbox to css grid(#604)
-- Improved spacing between the form elements through grid gap(#604)
-- Improved button width on desktop(#604)
-- Removed maximum width of notice text(#604)
-- Updated color of hover text(#604)
-- Improved HTML markup by spacing between elements(#604)
-- Improved CSS styling by using shorthand methods (#604)
+- Improved m-update-personal-data(#604)
 
 
 ## [1.0.5] - 23.06.2021
