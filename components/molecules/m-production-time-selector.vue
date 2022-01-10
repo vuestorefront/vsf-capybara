@@ -3,43 +3,30 @@
     class="m-production-time-selector"
     v-if="isProductionOptionsAvailable"
   >
-    <validation-provider
-      v-slot="{ errors, classes }"
-      name="Production time"
-      slim
+    <SfHeading
+      :level="3"
+      :title="$t('Choose your production time')"
+    />
+
+    <MBlockStory
+      v-if="blockSlug"
+      :story-slug="blockSlug"
+    />
+
+    <SfSelect
+      v-model="selectedOption"
+      name="rush_addons"
+      class="_rush-addons"
+      :disabled="disabled"
     >
-      <div
-        class="_production-time-field"
-        :class="classes"
+      <SfSelectOption
+        v-for="option in productionTimeOptions"
+        :key="option.id"
+        :value="option"
       >
-        <SfHeading
-          :level="3"
-          :title="$t('Choose your production time')"
-        />
-
-        <MBlockStory
-          v-if="blockSlug"
-          :story-slug="blockSlug"
-        />
-
-        <SfSelect
-          v-model="selectedOption"
-          name="rush_addons"
-          class="_rush-addons"
-          :disabled="disabled"
-          :valid="!errors.length"
-          :error-message="errors[0]"
-        >
-          <SfSelectOption
-            v-for="option in productionTimeOptions"
-            :key="option.id"
-            :value="option"
-          >
-            {{ option.text }}
-          </SfSelectOption>
-        </SfSelect>
-      </div>
-    </validation-provider>
+        {{ option.text }}
+      </SfSelectOption>
+    </SfSelect>
   </div>
 </template>
 
@@ -110,16 +97,14 @@ export default Vue.extend({
 <style lang="scss" scoped>
 
 .m-production-time-selector {
-  ._production-time-field {
-    max-width: 47em;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: var(--spacer-xl);
-    text-align: center;
+  max-width: 47em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: var(--spacer-xl);
+  text-align: center;
 
-    ::v-deep .sf-select__selected {
-      justify-content: center;
-    }
+  ::v-deep .sf-select__selected {
+    justify-content: center;
   }
 }
 </style>

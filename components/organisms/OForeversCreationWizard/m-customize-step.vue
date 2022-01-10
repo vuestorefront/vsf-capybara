@@ -111,12 +111,22 @@
         :title="$t('Final Options')"
       />
 
+      <validation-provider
+        v-slot="{ errors }"
+        name="Production time"
+        tag="div"
+      >
       <MProductionTimeSelector
         v-model="productionTimeOption"
         :production-time-options="productionTimeOptions"
         :product-id="product.id"
         :disabled="disabled"
       />
+
+        <div class="_error-text">
+          {{ errors[0] }}
+        </div>
+      </validation-provider>
 
       <validation-provider
         v-slot="{ errors, classes }"

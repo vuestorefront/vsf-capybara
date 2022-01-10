@@ -240,12 +240,22 @@
           </div>
         </validation-provider>
 
+        <validation-provider
+          v-slot="{ errors }"
+          name="Production time"
+          tag="div"
+        >
         <MProductionTimeSelector
           v-model="productionTime"
           :production-time-options="productionTimeOptions"
           :product-id="product.id"
           :disabled="isSubmitting"
         />
+
+          <div class="_error-text">
+            {{ errors[0] }}
+          </div>
+        </validation-provider>
 
         <div v-show="showEmailStep">
           <div
