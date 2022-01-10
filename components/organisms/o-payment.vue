@@ -301,6 +301,16 @@ export default {
       0
     );
   },
+  methods: {
+    async changeCountry () {
+      await Promise.all([
+        this.$store.dispatch('checkout/updatePaymentDetails', { country: this.payment.country }),
+        this.$store.dispatch('cart/syncPaymentMethods', { forceServerSync: true })
+      ]);
+
+      this.$bus.$emit('checkout-payment-country-changed');
+    }
+  },
   watch: {
     getPaymentCountry: {
       handler (after, before) {

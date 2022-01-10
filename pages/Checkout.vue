@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import { affirm } from 'config';
+import config from 'config';
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
 import OPayment from 'theme/components/organisms/o-payment';
@@ -144,7 +144,7 @@ export default {
         src: 'https://cdn1-sandbox.affirm.com/js/v2/affirm.js',
         async: true,
         crossorigin: 'anonymous',
-        callback: () => (window.affirm.apiKey.setPublicApiKey(affirm.key))
+        callback: () => (window.affirm.apiKey.setPublicApiKey(config.affirm.publicKey))
       }
     ]
   }

@@ -12,13 +12,13 @@ import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
 import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
 import { extendStore } from '@vue-storefront/core/helpers'
-import { StorefrontModule } from '@vue-storefront/core/lib/modules'
+import { StorefrontModule, registerModule } from '@vue-storefront/core/lib/modules'
 import { BudsiesModule } from 'src/modules/budsies'
 import { Braintree } from 'src/modules/payment-braintree'
 import { PromotionPlatformModule } from 'src/modules/promotion-platform'
 import { GiftCardModule } from 'src/modules/gift-card'
+import { PaymentAffirm } from 'src/modules/payment-affirm';
 
-import { registerModule } from '@vue-storefront/core/lib/modules'
 import registerStoryblokComponents from 'theme/components/storyblok'
 
 const extendUrlVuex = {
@@ -55,6 +55,7 @@ export function registerClientModules () {
   registerModule(Braintree)
   registerModule(PromotionPlatformModule)
   registerModule(GiftCardModule)
+  registerModule(PaymentAffirm)
 }
 
 // Deprecated API, will be removed in 2.0
