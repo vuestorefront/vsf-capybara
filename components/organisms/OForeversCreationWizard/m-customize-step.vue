@@ -369,10 +369,6 @@ export default Vue.extend({
       }
     },
     productionTimeOption (): ProductionTimeOption | undefined {
-      if (!this.productionTime) {
-        return this.productionTimeOptions[0];
-      }
-
       return this.productionTimeOptions.find(option => option.optionValueId === this.productionTime)
     },
     addons (): AddonOption[] {
