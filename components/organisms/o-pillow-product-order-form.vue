@@ -245,12 +245,12 @@
           name="Production time"
           tag="div"
         >
-        <MProductionTimeSelector
-          v-model="productionTime"
-          :production-time-options="productionTimeOptions"
-          :product-id="product.id"
-          :disabled="isSubmitting"
-        />
+          <MProductionTimeSelector
+            v-model="productionTime"
+            :production-time-options="productionTimeOptions"
+            :product-id="product.id"
+            :disabled="isSubmitting"
+          />
 
           <div class="_error-text">
             {{ errors[0] }}
@@ -355,22 +355,9 @@
       @close="areQuantityNotesVisible = false"
     >
       <div class="_popup-content">
-        <p><b>Quantity Discounts</b></p>
-        <p>All quantity discounts applied automatically at checkout:</p>
-
-        <ul>
-          <li>10% discount on 10+ Petsies</li>
-          <li>20% discount on 20+ Petsies</li>
-        </ul>
-
-        <p><b>Shipping Discounts</b></p>
-
-        <ul>
-          <li>First custom Petsie: $13.95 domestic</li>
-          <li>Each additional Petsie in same order: $5.95</li>
-          <li>All domestic Petsies ship via USPS 2 day priority mail.</li>
-          <li>International orders ship via USPS First Class Mail for just $24.95 worldwide, with $5.95 per each additional Petsie in the order.</li>
-        </ul>
+        <MBlockStory
+          story-slug="petsies_shipping_qty_discount_popup_content"
+        />
       </div>
     </SfModal>
   </div>

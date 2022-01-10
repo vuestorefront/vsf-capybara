@@ -214,23 +214,9 @@
       @close="areQuantityNotesVisible = false"
     >
       <div class="_popup-content">
-        <p><b>Quantity Discounts</b></p>
-        <p>All quantity discounts applied automatically at checkout:</p>
-
-        <ul>
-          <li>10% discount on 10+ Petsies</li>
-          <li>20% discount on 20+ Petsies</li>
-        </ul>
-
-        <p><b>Shipping Discounts</b></p>
-
-        <ul>
-          <li>Petsies: (US) $13.95, $5.95 for each additional; (International) $25.95, $5.95 for each additional</li>
-          <li>Pillows: (US) starting at $9.95;&nbsp;(International) $20.95</li>
-          <li>Petsies Socks: (US) $4.95; (International)&nbsp;$9.95</li>
-          <li>Read more about rates&nbsp;<a href="http://support.mypetsies.com/support/solutions/articles/13000017023-shipping-handling-fees" target="_blank">here</a>. Rates determined by weight</li>
-          <li>Tracking number will be emailed to you at time of shipment</li>
-        </ul>
+        <MBlockStory
+          story-slug="petsies_shipping_qty_discount_popup_content"
+        />
       </div>
     </SfModal>
 
