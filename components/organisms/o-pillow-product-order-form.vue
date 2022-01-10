@@ -5,10 +5,9 @@
       title="Pillow Order Form"
     />
 
-    <div class="_top-notes">
-      <p><strong>Estimated Delivery: 2 weeks</strong></p>
-      <p><strong>Please make sure everything is correct before submitting. Your pillow goes straight to print!</strong></p>
-    </div>
+    <MBlockStory
+      story-slug="pillow_creation_page_top"
+    />
 
     <SfDivider class="_step-divider" />
 
@@ -242,39 +241,19 @@
         </validation-provider>
 
         <validation-provider
-          v-slot="{ errors, classes }"
+          v-slot="{ errors }"
           name="Production time"
-          v-if="isProductionOptionsAvailable"
-          slim
+          tag="div"
         >
-          <div
-            class="_production-time-field"
-            :class="classes"
-          >
-            <SfHeading
-              class="_step-title -required"
-              :level="3"
-              :title="$t('Choose your production time')"
-            />
+          <MProductionTimeSelector
+            v-model="productionTime"
+            :production-time-options="productionTimeOptions"
+            :product-id="product.id"
+            :disabled="isSubmitting"
+          />
 
-            *{{ $t('We will refund the rush fee in the unlikely event we do not meet a promised delivery date') }}.
-
-            <SfSelect
-              v-model="productionTime"
-              name="rush_addons"
-              class="_rush-addons"
-              :disabled="isSubmitting"
-              :valid="!errors.length"
-              :error-message="errors[0]"
-            >
-              <SfSelectOption
-                v-for="option in productionTimeOptions"
-                :key="option.id"
-                :value="option"
-              >
-                {{ option.text }}
-              </SfSelectOption>
-            </SfSelect>
+          <div class="_error-text">
+            {{ errors[0] }}
           </div>
         </validation-provider>
 
@@ -367,27 +346,18 @@
       </form>
     </validation-observer>
 
+    <MBlockStory
+      story-slug="pillow_creation_page_bottom"
+    />
+
     <SfModal
       :visible="areQuantityNotesVisible"
       @close="areQuantityNotesVisible = false"
     >
       <div class="_popup-content">
-        <p><b>Quantity Discounts</b></p>
-        <p>All quantity discounts applied automatically at checkout:</p>
-
-        <ul>
-          <li>10% discount on 10+ Petsies</li>
-          <li>20% discount on 20+ Petsies</li>
-        </ul>
-
-        <p><b>Shipping Discounts</b></p>
-
-        <ul>
-          <li>First custom Petsie: $13.95 domestic</li>
-          <li>Each additional Petsie in same order: $5.95</li>
-          <li>All domestic Petsies ship via USPS 2 day priority mail.</li>
-          <li>International orders ship via USPS First Class Mail for just $24.95 worldwide, with $5.95 per each additional Petsie in the order.</li>
-        </ul>
+        <MBlockStory
+          story-slug="petsies_shipping_qty_discount_popup_content"
+        />
       </div>
     </SfModal>
   </div>
@@ -434,6 +404,8 @@ import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
 import CustomerImage from '../interfaces/customer-image.interface';
+import MBlockStory from 'theme/components/molecules/m-block-story.vue';
+import MProductionTimeSelector from 'theme/components/molecules/m-production-time-selector.vue';
 
 extend('required', {
   ...required,
@@ -463,7 +435,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfInput,
     SfModal,
     SfHeading,
-    SfSelect
+    SfSelect,
+    MBlockStory,
+    MProductionTimeSelector
   },
   inject: {
     window: { from: 'WindowObject' },
@@ -518,9 +492,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     bodyparts (): Bodypart[] {
       return this.$store.getters['budsies/getProductBodyparts'](this.product.id);
-    },
-    isProductionOptionsAvailable (): boolean {
-      return this.productionTimeOptions.length !== 0;
     },
     productionTimeBundleOption (): BundleOption | undefined {
       if (!this.product?.bundle_options) {
@@ -903,18 +874,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
   ._qty-container {
       margin-top: var(--spacer-xs);
-  }
-
-  ._production-time-field {
-    max-width: 47em;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: var(--spacer-xl);
-    text-align: center;
-
-    ::v-deep .sf-select__selected {
-      justify-content: center;
-    }
   }
 
   ._actions {
