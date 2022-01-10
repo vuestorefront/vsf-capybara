@@ -116,12 +116,13 @@
         name="Production time"
         tag="div"
       >
-      <MProductionTimeSelector
-        v-model="productionTimeOption"
-        :production-time-options="productionTimeOptions"
-        :product-id="product.id"
-        :disabled="disabled"
-      />
+        <MProductionTimeSelector
+          :value="productionTimeOption"
+          :production-time-options="productionTimeOptions"
+          :product-id="product.id"
+          :disabled="disabled"
+          @input="updateProductionTime"
+        />
 
         <div class="_error-text">
           {{ errors[0] }}
@@ -318,8 +319,7 @@ export default Vue.extend({
   data () {
     return {
       areQuantityNotesVisible: false,
-      areEyeColorNotesVisible: false,
-      productionTimeOption: undefined as ProductionTimeOption | undefined
+      areEyeColorNotesVisible: false
     }
   },
   computed: {
@@ -367,6 +367,13 @@ export default Vue.extend({
         const newValue: ForeversWizardCustomizeStepData = { ...this.value, productionTime: value };
         this.$emit('input', newValue);
       }
+    },
+    productionTimeOption (): ProductionTimeOption | undefined {
+      if (!this.productionTime) {
+        return this.productionTimeOptions[0];
+      }
+
+      return this.productionTimeOptions.find(option => option.optionValueId === this.productionTime)
     },
     addons (): AddonOption[] {
       if (!this.addonsBundleOption) {
@@ -452,29 +459,17 @@ export default Vue.extend({
     },
     async submitStep (): Promise<void> {
       await this.addToCart();
-    }
-  },
-  watch: {
-    productionTimeOption: {
-      handler (newValue: ProductionTimeOption | undefined) {
-        this.productionTime = newValue?.optionValueId
-      },
-      immediate: false
+    },
+    updateProductionTime (productionTimeOption: ProductionTimeOption) {
+      this.productionTime = productionTimeOption.optionValueId
     }
   },
   mounted () {
-    if (!this.productionTimeOptions.length) {
+    if (!this.productionTimeOptions.length || this.productionTime) {
       return;
     }
 
-    if (this.productionTime) {
-      this.productionTimeOption = this.productionTimeOptions.find(
-        (option) => option.optionId === this.productionTime
-      )
-    } else {
-      this.productionTime = this.productionTimeOptions[0].optionValueId;
-      this.productionTimeOption = this.productionTimeOptions[0];
-    }
+    this.productionTime = this.productionTimeOptions[0].optionValueId
   }
 });
 
