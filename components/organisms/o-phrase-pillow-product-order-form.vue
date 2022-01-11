@@ -284,7 +284,10 @@
             <SfStep
               :name="customizerStepsData.customOptions.id"
               class="_custom-text-fields-section _step-container"
-            >
+              v-show="false"
+            />
+
+            <div class="sf-step" v-show="showCustomOptionsStepContent">
               <div class="_custom-text-fields-section">
                 <SfHeading
                   :level="4"
@@ -297,29 +300,19 @@
                   :key="field.name"
                   class="_custom-text-field"
                 >
-                  <validation-provider
-                    v-slot="{ errors, classes }"
-                    :name="field.label"
-                    slim
-                  >
-                    <div :class="classes">
-                      <label class="_label">{{ field.label }}</label>
+                  <label class="_label">{{ field.label }}</label>
 
-                      <SfInput
-                        v-model="customTextValues[field.name]"
-                        class="_custom-input"
-                        :name="field.name"
-                        :disabled="isDisabled"
-                        :placeholder="field.placeholder"
-                        :valid="!errors.length"
-                        :error-message="errors[0]"
-                      />
+                  <SfInput
+                    v-model="customTextValues[field.name]"
+                    class="_custom-input"
+                    :name="field.name"
+                    :disabled="isDisabled"
+                    :placeholder="field.placeholder"
+                  />
 
-                      <div class="_helper-text" v-if="field.helperText">
-                        {{ field.helperText }}
-                      </div>
-                    </div>
-                  </validation-provider>
+                  <div class="_helper-text" v-if="field.helperText">
+                    {{ field.helperText }}
+                  </div>
                 </div>
 
                 <validation-provider
@@ -351,7 +344,7 @@
                   </div>
                 </validation-provider>
               </div>
-            </SfStep>
+            </div>
 
             <SfStep :name="customizerStepsData.addToCart.id">
               <div
@@ -979,6 +972,9 @@ export default (
     },
     selectedAccentColorPartValue (): AccentColorPart | undefined {
       return this.accentColorPartValue ? this.accentColorPartValue : this.defaultAccentColorPartValue;
+    },
+    showCustomOptionsStepContent (): boolean {
+      return this.customizerSteps[this.activeStepIndex].id === customizerStepsData.customOptions.id;
     }
   },
   methods: {
