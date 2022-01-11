@@ -283,11 +283,13 @@
 
             <SfStep
               :name="customizerStepsData.customOptions.id"
-              class="_custom-text-fields-section _step-container"
               v-show="false"
             />
 
-            <div class="sf-step" v-show="showCustomOptionsStepContent">
+            <div
+              class="_custom-text-fields-section _step-container"
+              v-show="showCustomOptionsStepContent"
+            >
               <div class="_custom-text-fields-section">
                 <SfHeading
                   :level="4"
