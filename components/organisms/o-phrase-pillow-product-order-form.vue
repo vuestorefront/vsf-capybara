@@ -281,56 +281,50 @@
               </SfStep>
             </validation-provider>
 
-            <SfStep
-              :name="customizerStepsData.customOptions.id"
-              class="_custom-text-fields-section _step-container"
+            <validation-provider
+              v-slot="{ errors, classes }"
+              rules="required"
+              :ref="customizerStepsData.customOptions.id"
+              :name="'Accent Color'"
+              :detect-input="false"
+              slim
             >
-              <div class="_custom-text-fields-section">
-                <SfHeading
-                  :level="4"
-                  class="_step-title"
-                  title="Add custom text"
-                />
+              <SfStep
+                :name="customizerStepsData.customOptions.id"
+                class="_custom-text-fields-section _step-container"
+              >
+                <div class="_custom-text-fields-section">
+                  <SfHeading
+                    :level="4"
+                    class="_step-title"
+                    title="Add custom text"
+                  />
 
-                <div
-                  v-for="field in customTextFields"
-                  :key="field.name"
-                  class="_custom-text-field"
-                >
-                  <validation-provider
-                    v-slot="{ errors, classes }"
-                    :name="field.label"
-                    slim
+                  <div
+                    v-for="field in customTextFields"
+                    :key="field.name"
+                    class="_custom-text-field"
                   >
-                    <div :class="classes">
-                      <label class="_label">{{ field.label }}</label>
+                    <label class="_label">{{ field.label }}</label>
 
-                      <SfInput
-                        v-model="customTextValues[field.name]"
-                        class="_custom-input"
-                        :name="field.name"
-                        :disabled="isDisabled"
-                        :placeholder="field.placeholder"
-                        :valid="!errors.length"
-                        :error-message="errors[0]"
-                      />
+                    <SfInput
+                      v-model="customTextValues[field.name]"
+                      class="_custom-input"
+                      :name="field.name"
+                      :disabled="isDisabled"
+                      :placeholder="field.placeholder"
+                    />
 
-                      <div class="_helper-text" v-if="field.helperText">
-                        {{ field.helperText }}
-                      </div>
+                    <div class="_helper-text" v-if="field.helperText">
+                      {{ field.helperText }}
                     </div>
-                  </validation-provider>
-                </div>
+                  </div>
 
-                <validation-provider
-                  v-slot="{ errors, classes }"
-                  rules="required"
-                  :ref="customizerStepsData.customOptions.id"
-                  :name="'Accent Color'"
-                  slim
-                  v-if="isAccentColorSelectorVisible"
-                >
-                  <div class="_accent-color-field" :class="classes">
+                  <div
+                    class="_accent-color-field"
+                    :class="classes"
+                    v-if="isAccentColorSelectorVisible"
+                  >
                     <SfHeading
                       :level="4"
                       class="_step-title"
@@ -349,9 +343,9 @@
                       @input="onAccentColorSelect"
                     />
                   </div>
-                </validation-provider>
-              </div>
-            </SfStep>
+                </div>
+              </SfStep>
+            </validation-provider>
 
             <SfStep :name="customizerStepsData.addToCart.id">
               <div
@@ -1253,12 +1247,19 @@ export default (
         this.isSubmitting = false;
       }
     },
-    onAccentColorSelect (value: AccentColorPart): void {
+    async onAccentColorSelect (value: AccentColorPart): Promise<void> {
+      const isValid = await this.validateCustomOptionsStep(value);
+
+      if (!isValid) {
+        return;
+      }
+
       Vue.set(
         this.stepValidateState,
         customizerStepsData.customOptions.id,
         'valid'
       );
+
       this.accentColorPartValue = value;
     },
     onBackDesignSelect (value?: string): void {
@@ -1329,6 +1330,16 @@ export default (
       if (image) {
         this.croppedBackground = image;
       }
+    },
+    async validateCustomOptionsStep (value: AccentColorPart): Promise<boolean> {
+      const customOptionsValidationObserver = this.$refs[customizerStepsData.customOptions.id];
+
+      if (!customOptionsValidationObserver) {
+        return false;
+      }
+
+      const result = await (customOptionsValidationObserver as InstanceType<typeof ValidationProvider>).validate(value);
+      return result.valid;
     },
     async validateStepsBeforeIndex (index: number): Promise<void> {
       const keys = Object.keys(customizerStepsData).filter(
