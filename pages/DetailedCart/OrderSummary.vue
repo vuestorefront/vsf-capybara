@@ -17,6 +17,13 @@
       >
         Go to checkout
       </SfButton>
+      <amazon-pay-button
+        type="PwA"
+      />
+      <amazon-pay-address-book
+        save-payment-details="true"
+        save-shipping-details="true"
+      />
     </div>
     <SfLoader v-if="isUpdatingQuantity" :loading="isUpdatingQuantity" />
   </div>
@@ -35,6 +42,7 @@ import CartEvents from 'src/modules/shared/types/cart-events';
 import APromoCode from 'theme/components/atoms/a-promo-code.vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary.vue';
 import AmazonPayButton from 'src/modules/vsf-amazon-pay/components/Button.vue'
+import AmazonPayAddressBook from 'src/modules/vsf-amazon-pay/components/AddressBook.vue'
 export default {
   name: 'OrderSummary',
   components: {
@@ -43,7 +51,8 @@ export default {
     APromoCode,
     SfHeading,
     SfButton,
-    AmazonPayButton
+    AmazonPayButton,
+    AmazonPayAddressBook
   },
   props: {
     isUpdatingQuantity: {
