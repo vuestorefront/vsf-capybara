@@ -546,6 +546,7 @@ import {
   ImageType,
   ImageHandlerService
 } from 'src/modules/file-storage';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import MFormErrors from '../molecules/m-form-errors.vue';
 import MBackgroundUploader from '../molecules/m-background-uploader.vue';
@@ -1236,6 +1237,11 @@ export default (
 
         this.goToCrossSells();
       } catch (error) {
+        if (!(error instanceof ServerError) && !isAxiosError(error)) {
+          this.goToCrossSells();
+          return;
+        }
+
         let errorToParse: any = error;
 
         if (isAxiosError(error) && error.response) {

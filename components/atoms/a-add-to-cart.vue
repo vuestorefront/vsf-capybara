@@ -13,6 +13,7 @@ import { SfButton } from '@storefront-ui/vue';
 import { formatProductMessages } from '@vue-storefront/core/filters/product-messages';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { mapGetters } from 'vuex';
+import ServerError from 'src/modules/shared/types/server-error';
 
 export default {
   name: 'AAddToCart',
@@ -61,10 +62,14 @@ export default {
             { root: true }
           );
         });
-      } catch (message) {
+      } catch (error) {
+        if (!(error instanceof ServerError)) {
+          return;
+        }
+
         this.$store.dispatch(
           'notification/spawnNotification',
-          notifications.createNotification({ type: 'danger', message, timeToLive: 10 * 1000 }),
+          notifications.createNotification({ type: 'danger', error, timeToLive: 10 * 1000 }),
           { root: true }
         );
       }

@@ -395,6 +395,7 @@ import {
   ProductValue
 } from 'src/modules/budsies';
 import { getProductPrice } from 'theme/helpers';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
@@ -714,22 +715,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return;
         }
 
-        this.resetForm();
-        this.window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-
-        const notification = notifications.createNotification({
-          type: 'info',
-          message: 'Product was added to the cart',
-          timeToLive: 5 * 1000
-        });
-
-        this.$store.dispatch(
-          'notification/spawnNotification',
-          notification,
-          { root: true }
-        );
-        this.$emit('make-another');
+        this.onSuccessAndMakeAnother();
       } catch (err) {
+        if (!(err instanceof ServerError)) {
+          if (!shouldMakeAnother) {
+            this.goToCrossSells();
+          } else {
+            this.onSuccessAndMakeAnother();
+          }
+
+          return;
+        }
+
         Logger.error(err, 'budsies')();
 
         this.onFailure('Unexpected error: ' + err);
@@ -743,6 +740,23 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         message: message,
         action1: { label: i18n.t('OK') }
       });
+    },
+    onSuccessAndMakeAnother (): void {
+      this.resetForm();
+      this.window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+
+      const notification = notifications.createNotification({
+        type: 'info',
+        message: 'Product was added to the cart',
+        timeToLive: 5 * 1000
+      });
+
+      this.$store.dispatch(
+        'notification/spawnNotification',
+        notification,
+        { root: true }
+      );
+      this.$emit('make-another');
     }
   },
   beforeMount () {

@@ -85,6 +85,7 @@ import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -241,6 +242,11 @@ export default Vue.extend({
 
         this.goToCrossSells();
       } catch (err) {
+        if (!(err instanceof ServerError)) {
+          this.goToCrossSells();
+          return;
+        }
+
         Logger.error(err, 'budsies')();
 
         this.onFailure('Unexpected error: ' + err);
@@ -430,6 +436,11 @@ export default Vue.extend({
 
         this.goToCrossSells();
       } catch (error) {
+        if (!(error instanceof ServerError)) {
+          this.goToCrossSells();
+          return;
+        }
+
         Logger.error(error, 'budsies')();
 
         this.onFailure('Unexpected error: ' + error);

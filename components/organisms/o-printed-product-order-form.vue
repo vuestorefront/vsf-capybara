@@ -174,6 +174,7 @@ import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/m
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -508,6 +509,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }).then(() => {
         this.onSuccess();
       }).catch(err => {
+        if (!(err instanceof ServerError)) {
+          this.onSuccess();
+          return;
+        }
+
         Logger.error(err, 'budsies')();
 
         this.onFailure('Unexpected error: ' + err);
