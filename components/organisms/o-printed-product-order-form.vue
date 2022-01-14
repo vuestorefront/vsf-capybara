@@ -508,13 +508,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         })
       })
         .catch((err) => {
-          Logger.error(err, 'budsies')();
           if (err instanceof ServerError) {
             throw err;
           }
+
+          Logger.error(err, 'budsies')();
         }).then(() => {
           this.onSuccess();
         }).catch(err => {
+          Logger.error(err, 'budsies')();
+
           this.onFailure('Unexpected error: ' + err);
         }).finally(() => {
           this.isSubmitting = false;

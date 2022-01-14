@@ -711,10 +711,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
             })
           });
         } catch (error) {
-          Logger.error(error, 'budsies')();
           if (error instanceof ServerError) {
             throw error;
           }
+
+          Logger.error(error, 'budsies')();
         }
 
         if (!shouldMakeAnother) {
@@ -724,6 +725,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         this.onSuccessAndMakeAnother();
       } catch (error) {
+        Logger.error(error, 'budsies')();
+
         this.onFailure('Unexpected error: ' + error);
       } finally {
         this.isSubmitting = false;
