@@ -546,6 +546,7 @@ import {
   ImageType,
   ImageHandlerService
 } from 'src/modules/file-storage';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import MFormErrors from '../molecules/m-form-errors.vue';
 import MBackgroundUploader from '../molecules/m-background-uploader.vue';
@@ -1223,19 +1224,29 @@ export default (
           { email: this.customerEmail }
         );
 
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, {
-            qty: this.quantity,
-            email: this.customerEmail,
-            bodyparts: this.getBodypartsData(),
-            customFields: JSON.stringify(this.customTextValues),
-            customerImages: customerImages,
-            uploadMethod: 'upload-now'
-          })
-        });
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: Object.assign({}, this.product, {
+              qty: this.quantity,
+              email: this.customerEmail,
+              bodyparts: this.getBodypartsData(),
+              customFields: JSON.stringify(this.customTextValues),
+              customerImages: customerImages,
+              uploadMethod: 'upload-now'
+            })
+          });
+        } catch (error) {
+          if (error instanceof ServerError) {
+            throw error;
+          }
+
+          Logger.error(error, 'budsies')();
+        }
 
         this.goToCrossSells();
       } catch (error) {
+        Logger.error(error, 'budsies')();
+
         let errorToParse: any = error;
 
         if (isAxiosError(error) && error.response) {
@@ -1244,6 +1255,7 @@ export default (
 
         this.submitErrors =
           this.errorConverterService.describeError(errorToParse);
+      } finally {
         this.isSubmitting = false;
       }
     },

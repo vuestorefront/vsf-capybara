@@ -174,6 +174,7 @@ import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/m
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -505,15 +506,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           customerImages: [this.customerImage, ...extraFacesArtworks],
           uploadMethod: 'upload-now'
         })
-      }).then(() => {
-        this.onSuccess();
-      }).catch(err => {
-        Logger.error(err, 'budsies')();
+      })
+        .catch((err) => {
+          if (err instanceof ServerError) {
+            throw err;
+          }
 
-        this.onFailure('Unexpected error: ' + err);
-      }).finally(() => {
-        this.isSubmitting = false;
-      });
+          Logger.error(err, 'budsies')();
+        }).then(() => {
+          this.onSuccess();
+        }).catch(err => {
+          Logger.error(err, 'budsies')();
+
+          this.onFailure('Unexpected error: ' + err);
+        }).finally(() => {
+          this.isSubmitting = false;
+        });
     },
     async onSuccess (): Promise<void> {
       try {
