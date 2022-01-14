@@ -226,30 +226,30 @@ export default Vue.extend({
       );
 
       try {
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, {
-            qty: this.customizeStepData.quantity,
-            plushieId: this.plushieId + '',
-            email: this.petInfoStepData.email?.trim(),
-            plushieName: this.petInfoStepData.name?.trim(),
-            plushieBreed: this.petInfoStepData.breed?.trim(),
-            plushieDescription: this.customizeStepData.description?.trim(),
-            bodyparts: this.getBodypartsData(),
-            uploadMethod: this.imageUploadStepData.uploadMethod,
-            customerImages: this.customerImages
-          })
-        });
-
-        this.goToCrossSells();
-      } catch (err) {
-        if (!(err instanceof ServerError)) {
-          this.goToCrossSells();
-          return;
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: Object.assign({}, this.product, {
+              qty: this.customizeStepData.quantity,
+              plushieId: this.plushieId + '',
+              email: this.petInfoStepData.email?.trim(),
+              plushieName: this.petInfoStepData.name?.trim(),
+              plushieBreed: this.petInfoStepData.breed?.trim(),
+              plushieDescription: this.customizeStepData.description?.trim(),
+              bodyparts: this.getBodypartsData(),
+              uploadMethod: this.imageUploadStepData.uploadMethod,
+              customerImages: this.customerImages
+            })
+          });
+        } catch (error) {
+          Logger.error(error, 'budsies')();
+          if (error instanceof ServerError) {
+            throw error;
+          }
         }
 
-        Logger.error(err, 'budsies')();
-
-        this.onFailure('Unexpected error: ' + err);
+        this.goToCrossSells();
+      } catch (error) {
+        this.onFailure('Unexpected error: ' + error);
       } finally {
         this.isSubmitting = false;
       }

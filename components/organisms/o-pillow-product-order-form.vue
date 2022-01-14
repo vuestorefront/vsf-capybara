@@ -698,17 +698,24 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       );
 
       try {
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, {
-            qty: this.quantity,
-            plushieId: this.plushieId + '',
-            email: this.email,
-            plushieName: this.name,
-            bodyparts: this.getBodypartsData(),
-            customerImages: this.isUploadNow && this.customerImage ? [this.customerImage] : [],
-            uploadMethod: this.uploadMethod
-          })
-        });
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: Object.assign({}, this.product, {
+              qty: this.quantity,
+              plushieId: this.plushieId + '',
+              email: this.email,
+              plushieName: this.name,
+              bodyparts: this.getBodypartsData(),
+              customerImages: this.isUploadNow && this.customerImage ? [this.customerImage] : [],
+              uploadMethod: this.uploadMethod
+            })
+          });
+        } catch (error) {
+          Logger.error(error, 'budsies')();
+          if (error instanceof ServerError) {
+            throw error;
+          }
+        }
 
         if (!shouldMakeAnother) {
           this.goToCrossSells();
@@ -716,20 +723,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         }
 
         this.onSuccessAndMakeAnother();
-      } catch (err) {
-        if (!(err instanceof ServerError)) {
-          if (!shouldMakeAnother) {
-            this.goToCrossSells();
-          } else {
-            this.onSuccessAndMakeAnother();
-          }
-
-          return;
-        }
-
-        Logger.error(err, 'budsies')();
-
-        this.onFailure('Unexpected error: ' + err);
+      } catch (error) {
+        this.onFailure('Unexpected error: ' + error);
       } finally {
         this.isSubmitting = false;
       }

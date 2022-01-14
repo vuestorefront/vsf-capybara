@@ -269,24 +269,24 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           notify_success: 0
         };
 
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: {
-            ...this.product,
-            qty: this.giftCardOrderFormData.qty,
-            giftcard_options: giftCardOptions
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: {
+              ...this.product,
+              qty: this.giftCardOrderFormData.qty,
+              giftcard_options: giftCardOptions
+            }
+          });
+        } catch (error) {
+          Logger.error(error, 'budsies')();
+          if (error instanceof ServerError) {
+            throw error;
           }
-        });
-
-        this.goToCart();
-      } catch (err) {
-        if (!(err instanceof ServerError)) {
-          this.goToCart();
-          return;
         }
 
-        Logger.error(err, 'budsies')();
-
-        this.onFailure('Unexpected error: ' + err);
+        this.goToCart();
+      } catch (error) {
+        this.onFailure('Unexpected error: ' + error);
       }
     },
     closePreviewModal (): void {

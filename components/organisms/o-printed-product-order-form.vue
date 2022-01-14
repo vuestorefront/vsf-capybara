@@ -506,20 +506,19 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           customerImages: [this.customerImage, ...extraFacesArtworks],
           uploadMethod: 'upload-now'
         })
-      }).then(() => {
-        this.onSuccess();
-      }).catch(err => {
-        if (!(err instanceof ServerError)) {
+      })
+        .catch((err) => {
+          Logger.error(err, 'budsies')();
+          if (err instanceof ServerError) {
+            throw err;
+          }
+        }).then(() => {
           this.onSuccess();
-          return;
-        }
-
-        Logger.error(err, 'budsies')();
-
-        this.onFailure('Unexpected error: ' + err);
-      }).finally(() => {
-        this.isSubmitting = false;
-      });
+        }).catch(err => {
+          this.onFailure('Unexpected error: ' + err);
+        }).finally(() => {
+          this.isSubmitting = false;
+        });
     },
     async onSuccess (): Promise<void> {
       try {
