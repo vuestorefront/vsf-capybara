@@ -4,7 +4,9 @@
       <SfHeading :level="1" title="Pillow Customizer" class="_main-header" />
 
       <div class="_notes">
-        <p>Ships within 7 days | Made & Printed in the USA</p>
+        <MBlockStory
+          story-slug="petsies_phrase_pillows_top"
+        />
       </div>
 
       <SfHeading
@@ -279,56 +281,50 @@
               </SfStep>
             </validation-provider>
 
-            <SfStep
-              :name="customizerStepsData.customOptions.id"
-              class="_custom-text-fields-section _step-container"
+            <validation-provider
+              v-slot="{ errors, classes }"
+              rules="required"
+              :ref="customizerStepsData.customOptions.id"
+              :name="'Accent Color'"
+              :detect-input="false"
+              slim
             >
-              <div class="_custom-text-fields-section">
-                <SfHeading
-                  :level="4"
-                  class="_step-title"
-                  title="Add custom text"
-                />
+              <SfStep
+                :name="customizerStepsData.customOptions.id"
+                class="_custom-text-fields-section _step-container"
+              >
+                <div class="_custom-text-fields-section">
+                  <SfHeading
+                    :level="4"
+                    class="_step-title"
+                    title="Add custom text"
+                  />
 
-                <div
-                  v-for="field in customTextFields"
-                  :key="field.name"
-                  class="_custom-text-field"
-                >
-                  <validation-provider
-                    v-slot="{ errors, classes }"
-                    :name="field.label"
-                    slim
+                  <div
+                    v-for="field in customTextFields"
+                    :key="field.name"
+                    class="_custom-text-field"
                   >
-                    <div :class="classes">
-                      <label class="_label">{{ field.label }}</label>
+                    <label class="_label">{{ field.label }}</label>
 
-                      <SfInput
-                        v-model="customTextValues[field.name]"
-                        class="_custom-input"
-                        :name="field.name"
-                        :disabled="isDisabled"
-                        :placeholder="field.placeholder"
-                        :valid="!errors.length"
-                        :error-message="errors[0]"
-                      />
+                    <SfInput
+                      v-model="customTextValues[field.name]"
+                      class="_custom-input"
+                      :name="field.name"
+                      :disabled="isDisabled"
+                      :placeholder="field.placeholder"
+                    />
 
-                      <div class="_helper-text" v-if="field.helperText">
-                        {{ field.helperText }}
-                      </div>
+                    <div class="_helper-text" v-if="field.helperText">
+                      {{ field.helperText }}
                     </div>
-                  </validation-provider>
-                </div>
+                  </div>
 
-                <validation-provider
-                  v-slot="{ errors, classes }"
-                  rules="required"
-                  :ref="customizerStepsData.customOptions.id"
-                  :name="'Accent Color'"
-                  slim
-                  v-if="isAccentColorSelectorVisible"
-                >
-                  <div class="_accent-color-field" :class="classes">
+                  <div
+                    class="_accent-color-field"
+                    :class="classes"
+                    v-if="isAccentColorSelectorVisible"
+                  >
                     <SfHeading
                       :level="4"
                       class="_step-title"
@@ -347,9 +343,9 @@
                       @input="onAccentColorSelect"
                     />
                   </div>
-                </validation-provider>
-              </div>
-            </SfStep>
+                </div>
+              </SfStep>
+            </validation-provider>
 
             <SfStep :name="customizerStepsData.addToCart.id">
               <div
@@ -464,14 +460,9 @@
                   </div>
 
                   <div class="_bottom-static-block">
-                    <slot name="bottom-static-block">
-                      <sup>
-                        <em>
-                          Your pillow goes straight to print so make sure the
-                          image is correct. No cancellations after 24 hours.
-                        </em>
-                      </sup>
-                    </slot>
+                    <MBlockStory
+                      story-slug="petsies_phrase_pillows_bottom"
+                    />
                   </div>
 
                   <div class="_actions-row" v-show="!isSubmitting">
@@ -555,6 +546,7 @@ import {
   ImageType,
   ImageHandlerService
 } from 'src/modules/file-storage';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import MFormErrors from '../molecules/m-form-errors.vue';
 import MBackgroundUploader from '../molecules/m-background-uploader.vue';
@@ -566,6 +558,7 @@ import MSubmitAnimator from '../molecules/m-submit-animator.vue';
 import MAccentColorSelector from '../molecules/m-accent-color-selector.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MCustomizerPreview from '../molecules/m-customizer-preview.vue';
+import MBlockStory from '../molecules/m-block-story.vue';
 
 import CustomTextFieldInterface from '../interfaces/custom-text-field.interface';
 import DesignProduct from '../interfaces/design-product.interface';
@@ -668,7 +661,8 @@ export default (
     MFormErrors,
     MDesignImages,
     MSubmitAnimator,
-    MAccentColorSelector
+    MAccentColorSelector,
+    MBlockStory
   },
   inject: {
     errorConverterService: { from: 'ErrorConverterService' },
@@ -1230,19 +1224,29 @@ export default (
           { email: this.customerEmail }
         );
 
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, {
-            qty: this.quantity,
-            email: this.customerEmail,
-            bodyparts: this.getBodypartsData(),
-            customFields: JSON.stringify(this.customTextValues),
-            customerImages: customerImages,
-            uploadMethod: 'upload-now'
-          })
-        });
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: Object.assign({}, this.product, {
+              qty: this.quantity,
+              email: this.customerEmail,
+              bodyparts: this.getBodypartsData(),
+              customFields: JSON.stringify(this.customTextValues),
+              customerImages: customerImages,
+              uploadMethod: 'upload-now'
+            })
+          });
+        } catch (error) {
+          if (error instanceof ServerError) {
+            throw error;
+          }
+
+          Logger.error(error, 'budsies')();
+        }
 
         this.goToCrossSells();
       } catch (error) {
+        Logger.error(error, 'budsies')();
+
         let errorToParse: any = error;
 
         if (isAxiosError(error) && error.response) {
@@ -1251,15 +1255,23 @@ export default (
 
         this.submitErrors =
           this.errorConverterService.describeError(errorToParse);
+      } finally {
         this.isSubmitting = false;
       }
     },
-    onAccentColorSelect (value: AccentColorPart): void {
+    async onAccentColorSelect (value: AccentColorPart): Promise<void> {
+      const isValid = await this.validateCustomOptionsStep(value);
+
+      if (!isValid) {
+        return;
+      }
+
       Vue.set(
         this.stepValidateState,
         customizerStepsData.customOptions.id,
         'valid'
       );
+
       this.accentColorPartValue = value;
     },
     onBackDesignSelect (value?: string): void {
@@ -1330,6 +1342,16 @@ export default (
       if (image) {
         this.croppedBackground = image;
       }
+    },
+    async validateCustomOptionsStep (value: AccentColorPart): Promise<boolean> {
+      const customOptionsValidationObserver = this.$refs[customizerStepsData.customOptions.id];
+
+      if (!customOptionsValidationObserver) {
+        return false;
+      }
+
+      const result = await (customOptionsValidationObserver as InstanceType<typeof ValidationProvider>).validate(value);
+      return result.valid;
     },
     async validateStepsBeforeIndex (index: number): Promise<void> {
       const keys = Object.keys(customizerStepsData).filter(
@@ -1755,15 +1777,6 @@ export default (
       ._background-uploader {
         padding: 0 2em;
         margin-bottom: 1.2em;
-      }
-    }
-
-    ._bottom-static-block {
-      text-align: center;
-      margin-top: var(--spacer-base);
-
-      ::v-deep p:last-child {
-        margin-bottom: 0;
       }
     }
 

@@ -85,6 +85,7 @@ import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -225,25 +226,33 @@ export default Vue.extend({
       );
 
       try {
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, {
-            qty: this.customizeStepData.quantity,
-            plushieId: this.plushieId + '',
-            email: this.petInfoStepData.email?.trim(),
-            plushieName: this.petInfoStepData.name?.trim(),
-            plushieBreed: this.petInfoStepData.breed?.trim(),
-            plushieDescription: this.customizeStepData.description?.trim(),
-            bodyparts: this.getBodypartsData(),
-            uploadMethod: this.imageUploadStepData.uploadMethod,
-            customerImages: this.customerImages
-          })
-        });
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: Object.assign({}, this.product, {
+              qty: this.customizeStepData.quantity,
+              plushieId: this.plushieId + '',
+              email: this.petInfoStepData.email?.trim(),
+              plushieName: this.petInfoStepData.name?.trim(),
+              plushieBreed: this.petInfoStepData.breed?.trim(),
+              plushieDescription: this.customizeStepData.description?.trim(),
+              bodyparts: this.getBodypartsData(),
+              uploadMethod: this.imageUploadStepData.uploadMethod,
+              customerImages: this.customerImages
+            })
+          });
+        } catch (error) {
+          if (error instanceof ServerError) {
+            throw error;
+          }
+
+          Logger.error(error, 'budsies')();
+        }
 
         this.goToCrossSells();
-      } catch (err) {
-        Logger.error(err, 'budsies')();
+      } catch (error) {
+        Logger.error(error, 'budsies')();
 
-        this.onFailure('Unexpected error: ' + err);
+        this.onFailure('Unexpected error: ' + error);
       } finally {
         this.isSubmitting = false;
       }
@@ -412,21 +421,29 @@ export default Vue.extend({
       this.isSubmitting = true;
 
       try {
-        await this.updateClientAndServerItem({
-          product: Object.assign({}, this.existingCartitem, {
-            qty: this.customizeStepData.quantity,
-            plushieId: this.plushieId + '',
-            email: this.petInfoStepData.email?.trim(),
-            plushieName: this.petInfoStepData.name?.trim(),
-            plushieBreed: this.petInfoStepData.breed?.trim(),
-            plushieDescription: this.customizeStepData.description?.trim(),
-            bodyparts: this.getBodypartsData(),
-            uploadMethod: this.imageUploadStepData.uploadMethod,
-            product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
-            customerImages: this.customerImages
-          }),
-          forceUpdateServerItem: true
-        });
+        try {
+          await this.updateClientAndServerItem({
+            product: Object.assign({}, this.existingCartitem, {
+              qty: this.customizeStepData.quantity,
+              plushieId: this.plushieId + '',
+              email: this.petInfoStepData.email?.trim(),
+              plushieName: this.petInfoStepData.name?.trim(),
+              plushieBreed: this.petInfoStepData.breed?.trim(),
+              plushieDescription: this.customizeStepData.description?.trim(),
+              bodyparts: this.getBodypartsData(),
+              uploadMethod: this.imageUploadStepData.uploadMethod,
+              product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
+              customerImages: this.customerImages
+            }),
+            forceUpdateServerItem: true
+          });
+        } catch (error) {
+          if (error instanceof ServerError) {
+            throw error;
+          }
+
+          Logger.error(error, 'budsies')();
+        }
 
         this.goToCrossSells();
       } catch (error) {
