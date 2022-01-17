@@ -269,7 +269,7 @@ import { ModalList } from 'theme/store/ui/modals'
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
-import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/affirm/types/AffirmCheckoutEvents';
+import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/payment-affirm/types/AffirmCheckoutEvents';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
