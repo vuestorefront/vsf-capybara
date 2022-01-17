@@ -12,12 +12,14 @@
         class="form__element form__checkbox"
         name="sendToShippingAddress"
         :label="$t('Copy address data from shipping')"
+        :disabled="isFormFieldsDisabled"
       />
       <SfCheckbox
         v-model="sendToBillingAddress"
         class="form__element form__checkbox"
         name="sendToBillingAddress"
         :label="$t('Use my billing data')"
+        :disabled="isFormFieldsDisabled"
       />
       <SfInput
         v-model.trim="payment.firstName"
@@ -25,6 +27,7 @@
         name="first-name"
         :label="$t('First name')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.payment.firstName.$error"
         :error-message="
           !$v.payment.firstName.required
@@ -39,6 +42,7 @@
         name="last-name"
         :label="$t('Last name')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.payment.lastName.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.lastName.$touch()"
@@ -49,6 +53,7 @@
         name="street-address"
         :label="$t('Address')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.payment.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.streetAddress.$touch()"
@@ -59,6 +64,7 @@
         name="city"
         :label="$t('City')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.payment.city.$error"
         :error-message="$t('Field is required')"
         @blur="$v.payment.city.$touch()"
@@ -69,6 +75,7 @@
         class="form__element form__element--half form__element--half-even"
         name="state"
         :label="$t('State / Province')"
+        :disabled="isFormFieldsDisabled"
       />
       <MMultiselect
         v-if="isSelectedCountryHasStates && canShowStateSelector"
@@ -87,6 +94,7 @@
         :options="getStatesForSelectedCountry"
         :valid="!$v.payment.state.$error"
         :error-message="$t('Field is required')"
+        :disabled="isFormFieldsDisabled"
       />
       <SfInput
         v-model.trim="payment.zipCode"
@@ -94,6 +102,7 @@
         name="zipCode"
         :label="$t('Zip-code')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.payment.zipCode.$error"
         :error-message="
           !$v.payment.zipCode.required
@@ -118,6 +127,7 @@
         :options="countries"
         :valid="!$v.payment.country.$error"
         :error-message="$t('Field is required')"
+        :disabled="isFormFieldsDisabled"
         @change="changeCountry"
       />
       <SfInput
@@ -125,6 +135,7 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        :disabled="isFormFieldsDisabled"
       />
     </div>
     <SfHeading
@@ -188,6 +199,7 @@ import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
 
 import OGiftCardPayment from './o-gift-card-payment.vue';
+import { METHOD_CODE } from 'src/modules/vsf-amazon-pay/index';
 
 const States = require('@vue-storefront/i18n/resource/states.json');
 
@@ -293,6 +305,22 @@ export default {
     },
     cartItems () {
       return this.$store.getters['cart/getCartItems'];
+    },
+    isFormFieldsDisabled () {
+      let result = false;
+      let paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
+
+      if (paymentDetails.paymentMethod === METHOD_CODE) {
+        if (paymentDetails.firstName !== '' &&
+        paymentDetails.lastName !== '' &&
+        paymentDetails.streetAddress !== '' &&
+        paymentDetails.city !== '' &&
+        paymentDetails.zipCode !== '' &&
+        paymentDetails.country !== '') {
+          result = true;
+        }
+      }
+      return result;
     }
   },
   mounted () {
