@@ -267,7 +267,7 @@ export default {
   data: () => {
     return {
       states: States,
-      fCanShowStateSelector: true
+      fCanShowStateSelector: false
     };
   },
   computed: {
@@ -296,6 +296,9 @@ export default {
     }
   },
   mounted () {
+    this.$nextTick(() => {
+      this.fCanShowStateSelector = true;
+    })
     createSmoothscroll(
       document.documentElement.scrollTop || document.body.scrollTop,
       0
@@ -312,19 +315,20 @@ export default {
     }
   },
   watch: {
-    getPaymentCountry: {
-      handler (after, before) {
-        this.fCanShowStateSelector = false;
+    getPaymentCountry (after, before) {
+      this.fCanShowStateSelector = false;
 
-        if (after && before) {
-          this.payment.state = '';
-        }
+      if (after && before) {
+        this.payment.state = '';
+      }
 
-        this.$nextTick(() => {
-          this.fCanShowStateSelector = true;
-        });
-      },
-      immediate: true
+      if (after && before !== after) {
+        this.changeCountry();
+      }
+
+      this.$nextTick(() => {
+        this.fCanShowStateSelector = true;
+      });
     }
   }
 };
