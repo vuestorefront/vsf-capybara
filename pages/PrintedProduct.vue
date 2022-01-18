@@ -4,6 +4,7 @@
       :artwork-upload-url="artworkUploadUrl"
       :product="getCurrentProduct"
       :selected-style="productDesign"
+      :existing-product="existingProduct"
       @style-selected="onStyleSelected"
       v-if="getCurrentProduct"
     />
@@ -16,6 +17,7 @@ import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import CartItem from 'core/modules/cart/types/CartItem';
 
 import Product from 'core/modules/catalog/types/Product';
 
@@ -32,6 +34,10 @@ export default Vue.extend({
       required: true
     },
     productDesign: {
+      type: String as PropType<string | undefined>,
+      default: undefined
+    },
+    existingPlushieId: {
       type: String as PropType<string | undefined>,
       default: undefined
     }
@@ -52,6 +58,16 @@ export default Vue.extend({
     },
     artworkUploadUrl () {
       return config.images.fileuploaderUploadUrl;
+    },
+    cartItems (): CartItem[] {
+      return this.$store.getters['cart/getCartItems'];
+    },
+    existingProduct (): CartItem | undefined {
+      if (!this.existingPlushieId) {
+        return;
+      }
+
+      return this.cartItems.find((item) => item.plushieId && item.plushieId === this.existingPlushieId);
     }
   },
   async serverPrefetch () {

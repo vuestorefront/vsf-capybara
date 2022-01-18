@@ -98,6 +98,7 @@
                   :product-id="backendProductId"
                   :disabled="isSubmitting"
                   :upload-url="artworkUploadUrl"
+                  :initial-items="artworkInitialItems"
                   @file-added="onArtworkAdd"
                   @file-removed="onArtworkRemove"
                 />
@@ -114,6 +115,8 @@
               :backend-product-id="backendProductId"
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
+              :initial-variant="initialAddonItemId"
+              :initial-artworks="initialExtraImages"
               v-show="hasExtraFaceAddons"
               @input="extraFacesData = $event"
             />
@@ -165,12 +168,14 @@ import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import { getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions';
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 import { getProductPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import CartItem from 'core/modules/cart/types/CartItem';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
@@ -242,6 +247,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     selectedStyle: {
       type: String as PropType<string | undefined>,
       default: undefined
+    },
+    existingProduct: {
+      type: Object as PropType<CartItem | undefined>,
+      default: undefined
     }
   },
   data () {
@@ -254,7 +263,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         storageItems: []
       } as ExtraFacesConfiguratorData,
       isSubmitting: false,
-      shouldShowDesignSelector: true
+      shouldShowDesignSelector: true,
+      artworkInitialItems: [] as CustomerImage[],
+      initialAddonItemId: undefined as string | undefined,
+      initialExtraImages: [] as CustomerImage[]
     }
   },
   computed: {
@@ -575,12 +587,66 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.$emit('style-selected', styleValue);
+    },
+    fillCustomerImagesData (existingProduct: CartItem): void {
+      if (!existingProduct.customerImages?.length) {
+        return;
+      }
+
+      this.customerImage = existingProduct.customerImages[0];
+      this.artworkInitialItems = [{ ...this.customerImage }]
+    },
+    fillExistingProductData (existingProduct: CartItem | undefined): void {
+      if (!existingProduct) {
+        return;
+      }
+
+      this.fillCustomerImagesData(existingProduct);
+      this.fillExtraFacesData(existingProduct);
+    },
+    fillExtraFacesData (existingProduct: CartItem): void {
+      this.fillExtraFacesDataAddon(existingProduct);
+      this.fillExtraFacesDataStorageItems(existingProduct);
+    },
+    fillExtraFacesDataAddon (existingProduct: CartItem): void {
+      const selectedBundleOptions = getSelectedBundleOptions(existingProduct);
+
+      if (!this.addons.length || !selectedBundleOptions.length) {
+        return;
+      }
+
+      const selectedAddon: ExtraPhotoAddonOption | undefined = this.addons.find(
+        (addon) => selectedBundleOptions.find(
+          (selectedOption) => selectedOption.option_id === addon.optionId &&
+         selectedOption.option_selections.includes(addon.optionValueId)
+        )
+      )
+
+      if (!selectedAddon) {
+        return;
+      }
+
+      this.extraFacesData.addon = selectedAddon;
+      this.initialAddonItemId = selectedAddon.id;
+    },
+    fillExtraFacesDataStorageItems (existingProduct: CartItem) {
+      if (!existingProduct.customerImages || existingProduct.customerImages.length <= 1) {
+        return;
+      }
+
+      const customerExtraFacesImages = [...existingProduct.customerImages];
+      // debugger;
+      customerExtraFacesImages.splice(0, 1);
+      this.extraFacesData.storageItems = customerExtraFacesImages;
+      this.initialExtraImages = customerExtraFacesImages;
     }
   },
   created (): void {
     if (this.product.qty) {
       this.quantity = this.product.qty;
     }
+
+    this.fillExistingProductData(this.existingProduct);
   },
   watch: {
     availableStyles: {

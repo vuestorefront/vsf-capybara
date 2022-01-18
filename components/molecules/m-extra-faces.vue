@@ -24,7 +24,7 @@
             :product-id="backendProductId"
             :upload-url="uploadUrl"
             :disabled="disabled"
-            :file="getInitialArtworkUrl(index - 1)"
+            :initial-items="[initialArtworks[index - 1]]"
             @file-added="(value) => onArtworkAdd(index - 1, value)"
             @file-removed="(storageItemId) => onArtworkRemove(index - 1, storageItemId)"
           />
@@ -207,14 +207,6 @@ export default Vue.extend({
       }
 
       return item.id;
-    },
-    getInitialArtworkUrl (index: number): string | undefined {
-      const item = this.initialArtworks[index];
-      if (!item) {
-        return;
-      }
-
-      return item.url;
     },
     getFilesIds (): string[] {
       return this.uploaderValues.map(item => item.id);
