@@ -227,7 +227,7 @@
     <div class="actions">
       <SfButton
         class="sf-button--full-width actions__button place-order-btn"
-        :disabled="$v.orderReview.$invalid || !productsInCart.length"
+        :disabled="$v.orderReview.$invalid || !productsInCart.length || isCheckoutInProgress"
         @click="placeOrder"
       >
         {{ $t("Place the order") }}
@@ -248,7 +248,7 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { OrderModule } from '@vue-storefront/core/modules/order';
 import { OrderReview } from '@vue-storefront/core/modules/checkout/components/OrderReview';
-import { getProductPrice } from 'theme/helpers';
+import { getProductPrice, createSmoothscroll } from 'theme/helpers';
 import {
   SfIcon,
   SfImage,
@@ -265,10 +265,11 @@ import {
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
 import { ModalList } from 'theme/store/ui/modals'
-import { createSmoothscroll } from 'theme/helpers';
+
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
+import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/payment-affirm/types/AffirmCheckoutEvents';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
@@ -311,7 +312,8 @@ export default {
           description: this.$t('Rest assured, we offer free returns within 30 days'),
           icon: 'return'
         }
-      ]
+      ],
+      isCheckoutInProgress: false
     };
   },
   validations: {
@@ -347,6 +349,16 @@ export default {
   },
   beforeCreate () {
     registerModule(OrderModule);
+  },
+  created () {
+    this.$bus.$on(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
+    this.$bus.$on(AFFIRM_MODAL_CLOSED, this.onAffirmModalClosedHandler);
+    this.$bus.$on(AFFIRM_CHECKOUT_ERROR, this.onAffirmPlaceOrderError);
+  },
+  beforeDestroy () {
+    this.$bus.$off(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
+    this.$bus.$off(AFFIRM_MODAL_CLOSED, this.onAffirmModalClosedHandler);
+    this.$bus.$off(AFFIRM_CHECKOUT_ERROR, this.onAffirmPlaceOrderError);
   },
   methods: {
     ...mapActions('ui', {
@@ -453,6 +465,20 @@ export default {
       }
 
       return text.substring(0, maxLength) + '...';
+    },
+    onAffirmBeforePlaceOrderHandler () {
+      this.isCheckoutInProgress = true;
+    },
+    onAffirmModalClosedHandler () {
+      this.isCheckoutInProgress = false;
+    },
+    onAffirmPlaceOrderError () {
+      this.isCheckoutInProgress = false;
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'danger',
+        message: this.$t('Something went wrong'),
+        action1: { label: this.$t('OK') }
+      });
     }
   },
   mounted () {
