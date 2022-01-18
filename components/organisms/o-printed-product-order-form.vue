@@ -28,7 +28,7 @@
 
         <validation-observer v-slot="{ passes }" slim ref="validation-observer">
           <form
-            @submit.prevent="(event) => passes(() => onSubmit(event))"
+            @submit.prevent="() => passes(() => onSubmit())"
           >
             <div class="_additional-options">
               <div v-show="hasStyleSelections">
@@ -174,7 +174,7 @@ import { SfButton, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 import { getProductPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
-import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import { getProductGallery as getGalleryByProduct, setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
 import CartItem from 'core/modules/cart/types/CartItem';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
@@ -278,6 +278,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return '-skin-petsies';
     },
     addonsBundleOption (): BundleOption | undefined {
+      debugger;
       if (!this.product?.bundle_options) {
         return undefined;
       }
@@ -490,16 +491,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    onArtworkAdd (value: Item): void {
-      this.customerImage = {
-        id: value.id,
-        url: this.imageHandlerService.getOriginalImageUrl(value.url)
-      };
-    },
-    onArtworkRemove (storageItemId: string): void {
-      this.customerImage = undefined;
-    },
-    async onSubmit (event: Event): Promise<void> {
+    async addToCart (): Promise<void> {
+      if (this.isSubmitting) {
+        return;
+      }
+
       this.isSubmitting = true;
 
       await this.$store.dispatch(
@@ -534,6 +530,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         }).finally(() => {
           this.isSubmitting = false;
         });
+    },
+    onArtworkAdd (value: Item): void {
+      this.customerImage = {
+        id: value.id,
+        url: this.imageHandlerService.getOriginalImageUrl(value.url)
+      };
+    },
+    onArtworkRemove (storageItemId: string): void {
+      this.customerImage = undefined;
+    },
+    onSubmit (): void {
+      if (!this.existingProduct) {
+        this.addToCart();
+      } else {
+        this.updateExistingCartItem();
+      }
     },
     async onSuccess (): Promise<void> {
       try {
@@ -603,6 +615,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.fillCustomerImagesData(existingProduct);
       this.fillExtraFacesData(existingProduct);
+      this.fillQuantity(existingProduct);
     },
     fillExtraFacesData (existingProduct: CartItem): void {
       this.fillExtraFacesDataAddon(existingProduct);
@@ -610,7 +623,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     fillExtraFacesDataAddon (existingProduct: CartItem): void {
       const selectedBundleOptions = getSelectedBundleOptions(existingProduct);
-
+      console.log(this.product)
       if (!this.addons.length || !selectedBundleOptions.length) {
         return;
       }
@@ -629,16 +642,70 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.extraFacesData.addon = selectedAddon;
       this.initialAddonItemId = selectedAddon.id;
     },
-    fillExtraFacesDataStorageItems (existingProduct: CartItem) {
+    fillExtraFacesDataStorageItems (existingProduct: CartItem): void {
       if (!existingProduct.customerImages || existingProduct.customerImages.length <= 1) {
         return;
       }
 
       const customerExtraFacesImages = [...existingProduct.customerImages];
-      // debugger;
       customerExtraFacesImages.splice(0, 1);
+
       this.extraFacesData.storageItems = customerExtraFacesImages;
       this.initialExtraImages = customerExtraFacesImages;
+    },
+    fillQuantity (existingProduct: CartItem): void {
+      this.quantity = existingProduct.qty;
+    },
+    async updateClientAndServerItem (payload: {
+      product: CartItem,
+      forceUpdateServerItem?: boolean,
+      forceClientState?: boolean
+    }): Promise<void> {
+      await this.$store.dispatch('cart/updateClientAndServerItem', payload);
+    },
+    async updateExistingCartItem (): Promise<void> {
+      if (!this.existingProduct) {
+        return;
+      }
+
+      this.isSubmitting = true;
+
+      const extraFacesArtworks: CustomerImage[] = this.extraFacesData.storageItems.map(item => {
+        let url = item.url;
+
+        if (!this.initialExtraImages.find((image) => image.id === item.id)) {
+          url = this.imageHandlerService.getOriginalImageUrl(item.url);
+        }
+
+        return {
+          id: item.id,
+          url
+        }
+      });
+
+      this.updateClientAndServerItem({
+        product: Object.assign({}, this.existingProduct, {
+          qty: this.quantity,
+          customerImages: [this.customerImage, ...extraFacesArtworks],
+          product_option: setBundleProductOptionsAsync(null, { product: this.existingProduct, bundleOptions: this.$store.state.product.current_bundle_options }),
+          uploadMethod: 'upload-now'
+        }),
+        forceUpdateServerItem: true
+      }).catch((err) => {
+        if (err instanceof ServerError) {
+          throw err;
+        }
+
+        Logger.error(err, 'budsies')();
+      }).then(() => {
+        this.onSuccess();
+      }).catch(err => {
+        Logger.error(err, 'budsies')();
+
+        this.onFailure('Unexpected error: ' + err);
+      }).finally(() => {
+        this.isSubmitting = false;
+      });
     }
   },
   created (): void {
