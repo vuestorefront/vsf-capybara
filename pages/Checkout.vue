@@ -136,17 +136,6 @@ export default {
         )
       });
     }
-  },
-  metaInfo: {
-    script: [
-      {
-        vmid: 'affirmscript',
-        src: 'https://cdn1-sandbox.affirm.com/js/v2/affirm.js',
-        async: true,
-        crossorigin: 'anonymous',
-        callback: () => (window.affirm.apiKey.setPublicApiKey(config.affirm.publicKey))
-      }
-    ]
   }
 };
 </script>
