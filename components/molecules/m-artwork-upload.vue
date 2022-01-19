@@ -135,7 +135,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       fPondStatus: 0,
       fFileProcessingRepository: undefined as undefined | FileProcessingRepository,
       fDragHoverHandler: undefined as undefined | ((e: DragEvent) => void),
-      fDragDropHandler: undefined as undefined | ((e: DragEvent) => void)
+      fDragDropHandler: undefined as undefined | ((e: DragEvent) => void),
+      files: undefined as FilePondInitialFile[] | undefined
     }
   },
   computed: {
@@ -147,15 +148,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return result;
-    },
-    files (): FilePondInitialFile[] | undefined {
-      return this.initialItems.map((item) => ({
-        source: item.url,
-        options: {
-          type: 'local',
-          name: item.id
-        }
-      }));
     },
     isBusy (): boolean {
       if (
@@ -175,6 +167,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     );
     this.fDragHoverHandler = (e: DragEvent) => this.onDropzoneDragHover(e);
     this.fDragDropHandler = (e: DragEvent) => this.onDropzoneDrop(e);
+    this.initFiles();
   },
   mounted (): void {
     const dropzone = this.getDropzone();
@@ -402,6 +395,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       } catch (e) {
         //
       }
+    },
+    initFiles (): void {
+      this.files = this.initialItems.map((item) => ({
+        source: item.url,
+        options: {
+          type: 'local',
+          name: item.id
+        }
+      }));
     }
   },
   watch: {

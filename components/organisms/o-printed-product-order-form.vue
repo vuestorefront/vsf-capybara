@@ -109,17 +109,19 @@
               </validation-provider>
             </div>
 
-            <MExtraFaces
-              ref="extra-faces"
-              :available-options="addons"
-              :backend-product-id="backendProductId"
-              :disabled="isSubmitting"
-              :upload-url="artworkUploadUrl"
-              :initial-variant="initialAddonItemId"
-              :initial-artworks="initialExtraImages"
-              v-show="hasExtraFaceAddons"
-              @input="extraFacesData = $event"
-            />
+            <template v-if="showExtraFaces">
+              <MExtraFaces
+                ref="extra-faces"
+                :available-options="addons"
+                :backend-product-id="backendProductId"
+                :disabled="isSubmitting"
+                :upload-url="artworkUploadUrl"
+                :initial-variant="initialAddonItemId"
+                :initial-artworks="initialExtraImages"
+                v-show="hasExtraFaceAddons"
+                @input="extraFacesData = $event"
+              />
+            </template>
 
             <validation-provider
               v-slot="{ errors, classes }"
@@ -278,7 +280,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return '-skin-petsies';
     },
     addonsBundleOption (): BundleOption | undefined {
-      debugger;
       if (!this.product?.bundle_options) {
         return undefined;
       }
@@ -449,6 +450,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.specialPrice;
+    },
+    showExtraFaces (): boolean {
+      return !this.existingProduct || this.hasExtraFaceAddons;
     },
     hasStyleSelections (): boolean {
       return !(
@@ -623,7 +627,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     fillExtraFacesDataAddon (existingProduct: CartItem): void {
       const selectedBundleOptions = getSelectedBundleOptions(existingProduct);
-      console.log(this.product)
+
       if (!this.addons.length || !selectedBundleOptions.length) {
         return;
       }
@@ -716,6 +720,13 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     this.fillExistingProductData(this.existingProduct);
   },
   watch: {
+    addons () {
+      if (!this.existingProduct) {
+        return;
+      }
+
+      this.fillExtraFacesData(this.existingProduct);
+    },
     availableStyles: {
       handler (): void {
         // SfSelect doesn't support options updating in the current package version

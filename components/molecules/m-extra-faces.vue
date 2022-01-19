@@ -24,7 +24,7 @@
             :product-id="backendProductId"
             :upload-url="uploadUrl"
             :disabled="disabled"
-            :initial-items="[initialArtworks[index - 1]]"
+            :initial-items="artworkUploadInitialItems(index - 1)"
             @file-added="(value) => onArtworkAdd(index - 1, value)"
             @file-removed="(storageItemId) => onArtworkRemove(index - 1, storageItemId)"
           />
@@ -188,6 +188,9 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
+    artworkUploadInitialItems (index: number): UploadedArtwork[] | undefined {
+      return this.initialArtworks.length ? [this.initialArtworks[index]] : undefined;
+    },
     clearUploaders (): void {
       const uploaders = this.getUploaders();
 
@@ -215,10 +218,7 @@ export default Vue.extend({
       this.selectedVariant = undefined;
     },
     onArtworkAdd (index: number, value: Item): void {
-      Vue.set(this.uploaderValues, index, {
-        id: value.id,
-        url: value.url
-      });
+      this.uploaderValues.splice(index, 0, value);
 
       const eventData: ExtraFacesConfiguratorData = {
         addon: this.selectedVariant,
