@@ -18,6 +18,8 @@ import { Braintree } from 'src/modules/payment-braintree'
 import { PromotionPlatformModule } from 'src/modules/promotion-platform'
 import { GiftCardModule } from 'src/modules/gift-card'
 import { PaymentAffirm } from 'src/modules/payment-affirm';
+import { UrlRewriteModule } from 'src/modules/url-rewrite';
+import { mappingFallbackForUrlRewrite } from 'src/modules/url-rewrite/mappingFallback';
 
 import registerStoryblokComponents from 'theme/components/storyblok'
 
@@ -27,6 +29,10 @@ const extendUrlVuex = {
       const result = await forStoryblok(context, payload);
       if (result) {
         return result
+      }
+      const urlRewriteResult = await mappingFallbackForUrlRewrite(context, payload);
+      if (urlRewriteResult) {
+        return urlRewriteResult;
       }
     }
   }
@@ -56,6 +62,7 @@ export function registerClientModules () {
   registerModule(PromotionPlatformModule)
   registerModule(GiftCardModule)
   registerModule(PaymentAffirm)
+  registerModule(UrlRewriteModule)
 }
 
 // Deprecated API, will be removed in 2.0
