@@ -95,8 +95,7 @@ let routes = [
     component: PrintedProduct,
     props: route => ({
       sku: 'customPrintedKeychains_bundle',
-      productDesign: route.query.product_design,
-      existingPlushieId: route.query.existingPlushieId
+      productDesign: route.query.product_design
     })
   },
   {
