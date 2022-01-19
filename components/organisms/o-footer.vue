@@ -26,7 +26,7 @@
       </SfFooterColumn>
       <SfFooterColumn title="Get more @Petsies cuteness" class="social-column">
         <form class="o-footer__subscribe">
-          <SfInput v-model="subscribeEmail" name="subscribeEmail" label="Email address" :required="true" />
+          <SfInput v-model="subscribeEmail" name="subscribeEmail" type="email" label="Email address" :required="true" />
           <SfButton class="color-primary">
             Join
           </SfButton>

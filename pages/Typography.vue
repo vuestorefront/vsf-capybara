@@ -58,7 +58,7 @@
       <SfContentPage :title="navigation[1].title">
         <h4>Form elements</h4>
         <form>
-          <SfInput v-model="email" name="email" label="Your email" :required="true" :valid="true" />
+          <SfInput v-model="email" name="email" type="email" label="Your email" :required="true" :valid="true" />
           <SfInput v-model="firstname" name="firstname" label="Your Firstname" :required="true" :valid="false" error-message="Field is required." />
           <SfInput name="name" label="Disabled Field" :required="true" :valid="true" disabled />
           <br>

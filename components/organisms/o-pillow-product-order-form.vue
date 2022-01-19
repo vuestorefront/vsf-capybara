@@ -279,6 +279,7 @@
           >
             <SfInput
               name="email"
+              type="email"
               v-model="email"
               placeholder="sample@email.com"
               :disabled="isSubmitting"

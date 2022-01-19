@@ -18,6 +18,7 @@
         <SfInput
           v-model="email"
           name="email"
+          type="email"
           :label="$t('Email:')"
           :required="true"
           :disabled="isSubmitting"

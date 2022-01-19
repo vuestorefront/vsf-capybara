@@ -26,6 +26,7 @@
   </div>
 </template>
 <script>
+import config from 'config';
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
 import OPayment from 'theme/components/organisms/o-payment';

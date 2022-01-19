@@ -4,6 +4,7 @@
       <SfInput
         v-model="email"
         name="email"
+        type="email"
         :label="$t('Your email')"
         :required="true"
         :valid="!$v.email.$error"
