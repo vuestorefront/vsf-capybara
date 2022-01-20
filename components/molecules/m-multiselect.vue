@@ -57,6 +57,11 @@
 import Vue, { PropType } from 'vue';
 import Multiselect from 'vue-multiselect';
 import { SfChevron } from '@storefront-ui/vue';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 type Option = Record<string, any> | string;
 
@@ -127,6 +132,7 @@ export default Vue.extend({
     }
   },
   computed: {
+    ...mapMobileObserver(),
     selectedOption: {
       get (): Option | undefined {
         if (!this.value) {
@@ -180,7 +186,21 @@ export default Vue.extend({
       return this.allowFreeText;
     }
   },
+  beforeDestroy (): void {
+    unMapMobileObserver();
+    this.enableBodyScroll();
+  },
   methods: {
+    enableBodyScroll (): void {
+      const multiselect = this.getMultiselect();
+
+      if (!multiselect) {
+        clearAllBodyScrollLocks();
+        return;
+      }
+
+      enableBodyScroll(multiselect);
+    },
     getMultiselect (): Multiselect | undefined {
       return this.$refs['multiselect'] as Multiselect | undefined;
     },
@@ -229,6 +249,33 @@ export default Vue.extend({
       }
 
       this.processFreeText();
+    },
+    toggleBodyScrollLock (): void {
+      const multiselect = this.getMultiselect();
+
+      if (!multiselect) {
+        return;
+      }
+
+      if (this.isOpen && this.isMobile) {
+        disableBodyScroll(multiselect);
+      } else {
+        enableBodyScroll(multiselect);
+      }
+    }
+  },
+  watch: {
+    isOpen: {
+      handler (): void {
+        this.toggleBodyScrollLock();
+      },
+      immediate: true
+    },
+    isMobile: {
+      handler (): void {
+        this.toggleBodyScrollLock();
+      },
+      immediate: true
     }
   }
 });
