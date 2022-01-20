@@ -192,17 +192,26 @@ export default Vue.extend({
   },
   methods: {
     enableBodyScroll (): void {
-      const multiselect = this.getMultiselect();
+      const scrollableContainer = this.getMultiselectScrollableContainer();
 
-      if (!multiselect) {
+      if (!scrollableContainer) {
         clearAllBodyScrollLocks();
         return;
       }
 
-      enableBodyScroll(multiselect);
+      enableBodyScroll(scrollableContainer);
     },
     getMultiselect (): Multiselect | undefined {
       return this.$refs['multiselect'] as Multiselect | undefined;
+    },
+    getMultiselectScrollableContainer (): Element | null {
+      const multiselect = this.getMultiselect();
+
+      if (!multiselect) {
+        return null;
+      }
+
+      return multiselect.$el.querySelector('.multiselect__content-wrapper');
     },
     processFreeText (): Option | undefined {
       const multiselect = this.getMultiselect();
@@ -251,16 +260,16 @@ export default Vue.extend({
       this.processFreeText();
     },
     toggleBodyScrollLock (): void {
-      const multiselect = this.getMultiselect();
+      const scrollableContainer = this.getMultiselectScrollableContainer();
 
-      if (!multiselect) {
+      if (!scrollableContainer) {
         return;
       }
 
       if (this.isOpen && this.isMobile) {
-        disableBodyScroll(multiselect);
+        disableBodyScroll(scrollableContainer);
       } else {
-        enableBodyScroll(multiselect);
+        enableBodyScroll(scrollableContainer);
       }
     }
   },
