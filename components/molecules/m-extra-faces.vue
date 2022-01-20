@@ -258,6 +258,11 @@ export default Vue.extend({
         this.reset();
       },
       immediate: true
+    },
+    initialVariant (newValue: string, oldValue: string) {
+      if (!newValue && oldValue) {
+        this.selectedVariant = undefined;
+      }
     }
   }
 })

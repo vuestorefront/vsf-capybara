@@ -535,6 +535,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           this.isSubmitting = false;
         });
     },
+    cleanExistingProductData (): void {
+      this.artworkInitialItems = [];
+      this.initialAddonItemId = undefined;
+      this.initialExtraImages = [];
+      this.extraFacesData = {
+        addon: undefined,
+        storageItems: []
+      }
+    },
     onArtworkAdd (value: Item): void {
       this.customerImage = {
         id: value.id,
@@ -735,6 +744,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.$nextTick(() => {
           this.shouldShowDesignSelector = true;
         });
+      }
+    },
+    existingProduct (newValue?: CartItem, oldValue?: CartItem) {
+      if (oldValue && !newValue) {
+        this.cleanExistingProductData();
       }
     },
     product: {

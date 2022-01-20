@@ -412,6 +412,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.$emit('is-busy-changed', newValue);
       },
       immediate: false
+    },
+    initialItems (newValue: CustomerImage[]) {
+      if (!newValue.length) {
+        this.initFiles();
+      }
     }
   }
 })
