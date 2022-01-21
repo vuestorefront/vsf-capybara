@@ -18,6 +18,7 @@
       name="rush_addons"
       class="_rush-addons"
       :disabled="disabled"
+      :should-lock-scroll-on-open="isMobile"
     >
       <SfSelectOption
         v-for="option in productionTimeOptions"
@@ -37,8 +38,14 @@ import {
   SfHeading,
   SfSelect
 } from '@storefront-ui/vue';
-import ProductionTimeOption from '../interfaces/production-time-option.interface';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
+
 import MBlockStory from 'theme/components/molecules/m-block-story.vue';
+
+import ProductionTimeOption from '../interfaces/production-time-option.interface';
 
 export default Vue.extend({
   name: 'MProductionTimeSelector',
@@ -67,6 +74,7 @@ export default Vue.extend({
     }
   },
   computed: {
+    ...mapMobileObserver(),
     selectedOption: {
       get (): ProductionTimeOption | undefined {
         return this.value;
@@ -90,6 +98,9 @@ export default Vue.extend({
           return undefined
       }
     }
+  },
+  beforeDestroy () {
+    unMapMobileObserver();
   }
 });
 </script>
