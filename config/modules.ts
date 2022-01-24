@@ -27,13 +27,12 @@ const extendUrlVuex = {
   actions: {
     async mapFallbackUrl (context, payload: any) {
       const result = await forStoryblok(context, payload);
+
       if (result) {
         return result
       }
-      const urlRewriteResult = await mappingFallbackForUrlRewrite(context, payload);
-      if (urlRewriteResult) {
-        return urlRewriteResult;
-      }
+
+      await mappingFallbackForUrlRewrite(context, payload);
     }
   }
 }
