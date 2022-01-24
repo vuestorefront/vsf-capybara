@@ -4,7 +4,7 @@
       :artwork-upload-url="artworkUploadUrl"
       :product="getCurrentProduct"
       :selected-style="productDesign"
-      :existing-product="existingProduct"
+      :existing-cart-item="existingCartItem"
       @style-selected="onStyleSelected"
       v-if="getCurrentProduct"
     />
@@ -62,7 +62,7 @@ export default Vue.extend({
     cartItems (): CartItem[] {
       return this.$store.getters['cart/getCartItems'];
     },
-    existingProduct (): CartItem | undefined {
+    existingCartItem (): CartItem | undefined {
       if (!this.existingPlushieId) {
         return;
       }
