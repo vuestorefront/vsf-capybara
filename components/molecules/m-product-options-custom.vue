@@ -20,6 +20,7 @@
         <SfSelect
           class="sf-select--underlined"
           v-model="inputValues[('customOption_' + option.option_id)]"
+          :should-lock-scroll-on-open="isMobile"
           @change="optionChanged(option)"
           :required="option.is_require"
         >
@@ -65,6 +66,10 @@ import { ProductCustomOptions } from '@vue-storefront/core/modules/catalog/compo
 import { SfCheckbox, SfRadio, SfSelect, SfProductOption, SfInput } from '@storefront-ui/vue';
 import get from 'lodash-es/get'
 import { customOptionFieldName, defaultCustomOptionValue, selectedCustomOptionValue } from '@vue-storefront/core/modules/catalog/helpers/customOption';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 export default {
   mixins: [ProductCustomOptions],
@@ -76,6 +81,7 @@ export default {
     SfInput
   },
   computed: {
+    ...mapMobileObserver(),
     getError () {
       return optionId => {
         const error = get(this.validation.results, 'customOption_' + optionId, {})
@@ -106,6 +112,9 @@ export default {
         return selectedOptions
       }, {})
     }
+  },
+  beforeDestroy () {
+    unMapMobileObserver();
   },
   methods: {
     setupInputFields () {

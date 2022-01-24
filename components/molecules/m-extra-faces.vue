@@ -52,6 +52,7 @@
       class="_extra-faces-selector sf-select--underlined"
       selected=""
       :disabled="disabled"
+      :should-lock-scroll-on-open="isMobile"
     >
       <SfSelectOption value="">
         No extra pets
@@ -75,6 +76,10 @@ import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { SfSelect } from '@storefront-ui/vue';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import { Item } from 'src/modules/file-storage';
 
@@ -129,6 +134,7 @@ export default Vue.extend({
     }
   },
   computed: {
+    ...mapMobileObserver(),
     selectedVariant: {
       get: function (): ExtraPhotoAddonOption | undefined {
         return this.fSelectedVariant;
@@ -183,6 +189,9 @@ export default Vue.extend({
     if (matchingOption) {
       this.selectedVariant = matchingOption;
     }
+  },
+  beforeDestroy (): void {
+    unMapMobileObserver();
   },
   methods: {
     ...mapMutations('product', {

@@ -53,6 +53,7 @@
                     class="sf-select--underlined"
                     :size="10"
                     :disabled="isSubmitting"
+                    :should-lock-scroll-on-open="isMobile"
                   >
                     <SfSelectOption disabled value="">
                       Select Design Variant
@@ -169,6 +170,10 @@ import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 import { getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
@@ -270,6 +275,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
+    ...mapMobileObserver(),
     ...mapGetters({
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
       getProductGallery: 'product/getProductGallery'
@@ -743,6 +749,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     if (this.existingCartItem) {
       this.fillProductDataFromExistingCartItem(this.existingCartItem);
     }
+  },
+  beforeDestroy () {
+    unMapMobileObserver();
   },
   watch: {
     addons () {

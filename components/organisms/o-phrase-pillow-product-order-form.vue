@@ -446,6 +446,7 @@
                           class="_rush-addons"
                           :valid="!errors.length"
                           :error-message="errors[0]"
+                          :should-lock-scroll-on-open="isMobile"
                         >
                           <SfSelectOption
                             v-for="option in productionTimeOptions"
@@ -547,6 +548,10 @@ import {
   ImageHandlerService
 } from 'src/modules/file-storage';
 import ServerError from 'src/modules/shared/types/server-error';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import MFormErrors from '../molecules/m-form-errors.vue';
 import MBackgroundUploader from '../molecules/m-background-uploader.vue';
@@ -728,6 +733,7 @@ export default (
     };
   },
   computed: {
+    ...mapMobileObserver(),
     skinClass (): string {
       return '-skin-petsies';
     },
@@ -1382,6 +1388,7 @@ export default (
   },
   beforeDestroy () {
     this.$bus.$off('budsies-store-synchronized', this.prefillEmail);
+    unMapMobileObserver();
   },
   created (): void {
     this.customizerStepsData = customizerStepsData;

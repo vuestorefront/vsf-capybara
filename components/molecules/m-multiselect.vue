@@ -57,6 +57,11 @@
 import Vue, { PropType } from 'vue';
 import Multiselect from 'vue-multiselect';
 import { SfChevron } from '@storefront-ui/vue';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 
 type Option = Record<string, any> | string;
 
@@ -127,6 +132,7 @@ export default Vue.extend({
     }
   },
   computed: {
+    ...mapMobileObserver(),
     selectedOption: {
       get (): Option | undefined {
         if (!this.value) {
@@ -180,9 +186,32 @@ export default Vue.extend({
       return this.allowFreeText;
     }
   },
+  beforeDestroy (): void {
+    unMapMobileObserver();
+    this.enableBodyScroll();
+  },
   methods: {
+    enableBodyScroll (): void {
+      const scrollableContainer = this.getMultiselectScrollableContainer();
+
+      if (!scrollableContainer) {
+        clearAllBodyScrollLocks();
+        return;
+      }
+
+      enableBodyScroll(scrollableContainer);
+    },
     getMultiselect (): Multiselect | undefined {
       return this.$refs['multiselect'] as Multiselect | undefined;
+    },
+    getMultiselectScrollableContainer (): Element | null {
+      const multiselect = this.getMultiselect();
+
+      if (!multiselect) {
+        return null;
+      }
+
+      return multiselect.$el.querySelector('.multiselect__content-wrapper');
     },
     processFreeText (): Option | undefined {
       const multiselect = this.getMultiselect();
@@ -229,6 +258,33 @@ export default Vue.extend({
       }
 
       this.processFreeText();
+    },
+    toggleBodyScrollLock (): void {
+      const scrollableContainer = this.getMultiselectScrollableContainer();
+
+      if (!scrollableContainer) {
+        return;
+      }
+
+      if (this.isOpen && this.isMobile) {
+        disableBodyScroll(scrollableContainer);
+      } else {
+        enableBodyScroll(scrollableContainer);
+      }
+    }
+  },
+  watch: {
+    isOpen: {
+      handler (): void {
+        this.toggleBodyScrollLock();
+      },
+      immediate: true
+    },
+    isMobile: {
+      handler (): void {
+        this.toggleBodyScrollLock();
+      },
+      immediate: true
     }
   }
 });
