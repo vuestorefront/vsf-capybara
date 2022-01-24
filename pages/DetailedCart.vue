@@ -178,6 +178,7 @@ import { ProductId } from 'src/modules/budsies';
 import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
+import { getBundleOptionsValues, getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
 
 const foreversProductsSkus = [
   'ForeversDog_bundle',
@@ -185,8 +186,15 @@ const foreversProductsSkus = [
   'ForeversOther_bundle'
 ]
 
+const printedProductSkus = [
+  'customPrintedSocks_bundle',
+  'customPrintedMasks_bundle',
+  'customPrintedKeychains_bundle'
+]
+
 const editableProductsSkus = [
-  ...foreversProductsSkus
+  ...foreversProductsSkus,
+  ...printedProductSkus
 ];
 
 export default {
@@ -309,7 +317,15 @@ export default {
     },
     editHandler (product) {
       if (foreversProductsSkus.includes(product.sku)) {
-        this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } })
+        this.$router.push({ name: 'forevers-create', query: { id: product.plushieId } });
+      } else if (printedProductSkus.includes(product.sku)) {
+        this.$router.push({ name: 'printed-product',
+          params: { sku: product.sku },
+          query: {
+            product_design: this.getPrintedProductDesign(product),
+            existingPlushieId: product.plushieId
+          }
+        });
       }
     },
     getProductOptions (product) {
@@ -406,6 +422,13 @@ export default {
       }
 
       return text.substring(0, maxLength) + '...';
+    },
+    getPrintedProductDesign (product) {
+      const selectedBundleOptions = getSelectedBundleOptions(product);
+      const productBundleOptions = product.bundle_options.filter((option) => option.title.toLowerCase() === 'product');
+      const selectedBundleOptionsValues = getBundleOptionsValues(selectedBundleOptions, productBundleOptions);
+
+      return selectedBundleOptionsValues[0].sku;
     }
   }
 };

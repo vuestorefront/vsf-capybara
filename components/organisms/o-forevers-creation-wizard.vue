@@ -259,6 +259,8 @@ export default Vue.extend({
     },
     fillAddons (cartItem: CartItem): void {
       const productOption = cartItem.product_option;
+      this.customizeStepData.addons = [];
+
       if (!this.addonsBundleOption || !productOption) {
         return;
       }
@@ -270,13 +272,13 @@ export default Vue.extend({
       this.customizeStepData.addons = productOption.extension_attributes.bundle_options[this.addonsBundleOption.option_id].option_selections.map((selection: number) => selection);
     },
     fillBodypartsValues (cartItem: CartItem): void {
+      this.customizeStepData.bodypartsValues = {};
+
       if (!cartItem.bodyparts) {
         return;
       }
 
       const bodyparts: Record<string, string[]> = cartItem.bodyparts as Record<string, string[]>;
-
-      this.customizeStepData.bodypartsValues = {};
 
       Object.keys(bodyparts).forEach((key: string) => {
         Vue.set(
@@ -309,6 +311,7 @@ export default Vue.extend({
     },
     fillProductionTime (cartItem: CartItem): void {
       const productOption = cartItem.product_option;
+      this.customizeStepData.productionTime = undefined;
       if (!this.productionTimeBundleOption || !productOption) {
         return;
       }
@@ -320,7 +323,9 @@ export default Vue.extend({
       this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
     },
     fillImageUploadStepData (cartItem: CartItem): void {
-      this.imageUploadStepData.uploadMethod = cartItem.uploadMethod as ImageUploadMethod;
+      this.imageUploadStepData.uploadMethod = cartItem.uploadMethod
+        ? cartItem.uploadMethod as ImageUploadMethod
+        : ImageUploadMethod.NOW;
       this.imageUploadStepData.customerImages = cartItem.customerImages ? cartItem.customerImages : [];
     },
     fillPetInfoStepData (cartItem: CartItem): void {
