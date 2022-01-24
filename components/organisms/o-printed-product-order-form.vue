@@ -509,7 +509,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       try {
         try {
-          this.$store.dispatch('cart/addItem', {
+          await this.$store.dispatch('cart/addItem', {
             productToAdd: Object.assign({}, this.product, {
               qty: this.quantity,
               customerImages: [this.customerImage, ...extraFacesArtworks],
