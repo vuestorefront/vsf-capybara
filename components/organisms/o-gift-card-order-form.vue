@@ -13,6 +13,7 @@
           name="giftcard_template_id"
           class="_giftcard-template sf-select--underlined"
           :disabled="isDisabled"
+          :should-lock-scroll-on-open="isMobile"
         >
           <SfSelectOption
             v-for="template in giftCardTemplatesList"
@@ -41,6 +42,7 @@
             :disabled="isDisabled"
             :valid="!errors.length"
             :error-message="errors[0]"
+            :should-lock-scroll-on-open="isMobile"
           >
             <SfSelectOption
               v-for="option in priceAmountOptionsList"
@@ -214,6 +216,10 @@
 import Vue, { PropType } from 'vue';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required, email } from 'vee-validate/dist/rules';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import { SfCheckbox, SfButton, SfInput, SfSelect } from '@storefront-ui/vue';
 
@@ -260,6 +266,7 @@ export default Vue.extend({
     }
   },
   computed: {
+    ...mapMobileObserver(),
     charactersRemaining (): number {
       return maxCharactersRemaining - this.customMessage.length;
     },
@@ -405,6 +412,9 @@ export default Vue.extend({
         });
       }
     }
+  },
+  beforeDestroy () {
+    unMapMobileObserver();
   },
   methods: {
     submitForm () {

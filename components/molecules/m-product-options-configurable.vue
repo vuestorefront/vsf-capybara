@@ -6,6 +6,7 @@
         v-if="attribute.attribute_code !== 'color'"
         :label="getAttributeLabel(attribute)"
         :value="getActiveOption(attribute)"
+        :should-lock-scroll-on-open="isMobile"
         @change="handleChangeOption"
         class="sf-select--underlined product__select-size"
       >
@@ -39,6 +40,11 @@ import { mapGetters } from 'vuex';
 import get from 'lodash-es/get'
 import { SfSelect, SfProductOption, SfColor } from '@storefront-ui/vue';
 import { getAvailableFiltersByProduct } from '@vue-storefront/core/modules/catalog/helpers/filters'
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
+
 export default {
   name: 'MProductOptionsConfigurable',
   inject: {
@@ -60,6 +66,7 @@ export default {
     }
   },
   computed: {
+    ...mapMobileObserver(),
     ...mapGetters({
       getCurrentProductOptions: 'product/getCurrentProductOptions'
     }),
@@ -88,6 +95,9 @@ export default {
     isColorSelected () {
       return attributeOption => this.configuration.color && parseInt(this.configuration.color.id) === parseInt(attributeOption.id);
     }
+  },
+  beforeDestroy () {
+    unMapMobileObserver();
   },
   methods: {
     handleChangeOption (option) {

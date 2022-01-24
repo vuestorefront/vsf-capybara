@@ -87,6 +87,7 @@
               required
               :valid="!$v.editedAddress.country.$error"
               :error-message="$t('Field is required.')"
+              :should-lock-scroll-on-open="isMobile"
               class="sf-select--underlined form__select form__element form__element--half form__select form__element--half-even"
             >
               <SfSelectOption
@@ -172,6 +173,11 @@ import pick from 'lodash-es/pick';
 import { required, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { SfTabs, SfInput, SfButton, SfSelect, SfIcon } from '@storefront-ui/vue';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
+
 const Countries = require('@vue-storefront/i18n/resource/countries.json')
 
 export default {
@@ -196,6 +202,7 @@ export default {
     }
   },
   computed: {
+    ...mapMobileObserver(),
     addresses () {
       return this.$store.state.user.current.addresses
     }
@@ -273,6 +280,9 @@ export default {
       userDataToUpdate.addresses.splice(index, 1)
       this.$store.dispatch('user/update', { customer: userDataToUpdate })
     }
+  },
+  beforeDestroy () {
+    unMapMobileObserver();
   },
   validations: {
     editedAddress: {
