@@ -109,19 +109,17 @@
               </validation-provider>
             </div>
 
-            <template v-if="showExtraFaces">
-              <MExtraFaces
-                ref="extra-faces"
-                :available-options="addons"
-                :backend-product-id="backendProductId"
-                :disabled="isSubmitting"
-                :upload-url="artworkUploadUrl"
-                :initial-variant="initialAddonItemId"
-                :initial-artworks="initialExtraImages"
-                v-show="hasExtraFaceAddons"
-                @input="extraFacesData = $event"
-              />
-            </template>
+            <MExtraFaces
+              ref="extra-faces"
+              :available-options="addons"
+              :backend-product-id="backendProductId"
+              :disabled="isSubmitting"
+              :upload-url="artworkUploadUrl"
+              :initial-variant="initialAddonItemId"
+              :initial-artworks="initialExtraImages"
+              v-if="hasExtraFaceAddons"
+              @input="extraFacesData = $event"
+            />
 
             <validation-provider
               v-slot="{ errors, classes }"
@@ -450,9 +448,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.specialPrice;
-    },
-    showExtraFaces (): boolean {
-      return !this.existingCartItem || this.hasExtraFaceAddons;
     },
     hasStyleSelections (): boolean {
       return !(
