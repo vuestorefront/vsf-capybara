@@ -16,8 +16,9 @@
         >
           <SfStep name="Type">
             <MProductTypeChooseStep
-              v-model="productTypeStepData"
+              :value="productTypeStepData"
               :disabled="isSubmitting"
+              @input="onProductTypeStepDataInput"
               @next-step="nextStep"
             />
           </SfStep>
@@ -29,7 +30,7 @@
               :product="activeProduct"
               :plushie-id="plushieId"
               :disabled="isSubmitting"
-              @input="imageUploadStepData = $event"
+              @input="onImageUploadStepDataInput"
               @next-step="nextStep"
               v-if="plushieId"
             />
@@ -42,6 +43,7 @@
               :product="activeProduct"
               :disabled="isSubmitting"
               @next-step="nextStep"
+              @input-field-blur="onPetInfoStepInputFieldBlur"
             />
           </SfStep>
 
@@ -100,6 +102,8 @@ import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-custo
 import BodypartOption from '../interfaces/bodypart-option';
 import CustomerImage from '../interfaces/customer-image.interface';
 import { TranslateResult } from 'vue-i18n';
+
+import { saveForeversCreationWizardImageUploadStepData, saveForeversCreationWizardPetInfoStepData, saveForeversCreationWizardProductTypeStepData } from 'theme/helpers/forevers-creation-wizard-persistance-state';
 
 export default Vue.extend({
   name: 'OForeversCreationWizard',
@@ -407,6 +411,50 @@ export default Vue.extend({
         message: message,
         action1: { label: i18n.t('OK') }
       });
+    },
+    onImageUploadStepDataInput (value: ForeversWizardImageUploadStepData): void {
+      this.imageUploadStepData = value;
+      this.persistImageUploadStepData(value);
+    },
+    onPetInfoStepInputFieldBlur (): void {
+      this.persistPetInfoStepData(this.petInfoStepData);
+    },
+    onProductTypeStepDataInput (value: ForeversWizardProductTypeStepData): void {
+      this.productTypeStepData = value;
+      this.persistProductTypeStepData(value);
+    },
+    persistImageUploadStepData (value: ForeversWizardImageUploadStepData): void {
+      if (this.existingCartitem) {
+        return;
+      }
+
+      if (!this.plushieId) {
+        throw new Error('Plushie id is undefined');
+      }
+
+      saveForeversCreationWizardImageUploadStepData(this.plushieId, value);
+    },
+    persistPetInfoStepData (value: ForeversWizardPetInfoStepData): void {
+      if (this.existingCartitem) {
+        return;
+      }
+
+      if (!this.plushieId) {
+        throw new Error('Plushie id is undefined');
+      }
+
+      saveForeversCreationWizardPetInfoStepData(this.plushieId, value);
+    },
+    persistProductTypeStepData (value: ForeversWizardProductTypeStepData): void {
+      if (this.existingCartitem) {
+        return;
+      }
+
+      if (!value.plushieId || !value.product) {
+        throw new Error('Plushie Id or Product Sku is undefined');
+      }
+
+      saveForeversCreationWizardProductTypeStepData(value.plushieId, value.product.sku);
     },
     setBundleOptionValue (optionId: number, optionQty: number, optionSelections: number[]): void {
       this.$store.commit('product' + '/' + catalogTypes.PRODUCT_SET_BUNDLE_OPTION, { optionId, optionQty, optionSelections });

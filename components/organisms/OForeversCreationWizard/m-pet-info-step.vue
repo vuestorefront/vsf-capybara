@@ -31,6 +31,7 @@
           :required="false"
           :valid="!errors.length"
           :error-message="errors[0]"
+          @blur="$emit('input-field-blur')"
         />
       </validation-provider>
 
@@ -48,6 +49,7 @@
           :required="false"
           :allow-free-text="true"
           :disabled="disabled"
+          @close="$emit('input-field-blur')"
         />
 
         <div class="_helper-text">
@@ -77,6 +79,7 @@
           :required="false"
           :valid="!errors.length"
           :error-message="errors[0]"
+          @blur="$emit('input-field-blur')"
         />
       </validation-provider>
     </div>

@@ -1,4 +1,4 @@
-import { StorageManager } from 'core/lib/storage-manager';
+import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
 import { SN_BUDSIES } from 'src/modules/budsies/store/mutation-types';
 import ForeversCreationWizardPersistanceState from 'theme/components/interfaces/forevers-creation-wizard-persistance-state.interface';
 import ForeversWizardImageUploadStepData from 'theme/components/interfaces/forevers-wizard-image-upload-step-data.interface';
@@ -9,7 +9,7 @@ const STORAGE_KEY = 'forevers-creation-wizard-state'
 async function getForeversCreationWizardProductTypeStepDataFromLocalStorage (plushieId: number): Promise<any> {
   const budsiesStorage = StorageManager.get(SN_BUDSIES);
 
-  let foreversCreationWizardStateByPlushieId = budsiesStorage.getItem(
+  let foreversCreationWizardStateByPlushieId = await budsiesStorage.getItem(
     `${STORAGE_KEY}/${plushieId}`
   );
 
@@ -43,7 +43,7 @@ export async function saveForeversCreationWizardImageUploadStepData (plushieId: 
   foreversCreationWizardStateByPlushieId.imageUploadStepData = imageUploadStepData;
 
   await budsiesStorage.setItem(
-    `forevers-creation-wizard-state/${plushieId}`,
+    `${STORAGE_KEY}/${plushieId}`,
     foreversCreationWizardStateByPlushieId
   )
 };
@@ -55,7 +55,7 @@ export async function saveForeversCreationWizardPetInfoStepData (plushieId: numb
   foreversCreationWizardStateByPlushieId.petInfoStepData = petInfoStepData;
 
   await budsiesStorage.setItem(
-    `forevers-creation-wizard-state/${plushieId}`,
+    `${STORAGE_KEY}/${plushieId}`,
     foreversCreationWizardStateByPlushieId
   )
 };
@@ -63,4 +63,9 @@ export async function saveForeversCreationWizardPetInfoStepData (plushieId: numb
 export async function getForeversCreationWizardPersistanceState (plushieId: number): Promise<ForeversCreationWizardPersistanceState | undefined> {
   const budsiesStorage = StorageManager.get(SN_BUDSIES);
   return budsiesStorage.getItem(`${STORAGE_KEY}/${plushieId}`);
+}
+
+export async function removeForeversCreationWizardPersistanceState (plushieId: number): Promise<void> {
+  const budsiesStorage = StorageManager.get(SN_BUDSIES);
+  await budsiesStorage.removeItem(`${STORAGE_KEY}/${plushieId}`);
 }
