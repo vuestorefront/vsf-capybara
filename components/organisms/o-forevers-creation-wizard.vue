@@ -73,6 +73,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { TranslateResult } from 'vue-i18n';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
@@ -88,6 +89,7 @@ import {
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
 import ServerError from 'src/modules/shared/types/server-error';
+import ForeversCreationWizardPersistanceStateService from 'theme/helpers/forevers-creation-wizard-persistance-state.service';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -101,9 +103,7 @@ import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-inf
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import BodypartOption from '../interfaces/bodypart-option';
 import CustomerImage from '../interfaces/customer-image.interface';
-import { TranslateResult } from 'vue-i18n';
-
-import { getForeversCreationWizardPersistanceState, saveForeversCreationWizardImageUploadStepData, saveForeversCreationWizardPetInfoStepData, saveForeversCreationWizardProductTypeStepData } from 'theme/helpers/forevers-creation-wizard-persistance-state';
+import ForeversCreationWizardPersistanceState from '../interfaces/forevers-creation-wizard-persistance-state.interface';
 
 export default Vue.extend({
   name: 'OForeversCreationWizard',
@@ -155,7 +155,8 @@ export default Vue.extend({
         quantity: 1
       } as ForeversWizardCustomizeStepData,
 
-      isSubmitting: false
+      isSubmitting: false,
+      foreversCreationWizardPersistanceStateService: undefined as ForeversCreationWizardPersistanceStateService | undefined
     }
   },
   computed: {
@@ -253,6 +254,16 @@ export default Vue.extend({
         }
 
         this.goToCrossSells();
+
+        if (!this.plushieId) {
+          throw new Error('Plushie Id is undefined');
+        }
+
+        if (!this.foreversCreationWizardPersistanceStateService) {
+          this.foreversCreationWizardPersistanceStateService = new ForeversCreationWizardPersistanceStateService();
+        }
+
+        this.foreversCreationWizardPersistanceStateService.removeStateByPlushieId(this.plushieId);
       } catch (error) {
         Logger.error(error, 'budsies')();
 
@@ -296,10 +307,6 @@ export default Vue.extend({
     },
     async fillPlushieData (): Promise<void> {
       if (!this.existingCartitem) {
-        if (this.existingPlushieId) {
-          this.fillPlushieDataFromStorage(this.existingPlushieId);
-        }
-
         return;
       }
 
@@ -313,41 +320,79 @@ export default Vue.extend({
 
       this.fillCustomizeStepData(this.existingCartitem);
     },
-    async fillPlushieDataFromStorage (plushieId: string): Promise<void> {
-      const persistanceState = await getForeversCreationWizardPersistanceState(Number.parseInt(plushieId));
-
-      if (persistanceState?.productTypeData) {
-        this.currentStep = 1;
-        const product = await this.$store.dispatch(
-          'product/loadProduct',
-          { parentSku: persistanceState.productTypeData.productSku }
-        );
-        this.productTypeStepData = {
-          product,
-          plushieId: persistanceState.productTypeData.plushieId
-        }
+    async fillPlushieDataFromPersistedState (): Promise<void> {
+      if (this.existingCartitem || !this.existingPlushieId) {
+        return;
       }
 
-      if (persistanceState?.imageUploadStepData) {
-        this.imageUploadStepData = persistanceState.imageUploadStepData;
-        if (
-          (this.imageUploadStepData.uploadMethod === ImageUploadMethod.NOW && this.imageUploadStepData.customerImages.length !== 0) ||
-           this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW
-        ) {
-          this.currentStep = 2;
-        }
+      if (!this.foreversCreationWizardPersistanceStateService) {
+        this.foreversCreationWizardPersistanceStateService = new ForeversCreationWizardPersistanceStateService();
       }
 
-      if (persistanceState?.petInfoStepData) {
-        this.petInfoStepData = persistanceState.petInfoStepData;
-        if (this.petInfoStepData.name && this.petInfoStepData.breed && this.petInfoStepData.email) {
-          this.currentStep = 3;
-        }
-      }
+      const persistanceState = await this.foreversCreationWizardPersistanceStateService.getStateByPlushieId(Number.parseInt(this.existingPlushieId));
+
+      this.fillProductTypeStepDataFromPersistanceState(persistanceState);
+      this.fillImageUploadStepDataFromPersistanceState(persistanceState);
+      this.fillPetInfoStepDataFromPersistanceState(persistanceState);
     },
     fillProductTypeStepData (cartItem: CartItem): void {
       this.productTypeStepData.product = cartItem;
       this.productTypeStepData.plushieId = cartItem.plushieId ? Number.parseInt(cartItem.plushieId, 10) : undefined;
+    },
+    async fillProductTypeStepDataFromPersistanceState (persistanceState?: ForeversCreationWizardPersistanceState): Promise<void> {
+      if (!persistanceState?.productTypeData) {
+        this.productTypeStepData = {
+          product: undefined,
+          plushieId: undefined
+        };
+        return;
+      }
+
+      this.currentStep = 1;
+
+      const product = await this.$store.dispatch(
+        'product/loadProduct',
+        { parentSku: persistanceState.productTypeData.productSku }
+      );
+
+      this.productTypeStepData = {
+        product,
+        plushieId: persistanceState.productTypeData.plushieId
+      }
+    },
+    fillImageUploadStepDataFromPersistanceState (persistanceState?: ForeversCreationWizardPersistanceState): void {
+      if (!persistanceState?.imageUploadStepData) {
+        this.imageUploadStepData = {
+          uploadMethod: ImageUploadMethod.NOW,
+          customerImages: []
+        };
+        return;
+      }
+
+      this.imageUploadStepData = persistanceState.imageUploadStepData;
+
+      if (
+        (this.imageUploadStepData.uploadMethod === ImageUploadMethod.NOW && this.imageUploadStepData.customerImages.length !== 0) ||
+           this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW
+      ) {
+        this.currentStep = 2;
+      }
+    },
+    fillPetInfoStepDataFromPersistanceState (persistanceState?: ForeversCreationWizardPersistanceState): void {
+      if (!persistanceState?.petInfoStepData) {
+        this.petInfoStepData = {
+          name: undefined,
+          breed: undefined,
+          email: undefined
+        };
+        return;
+      }
+
+      this.petInfoStepData = persistanceState.petInfoStepData;
+
+      if (this.petInfoStepData.name && this.petInfoStepData.breed && this.petInfoStepData.email) {
+        this.currentStep = 3;
+      }
     },
     fillProductionTime (cartItem: CartItem): void {
       const productOption = cartItem.product_option;
@@ -469,7 +514,11 @@ export default Vue.extend({
         throw new Error('Plushie id is undefined');
       }
 
-      saveForeversCreationWizardImageUploadStepData(this.plushieId, value);
+      if (!this.foreversCreationWizardPersistanceStateService) {
+        this.foreversCreationWizardPersistanceStateService = new ForeversCreationWizardPersistanceStateService();
+      }
+
+      this.foreversCreationWizardPersistanceStateService.saveImageUploadStepData(this.plushieId, value);
     },
     persistPetInfoStepData (value: ForeversWizardPetInfoStepData): void {
       if (this.existingCartitem) {
@@ -480,7 +529,11 @@ export default Vue.extend({
         throw new Error('Plushie id is undefined');
       }
 
-      saveForeversCreationWizardPetInfoStepData(this.plushieId, value);
+      if (!this.foreversCreationWizardPersistanceStateService) {
+        this.foreversCreationWizardPersistanceStateService = new ForeversCreationWizardPersistanceStateService();
+      }
+
+      this.foreversCreationWizardPersistanceStateService.savePetInfoStepData(this.plushieId, value);
     },
     persistProductTypeStepData (value: ForeversWizardProductTypeStepData): void {
       if (this.existingCartitem) {
@@ -491,7 +544,11 @@ export default Vue.extend({
         throw new Error('Plushie Id or Product Sku is undefined');
       }
 
-      saveForeversCreationWizardProductTypeStepData(value.plushieId, value.product.sku);
+      if (!this.foreversCreationWizardPersistanceStateService) {
+        this.foreversCreationWizardPersistanceStateService = new ForeversCreationWizardPersistanceStateService();
+      }
+
+      this.foreversCreationWizardPersistanceStateService.saveProductTypeStepData(value.plushieId, value.product.sku);
     },
     setBundleOptionValue (optionId: number, optionQty: number, optionSelections: number[]): void {
       this.$store.commit('product' + '/' + catalogTypes.PRODUCT_SET_BUNDLE_OPTION, { optionId, optionQty, optionSelections });
@@ -549,6 +606,10 @@ export default Vue.extend({
     this.$store.dispatch('budsies/loadBreeds');
 
     this.fillPlushieData();
+  },
+  beforeMount (): void {
+    this.foreversCreationWizardPersistanceStateService = new ForeversCreationWizardPersistanceStateService();
+    this.fillPlushieDataFromPersistedState();
   },
   watch: {
     product: {
