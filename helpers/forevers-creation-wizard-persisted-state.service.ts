@@ -6,7 +6,7 @@ import ForeversWizardPetInfoStepData from 'theme/components/interfaces/forevers-
 
 const STORAGE_KEY = 'forevers-creation-wizard-state';
 
-export default class ForeversCreationWizardPersistanceStateService {
+export default class ForeversCreationWizardPersistedStateService {
   private fBudsiesStorage;
 
   public constructor () {
