@@ -17,7 +17,7 @@
           <SfStep name="Type">
             <MProductTypeChooseStep
               :value="productTypeStepData"
-              :disabled="isSubmitting"
+              :disabled="isSubmitting || isProductLoadingForExistingPlushieId"
               @input="onProductTypeStepDataInput"
               @next-step="nextStep"
             />
@@ -156,7 +156,8 @@ export default Vue.extend({
       } as ForeversWizardCustomizeStepData,
 
       isSubmitting: false,
-      foreversCreationWizardPersistanceStateService: undefined as ForeversCreationWizardPersistanceStateService | undefined
+      foreversCreationWizardPersistanceStateService: undefined as ForeversCreationWizardPersistanceStateService | undefined,
+      isProductLoadingForExistingPlushieId: false
     }
   },
   computed: {
@@ -331,7 +332,7 @@ export default Vue.extend({
 
       const persistanceState = await this.foreversCreationWizardPersistanceStateService.getStateByPlushieId(Number.parseInt(this.existingPlushieId));
 
-      this.fillProductTypeStepDataFromPersistanceState(persistanceState);
+      await this.fillProductTypeStepDataFromPersistanceState(persistanceState);
       this.fillImageUploadStepDataFromPersistanceState(persistanceState);
       this.fillPetInfoStepDataFromPersistanceState(persistanceState);
     },
@@ -348,7 +349,7 @@ export default Vue.extend({
         return;
       }
 
-      this.currentStep = 1;
+      this.isProductLoadingForExistingPlushieId = true;
 
       const product = await this.$store.dispatch(
         'product/loadProduct',
@@ -359,6 +360,10 @@ export default Vue.extend({
         product,
         plushieId: persistanceState.productTypeData.plushieId
       }
+
+      this.isProductLoadingForExistingPlushieId = false;
+
+      this.currentStep = 1;
     },
     fillImageUploadStepDataFromPersistanceState (persistanceState?: ForeversCreationWizardPersistanceState): void {
       if (!persistanceState?.imageUploadStepData) {
