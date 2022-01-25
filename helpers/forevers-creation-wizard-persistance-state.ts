@@ -6,7 +6,7 @@ import ForeversWizardPetInfoStepData from 'theme/components/interfaces/forevers-
 
 const STORAGE_KEY = 'forevers-creation-wizard-state'
 
-async function getForeversCreationWizardProductTypeStepDataFromLocalStorage (plushieId: number): Promise<any> {
+async function getForeversCreationWizardProductTypeStepDataFromLocalStorage (plushieId: number): Promise<ForeversCreationWizardPersistanceState> {
   const budsiesStorage = StorageManager.get(SN_BUDSIES);
 
   let foreversCreationWizardStateByPlushieId = await budsiesStorage.getItem(
@@ -25,7 +25,7 @@ export async function saveForeversCreationWizardProductTypeStepData (plushieId: 
 
   let foreversCreationWizardStateByPlushieId = await getForeversCreationWizardProductTypeStepDataFromLocalStorage(plushieId);
 
-  foreversCreationWizardStateByPlushieId.productTypeStepData = {
+  foreversCreationWizardStateByPlushieId.productTypeData = {
     plushieId,
     productSku
   }

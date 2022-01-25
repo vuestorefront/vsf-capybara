@@ -103,7 +103,7 @@ import BodypartOption from '../interfaces/bodypart-option';
 import CustomerImage from '../interfaces/customer-image.interface';
 import { TranslateResult } from 'vue-i18n';
 
-import { saveForeversCreationWizardImageUploadStepData, saveForeversCreationWizardPetInfoStepData, saveForeversCreationWizardProductTypeStepData } from 'theme/helpers/forevers-creation-wizard-persistance-state';
+import { getForeversCreationWizardPersistanceState, saveForeversCreationWizardImageUploadStepData, saveForeversCreationWizardPetInfoStepData, saveForeversCreationWizardProductTypeStepData } from 'theme/helpers/forevers-creation-wizard-persistance-state';
 
 export default Vue.extend({
   name: 'OForeversCreationWizard',
@@ -296,6 +296,10 @@ export default Vue.extend({
     },
     async fillPlushieData (): Promise<void> {
       if (!this.existingCartitem) {
+        if (this.existingPlushieId) {
+          this.fillPlushieDataFromStorage(this.existingPlushieId);
+        }
+
         return;
       }
 
@@ -308,6 +312,38 @@ export default Vue.extend({
       await this.loadProductOptions(this.existingCartitem.id);
 
       this.fillCustomizeStepData(this.existingCartitem);
+    },
+    async fillPlushieDataFromStorage (plushieId: string): Promise<void> {
+      const persistanceState = await getForeversCreationWizardPersistanceState(Number.parseInt(plushieId));
+
+      if (persistanceState?.productTypeData) {
+        this.currentStep = 1;
+        const product = await this.$store.dispatch(
+          'product/loadProduct',
+          { parentSku: persistanceState.productTypeData.productSku }
+        );
+        this.productTypeStepData = {
+          product,
+          plushieId: persistanceState.productTypeData.plushieId
+        }
+      }
+
+      if (persistanceState?.imageUploadStepData) {
+        this.imageUploadStepData = persistanceState.imageUploadStepData;
+        if (
+          (this.imageUploadStepData.uploadMethod === ImageUploadMethod.NOW && this.imageUploadStepData.customerImages.length !== 0) ||
+           this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW
+        ) {
+          this.currentStep = 2;
+        }
+      }
+
+      if (persistanceState?.petInfoStepData) {
+        this.petInfoStepData = persistanceState.petInfoStepData;
+        if (this.petInfoStepData.name && this.petInfoStepData.breed && this.petInfoStepData.email) {
+          this.currentStep = 3;
+        }
+      }
     },
     fillProductTypeStepData (cartItem: CartItem): void {
       this.productTypeStepData.product = cartItem;
@@ -422,6 +458,7 @@ export default Vue.extend({
     onProductTypeStepDataInput (value: ForeversWizardProductTypeStepData): void {
       this.productTypeStepData = value;
       this.persistProductTypeStepData(value);
+      this.$router.push({ query: { ...this.$route.query, id: value.plushieId?.toString(10) } });
     },
     persistImageUploadStepData (value: ForeversWizardImageUploadStepData): void {
       if (this.existingCartitem) {
