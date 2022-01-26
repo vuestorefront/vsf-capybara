@@ -123,9 +123,13 @@
       />
       <SfInput
         v-model.trim="payment.phoneNumber"
+        :required="isPhoneNumberRequired"
+        :valid="!$v.payment.phoneNumber.$error"
+        :error-message="$t('Field is required')"
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        @blur="$v.payment.phoneNumber.$touch()"
       />
     </div>
     <SfHeading
@@ -238,6 +242,9 @@ export default {
       },
       paymentMethod: {
         required
+      },
+      phoneNumber: {
+        required: requiredIf(function () { return this.isPhoneNumberRequired })
       }
     };
 
@@ -272,6 +279,9 @@ export default {
     };
   },
   computed: {
+    isPhoneNumberRequired () {
+      return this.payment.country && this.payment.country !== 'US';
+    },
     isAddressFormDisabled () {
       return this.sendToShippingAddress || this.sendToBillingAddress;
     },
