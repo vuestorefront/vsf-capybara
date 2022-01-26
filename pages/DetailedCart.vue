@@ -64,8 +64,8 @@
                 <template #input>
                   <SfQuantitySelector
                     :qty="product.qty"
-                    :disabled="isQuantityUpdatingForProduct(product)"
-                    @input="changeQuantity(product, $event)"
+                    :disabled="isUpdatingQuantity"
+                    @input="changeProductQuantity(product, $event)"
                   />
                 </template>
                 <template #price>
@@ -162,6 +162,7 @@
   </div>
 </template>
 <script>
+import debounce from 'lodash-es/debounce';
 import {
   SfPrice,
   SfList,
@@ -185,6 +186,9 @@ import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
 import { getBundleOptionsValues, getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
+import { CART_UPD_ITEM } from '@vue-storefront/core/modules/cart/store/mutation-types'
+
+const CHANGE_QUANTITY_DEBOUNCE_TIME = 1000;
 
 const foreversProductsSkus = [
   'ForeversDog_bundle',
@@ -221,6 +225,7 @@ export default {
   },
   data () {
     return {
+      isUpdatingQuantity: false,
       isDropdownOpen: false,
       dropdownActions: [
         {
@@ -269,8 +274,7 @@ export default {
           link: '/cart'
         }
       ],
-      isMounted: false,
-      quantityUpdatingProductsKeys: []
+      isMounted: false
     };
   },
   props: {
@@ -295,14 +299,15 @@ export default {
     },
     isLoading () {
       return !this.isMounted || !this.cartIsLoaded;
-    },
-    isUpdatingQuantity () {
-      return this.quantityUpdatingProductsKeys.length !== 0;
     }
   },
   async mounted () {
+    this.syncQuantity = debounce(this.syncQuantity, CHANGE_QUANTITY_DEBOUNCE_TIME);
     await this.$nextTick();
     this.isMounted = true;
+  },
+  beforeDestroy () {
+    this.syncQuantity.cancel();
   },
   methods: {
     getPlushieName (product) {
@@ -410,14 +415,20 @@ export default {
 
       return result;
     },
-    changeQuantity (product, newQuantity) {
-      this.quantityUpdatingProductsKeys.push(this.getProductKey(product));
+    async changeProductQuantity (product, qty) {
+      this.$store.commit(`cart/${CART_UPD_ITEM}`, { product, qty });
 
-      this.$store.dispatch('cart/updateQuantity', {
-        product: product,
-        qty: newQuantity
+      if (this.$store.getters['cart/isCartSyncEnabled']) {
+        this.syncQuantity();
+      }
+    },
+    syncQuantity () {
+      this.isUpdatingQuantity = true;
+
+      return this.$store.dispatch('cart/sync', {
+        forceClientState: true
       }).finally(() => {
-        this.removeProductKeyFromQuantityUpdating(product);
+        this.isUpdatingQuantity = false;
       });
     },
     onDropdownActionClick (action) {
@@ -441,21 +452,6 @@ export default {
       const selectedBundleOptionsValues = getBundleOptionsValues(selectedBundleOptions, productBundleOptions);
 
       return selectedBundleOptionsValues[0].sku;
-    },
-    isQuantityUpdatingForProduct (product) {
-      return this.quantityUpdatingProductsKeys.includes(this.getProductKey(product));
-    },
-    getProductKey (product) {
-      return `${product.id}-${product.checksum}`;
-    },
-    removeProductKeyFromQuantityUpdating (product) {
-      const index = this.quantityUpdatingProductsKeys.findIndex(
-        (key) => key === this.getProductKey(product)
-      );
-
-      if (index !== -1) {
-        this.quantityUpdatingProductsKeys.splice(index, 1);
-      }
     }
   }
 };
