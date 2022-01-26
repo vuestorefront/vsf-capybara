@@ -19,13 +19,11 @@
               <SfCollectedProduct
                 v-for="product in products"
                 :key="product.id + product.checksum"
-                :qty="product.qty"
                 :image="getThumbnailForProductExtend(product)"
                 image-width="140"
                 image-height="140"
                 :title="product.name"
                 class="sf-collected-product--detailed collected-product"
-                @input="changeQuantity(product, $event)"
               >
                 <template #configuration>
                   <div class="collected-product__properties" v-if="getPlushieName(product)">
@@ -62,6 +60,13 @@
                       </div>
                     </template>
                   </div>
+                </template>
+                <template #input>
+                  <SfQuantitySelector
+                    :qty="product.qty"
+                    :disabled="isQuantityUpdatingForProduct(product)"
+                    @input="changeQuantity(product, $event)"
+                  />
                 </template>
                 <template #price>
                   <div />
@@ -167,7 +172,8 @@ import {
   SfProperty,
   SfHeading,
   SfBreadcrumbs,
-  SfIcon
+  SfIcon,
+  SfQuantitySelector
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters, mapState } from 'vuex';
@@ -210,11 +216,11 @@ export default {
     SfHeading,
     SfProperty,
     SfIcon,
+    SfQuantitySelector,
     OrderSummary
   },
   data () {
     return {
-      isUpdatingQuantity: false,
       isDropdownOpen: false,
       dropdownActions: [
         {
@@ -263,7 +269,8 @@ export default {
           link: '/cart'
         }
       ],
-      isMounted: false
+      isMounted: false,
+      quantityUpdatingProductsKeys: []
     };
   },
   props: {
@@ -288,6 +295,9 @@ export default {
     },
     isLoading () {
       return !this.isMounted || !this.cartIsLoaded;
+    },
+    isUpdatingQuantity () {
+      return this.quantityUpdatingProductsKeys.length !== 0;
     }
   },
   async mounted () {
@@ -401,12 +411,14 @@ export default {
       return result;
     },
     changeQuantity (product, newQuantity) {
-      this.isUpdatingQuantity = true;
+      this.quantityUpdatingProductsKeys.push(this.getProductKey(product));
 
       this.$store.dispatch('cart/updateQuantity', {
         product: product,
         qty: newQuantity
-      }).finally(() => { this.isUpdatingQuantity = false });
+      }).finally(() => {
+        this.removeProductKeyFromQuantityUpdating(product);
+      });
     },
     onDropdownActionClick (action) {
       EventBus.$emit(CartEvents.MAKE_ANOTHER_FROM_CART, action.label);
@@ -429,6 +441,21 @@ export default {
       const selectedBundleOptionsValues = getBundleOptionsValues(selectedBundleOptions, productBundleOptions);
 
       return selectedBundleOptionsValues[0].sku;
+    },
+    isQuantityUpdatingForProduct (product) {
+      return this.quantityUpdatingProductsKeys.includes(this.getProductKey(product));
+    },
+    getProductKey (product) {
+      return `${product.id}-${product.checksum}`;
+    },
+    removeProductKeyFromQuantityUpdating (product) {
+      const index = this.quantityUpdatingProductsKeys.findIndex(
+        (key) => key === this.getProductKey(product)
+      );
+
+      if (index !== -1) {
+        this.quantityUpdatingProductsKeys.splice(index, 1);
+      }
     }
   }
 };
@@ -506,6 +533,13 @@ export default {
         &:hover {
           background-color: var(--c-light);
         }
+      }
+    }
+  }
+  .sf-quantity-selector {
+    ::v-deep {
+      .sf-quantity-selector__button {
+        --button-background: transparent;
       }
     }
   }
