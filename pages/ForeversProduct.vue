@@ -35,7 +35,7 @@ export default Vue.extend({
       return config.images.fileuploaderUploadUrl;
     },
     existingPlushieId (): string {
-      return this.$route.query?.id;
+      return String(this.$route.query?.id);
     }
   },
   beforeRouteLeave (to, from, next) {
