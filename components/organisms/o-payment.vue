@@ -5,11 +5,11 @@
       :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <div class="form">
+    <div class="form" :disabled="isAddressFormDisabled">
       <SfCheckbox
         v-if="!isVirtualCart"
         v-model="sendToShippingAddress"
-        class="form__element form__checkbox"
+        class="form__element form__checkbox -always-enabled"
         name="sendToShippingAddress"
         :label="$t('Copy address data from shipping')"
       />
@@ -272,6 +272,9 @@ export default {
     };
   },
   computed: {
+    isAddressFormDisabled () {
+      return this.sendToShippingAddress || this.sendToBillingAddress;
+    },
     isSelectedCountryHasStates () {
       if (!this.payment.country || !this.states) {
         return false;
@@ -372,6 +375,16 @@ export default {
       }
     }
   }
+
+  &[disabled] {
+    .form__element {
+      &:not(.-always-enabled) {
+        pointer-events: none;
+        opacity: 0.75;
+      }
+    }
+  }
+
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
