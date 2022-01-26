@@ -5,15 +5,16 @@
       :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <div class="form">
+    <div class="form" :disabled="isAddressFormDisabled">
       <SfCheckbox
         v-if="!isVirtualCart"
         v-model="sendToShippingAddress"
-        class="form__element form__checkbox"
+        class="form__element form__checkbox -always-enabled"
         name="sendToShippingAddress"
         :label="$t('Copy address data from shipping')"
       />
       <SfCheckbox
+        v-if="hasBillingData()"
         v-model="sendToBillingAddress"
         class="form__element form__checkbox"
         name="sendToBillingAddress"
@@ -122,9 +123,13 @@
       />
       <SfInput
         v-model.trim="payment.phoneNumber"
+        :required="isPhoneNumberRequired"
+        :valid="!$v.payment.phoneNumber.$error"
+        :error-message="$t('Field is required')"
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        @blur="$v.payment.phoneNumber.$touch()"
       />
     </div>
     <SfHeading
@@ -237,6 +242,9 @@ export default {
       },
       paymentMethod: {
         required
+      },
+      phoneNumber: {
+        required: requiredIf(function () { return this.isPhoneNumberRequired })
       }
     };
 
@@ -271,6 +279,12 @@ export default {
     };
   },
   computed: {
+    isPhoneNumberRequired () {
+      return this.payment.country && this.payment.country !== 'US';
+    },
+    isAddressFormDisabled () {
+      return this.sendToShippingAddress || this.sendToBillingAddress;
+    },
     isSelectedCountryHasStates () {
       if (!this.payment.country || !this.states) {
         return false;
@@ -371,6 +385,16 @@ export default {
       }
     }
   }
+
+  &[disabled] {
+    .form__element {
+      &:not(.-always-enabled) {
+        pointer-events: none;
+        opacity: 0.75;
+      }
+    }
+  }
+
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
