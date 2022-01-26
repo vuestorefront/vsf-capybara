@@ -14,6 +14,7 @@
         :label="$t('Copy address data from shipping')"
       />
       <SfCheckbox
+        v-if="hasBillingData()"
         v-model="sendToBillingAddress"
         class="form__element form__checkbox"
         name="sendToBillingAddress"
