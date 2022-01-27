@@ -112,39 +112,20 @@
       />
 
       <validation-provider
-        v-slot="{ errors, classes }"
+        v-slot="{ errors }"
         name="Production time"
-        v-if="isProductionOptionsAvailable"
-        slim
+        tag="div"
       >
-        <div
-          class="_production-time-field"
-          :class="classes"
-        >
-          <SfHeading
-            class="-required "
-            :level="3"
-            :title="$t('Choose your production time')"
-          />
+        <MProductionTimeSelector
+          :value="productionTimeOption"
+          :production-time-options="productionTimeOptions"
+          :product-id="product.id"
+          :disabled="disabled"
+          @input="updateProductionTime"
+        />
 
-          *{{ $t('We will refund the rush fee in the unlikely event we do not meet a promised delivery date') }}.
-
-          <SfSelect
-            v-model="productionTime"
-            name="rush_addons"
-            class="_rush-addons"
-            :disabled="disabled"
-            :valid="!errors.length"
-            :error-message="errors[0]"
-          >
-            <SfSelectOption
-              v-for="option in productionTimeOptions"
-              :key="option.id"
-              :value="option.optionValueId ? option.optionValueId : ''"
-            >
-              {{ option.text }}
-            </SfSelectOption>
-          </SfSelect>
+        <div class="_error-text">
+          {{ errors[0] }}
         </div>
       </validation-provider>
 
@@ -224,18 +205,9 @@
         {{ $t('Add to Cart') }}
       </SfButton>
 
-      <p class="_order-agreement">
-        I agree to
-        <router-link to="/terms-of-service/" target="_blank">
-          Terms of Service
-        </router-link>,
-        <router-link to="/privacy-policy/" target="_blank">
-          Privacy Policy
-        </router-link>,
-        and <a href="http://support.mypetsies.com/support/solutions/folders/13000003991" target="_blank">Refund Policy</a>.
-        I understand that Petsies happily takes care of all tears, defects, and shipping damage with either a refund or a repair.
-        I also understand that my custom Petsies order is backed by the Petsies Guarantee.
-      </p>
+      <MBlockStory
+        story-slug="order_submit_agreement_petsies"
+      />
     </div>
 
     <SfModal
@@ -243,23 +215,9 @@
       @close="areQuantityNotesVisible = false"
     >
       <div class="_popup-content">
-        <p><b>Quantity Discounts</b></p>
-        <p>All quantity discounts applied automatically at checkout:</p>
-
-        <ul>
-          <li>10% discount on 10+ Petsies</li>
-          <li>20% discount on 20+ Petsies</li>
-        </ul>
-
-        <p><b>Shipping Discounts</b></p>
-
-        <ul>
-          <li>Petsies: (US) $13.95, $5.95 for each additional; (International) $25.95, $5.95 for each additional</li>
-          <li>Pillows: (US) starting at $9.95;&nbsp;(International) $20.95</li>
-          <li>Petsies Socks: (US) $4.95; (International)&nbsp;$9.95</li>
-          <li>Read more about rates&nbsp;<a href="http://support.mypetsies.com/support/solutions/articles/13000017023-shipping-handling-fees" target="_blank">here</a>. Rates determined by weight</li>
-          <li>Tracking number will be emailed to you at time of shipment</li>
-        </ul>
+        <MBlockStory
+          story-slug="petsies_shipping_qty_discount_popup_content"
+        />
       </div>
     </SfModal>
 
@@ -293,6 +251,8 @@ import { getProductPrice } from 'theme/helpers';
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
 import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-configurator.vue';
+import MBlockStory from '../../molecules/m-block-story.vue';
+import MProductionTimeSelector from '../../molecules/m-production-time-selector.vue';
 
 import BodypartOption from '../../interfaces/bodypart-option';
 import AddonOption from '../../interfaces/addon-option.interface';
@@ -316,7 +276,9 @@ export default Vue.extend({
     ValidationObserver,
     MAddonsSelector,
     ACustomProductQuantity,
-    MBodypartOptionConfigurator
+    MBodypartOptionConfigurator,
+    MBlockStory,
+    MProductionTimeSelector
   },
   props: {
     value: {
@@ -406,6 +368,9 @@ export default Vue.extend({
         this.$emit('input', newValue);
       }
     },
+    productionTimeOption (): ProductionTimeOption | undefined {
+      return this.productionTimeOptions.find(option => option.optionValueId === this.productionTime)
+    },
     addons (): AddonOption[] {
       if (!this.addonsBundleOption) {
         return []
@@ -450,9 +415,6 @@ export default Vue.extend({
     getBodypartOptions (): (id: string) => BodypartOption[] {
       return this.$store.getters['budsies/getBodypartOptions']
     },
-    isProductionOptionsAvailable (): boolean {
-      return this.productionTimeOptions.length > 1;
-    },
     productionTimeOptions (): ProductionTimeOption[] {
       if (!this.productionTimeBundleOption) {
         return []
@@ -493,6 +455,9 @@ export default Vue.extend({
     },
     async submitStep (): Promise<void> {
       await this.addToCart();
+    },
+    updateProductionTime (productionTimeOption: ProductionTimeOption) {
+      this.productionTime = productionTimeOption.optionValueId
     }
   },
   mounted () {
@@ -500,7 +465,7 @@ export default Vue.extend({
       return;
     }
 
-    this.productionTime = this.productionTimeOptions[0].optionValueId;
+    this.productionTime = this.productionTimeOptions[0].optionValueId
   }
 });
 
@@ -516,14 +481,6 @@ export default Vue.extend({
   ._quantity-field,
   ._addons {
     margin-top: var(--spacer-base);
-  }
-
-  ._production-time-field {
-    text-align: center;
-
-    ::v-deep .sf-select__selected {
-      justify-content: center;
-    }
   }
 
   ._helper-text {

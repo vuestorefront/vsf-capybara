@@ -69,7 +69,7 @@ export default {
     }),
     goToCheckout () {
       EventBus.$emit(CartEvents.GO_TO_CHECKOUT_FROM_CART)
-      this.$router.push(localizedRoute('/checkout'));
+      this.$router.push(localizedRoute({ name: 'checkout' }));
     },
     onAmazonPayAuthorized () {
       this.openModal({ name: ModalList.AmazonPayOrderDetails });

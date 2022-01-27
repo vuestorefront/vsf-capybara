@@ -1,6 +1,6 @@
 <template>
   <div id="checkout">
-    <div v-if="!isThankYouPage" class="checkout">
+    <div v-if="!showThankYouPage" class="checkout">
       <div class="checkout__main">
         <SfSteps
           :active="currentStep"
@@ -22,11 +22,13 @@
         </transition>
       </div>
     </div>
-    <OOrderConfirmation v-if="isThankYouPage" />
+    <OOrderConfirmation v-if="showThankYouPage" />
   </div>
 </template>
 <script>
+import config from 'config';
 import Checkout from '@vue-storefront/core/pages/Checkout';
+import { isServer } from '@vue-storefront/core/helpers'
 import { SfSteps } from '@storefront-ui/vue';
 import OPayment from 'theme/components/organisms/o-payment';
 import OShipping from 'theme/components/organisms/o-shipping';
@@ -38,8 +40,16 @@ import OPersonalDetails from 'theme/components/organisms/o-personal-details';
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapGetters } from 'vuex';
 
+const successParamValue = 'success';
+
 export default {
   name: 'Checkout',
+  props: {
+    success: {
+      type: String,
+      default: undefined
+    }
+  },
   components: {
     SfSteps,
     OPayment,
@@ -84,12 +94,39 @@ export default {
     }),
     currentStep () {
       return this.steps.findIndex(step => this.activeSection[step.key]);
+    },
+    isSuccess () {
+      return this.success === successParamValue;
+    },
+    showThankYouPage () {
+      return this.isThankYouPage && this.isSuccess;
     }
   },
+  beforeMount () {
+    this.$bus.$on('order-after-placed', this.onOrderAfterPlacedHandler);
+  },
+  beforeDestroy () {
+    this.$bus.$off('order-after-placed', this.onOrderAfterPlacedHandler)
+  },
   methods: {
+    activateHashSection () {
+      if (!this.showThankYouPage) {
+        Checkout.methods.activateHashSection.bind(this)();
+      }
+    },
     changeStep (nextStep) {
       if (nextStep < this.currentStep) {
         this.$bus.$emit('checkout-before-edit', this.steps[nextStep].key);
+      }
+    },
+    async onOrderAfterPlacedHandler () {
+      if (!this.isSuccess) {
+        await this.$router.push({
+          name: 'checkout',
+          params: {
+            success: successParamValue
+          }
+        });
       }
     },
     showNotification ({ type, message }) {

@@ -12,23 +12,29 @@ import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
 import { forStoryblok } from 'src/modules/vsf-storyblok-module/mappingFallback'
 import { extendStore } from '@vue-storefront/core/helpers'
-import { StorefrontModule } from '@vue-storefront/core/lib/modules'
+import { StorefrontModule, registerModule } from '@vue-storefront/core/lib/modules'
 import { BudsiesModule } from 'src/modules/budsies'
 import { Braintree } from 'src/modules/payment-braintree'
 import { PromotionPlatformModule } from 'src/modules/promotion-platform'
 import { GiftCardModule } from 'src/modules/gift-card'
 import { AmazonPay } from 'src/modules/vsf-amazon-pay'
+import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
+import { PaymentAffirm } from 'src/modules/payment-affirm';
+import { UrlRewriteModule } from 'src/modules/url-rewrite';
+import { mappingFallbackForUrlRewrite } from 'src/modules/url-rewrite/mappingFallback';
 
-import { registerModule } from '@vue-storefront/core/lib/modules'
 import registerStoryblokComponents from 'theme/components/storyblok'
 
 const extendUrlVuex = {
   actions: {
     async mapFallbackUrl (context, payload: any) {
       const result = await forStoryblok(context, payload);
+
       if (result) {
         return result
       }
+
+      await mappingFallbackForUrlRewrite(context, payload);
     }
   }
 }
@@ -56,6 +62,9 @@ export function registerClientModules () {
   registerModule(Braintree)
   registerModule(PromotionPlatformModule)
   registerModule(GiftCardModule)
+  registerModule(PaymentBackendMethodsModule)
+  registerModule(PaymentAffirm)
+  registerModule(UrlRewriteModule)
 }
 
 // Deprecated API, will be removed in 2.0

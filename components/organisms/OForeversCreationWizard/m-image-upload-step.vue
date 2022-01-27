@@ -5,6 +5,10 @@
     tag="div"
     ref="validation-observer"
   >
+    <MBlockStory
+      story-slug="petsies_creation_page_top"
+    />
+
     <div class="_upload-now" v-show="isUploadNow">
       <SfHeading
         class="_step-title -required "
@@ -130,9 +134,9 @@
       </div>
     </div>
 
-    <p>
-      {{ $t('Petsies are not replicas of your pet. They are handcrafted plush works of art. For better or worse, Petsies will not smell, shed, or bite like your pet') }} :)
-    </p>
+    <MBlockStory
+      story-slug="petsies_creation_page_bottom"
+    />
   </validation-observer>
 </template>
 
@@ -156,6 +160,7 @@ import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import CustomerImage from 'theme/components/interfaces/customer-image.interface';
 
 import MArtworkUpload from '../../molecules/m-artwork-upload.vue';
+import MBlockStory from '../../molecules/m-block-story.vue';
 
 import ForeversWizardImageUploadStepData from '../../interfaces/forevers-wizard-image-upload-step-data.interface';
 
@@ -175,7 +180,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfButton,
     ValidationObserver,
     ValidationProvider,
-    MArtworkUpload
+    MArtworkUpload,
+    MBlockStory
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }

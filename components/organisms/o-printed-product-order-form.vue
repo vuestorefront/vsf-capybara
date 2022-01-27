@@ -28,7 +28,7 @@
 
         <validation-observer v-slot="{ passes }" slim ref="validation-observer">
           <form
-            @submit.prevent="(event) => passes(() => onSubmit(event))"
+            @submit.prevent="() => passes(() => onSubmit())"
           >
             <div class="_additional-options">
               <div v-show="hasStyleSelections">
@@ -40,7 +40,9 @@
                   v-slot="{ errors }"
                   rules="required"
                   name="'Style Option'"
+                  mode="passive"
                   tag="div"
+                  ref="style-option-validation-provider"
                 >
                   <SfSelect
                     :selected="selectedStyle"
@@ -51,6 +53,7 @@
                     class="sf-select--underlined"
                     :size="10"
                     :disabled="isSubmitting"
+                    :should-lock-scroll-on-open="isMobile"
                   >
                     <SfSelectOption disabled value="">
                       Select Design Variant
@@ -96,6 +99,7 @@
                   :product-id="backendProductId"
                   :disabled="isSubmitting"
                   :upload-url="artworkUploadUrl"
+                  :initial-items="artworkInitialItems"
                   @file-added="onArtworkAdd"
                   @file-removed="onArtworkRemove"
                 />
@@ -112,7 +116,9 @@
               :backend-product-id="backendProductId"
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
-              v-show="hasExtraFaceAddons"
+              :initial-variant="initialAddonItemId"
+              :initial-artworks="initialExtraImages"
+              v-if="hasExtraFaceAddons"
               @input="extraFacesData = $event"
             />
 
@@ -163,15 +169,22 @@ import i18n from '@vue-storefront/i18n';
 import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import { getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
 import { getProductPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
-import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
+import { getProductGallery as getGalleryByProduct, setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
+import CartItem from 'core/modules/cart/types/CartItem';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -239,6 +252,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     selectedStyle: {
       type: String as PropType<string | undefined>,
       default: undefined
+    },
+    existingCartItem: {
+      type: Object as PropType<CartItem | undefined>,
+      default: undefined
     }
   },
   data () {
@@ -251,10 +268,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         storageItems: []
       } as ExtraFacesConfiguratorData,
       isSubmitting: false,
-      shouldShowDesignSelector: true
+      shouldShowDesignSelector: true,
+      artworkInitialItems: [] as CustomerImage[],
+      initialAddonItemId: undefined as string | undefined,
+      initialExtraImages: [] as CustomerImage[]
     }
   },
   computed: {
+    ...mapMobileObserver(),
     ...mapGetters({
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
       getProductGallery: 'product/getProductGallery'
@@ -466,22 +487,20 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return style.shortDescription;
+    },
+    hasOnlyOneAvailableStyle (): boolean {
+      return this.availableStyles.length === 1;
     }
   },
   methods: {
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    onArtworkAdd (value: Item): void {
-      this.customerImage = {
-        id: value.id,
-        url: this.imageHandlerService.getOriginalImageUrl(value.url)
-      };
-    },
-    onArtworkRemove (storageItemId: string): void {
-      this.customerImage = undefined;
-    },
-    async onSubmit (event: Event): Promise<void> {
+    async addToCart (): Promise<void> {
+      if (this.isSubmitting) {
+        return;
+      }
+
       this.isSubmitting = true;
 
       await this.$store.dispatch(
@@ -494,21 +513,52 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         url: this.imageHandlerService.getOriginalImageUrl(item.url)
       }));
 
-      this.$store.dispatch('cart/addItem', {
-        productToAdd: Object.assign({}, this.product, {
-          qty: this.quantity,
-          customerImages: [this.customerImage, ...extraFacesArtworks],
-          uploadMethod: 'upload-now'
-        })
-      }).then(() => {
+      try {
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: Object.assign({}, this.product, {
+              qty: this.quantity,
+              customerImages: [this.customerImage, ...extraFacesArtworks],
+              uploadMethod: 'upload-now'
+            })
+          });
+        } catch (err) {
+          if (err instanceof ServerError) {
+            throw err;
+          }
+
+          Logger.error(err, 'budsies')();
+        }
+
         this.onSuccess();
-      }).catch(err => {
+      } catch (err) {
         Logger.error(err, 'budsies')();
 
         this.onFailure('Unexpected error: ' + err);
-      }).finally(() => {
+      } finally {
         this.isSubmitting = false;
-      });
+      }
+    },
+    cleanExistingProductData (): void {
+      this.fillEmptyCustomerImagesData();
+      this.fillEmptyExtraFacesDataAddon();
+      this.fillEmptyExtraFacesDataStorageItems();
+    },
+    onArtworkAdd (value: Item): void {
+      this.customerImage = {
+        id: value.id,
+        url: this.imageHandlerService.getOriginalImageUrl(value.url)
+      };
+    },
+    onArtworkRemove (storageItemId: string): void {
+      this.customerImage = undefined;
+    },
+    onSubmit (): void {
+      if (!this.existingCartItem) {
+        this.addToCart();
+      } else {
+        this.updateExistingCartItem();
+      }
     },
     async onSuccess (): Promise<void> {
       try {
@@ -550,8 +600,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
     },
+    getStyleOptionValidationProvider (): InstanceType<typeof ValidationProvider> | undefined {
+      return this.$refs['style-option-validation-provider'] as InstanceType<typeof ValidationProvider> | undefined;
+    },
     goToCrossSells (): void {
-      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
+      this.$router.push(localizedRoute({
+        name: 'cross-sells',
+        params: {
+          parentSku: this.product.sku
+        }
+      }));
     },
     selectStyle (styleValue: string): void {
       if (styleValue === this.selectedStyle) {
@@ -559,14 +617,155 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.$emit('style-selected', styleValue);
+    },
+    fillCustomerImagesData (existingCartItem: CartItem): void {
+      if (!existingCartItem.customerImages?.length) {
+        this.fillEmptyCustomerImagesData();
+        return;
+      }
+
+      this.customerImage = existingCartItem.customerImages[0];
+      this.artworkInitialItems = [{ ...this.customerImage }]
+    },
+    fillEmptyCustomerImagesData (): void {
+      this.customerImage = undefined;
+      this.artworkInitialItems = [];
+    },
+    fillEmptyExtraFacesDataAddon (): void {
+      this.extraFacesData.addon = undefined;
+      this.initialAddonItemId = undefined;
+    },
+    fillEmptyExtraFacesDataStorageItems (): void {
+      this.extraFacesData.storageItems = [];
+      this.initialExtraImages = [];
+    },
+    fillProductDataFromExistingCartItem (existingCartItem: CartItem): void {
+      if (!existingCartItem) {
+        throw new Error('Existing cart item is undefined');
+      }
+
+      this.fillCustomerImagesData(existingCartItem);
+      this.fillExtraFacesData(existingCartItem);
+      this.fillQuantity(existingCartItem);
+    },
+    fillExtraFacesData (existingCartItem: CartItem): void {
+      this.fillExtraFacesDataAddon(existingCartItem);
+      this.fillExtraFacesDataStorageItems(existingCartItem);
+    },
+    fillExtraFacesDataAddon (existingCartItem: CartItem): void {
+      const selectedBundleOptions = getSelectedBundleOptions(existingCartItem);
+
+      if (!this.addons.length || !selectedBundleOptions.length) {
+        this.fillEmptyExtraFacesDataAddon();
+        return;
+      }
+
+      const selectedAddon: ExtraPhotoAddonOption | undefined = this.addons.find(
+        (addon) => selectedBundleOptions.find(
+          (selectedOption) => selectedOption.option_id === addon.optionId &&
+         selectedOption.option_selections.includes(addon.optionValueId)
+        )
+      )
+
+      if (!selectedAddon) {
+        this.fillEmptyExtraFacesDataAddon();
+        return;
+      }
+
+      this.extraFacesData.addon = selectedAddon;
+      this.initialAddonItemId = selectedAddon.id;
+    },
+    fillExtraFacesDataStorageItems (existingCartItem: CartItem): void {
+      if (!existingCartItem.customerImages || existingCartItem.customerImages.length <= 1) {
+        this.fillEmptyExtraFacesDataStorageItems();
+        return;
+      }
+
+      const customerExtraFacesImages = [...existingCartItem.customerImages];
+      customerExtraFacesImages.splice(0, 1);
+
+      this.extraFacesData.storageItems = customerExtraFacesImages;
+      this.initialExtraImages = customerExtraFacesImages;
+    },
+    fillQuantity (existingCartItem: CartItem): void {
+      this.quantity = existingCartItem.qty;
+    },
+    async updateClientAndServerItem (payload: {
+      product: CartItem,
+      forceUpdateServerItem?: boolean,
+      forceClientState?: boolean
+    }): Promise<void> {
+      await this.$store.dispatch('cart/updateClientAndServerItem', payload);
+    },
+    async updateExistingCartItem (): Promise<void> {
+      if (!this.existingCartItem) {
+        throw new Error('Cart item is undefined');
+      }
+
+      this.isSubmitting = true;
+
+      const extraFacesArtworks: CustomerImage[] = this.extraFacesData.storageItems.map(item => {
+        let url = item.url;
+
+        if (!this.initialExtraImages.find((image) => image.id === item.id)) {
+          url = this.imageHandlerService.getOriginalImageUrl(item.url);
+        }
+
+        return {
+          id: item.id,
+          url
+        }
+      });
+
+      try {
+        try {
+          await this.updateClientAndServerItem({
+            product: Object.assign({}, this.existingCartItem, {
+              qty: this.quantity,
+              customerImages: [this.customerImage, ...extraFacesArtworks],
+              product_option: setBundleProductOptionsAsync(null, { product: this.existingCartItem, bundleOptions: this.$store.state.product.current_bundle_options }),
+              uploadMethod: 'upload-now'
+            }),
+            forceUpdateServerItem: true
+          });
+        } catch (err) {
+          if (err instanceof ServerError) {
+            throw err;
+          }
+
+          Logger.error(err, 'budsies')();
+        }
+
+        this.onSuccess();
+      } catch (err) {
+        Logger.error(err, 'budsies')();
+
+        this.onFailure('Unexpected error: ' + err);
+      } finally {
+        this.isSubmitting = false;
+      }
     }
   },
   created (): void {
     if (this.product.qty) {
       this.quantity = this.product.qty;
     }
+
+    if (this.existingCartItem) {
+      this.fillProductDataFromExistingCartItem(this.existingCartItem);
+    }
+  },
+  beforeDestroy () {
+    unMapMobileObserver();
   },
   watch: {
+    addons () {
+      if (!this.existingCartItem) {
+        return;
+      }
+
+      this.fillExtraFacesData(this.existingCartItem);
+    },
     availableStyles: {
       handler (): void {
         // SfSelect doesn't support options updating in the current package version
@@ -577,13 +776,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         });
       }
     },
+    existingCartItem (newValue?: CartItem, oldValue?: CartItem) {
+      if (oldValue && !newValue) {
+        this.cleanExistingProductData();
+      }
+
+      if (newValue) {
+        this.fillProductDataFromExistingCartItem(newValue);
+      }
+    },
     product: {
       handler (newValue: Product, oldValue: Product | undefined) {
         if (newValue.id === oldValue?.id) {
           return;
         }
 
-        if (!this.selectedStyle && this.availableStyles.length === 1) {
+        if (!this.selectedStyle && this.hasOnlyOneAvailableStyle) {
           this.selectStyle(this.availableStyles[0].value);
         }
 
@@ -598,21 +806,40 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       immediate: true
     },
     selectedStyle: {
-      handler () {
-        if (!this.styleBundleOption) {
-          Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
-          return
+      handler (val: string | undefined, oldVal: string | undefined) {
+        if (val === oldVal) {
+          return;
         }
 
-        const selectedDesign = this.availableStyles.find(design => design.value === this.selectedStyle);
+        if (!this.styleBundleOption) {
+          Logger.error('styleBundleOption is not defined while attempt to set style was performed', 'budsies')();
+          return;
+        }
+
+        if (!val && this.hasOnlyOneAvailableStyle) {
+          this.selectStyle(this.availableStyles[0].value);
+          return;
+        }
+
+        const selectedDesign = this.availableStyles.find(design => design.value === val);
 
         this.setBundleOptionValue({
           optionId: this.styleBundleOption.option_id,
           optionQty: 1,
           optionSelections: selectedDesign ? [selectedDesign.optionValueId] : []
         });
+
+        const styleOptionValidationProvider = this.getStyleOptionValidationProvider();
+
+        if (!styleOptionValidationProvider) {
+          return;
+        }
+
+        this.$nextTick().then(() => {
+          styleOptionValidationProvider.validate();
+        });
       },
-      immediate: false
+      immediate: true
     },
     'extraFacesData.addon': {
       handler (newValue: ExtraPhotoAddonOption | undefined) {
@@ -749,6 +976,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
     .sf-select {
       --select-padding: 0;
+    }
+
+    .sf-select-option[disabled] {
+      pointer-events: none;
+      opacity: 0.8;
     }
 
     &.-skin-petsies {

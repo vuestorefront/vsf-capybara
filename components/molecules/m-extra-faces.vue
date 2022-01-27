@@ -24,7 +24,7 @@
             :product-id="backendProductId"
             :upload-url="uploadUrl"
             :disabled="disabled"
-            :file="getInitialArtworkUrl(index - 1)"
+            :initial-items="artworkUploadInitialItems(index - 1)"
             @file-added="(value) => onArtworkAdd(index - 1, value)"
             @file-removed="(storageItemId) => onArtworkRemove(index - 1, storageItemId)"
           />
@@ -52,6 +52,7 @@
       class="_extra-faces-selector sf-select--underlined"
       selected=""
       :disabled="disabled"
+      :should-lock-scroll-on-open="isMobile"
     >
       <SfSelectOption value="">
         No extra pets
@@ -75,6 +76,10 @@ import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { SfSelect } from '@storefront-ui/vue';
 import * as types from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import { Item } from 'src/modules/file-storage';
 
@@ -129,6 +134,7 @@ export default Vue.extend({
     }
   },
   computed: {
+    ...mapMobileObserver(),
     selectedVariant: {
       get: function (): ExtraPhotoAddonOption | undefined {
         return this.fSelectedVariant;
@@ -184,10 +190,16 @@ export default Vue.extend({
       this.selectedVariant = matchingOption;
     }
   },
+  beforeDestroy (): void {
+    unMapMobileObserver();
+  },
   methods: {
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
+    artworkUploadInitialItems (index: number): UploadedArtwork[] | undefined {
+      return this.initialArtworks.length ? [this.initialArtworks[index]] : undefined;
+    },
     clearUploaders (): void {
       const uploaders = this.getUploaders();
 
@@ -208,14 +220,6 @@ export default Vue.extend({
 
       return item.id;
     },
-    getInitialArtworkUrl (index: number): string | undefined {
-      const item = this.initialArtworks[index];
-      if (!item) {
-        return;
-      }
-
-      return item.url;
-    },
     getFilesIds (): string[] {
       return this.uploaderValues.map(item => item.id);
     },
@@ -223,10 +227,7 @@ export default Vue.extend({
       this.selectedVariant = undefined;
     },
     onArtworkAdd (index: number, value: Item): void {
-      Vue.set(this.uploaderValues, index, {
-        id: value.id,
-        url: value.url
-      });
+      this.uploaderValues.splice(index, 0, value);
 
       const eventData: ExtraFacesConfiguratorData = {
         addon: this.selectedVariant,
@@ -266,6 +267,11 @@ export default Vue.extend({
         this.reset();
       },
       immediate: true
+    },
+    initialVariant (newValue: string, oldValue: string) {
+      if (!newValue && oldValue) {
+        this.selectedVariant = undefined;
+      }
     }
   }
 })

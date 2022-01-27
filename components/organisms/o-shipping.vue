@@ -115,10 +115,14 @@
       />
       <SfInput
         v-model.trim="shipping.phoneNumber"
+        :required="isPhoneNumberRequired"
+        :valid="!$v.shipping.phoneNumber.$error"
+        :error-message="$t('Field is required')"
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
         :disabled="isFormFieldsDisabled"
+        @blur="$v.shipping.phoneNumber.$touch()"
       />
     </div>
     <SfHeading
@@ -227,6 +231,9 @@ export default {
       city: {
         required,
         unicodeAlpha
+      },
+      phoneNumber: {
+        required: requiredIf(function () { return this.isPhoneNumberRequired })
       }
     }
   },
@@ -238,6 +245,9 @@ export default {
     };
   },
   computed: {
+    isPhoneNumberRequired () {
+      return this.shipping.country && this.shipping.country !== 'US';
+    },
     isSelectedCountryHasStates () {
       if (!this.shipping.country || !this.states) {
         return false;

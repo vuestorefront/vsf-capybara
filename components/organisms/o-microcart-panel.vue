@@ -182,7 +182,7 @@ export default {
       this.$store.dispatch('cart/removeItem', { product: product });
     },
     goToCheckout () {
-      this.$router.push(localizedRoute('/checkout'));
+      this.$router.push(localizedRoute({ name: 'checkout' }));
       this.closeMicrocartExtend();
     },
     changeQuantity (product, newQuantity) {
