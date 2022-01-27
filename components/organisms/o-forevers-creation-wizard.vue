@@ -301,20 +301,20 @@ export default Vue.extend({
         );
       });
     },
-    async fillPlushieData (): Promise<void> {
+    async fillPlushieDataFromCartItem (): Promise<void> {
       if (!this.existingCartitem) {
         return;
       }
 
       this.currentStep = 1; // todo
 
-      this.fillImageUploadStepData(this.existingCartitem);
-      this.fillProductTypeStepData(this.existingCartitem);
-      this.fillPetInfoStepData(this.existingCartitem);
+      this.fillImageUploadStepDataFromCartItem(this.existingCartitem);
+      this.fillProductTypeStepDataFromCartItem(this.existingCartitem);
+      this.fillPetInfoStepDataFromCartItem(this.existingCartitem);
 
       await this.loadProductOptions(this.existingCartitem.id);
 
-      this.fillCustomizeStepData(this.existingCartitem);
+      this.fillCustomizeStepDataFromCartItem(this.existingCartitem);
     },
     async fillPlushieDataFromPersistedState (): Promise<void> {
       if (this.existingCartitem || !this.existingPlushieId) {
@@ -327,7 +327,7 @@ export default Vue.extend({
       this.fillImageUploadStepDataFromPersistedState(persistedState);
       this.fillPetInfoStepDataFromPersistedState(persistedState);
     },
-    fillProductTypeStepData (cartItem: CartItem): void {
+    fillProductTypeStepDataFromCartItem (cartItem: CartItem): void {
       this.productTypeStepData.product = cartItem;
       this.productTypeStepData.plushieId = cartItem.plushieId ? Number.parseInt(cartItem.plushieId, 10) : undefined;
     },
@@ -403,18 +403,18 @@ export default Vue.extend({
 
       this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
     },
-    fillImageUploadStepData (cartItem: CartItem): void {
+    fillImageUploadStepDataFromCartItem (cartItem: CartItem): void {
       this.imageUploadStepData.uploadMethod = cartItem.uploadMethod
         ? cartItem.uploadMethod as ImageUploadMethod
         : ImageUploadMethod.NOW;
       this.imageUploadStepData.customerImages = cartItem.customerImages ? cartItem.customerImages : [];
     },
-    fillPetInfoStepData (cartItem: CartItem): void {
+    fillPetInfoStepDataFromCartItem (cartItem: CartItem): void {
       this.petInfoStepData.name = cartItem.plushieName;
       this.petInfoStepData.breed = cartItem.plushieBreed;
       this.petInfoStepData.email = cartItem.email;
     },
-    fillCustomizeStepData (cartItem: CartItem): void {
+    fillCustomizeStepDataFromCartItem (cartItem: CartItem): void {
       this.fillBodypartsValues(cartItem);
       this.fillAddons(cartItem);
       this.fillProductionTime(cartItem);
@@ -600,7 +600,7 @@ export default Vue.extend({
   created (): void {
     this.$store.dispatch('budsies/loadBreeds');
 
-    this.fillPlushieData();
+    this.fillPlushieDataFromCartItem();
   },
   beforeMount (): void {
     this.fillPlushieDataFromPersistedState();
