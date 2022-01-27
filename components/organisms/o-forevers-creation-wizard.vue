@@ -85,6 +85,7 @@ import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes
 } from 'src/modules/budsies';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -189,7 +190,7 @@ export default Vue.extend({
       return this.getBundleOption('production time');
     },
     existingCartitem (): CartItem | undefined {
-      return this.cartItems.find(({ plushieId }) => plushieId && plushieId === this.existingPlushieId);
+      return this.cartItems.find(({ plushieId }) => plushieId && String(plushieId) === this.existingPlushieId);
     },
     steps (): TranslateResult[] {
       return [
@@ -225,31 +226,41 @@ export default Vue.extend({
       );
 
       try {
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: Object.assign({}, this.product, {
-            qty: this.customizeStepData.quantity,
-            plushieId: this.plushieId + '',
-            email: this.petInfoStepData.email?.trim(),
-            plushieName: this.petInfoStepData.name?.trim(),
-            plushieBreed: this.petInfoStepData.breed?.trim(),
-            plushieDescription: this.customizeStepData.description?.trim(),
-            bodyparts: this.getBodypartsData(),
-            uploadMethod: this.imageUploadStepData.uploadMethod,
-            customerImages: this.customerImages
-          })
-        });
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: Object.assign({}, this.product, {
+              qty: this.customizeStepData.quantity,
+              plushieId: this.plushieId + '',
+              email: this.petInfoStepData.email?.trim(),
+              plushieName: this.petInfoStepData.name?.trim(),
+              plushieBreed: this.petInfoStepData.breed?.trim(),
+              plushieDescription: this.customizeStepData.description?.trim(),
+              bodyparts: this.getBodypartsData(),
+              uploadMethod: this.imageUploadStepData.uploadMethod,
+              customerImages: this.customerImages
+            })
+          });
+        } catch (error) {
+          if (error instanceof ServerError) {
+            throw error;
+          }
+
+          Logger.error(error, 'budsies')();
+        }
 
         this.goToCrossSells();
-      } catch (err) {
-        Logger.error(err, 'budsies')();
+      } catch (error) {
+        Logger.error(error, 'budsies')();
 
-        this.onFailure('Unexpected error: ' + err);
+        this.onFailure('Unexpected error: ' + error);
       } finally {
         this.isSubmitting = false;
       }
     },
     fillAddons (cartItem: CartItem): void {
       const productOption = cartItem.product_option;
+      this.customizeStepData.addons = [];
+
       if (!this.addonsBundleOption || !productOption) {
         return;
       }
@@ -261,20 +272,21 @@ export default Vue.extend({
       this.customizeStepData.addons = productOption.extension_attributes.bundle_options[this.addonsBundleOption.option_id].option_selections.map((selection: number) => selection);
     },
     fillBodypartsValues (cartItem: CartItem): void {
+      this.customizeStepData.bodypartsValues = {};
+
       if (!cartItem.bodyparts) {
         return;
       }
 
-      const bodyparts: Record<string, string[]> = cartItem.bodyparts as Record<string, string[]>;
-
-      this.customizeStepData.bodypartsValues = {};
+      const bodyparts: Record<string, any[]> = cartItem.bodyparts as Record<string, any[]>;
 
       Object.keys(bodyparts).forEach((key: string) => {
         Vue.set(
           this.customizeStepData.bodypartsValues,
           key,
           this.getBodypartOptions(key).filter(
-            (bodypart: BodypartOption) => bodyparts[key].includes(bodypart.id)
+            (bodypartOption: BodypartOption) => bodyparts[key].includes(bodypartOption.id) ||
+              bodyparts[key].includes(Number(bodypartOption.id))
           )
         );
       });
@@ -300,6 +312,7 @@ export default Vue.extend({
     },
     fillProductionTime (cartItem: CartItem): void {
       const productOption = cartItem.product_option;
+      this.customizeStepData.productionTime = undefined;
       if (!this.productionTimeBundleOption || !productOption) {
         return;
       }
@@ -311,7 +324,9 @@ export default Vue.extend({
       this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
     },
     fillImageUploadStepData (cartItem: CartItem): void {
-      this.imageUploadStepData.uploadMethod = cartItem.uploadMethod as ImageUploadMethod;
+      this.imageUploadStepData.uploadMethod = cartItem.uploadMethod
+        ? cartItem.uploadMethod as ImageUploadMethod
+        : ImageUploadMethod.NOW;
       this.imageUploadStepData.customerImages = cartItem.customerImages ? cartItem.customerImages : [];
     },
     fillPetInfoStepData (cartItem: CartItem): void {
@@ -412,21 +427,29 @@ export default Vue.extend({
       this.isSubmitting = true;
 
       try {
-        await this.updateClientAndServerItem({
-          product: Object.assign({}, this.existingCartitem, {
-            qty: this.customizeStepData.quantity,
-            plushieId: this.plushieId + '',
-            email: this.petInfoStepData.email?.trim(),
-            plushieName: this.petInfoStepData.name?.trim(),
-            plushieBreed: this.petInfoStepData.breed?.trim(),
-            plushieDescription: this.customizeStepData.description?.trim(),
-            bodyparts: this.getBodypartsData(),
-            uploadMethod: this.imageUploadStepData.uploadMethod,
-            product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
-            customerImages: this.customerImages
-          }),
-          forceUpdateServerItem: true
-        });
+        try {
+          await this.updateClientAndServerItem({
+            product: Object.assign({}, this.existingCartitem, {
+              qty: this.customizeStepData.quantity,
+              plushieId: this.plushieId + '',
+              email: this.petInfoStepData.email?.trim(),
+              plushieName: this.petInfoStepData.name?.trim(),
+              plushieBreed: this.petInfoStepData.breed?.trim(),
+              plushieDescription: this.customizeStepData.description?.trim(),
+              bodyparts: this.getBodypartsData(),
+              uploadMethod: this.imageUploadStepData.uploadMethod,
+              product_option: setBundleProductOptionsAsync(null, { product: this.existingCartitem, bundleOptions: this.$store.state.product.current_bundle_options }),
+              customerImages: this.customerImages
+            }),
+            forceUpdateServerItem: true
+          });
+        } catch (error) {
+          if (error instanceof ServerError) {
+            throw error;
+          }
+
+          Logger.error(error, 'budsies')();
+        }
 
         this.goToCrossSells();
       } catch (error) {

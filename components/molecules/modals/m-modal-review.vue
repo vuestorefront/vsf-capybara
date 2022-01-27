@@ -18,6 +18,7 @@
         <SfInput
           v-model="formData.email"
           name="email"
+          type="email"
           :label="$t('Email address')"
           :required="true"
           :valid="!$v.formData.email.$error"

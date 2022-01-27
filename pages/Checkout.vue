@@ -26,6 +26,7 @@
   </div>
 </template>
 <script>
+import config from 'config';
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { isServer } from '@vue-storefront/core/helpers'
 import { SfSteps } from '@storefront-ui/vue';

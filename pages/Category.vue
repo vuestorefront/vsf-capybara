@@ -36,6 +36,7 @@
             class="navbar__select sort-by"
             ref="SortBy"
             :selected="sortOrder"
+            :should-lock-scroll-on-open="isMobile"
             @change="changeSortOder"
           >
             <SfSelectOption
@@ -200,14 +201,18 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
+import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct, getProductPrice } from 'theme/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
-import { getProductPrice } from 'theme/helpers';
+
 import {
   localizedRoute,
   currentStoreView
 } from '@vue-storefront/core/lib/multistore';
 import store from '@vue-storefront/core/store'
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import ASortIcon from 'theme/components/atoms/a-sort-icon';
 import {
@@ -289,6 +294,7 @@ export default {
     };
   },
   computed: {
+    ...mapMobileObserver(),
     ...mapGetters({
       getCurrentSearchQuery: 'category-next/getCurrentSearchQuery',
       getCategoryProducts: 'category-next/getCategoryProducts',
@@ -464,6 +470,7 @@ export default {
     this.getBrowserWidth();
   },
   beforeDestroy () {
+    unMapMobileObserver();
     this.$store.dispatch('category-next/resetCurrentCategoryData');
     this.unsubscribeFromStoreAction();
     this.$bus.$off('product-after-list', this.initPagination);

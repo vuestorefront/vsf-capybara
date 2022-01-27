@@ -74,6 +74,7 @@ import GiftCardTemplate from 'src/modules/gift-card/types/GiftCardTemplate.inter
 import { ImageHandlerService } from 'src/modules/file-storage';
 import { InjectType } from 'src/modules/shared';
 import { GiftCardOptions, GiftCardTemplateSize } from 'src/modules/gift-card';
+import ServerError from 'src/modules/shared/types/server-error';
 
 import GiftCardOrderFormData from 'theme/components/interfaces/gift-card-order-form-data.interface';
 
@@ -268,19 +269,27 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           notify_success: 0
         };
 
-        await this.$store.dispatch('cart/addItem', {
-          productToAdd: {
-            ...this.product,
-            qty: this.giftCardOrderFormData.qty,
-            giftcard_options: giftCardOptions
+        try {
+          await this.$store.dispatch('cart/addItem', {
+            productToAdd: {
+              ...this.product,
+              qty: this.giftCardOrderFormData.qty,
+              giftcard_options: giftCardOptions
+            }
+          });
+        } catch (error) {
+          if (error instanceof ServerError) {
+            throw error;
           }
-        });
+
+          Logger.error(error, 'budsies')();
+        }
 
         this.goToCart();
-      } catch (err) {
-        Logger.error(err, 'budsies')();
+      } catch (error) {
+        Logger.error(error, 'budsies')();
 
-        this.onFailure('Unexpected error: ' + err);
+        this.onFailure('Unexpected error: ' + error);
       }
     },
     closePreviewModal (): void {

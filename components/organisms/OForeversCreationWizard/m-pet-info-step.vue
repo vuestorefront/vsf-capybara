@@ -70,6 +70,7 @@
 
         <SfInput
           name="email"
+          type="email"
           v-model.trim="email"
           placeholder="sample@email.com"
           :disabled="disabled"

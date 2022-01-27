@@ -88,7 +88,8 @@ let routes = [
     component: PrintedProduct,
     props: route => ({
       sku: route.params.sku,
-      productDesign: route.query.product_design
+      productDesign: route.query.product_design,
+      existingPlushieId: route.query.existingPlushieId
     })
   },
   { name: 'pillow-product',
