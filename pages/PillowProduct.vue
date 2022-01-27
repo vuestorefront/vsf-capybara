@@ -11,7 +11,6 @@
 </template>
 
 <script lang="ts">
-import { PropType } from 'vue';
 import config from 'config';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { isServer } from '@vue-storefront/core/helpers';
@@ -26,17 +25,12 @@ const pillowSku = 'customPillow_bundle';
 
 export default {
   name: 'PillowProduct',
-  props: {
-    plushieId: {
-      type: Number as PropType<number | undefined>,
-      default: undefined
-    }
-  },
   components: {
     OPillowProductOrderForm
   },
   data () {
     return {
+      plushieId: undefined as number | undefined,
       isRouterLeaving: false
     };
   },
@@ -58,21 +52,9 @@ export default {
     }
   },
   async mounted (): Promise<void> {
+    // TODO check ID in URL and load plushie instead of create a new one
     await this.setCurrentProduct();
-
-    if (this.plushieId) {
-      const task = await this.$store.dispatch(
-        'budsies/fetchPlushieById',
-        { plushieId: this.plushieId }
-      );
-
-      // TODO try to find existing cart item with corresponding plushie id for cart item editing purpose.
-      if (task.code === 200 && task.result.status_id === 1) {
-        return;
-      }
-    }
-
-    await this.createPlushie();
+    this.plushieId = await this.createPlushie();
   },
   async asyncData ({ store, route, context }): Promise<void> {
     if (context) context.output.cacheTags.add('product')
@@ -108,18 +90,15 @@ export default {
   },
   methods: {
     async onMakeAnother (): Promise<void> {
-      await this.createPlushie();
+      this.plushieId = await this.createPlushie();
     },
-    async createPlushie (): Promise<void> {
+    async createPlushie (): Promise<number> {
       if (!this.getCurrentProduct) {
         throw new Error('Current product is not set!');
       }
 
       const task = await this.$store.dispatch('budsies/createNewPlushie', { productId: this.getCurrentProduct.id });
-      this.$router.replace({
-        name: 'pillow-product',
-        params: { plushieId: task.result }
-      });
+      return task.result;
     },
     async setCurrentProduct (): Promise<void> {
       if (this.getCurrentProduct) {

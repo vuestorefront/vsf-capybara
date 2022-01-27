@@ -92,22 +92,13 @@ let routes = [
       existingPlushieId: route.query.existingPlushieId
     })
   },
-  { name: 'pillow-product',
-    path: '/pillows/create/:plushieId?',
-    component: PillowProduct,
-    props: (route) => ({
-      plushieId: route.params.plushieId ? Number.parseInt(route.params.plushieId) : undefined
-    })
-  },
+  { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
   {
     name: 'pillow-product-alias',
     path: '/plushie/index/create/id/:plushieId/type/pillow',
-    redirect: (route) => ({
-      name: 'pillow-product',
-      params: {
-        plushieId: route.params.plushieId
-      }
-    })
+    redirect: {
+      name: 'pillow-product'
+    }
   },
   { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
   {
