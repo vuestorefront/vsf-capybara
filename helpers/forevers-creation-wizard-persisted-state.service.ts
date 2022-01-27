@@ -6,10 +6,12 @@ import ForeversWizardPetInfoStepData from 'theme/components/interfaces/forevers-
 
 const STORAGE_KEY = 'forevers-creation-wizard-state';
 
-export default class ForeversCreationWizardPersistedStateService {
+class ForeversCreationWizardPersistedStateService {
   private fBudsiesStorage;
 
   public constructor () {
+    debugger;
+
     this.fBudsiesStorage = StorageManager.get(SN_BUDSIES);
   }
 
@@ -91,3 +93,7 @@ export default class ForeversCreationWizardPersistedStateService {
     )
   }
 }
+
+const foreversCreationWizardPersistedStateService = new ForeversCreationWizardPersistedStateService();
+
+export default foreversCreationWizardPersistedStateService;
