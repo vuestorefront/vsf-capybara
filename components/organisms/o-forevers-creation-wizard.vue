@@ -377,9 +377,9 @@ export default Vue.extend({
     goToCrossSells (): void {
       let route;
       if (this.product) {
-        route = '/cross-sells/p/' + this.product.sku
+        route = { name: 'cross-sells', params: { parentSku: this.product.sku } }
       } else {
-        route = '/cart'
+        route = { name: 'detailed-cart' };
       }
 
       this.$router.push(localizedRoute(route));

@@ -271,7 +271,9 @@ export default {
         },
         {
           text: 'Cart',
-          link: '/cart'
+          link: {
+            name: 'detailed-cart'
+          }
         }
       ],
       isMounted: false,

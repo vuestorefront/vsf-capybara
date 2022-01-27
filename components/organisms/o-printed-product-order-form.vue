@@ -604,7 +604,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.$refs['style-option-validation-provider'] as InstanceType<typeof ValidationProvider> | undefined;
     },
     goToCrossSells (): void {
-      this.$router.push(localizedRoute('/cross-sells/p/' + this.product.sku));
+      this.$router.push(localizedRoute({
+        name: 'cross-sells',
+        params: {
+          parentSku: this.product.sku
+        }
+      }));
     },
     selectStyle (styleValue: string): void {
       if (styleValue === this.selectedStyle) {
