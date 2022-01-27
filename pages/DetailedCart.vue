@@ -274,7 +274,8 @@ export default {
           link: '/cart'
         }
       ],
-      isMounted: false
+      isMounted: false,
+      syncQuantityDebounced: undefined
     };
   },
   props: {
@@ -302,12 +303,12 @@ export default {
     }
   },
   async mounted () {
-    this.syncQuantity = debounce(this.syncQuantity, CHANGE_QUANTITY_DEBOUNCE_TIME);
+    this.syncQuantityDebounced = debounce(this.syncQuantity, CHANGE_QUANTITY_DEBOUNCE_TIME);
     await this.$nextTick();
     this.isMounted = true;
   },
   beforeDestroy () {
-    this.syncQuantity.cancel();
+    this.syncQuantityDebounced.cancel();
   },
   methods: {
     getPlushieName (product) {
@@ -419,7 +420,7 @@ export default {
       this.$store.commit(`cart/${CART_UPD_ITEM}`, { product, qty });
 
       if (this.$store.getters['cart/isCartSyncEnabled']) {
-        this.syncQuantity();
+        this.syncQuantityDebounced();
       }
     },
     syncQuantity () {
