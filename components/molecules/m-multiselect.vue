@@ -77,6 +77,13 @@ export default Vue.extend({
   created: function (): void {
     this.instanceId = instanceId.toString();
     instanceId += 1;
+
+    if (!this.allowFreeText || !this.value) {
+      return;
+    }
+
+    const option = this.getCustomOptionForValue(this.value);
+    this.customOptions.push(option);
   },
   props: {
     placeholder: {
@@ -201,6 +208,16 @@ export default Vue.extend({
 
       enableBodyScroll(scrollableContainer);
     },
+    getCustomOptionForValue (value: string): Option {
+      if (!this.idField || !this.labelField) {
+        return value;
+      }
+
+      return {
+        [this.idField]: value,
+        [this.labelField]: value
+      };
+    },
     getMultiselect (): Multiselect | undefined {
       return this.$refs['multiselect'] as Multiselect | undefined;
     },
@@ -227,13 +244,7 @@ export default Vue.extend({
         return;
       }
 
-      let option: Option = searchValue;
-      if (this.idField && this.labelField) {
-        option = {
-          [this.idField]: searchValue,
-          [this.labelField]: searchValue
-        };
-      }
+      let option = this.getCustomOptionForValue(searchValue);
 
       this.customOptions.push(option);
       return option;
