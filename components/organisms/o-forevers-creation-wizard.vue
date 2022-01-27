@@ -501,6 +501,17 @@ export default Vue.extend({
       this.persistProductTypeStepData(value);
       this.$router.push({ query: { ...this.$route.query, id: value.plushieId?.toString(10) } });
     },
+    persistCurrentStep (value: number) {
+      if (this.existingCartitem) {
+        return;
+      }
+
+      if (!this.plushieId) {
+        throw new Error('Plushie id is undefined');
+      }
+
+      foreversCreationWizardPersistedStateService.saveCurrentStepIndex(this.plushieId, value);
+    },
     persistImageUploadStepData (value: ForeversWizardImageUploadStepData): void {
       if (this.existingCartitem) {
         return;

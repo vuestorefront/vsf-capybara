@@ -2,6 +2,7 @@ import ForeversWizardImageUploadStepData from './forevers-wizard-image-upload-st
 import ForeversWizardPetInfoStepData from './forevers-wizard-pet-info-step-data.interface';
 
 export default interface ForeversCreationWizardPersistedState {
+  currentStepIndex?: number,
   productTypeData?: {
     plushieId: number,
     productSku: string

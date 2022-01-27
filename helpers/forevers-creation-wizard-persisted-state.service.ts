@@ -1,6 +1,6 @@
 import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
 import { SN_BUDSIES } from 'src/modules/budsies/store/mutation-types';
-import ForeversCreationWizardPersistanceState from 'theme/components/interfaces/forevers-creation-wizard-persistance-state.interface';
+import ForeversCreationWizardPersistedState from 'theme/components/interfaces/forevers-creation-wizard-persisted-state.interface';
 import ForeversWizardImageUploadStepData from 'theme/components/interfaces/forevers-wizard-image-upload-step-data.interface';
 import ForeversWizardPetInfoStepData from 'theme/components/interfaces/forevers-wizard-pet-info-step-data.interface';
 
@@ -10,9 +10,19 @@ class ForeversCreationWizardPersistedStateService {
   private fBudsiesStorage;
 
   public constructor () {
-    debugger;
-
     this.fBudsiesStorage = StorageManager.get(SN_BUDSIES);
+  }
+
+  public async saveCurrentStepIndex (plushieId: number, stepIndex: number): Promise<void> {
+    let wizardState = await this.getStateByPlushieId(plushieId);
+
+    if (!wizardState) {
+      wizardState = {};
+    }
+
+    wizardState.currentStepIndex = stepIndex;
+
+    await this.updateStateForPlushie(plushieId, wizardState);
   }
 
   public async saveProductTypeStepData (plushieId: number, productSku: string): Promise<void> {
@@ -54,7 +64,7 @@ class ForeversCreationWizardPersistedStateService {
     await this.updateStateForPlushie(plushieId, wizardState)
   };
 
-  public async getStateByPlushieId (plushieId: number): Promise<ForeversCreationWizardPersistanceState | undefined> {
+  public async getStateByPlushieId (plushieId: number): Promise<ForeversCreationWizardPersistedState | undefined> {
     let wizardStateDictionary = await this.fBudsiesStorage.getItem(STORAGE_KEY);
 
     if (!wizardStateDictionary) {
@@ -78,7 +88,7 @@ class ForeversCreationWizardPersistedStateService {
     )
   }
 
-  private async updateStateForPlushie (plushieId: number, state: ForeversCreationWizardPersistanceState): Promise<void> {
+  private async updateStateForPlushie (plushieId: number, state: ForeversCreationWizardPersistedState): Promise<void> {
     let stateDictionary = await this.fBudsiesStorage.getItem(STORAGE_KEY);
 
     if (!stateDictionary) {
