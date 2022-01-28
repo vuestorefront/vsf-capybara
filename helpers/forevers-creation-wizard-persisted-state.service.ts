@@ -1,4 +1,7 @@
 import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
+import LocalForageCacheDriver from '@vue-storefront/core/lib/store/storage';
+import { Mutex, MutexInterface } from 'async-mutex';
+
 import { SN_BUDSIES } from 'src/modules/budsies/store/mutation-types';
 import ForeversCreationWizardPersistedState from 'theme/components/interfaces/forevers-creation-wizard-persisted-state.interface';
 import ForeversWizardImageUploadStepData from 'theme/components/interfaces/forevers-wizard-image-upload-step-data.interface';
@@ -7,61 +10,87 @@ import ForeversWizardPetInfoStepData from 'theme/components/interfaces/forevers-
 const STORAGE_KEY = 'forevers-creation-wizard-state';
 
 class ForeversCreationWizardPersistedStateService {
-  private fBudsiesStorage;
+  private fBudsiesStorage: LocalForageCacheDriver;
+  private fMutex: MutexInterface;
 
   public constructor () {
     this.fBudsiesStorage = StorageManager.get(SN_BUDSIES);
+    this.fMutex = new Mutex();
   }
 
   public async saveCurrentStepIndex (plushieId: number, stepIndex: number): Promise<void> {
-    let wizardState = await this.getStateByPlushieId(plushieId);
+    const mutexRelease = await this.fMutex.acquire();
 
-    if (!wizardState) {
-      wizardState = {};
+    try {
+      let wizardState = await this.getStateByPlushieId(plushieId);
+
+      if (!wizardState) {
+        wizardState = {};
+      }
+
+      wizardState.currentStepIndex = stepIndex;
+
+      await this.updateStateForPlushie(plushieId, wizardState);
+    } finally {
+      mutexRelease();
     }
-
-    wizardState.currentStepIndex = stepIndex;
-
-    await this.updateStateForPlushie(plushieId, wizardState);
   }
 
   public async saveProductTypeStepData (plushieId: number, productSku: string): Promise<void> {
-    let wizardState = await this.getStateByPlushieId(plushieId);
+    const mutexRelease = await this.fMutex.acquire();
 
-    if (!wizardState) {
-      wizardState = {};
+    try {
+      let wizardState = await this.getStateByPlushieId(plushieId);
+
+      if (!wizardState) {
+        wizardState = {};
+      }
+
+      wizardState.productTypeData = {
+        plushieId,
+        productSku
+      }
+
+      await this.updateStateForPlushie(plushieId, wizardState)
+    } finally {
+      mutexRelease();
     }
-
-    wizardState.productTypeData = {
-      plushieId,
-      productSku
-    }
-
-    await this.updateStateForPlushie(plushieId, wizardState)
   };
 
   public async saveImageUploadStepData (plushieId: number, imageUploadStepData: ForeversWizardImageUploadStepData): Promise<void> {
-    let wizardState = await this.getStateByPlushieId(plushieId);
+    const mutexRelease = await this.fMutex.acquire();
 
-    if (!wizardState) {
-      wizardState = {};
+    try {
+      let wizardState = await this.getStateByPlushieId(plushieId);
+
+      if (!wizardState) {
+        wizardState = {};
+      }
+
+      wizardState.imageUploadStepData = imageUploadStepData;
+
+      await this.updateStateForPlushie(plushieId, wizardState)
+    } finally {
+      mutexRelease();
     }
-
-    wizardState.imageUploadStepData = imageUploadStepData;
-
-    await this.updateStateForPlushie(plushieId, wizardState)
   };
 
   public async savePetInfoStepData (plushieId: number, petInfoStepData: ForeversWizardPetInfoStepData): Promise<void> {
-    let wizardState = await this.getStateByPlushieId(plushieId);
+    const mutexRelease = await this.fMutex.acquire();
 
-    if (!wizardState) {
-      wizardState = {};
+    try {
+      let wizardState = await this.getStateByPlushieId(plushieId);
+
+      if (!wizardState) {
+        wizardState = {};
+      }
+
+      wizardState.petInfoStepData = petInfoStepData;
+
+      await this.updateStateForPlushie(plushieId, wizardState)
+    } finally {
+      mutexRelease();
     }
-
-    wizardState.petInfoStepData = petInfoStepData;
-
-    await this.updateStateForPlushie(plushieId, wizardState)
   };
 
   public async getStateByPlushieId (plushieId: number): Promise<ForeversCreationWizardPersistedState | undefined> {
@@ -75,17 +104,23 @@ class ForeversCreationWizardPersistedStateService {
   }
 
   public async removeStateByPlushieId (plushieId: number): Promise<void> {
-    let wizardStateDictionary = await this.fBudsiesStorage.getItem(STORAGE_KEY);
-    if (!wizardStateDictionary || !wizardStateDictionary[plushieId]) {
-      return;
+    const mutexRelease = await this.fMutex.acquire();
+
+    try {
+      let wizardStateDictionary = await this.fBudsiesStorage.getItem(STORAGE_KEY);
+      if (!wizardStateDictionary || !wizardStateDictionary[plushieId]) {
+        return;
+      }
+
+      delete wizardStateDictionary[plushieId];
+
+      await this.fBudsiesStorage.setItem(
+        STORAGE_KEY,
+        wizardStateDictionary
+      )
+    } finally {
+      mutexRelease();
     }
-
-    delete wizardStateDictionary[plushieId];
-
-    await this.fBudsiesStorage.setItem(
-      STORAGE_KEY,
-      wizardStateDictionary
-    )
   }
 
   private async updateStateForPlushie (plushieId: number, state: ForeversCreationWizardPersistedState): Promise<void> {
