@@ -464,6 +464,8 @@ export default Vue.extend({
     onChangeStep (nextStep: number) {
       if (nextStep < this.currentStep) {
         this.currentStep = nextStep;
+
+        this.persistCurrentStep(nextStep);
       }
     },
     onFailure (message: any): void {
@@ -487,16 +489,16 @@ export default Vue.extend({
         this.persistPetInfoStepData(value);
       }
     },
-    onProductTypeStepDataInput (value: ForeversWizardProductTypeStepData): void {
+    async onProductTypeStepDataInput (value: ForeversWizardProductTypeStepData): Promise<void> {
       this.productTypeStepData = value;
 
       if (!this.existingCartItem) {
-        this.persistProductTypeStepData(value);
+        await this.persistProductTypeStepData(value);
       }
 
       this.$router.push({ query: { ...this.$route.query, id: value.plushieId?.toString(10) } });
     },
-    persistCurrentStep (value: number) {
+    persistCurrentStep (value: number): void {
       if (!this.plushieId) {
         throw new Error('Plushie id is undefined');
       }
