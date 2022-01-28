@@ -45,11 +45,12 @@ export default {
         return;
       }
 
-      if (route.name === 'error') {
-        context.output.cacheTags.add(`error`);
-      } else {
+      if (route.name === 'page-not-found') {
         context.output.cacheTags.add(`page-not-found`);
         context.server.response.statusCode = 404;
+      } else {
+        context.output.cacheTags.add(`error`);
+        context.server.response.statusCode = 500;
       }
 
       resolve();
