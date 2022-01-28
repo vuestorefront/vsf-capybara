@@ -1,5 +1,4 @@
 import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
-import { Dictionary } from 'src/modules/budsies';
 import { SN_BUDSIES } from 'src/modules/budsies/store/mutation-types';
 import ForeversCreationWizardPersistedState from 'theme/components/interfaces/forevers-creation-wizard-persisted-state.interface';
 import ForeversWizardImageUploadStepData from 'theme/components/interfaces/forevers-wizard-image-upload-step-data.interface';
@@ -9,41 +8,60 @@ const STORAGE_KEY = 'forevers-creation-wizard-state';
 
 class ForeversCreationWizardPersistedStateService {
   private fBudsiesStorage;
-  private fLocalState: Dictionary<ForeversCreationWizardPersistedState> = {};
 
   public constructor () {
     this.fBudsiesStorage = StorageManager.get(SN_BUDSIES);
   }
 
   public async saveCurrentStepIndex (plushieId: number, stepIndex: number): Promise<void> {
-    const newState = {
-      currentStepIndex: stepIndex
-    };
+    let wizardState = await this.getStateByPlushieId(plushieId);
 
-    await this.updateStateForPlushie(plushieId, newState);
+    if (!wizardState) {
+      wizardState = {};
+    }
+
+    wizardState.currentStepIndex = stepIndex;
+
+    await this.updateStateForPlushie(plushieId, wizardState);
   }
 
   public async saveProductTypeStepData (plushieId: number, productSku: string): Promise<void> {
-    const newState = {
-      productTypeData: {
-        plushieId,
-        productSku
-      }
+    let wizardState = await this.getStateByPlushieId(plushieId);
+
+    if (!wizardState) {
+      wizardState = {};
     }
 
-    await this.updateStateForPlushie(plushieId, newState);
+    wizardState.productTypeData = {
+      plushieId,
+      productSku
+    }
+
+    await this.updateStateForPlushie(plushieId, wizardState)
   };
 
   public async saveImageUploadStepData (plushieId: number, imageUploadStepData: ForeversWizardImageUploadStepData): Promise<void> {
-    const newState = { imageUploadStepData };
+    let wizardState = await this.getStateByPlushieId(plushieId);
 
-    await this.updateStateForPlushie(plushieId, newState);
+    if (!wizardState) {
+      wizardState = {};
+    }
+
+    wizardState.imageUploadStepData = imageUploadStepData;
+
+    await this.updateStateForPlushie(plushieId, wizardState)
   };
 
   public async savePetInfoStepData (plushieId: number, petInfoStepData: ForeversWizardPetInfoStepData): Promise<void> {
-    const newState = { petInfoStepData };
+    let wizardState = await this.getStateByPlushieId(plushieId);
 
-    await this.updateStateForPlushie(plushieId, newState)
+    if (!wizardState) {
+      wizardState = {};
+    }
+
+    wizardState.petInfoStepData = petInfoStepData;
+
+    await this.updateStateForPlushie(plushieId, wizardState)
   };
 
   public async getStateByPlushieId (plushieId: number): Promise<ForeversCreationWizardPersistedState | undefined> {
@@ -77,22 +95,7 @@ class ForeversCreationWizardPersistedStateService {
       stateDictionary = {};
     }
 
-    let storageWizardState = await this.getStateByPlushieId(plushieId);
-    let localWizardState = this.fLocalState[plushieId];
-
-    if (!storageWizardState) {
-      storageWizardState = {}
-    }
-
-    if (!localWizardState) {
-      localWizardState = {};
-    }
-
-    const newState = { ...localWizardState, ...storageWizardState, ...state };
-
-    this.fLocalState[plushieId] = newState;
-
-    stateDictionary[plushieId] = newState;
+    stateDictionary[plushieId] = state;
 
     await this.fBudsiesStorage.setItem(
       STORAGE_KEY,
