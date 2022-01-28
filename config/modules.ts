@@ -17,6 +17,7 @@ import { BudsiesModule } from 'src/modules/budsies'
 import { Braintree } from 'src/modules/payment-braintree'
 import { PromotionPlatformModule } from 'src/modules/promotion-platform'
 import { GiftCardModule } from 'src/modules/gift-card'
+import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods'
 import { PaymentAffirm } from 'src/modules/payment-affirm';
 import { UrlRewriteModule } from 'src/modules/url-rewrite';
 import { mappingFallbackForUrlRewrite } from 'src/modules/url-rewrite/mappingFallback';
@@ -60,6 +61,7 @@ export function registerClientModules () {
   registerModule(Braintree)
   registerModule(PromotionPlatformModule)
   registerModule(GiftCardModule)
+  registerModule(PaymentBackendMethodsModule)
   registerModule(PaymentAffirm)
   registerModule(UrlRewriteModule)
 }

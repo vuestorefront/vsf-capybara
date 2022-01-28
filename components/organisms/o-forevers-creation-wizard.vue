@@ -195,7 +195,7 @@ export default Vue.extend({
       return this.getBundleOption('production time');
     },
     existingCartItem (): CartItem | undefined {
-      return this.cartItems.find(({ plushieId }) => plushieId && plushieId === this.existingPlushieId);
+      return this.cartItems.find(({ plushieId }) => plushieId && String(plushieId) === this.existingPlushieId);
     },
     steps (): TranslateResult[] {
       return [
@@ -289,14 +289,15 @@ export default Vue.extend({
         return;
       }
 
-      const bodyparts: Record<string, string[]> = cartItem.bodyparts as Record<string, string[]>;
+      const bodyparts: Record<string, any[]> = cartItem.bodyparts as Record<string, any[]>;
 
       Object.keys(bodyparts).forEach((key: string) => {
         Vue.set(
           this.customizeStepData.bodypartsValues,
           key,
           this.getBodypartOptions(key).filter(
-            (bodypart: BodypartOption) => bodyparts[key].includes(bodypart.id)
+            (bodypartOption: BodypartOption) => bodyparts[key].includes(bodypartOption.id) ||
+              bodyparts[key].includes(Number(bodypartOption.id))
           )
         );
       });
@@ -441,9 +442,9 @@ export default Vue.extend({
     goToCrossSells (): void {
       let route;
       if (this.product) {
-        route = '/cross-sells/p/' + this.product.sku
+        route = { name: 'cross-sells', params: { parentSku: this.product.sku } }
       } else {
-        route = '/cart'
+        route = { name: 'detailed-cart' };
       }
 
       this.$router.push(localizedRoute(route));

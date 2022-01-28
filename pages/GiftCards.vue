@@ -296,7 +296,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.showPreviewModal = false;
     },
     goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
+      this.$router.push(localizedRoute({ name: 'detailed-cart' }));
     },
     initEventBusListeners (): void {
       EventBus.$on('session-after-started', this.updateCustomerName);

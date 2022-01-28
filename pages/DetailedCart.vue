@@ -19,13 +19,11 @@
               <SfCollectedProduct
                 v-for="product in products"
                 :key="product.id + product.checksum"
-                :qty="product.qty"
                 :image="getThumbnailForProductExtend(product)"
                 image-width="140"
                 image-height="140"
                 :title="product.name"
                 class="sf-collected-product--detailed collected-product"
-                @input="changeQuantity(product, $event)"
               >
                 <template #configuration>
                   <div class="collected-product__properties" v-if="getPlushieName(product)">
@@ -62,6 +60,13 @@
                       </div>
                     </template>
                   </div>
+                </template>
+                <template #input>
+                  <SfQuantitySelector
+                    :qty="product.qty"
+                    :disabled="isUpdatingQuantity"
+                    @input="changeProductQuantity(product, $event)"
+                  />
                 </template>
                 <template #price>
                   <div />
@@ -157,6 +162,7 @@
   </div>
 </template>
 <script>
+import debounce from 'lodash-es/debounce';
 import {
   SfPrice,
   SfList,
@@ -167,7 +173,8 @@ import {
   SfProperty,
   SfHeading,
   SfBreadcrumbs,
-  SfIcon
+  SfIcon,
+  SfQuantitySelector
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters, mapState } from 'vuex';
@@ -179,6 +186,9 @@ import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
 import { getBundleOptionsValues, getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
+import { CART_UPD_ITEM } from '@vue-storefront/core/modules/cart/store/mutation-types'
+
+const CHANGE_QUANTITY_DEBOUNCE_TIME = 1000;
 
 const foreversProductsSkus = [
   'ForeversDog_bundle',
@@ -210,6 +220,7 @@ export default {
     SfHeading,
     SfProperty,
     SfIcon,
+    SfQuantitySelector,
     OrderSummary
   },
   data () {
@@ -260,10 +271,13 @@ export default {
         },
         {
           text: 'Cart',
-          link: '/cart'
+          link: {
+            name: 'detailed-cart'
+          }
         }
       ],
-      isMounted: false
+      isMounted: false,
+      syncQuantityDebounced: undefined
     };
   },
   props: {
@@ -291,8 +305,12 @@ export default {
     }
   },
   async mounted () {
+    this.syncQuantityDebounced = debounce(this.syncQuantity, CHANGE_QUANTITY_DEBOUNCE_TIME);
     await this.$nextTick();
     this.isMounted = true;
+  },
+  beforeDestroy () {
+    this.syncQuantityDebounced.cancel();
   },
   methods: {
     getPlushieName (product) {
@@ -400,13 +418,21 @@ export default {
 
       return result;
     },
-    changeQuantity (product, newQuantity) {
+    async changeProductQuantity (product, qty) {
+      this.$store.commit(`cart/${CART_UPD_ITEM}`, { product, qty });
+
+      if (this.$store.getters['cart/isCartSyncEnabled']) {
+        this.syncQuantityDebounced();
+      }
+    },
+    syncQuantity () {
       this.isUpdatingQuantity = true;
 
-      this.$store.dispatch('cart/updateQuantity', {
-        product: product,
-        qty: newQuantity
-      }).finally(() => { this.isUpdatingQuantity = false });
+      return this.$store.dispatch('cart/sync', {
+        forceClientState: true
+      }).finally(() => {
+        this.isUpdatingQuantity = false;
+      });
     },
     onDropdownActionClick (action) {
       EventBus.$emit(CartEvents.MAKE_ANOTHER_FROM_CART, action.label);
@@ -506,6 +532,13 @@ export default {
         &:hover {
           background-color: var(--c-light);
         }
+      }
+    }
+  }
+  .sf-quantity-selector {
+    ::v-deep {
+      .sf-quantity-selector__button {
+        --button-background: transparent;
       }
     }
   }

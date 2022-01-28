@@ -56,7 +56,7 @@ export default Vue.extend({
 
       await this.$store.dispatch('cart/syncTotals')
 
-      this.$router.push(localizedRoute('/cart'))
+      this.$router.push(localizedRoute({ name: 'detailed-cart' }))
     } catch (error) {
       this.isShowError = true;
       Logger.error(error, 'budsies')();

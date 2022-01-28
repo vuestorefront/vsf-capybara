@@ -187,7 +187,7 @@ export default Vue.extend({
       this.upSellsProducts = await this.getProductsList('upsell');
     },
     goToCart (): void {
-      this.$router.push(localizedRoute('/cart'));
+      this.$router.push(localizedRoute({ name: 'detailed-cart' }));
     },
     async setCurrentProduct (): Promise<void> {
       const sku = getSkuFromRoute(this.$route);
