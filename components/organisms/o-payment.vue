@@ -204,7 +204,7 @@ import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
 
 import OGiftCardPayment from './o-gift-card-payment.vue';
-import { METHOD_CODE } from 'src/modules/vsf-amazon-pay/index';
+import { KEY, METHOD_CODE } from 'src/modules/vsf-amazon-pay/index';
 
 const States = require('@vue-storefront/i18n/resource/states.json');
 
@@ -321,20 +321,28 @@ export default {
       return this.$store.getters['cart/getCartItems'];
     },
     isFormFieldsDisabled () {
-      let result = false;
       let paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
 
-      if (paymentDetails.paymentMethod === METHOD_CODE) {
-        if (paymentDetails.firstName !== '' &&
+      if (paymentDetails.paymentMethod !== METHOD_CODE) {
+        return false;
+      }
+
+      let amazonOrderState = this.$store.state[KEY].orderState;
+
+      if (!amazonOrderState) {
+        return false;
+      }
+
+      if (paymentDetails.firstName !== '' &&
         paymentDetails.lastName !== '' &&
         paymentDetails.streetAddress !== '' &&
         paymentDetails.city !== '' &&
         paymentDetails.zipCode !== '' &&
         paymentDetails.country !== '') {
-          result = true;
-        }
+        return true;
       }
-      return result;
+
+      return false;
     }
   },
   mounted () {

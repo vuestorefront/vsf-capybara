@@ -188,7 +188,7 @@ import {
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
-import { METHOD_CODE } from 'src/modules/vsf-amazon-pay/index';
+import { KEY, METHOD_CODE } from 'src/modules/vsf-amazon-pay/index';
 const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
@@ -272,12 +272,17 @@ export default {
       return this.shipping.zipCode;
     },
     isFormFieldsDisabled () {
-      let result = false;
-
-      if (this.$store.getters['checkout/getPaymentDetails'].paymentMethod === METHOD_CODE) {
-        result = true;
+      if (this.$store.getters['checkout/getPaymentDetails'].paymentMethod !== METHOD_CODE) {
+        return false;
       }
-      return result;
+
+      let amazonOrderState = this.$store.state[KEY].orderState;
+
+      if (amazonOrderState) {
+        return true;
+      }
+
+      return false;
     }
   },
   methods: {
