@@ -242,18 +242,15 @@ export default Vue.extend({
       this.isOpen = !this.isOpen;
 
       if (!this.allowFreeText) {
-        this.$emit('close');
         return;
       }
 
       const newOption = this.processFreeText();
       if (!newOption) {
-        this.$emit('close');
         return;
       }
 
       this.selectedOption = newOption;
-      this.$emit('close');
     },
     async onEnterPressed (): Promise<void> {
       if (!this.allowFreeText) {

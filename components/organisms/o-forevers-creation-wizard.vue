@@ -38,12 +38,12 @@
 
           <SfStep name="Pet Info">
             <MPetInfoStep
-              v-model="petInfoStepData"
+              :value="petInfoStepData"
               :plushie-id="plushieId"
               :product="activeProduct"
               :disabled="isSubmitting"
               @next-step="nextStep"
-              @input-field-blur="onPetInfoStepInputFieldBlur"
+              @input="onPetInfoStepDataInput"
             />
           </SfStep>
 
@@ -318,6 +318,7 @@ export default Vue.extend({
       await this.fillProductTypeStepDataFromPersistedState(persistedState);
       this.fillImageUploadStepDataFromPersistedState(persistedState);
       this.fillPetInfoStepDataFromPersistedState(persistedState);
+      this.currentStep = persistedState?.currentStepIndex ? persistedState.currentStepIndex : 1;
     },
     fillProductTypeStepDataFromCartItem (cartItem: CartItem): void {
       this.productTypeStepData.product = cartItem;
@@ -345,8 +346,6 @@ export default Vue.extend({
       }
 
       this.isProductLoadingForExistingPlushieId = false;
-
-      this.currentStep = 1;
     },
     fillImageUploadStepDataFromPersistedState (persistedState?: ForeversCreationWizardPersistedState): void {
       if (!persistedState?.imageUploadStepData) {
@@ -358,13 +357,6 @@ export default Vue.extend({
       }
 
       this.imageUploadStepData = persistedState.imageUploadStepData;
-
-      if (
-        (this.imageUploadStepData.uploadMethod === ImageUploadMethod.NOW && this.imageUploadStepData.customerImages.length !== 0) ||
-           this.imageUploadStepData.uploadMethod !== ImageUploadMethod.NOW
-      ) {
-        this.currentStep = 2;
-      }
     },
     fillPetInfoStepDataFromPersistedState (persistedState?: ForeversCreationWizardPersistedState): void {
       if (!persistedState?.petInfoStepData) {
@@ -377,10 +369,6 @@ export default Vue.extend({
       }
 
       this.petInfoStepData = persistedState.petInfoStepData;
-
-      if (this.petInfoStepData.name && this.petInfoStepData.breed && this.petInfoStepData.email) {
-        this.currentStep = 3;
-      }
     },
     fillProductionTime (cartItem: CartItem): void {
       const productOption = cartItem.product_option;
@@ -492,9 +480,11 @@ export default Vue.extend({
         this.persistImageUploadStepData(value);
       }
     },
-    onPetInfoStepInputFieldBlur (): void {
+    onPetInfoStepDataInput (value: ForeversWizardPetInfoStepData): void {
+      this.petInfoStepData = value;
+
       if (!this.existingCartItem) {
-        this.persistPetInfoStepData(this.petInfoStepData);
+        this.persistPetInfoStepData(value);
       }
     },
     onProductTypeStepDataInput (value: ForeversWizardProductTypeStepData): void {
@@ -640,6 +630,8 @@ export default Vue.extend({
     existingPlushieId (value: string) {
       if (!this.existingCartItem && value) {
         this.fillPlushieDataFromPersistedState();
+      } else if (this.existingCartItem) {
+        this.fillPlushieDataFromCartItem(this.existingCartItem);
       }
     }
   }
