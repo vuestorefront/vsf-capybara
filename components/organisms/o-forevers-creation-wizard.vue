@@ -316,10 +316,15 @@ export default Vue.extend({
     async fillPlushieDataFromPersistedState (): Promise<void> {
       const persistedState = await foreversCreationWizardPersistedStateService.getStateByPlushieId(Number.parseInt(this.existingPlushieId));
 
+      if (!persistedState) {
+        return;
+      }
+
       await this.fillProductTypeStepDataFromPersistedState(persistedState);
       this.fillImageUploadStepDataFromPersistedState(persistedState);
       this.fillPetInfoStepDataFromPersistedState(persistedState);
-      this.currentStep = persistedState?.currentStepIndex ? persistedState.currentStepIndex : 1;
+
+      this.currentStep = persistedState.currentStepIndex ? persistedState.currentStepIndex : 1;
     },
     fillProductTypeStepDataFromCartItem (cartItem: CartItem): void {
       this.productTypeStepData.product = cartItem;
