@@ -259,7 +259,7 @@ export default Vue.extend({
           throw new Error('Plushie Id is undefined');
         }
 
-        foreversCreationWizardPersistedStateService.removeStateByPlushieId(this.plushieId);
+        await foreversCreationWizardPersistedStateService.removeStateByPlushieId(this.plushieId);
       } catch (error) {
         Logger.error(error, 'budsies')();
 
@@ -303,7 +303,7 @@ export default Vue.extend({
       });
     },
     async fillPlushieDataFromCartItem (existingCartItem: CartItem): Promise<void> {
-      this.currentStep = 1; // todo
+      this.currentStep = 1;
 
       this.fillImageUploadStepDataFromCartItem(existingCartItem);
       this.fillProductTypeStepDataFromCartItem(existingCartItem);
@@ -341,17 +341,19 @@ export default Vue.extend({
 
       this.isProductLoadingForExistingPlushieId = true;
 
-      const product = await this.$store.dispatch(
-        'product/loadProduct',
-        { parentSku: persistedState.productTypeData.productSku }
-      );
+      try {
+        const product = await this.$store.dispatch(
+          'product/loadProduct',
+          { parentSku: persistedState.productTypeData.productSku }
+        );
 
-      this.productTypeStepData = {
-        product,
-        plushieId: persistedState.productTypeData.plushieId
+        this.productTypeStepData = {
+          product,
+          plushieId: persistedState.productTypeData.plushieId
+        }
+      } finally {
+        this.isProductLoadingForExistingPlushieId = false;
       }
-
-      this.isProductLoadingForExistingPlushieId = false;
     },
     fillImageUploadStepDataFromPersistedState (persistedState?: ForeversCreationWizardPersistedState): void {
       if (!persistedState?.imageUploadStepData) {
@@ -407,7 +409,7 @@ export default Vue.extend({
       this.customizeStepData.description = cartItem.plushieDescription;
       this.customizeStepData.quantity = cartItem.qty;
     },
-    nextStep (): void {
+    async nextStep (): Promise<void> {
       if (this.currentStep === 3) {
         return;
       }
@@ -415,7 +417,7 @@ export default Vue.extend({
       this.currentStep += 1;
 
       if (!this.existingCartItem) {
-        this.persistCurrentStep(this.currentStep);
+        await this.persistCurrentStep(this.currentStep);
       }
     },
     getBodypartsData (): Record<string, string[]> {
@@ -467,11 +469,11 @@ export default Vue.extend({
         this.addToCart();
       }
     },
-    onChangeStep (nextStep: number) {
+    async onChangeStep (nextStep: number) {
       if (nextStep < this.currentStep) {
         this.currentStep = nextStep;
 
-        this.persistCurrentStep(nextStep);
+        await this.persistCurrentStep(nextStep);
       }
     },
     onFailure (message: any): void {
@@ -481,18 +483,18 @@ export default Vue.extend({
         action1: { label: i18n.t('OK') }
       });
     },
-    onImageUploadStepDataInput (value: ForeversWizardImageUploadStepData): void {
+    async onImageUploadStepDataInput (value: ForeversWizardImageUploadStepData): Promise<void> {
       this.imageUploadStepData = value;
 
       if (!this.existingCartItem) {
-        this.persistImageUploadStepData(value);
+        await this.persistImageUploadStepData(value);
       }
     },
-    onPetInfoStepDataInput (value: ForeversWizardPetInfoStepData): void {
+    async onPetInfoStepDataInput (value: ForeversWizardPetInfoStepData): Promise<void> {
       this.petInfoStepData = value;
 
       if (!this.existingCartItem) {
-        this.persistPetInfoStepData(value);
+        await this.persistPetInfoStepData(value);
       }
     },
     async onProductTypeStepDataInput (value: ForeversWizardProductTypeStepData): Promise<void> {
@@ -504,33 +506,33 @@ export default Vue.extend({
 
       this.$router.push({ query: { ...this.$route.query, id: value.plushieId?.toString(10) } });
     },
-    persistCurrentStep (value: number): void {
+    async persistCurrentStep (value: number): Promise<void> {
       if (!this.plushieId) {
         throw new Error('Plushie id is undefined');
       }
 
-      foreversCreationWizardPersistedStateService.saveCurrentStepIndex(this.plushieId, value);
+      await foreversCreationWizardPersistedStateService.saveCurrentStepIndex(this.plushieId, value);
     },
-    persistImageUploadStepData (value: ForeversWizardImageUploadStepData): void {
+    async persistImageUploadStepData (value: ForeversWizardImageUploadStepData): Promise<void> {
       if (!this.plushieId) {
         throw new Error('Plushie id is undefined');
       }
 
-      foreversCreationWizardPersistedStateService.saveImageUploadStepData(this.plushieId, value);
+      await foreversCreationWizardPersistedStateService.saveImageUploadStepData(this.plushieId, value);
     },
-    persistPetInfoStepData (value: ForeversWizardPetInfoStepData): void {
+    async persistPetInfoStepData (value: ForeversWizardPetInfoStepData): Promise<void> {
       if (!this.plushieId) {
         throw new Error('Plushie id is undefined');
       }
 
-      foreversCreationWizardPersistedStateService.savePetInfoStepData(this.plushieId, value);
+      await foreversCreationWizardPersistedStateService.savePetInfoStepData(this.plushieId, value);
     },
-    persistProductTypeStepData (value: ForeversWizardProductTypeStepData): void {
+    async persistProductTypeStepData (value: ForeversWizardProductTypeStepData): Promise<void> {
       if (!value.plushieId || !value.product) {
         throw new Error('Plushie Id or Product Sku is undefined');
       }
 
-      foreversCreationWizardPersistedStateService.saveProductTypeStepData(value.plushieId, value.product.sku);
+      await foreversCreationWizardPersistedStateService.saveProductTypeStepData(value.plushieId, value.product.sku);
     },
     setBundleOptionValue (optionId: number, optionQty: number, optionSelections: number[]): void {
       this.$store.commit('product' + '/' + catalogTypes.PRODUCT_SET_BUNDLE_OPTION, { optionId, optionQty, optionSelections });
@@ -544,7 +546,7 @@ export default Vue.extend({
     },
     async updateExistingCartItem (): Promise<void> {
       if (!this.existingCartItem) {
-        return;
+        throw new Error('Cart Item not found!');
       }
 
       this.isSubmitting = true;
@@ -584,16 +586,16 @@ export default Vue.extend({
       }
     }
   },
-  created (): void {
+  async created (): Promise<void> {
     this.$store.dispatch('budsies/loadBreeds');
 
     if (this.existingCartItem) {
-      this.fillPlushieDataFromCartItem(this.existingCartItem);
+      await this.fillPlushieDataFromCartItem(this.existingCartItem);
     }
   },
-  beforeMount (): void {
+  async beforeMount (): Promise<void> {
     if (!this.existingCartItem && this.existingPlushieId) {
-      this.fillPlushieDataFromPersistedState();
+      await this.fillPlushieDataFromPersistedState();
     }
   },
   watch: {
@@ -635,11 +637,11 @@ export default Vue.extend({
       },
       immediate: false
     },
-    existingPlushieId (value: string) {
-      if (!this.existingCartItem && value) {
-        this.fillPlushieDataFromPersistedState();
-      } else if (this.existingCartItem) {
-        this.fillPlushieDataFromCartItem(this.existingCartItem);
+    async existingPlushieId (value: string) {
+      if (this.existingCartItem) {
+        await this.fillPlushieDataFromCartItem(this.existingCartItem);
+      } else if (value) {
+        await this.fillPlushieDataFromPersistedState();
       }
     }
   }
