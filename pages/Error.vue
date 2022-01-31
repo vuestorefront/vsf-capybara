@@ -40,9 +40,19 @@ export default {
   asyncData ({ store, route, context }) {
     return new Promise((resolve, reject) => {
       Logger.log('Calling asyncData for Error page ' + new Date())();
-      if (context) {
-        context.output.cacheTags.add(`error`);
+      if (!context) {
+        resolve();
+        return;
       }
+
+      if (route.name === 'page-not-found') {
+        context.output.cacheTags.add(`page-not-found`);
+        context.server.response.statusCode = 404;
+      } else {
+        context.output.cacheTags.add(`error`);
+        context.server.response.statusCode = 500;
+      }
+
       resolve();
     })
   },
