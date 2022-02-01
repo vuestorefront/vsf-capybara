@@ -255,12 +255,12 @@ export default {
       let addressToUpdate = {
         firstname: this.editedAddress.firstname,
         lastname: this.editedAddress.lastname,
-        street: [this.editedAddress.streetName, this.editedAddress.apartment],
+        street: [this.editedAddress.streetName, this.editedAddress.apartment.toString()],
         city: this.editedAddress.city,
         ...(this.editedAddress.state ? { region: { region: this.editedAddress.state } } : {}),
         country_id: this.countries.find(country => country.name === this.editedAddress.country).code || this.editedAddress.country,
-        postcode: this.editedAddress.postcode,
-        ...(this.editedAddress.telephone ? { telephone: this.editedAddress.telephone } : {})
+        postcode: this.editedAddress.postcode.toString(),
+        ...(this.editedAddress.telephone ? { telephone: this.editedAddress.telephone.toString() } : {})
       }
 
       if (this.editedAddressIndex > -1) {
