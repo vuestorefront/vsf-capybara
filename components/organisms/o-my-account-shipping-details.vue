@@ -117,9 +117,6 @@
         class="tab-orphan"
       >
         <SfTab :title="$t('Shipping details')">
-          <p class="message">
-            {{ $t('Manage all the shipping addresses you want (work place, home address ...) This way you won\'t have to enter the shipping address manually with each order.') }}
-          </p>
           <transition-group tag="div" name="fade" class="shipping-list">
             <div
               v-for="(address, key) in addresses"
@@ -138,29 +135,12 @@
                 </p>
               </div>
               <div class="shipping__actions">
-                <SfIcon
-                  icon="cross"
-                  color="gray"
-                  size="14px"
-                  role="button"
-                  class="mobile-only"
-                  @click="deleteAddress(key)"
-                />
-                <SfButton @click="changeAddress(key)">
+                <SfButton v-show="address.default_billing || address.default_shipping" @click="changeAddress(key)">
                   {{ $t('Change') }}
-                </SfButton>
-                <SfButton
-                  class="shipping__button-delete desktop-only"
-                  @click="deleteAddress(key)"
-                >
-                  {{ $t('Delete') }}
                 </SfButton>
               </div>
             </div>
           </transition-group>
-          <SfButton class="action-button" @click="changeAddress(-1)">
-            {{ $t('Add new address') }}
-          </SfButton>
         </SfTab>
       </SfTabs>
     </div>
