@@ -117,9 +117,6 @@
         class="tab-orphan"
       >
         <SfTab :title="$t('Shipping details')">
-          <p class="message">
-            {{ $t('Manage all the shipping addresses you want (work place, home address ...) This way you won\'t have to enter the shipping address manually with each order.') }}
-          </p>
           <transition-group tag="div" name="fade" class="shipping-list">
             <div
               v-for="(address, key) in addresses"
@@ -138,29 +135,12 @@
                 </p>
               </div>
               <div class="shipping__actions">
-                <SfIcon
-                  icon="cross"
-                  color="gray"
-                  size="14px"
-                  role="button"
-                  class="mobile-only"
-                  @click="deleteAddress(key)"
-                />
-                <SfButton @click="changeAddress(key)">
+                <SfButton v-show="address.default_billing || address.default_shipping" @click="changeAddress(key)">
                   {{ $t('Change') }}
-                </SfButton>
-                <SfButton
-                  class="shipping__button-delete desktop-only"
-                  @click="deleteAddress(key)"
-                >
-                  {{ $t('Delete') }}
                 </SfButton>
               </div>
             </div>
           </transition-group>
-          <SfButton class="action-button" @click="changeAddress(-1)">
-            {{ $t('Add new address') }}
-          </SfButton>
         </SfTab>
       </SfTabs>
     </div>
@@ -255,12 +235,12 @@ export default {
       let addressToUpdate = {
         firstname: this.editedAddress.firstname,
         lastname: this.editedAddress.lastname,
-        street: [this.editedAddress.streetName, this.editedAddress.apartment],
+        street: [this.editedAddress.streetName, this.editedAddress.apartment.toString()],
         city: this.editedAddress.city,
         ...(this.editedAddress.state ? { region: { region: this.editedAddress.state } } : {}),
         country_id: this.countries.find(country => country.name === this.editedAddress.country).code || this.editedAddress.country,
-        postcode: this.editedAddress.postcode,
-        ...(this.editedAddress.telephone ? { telephone: this.editedAddress.telephone } : {})
+        postcode: this.editedAddress.postcode.toString(),
+        ...(this.editedAddress.telephone ? { telephone: this.editedAddress.telephone.toString() } : {})
       }
 
       if (this.editedAddressIndex > -1) {

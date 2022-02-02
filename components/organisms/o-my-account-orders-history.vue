@@ -3,9 +3,6 @@
     <SfTabs :open-tab="1">
       <SfTab :title="$t('My orders')">
         <template v-if="!activeOrder">
-          <p class="message">
-            {{ $t('Check the details and status of your orders in the online store. You can also cancel your order or request a return.') }}
-          </p>
           <div v-if="orders.length === 0" class="no-orders">
             <p class="no-orders__title">
               {{ $t('You currently have no orders') }}
@@ -22,12 +19,7 @@
               >
                 {{ $t(tableHeader) }}
               </SfTableHeader>
-              <SfTableHeader class="orders__element--right">
-                <span class="mobile-only">{{ $t('Download') }}</span>
-                <SfButton @click.native="downloadAll" class="desktop-only sf-button--text orders__download-all">
-                  {{ $t('Download all') }}
-                </SfButton>
-              </SfTableHeader>
+              <SfTableHeader class="orders__element--right" />
             </SfTableHeading>
             <SfTableRow v-for="order in orders" :key="order.order_id">
               <SfTableData v-for="(data, key) in order" :key="key">
@@ -44,24 +36,13 @@
                   {{ data }}
                 </template>
               </SfTableData>
-              <SfTableData class="orders__view orders__element--right">
-                <SfButton class="sf-button--text color-secondary" @click.native="setActiveOrder(order)">
-                  {{ $t('VIEW') }}
-                </SfButton>
-              </SfTableData>
+              <SfTableData class="orders__view orders__element--right" />
             </SfTableRow>
           </SfTable>
         </template>
         <template v-else>
           <OMyAccountOrderDetails :order="activeOrder" @close="setActiveOrder(null)" />
         </template>
-      </SfTab>
-      <SfTab :title="$t('Returns')">
-        <p class="message">
-          {{ $t('This feature is not implemented yet! Please take a look at') }}
-          <a href="https://github.com/DivanteLtd/vue-storefront"> https://github.com/DivanteLtd/vue-storefront </a>
-          {{ $t('for our Roadmap!') }}
-        </p>
       </SfTab>
     </SfTabs>
   </div>

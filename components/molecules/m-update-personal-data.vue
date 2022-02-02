@@ -41,8 +41,8 @@
       </SfButton>
     </div>
     <p class="notice">
-      {{ $t('At Brand name, we attach great importance to privacy issues and are committed to protecting the personal data of our users. Learn more about how we care and use your personal data in the') }}
-      <a :href="localizedRoute('/privacy')">{{ $t('Privacy Policy') }}</a>.
+      {{ $t('At Budsies, we attach great importance to privacy issues and are committed to protecting the personal data of our users. Learn more about how we care and use your personal data in the') }}
+      <a :href="localizedRoute('/privacy-policy')">{{ $t('Privacy Policy') }}</a>.
     </p>
   </div>
 </template>
