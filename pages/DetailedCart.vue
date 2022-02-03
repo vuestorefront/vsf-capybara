@@ -130,6 +130,7 @@
             />
             <SfButton
               class="sf-button--full-width color-primary empty-cart__button"
+              @click="processStartShopping"
             >
               Start shopping
             </SfButton>
@@ -173,6 +174,7 @@ import {
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters, mapState } from 'vuex';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
@@ -450,6 +452,9 @@ export default {
       const selectedBundleOptionsValues = getBundleOptionsValues(selectedBundleOptions, productBundleOptions);
 
       return selectedBundleOptionsValues[0].sku;
+    },
+    processStartShopping () {
+      this.$router.push(localizedRoute('/pet-gifts'));
     }
   }
 };
@@ -633,14 +638,7 @@ export default {
   flex: 1;
   align-items: center;
   flex-direction: column;
-  &__image {
-    --image-width: 13.1875rem;
-    margin: var(--spacer-2xl) 0;
-  }
   @include for-desktop {
-    &__image {
-      --image-width: 22rem;
-    }
     &__button {
       --button-width: 20.9375rem;
     }
