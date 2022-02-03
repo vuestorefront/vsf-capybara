@@ -204,7 +204,10 @@ import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
 
 import OGiftCardPayment from './o-gift-card-payment.vue';
-import { KEY, METHOD_CODE } from 'src/modules/vsf-amazon-pay/index';
+import {
+  KEY as AMAZON_PAY_MODULE_KEY,
+  METHOD_CODE as AMAZON_PAY_PAYMENT_METHOD_CODE
+} from 'src/modules/vsf-amazon-pay/index';
 
 const States = require('@vue-storefront/i18n/resource/states.json');
 
@@ -323,11 +326,11 @@ export default {
     isFormFieldsDisabled () {
       let paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
 
-      if (paymentDetails.paymentMethod !== METHOD_CODE) {
+      if (paymentDetails.paymentMethod !== AMAZON_PAY_PAYMENT_METHOD_CODE) {
         return false;
       }
 
-      let amazonOrderState = this.$store.state[KEY].orderState;
+      let amazonOrderState = this.$store.state[AMAZON_PAY_MODULE_KEY].orderState;
 
       if (!amazonOrderState) {
         return false;

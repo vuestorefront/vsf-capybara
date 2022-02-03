@@ -188,7 +188,10 @@ import {
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
-import { KEY, METHOD_CODE } from 'src/modules/vsf-amazon-pay/index';
+import {
+  KEY as AMAZON_PAY_MODULE_KEY,
+  METHOD_CODE as AMAZON_PAY_PAYMENT_METHOD_CODE
+} from 'src/modules/vsf-amazon-pay/index';
 const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
@@ -272,11 +275,11 @@ export default {
       return this.shipping.zipCode;
     },
     isFormFieldsDisabled () {
-      if (this.$store.getters['checkout/getPaymentDetails'].paymentMethod !== METHOD_CODE) {
+      if (this.$store.getters['checkout/getPaymentDetails'].paymentMethod !== AMAZON_PAY_PAYMENT_METHOD_CODE) {
         return false;
       }
 
-      let amazonOrderState = this.$store.state[KEY].orderState;
+      let amazonOrderState = this.$store.state[AMAZON_PAY_MODULE_KEY].orderState;
 
       if (amazonOrderState) {
         return true;
