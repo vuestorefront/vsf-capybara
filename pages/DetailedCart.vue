@@ -122,11 +122,6 @@
             </div>
           </div>
           <div v-else key="empty-cart" class="empty-cart">
-            <SfImage
-              :src="require('@storefront-ui/shared/icons/empty_cart.svg')"
-              alt="Empty cart"
-              class="empty-cart__image"
-            />
             <SfHeading
               title="Your cart is empty"
               :level="2"
