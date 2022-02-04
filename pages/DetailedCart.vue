@@ -5,10 +5,6 @@
     </div>
     <div class="detailed-cart" v-else>
       <div class="detailed-cart__main">
-        <SfBreadcrumbs
-          class="breadcrumbs desktop-only"
-          :breadcrumbs="breadcrumbs"
-        />
         <transition name="fade" mode="out-in">
           <div
             v-if="totalItems"
@@ -168,7 +164,6 @@ import {
   SfImage,
   SfProperty,
   SfHeading,
-  SfBreadcrumbs,
   SfIcon,
   SfQuantitySelector
 } from '@storefront-ui/vue';
@@ -211,7 +206,6 @@ export default {
     SfList,
     SfDropdown,
     SfCollectedProduct,
-    SfBreadcrumbs,
     SfImage,
     SfButton,
     SfHeading,
@@ -258,18 +252,6 @@ export default {
           label: 'Pet Keychains',
           url: {
             name: 'printed-keychains-creation-page'
-          }
-        }
-      ],
-      breadcrumbs: [
-        {
-          text: 'Home',
-          link: '/'
-        },
-        {
-          text: 'Cart',
-          link: {
-            name: 'detailed-cart'
           }
         }
       ],
@@ -495,9 +477,6 @@ export default {
   }
 }
 
-.breadcrumbs {
-  padding: var(--spacer-base) 0;
-}
 .detailed-cart {
   .sf-collected-product {
     --collected-product-image-background: none;
