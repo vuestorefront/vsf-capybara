@@ -7,7 +7,8 @@ import { getBundleOptionsValues, getBundleOptionPrice } from '@vue-storefront/co
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 import { BundleOption } from '@vue-storefront/core/modules/catalog/types/BundleOption';
 
-import UpdateProductDiscountPriceEventData, { UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID } from 'src/modules/shared/types/update-product-discount-price.event';
+import { UPDATE_CART_ITEM_DISCOUNT_PRICE_DATA_EVENT_ID, UPDATE_DEFAULT_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID } from 'src/modules/shared/types/discount-price/events';
+import UpdateProductDiscountPriceEventData from 'src/modules/shared/types/discount-price/update-product-discount-price-event-data.interface';
 
 interface ProductPriceData {
   originalPriceInclTax: number,
@@ -143,7 +144,7 @@ export function getCartItemPrice (product, customOptions, format = true) {
     product
   }
 
-  EventBus.$emit(UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData); // TODO replace with appropriate function
+  EventBus.$emit(UPDATE_CART_ITEM_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData); // TODO replace with appropriate function
 
   const productPrice = getProductPrice(product, productDiscountPriceData, productPriceData, customOptions);
 
@@ -171,7 +172,7 @@ export function getDefaultProductPrice (product, customOptions, format = true) {
     product
   }
 
-  EventBus.$emit(UPDATE_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData); // TODO replace with appropriate function
+  EventBus.$emit(UPDATE_DEFAULT_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData); // TODO replace with appropriate function
 
   const productPrice = getProductPrice(product, productDiscountPriceData, productPriceData, customOptions);
 
