@@ -161,8 +161,9 @@ export default Vue.extend({
   }
 
   ._visual-selector-value {
-    width: 114px;
-    margin: 0 2%;
+    box-sizing: border-box;
+    width: 33.33%;
+    padding: 0 2%;
 
     ._icon {
       background-position: center center;
@@ -236,6 +237,12 @@ export default Vue.extend({
   &.-disabled {
     ._visual-selector-value {
       opacity: 0.7;
+    }
+  }
+
+  @media (min-width: $tablet-min) {
+    ._visual-selector-value {
+      width: 146px;
     }
   }
 }
