@@ -143,8 +143,8 @@ function getProductPrice (product, productDiscountPriceData: UpdateProductDiscou
 export function getCartItemPrice (product, customOptions, format = true) {
   if (!product) {
     return {
-      regular: '',
-      special: ''
+      regular: format ? '' : 0,
+      special: format ? '' : 0
     }
   }
 
@@ -169,11 +169,10 @@ export function getCartItemPrice (product, customOptions, format = true) {
 }
 
 export function getDefaultProductPrice (product, customOptions, format = true) {
-  debugger;
   if (!product) {
     return {
-      regular: '',
-      special: ''
+      regular: format ? '' : 0,
+      special: format ? '' : 0
     }
   }
 

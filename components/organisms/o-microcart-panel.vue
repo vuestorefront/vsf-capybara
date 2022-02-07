@@ -20,8 +20,8 @@
               :key="product.id"
               :image="getThumbnailForProductExtend(product)"
               :title="product.name"
-              :regular-price="getProductPrice(product).regular"
-              :special-price="getProductPrice(product).special"
+              :regular-price="getCartItemPrice(product).regular"
+              :special-price="getCartItemPrice(product).special"
               :stock="10"
               :qty="product.qty"
               class="collected-product"
@@ -168,7 +168,7 @@ export default {
     getThumbnailForProductExtend (product) {
       return getThumbnailForProduct(product);
     },
-    getProductPrice (product) {
+    getCartItemPrice (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options
         ? getProductPriceFromTotals(product)
         : getCartItemPrice(product);
