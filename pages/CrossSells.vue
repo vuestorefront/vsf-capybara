@@ -239,7 +239,7 @@ export default Vue.extend({
           }
         });
       },
-      immediate: false
+      immediate: true
     }
   }
 });
