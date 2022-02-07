@@ -189,6 +189,9 @@ export default Vue.extend({
     goToCart (): void {
       this.$router.push(localizedRoute({ name: 'detailed-cart' }));
     },
+    redirectToCart (): void {
+      this.$router.replace(localizedRoute({ name: 'detailed-cart' }));
+    },
     async setCurrentProduct (): Promise<void> {
       const sku = getSkuFromRoute(this.$route);
 
@@ -227,8 +230,14 @@ export default Vue.extend({
           return;
         }
 
-        this.loadCrossSellsProducts();
-        this.loadUpSellsProducts();
+        Promise.all([
+          this.loadCrossSellsProducts(),
+          this.loadUpSellsProducts()
+        ]).then(() => {
+          if (!this.crossSellsProducts.length && !this.upSellsProducts.length) {
+            this.redirectToCart();
+          }
+        });
       },
       immediate: true
     }
