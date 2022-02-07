@@ -20,8 +20,8 @@
       </SfTableHeader>
     </SfTableHeading>
     <SfTableRow
-      v-for="product in cartItems"
-      :key="product.id && product.checksum ? product.id + product.checksum : product.name"
+      v-for="(product, index) in cartItems"
+      :key="index + '-' + product.name"
       class="table__row"
     >
       <SfTableData class="table__image">

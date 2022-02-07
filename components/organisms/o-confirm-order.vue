@@ -92,8 +92,8 @@
           <transition name="fade">
             <div class="accordion__content">
               <SfCollectedProduct
-                v-for="product in productsInCart"
-                :key="product.id + product.checksum"
+                v-for="(product, index) in productsInCart"
+                :key="index + '-' + product.name"
                 v-model="product.qty"
                 :image="getThumbnailForProduct(product)"
                 :title="product.name | htmlDecode"
