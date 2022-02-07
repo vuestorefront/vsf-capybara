@@ -5,10 +5,6 @@
     </div>
     <div class="detailed-cart" v-else>
       <div class="detailed-cart__main">
-        <SfBreadcrumbs
-          class="breadcrumbs desktop-only"
-          :breadcrumbs="breadcrumbs"
-        />
         <transition name="fade" mode="out-in">
           <div
             v-if="totalItems"
@@ -122,11 +118,6 @@
             </div>
           </div>
           <div v-else key="empty-cart" class="empty-cart">
-            <SfImage
-              :src="require('@storefront-ui/shared/icons/empty_cart.svg')"
-              alt="Empty cart"
-              class="empty-cart__image"
-            />
             <SfHeading
               title="Your cart is empty"
               :level="2"
@@ -135,6 +126,7 @@
             />
             <SfButton
               class="sf-button--full-width color-primary empty-cart__button"
+              @click="processStartShopping"
             >
               Start shopping
             </SfButton>
@@ -172,12 +164,12 @@ import {
   SfImage,
   SfProperty,
   SfHeading,
-  SfBreadcrumbs,
   SfIcon,
   SfQuantitySelector
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters, mapState } from 'vuex';
+import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
@@ -214,7 +206,6 @@ export default {
     SfList,
     SfDropdown,
     SfCollectedProduct,
-    SfBreadcrumbs,
     SfImage,
     SfButton,
     SfHeading,
@@ -261,18 +252,6 @@ export default {
           label: 'Pet Keychains',
           url: {
             name: 'printed-keychains-creation-page'
-          }
-        }
-      ],
-      breadcrumbs: [
-        {
-          text: 'Home',
-          link: '/'
-        },
-        {
-          text: 'Cart',
-          link: {
-            name: 'detailed-cart'
           }
         }
       ],
@@ -455,6 +434,9 @@ export default {
       const selectedBundleOptionsValues = getBundleOptionsValues(selectedBundleOptions, productBundleOptions);
 
       return selectedBundleOptionsValues[0].sku;
+    },
+    processStartShopping () {
+      this.$router.push(localizedRoute('/pet-gifts'));
     }
   }
 };
@@ -471,7 +453,7 @@ export default {
   @include for-desktop {
     max-width: 1272px;
     width: 100%;
-    margin: 0 auto;
+    margin: auto;
     padding: 0 var(--spacer-sm);
   }
 }
@@ -495,9 +477,6 @@ export default {
   }
 }
 
-.breadcrumbs {
-  padding: var(--spacer-base) 0;
-}
 .detailed-cart {
   .sf-collected-product {
     --collected-product-image-background: none;
@@ -638,14 +617,7 @@ export default {
   flex: 1;
   align-items: center;
   flex-direction: column;
-  &__image {
-    --image-width: 13.1875rem;
-    margin: var(--spacer-2xl) 0;
-  }
   @include for-desktop {
-    &__image {
-      --image-width: 22rem;
-    }
     &__button {
       --button-width: 20.9375rem;
     }
