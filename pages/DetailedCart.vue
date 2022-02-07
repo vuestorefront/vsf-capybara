@@ -441,7 +441,6 @@ export default {
       return editableProductsSkus.includes(productSku);
     },
     truncate (text, desktopLength = 75, mobileLength = 50) {
-      text = String(text);
       const maxLength = this.isMobile ? mobileLength : desktopLength;
 
       if (text.length <= maxLength) {
