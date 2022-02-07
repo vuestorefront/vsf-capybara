@@ -85,7 +85,7 @@ import {
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 
-import { getProductPrice } from 'theme/helpers';
+import { getCartItemPrice } from 'theme/helpers';
 import CartItem from 'core/modules/cart/types/CartItem';
 import CartItemOption from 'core/modules/cart/types/CartItemOption';
 import { ProductId } from 'src/modules/budsies';
@@ -177,10 +177,10 @@ export default {
       return this.shouldShowHeader ? product.qty : `x ${product.qty}`;
     },
     getProductRegularPrice (product: CartItem): string {
-      return getProductPrice(product, {}).regular;
+      return getCartItemPrice(product, {}).regular;
     },
     getProductSpecialPrice (product: CartItem): string {
-      return getProductPrice(product, {}).special;
+      return getCartItemPrice(product, {}).special;
     },
     getThumbnailForProduct (product: CartItem): string {
       if (product.thumbnail && product.thumbnail.includes('://')) {

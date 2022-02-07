@@ -395,7 +395,7 @@ import {
   BodyPartValueContentType,
   ProductValue
 } from 'src/modules/budsies';
-import { getProductPrice } from 'theme/helpers';
+import { getDefaultProductPrice } from 'theme/helpers';
 import ServerError from 'src/modules/shared/types/server-error';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
@@ -527,7 +527,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           continue;
         }
 
-        const price = getProductPrice(productLink.product, {}, false);
+        const price = getDefaultProductPrice(productLink.product, {}, false);
 
         availableSizes.push({
           id: String(productLink.product.id),
