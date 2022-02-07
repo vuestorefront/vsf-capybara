@@ -44,6 +44,8 @@ import { BodyPartValueContentType } from 'src/modules/budsies';
 
 import BodypartOption from '../interfaces/bodypart-option';
 
+const BODYPART_ITEM_WIDTH = 145;
+
 let instanceId = 0;
 
 export default Vue.extend({
@@ -113,7 +115,7 @@ export default Vue.extend({
     },
     getIconStyle (option: BodypartOption): string | Record<string, string | number> {
       if (option.contentTypeId === BodyPartValueContentType.IMAGE && option.image) {
-        const thumb = getThumbnailPath(option.image, 150, 150, this.type);
+        const thumb = getThumbnailPath(option.image, BODYPART_ITEM_WIDTH * 2, BODYPART_ITEM_WIDTH * 2, this.type);
         return {
           'background-image': `url(${thumb})`
         }
@@ -150,6 +152,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+$bodypart-item-width: 145px;
+
 .m-bodypart-option-configurator {
   ._visual-selector {
     list-style: none;
@@ -164,6 +168,7 @@ export default Vue.extend({
     box-sizing: border-box;
     width: 33.33%;
     padding: 0 2%;
+    max-width: $bodypart-item-width;
 
     ._icon {
       background-position: center center;
@@ -242,7 +247,7 @@ export default Vue.extend({
 
   @media (min-width: $tablet-min) {
     ._visual-selector-value {
-      width: 146px;
+      width: $bodypart-item-width;
     }
   }
 }
