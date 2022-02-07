@@ -17,14 +17,16 @@
 
       <div class="product__bottom">
         <lazy-hydrate when-idle>
-          <SfSection :title-heading="$t('We found other products you might like')">
-            <MRelatedProducts type="upsell" />
-          </SfSection>
+          <MRelatedProducts
+            :title-heading="$t('We found other products you might like')"
+            type="upsell"
+          />
         </lazy-hydrate>
         <lazy-hydrate when-idle>
-          <SfSection :title-heading="$t('Similar Products')">
-            <MRelatedProducts type="related" />
-          </SfSection>
+          <MRelatedProducts
+            :title-heading="$t('Similar Products')"
+            type="related"
+          />
         </lazy-hydrate>
       </div>
     </template>
@@ -40,7 +42,6 @@ import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
 import MRelatedProducts from 'theme/components/molecules/m-related-products';
 import OProductDetails from 'theme/components/organisms/o-product-details';
-import { SfSection } from '@storefront-ui/vue';
 import { filterChangedProduct } from '@vue-storefront/core/modules/catalog/events';
 import { getMediaGallery } from '@vue-storefront/core/modules/catalog/helpers';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
@@ -63,7 +64,6 @@ export default {
   components: {
     LazyHydrate,
     MRelatedProducts,
-    SfSection,
     OProductDetails,
     MProductDescriptionStory
   },
