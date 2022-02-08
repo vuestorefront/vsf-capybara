@@ -12,6 +12,7 @@
         class="form__element form__checkbox"
         name="shipToMyAddress"
         :label="$t('Ship to my default address')"
+        :disabled="isFormFieldsDisabled"
       />
       <SfInput
         v-model.trim="shipping.firstName"
@@ -19,6 +20,7 @@
         name="first-name"
         :label="$t('First name')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.shipping.firstName.$error"
         :error-message="
           !$v.shipping.firstName.required
@@ -33,6 +35,7 @@
         name="last-name"
         :label="$t('Last name')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.shipping.lastName.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.lastName.$touch()"
@@ -43,6 +46,7 @@
         name="street-address"
         :label="$t('Address')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.shipping.streetAddress.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.streetAddress.$touch()"
@@ -53,6 +57,7 @@
         name="city"
         :label="$t('City')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.shipping.city.$error"
         :error-message="$t('Field is required')"
         @blur="$v.shipping.city.$touch()"
@@ -63,6 +68,7 @@
         class="form__element form__element--half form__element--half-even"
         name="state"
         :label="$t('State / Province')"
+        :disabled="isFormFieldsDisabled"
       />
       <MMultiselect
         v-if="isSelectedCountryHasStates && canShowStateSelector"
@@ -76,6 +82,7 @@
         :options="getStatesForSelectedCountry"
         :valid="!$v.shipping.state.$error"
         :error-message="$t('Field is required')"
+        :disabled="isFormFieldsDisabled"
       />
       <SfInput
         v-model.trim="shipping.zipCode"
@@ -83,6 +90,7 @@
         name="zipCode"
         :label="$t('Zip-code')"
         :required="true"
+        :disabled="isFormFieldsDisabled"
         :valid="!$v.shipping.zipCode.$error"
         :error-message="
           !$v.shipping.zipCode.required
@@ -102,6 +110,7 @@
         :options="countries"
         :valid="!$v.shipping.country.$error"
         :error-message="$t('Field is required')"
+        :disabled="isFormFieldsDisabled"
         @change="changeCountry"
       />
       <SfInput
@@ -112,6 +121,7 @@
         class="form__element"
         name="phone"
         :label="$t('Phone Number')"
+        :disabled="isFormFieldsDisabled"
         @blur="$v.shipping.phoneNumber.$touch()"
       />
     </div>
@@ -178,6 +188,10 @@ import {
 } from '@storefront-ui/vue';
 import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
+import {
+  KEY as AMAZON_PAY_MODULE_KEY,
+  METHOD_CODE as AMAZON_PAY_PAYMENT_METHOD_CODE
+} from 'src/modules/vsf-amazon-pay/index';
 const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
@@ -259,6 +273,19 @@ export default {
     },
     getZipCode () {
       return this.shipping.zipCode;
+    },
+    isFormFieldsDisabled () {
+      if (this.$store.getters['checkout/getPaymentDetails'].paymentMethod !== AMAZON_PAY_PAYMENT_METHOD_CODE) {
+        return false;
+      }
+
+      let amazonOrderState = this.$store.state[AMAZON_PAY_MODULE_KEY].orderState;
+
+      if (amazonOrderState) {
+        return true;
+      }
+
+      return false;
     }
   },
   methods: {
