@@ -17,6 +17,10 @@
       >
         Go to checkout
       </SfButton>
+      <amazon-pay-button
+        type="PwA"
+      />
+      <amazon-pay-order-details-modal />
     </div>
     <SfLoader v-if="isUpdatingQuantity" :loading="isUpdatingQuantity" />
   </div>
@@ -34,6 +38,11 @@ import CartEvents from 'src/modules/shared/types/cart-events';
 
 import APromoCode from 'theme/components/atoms/a-promo-code.vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary.vue';
+import AmazonPayButton from 'src/modules/vsf-amazon-pay/components/Button.vue'
+import AmazonPayOrderDetailsModal from 'theme/components/molecules/modals/m-modal-amazonpay-order-details.vue'
+import { mapActions } from 'vuex'
+import { ModalList } from 'theme/store/ui/modals'
+
 export default {
   name: 'OrderSummary',
   components: {
@@ -41,7 +50,9 @@ export default {
     SfLoader,
     APromoCode,
     SfHeading,
-    SfButton
+    SfButton,
+    AmazonPayButton,
+    AmazonPayOrderDetailsModal
   },
   props: {
     isUpdatingQuantity: {
@@ -49,10 +60,19 @@ export default {
       required: true
     }
   },
+  beforeMount () {
+    this.$bus.$on('amazon-authorized', this.onAmazonPayAuthorized);
+  },
   methods: {
+    ...mapActions('ui', {
+      openModal: 'openModal'
+    }),
     goToCheckout () {
       EventBus.$emit(CartEvents.GO_TO_CHECKOUT_FROM_CART)
       this.$router.push(localizedRoute({ name: 'checkout' }));
+    },
+    onAmazonPayAuthorized () {
+      this.openModal({ name: ModalList.AmazonPayOrderDetails });
     }
   }
 };
