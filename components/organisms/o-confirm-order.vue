@@ -93,7 +93,7 @@
             <div class="accordion__content">
               <SfCollectedProduct
                 v-for="product in productsInCart"
-                :key="product.id + product.checksum"
+                :key="getCartItemKey(product)"
                 v-model="product.qty"
                 :image="getThumbnailForProduct(product)"
                 :title="product.name | htmlDecode"
@@ -268,6 +268,7 @@ import { ModalList } from 'theme/store/ui/modals'
 
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
+import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
 import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
 import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/payment-affirm/types/AffirmCheckoutEvents';
 
@@ -479,6 +480,9 @@ export default {
         message: this.$t('Something went wrong'),
         action1: { label: this.$t('OK') }
       });
+    },
+    getCartItemKey (cartItem) {
+      return getCartItemKey(cartItem);
     }
   },
   mounted () {

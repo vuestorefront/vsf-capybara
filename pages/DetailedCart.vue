@@ -14,7 +14,7 @@
             <transition-group name="fade" tag="div">
               <SfCollectedProduct
                 v-for="product in products"
-                :key="product.id + product.checksum"
+                :key="getCartItemKey(product)"
                 :image="getThumbnailForProductExtend(product)"
                 image-width="140"
                 image-height="140"
@@ -174,6 +174,7 @@ import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
+import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
 import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
@@ -434,6 +435,9 @@ export default {
       const selectedBundleOptionsValues = getBundleOptionsValues(selectedBundleOptions, productBundleOptions);
 
       return selectedBundleOptionsValues[0].sku;
+    },
+    getCartItemKey (cartItem) {
+      return getCartItemKey(cartItem);
     },
     processStartShopping () {
       this.$router.push(localizedRoute('/pet-gifts'));
