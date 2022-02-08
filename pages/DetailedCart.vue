@@ -17,8 +17,8 @@
           >
             <transition-group name="fade" tag="div">
               <SfCollectedProduct
-                v-for="(product, index) in products"
-                :key="index + '-' + product.name"
+                v-for="product in products"
+                :key="getCartItemKey(product)"
                 :image="getThumbnailForProductExtend(product)"
                 image-width="140"
                 image-height="140"
@@ -182,6 +182,7 @@ import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
+import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
 import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
@@ -455,6 +456,9 @@ export default {
       const selectedBundleOptionsValues = getBundleOptionsValues(selectedBundleOptions, productBundleOptions);
 
       return selectedBundleOptionsValues[0].sku;
+    },
+    getCartItemKey (cartItem) {
+      return getCartItemKey(cartItem);
     }
   }
 };

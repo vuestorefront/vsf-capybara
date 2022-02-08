@@ -20,8 +20,8 @@
       </SfTableHeader>
     </SfTableHeading>
     <SfTableRow
-      v-for="(product, index) in cartItems"
-      :key="index + '-' + product.name"
+      v-for="product in cartItems"
+      :key="getCartItemKey(product)"
       class="table__row"
     >
       <SfTableData class="table__image">
@@ -89,6 +89,7 @@ import { getProductPrice } from 'theme/helpers';
 import CartItem from 'core/modules/cart/types/CartItem';
 import CartItemOption from 'core/modules/cart/types/CartItemOption';
 import { ProductId } from 'src/modules/budsies';
+import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 export default {
@@ -217,6 +218,9 @@ export default {
       }
 
       return text.substring(0, maxLength) + '...';
+    },
+    getCartItemKey (cartItem: CartItem): string {
+      return getCartItemKey(cartItem);
     }
   }
 }
