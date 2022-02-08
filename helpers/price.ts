@@ -7,7 +7,7 @@ import { getBundleOptionsValues, getBundleOptionPrice, getDefaultBundleOptions }
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus'
 import { SelectedBundleOption } from '@vue-storefront/core/modules/catalog/types/BundleOption';
 
-import { UPDATE_CART_ITEM_DISCOUNT_PRICE_DATA_EVENT_ID, UPDATE_DEFAULT_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID } from 'src/modules/shared/types/discount-price/events';
+import { UPDATE_CART_ITEM_DISCOUNT_PRICE_DATA_EVENT_ID, UPDATE_PRODUCT_DEFAULT_DISCOUNT_PRICE_DATA_EVENT_ID } from 'src/modules/shared/types/discount-price/events';
 import UpdateProductDiscountPriceEventData from 'src/modules/shared/types/discount-price/update-product-discount-price-event-data.interface';
 
 interface ProductPriceData {
@@ -26,7 +26,7 @@ function calculateCartItemBundleOptionsPrice (product) {
   return price
 }
 
-function calculateDefaultProductBundleOptionsPrice (product) {
+function calculateProductDefaultBundleOptionsPrice (product) {
   const allBundleOptions = product.bundle_options || [];
 
   const defaultBundleOptions = getDefaultBundleOptions(product);
@@ -38,7 +38,7 @@ function calculateDefaultProductBundleOptionsPrice (product) {
   return price;
 }
 
-function getCartItemPriceData (product): ProductPriceData {
+function getProductPriceData (product, bundleOptionsPriceCalculationFunction: (product) => any): ProductPriceData {
   let productPriceData: ProductPriceData = {
     originalPriceInclTax: 0,
     priceInclTax: 0,
@@ -46,28 +46,7 @@ function getCartItemPriceData (product): ProductPriceData {
   }
 
   if (isBundleProduct(product)) {
-    productPriceData = calculateCartItemBundleOptionsPrice(product);
-  } else if (product.giftcard_options) {
-    productPriceData.priceInclTax = product.giftcard_options.price_amount;
-    productPriceData.originalPriceInclTax = product.giftcard_options.price_amount;
-  } else {
-    productPriceData.priceInclTax = product.price_incl_tax || product.priceInclTax || 0
-    productPriceData.originalPriceInclTax = product.original_price_incl_tax || product.originalPriceInclTax || 0
-    productPriceData.specialPrice = product.special_price || product.specialPrice || 0
-  }
-
-  return productPriceData;
-}
-
-function getDefaultProductPriceData (product) {
-  let productPriceData: ProductPriceData = {
-    originalPriceInclTax: 0,
-    priceInclTax: 0,
-    specialPrice: 0
-  }
-
-  if (isBundleProduct(product)) {
-    productPriceData = calculateDefaultProductBundleOptionsPrice(product);
+    productPriceData = bundleOptionsPriceCalculationFunction(product);
   } else if (product.giftcard_options) {
     productPriceData.priceInclTax = product.giftcard_options.price_amount;
     productPriceData.originalPriceInclTax = product.giftcard_options.price_amount;
@@ -93,19 +72,19 @@ function formatPrice (value) {
   return value ? price(value) : ''
 }
 
-export function getDefaultProductDiscount (product, format = true) {
+export function getProductDefaultDiscount (product, format = true) {
   const defaultDiscount = format ? '' : 0;
   if (!product) {
     return defaultDiscount;
   }
 
-  const productPriceData = getDefaultProductPriceData(product);
+  const productPriceData = getProductPriceData(product, calculateProductDefaultBundleOptionsPrice);
   const productDiscountPriceData: UpdateProductDiscountPriceEventData = {
     value: undefined,
     product
   };
 
-  EventBus.$emit(UPDATE_DEFAULT_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
+  EventBus.$emit(UPDATE_PRODUCT_DEFAULT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
 
   const price = getProductPrice(product, productDiscountPriceData, productPriceData);
 
@@ -148,7 +127,7 @@ export function getCartItemPrice (product, customOptions, format = true) {
     }
   }
 
-  const productPriceData = getCartItemPriceData(product);
+  const productPriceData = getProductPriceData(product, calculateCartItemBundleOptionsPrice);
   const productDiscountPriceData: UpdateProductDiscountPriceEventData = {
     value: undefined,
     product
@@ -168,7 +147,7 @@ export function getCartItemPrice (product, customOptions, format = true) {
   }
 }
 
-export function getDefaultProductPrice (product, customOptions, format = true) {
+export function getProductDefaultPrice (product, customOptions, format = true) {
   if (!product) {
     return {
       regular: format ? '' : 0,
@@ -176,13 +155,13 @@ export function getDefaultProductPrice (product, customOptions, format = true) {
     }
   }
 
-  const productPriceData = getDefaultProductPriceData(product);
+  const productPriceData = getProductPriceData(product, calculateProductDefaultBundleOptionsPrice);
   const productDiscountPriceData: UpdateProductDiscountPriceEventData = {
     value: undefined,
     product
   }
 
-  EventBus.$emit(UPDATE_DEFAULT_PRODUCT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
+  EventBus.$emit(UPDATE_PRODUCT_DEFAULT_DISCOUNT_PRICE_DATA_EVENT_ID, productDiscountPriceData);
 
   const productPrice = getProductPrice(product, productDiscountPriceData, productPriceData, customOptions);
 
