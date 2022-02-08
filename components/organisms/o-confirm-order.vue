@@ -248,7 +248,7 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { OrderModule } from '@vue-storefront/core/modules/order';
 import { OrderReview } from '@vue-storefront/core/modules/checkout/components/OrderReview';
-import { getProductPrice, createSmoothscroll } from 'theme/helpers';
+import { createSmoothscroll, getCartItemPrice } from 'theme/helpers';
 import {
   SfIcon,
   SfImage,
@@ -385,10 +385,10 @@ export default {
       return getThumbnailForProduct(product);
     },
     getProductRegularPrice (product) {
-      return getProductPrice(product, {}).regular;
+      return getCartItemPrice(product, {}).regular;
     },
     getProductSpecialPrice (product) {
-      return getProductPrice(product, {}).special;
+      return getCartItemPrice(product, {}).special;
     },
     getProductOptions (product) {
       return onlineHelper.isOnline && product.totals && product.totals.options

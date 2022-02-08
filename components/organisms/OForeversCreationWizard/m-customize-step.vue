@@ -246,7 +246,7 @@ import { Logger } from '@vue-storefront/core/lib/logger';
 
 import { isVue } from 'src/modules/shared';
 import { Bodypart } from 'src/modules/budsies';
-import { getProductPrice } from 'theme/helpers';
+import { getProductDefaultPrice } from 'theme/helpers';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
@@ -383,7 +383,7 @@ export default Vue.extend({
         }
 
         const images: string[] = getGalleryByProduct(productLink.product).map((i: any) => i.src);
-        const price = getProductPrice(productLink.product, {}, false);
+        const price = getProductDefaultPrice(productLink.product, {}, false);
         result.push({
           id: Number(productLink.product.id),
           sku: productLink.product.sku,

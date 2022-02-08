@@ -169,8 +169,8 @@ import {
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters, mapState } from 'vuex';
+import { getCartItemPrice } from 'theme/helpers';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
-import { getProductPrice } from 'theme/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
@@ -338,10 +338,10 @@ export default {
       return product.custom_options.find(option => option.title === productOption.label) !== undefined;
     },
     getProductRegularPrice (product) {
-      return getProductPrice(product, {}).regular;
+      return getCartItemPrice(product, {}).regular;
     },
     getProductSpecialPrice (product) {
-      return getProductPrice(product, {}).special;
+      return getCartItemPrice(product, {}).special;
     },
     removeHandler (product) {
       this.$store.dispatch('cart/removeItem', { product: product });

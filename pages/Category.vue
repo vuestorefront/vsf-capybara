@@ -201,7 +201,7 @@ import { htmlDecode } from '@vue-storefront/core/filters';
 import { quickSearchByQuery } from '@vue-storefront/core/lib/search';
 import { getSearchOptionsFromRouteParams } from '@vue-storefront/core/modules/catalog-next/helpers/categoryHelpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
-import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct, getProductPrice } from 'theme/helpers';
+import { getTopLevelCategories, prepareCategoryMenuItem, prepareCategoryProduct } from 'theme/helpers';
 import { formatProductLink } from '@vue-storefront/core/modules/url/helpers';
 
 import {

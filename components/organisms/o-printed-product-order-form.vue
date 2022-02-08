@@ -177,7 +177,7 @@ import {
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
-import { getProductPrice } from 'theme/helpers';
+import { getProductDefaultPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { getProductGallery as getGalleryByProduct, setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
 import CartItem from 'core/modules/cart/types/CartItem';
@@ -350,7 +350,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           continue;
         }
 
-        const priceData = getProductPrice(productLink.product, {}, false);
+        const priceData = getProductDefaultPrice(productLink.product, {}, false);
 
         availableStyles.push({
           optionId: this.styleBundleOption.option_id,
@@ -392,7 +392,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return productImages['images'];
     },
     bundleProductPrice (): {regular: any, special: any} {
-      return getProductPrice(this.product, this.getCurrentCustomOptions, false);
+      return getProductDefaultPrice(this.product, this.getCurrentCustomOptions, false);
     },
     productImages (): GalleryProductImages[] {
       const images = this.getProductGallery.map((imageObject: any) => ({
