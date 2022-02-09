@@ -17,6 +17,19 @@
     >
       <SfContentPage :title="navigation[0].title">
         <SfHeading title="Store Front Heading" subtitle="with default level" />
+        <SfHeading :level="1" title="SfHeading H1" />
+        <p> Default text </p>
+        <SfHeading :level="2" title="SfHeading H2" />
+        <p> Default text </p>
+        <SfHeading :level="3" title="SfHeading H3" />
+        <p> Default text </p>
+        <SfHeading :level="4" title="SfHeading H4" />
+        <p> Default text </p>
+        <SfHeading :level="5" title="SfHeading H5" />
+        <p> Default text </p>
+        <SfHeading :level="6" title="SfHeading H6" />
+        <p> Default text </p>
+
         <h1>Heading H1</h1>
         <h2>Heading H2</h2>
         <h3>Heading H3</h3>
