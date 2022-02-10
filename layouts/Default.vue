@@ -73,7 +73,7 @@ export default {
       return this.$route.query.hasOwnProperty('_storyblok');
     },
     hideFooterOnMobile () {
-      return this.$route.name === 'pillowSideDesign-product';
+      return this.$route.name === 'phrase-pillow-customize';
     }
   },
   beforeMount () {
