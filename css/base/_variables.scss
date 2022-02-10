@@ -78,7 +78,7 @@ $forms-color-placeholder: #a09999;
     --h3-font-size: 1.625rem;
     --h4-font-size: 1.125rem;
     --h5-font-size: 0.875rem;
-    --h6-font-size: 0.625rem;
+    --h6-font-size: 0.85rem;
     --heading-title-font-line-height: 1;
 
     // Colors
@@ -130,9 +130,5 @@ $forms-color-placeholder: #a09999;
     @include for-desktop {
       --h1-font-size: 2.625rem;
       --h2-font-size: 2.625rem;
-      --h3-font-size: 1.625rem;
-      --h4-font-size: 1.125rem;
-      --h5-font-size: 0.875rem;
-      --h6-font-size: 0.625rem;
     }
   }
