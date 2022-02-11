@@ -316,7 +316,7 @@ export default Vue.extend({
     --chevron-position: absolute;
     right: var(--spacer-xs);
     top: 50%;
-    transform: translate3d(0, -50%, 0);
+    transform: translateY(-50%);
   }
 
   ::v-deep .multiselect {
