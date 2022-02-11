@@ -171,21 +171,6 @@
           class="sf-heading--left sf-heading--no-underline summary__title"
         />
         <MPriceSummary class="summary__total" />
-        <SfCheckbox
-          v-model="orderReview.terms"
-          class="summary__terms"
-          name="acceptConditions"
-          @blur="$v.orderReview.terms.$touch()"
-        >
-          <template #label>
-            <span class="sf-checkbox__label no-flex">
-              {{ $t("I accept ") }}
-            </span>
-            <SfButton class="sf-button sf-button--text summary__terms--link" @click.prevent="openTermsAndConditionsModal">
-              {{ $t("Terms and conditions") }}
-            </SfButton>
-          </template>
-        </SfCheckbox>
       </div>
     </div>
     <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
@@ -202,21 +187,6 @@
     </div>
     <div class="totals desktop-only">
       <div class="totals__element">
-        <SfCheckbox
-          v-model="orderReview.terms"
-          class="totals__terms"
-          name="acceptConditions"
-          @blur="$v.orderReview.terms.$touch()"
-        >
-          <template #label>
-            <span class="sf-checkbox__label no-flex">
-              {{ $t("I accept ") }}
-            </span>
-            <SfButton class="sf-button sf-button--text totals__terms--link" @click.prevent="openTermsAndConditionsModal">
-              {{ $t("Terms and conditions") }}
-            </SfButton>
-          </template>
-        </SfCheckbox>
         <APromoCode :allow-promo-code-removal="false" />
       </div>
       <MPriceSummary class="totals__element" />
@@ -227,7 +197,7 @@
     <div class="actions">
       <SfButton
         class="sf-button--full-width actions__button place-order-btn"
-        :disabled="$v.orderReview.$invalid || !productsInCart.length || isCheckoutInProgress"
+        :disabled="!productsInCart.length || isCheckoutInProgress"
         @click="placeOrder"
       >
         {{ $t("Place the order") }}
@@ -243,7 +213,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { required } from 'vuelidate/lib/validators';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { OrderModule } from '@vue-storefront/core/modules/order';
@@ -256,7 +225,6 @@ import {
   SfTable,
   SfButton,
   SfHeading,
-  SfCheckbox,
   SfAccordion,
   SfCharacteristic,
   SfCollectedProduct,
@@ -264,7 +232,6 @@ import {
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
-import { ModalList } from 'theme/store/ui/modals'
 
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
@@ -287,7 +254,6 @@ export default {
     SfTable,
     SfButton,
     SfHeading,
-    SfCheckbox,
     SfAccordion,
     SfCharacteristic,
     SfCollectedProduct,
@@ -316,13 +282,6 @@ export default {
       ],
       isCheckoutInProgress: false
     };
-  },
-  validations: {
-    orderReview: {
-      terms: {
-        required
-      }
-    }
   },
   computed: {
     ...mapGetters({
@@ -454,9 +413,6 @@ export default {
         message: this.$t(response.result),
         action1: { label: this.$t('OK') }
       });
-    },
-    openTermsAndConditionsModal () {
-      this.openModal({ name: ModalList.TermsAndConditions })
     },
     truncate (text, desktopLength = 75, mobileLength = 50) {
       const maxLength = this.isMobile ? mobileLength : desktopLength;

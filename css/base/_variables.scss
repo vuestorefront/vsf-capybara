@@ -72,6 +72,15 @@ $forms-color-placeholder: #a09999;
     --font-lg: 1.266rem; 
     --font-xl: 1.5rem;
     --font-2xl: 1.875rem; 
+    // headings font-size
+    --h1-font-size: 1.375rem;
+    --h2-font-size: 1.375rem;
+    --h3-font-size: 1.250rem;
+    --h4-font-size: 1.125rem;
+    --h5-font-size: 0.875rem;
+    --h6-font-size: 0.75rem;
+    --heading-title-font-line-height: 1;
+
     // Colors
     @include generate-color-variants(--c-black, #535353);
     @include generate-color-variants(--c-white, #ffffff);
@@ -117,4 +126,13 @@ $forms-color-placeholder: #a09999;
     --c-warning-variant: var(--_c-light-secondary);
     @include assign-color-variants(--c-danger, --_c-red-secondary);
     --c-danger-variant: var(--_c-red-primary);
+
+    @include for-desktop {
+      --h1-font-size: 2.625rem;
+      --h2-font-size: 2.625rem;
+      --h3-font-size: 1.625rem;
+      --h4-font-size: 1.125rem;
+      --h5-font-size: 0.875rem;
+      --h6-font-size: 0.625rem;
+    }
   }

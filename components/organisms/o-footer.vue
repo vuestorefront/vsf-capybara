@@ -276,6 +276,8 @@ export default {
     --footer-padding: 0 var(--spacer-sm);
     --footer-column-title-color: var(--c-light-variant);
     --footer-column-title-background: var(--c-footer);
+
+    --footer-column-title-font-size: --h4-font-size;
   }
   ::v-deep .sf-footer-column__content {
     padding: 0 var(--spacer-xl);

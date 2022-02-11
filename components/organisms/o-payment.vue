@@ -359,12 +359,19 @@ export default {
   },
   methods: {
     async changeCountry () {
+      await this.$nextTick();
+      this.validateCountryRelatedFields();
+
       await Promise.all([
         this.$store.dispatch('checkout/updatePaymentDetails', { country: this.payment.country }),
         this.$store.dispatch('cart/syncPaymentMethods', { forceServerSync: true })
       ]);
 
       this.$bus.$emit('checkout-payment-country-changed');
+    },
+    validateCountryRelatedFields () {
+      this.$v.payment.state.$touch();
+      this.$v.payment.phoneNumber.$touch();
     }
   },
   watch: {
