@@ -127,6 +127,9 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-product {
   display: flex;
   justify-content: center;
@@ -146,5 +149,7 @@ export default Blok.extend({
       height: auto;
     }
   }
+
+  @include display-property-handling;
 }
 </style>

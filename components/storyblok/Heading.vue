@@ -56,6 +56,7 @@ export default Blok.extend({
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
 
 .storyblok-heading {
   text-align: center;
@@ -203,5 +204,7 @@ export default Blok.extend({
       }
     }
   }
+
+  @include display-property-handling;
 }
 </style>

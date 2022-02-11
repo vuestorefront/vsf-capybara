@@ -63,6 +63,7 @@ export default Blok.extend({
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
 
 .promotion-platform-image-banner-container {
   display: flex;
@@ -90,7 +91,8 @@ export default Blok.extend({
         display: none;
       }
     }
-
   }
+
+  @include display-property-handling;
 }
 </style>

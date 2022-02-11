@@ -139,6 +139,7 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
 
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
 
 .storyblok-homepage-intro-section {
   position: relative;
@@ -207,7 +208,8 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
         }
       }
     }
-
   }
+
+  @include display-property-handling;
 }
 </style>

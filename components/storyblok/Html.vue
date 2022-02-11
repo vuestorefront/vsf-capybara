@@ -90,6 +90,9 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-html-renderer {
   &.-editor-preview-mode {
     ._no-script-html,
@@ -97,5 +100,7 @@ export default Blok.extend({
       pointer-events: none
     }
   }
+
+  @include display-property-handling;
 }
 </style>

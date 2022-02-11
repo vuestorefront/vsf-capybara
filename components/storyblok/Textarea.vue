@@ -23,6 +23,9 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-textarea {
   ::v-deep ul, ol, dl {
     display: inline-block;
@@ -56,5 +59,7 @@ export default Blok.extend({
       font-size: 24px;
     }
   }
+
+  @include display-property-handling;
 }
 </style>
