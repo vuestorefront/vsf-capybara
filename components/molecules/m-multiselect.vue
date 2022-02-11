@@ -27,7 +27,7 @@
       @close="onClose"
     >
       <template #caret>
-        <SfChevron class="sf-select__chevron" />
+        <SfChevron class="_chevron" />
       </template>
     </multiselect>
 
@@ -311,6 +311,13 @@ export default Vue.extend({
   position: relative;
   box-sizing: border-box;
   align-self: flex-start;
+
+  ._chevron {
+    --chevron-position: absolute;
+    right: var(--spacer-xs);
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
   ::v-deep .multiselect {
     &__tags {
