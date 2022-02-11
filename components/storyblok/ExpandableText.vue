@@ -97,9 +97,14 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .expandable-text-block {
-    ._link {
-        margin-left: 0.5em;
-    }
+  ._link {
+      margin-left: 0.5em;
+  }
+
+  @include display-property-handling;
 }
 </style>

@@ -137,6 +137,9 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
 </script>
 
 <style lang="scss">
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-image {
   text-align: center;
   font-size: 0;
@@ -146,5 +149,7 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
       pointer-events: none
     }
   }
+
+  @include display-property-handling;
 }
 </style>

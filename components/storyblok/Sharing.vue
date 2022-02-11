@@ -1,5 +1,6 @@
 <template>
   <m-social-sharing
+    class="storyblok-sharing"
     :class="cssClasses"
     :style="styles"
     :sharing-url="itemData.sharing_url.url"
@@ -28,3 +29,12 @@ export default Blok.extend({
   }
 })
 </script>
+
+<style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
+.storyblok-sharing {
+  @include display-property-handling;
+}
+</style>

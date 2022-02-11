@@ -72,6 +72,9 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-button {
   --button-wrap: normal;
 
@@ -84,5 +87,7 @@ export default Blok.extend({
       pointer-events: none
     }
   }
+
+  @include display-property-handling;
 }
 </style>
