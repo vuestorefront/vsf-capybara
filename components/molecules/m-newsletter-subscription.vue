@@ -1,0 +1,103 @@
+<template>
+  <div class="m-newsletter-subscription">
+    <slot />
+    <form @submit.prevent="subscribe" class="_subscription-form">
+      <SfInput
+        v-model="email"
+        name="email"
+        type="email"
+        :label="$t('E-mail address')"
+        :required="true"
+        :valid="!$v.email.$error"
+      />
+      <SfButton class="color-primary">
+        Join
+      </SfButton>
+    </form>
+  </div>
+</template>
+
+<script>
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
+import { getResponseMessage } from '@vue-storefront/core/lib/sync/helpers'
+import i18n from '@vue-storefront/i18n';
+import { required, email } from 'vuelidate/lib/validators';
+import { SfInput, SfButton } from '@storefront-ui/vue';
+
+export default {
+  name: 'MNewsletterSubscription',
+  components: { SfInput, SfButton },
+  data () {
+    return {
+      email: ''
+    };
+  },
+  methods: {
+    subscribe () {
+      this.$v.$touch();
+
+      if (this.$v.$invalid) {
+        return;
+      }
+
+      const storeView = currentStoreView();
+
+      this.$store.dispatch('budsies/createNewsletterSubscription', {
+        email: this.email,
+        storeId: +storeView.storeId
+      }).then(res => {
+        if (+res.resultCode !== 200) {
+          return;
+        }
+
+        this.$store.dispatch('notification/spawnNotification', {
+          type: 'success',
+          message: i18n.t(getResponseMessage(res)),
+          action1: { label: i18n.t('OK') }
+        })
+      })
+    }
+  },
+  validations: {
+    email: {
+      required,
+      email
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.m-newsletter-subscription {
+  --input-background: var(--c-light-variant);
+  ._subscription-form {
+    display: flex;
+    align-items: flex-start;
+  }
+  ::v-deep .sf-input {
+    &__label {
+      --input-label-font-size: var(--font-sm);
+    }
+    input {
+      --input-border: none;
+      --input-font-size: var(--font-sm);
+      &:focus {
+        & ~ * {
+          --input-label-font-size: var(--font-2xs);
+        }
+      }
+    }
+    &--has-text,
+    &--filled {
+      .sf-input__label {
+        --input-label-font-size: var(--font-2xs);
+      }
+    }
+  }
+  .sf-button {
+    margin-left: var(--spacer-base);
+    --button-font-size: var(--font-xs);
+    --button-padding: calc(var(--spacer-base) * 0.56) var(--spacer-base);
+  }
+}
+</style>
