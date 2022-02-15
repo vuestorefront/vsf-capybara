@@ -12,7 +12,8 @@
 
       <MProductDescriptionStory
         class="_product-full-description"
-        :product="getCurrentProduct"
+        :product-sku="getCurrentProduct.sku"
+        :backup-product-sku="getCurrentProduct.parentSku"
       />
 
       <div class="product__bottom">
@@ -156,12 +157,6 @@ export default {
     });
 
     if (isServer) await store.dispatch('product/setCurrent', product)
-
-    const parentProduct = await store.dispatch('product/single', {
-      options: { sku: product.parentSku }
-    });
-    console.log('Parent product for SKU ' + product.parentSku);
-    console.log(parentProduct);
 
     catalogHooksExecutors.productPageVisited(product);
   },
