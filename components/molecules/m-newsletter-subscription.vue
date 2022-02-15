@@ -5,10 +5,13 @@
       <SfInput
         v-model="email"
         name="email"
-        type="email"
         :label="$t('E-mail address')"
-        :required="true"
         :valid="!$v.email.$error"
+        :error-message="
+          !$v.email.required
+            ? $t('Field is required.')
+            : $t('Please provide valid e-mail address.')
+        "
       />
       <SfButton class="color-primary">
         Join
@@ -69,7 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 .m-newsletter-subscription {
-  --input-background: var(--c-light-variant);
+  --input-background: var(--_c-light-secondary);
   ._subscription-form {
     display: flex;
     align-items: flex-start;
@@ -77,10 +80,12 @@ export default {
   ::v-deep .sf-input {
     &__label {
       --input-label-font-size: var(--font-sm);
+      --input-label-left: var(--spacer-xs);
     }
     input {
       --input-border: none;
       --input-font-size: var(--font-sm);
+      --input-padding: var(--spacer-sm) 0 var(--spacer-xs) var(--spacer-xs);
       &:focus {
         & ~ * {
           --input-label-font-size: var(--font-2xs);
