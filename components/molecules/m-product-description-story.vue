@@ -9,13 +9,14 @@
       />
     </div>
 
-    <Blok v-if="showStory" :item="story.content" class="_story" />
+    <Blok v-if="showStory" :item="storyData.content" class="_story" />
   </div>
 </template>
 
 <script lang="ts">
 import { PropType } from 'vue';
 import Product from '@vue-storefront/core/modules/catalog/types/Product';
+import { StoryblokStories } from 'src/modules/vsf-storyblok-module/types/State';
 
 import DescriptionStoryMixin from 'theme/mixins/description-story';
 
@@ -30,6 +31,10 @@ export default DescriptionStoryMixin.extend({
     product: {
       type: Object as PropType<Product>,
       required: true
+    },
+    backupProduct: {
+      type: Object as PropType<Product | undefined>,
+      default: undefined
     }
   },
   components: {
@@ -37,11 +42,38 @@ export default DescriptionStoryMixin.extend({
     SfHeading
   },
   computed: {
-    fallbackDescription (): string | undefined {
-      return this.product.description;
+    storyData (): StoryblokStories | undefined {
+      let story = this.$store.state.storyblok.stories[this.product.sku];
+
+      console.log(story);
+
+      if (!story?.content && this.backupProduct?.sku) {
+        story = this.$store.state.storyblok.stories[this.backupProduct.sku];
+      }
+
+      return story;
     },
-    storyFullSlug (): string {
-      return `${storyParentFolderName}/${this.product.sku}`;
+    fallbackDescription (): string | undefined {
+      return this.product.description ? this.product.description : this.backupProduct?.description;
+    }
+  },
+  async mounted () {
+    if (this.story) {
+      return;
+    }
+
+    await this.loadStory();
+  },
+  methods: {
+    getStoryFullSlug (productSku: string): string {
+      return `${storyParentFolderName}/${productSku}`;
+    },
+    async loadStory (): Promise<void> {
+      await this.$store.dispatch(`storyblok/loadStory`, { fullSlug: this.getStoryFullSlug(this.product.sku) });
+
+      if (this.backupProduct?.sku) {
+        await this.$store.dispatch(`storyblok/loadStory`, { fullSlug: this.getStoryFullSlug(this.backupProduct.sku) });
+      }
     }
   },
   watch: {
