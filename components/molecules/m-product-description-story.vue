@@ -1,83 +1,58 @@
 <template>
-  <div class="m-product-description-story" v-if="showStory || showFallback">
-    <div v-if="showFallback" class="_fallback-container">
-      <SfHeading :title="$t('Additional Details')" :level="3" />
-
-      <div
-        class="_fallback"
-        v-html="fallbackDescription"
-      />
-    </div>
-
-    <Blok v-if="showStory" :item="storyData.content" class="_story" />
+  <div class="m-product-description-story" v-if="showStory">
+    <Blok v-if="showStory" :item="story.content" class="_story" />
   </div>
 </template>
 
 <script lang="ts">
 import { PropType } from 'vue';
-import Product from '@vue-storefront/core/modules/catalog/types/Product';
 import { StoryblokStories } from 'src/modules/vsf-storyblok-module/types/State';
-
-import DescriptionStoryMixin from 'theme/mixins/description-story';
-
-import { SfHeading } from '@storefront-ui/vue';
 import { components } from 'src/modules/vsf-storyblok-module/components';
+
+import StoryMixin from 'theme/mixins/story';
 
 const storyParentFolderName = 'product-descriptions';
 
-export default DescriptionStoryMixin.extend({
+export default StoryMixin.extend({
   name: 'MProductDescriptionStory',
   props: {
-    product: {
-      type: Object as PropType<Product>,
+    productSku: {
+      type: String,
       required: true
     },
-    backupProduct: {
-      type: Object as PropType<Product | undefined>,
+    backupProductSku: {
+      type: String as PropType<string | undefined>,
       default: undefined
     }
   },
   components: {
-    Blok: components.block,
-    SfHeading
+    Blok: components.block
   },
   computed: {
     storyData (): StoryblokStories | undefined {
-      let story = this.$store.state.storyblok.stories[this.product.sku];
+      let productStory = this.$store.state.storyblok.stories[this.getStoryFullSlug(this.productSku)];
 
-      console.log(story);
-
-      if (!story?.content && this.backupProduct?.sku) {
-        story = this.$store.state.storyblok.stories[this.backupProduct.sku];
+      if (!productStory?.story?.content && this.backupProductSku) {
+        productStory = this.$store.state.storyblok.stories[this.getStoryFullSlug(this.backupProductSku)];
       }
 
-      return story;
-    },
-    fallbackDescription (): string | undefined {
-      return this.product.description ? this.product.description : this.backupProduct?.description;
+      return productStory;
     }
-  },
-  async mounted () {
-    if (this.story) {
-      return;
-    }
-
-    await this.loadStory();
   },
   methods: {
     getStoryFullSlug (productSku: string): string {
       return `${storyParentFolderName}/${productSku}`;
     },
     async loadStory (): Promise<void> {
-      await this.$store.dispatch(`storyblok/loadStory`, { fullSlug: this.getStoryFullSlug(this.product.sku) });
+      const story = await this.$store.dispatch(`storyblok/loadStory`, { fullSlug: this.getStoryFullSlug(this.productSku) });
 
-      if (this.backupProduct?.sku) {
-        await this.$store.dispatch(`storyblok/loadStory`, { fullSlug: this.getStoryFullSlug(this.backupProduct.sku) });
+      if (!story?.content && this.backupProductSku) {
+        await this.$store.dispatch(`storyblok/loadStory`, { fullSlug: this.getStoryFullSlug(this.backupProductSku) });
       }
     }
   },
   watch: {
-    'product.sku' (): void {
+    productSku (): void {
       this.loadStory();
     }
   }
@@ -86,9 +61,6 @@ export default DescriptionStoryMixin.extend({
 
 <style lang="scss" scoped>
 .m-product-description-story {
-  ._fallback-container,
-  ._fallback {
-    padding-top: var(--spacer-base);
-  }
+
 }
 </style>
