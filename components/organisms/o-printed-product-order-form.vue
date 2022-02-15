@@ -155,7 +155,7 @@
       </div>
     </div>
 
-    <MProductDescriptionStory :product="product" />
+    <MProductDescriptionStory :product="product" :backup-product-sku="selectedStyleProduct" />
   </div>
 </template>
 
@@ -271,7 +271,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       shouldShowDesignSelector: true,
       artworkInitialItems: [] as CustomerImage[],
       initialAddonItemId: undefined as string | undefined,
-      initialExtraImages: [] as CustomerImage[]
+      initialExtraImages: [] as CustomerImage[],
+      selectedStyleProduct: undefined as Product | undefined
     }
   },
   computed: {
@@ -744,6 +745,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       } finally {
         this.isSubmitting = false;
       }
+    },
+    async setSelectedStyleProduct (): Promise<void> {
+      this.selectedStyleProduct = await this.$store.dispatch('product/loadProduct', {
+        parentSku: this.selectedStyle,
+        setCurrent: false
+      });
     }
   },
   created (): void {
@@ -828,6 +835,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           optionQty: 1,
           optionSelections: selectedDesign ? [selectedDesign.optionValueId] : []
         });
+
+        this.setSelectedStyleProduct();
 
         const styleOptionValidationProvider = this.getStyleOptionValidationProvider();
 
