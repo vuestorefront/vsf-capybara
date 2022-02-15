@@ -90,6 +90,7 @@ export default {
       getCurrentCategory: 'category-next/getCurrentCategory',
       getCurrentProduct: 'product/getCurrentProduct',
       getCurrentProductConfiguration: 'product/getCurrentProductConfiguration',
+      getParentProduct: 'product/getParentProduct',
       getOriginalProduct: 'product/getOriginalProduct',
       attributesByCode: 'attribute/attributeListByCode',
       getCurrentCustomOptions: 'product/getCurrentCustomOptions',
@@ -155,6 +156,12 @@ export default {
     });
 
     if (isServer) await store.dispatch('product/setCurrent', product)
+
+    const parentProduct = await store.dispatch('product/single', {
+      options: { sku: product.parentSku }
+    });
+    console.log('Parent product for SKU ' + product.parentSku);
+    console.log(parentProduct);
 
     catalogHooksExecutors.productPageVisited(product);
   },
