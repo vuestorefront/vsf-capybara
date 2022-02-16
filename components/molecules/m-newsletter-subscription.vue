@@ -21,7 +21,6 @@
 </template>
 
 <script lang="ts">
-import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { getResponseMessage } from '@vue-storefront/core/lib/sync/helpers'
 import { uniqueEntityId } from '@vue-storefront/core/lib/store/entities';
 import i18n from '@vue-storefront/i18n';
@@ -47,11 +46,8 @@ export default {
         return;
       }
 
-      const storeView = currentStoreView();
-
       this.$store.dispatch('budsies/createNewsletterSubscription', {
-        email: this.email,
-        storeId: +storeView.storeId
+        email: this.email
       }).then(res => {
         if (+res.resultCode !== 200) {
           return;
