@@ -1,6 +1,8 @@
 <template>
   <div class="storyblok-newsletter-subscribe-form">
-    <MNewsletterSubscription />
+    <MNewsletterSubscription
+      name="storyblock-newsletter-subscription-form"
+    />
   </div>
 </template>
 

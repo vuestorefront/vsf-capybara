@@ -4,7 +4,7 @@
     <form @submit.prevent="subscribe" class="_subscription-form">
       <SfInput
         v-model="email"
-        :name="getUniqueEmailInputName()"
+        :name="emailInputName"
         :label="$t('E-mail address')"
         :valid="!$v.email.$error"
         :error-message="
@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { getResponseMessage } from '@vue-storefront/core/lib/sync/helpers'
-import { uniqueEntityId } from '@vue-storefront/core/lib/store/entities';
 import i18n from '@vue-storefront/i18n';
 import { SfInput, SfButton } from '@storefront-ui/vue';
 import { required, email } from 'vuelidate/lib/validators';
@@ -30,15 +29,23 @@ import { required, email } from 'vuelidate/lib/validators';
 export default {
   name: 'MNewsletterSubscription',
   components: { SfInput, SfButton },
+  props: {
+    name: {
+      type: String,
+      default: 'newsletter-subscription-form'
+    }
+  },
   data (): Record<string, any> {
     return {
       email: ''
     };
   },
+  computed: {
+    emailInputName (): string {
+      return this.name + '-email-input';
+    }
+  },
   methods: {
-    getUniqueEmailInputName (): string {
-      return 'email-' + uniqueEntityId(this);
-    },
     subscribe (): void {
       this.$v.$touch();
 
