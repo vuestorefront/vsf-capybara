@@ -155,7 +155,10 @@
       </div>
     </div>
 
-    <MProductDescriptionStory :product="product" />
+    <MProductDescriptionStory
+      :product-sku="selectedStyle ? selectedStyle : product.sku"
+      :backup-product-sku="product.parentSku"
+    />
   </div>
 </template>
 

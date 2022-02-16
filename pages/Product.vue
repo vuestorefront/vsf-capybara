@@ -12,7 +12,8 @@
 
       <MProductDescriptionStory
         class="_product-full-description"
-        :product="getCurrentProduct"
+        :product-sku="getCurrentProduct.sku"
+        :backup-product-sku="getCurrentProduct.parentSku"
       />
 
       <div class="product__bottom">
