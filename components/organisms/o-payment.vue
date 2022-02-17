@@ -143,25 +143,7 @@
         @blur="$v.payment.phoneNumber.$touch()"
       />
     </div>
-    <SfHeading
-      :title="$t('Payment method')"
-      :level="3"
-      class="sf-heading--left sf-heading--no-underline title"
-    />
     <div class="form">
-      <OGiftCardPayment :cart-items="cartItems" />
-      <div class="form__radio-group">
-        <SfRadio
-          v-for="method in paymentMethods"
-          :key="method.code"
-          v-model="payment.paymentMethod"
-          :label="method.title ? method.title : method.name"
-          :value="method.code"
-          name="payment-method"
-          class="form__radio payment-method"
-          @input="changePaymentMethod"
-        />
-      </div>
       <div class="form__action">
         <SfButton
           class="sf-button--full-width form__action-button"

@@ -191,6 +191,26 @@
       </div>
       <MPriceSummary class="totals__element" />
     </div>
+    <SfHeading
+      :title="$t('Payment method')"
+      :level="3"
+      class="sf-heading--left sf-heading--no-underline title"
+    />
+    <div class="form">
+      <OGiftCardPayment :cart-items="cartItems" />
+      <div class="form__radio-group">
+        <SfRadio
+          v-for="method in paymentMethods"
+          :key="method.code"
+          v-model="payment.paymentMethod"
+          :label="method.title ? method.title : method.name"
+          :value="method.code"
+          name="payment-method"
+          class="form__radio payment-method"
+          @input="changePaymentMethod"
+        />
+      </div>
+    </div>
     <div class="_braintree-widget">
       <braintree-dropin v-if="paymentMethod === 'Braintree'" />
     </div>
@@ -217,8 +237,10 @@ import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helper
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { OrderModule } from '@vue-storefront/core/modules/order';
 import { OrderReview } from '@vue-storefront/core/modules/checkout/components/OrderReview';
+import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 import { createSmoothscroll, getCartItemPrice } from 'theme/helpers';
 import {
+  SfRadio,
   SfIcon,
   SfImage,
   SfPrice,
@@ -232,6 +254,7 @@ import {
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
+import OGiftCardPayment from './o-gift-card-payment.vue';
 
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
@@ -248,6 +271,8 @@ export default {
     APromoCode,
     MPriceSummary,
     OCartItemsTable,
+    OGiftCardPayment,
+    SfRadio,
     SfIcon,
     SfImage,
     SfPrice,
@@ -260,7 +285,7 @@ export default {
     SfProperty,
     BraintreeDropin
   },
-  mixins: [OrderReview],
+  mixins: [OrderReview, Payment],
   data () {
     return {
       characteristics: [
@@ -294,6 +319,9 @@ export default {
       personalDetails: 'checkout/getPersonalDetails'
     }),
     ...mapMobileObserver(),
+    cartItems () {
+      return this.$store.getters['cart/getCartItems'];
+    },
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
         method => this.shippingDetails.shippingMethod === method.method_code
