@@ -82,49 +82,16 @@
     <p class="content">
       {{ paymentMethod }}
     </p>
-    <div class="characteristics">
-      <SfCharacteristic
-        v-for="characteristic in characteristics"
-        :key="characteristic.title"
-        :title="characteristic.title"
-        :description="characteristic.description"
-        :icon="characteristic.icon"
-        color-icon="green-primary"
-        class="characteristics__item"
-      />
-    </div>
   </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
-import { SfHeading, SfButton, SfCharacteristic } from '@storefront-ui/vue';
+import { SfHeading, SfButton } from '@storefront-ui/vue';
 export default {
   name: 'OOrderReview',
   components: {
     SfHeading,
-    SfButton,
-    SfCharacteristic
-  },
-  data () {
-    return {
-      characteristics: [
-        {
-          title: this.$t('Safety'),
-          description: this.$t('It carefully packaged with a personal touch'),
-          icon: 'safety'
-        },
-        {
-          title: this.$t('Easy shipping'),
-          description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
-          icon: 'shipping'
-        },
-        {
-          title: this.$t('Changed your mind?'),
-          description: this.$t('Rest assured, we offer free returns within 30 days'),
-          icon: 'return'
-        }
-      ]
-    };
+    SfButton
   },
   computed: {
     ...mapGetters({
@@ -163,12 +130,6 @@ export default {
     h3 {
       font: inherit;
     }
-  }
-}
-.characteristics {
-  margin: var(--spacer-xl) 0 0 var(--spacer-xs);
-  &__item {
-    margin: var(--spacer-base) 0;
   }
 }
 .content {
