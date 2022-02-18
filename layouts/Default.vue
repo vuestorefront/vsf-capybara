@@ -20,7 +20,7 @@
       />
       <OModal />
       <ONotification />
-      <MCookieNotification />
+      <MCookieNotification details-link="/privacy-policy" />
       <MOfflineBadge />
     </div>
     <vue-progress-bar />
