@@ -58,6 +58,8 @@ export default Blok.extend({
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 @import "src/modules/vsf-storyblok-module/components/defaults/mixins";
 
+$intro-left-margin: 1em;
+
 .storyblok-heading {
   text-align: center;
 
@@ -74,73 +76,58 @@ export default Blok.extend({
 
     ._container {
       display: inline-block;
+      position: relative;
+      padding-top: 0.75em;
+      padding-left: 0.5 * $intro-left-margin;
+      padding-right: 0.5 * $intro-left-margin;
     }
 
     ._intro {
+      display: inline;
+      position: absolute;
+      left: auto;
       color: var(--c-warning);
-
       font-family: var(--font-family-intro);
       font-weight: 400;
-      margin-left: -0.4em;
-      padding-left: 0.2em;
-      padding-right: 0.2em;
-      text-align: left;
+      margin-top: -0.75em;
+      margin-left: -0.5 * $intro-left-margin;
     }
 
     ._heading {
+      display: inline;
       padding: 0;
-    }
 
-    ._intro + ._heading ::v-deep .sf-heading__title {
-      line-height: 1;
-    }
-
-    &.-h1,
-    &.-h2 {
-      ._intro + ._heading {
-        margin-top: -0.6em;
-      }
-    }
-
-    &.-h3,
-    &.-h4 {
-      ._intro + ._heading {
-        margin-top: -0.4em;
-      }
-    }
-
-    &.-h5 {
-      ._intro + ._heading {
-        margin-top: -0.2em;
+      ::v-deep .sf-heading__title {
+        display: inline;
       }
     }
 
     @for $i from 1 through 6 {
       &.-h#{$i} {
-        ._intro {
+        ._container {
           font-size: calc(var(--h#{$i}-font-size) * 1.15);
         }
       }
     }
 
-    &.-aligned-left,
-    &.-aligned-right {
-      ._intro {
-        margin-left: 0;
-      }
+    &.-aligned-left {
+      text-align: left;
     }
 
     &.-aligned-right {
-      ._intro {
-        text-align: right;
-      }
+      text-align: right;
     }
   }
 
   @media (min-width: $tablet-min) {
     &.-custom-styled {
+      ._container {
+        padding-left: $intro-left-margin;
+        padding-right: $intro-left-margin;
+      }
+
       ._intro {
-        margin-left: -0.6em;
+        margin-left: -1 * $intro-left-margin;
       }
 
       ._heading {
@@ -181,19 +168,6 @@ export default Blok.extend({
 
   @include for-desktop {
     &.-custom-styled {
-      &.-h1,
-      &.-h2 {
-        ._intro + ._heading {
-          margin-top: -1em;
-        }
-      }
-
-      &.-h3 {
-        ._intro + ._heading {
-          margin-top: -0.6em;
-        }
-      }
-
       &.-h2 {
         ._heading {
           &::after,
