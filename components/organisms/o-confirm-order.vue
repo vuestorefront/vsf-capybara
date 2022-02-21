@@ -199,21 +199,22 @@
     <div class="form">
       <OGiftCardPayment :cart-items="cartItems" />
       <div class="form__radio-group">
-        <SfRadio
-          v-for="method in paymentMethods"
-          :key="method.code"
-          v-model="payment.paymentMethod"
-          :label="method.title ? method.title : method.name"
-          :value="method.code"
-          name="payment-method"
-          class="form__radio payment-method"
-          @input="changePaymentMethod"
-        />
+        <div v-for="method in paymentMethods" :key="method.code">
+          <SfRadio
+            v-model="payment.paymentMethod"
+            :label="method.title ? method.title : method.name"
+            :value="method.code"
+            name="payment-method"
+            class="form__radio payment-method"
+            @input="changePaymentMethod"
+          />
+          <div class="_braintree-widget" v-if="method.code === 'braintree'">
+            <braintree-dropin v-if="paymentMethod === 'Braintree'" />
+          </div>
+        </div>
       </div>
     </div>
-    <div class="_braintree-widget">
-      <braintree-dropin v-if="paymentMethod === 'Braintree'" />
-    </div>
+
     <div class="actions">
       <SfButton
         class="sf-button--full-width actions__button place-order-btn"
@@ -641,6 +642,9 @@ a {
   }
 }
 ._braintree-widget {
-  margin-top: var(--spacer-base);
+  .braintree {
+    margin-top: var(--spacer-base);
+    margin-left: calc(var(--spacer-lg) * 1.75);
+  }
 }
 </style>
