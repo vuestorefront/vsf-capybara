@@ -25,12 +25,7 @@
         </SfList>
       </SfFooterColumn>
       <SfFooterColumn title="Get more @Petsies cuteness" class="social-column">
-        <form class="o-footer__subscribe">
-          <SfInput v-model="subscribeEmail" name="subscribeEmail" type="email" label="Email address" :required="true" />
-          <SfButton class="color-primary">
-            Join
-          </SfButton>
-        </form>
+        <MNewsletterSubscription />
         <div class="social-icon">
           <a
             :href="item.url"
@@ -72,6 +67,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import ABackToTop from 'theme/components/atoms/a-back-to-top';
+import MNewsletterSubscription from 'theme/components/molecules/m-newsletter-subscription.vue';
 import { SfFooter, SfList, SfMenuItem, SfInput, SfButton } from '@storefront-ui/vue';
 import { ModalList } from 'theme/store/ui/modals'
 import { getPathForStaticPage } from 'theme/helpers';
@@ -83,6 +79,7 @@ export default {
   name: 'OFooter',
   components: {
     ABackToTop,
+    MNewsletterSubscription,
     SfFooter,
     SfList,
     SfMenuItem,
@@ -229,37 +226,8 @@ export default {
     font-size: var(--font-2xl);
     margin: var(--spacer-base) 0;
   }
-  &__subscribe {
-    --input-background: var(--c-light-variant);
-    display: flex;
-    align-items: flex-start;
-    ::v-deep .sf-input {
-      &__wrapper {
-        margin-top: 3px;
-      }
-      &__label {
-        --input-label-font-size: var(--font-sm);
-      }
-      input {
-        --input-border: none;
-        --input-font-size: var(--font-sm);
-        &:focus {
-          & ~ * {
-            --input-label-font-size: var(--font-2xs);
-          }
-        }
-      }
-      &--has-text,
-      &--filled {
-        .sf-input__label {
-          --input-label-font-size: var(--font-2xs);
-        }
-      }
-    }
-    .sf-button {
-      margin-left: var(--spacer-base);
-      --button-font-size: var(--font-xs);
-    }
+  .m-newsletter-subscription {
+    margin-top: var(--spacer-xs);
   }
   ::v-deep .sf-menu-item {
     --menu-item-font-size: var(--font-sm);
