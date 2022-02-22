@@ -174,17 +174,6 @@
       </div>
     </div>
     <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
-    <div class="characteristics mobile-only">
-      <SfCharacteristic
-        v-for="characteristic in characteristics"
-        :key="characteristic.title"
-        :title="characteristic.title"
-        :description="characteristic.description"
-        :icon="characteristic.icon"
-        color-icon="green-primary"
-        class="characteristics__item"
-      />
-    </div>
     <div class="totals desktop-only">
       <div class="totals__element">
         <APromoCode :allow-promo-code-removal="false" />
@@ -248,7 +237,6 @@ import {
   SfButton,
   SfHeading,
   SfAccordion,
-  SfCharacteristic,
   SfCollectedProduct,
   SfProperty
 } from '@storefront-ui/vue';
@@ -280,7 +268,6 @@ export default {
     SfButton,
     SfHeading,
     SfAccordion,
-    SfCharacteristic,
     SfCollectedProduct,
     SfProperty,
     BraintreeDropin
@@ -288,23 +275,6 @@ export default {
   mixins: [OrderReview, Payment],
   data () {
     return {
-      characteristics: [
-        {
-          title: this.$t('Safety'),
-          description: this.$t('It carefully packaged with a personal touch'),
-          icon: 'safety'
-        },
-        {
-          title: this.$t('Easy shipping'),
-          description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
-          icon: 'shipping'
-        },
-        {
-          title: this.$t('Changed your mind?'),
-          description: this.$t('Rest assured, we offer free returns within 30 days'),
-          icon: 'return'
-        }
-      ],
       isCheckoutInProgress: false
     };
   },
@@ -521,12 +491,6 @@ export default {
   --divider-border-color: var(--c-white);
   --divider-width: 100%;
   --divider-margin: 0 0 var(--spacer-base) 0;
-}
-.characteristics {
-  padding: var(--spacer-sm);
-  &__item {
-    margin: var(--spacer-base) 0;
-  }
 }
 .summary,
 .accordion {
