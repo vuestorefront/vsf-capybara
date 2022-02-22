@@ -4,4 +4,8 @@
   &__title {
     color: var(--footer-column-title-color, var(--c-text));
   }
+
+  .m-newsletter-subscription {
+    --c-text: var(--footer-column-title-color);
+  }
 }
