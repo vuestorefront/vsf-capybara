@@ -4,7 +4,7 @@
 $line-height-base: 1.34;
 
 $font-size-base: 16px;
-$font-size-base-mobile: 14px;
+$font-size-base-mobile: 15px;
 
 $font-family-base: "Avenir", sans-serif;
 $font-family-intro: "Roselina", cursive;
@@ -51,7 +51,7 @@ $forms-color-placeholder: #a09999;
 
 // override storefront-ui variables
 :root {
-    --font-size-base: #{$font-size-base};
+    --font-size-base: #{$font-size-base-mobile};
     // font-family
     --font-family-primary: #{$font-family-base};
     --font-family-secondary: #{$font-family-base};
@@ -80,6 +80,8 @@ $forms-color-placeholder: #a09999;
     --h5-font-size: 0.875rem;
     --h6-font-size: 0.75rem;
     --heading-title-font-line-height: 1;
+
+    --button-font-size: var(--font-sm);
 
     // Colors
     @include generate-color-variants(--c-black, #535353);
@@ -126,6 +128,11 @@ $forms-color-placeholder: #a09999;
     --c-warning-variant: var(--_c-light-secondary);
     @include assign-color-variants(--c-danger, --_c-red-secondary);
     --c-danger-variant: var(--_c-red-primary);
+
+    @media (min-width: $tablet-min) {
+      --font-size-base: #{$font-size-base};
+      --button-font-size: var(--font-base);
+    }
 
     @include for-desktop {
       --h1-font-size: 2.625rem;
