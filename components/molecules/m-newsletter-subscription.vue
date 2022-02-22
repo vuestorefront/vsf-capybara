@@ -18,6 +18,10 @@
         Join
       </MSpinnerButton>
     </form>
+
+    <div class="_success-message" v-show="displaySuccessMessage">
+      {{ $t('Thank you for your subscription!') }}
+    </div>
   </div>
 </template>
 
@@ -41,7 +45,8 @@ export default {
     return {
       email: '',
       isSubmitting: false,
-      displayForm: true
+      displayForm: true,
+      displaySuccessMessage: false
     };
   },
   computed: {
@@ -70,13 +75,8 @@ export default {
           return;
         }
 
-        this.$store.dispatch('notification/spawnNotification', {
-          type: 'success',
-          message: i18n.t(getResponseMessage(res)),
-          action1: { label: i18n.t('OK') }
-        });
-
         this.displayForm = false;
+        this.displaySuccessMessage = true;
       }).finally(() => {
         this.isSubmitting = false;
       });
@@ -124,6 +124,11 @@ export default {
     margin-left: var(--spacer-base);
     --button-font-size: var(--font-xs);
     --button-padding: calc(var(--spacer-base) * 0.56) var(--spacer-base);
+  }
+
+  ._success-message {
+    color: var(--c-text);
+    margin-bottom: calc(var(--font-xs) * 1.2);
   }
 }
 </style>
