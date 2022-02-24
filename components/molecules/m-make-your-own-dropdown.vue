@@ -2,15 +2,20 @@
   <div
     class="m-make-your-own-dropdown"
     :class="{ '-small': size === 'small' }"
-    @mouseover="isDropdownOpen = true"
-    @mouseleave="isDropdownOpen = false"
+    @mouseover="toggleDropdownOnDesktop(true)"
+    @mouseleave="toggleDropdownOnDesktop(false)"
   >
-    <SfButton> Make your own </SfButton>
-    <SfDropdown :is-open="isDropdownOpen">
+    <SfButton @click="toggleDropdownOnMobile(true)">
+      Make your own
+    </SfButton>
+    <SfDropdown
+      :is-open="isDropdownOpen"
+      @click:close="toggleDropdownOnMobile(false)"
+    >
       <SfList>
         <SfListItem v-for="action in dropdownActions" :key="action.label">
           <router-link
-            @click.native="onDropdownCloseButtonClick"
+            @click.native="toggleDropdownOnMobile(false)"
             :to="action.url"
           >
             {{ action.label }}
@@ -21,7 +26,7 @@
       <template #cancel>
         <SfButton
           class="sf-button--full-width sf-dropdown__cancel"
-          @click="onDropdownCloseButtonClick"
+          @click="toggleDropdownOnMobile(false)"
         >
           Cancel
         </SfButton>
@@ -33,6 +38,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import { SfButton, SfDropdown, SfList } from '@storefront-ui/vue';
+import {
+  mapMobileObserver,
+  unMapMobileObserver
+} from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 export default Vue.extend({
   name: 'MMakeYourOwnDropdown',
@@ -84,9 +93,26 @@ export default Vue.extend({
       isDropdownOpen: false
     };
   },
+  computed: {
+    ...mapMobileObserver()
+  },
+  beforeDestroy (): void {
+    unMapMobileObserver();
+  },
   methods: {
-    onDropdownCloseButtonClick () {
-      this.isDropdownOpen = false;
+    toggleDropdownOnMobile (shouldOpen: boolean) {
+      if (!this.isMobile) {
+        return;
+      }
+
+      this.isDropdownOpen = shouldOpen;
+    },
+    toggleDropdownOnDesktop (shouldOpen: boolean) {
+      if (this.isMobile) {
+        return;
+      }
+
+      this.isDropdownOpen = shouldOpen;
     }
   }
 });

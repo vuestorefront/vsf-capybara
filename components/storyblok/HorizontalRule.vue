@@ -38,6 +38,9 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-hr {
   margin:15px auto;
   max-width:100%;
@@ -45,5 +48,7 @@ export default Blok.extend({
   border-width:1px;
   border:none;
   border-top:solid;
+
+  @include display-property-handling;
 }
 </style>

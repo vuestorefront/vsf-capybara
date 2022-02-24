@@ -31,11 +31,16 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-video {
   &.-editor-preview-mode {
     ._embedded-video {
       pointer-events: none
     }
   }
+
+  @include display-property-handling;
 }
 </style>

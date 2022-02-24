@@ -111,7 +111,7 @@
         :valid="!$v.shipping.country.$error"
         :error-message="$t('Field is required')"
         :disabled="isFormFieldsDisabled"
-        @change="changeCountry"
+        @change="onChangeCountry"
       />
       <SfInput
         v-model.trim="shipping.phoneNumber"
@@ -289,6 +289,11 @@ export default {
     }
   },
   methods: {
+    async onChangeCountry () {
+      this.changeCountry();
+      await this.$nextTick();
+      this.validateCountryRelatedFields();
+    },
     onZipCodeBlur () {
       this.$v.shipping.zipCode.$touch();
 
@@ -311,6 +316,10 @@ export default {
     saveDataToCheckout () {
       this.sendDataToCheckout();
       this.$store.dispatch('cart/syncTotals', { forceServerSync: true });
+    },
+    validateCountryRelatedFields () {
+      this.$v.shipping.state.$touch();
+      this.$v.shipping.phoneNumber.$touch();
     }
   },
   mounted () {

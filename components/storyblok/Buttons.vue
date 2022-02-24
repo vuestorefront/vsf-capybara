@@ -35,6 +35,9 @@ export default Blok.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
 .storyblok-buttons {
   width: 100%;
 
@@ -46,5 +49,7 @@ export default Blok.extend({
       margin-left: 0;
     }
   }
+
+  @include display-property-handling;
 }
 </style>

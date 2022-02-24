@@ -96,16 +96,11 @@ export default {
     width: 1272px;
     max-width: 100%;
     height: 3rem;
-    &__message-link {
-      padding-left: 1rem;
-      --c-link: var(--c-gray);
-      --c-link-hover: var(--c-light);
-    }
     &__icon {
       cursor: pointer;
-      --icon-color: var(--c-gray);
+      --icon-color: var(--c-link);
       &:hover {
-        --icon-color: var(--c-light);
+        --icon-color: var(--c-link-hover);
       }
     }
   }

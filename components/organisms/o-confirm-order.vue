@@ -171,52 +171,11 @@
           class="sf-heading--left sf-heading--no-underline summary__title"
         />
         <MPriceSummary class="summary__total" />
-        <SfCheckbox
-          v-model="orderReview.terms"
-          class="summary__terms"
-          name="acceptConditions"
-          @blur="$v.orderReview.terms.$touch()"
-        >
-          <template #label>
-            <span class="sf-checkbox__label no-flex">
-              {{ $t("I accept ") }}
-            </span>
-            <SfButton class="sf-button sf-button--text summary__terms--link" @click.prevent="openTermsAndConditionsModal">
-              {{ $t("Terms and conditions") }}
-            </SfButton>
-          </template>
-        </SfCheckbox>
       </div>
     </div>
     <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
-    <div class="characteristics mobile-only">
-      <SfCharacteristic
-        v-for="characteristic in characteristics"
-        :key="characteristic.title"
-        :title="characteristic.title"
-        :description="characteristic.description"
-        :icon="characteristic.icon"
-        color-icon="green-primary"
-        class="characteristics__item"
-      />
-    </div>
     <div class="totals desktop-only">
       <div class="totals__element">
-        <SfCheckbox
-          v-model="orderReview.terms"
-          class="totals__terms"
-          name="acceptConditions"
-          @blur="$v.orderReview.terms.$touch()"
-        >
-          <template #label>
-            <span class="sf-checkbox__label no-flex">
-              {{ $t("I accept ") }}
-            </span>
-            <SfButton class="sf-button sf-button--text totals__terms--link" @click.prevent="openTermsAndConditionsModal">
-              {{ $t("Terms and conditions") }}
-            </SfButton>
-          </template>
-        </SfCheckbox>
         <APromoCode :allow-promo-code-removal="false" />
       </div>
       <MPriceSummary class="totals__element" />
@@ -227,7 +186,7 @@
     <div class="actions">
       <SfButton
         class="sf-button--full-width actions__button place-order-btn"
-        :disabled="$v.orderReview.$invalid || !productsInCart.length || isCheckoutInProgress"
+        :disabled="!productsInCart.length || isCheckoutInProgress"
         @click="placeOrder"
       >
         {{ $t("Place the order") }}
@@ -243,7 +202,6 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { required } from 'vuelidate/lib/validators';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { registerModule } from '@vue-storefront/core/lib/modules';
 import { OrderModule } from '@vue-storefront/core/modules/order';
@@ -256,15 +214,12 @@ import {
   SfTable,
   SfButton,
   SfHeading,
-  SfCheckbox,
   SfAccordion,
-  SfCharacteristic,
   SfCollectedProduct,
   SfProperty
 } from '@storefront-ui/vue';
 import MPriceSummary from 'theme/components/molecules/m-price-summary';
 import APromoCode from 'theme/components/atoms/a-promo-code';
-import { ModalList } from 'theme/store/ui/modals'
 
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
@@ -287,9 +242,7 @@ export default {
     SfTable,
     SfButton,
     SfHeading,
-    SfCheckbox,
     SfAccordion,
-    SfCharacteristic,
     SfCollectedProduct,
     SfProperty,
     BraintreeDropin
@@ -297,32 +250,8 @@ export default {
   mixins: [OrderReview],
   data () {
     return {
-      characteristics: [
-        {
-          title: this.$t('Safety'),
-          description: this.$t('It carefully packaged with a personal touch'),
-          icon: 'safety'
-        },
-        {
-          title: this.$t('Easy shipping'),
-          description: this.$t('You’ll receive dispatch confirmation and an arrival date'),
-          icon: 'shipping'
-        },
-        {
-          title: this.$t('Changed your mind?'),
-          description: this.$t('Rest assured, we offer free returns within 30 days'),
-          icon: 'return'
-        }
-      ],
       isCheckoutInProgress: false
     };
-  },
-  validations: {
-    orderReview: {
-      terms: {
-        required
-      }
-    }
   },
   computed: {
     ...mapGetters({
@@ -455,9 +384,6 @@ export default {
         action1: { label: this.$t('OK') }
       });
     },
-    openTermsAndConditionsModal () {
-      this.openModal({ name: ModalList.TermsAndConditions })
-    },
     truncate (text, desktopLength = 75, mobileLength = 50) {
       const maxLength = this.isMobile ? mobileLength : desktopLength;
 
@@ -537,12 +463,6 @@ export default {
   --divider-border-color: var(--c-white);
   --divider-width: 100%;
   --divider-margin: 0 0 var(--spacer-base) 0;
-}
-.characteristics {
-  padding: var(--spacer-sm);
-  &__item {
-    margin: var(--spacer-base) 0;
-  }
 }
 .summary,
 .accordion {

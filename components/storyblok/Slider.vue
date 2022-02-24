@@ -1,5 +1,6 @@
 <template>
   <MZoomGallery
+    class="storyblok-slider"
     :images="slides"
     :horizontal-thumbnails="isHorizontalThumbnails"
   />
@@ -101,3 +102,12 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
   }
 })
 </script>
+
+<style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+@import "src/modules/vsf-storyblok-module/components/defaults/mixins";
+
+.storyblok-slider {
+  @include display-property-handling;
+}
+</style>
