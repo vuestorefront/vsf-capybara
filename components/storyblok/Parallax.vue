@@ -1,8 +1,7 @@
 <template>
   <div class="parallax" :style="styles" :class="cssClasses">
     <m-parallax-section
-      :parallax-speed="parallaxSpeed"
-      :initial-top-position="initialTopPosition"
+      :direction="direction"
       :image-src="itemData.image_src"
     >
       <template #content>
@@ -16,6 +15,7 @@
 
 <script lang="ts">
 import { Blok, components } from 'src/modules/vsf-storyblok-module/components';
+import ParallaxData from 'src/modules/vsf-storyblok-module/types/parallax-data.interface';
 import MParallaxSection from '../molecules/m-parallax-section.vue';
 
 export default Blok.extend({
@@ -25,14 +25,11 @@ export default Blok.extend({
     MParallaxSection
   },
   computed: {
-    itemData (): any { // TODO fix type
-      return this.item;
+    itemData (): ParallaxData {
+      return this.item as ParallaxData;
     },
-    parallaxSpeed (): number {
-      return Number.parseInt(this.itemData.parallax_speed, 10);
-    },
-    initialTopPosition (): number {
-      return Number.parseInt(this.itemData.initial_top_position, 10);
+    direction (): 'up' | 'down' {
+      return this.itemData.direction;
     }
   }
 })

@@ -32,17 +32,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   props: {
-    parallaxSpeed: {
-      type: Number,
-      default: 0.15
-    },
     direction: {
       type: String as PropType<'up' | 'down'>,
       default: 'up'
-    },
-    initialTopPosition: {
-      type: Number,
-      default: 100
     },
     imageSrc: {
       type: String,
@@ -55,53 +47,59 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
-    directionValue () {
+    directionValue (): number {
       return this.direction === 'down' ? +1 : -1
+    },
+    initialValue (): number {
+      return this.direction === 'down' ? 0 : -100
     }
   },
   mounted (): void {
-    this.animateElement();
     this.init();
+    this.animateElement();
   },
   methods: {
     animateElement (): void {
-      const parentHeight = this.$refs.block.offsetHeight;
-      const parallaxHeight = this.$refs.parallax.offsetHeight;
-      const availableOffset = parallaxHeight - parentHeight;
-      let animationValue = (this.window.scrollY * this.parallaxSpeed);
+      const componentContainer = this.getComponentContainer();
 
-      if (animationValue <= availableOffset && animationValue >= 0) { // TODO check condition
-        this.transform = `translateY(calc(${-this.initialTopPosition}% - ${animationValue * this.directionValue}px))`;
-      }
-    },
-    getParallaxContainer (): Element | undefined {
-      return this.$refs.parallax as Element | undefined;
-    },
-    scrollHandler () {
-      const parallaxContainer = this.getParallaxContainer();
+      const availableHeight = (this.window.innerHeight || document.documentElement.clientHeight) + componentContainer.offsetHeight;
 
-      if (!parallaxContainer) {
-        return;
-      }
+      let componentContainerTopPosition = componentContainer.getBoundingClientRect().top + componentContainer.offsetHeight;
+
+      componentContainerTopPosition = componentContainerTopPosition > 0 ? componentContainerTopPosition : 0;
+      componentContainerTopPosition = componentContainerTopPosition > availableHeight ? availableHeight : componentContainerTopPosition;
+
+      let animationValue = Math.floor(((availableHeight - componentContainerTopPosition) / availableHeight) * 100);
+
+      this.transform = `translateY(calc(${this.initialValue}% - ${animationValue * this.directionValue}%))`;
+    },
+    getComponentContainer (): HTMLElement {
+      return this.$refs.block as HTMLElement;
+    },
+    getParallaxContainer (): HTMLElement {
+      return this.$refs.parallax as HTMLElement;
+    },
+    scrollHandler (): void {
+      const componentContainer = this.getComponentContainer();
 
       this.window.requestAnimationFrame(() => {
-        if (this.isInView(parallaxContainer)) {
-          this.animateElement()
+        if (this.isInView(componentContainer)) {
+          this.animateElement();
         }
       })
     },
-    isInView (el: Element) {
-      let rect = el.getBoundingClientRect()
+    isInView (el: HTMLElement): boolean {
+      let rect = el.getBoundingClientRect();
+
       return (
-        rect.bottom >= 0 &&
-          rect.top <= (window.innerHeight || document.documentElement.clientHeight)
+        rect.bottom >= 0 && rect.top <= (this.window.innerHeight || document.documentElement.clientHeight)
       )
     },
-    init () {
+    init (): void {
       this.window.addEventListener('scroll', this.scrollHandler, false);
     }
   },
-  beforeDestroy () {
+  beforeDestroy (): void {
     this.window.removeEventListener('scroll', this.scrollHandler, false);
   }
 });
@@ -119,6 +117,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     will-change: transform;
     right: 0;
     top: 0;
+    transition: transform 0.25s;
 
     ._image-container {
       display: flex;
