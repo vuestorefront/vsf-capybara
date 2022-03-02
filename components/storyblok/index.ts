@@ -18,6 +18,7 @@ export default function registerComponents () {
   add('newsletter_subscribe_form', () => import('./NewsletterSubscribeForm.vue'))
   add('expandable_text_block', () => import('./ExpandableText.vue'))
   add('hr', () => import('./HorizontalRule.vue'))
+  add('parallax', () => import('./Parallax.vue'))
 
   // add('product', () => import('./Product.vue'))
   // add('category', () => import('./Category.vue'))
