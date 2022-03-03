@@ -6,7 +6,7 @@
     <SfHeading :level="1" :title="title" class="_title" />
     <div class="_error-action" v-if="isShowError">
       <SfButton @click="goToHomepage">
-        {{ $t("Return to home") }}
+        {{ $t('Return to home') }}
       </SfButton>
     </div>
   </div>

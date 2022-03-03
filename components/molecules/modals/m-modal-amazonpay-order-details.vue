@@ -15,7 +15,7 @@
           :disabled="isOrderButtonDisabled"
           @click="goToCheckout"
         >
-          {{ $t("Place the order") }}
+          {{ $t('Place the order') }}
         </SfButton>
       </div>
     </SfModal>

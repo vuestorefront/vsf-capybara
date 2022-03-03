@@ -44,11 +44,11 @@
         class="form__element"
       />
       <SfButton class="sf-button--full-width form__submit">
-        {{ $t("Create an account") }}
+        {{ $t('Create an account') }}
       </SfButton>
     </form>
     <SfButton class="sf-button--text action-button" @click.native="switchElem('login')">
-      {{ `${$t("or")} ${$t("login in to your account")}` }}
+      {{ `${$t('or')} ${$t('login in to your account')}` }}
     </SfButton>
   </div>
 </template>

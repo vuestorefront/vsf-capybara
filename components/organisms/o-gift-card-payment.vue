@@ -8,7 +8,7 @@
       <SfCheckbox v-model="useGiftCard" class="_checkbox">
         <template #label>
           <span class="sf-checkbox__label">
-            {{ $t("Use gift card to checkout") }}
+            {{ $t('Use gift card to checkout') }}
           </span>
         </template>
       </SfCheckbox>
@@ -65,7 +65,7 @@
           :disabled="isSubmitting"
           @click.native="() => passes(() => onApplyGiftCardCode())"
         >
-          {{ $t("Apply Gift Card") }}
+          {{ $t('Apply Gift Card') }}
         </SfButton>
       </validation-observer>
 

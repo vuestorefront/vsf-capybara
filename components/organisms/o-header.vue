@@ -62,7 +62,7 @@
           class="sf-button--text form__action-button form__action-button--secondary mobile-only"
           @click="$store.commit('ui/setSearchpanel', false)"
         >
-          {{ $t("Cancel") }}
+          {{ $t('Cancel') }}
         </SfButton> -->
       </template>
       <template #header-icons>

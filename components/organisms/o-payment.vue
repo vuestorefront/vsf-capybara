@@ -168,7 +168,7 @@
           :disabled="$v.payment.$invalid"
           @click="sendDataToCheckout"
         >
-          {{ $t("Go review the order") }}
+          {{ $t('Go review the order') }}
         </SfButton>
         <SfButton
           class="
@@ -177,7 +177,7 @@
           "
           @click="$bus.$emit('checkout-before-edit', 'shipping')"
         >
-          {{ $t("Edit shipping") }}
+          {{ $t('Edit shipping') }}
         </SfButton>
       </div>
     </div>
