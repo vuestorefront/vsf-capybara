@@ -140,7 +140,11 @@ export default Vue.extend({
             return;
           }
 
-          jQuery(imageWrapper).CloudZoom({ adjustX: 10, showTitle: false });
+          jQuery(imageWrapper).CloudZoom({
+            adjustX: 10,
+            showTitle: false,
+            transparentImage: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+          });
         });
       }
     },
