@@ -1,7 +1,7 @@
 <template>
   <div id="category">
     <div class="page-header">
-      <SfHeading :level="1" :title="$t(getCurrentCategory.name)" class="navbar__title" />
+      <SfHeading :level="1" :title="getCurrentCategory.name" class="navbar__title" />
     </div>
 
     <div
