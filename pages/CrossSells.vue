@@ -89,12 +89,28 @@ export default Vue.extend({
   },
   data: function () {
     return {
-      crossSellsProducts: [] as Product[],
-      upSellsProducts: [] as Product[],
       isRouterLeaving: false
     }
   },
   computed: {
+    crossSellsProducts (): any[] {
+      if (!this.getCurrentProduct) {
+        return [];
+      }
+
+      const skus = this.getProductLinkSkusByType('crosssell');
+
+      return this.getSellsProductsBySkus(skus);
+    },
+    upSellsProducts (): any[] {
+      if (!this.getCurrentProduct) {
+        return [];
+      }
+
+      const skus = this.getProductLinkSkusByType('upsell');
+
+      return this.getSellsProductsBySkus(skus);
+    },
     getCurrentProduct (): Product | null {
       const product = this.$store.getters['product/getCurrentProduct'];
       const sku = getSkuFromRoute(this.$route);
@@ -109,18 +125,24 @@ export default Vue.extend({
       return this.$store.getters['product/getProductBySkuDictionary'];
     }
   },
-  async asyncData ({ store, route, context }) {
-    const product = await store.dispatch(
+  async serverPrefetch () {
+    const product = await this.$store.dispatch(
       'product/loadProduct',
       {
-        parentSku: getSkuFromRoute(route),
+        parentSku: getSkuFromRoute(this.$route),
         setCurrent: false
       }
     );
 
-    if (isServer) {
-      await store.dispatch('product/setCurrent', product);
-    }
+    await this.$store.dispatch('product/setCurrent', product);
+
+    await Promise.all([
+      (this as any).loadCrossSellsProducts(),
+      (this as any).loadUpSellsProducts()
+    ]);
+  },
+  async mounted () {
+    await this.setCurrentProduct();
   },
   beforeRouteLeave (to, from, next) {
     this.isRouterLeaving = true
@@ -134,7 +156,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    productLinks (): ProductLink[] {
+    getProductLinkSkusByType (type: string): string[] {
       if (!this.getCurrentProduct) {
         return [];
       }
@@ -143,7 +165,32 @@ export default Vue.extend({
         return [];
       }
 
-      return this.getCurrentProduct.product_links;
+      const productLinks = this.getCurrentProduct.product_links;
+
+      if (productLinks.length === 0) {
+        return [];
+      }
+
+      const skus = productLinks
+        .filter(productLink => productLink.link_type === type)
+        .map(productLink => productLink.linked_product_sku);
+
+      return skus;
+    },
+    getSellsProductsBySkus (skus: string[]): any[] {
+      let products: Product[] = [];
+
+      for (const sku of skus) {
+        for (const key in this.getProductBySkuDictionary) {
+          if (this.getProductBySkuDictionary[key].parentSku === sku) {
+            products.push(this.getProductBySkuDictionary[key]);
+
+            break;
+          }
+        }
+      }
+
+      return products.map((item: Product) => ({ ...prepareCategoryProduct(item), landing_page_url: item.landing_page_url }));
     },
     getSearchQuery (skus: string[]) {
       let productsQuery = new SearchQuery()
@@ -155,36 +202,46 @@ export default Vue.extend({
       }
       return productsQuery;
     },
-    async getProductsList (type: string): Promise<Product[]> {
+    async loadProductsList (type: string): Promise<void> {
       if (!this.getCurrentProduct) {
-        return [];
+        return;
       }
 
-      const productLinks = this.productLinks();
+      const skus = this.getProductLinkSkusByType(type);
 
-      if (productLinks.length === 0) {
-        return [];
+      let notExistingProductsSkus: string[] = [];
+
+      for (const sku of skus) {
+        let productFound = false;
+
+        for (const key in this.getProductBySkuDictionary) {
+          if (this.getProductBySkuDictionary[key].parentSku === sku) {
+            productFound = true;
+
+            break;
+          }
+        }
+
+        if (productFound) {
+          continue;
+        }
+
+        notExistingProductsSkus.push(sku);
       }
 
-      let skus = productLinks
-        .filter(productLink => productLink.link_type === type)
-        .map(productLink => productLink.linked_product_sku)
-
-      if (skus === null || (skus.length === 0)) {
-        return [];
+      if (notExistingProductsSkus.length === 0) {
+        return;
       }
 
-      const { items } = await this.$store.dispatch('product/findProducts', {
-        query: this.getSearchQuery(skus)
+      await this.$store.dispatch('product/findProducts', {
+        query: this.getSearchQuery(notExistingProductsSkus)
       });
-
-      return items.map((item: Product) => ({ ...prepareCategoryProduct(item), landing_page_url: item.landing_page_url }));
     },
     async loadCrossSellsProducts () {
-      this.crossSellsProducts = await this.getProductsList('crosssell');
+      await this.loadProductsList('crosssell');
     },
     async loadUpSellsProducts () {
-      this.upSellsProducts = await this.getProductsList('upsell');
+      await this.loadProductsList('upsell');
     },
     goToCart (): void {
       this.$router.push(localizedRoute({ name: 'detailed-cart' }));
@@ -204,29 +261,13 @@ export default Vue.extend({
     }
   },
   watch: {
-    $route: {
+    getCurrentProduct: {
       async handler (val, oldVal) {
         if (isServer) {
           return;
         }
 
-        if (val.path === oldVal?.path) {
-          return;
-        }
-
-        await this.setCurrentProduct();
-      },
-      immediate: true
-    },
-    getCurrentProduct: {
-      async handler (val) {
-        if (isServer) {
-          return;
-        }
-
         if (!val) {
-          this.crossSellsProducts = [];
-          this.upSellsProducts = [];
           return;
         }
 
