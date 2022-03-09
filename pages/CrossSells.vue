@@ -234,7 +234,10 @@ export default Vue.extend({
       }
 
       await this.$store.dispatch('product/findProducts', {
-        query: this.getSearchQuery(notExistingProductsSkus)
+        query: this.getSearchQuery(notExistingProductsSkus),
+        options: {
+          prefetchGroupProducts: false
+        }
       });
     },
     async loadCrossSellsProducts () {
