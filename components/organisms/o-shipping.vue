@@ -163,13 +163,13 @@
           :disabled="$v.shipping.$invalid || !shippingMethods.length"
           @click="saveDataToCheckout"
         >
-          {{ $t("Continue to payment") }}
+          {{ $t('Continue to payment') }}
         </SfButton>
         <SfButton
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
           @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
         >
-          {{ $t("Edit Details") }}
+          {{ $t('Edit Details') }}
         </SfButton>
       </div>
     </div>

@@ -45,19 +45,19 @@
       </div>
 
       <div class="_description">
-        {{ $t("We'll send you a digital copy of the coloring book via email for you to download when ready!") }}
+        {{ $t('We\'ll send you a digital copy of the coloring book via email for you to download when ready!') }}
       </div>
     </form>
 
     <div v-show="isSubmitted">
       <p>
         <strong>
-          {{ $t("Success! Your storybook is on it's way") }}
+          {{ $t('Success! Your storybook is on it\'s way') }}
         </strong>
       </p>
 
       <div class="_description">
-        {{ $t("Enjoy over 25 beautifully illustrated color pages, where your child’s drawings will help Dongler get home in time for dinner!") }}
+        {{ $t('Enjoy over 25 beautifully illustrated color pages, where your child’s drawings will help Dongler get home in time for dinner!') }}
       </div>
     </div>
   </div>

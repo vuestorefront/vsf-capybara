@@ -108,10 +108,10 @@
             >
               <template #label>
                 <span class="sf-checkbox__label no-flex">
-                  {{ $t("I accept ") }}
+                  {{ $t('I accept ') }}
                 </span>
                 <SfButton class="sf-button sf-button--text terms" @click.prevent="openTermsAndConditionsModal">
-                  {{ $t("Terms and conditions") }}
+                  {{ $t('Terms and conditions') }}
                 </SfButton>
               </template>
             </SfCheckbox>
@@ -142,7 +142,7 @@
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary mobile-only"
           @click="login"
         >
-          {{ $t("or login to your account") }}
+          {{ $t('or login to your account') }}
         </SfButton>
       </div>
     </div>

@@ -7,7 +7,7 @@
         </h2>
       </header>
       <SfButton class="sf-button actions__button" @click="goToCart">
-        {{ $t("Continue to cart") }}
+        {{ $t('Continue to cart') }}
       </SfButton>
     </div>
 

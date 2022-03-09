@@ -84,7 +84,7 @@
             class="sf-button--full-width color-secondary"
             @click.native="goToCheckout"
           >
-            {{ $t("Go to checkout") }}
+            {{ $t('Go to checkout') }}
           </SfButton>
         </div>
         <div v-else>
@@ -92,7 +92,7 @@
             class="sf-button--full-width color-primary"
             @click.native="startShopping"
           >
-            {{ $t("Start shopping") }}
+            {{ $t('Start shopping') }}
           </SfButton>
         </div>
       </transition>

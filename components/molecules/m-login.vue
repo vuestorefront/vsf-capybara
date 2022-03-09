@@ -32,11 +32,11 @@
         class="form__element form__checkbox"
       />
       <SfButton class="sf-button--full-width form__submit">
-        {{ $t("Login") }}
+        {{ $t('Login') }}
       </SfButton>
     </form>
     <SfButton class="sf-button--text action-button" @click.native="switchElem('forgot-pass')">
-      {{ $t("Forgotten password?") }}
+      {{ $t('Forgotten password?') }}
     </SfButton>
     <div class="aside">
       <SfHeading
@@ -45,7 +45,7 @@
         class="aside__heading"
       />
       <SfButton class="sf-button--text" @click.native="switchElem('register')">
-        {{ $t("Register now") }}
+        {{ $t('Register now') }}
       </SfButton>
     </div>
   </div>

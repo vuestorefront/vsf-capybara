@@ -8,7 +8,7 @@
         : addProductToWhishlist(product)
     "
   >
-    {{ !isOnWishlist ? $t("Save for later") : $t("Remove") }}
+    {{ !isOnWishlist ? $t('Save for later') : $t('Remove') }}
   </SfButton>
 </template>
 

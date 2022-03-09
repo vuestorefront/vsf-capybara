@@ -42,7 +42,7 @@
           type="button"
           @click="$emit('see-more')"
         >
-          {{ $t("Load more") }}
+          {{ $t('Load more') }}
         </SfButton>
       </div>
     </div>

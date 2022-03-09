@@ -20,7 +20,7 @@
             class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
           >
-            {{ $t("Edit") }}
+            {{ $t('Edit') }}
           </SfButton>
         </div>
       </SfAccordionItem>
@@ -46,7 +46,7 @@
             class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'shipping')"
           >
-            {{ $t("Edit") }}
+            {{ $t('Edit') }}
           </SfButton>
         </div>
       </SfAccordionItem>
@@ -68,7 +68,7 @@
             class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'payment')"
           >
-            {{ $t("Edit") }}
+            {{ $t('Edit') }}
           </SfButton>
         </div>
       </SfAccordionItem>
@@ -83,7 +83,7 @@
             class="sf-button--text color-secondary accordion__edit"
             @click="$bus.$emit('checkout-before-edit', 'payment')"
           >
-            {{ $t("Edit") }}
+            {{ $t('Edit') }}
           </SfButton>
         </div>
       </SfAccordionItem>
@@ -189,13 +189,13 @@
         :disabled="!productsInCart.length || isCheckoutInProgress"
         @click="placeOrder"
       >
-        {{ $t("Place the order") }}
+        {{ $t('Place the order') }}
       </SfButton>
       <SfButton
         class="sf-button--full-width sf-button--text color-secondary actions__button actions__button--secondary"
         @click="$bus.$emit('checkout-before-edit', 'payment')"
       >
-        {{ $t("Edit payment") }}
+        {{ $t('Edit payment') }}
       </SfButton>
     </div>
   </div>
