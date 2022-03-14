@@ -15,15 +15,15 @@
         />
         <SfTable class="sf-table--bordered">
           <SfTableHeading>
-            <SfTableHeader>{{ $t("Product Name") }}</SfTableHeader>
+            <SfTableHeader>{{ $t('Product Name') }}</SfTableHeader>
             <SfTableHeader class="table-center">
-              {{ $t("Price") }}
+              {{ $t('Price') }}
             </SfTableHeader>
             <SfTableHeader class="table-center">
-              {{ $t("Qty") }}
+              {{ $t('Qty') }}
             </SfTableHeader>
             <SfTableHeader class="table-center">
-              {{ $t("Subtotal") }}
+              {{ $t('Subtotal') }}
             </SfTableHeader>
           </SfTableHeading>
           <SfTableRow
@@ -54,10 +54,10 @@
       </div>
       <div class="order-confirmation__buttons">
         <SfButton class="sf-button sf-button--text color-secondary" @click.native="cancelOrders">
-          {{ $t("Cancel") }}
+          {{ $t('Cancel') }}
         </SfButton>
         <SfButton class="sf-button" @click.native="confirmOrders">
-          {{ $t("Confirm your order") }}
+          {{ $t('Confirm your order') }}
         </SfButton>
       </div>
     </SfModal>

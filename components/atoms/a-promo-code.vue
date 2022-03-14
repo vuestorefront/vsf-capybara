@@ -23,7 +23,7 @@
       class="sf-button sf-button--outline a-promo-code__button"
       @click="removeCoupon"
     >
-      {{ $t("Delete discount code") }}
+      {{ $t('Delete discount code') }}
     </SfButton>
     <div class="a-promo-code__message" v-if="message">
       {{ message }}

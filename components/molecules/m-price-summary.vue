@@ -63,7 +63,7 @@
       class="sf-button sf-button--outline promo-code__button"
       @click="removeCoupon"
     >
-      {{ $t("Delete discount code") }}
+      {{ $t('Delete discount code') }}
     </SfButton>
     <SfDivider class="divider" />
     <SfProperty

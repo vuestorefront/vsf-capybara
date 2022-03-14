@@ -1,7 +1,7 @@
 <template>
   <div id="category">
     <div class="page-header">
-      <SfHeading :level="1" :title="$t(getCurrentCategory.name)" class="navbar__title" />
+      <SfHeading :level="1" :title="getCurrentCategory.name" class="navbar__title" />
     </div>
 
     <div
@@ -20,7 +20,7 @@
             @click="isFilterSidebarOpen = true"
           >
             <SfIcon size="18px" class="navbar__filters-icon" color="#BEBFC4" icon="filter" />
-            {{ $t("Filters") }}
+            {{ $t('Filters') }}
           </SfButton>
           <template v-if="activeFiltersCount">
             ({{ activeFiltersCount }})
@@ -31,7 +31,7 @@
           </template>
         </div>
         <div class="navbar__sort">
-          <span class="navbar__label desktop-only">{{ $t("Sort By") }}:</span>
+          <span class="navbar__label desktop-only">{{ $t('Sort By') }}:</span>
           <SfSelect
             class="navbar__select sort-by"
             ref="SortBy"
@@ -58,11 +58,11 @@
         </div>
         <div class="navbar__counter">
           <span class="navbar__label desktop-only">
-            {{ $t("Products found") }}:
+            {{ $t('Products found') }}:
           </span>
           <strong class="desktop-only">{{ getCategoryProductsTotal }}</strong>
           <span class="navbar__label mobile-only">
-            {{ $t("{count} items", { count: getCategoryProductsTotal }) }}
+            {{ $t('{count} items', { count: getCategoryProductsTotal }) }}
           </span>
         </div>
       </div>
@@ -166,13 +166,13 @@
             class="sf-button--full-width"
             @click="isFilterSidebarOpen = false"
           >
-            {{ $t("Done") }}
+            {{ $t('Done') }}
           </SfButton>
           <SfButton
             class="sf-button--full-width filters__button-clear"
             @click="clearAllFilters"
           >
-            {{ $t("Clear all") }}
+            {{ $t('Clear all') }}
           </SfButton>
         </div>
       </template>

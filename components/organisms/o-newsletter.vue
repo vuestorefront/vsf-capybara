@@ -7,7 +7,7 @@
   >
     <template #button>
       <SfButton @click="showNewsletterPopup">
-        {{ $t("Subscribe") }}
+        {{ $t('Subscribe') }}
       </SfButton>
     </template>
   </SfCallToAction>

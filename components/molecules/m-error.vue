@@ -8,14 +8,14 @@
     <div class="error__action">
       <a :href="localizedRoute('/')">
         <SfButton class="sf-button--full-width error__action-button">
-          {{ $t("Return to home") }}
+          {{ $t('Return to home') }}
         </SfButton>
       </a>
       <SfButton
         class="sf-button--full-width sf-button--text error__action-button error__action-button--secondary"
         @click="$router.back()"
       >
-        {{ $t("Back") }}
+        {{ $t('Back') }}
       </SfButton>
     </div>
   </div>

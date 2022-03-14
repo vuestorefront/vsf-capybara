@@ -7,13 +7,13 @@
     />
     <div class="review__header">
       <h3 class="review__title">
-        {{ $t("Details") }}
+        {{ $t('Details') }}
       </h3>
       <SfButton
         class="sf-button--text color-secondary"
         @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
       >
-        {{ $t("Edit") }}
+        {{ $t('Edit') }}
       </SfButton>
     </div>
     <p class="content">
@@ -24,13 +24,13 @@
     </p>
     <div class="review__header">
       <h3 class="review__title">
-        {{ $t("Shipping") }}
+        {{ $t('Shipping') }}
       </h3>
       <SfButton
         class="sf-button--text color-secondary"
         @click="$bus.$emit('checkout-before-edit', 'shipping')"
       >
-        {{ $t("Edit") }}
+        {{ $t('Edit') }}
       </SfButton>
     </div>
     <p class="content">
@@ -49,13 +49,13 @@
     </p>
     <div class="review__header">
       <h3 class="review__title">
-        {{ $t("Payment") }}
+        {{ $t('Payment') }}
       </h3>
       <SfButton
         class="sf-button--text color-secondary"
         @click="$bus.$emit('checkout-before-edit', 'payment')"
       >
-        {{ $t("Edit") }}
+        {{ $t('Edit') }}
       </SfButton>
     </div>
     <p class="content">
@@ -70,13 +70,13 @@
     </p>
     <div class="review__header">
       <h3 class="review__title">
-        {{ $t("Payment method") }}
+        {{ $t('Payment method') }}
       </h3>
       <SfButton
         class="sf-button--text color-secondary"
         @click="$bus.$emit('checkout-before-edit', 'payment')"
       >
-        {{ $t("Edit") }}
+        {{ $t('Edit') }}
       </SfButton>
     </div>
     <p class="content">

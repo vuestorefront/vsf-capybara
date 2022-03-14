@@ -7,7 +7,7 @@
         class="sf-button--full-width color-secondary"
         @click="closeModal"
       >
-        {{ $t("OK") }}
+        {{ $t('OK') }}
       </SfButton>
     </SfModal>
   </div>

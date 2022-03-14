@@ -206,7 +206,7 @@
         :disabled="isDisabled"
         @click="(event) => passes(() => submitForm())"
       >
-        {{ $t("Add to Cart") }}
+        {{ $t('Add to Cart') }}
       </SfButton>
     </div>
   </validation-observer>

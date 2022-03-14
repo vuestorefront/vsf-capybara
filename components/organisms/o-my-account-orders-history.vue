@@ -17,7 +17,7 @@
                 v-for="tableHeader in tableHeaders"
                 :key="tableHeader"
               >
-                {{ $t(tableHeader) }}
+                {{ tableHeader }}
               </SfTableHeader>
               <SfTableHeader class="orders__element--right" />
             </SfTableHeading>
@@ -66,11 +66,11 @@ export default {
   data () {
     return {
       tableHeaders: [
-        'Order ID',
-        'Order date',
-        'Payment method',
-        'Amount',
-        'Status'
+        this.$t('Order ID'),
+        this.$t('Order date'),
+        this.$t('Payment method'),
+        this.$t('Amount'),
+        this.$t('Status')
       ],
       activeOrder: null
     };

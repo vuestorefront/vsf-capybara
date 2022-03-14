@@ -48,7 +48,7 @@
           class="form__element"
         />
         <SfButton class="sf-button--full-width form__submit">
-          {{ $t("Add review") }}
+          {{ $t('Add review') }}
         </SfButton>
       </form>
     </SfModal>

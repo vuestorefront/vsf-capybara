@@ -23,7 +23,7 @@
           class="form__element"
         />
         <SfButton class="sf-button--full-width form__submit">
-          {{ $t("Subscribe") }}
+          {{ $t('Subscribe') }}
         </SfButton>
       </form>
     </div>

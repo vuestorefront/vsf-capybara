@@ -8,17 +8,17 @@
       <SfFooterColumn
         v-for="linkGroup in links"
         :key="linkGroup.name"
-        :title="$t(linkGroup.name)"
+        :title="linkGroup.name"
       >
         <SfList>
           <SfListItem v-for="link in linkGroup.children" :key="link.name">
             <router-link v-if="link.link" :to="localizedRoute(link.link)" :target="link.target" exact>
-              <SfMenuItem class="sf-footer__menu-item" :label="$t(link.name)" />
+              <SfMenuItem class="sf-footer__menu-item" :label="link.name" />
             </router-link>
             <SfMenuItem
               v-else-if="link.clickHandler"
               class="sf-footer__menu-item"
-              :label="$t(link.name)"
+              :label="link.name"
               @click="link.clickHandler"
             />
           </SfListItem>
@@ -149,16 +149,16 @@ export default {
           ]
         },
         services: {
-          name: 'Services',
+          name: this.$t('Services'),
           children: [
-            { name: 'Custom Forevers', link: '/forevers-pet-plush' },
-            { name: 'Custom Pillows', link: '/custom-pillows' },
-            { name: 'Custom Socks', link: { name: 'printed-socks-creation-page' } },
-            { name: 'Custom Face Masks', link: { name: 'printed-masks-creation-page' } },
-            { name: 'Custom Bulk', link: '/bulk-custom-stuffed-animal-manufacture' },
-            { name: 'Gift Cards', link: '/giftcards' },
-            { name: 'Gift Box', link: '/giftbox' },
-            { name: 'Accessories',
+            { name: this.$t('Custom Forevers'), link: '/forevers-pet-plush' },
+            { name: this.$t('Custom Pillows'), link: '/custom-pillows' },
+            { name: this.$t('Custom Socks'), link: { name: 'printed-socks-creation-page' } },
+            { name: this.$t('Custom Face Masks'), link: { name: 'printed-masks-creation-page' } },
+            { name: this.$t('Custom Bulk'), link: '/bulk-custom-stuffed-animal-manufacture' },
+            { name: this.$t('Gift Cards'), link: '/giftcards' },
+            { name: this.$t('Gift Box'), link: '/giftbox' },
+            { name: this.$t('Accessories'),
               link: {
                 name: 'category',
                 params: {
@@ -169,27 +169,27 @@ export default {
           ]
         },
         account: {
-          name: 'Account',
+          name: this.$t('Account'),
           children: [
             {
-              name: 'My account',
+              name: this.$t('My account'),
               ...this.isLoggedIn
                 ? { link: '/my-account' }
                 : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
             },
-            { name: 'My Cart', link: { name: 'detailed-cart' } },
-            { name: 'Rising Starts', link: '/rising-stars' }
+            { name: this.$t('My Cart'), link: { name: 'detailed-cart' } },
+            { name: this.$t('Rising Starts'), link: '/rising-stars' }
           ]
         },
         quickLInks: {
-          name: 'Quick Links',
+          name: this.$t('Quick Links'),
           children: [
-            { name: 'Veterinarians', link: '/partners' },
-            { name: 'Become a Partner', link: '/partners' },
-            { name: 'Resellers', link: '/partners' },
-            { name: 'Affiliates', link: '/affiliates' },
-            { name: 'Corporate Buying', link: '/partners' },
-            { name: 'FAQ', link: '//support.mypetsies.com/support/home', target: '_blank' }
+            { name: this.$t('Veterinarians'), link: '/partners' },
+            { name: this.$t('Become a Partner'), link: '/partners' },
+            { name: this.$t('Resellers'), link: '/partners' },
+            { name: this.$t('Affiliates'), link: '/affiliates' },
+            { name: this.$t('Corporate Buying'), link: '/partners' },
+            { name: this.$t('FAQ'), link: '//support.mypetsies.com/support/home', target: '_blank' }
           ]
         }
       };

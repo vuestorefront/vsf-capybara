@@ -5,10 +5,10 @@
     @click="isOnCompare ? removeProduct(product) : addProduct(product)"
   >
     <template v-if="!isOnCompare">
-      {{ $t("Add to compare") }}
+      {{ $t('Add to compare') }}
     </template>
     <template v-else>
-      {{ $t("Remove from compare") }}
+      {{ $t('Remove from compare') }}
     </template>
   </SfButton>
 </template>
