@@ -22,6 +22,10 @@
       </template>
     </SfHeading>
 
+    <p class="_confirmation">
+      {{ $t('You\'ll receive a confirmation email with your order number shortly!') }}
+    </p>
+
     <div class="_content">
       <div class="_left">
         <img class="_success-icon" src="/assets/images/success-icon.jpg" alt="">
@@ -29,63 +33,68 @@
 
       <div class="_right">
         <div class="_section">
-          <div class="_title">
-            <div class="_number">
-              1
-            </div>
-
-            <SfHeading
-              :title="$t('Get special birthday savings for your pet(s) (optional)')"
-              :level="3"
-            />
+          <div class="_number">
+            1
           </div>
 
-          <MPetsBirthdayForm />
+          <div class="_inner">
+            <div class="_title">
+              <SfHeading
+                :title="$t('Get special birthday savings for your pet(s) (optional)')"
+                :level="3"
+              />
+            </div>
+
+            <MPetsBirthdayForm />
+          </div>
         </div>
 
         <div class="_section">
-          <div class="_title">
-            <div class="_number">
-              2
-            </div>
-
-            <SfHeading
-              :title="$t('Does your pet have a special story?')"
-              :level="3"
-            />
+          <div class="_number">
+            2
           </div>
 
-          <m-pet-special-story-form class="m-pet-special-story-form" />
+          <div class="_inner">
+            <div class="_title">
+              <SfHeading
+                :title="$t('Does your pet have a special story?')"
+                :level="3"
+              />
+            </div>
+
+            <m-pet-special-story-form class="m-pet-special-story-form" />
+          </div>
         </div>
 
         <div class="_section">
-          <div class="_title">
-            <div class="_number">
-              3
+          <div class="_number">
+            3
+          </div>
+          <div class="_inner">
+            <div class="_title">
+              <SfHeading
+                :title="$t('Are you a trendsetter?')"
+                :level="3"
+              />
             </div>
 
-            <SfHeading
-              :title="$t('Are you a trendsetter?')"
-              :level="3"
-            />
-          </div>
+            <div class="_sharing-content">
+              <p class="_text">
+                {{ $t('Let your friends know about Petsies so they can make their own amazing custom plushies.') }}
+              </p>
 
-          <div class="_sharing-content">
-            <p class="_text">
-              {{ $t('Let your friends know about Petsies so they can make their own amazing custom plushies.') }}
-            </p>
+              <m-social-sharing
+                :sharing-url="sharingData.sharingUrl"
+                :sharing-description="sharingData.sharingDescription"
+                :e-mail-subject="sharingData.eMailSubject"
+                :twitter-description="sharingData.twitterDescription"
+                :image="sharingData.image"
+              />
 
-            <m-social-sharing
-              :sharing-url="sharingData.sharingUrl"
-              :sharing-description="sharingData.sharingDescription"
-              :e-mail-subject="sharingData.eMailSubject"
-              :twitter-description="sharingData.twitterDescription"
-              :image="sharingData.image"
-            />
-
-            <p class="_text -small">
-              {{ $t('Clicking link will open new tab where you can customize your message.') }}
-            </p>
+              <p class="_text -small">
+                {{ $t('Clicking link will open new tab where you can customize your message.') }}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -156,6 +165,13 @@ export default (Vue as VueConstructor<Vue & NonReactiveState & InjectedServices>
     margin-bottom: var(--spacer-base);
   }
 
+  ._confirmation {
+    color: var(--c-danger-variant);
+    text-align: center;
+    font-size: var(--font-base);
+    margin-top: var(--spacer-base);
+  }
+
   ._content {
     display: flex;
     flex-direction: column;
@@ -172,8 +188,15 @@ export default (Vue as VueConstructor<Vue & NonReactiveState & InjectedServices>
   }
 
   ._section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
     padding: 0 var(--spacer-sm);
     margin-bottom: var(--spacer-xl);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     ._title {
       display: flex;
@@ -227,8 +250,16 @@ export default (Vue as VueConstructor<Vue & NonReactiveState & InjectedServices>
     }
 
     ._section {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: row;
+
       ._title {
         flex-direction: row;
+
+        .sf-heading {
+          --heading-text-align: start;
+        }
       }
 
       ._number {

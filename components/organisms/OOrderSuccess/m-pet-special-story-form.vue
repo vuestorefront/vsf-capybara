@@ -85,7 +85,7 @@ export default Vue.extend({
       try {
         await this.$store.dispatch('budsies/shareCustomerStory', {
           customerStoryText: this.story,
-          orderId: this.lastOrderConfirmation.orderNumber
+          orderId: this.lastOrderConfirmation.magentoOrderId
         });
 
         this.isShared = true;
@@ -126,7 +126,7 @@ export default Vue.extend({
 
   ._button-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   ._error-text {
@@ -138,6 +138,10 @@ export default Vue.extend({
   @include for-desktop {
     ._text {
       text-align: start;
+    }
+
+    ._button-container {
+      justify-content: flex-end;
     }
   }
 }

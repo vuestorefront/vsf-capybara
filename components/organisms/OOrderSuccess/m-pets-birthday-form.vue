@@ -30,10 +30,12 @@
           >
             <SfInput
               class="_input"
+              name="petName"
               :required="true"
               v-model="name"
               :valid="!errors.length"
               :error-message="errors[0]"
+              :disabled="isDisabled"
               :label="$t('Pet\'s name')"
             />
           </validation-provider>
@@ -48,6 +50,7 @@
             <SfSelect
               v-model="birthMonth"
               :required="true"
+              :disabled="isDisabled"
               class="_select sf-select--underlined"
               :class="classes"
             >
@@ -79,6 +82,7 @@
             <SfSelect
               v-model="birthDay"
               :required="true"
+              :disabled="isDisabled"
               class="_select sf-select--underlined"
               :class="classes"
             >
@@ -267,7 +271,7 @@ export default (Vue as VueConstructor<Vue & NonReactiveData>).extend({
 
   ._button-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   ._error-text {
@@ -290,6 +294,10 @@ export default (Vue as VueConstructor<Vue & NonReactiveData>).extend({
   @include for-desktop {
     ._text {
       text-align: start;
+    }
+
+    ._button-container {
+      justify-content: flex-end;
     }
   }
 
