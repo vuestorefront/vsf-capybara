@@ -195,11 +195,12 @@
             :value="method.code"
             name="payment-method"
             class="form__radio payment-method"
+            :class="{ hidden: method.code === 'braintree' }"
             @input="changePaymentMethod"
           />
-          <div class="_braintree-widget" v-if="method.code === 'braintree'">
-            <braintree-dropin v-if="paymentMethod === 'Braintree'" />
-          </div>
+        </div>
+        <div class="_braintree-widget" v-if="isBraintreeAvailable">
+          <braintree-dropin @method-selected="onBraintreeMethodSelected" />
         </div>
       </div>
     </div>
@@ -292,6 +293,9 @@ export default {
     ...mapMobileObserver(),
     cartItems () {
       return this.$store.getters['cart/getCartItems'];
+    },
+    isBraintreeAvailable () {
+      return !!this.paymentMethods.find(({ code }) => code === 'braintree');
     },
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
@@ -438,6 +442,10 @@ export default {
     },
     getCartItemKey (cartItem) {
       return getCartItemKey(cartItem);
+    },
+    onBraintreeMethodSelected () {
+      this.payment.paymentMethod = 'braintree';
+      this.changePaymentMethod();
     }
   },
   mounted () {
@@ -453,6 +461,12 @@ export default {
   @include for-desktop {
     --heading-title-font-size: var(--h3-font-size);
     --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
+  }
+}
+
+.payment-method {
+  &.hidden {
+    display: none;
   }
 }
 
