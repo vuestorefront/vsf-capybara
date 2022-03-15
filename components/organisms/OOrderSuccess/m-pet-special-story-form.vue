@@ -14,10 +14,11 @@
         class="_field"
         :name="$t('Story')"
         tag="div"
-        v-slot="{errors}"
+        v-slot="{ errors, classes }"
       >
         <textarea
           class="_story-textarea"
+          :class="classes"
           v-model="story"
           :disabled="isDisabled"
           :required="true"
@@ -132,6 +133,11 @@ export default Vue.extend({
 
     &:focus-visible {
       outline: var(--c-primary-lighten) auto 1px;
+    }
+
+    &.invalid {
+      border-color: var(--c-danger);
+      outline: none;
     }
   }
 
