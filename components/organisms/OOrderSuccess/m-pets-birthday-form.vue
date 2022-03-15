@@ -1,6 +1,6 @@
 <template>
   <div class="m-pets-birthday-form">
-    <validation-observer v-slot="{ passes }">
+    <validation-observer slim v-slot="{ passes }">
       <div class="_birthday-added" v-if="isBirthdayAdded">
         <p class="_thank-you">
           {{ $t('Thank You') }}

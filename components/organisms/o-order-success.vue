@@ -186,9 +186,6 @@ $number-margin-right-desktop: var(--spacer-sm);
   }
 
   ._section {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
     padding: 0 var(--spacer-sm);
     margin-bottom: var(--spacer-xl);
 
@@ -248,9 +245,6 @@ $number-margin-right-desktop: var(--spacer-sm);
     }
 
     ._section {
-      display: flex;
-      align-items: flex-start;
-
       ._title {
         flex-direction: row;
 
@@ -265,7 +259,6 @@ $number-margin-right-desktop: var(--spacer-sm);
       }
 
       ._section_content {
-        width: 100%;
         padding-left: calc(#{$number-size} + #{$number-margin-right-desktop});
       }
 
