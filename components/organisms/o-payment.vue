@@ -177,7 +177,6 @@ import {
 import { Payment } from '@vue-storefront/core/modules/checkout/components/Payment';
 import {
   SfInput,
-  SfRadio,
   SfButton,
   SfHeading,
   SfCheckbox
@@ -185,7 +184,6 @@ import {
 import { createSmoothscroll } from 'theme/helpers';
 import MMultiselect from 'theme/components/molecules/m-multiselect';
 
-import OGiftCardPayment from './o-gift-card-payment.vue';
 import {
   KEY as AMAZON_PAY_MODULE_KEY,
   METHOD_CODE as AMAZON_PAY_PAYMENT_METHOD_CODE
@@ -196,9 +194,7 @@ const States = require('@vue-storefront/i18n/resource/states.json');
 export default {
   name: 'OPayment',
   components: {
-    OGiftCardPayment,
     SfInput,
-    SfRadio,
     SfButton,
     SfHeading,
     SfCheckbox,
@@ -442,16 +438,6 @@ export default {
       flex: 0 0 100%;
       display: flex;
     }
-  }
-}
-.payment-method {
-  --radio-container-align-items: center;
-  --radio-container-padding: var(--spacer-sm) 0;
-  --ratio-content-margin: 0 0 0 var(--spacer-lg);
-  --radio-background: transparent;
-  white-space: nowrap;
-  @include for-desktop {
-    --radio-container-padding: var(--spacer-sm);
   }
 }
 </style>
