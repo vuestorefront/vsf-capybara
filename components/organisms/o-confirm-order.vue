@@ -199,7 +199,7 @@
             @input="changePaymentMethod"
           />
         </div>
-        <div class="_braintree-widget" v-if="isBraintreeAvailable">
+        <div v-if="isBraintreeAvailable">
           <braintree-dropin @method-selected="onBraintreeMethodSelected" />
         </div>
       </div>
@@ -617,12 +617,6 @@ a {
   &.mobile-only {
     max-width: 100%;
     width: 20rem;
-  }
-}
-._braintree-widget {
-  .braintree {
-    margin-top: var(--spacer-base);
-    margin-left: calc(var(--spacer-lg) * 1.75);
   }
 }
 </style>
