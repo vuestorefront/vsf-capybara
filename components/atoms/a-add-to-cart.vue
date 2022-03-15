@@ -69,7 +69,7 @@ export default {
 
         this.$store.dispatch(
           'notification/spawnNotification',
-          notifications.createNotification({ type: 'danger', error, timeToLive: 10 * 1000 }),
+          notifications.createNotification({ type: 'danger', message: error, timeToLive: 10 * 1000 }),
           { root: true }
         );
       }

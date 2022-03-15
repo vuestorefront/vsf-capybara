@@ -126,6 +126,7 @@ import { required } from 'vee-validate/dist/rules';
 import Vue, { VueConstructor } from 'vue'
 import { mapState } from 'vuex';
 import { SfButton, SfInput, SfSelect } from '@storefront-ui/vue';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 
 extend('required', {
   ...required,
@@ -210,6 +211,16 @@ export default (Vue as VueConstructor<Vue & NonReactiveData>).extend({
 
         this.isBirthdayAdded = true;
         this.clearForm();
+      } catch (error) {
+        this.$store.dispatch(
+          'notification/spawnNotification',
+          notifications.createNotification({
+            type: 'danger',
+            message: (this.$t('Something went wrong') as string),
+            timeToLive: 10 * 1000
+          }),
+          { root: true }
+        );
       } finally {
         this.isDisabled = false;
       }

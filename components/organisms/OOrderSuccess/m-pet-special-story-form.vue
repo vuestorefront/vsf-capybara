@@ -50,6 +50,7 @@ import { required } from 'vee-validate/dist/rules';
 import Vue from 'vue'
 import { mapState } from 'vuex';
 import { SfButton } from '@storefront-ui/vue';
+import { notifications } from '@vue-storefront/core/modules/cart/helpers';
 
 extend('required', {
   ...required,
@@ -89,6 +90,16 @@ export default Vue.extend({
         });
 
         this.isShared = true;
+      } catch (error) {
+        this.$store.dispatch(
+          'notification/spawnNotification',
+          notifications.createNotification({
+            type: 'danger',
+            message: (this.$t('Something went wrong') as string),
+            timeToLive: 10 * 1000
+          }),
+          { root: true }
+        );
       } finally {
         this.isDisabled = false;
       }
