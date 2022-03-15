@@ -33,68 +33,63 @@
 
       <div class="_right">
         <div class="_section">
-          <div class="_number">
-            1
-          </div>
-
-          <div class="_inner">
-            <div class="_title">
-              <SfHeading
-                :title="$t('Get special birthday savings for your pet(s) (optional)')"
-                :level="3"
-              />
+          <div class="_title">
+            <div class="_number">
+              1
             </div>
 
-            <MPetsBirthdayForm />
+            <SfHeading
+              :title="$t('Get special birthday savings for your pet(s) (optional)')"
+              :level="3"
+            />
           </div>
+
+          <MPetsBirthdayForm class="_section_content" />
         </div>
 
         <div class="_section">
-          <div class="_number">
-            2
-          </div>
-
-          <div class="_inner">
-            <div class="_title">
-              <SfHeading
-                :title="$t('Does your pet have a special story?')"
-                :level="3"
-              />
+          <div class="_title">
+            <div class="_number">
+              2
             </div>
 
-            <m-pet-special-story-form class="m-pet-special-story-form" />
+            <SfHeading
+              :title="$t('Does your pet have a special story?')"
+              :level="3"
+            />
           </div>
+
+          <m-pet-special-story-form class="m-pet-special-story-form _section_content" />
         </div>
 
         <div class="_section">
-          <div class="_number">
-            3
+          <div class="_title">
+            <div class="_number">
+              3
+            </div>
+
+            <SfHeading
+              :title="$t('Are you a trendsetter?')"
+              :level="3"
+            />
           </div>
-          <div class="_inner">
-            <div class="_title">
-              <SfHeading
-                :title="$t('Are you a trendsetter?')"
-                :level="3"
-              />
-            </div>
 
-            <div class="_sharing-content">
-              <p class="_text">
-                {{ $t('Let your friends know about Petsies so they can make their own amazing custom plushies.') }}
-              </p>
+          <div class="_sharing-content _section_content">
+            <p class="_text">
+              {{ $t('Let your friends know about Petsies so they can make their own amazing custom plushies.') }}
+            </p>
 
-              <m-social-sharing
-                :sharing-url="sharingData.sharingUrl"
-                :sharing-description="sharingData.sharingDescription"
-                :e-mail-subject="sharingData.eMailSubject"
-                :twitter-description="sharingData.twitterDescription"
-                :image="sharingData.image"
-              />
+            <m-social-sharing
+              :sharing-url="sharingData.sharingUrl"
+              :sharing-description="sharingData.sharingDescription"
+              :e-mail-subject="sharingData.eMailSubject"
+              :twitter-description="sharingData.twitterDescription"
+              :image="sharingData.image"
+            />
 
-              <p class="_text -small">
-                {{ $t('Clicking link will open new tab where you can customize your message.') }}
-              </p>
-            </div>
+            <p class="_text -small">
+              {{ $t('Clicking link will open new tab where you can customize your message.') }}
+            </p>
           </div>
         </div>
       </div>
@@ -156,6 +151,9 @@ export default (Vue as VueConstructor<Vue & NonReactiveState & InjectedServices>
 <style lang="scss" scoped>
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
+$number-size: 50px;
+$number-margin-right-desktop: var(--spacer-sm);
+
 .o-order-success {
   ._main-title {
     margin-bottom: var(--spacer-lg);
@@ -211,11 +209,11 @@ export default (Vue as VueConstructor<Vue & NonReactiveState & InjectedServices>
       color: var(--c-white);
       display: inline-block;
       font-size: var(--font-xl);
-      height: 50px;
-      line-height: 50px;
+      height: $number-size;
+      line-height: $number-size;
       text-align: center;
       vertical-align: top;
-      width: 50px;
+      width: $number-size;
       margin-bottom: var(--spacer-base);
     }
   }
@@ -252,7 +250,6 @@ export default (Vue as VueConstructor<Vue & NonReactiveState & InjectedServices>
     ._section {
       display: flex;
       align-items: flex-start;
-      flex-direction: row;
 
       ._title {
         flex-direction: row;
@@ -264,7 +261,12 @@ export default (Vue as VueConstructor<Vue & NonReactiveState & InjectedServices>
 
       ._number {
         margin-bottom: 0;
-        margin-right: var(--spacer-sm);
+        margin-right: $number-margin-right-desktop;
+      }
+
+      ._section_content {
+        width: 100%;
+        padding-left: calc(#{$number-size} + #{$number-margin-right-desktop});
       }
 
       &:first-child {
