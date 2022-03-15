@@ -22,7 +22,7 @@
         </transition>
       </div>
     </div>
-    <OOrderConfirmation v-if="showThankYouPage" />
+    <OOrderSuccess v-else class="_order-success" />
   </div>
 </template>
 <script>
@@ -35,7 +35,7 @@ import OShipping from 'theme/components/organisms/o-shipping';
 import OConfirmOrder from 'theme/components/organisms/o-confirm-order';
 import OOrderReview from 'theme/components/organisms/o-order-review';
 import OOrderSummary from 'theme/components/organisms/o-order-summary';
-import OOrderConfirmation from 'theme/components/organisms/o-order-confirmation';
+import OOrderSuccess from 'theme/components/organisms/o-order-success';
 import OPersonalDetails from 'theme/components/organisms/o-personal-details';
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapGetters } from 'vuex';
@@ -59,7 +59,7 @@ export default {
     OConfirmOrder,
     OPersonalDetails,
     OCartItemsTable,
-    OOrderConfirmation
+    OOrderSuccess
   },
   mixins: [Checkout],
   data () {
@@ -186,6 +186,12 @@ export default {
     margin: 0 auto;
     width: 100%;
 }
+
+._order-success {
+  flex: 1;
+  padding: var(--spacer-xl) 0 0 0;
+}
+
 }
 .checkout {
   --steps-content-padding: 0 var(--spacer-sm);
