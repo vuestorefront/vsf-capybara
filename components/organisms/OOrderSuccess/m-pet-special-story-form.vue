@@ -1,6 +1,6 @@
 <template>
   <div class="m-pets-birthday-form">
-    <div class="_shared-success" v-if="isShared">
+    <div class="_text" v-if="isShared">
       {{ $t('Your story has just been broadcast to the design team. Thank you very much for giving us the opportunity to be a part of your family.') }}
     </div>
 
