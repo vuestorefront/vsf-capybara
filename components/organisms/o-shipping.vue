@@ -314,10 +314,9 @@ export default {
       this.$bus.$emit('checkout-before-shippingMethods', this.shipping.country)
     },
     saveDataToCheckout () {
-      this.$v.shipping.$touch();
-      const isInvalid = this.$v.shipping.$invalid;
+      this.$v.$touch();
 
-      if (isInvalid) {
+      if (this.$v.$invalid) {
         return;
       }
 
