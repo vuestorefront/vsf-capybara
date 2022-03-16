@@ -126,7 +126,7 @@ $forms-color-placeholder: #a09999;
     --c-success-variant: var(--_c-green-primary);
     @include assign-color-variants(--c-warning, --_c-light-primary);
     --c-warning-variant: var(--_c-light-secondary);
-    @include assign-color-variants(--c-danger, --_c-red-secondary);
+    @include assign-color-variants(--c-danger, --_c-light-primary);
     --c-danger-variant: var(--_c-red-primary);
 
     @media (min-width: $tablet-min) {
