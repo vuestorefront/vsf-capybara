@@ -164,6 +164,15 @@ let routes = [
     })
   },
   {
+    name: 'printed-magnets-creation-page',
+    path: '/plushie/index/printedMagnets/',
+    component: PrintedProduct,
+    props: route => ({
+      sku: 'customPetMagnets_bundle',
+      productDesign: route.query.product_design
+    })
+  },
+  {
     name: 'photo-pillows-alias-1',
     path: '/photo-pillow/designs',
     redirect: {
