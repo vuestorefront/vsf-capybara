@@ -59,6 +59,8 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .sf-price {
+  --price-regular-color: var(--c-warning);
+
   ::v-deep &__special {
     margin: var(--price-old-margin, 0 var(--spacer-xs) 0 0);
   }
