@@ -160,7 +160,7 @@
       <div class="form__action">
         <SfButton
           class="sf-button--full-width form__action-button"
-          :disabled="$v.shipping.$invalid || !shippingMethods.length"
+          :disabled="!shippingMethods.length"
           @click="saveDataToCheckout"
         >
           {{ $t('Continue to payment') }}
@@ -314,6 +314,13 @@ export default {
       this.$bus.$emit('checkout-before-shippingMethods', this.shipping.country)
     },
     saveDataToCheckout () {
+      this.$v.shipping.$touch();
+      const isInvalid = this.$v.shipping.$invalid;
+
+      if (isInvalid) {
+        return;
+      }
+
       this.sendDataToCheckout();
       this.$store.dispatch('cart/syncTotals', { forceServerSync: true });
     },
