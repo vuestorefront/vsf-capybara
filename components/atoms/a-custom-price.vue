@@ -6,7 +6,7 @@
     <template #special="{ special }">
       <ins v-if="special" class="sf-price__special">{{ special }}</ins>
       <ins v-if="special" class="sf-price__saved-value">
-        (Save {{ saveAmount | currency("$", 2) }} |
+        (Save {{ saveAmount | price() }} |
         {{ savePercent }}%)
       </ins>
     </template>
@@ -59,6 +59,8 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .sf-price {
+  --price-regular-color: var(--c-warning);
+
   ::v-deep &__special {
     margin: var(--price-old-margin, 0 var(--spacer-xs) 0 0);
   }

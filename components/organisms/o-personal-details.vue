@@ -130,8 +130,7 @@
       <div class="form__action">
         <SfButton
           class="sf-button--full-width form__action-button"
-          :disabled="createAccount ? $v.$invalid : $v.personalDetails.$invalid"
-          @click="sendDataToCheckout"
+          @click="onContinueButtonClick"
         >
           {{
             $t(isVirtualCart ? "Continue to payment" : "Continue to shipping")
@@ -220,6 +219,21 @@ export default {
     },
     openTermsAndConditionsModal () {
       this.openModal({ name: ModalList.TermsAndConditions })
+    },
+    onContinueButtonClick () {
+      let isInvalid = false;
+
+      if (this.createAccount) {
+        this.$v.$touch();
+        isInvalid = this.$v.$invalid;
+      } else {
+        this.$v.personalDetails.$touch();
+        isInvalid = this.$v.personalDetails.$invalid;
+      }
+
+      if (isInvalid) return;
+
+      this.sendDataToCheckout();
     }
   }
 };

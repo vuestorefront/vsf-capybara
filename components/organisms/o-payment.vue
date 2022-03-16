@@ -147,8 +147,7 @@
       <div class="form__action">
         <SfButton
           class="sf-button--full-width form__action-button"
-          :disabled="$v.payment.$invalid"
-          @click="sendDataToCheckout"
+          @click="onGoReviewButtonClicked"
         >
           {{ $t('Go review the order') }}
         </SfButton>
@@ -346,6 +345,15 @@ export default {
       ]);
 
       this.$bus.$emit('checkout-payment-country-changed');
+    },
+    onGoReviewButtonClicked () {
+      this.$v.$touch();
+
+      if (this.$v.$invalid) {
+        return;
+      }
+
+      this.sendDataToCheckout();
     },
     validateCountryRelatedFields () {
       this.$v.payment.state.$touch();

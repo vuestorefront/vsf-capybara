@@ -32,7 +32,7 @@
 
               <div class="_price" v-if="addon.price">
                 <strong>
-                  + ${{ addon.price.toFixed(2) }}
+                  + {{ addon.price | price() }}
                 </strong>
               </div>
             </div>
