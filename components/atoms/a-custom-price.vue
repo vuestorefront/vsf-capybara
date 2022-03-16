@@ -6,7 +6,7 @@
     <template #special="{ special }">
       <ins v-if="special" class="sf-price__special">{{ special }}</ins>
       <ins v-if="special" class="sf-price__saved-value">
-        (Save {{ saveAmount | currency("$", 2) }} |
+        (Save {{ saveAmount | price() }} |
         {{ savePercent }}%)
       </ins>
     </template>
