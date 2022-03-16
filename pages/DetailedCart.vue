@@ -254,6 +254,12 @@ export default {
           url: {
             name: 'printed-keychains-creation-page'
           }
+        },
+        {
+          label: 'Pet Magnets',
+          url: {
+            name: 'printed-magnets-creation-page'
+          }
         }
       ],
       isMounted: false,
