@@ -86,6 +86,12 @@ export default Vue.extend({
           }
         },
         {
+          label: 'Pet Magnets',
+          url: {
+            name: 'printed-magnets-creation-page'
+          }
+        },
+        {
           label: 'Gift Box',
           url: '/giftbox'
         }

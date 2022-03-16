@@ -377,6 +377,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return ProductValue.PRINTED_MASKS;
         case 353:
           return ProductValue.PRINTED_KEYCHAINS;
+        case 446:
+          return ProductValue.PRINTED_MAGNETS;
         default:
           throw new Error(
             `Can't resolve Backend product ID for Magento '${this.product.id}' product ID`
