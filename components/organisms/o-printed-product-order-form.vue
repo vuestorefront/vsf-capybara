@@ -390,7 +390,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         (item) => item.sku === this.selectedStyle
       );
 
-      if (!productImages || !this.selectedStyle) {
+      if (
+        !productImages ||
+        !productImages.images.length ||
+        !this.selectedStyle
+      ) {
         return this.productImages[0]['images'];
       }
 

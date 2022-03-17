@@ -180,7 +180,7 @@
 
     <MCategoryDescriptionStory
       :category="getCurrentCategory"
-      v-if="getCurrentCategory"
+      v-if="showCategoryDescription"
     />
   </div>
 </template>
@@ -213,6 +213,8 @@ import {
   mapMobileObserver,
   unMapMobileObserver
 } from '@storefront-ui/vue/src/utilities/mobile-observer';
+
+import isObjectEmpty from 'theme/helpers/is-object-empty.function';
 
 import ASortIcon from 'theme/components/atoms/a-sort-icon';
 import {
@@ -406,6 +408,9 @@ export default {
         castArray(this.getCurrentFilters[filter.type]).find(
           variant => variant && variant.id === filter.id
         ) !== undefined;
+    },
+    showCategoryDescription () {
+      return !isObjectEmpty(this.getCurrentCategory);
     }
   },
   watch: {

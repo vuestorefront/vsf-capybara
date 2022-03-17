@@ -188,7 +188,7 @@ $bodypart-item-width: 145px;
     }
 
     &.-color-value {
-      width: 60px;
+      width: 25.1%;
 
       ._icon {
         border: 1px solid #ccc;
@@ -248,6 +248,10 @@ $bodypart-item-width: 145px;
   @media (min-width: $tablet-min) {
     ._visual-selector-value {
       width: $bodypart-item-width;
+
+      &.-color-value {
+        width: 90px;
+      }
     }
   }
 }
