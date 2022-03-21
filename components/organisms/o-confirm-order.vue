@@ -200,7 +200,7 @@
           />
         </div>
         <div v-if="isBraintreeAvailable">
-          <braintree-dropin @method-selected="onBraintreeMethodSelected" />
+          <braintree-client @method-selected="onBraintreeMethodSelected" />
         </div>
       </div>
     </div>
@@ -249,7 +249,7 @@ import OGiftCardPayment from './o-gift-card-payment.vue';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
-import BraintreeDropin from 'src/modules/payment-braintree/components/Dropin';
+import BraintreeClient from 'src/modules/payment-braintree/components/BraintreeClient';
 import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/payment-affirm/types/AffirmCheckoutEvents';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
@@ -272,7 +272,7 @@ export default {
     SfAccordion,
     SfCollectedProduct,
     SfProperty,
-    BraintreeDropin
+    BraintreeClient
   },
   mixins: [OrderReview, Payment],
   data () {
