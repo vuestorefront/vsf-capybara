@@ -196,7 +196,7 @@
             name="payment-method"
             class="form__radio payment-method"
             :class="{ hidden: method.code === 'braintree' }"
-            @input="changePaymentMethod"
+            @input="onPaymentMethodChange"
           />
         </div>
         <div v-if="isBraintreeAvailable">
@@ -445,7 +445,11 @@ export default {
     },
     onBraintreeMethodSelected () {
       this.payment.paymentMethod = 'braintree';
+      this.onPaymentMethodChange();
+    },
+    onPaymentMethodChange () {
       this.changePaymentMethod();
+      this.$bus.$emit('checkout-after-paymentMethodChanged', this.payment);
     }
   },
   mounted () {
