@@ -193,6 +193,7 @@
               :ref="braintreeMethod.code"
               paypal-button-container-id="braintree-paypal-button"
               @success="placeOrder"
+              @error="onBraintreePaymentMethodError"
               @braintree-method-selected="() => changeBraintreePaymentMethod(braintreeMethod.code)"
             >
               <template #title>
@@ -467,6 +468,13 @@ export default {
       this.$store.dispatch('notification/spawnNotification', {
         type: 'danger',
         message: this.$t(response.result),
+        action1: { label: this.$t('OK') }
+      });
+    },
+    onBraintreePaymentMethodError () {
+      this.$store.dispatch('notification/spawnNotification', {
+        type: 'danger',
+        message: this.$t('Something went wrong. Please try another payment method'),
         action1: { label: this.$t('OK') }
       });
     },

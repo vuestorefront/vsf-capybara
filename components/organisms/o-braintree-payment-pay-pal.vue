@@ -69,7 +69,6 @@ export default PaymentMethod.extend({
         },
         onApprove: (data: PayPalCheckoutTokenizationOptions) => {
           return paypalCheckoutInstance.tokenizePayment(data, (error, payload) => {
-            console.log('error', error);
             if (error) {
               this.$emit('error', error);
               return;
