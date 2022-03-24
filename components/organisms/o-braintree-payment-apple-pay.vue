@@ -92,36 +92,3 @@ export default PaymentMethod.extend({
   }
 })
 </script>
-
-<style lang="scss" scoped>
-.checkout-apple-pay {
-  ._apple-pay {
-    margin: var(--spacer-sm) var(--spacer-sm) 0;
-  }
-
-  @supports not (-webkit-appearance: -apple-pay-button) {
-    ._apple-pay {
-      display: inline-block;
-      background-size: 100% 60%;
-      background-repeat: no-repeat;
-      background-position: 50% 50%;
-      border-radius: 5px;
-      padding: 0px;
-      box-sizing: border-box;
-      min-width: 200px;
-      min-height: 32px;
-      max-height: 64px;
-      background-image: -webkit-named-image(apple-pay-logo-white);
-      background-color: black;
-    }
-  }
-
-  @supports (-webkit-appearance: -apple-pay-button) {
-    ._apple-pay {
-      display: inline-block;
-      -webkit-appearance: -apple-pay-button;
-      -apple-pay-button-type: plain;
-    }
-  }
-}
-</style>

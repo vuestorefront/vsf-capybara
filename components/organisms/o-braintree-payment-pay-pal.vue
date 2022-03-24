@@ -69,6 +69,7 @@ export default PaymentMethod.extend({
         },
         onApprove: (data: PayPalCheckoutTokenizationOptions) => {
           return paypalCheckoutInstance.tokenizePayment(data, (error, payload) => {
+            console.log('error', error);
             if (error) {
               this.$emit('error', error);
               return;
@@ -92,11 +93,3 @@ export default PaymentMethod.extend({
   }
 })
 </script>
-
-<style lang="scss" scoped>
-.checkout-paypal {
-  ._button {
-    margin: var(--spacer-sm) var(--spacer-sm) 0;
-  }
-}
-</style>

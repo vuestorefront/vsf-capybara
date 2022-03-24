@@ -501,8 +501,8 @@ export default {
       this.onPaymentMethodChange();
     },
     onPaymentMethodChange () {
-      this.changePaymentMethod();
       this.$bus.$emit('checkout-after-paymentMethodChanged', this.payment);
+      this.changePaymentMethod();
     },
     changeBraintreePaymentMethod (code) {
       this.$store.commit(`${SN_BRAINTREE}/${SET_SELECTED_METHOD}`, code);
