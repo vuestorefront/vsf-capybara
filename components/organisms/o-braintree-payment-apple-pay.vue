@@ -83,7 +83,7 @@ export default PaymentMethod.extend({
           budsies_payment_method_code: this.getPaymentMethodCode(payload.type)
         });
 
-        this.$emit('success', payload);
+        this.$emit('success');
         session.completePayment((this.window as any).ApplePaySession.STATUS_SUCCESS);
       } catch (error) {
         session.completePayment((this.window as any).ApplePaySession.STATUS_FAILURE);

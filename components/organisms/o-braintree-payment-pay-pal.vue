@@ -79,7 +79,7 @@ export default PaymentMethod.extend({
               budsies_payment_method_code: this.getPaymentMethodCode(payload.type)
             });
 
-            this.$emit('success', payload);
+            this.$emit('success');
           })
         },
         onError: (error: string) => {
