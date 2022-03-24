@@ -199,20 +199,48 @@
             @input="onPaymentMethodChange"
           />
         </div>
-        <div v-if="isBraintreeAvailable">
-          <braintree-client @method-selected="onBraintreeMethodSelected" />
-        </div>
+        <template v-if="isBraintreeAvailable">
+          <div class="_braintree" v-if="showBraintreeMethods">
+            <component
+              v-for="braintreeMethod in braintreePaymentMethods"
+              :is="braintreeMethod.component"
+              :key="braintreeMethod.code"
+              :ref="braintreeMethod.code"
+              paypal-button-container-id="braintree-paypal-button"
+              @success="placeOrder"
+              @braintree-method-selected="() => changeBraintreePaymentMethod(braintreeMethod.code)"
+            >
+              <template #title>
+                <SfRadio
+                  :selected="selectedBraintreePaymentMethod"
+                  :label="braintreeMethod.name"
+                  :value="braintreeMethod.code"
+                  @input="changeBraintreePaymentMethod"
+                  class="form__radio"
+                />
+              </template>
+            </component>
+          </div>
+        </template>
       </div>
     </div>
 
     <div class="actions">
       <SfButton
+        v-show="!showPayWithPaypalButton"
         class="sf-button--full-width actions__button place-order-btn"
         :disabled="!productsInCart.length || isCheckoutInProgress"
-        @click="placeOrder"
+        @click="onPlaceOrder"
       >
         {{ $t('Place the order') }}
       </SfButton>
+
+      <div
+        v-show="showPayWithPaypalButton"
+        class="_paypal-button"
+        id="braintree-paypal-button"
+      />
+
       <SfButton
         class="sf-button--full-width sf-button--text color-secondary actions__button actions__button--secondary"
         @click="$bus.$emit('checkout-before-edit', 'payment')"
@@ -249,11 +277,14 @@ import OGiftCardPayment from './o-gift-card-payment.vue';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
-import BraintreeClient from 'src/modules/payment-braintree/components/BraintreeClient';
 import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/payment-affirm/types/AffirmCheckoutEvents';
+import { SN_BRAINTREE, SET_SELECTED_METHOD } from 'src/modules/payment-braintree/store/mutation-types';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
+import CheckoutCard from 'src/modules/payment-braintree/components/CheckoutCard.vue';
+import CheckoutPayPal from 'src/modules/payment-braintree/components/CheckoutPayPal.vue';
+import CheckoutApplePay from 'src/modules/payment-braintree/components/CheckoutApplePay.vue';
 
 export default {
   name: 'OConfirmOrder',
@@ -271,8 +302,7 @@ export default {
     SfHeading,
     SfAccordion,
     SfCollectedProduct,
-    SfProperty,
-    BraintreeClient
+    SfProperty
   },
   mixins: [OrderReview, Payment],
   data () {
@@ -308,6 +338,38 @@ export default {
         method => this.paymentDetails.paymentMethod === method.code
       );
       return paymentMethod ? paymentMethod.title : '';
+    },
+    braintreePaymentMethods () {
+      return {
+        card: {
+          code: 'card',
+          name: 'Card',
+          component: CheckoutCard
+        },
+        applePay: {
+          code: 'applePay',
+          name: 'ApplePay',
+          component: CheckoutApplePay
+        },
+        paypal: {
+          code: 'paypal',
+          name: 'Paypal',
+          component: CheckoutPayPal
+        }
+      }
+    },
+    selectedBraintreePaymentMethod () {
+      if (this.paymentDetails.paymentMethod !== 'braintree') {
+        return;
+      }
+
+      return this.$store.getters['braintree/selectedMethod'];
+    },
+    showBraintreeMethods () {
+      return !!this.$store.getters['braintree/braintreeClient'];
+    },
+    showPayWithPaypalButton () {
+      return this.selectedBraintreePaymentMethod === this.braintreePaymentMethods.paypal.code;
     }
   },
   beforeCreate () {
@@ -317,6 +379,12 @@ export default {
     this.$bus.$on(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
     this.$bus.$on(AFFIRM_MODAL_CLOSED, this.onAffirmModalClosedHandler);
     this.$bus.$on(AFFIRM_CHECKOUT_ERROR, this.onAffirmPlaceOrderError);
+
+    if (!this.isBraintreeAvailable) {
+      return;
+    }
+
+    this.$store.dispatch('braintree/createBraintreeClient');
   },
   beforeDestroy () {
     this.$bus.$off(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
@@ -450,6 +518,21 @@ export default {
     onPaymentMethodChange () {
       this.changePaymentMethod();
       this.$bus.$emit('checkout-after-paymentMethodChanged', this.payment);
+    },
+    changeBraintreePaymentMethod (code) {
+      this.$store.commit(`${SN_BRAINTREE}/${SET_SELECTED_METHOD}`, code);
+
+      if (this.paymentDetails.paymentMethod !== 'braintree') {
+        this.onBraintreeMethodSelected();
+      }
+    },
+    onPlaceOrder () {
+      if (this.paymentDetails.paymentMethod !== 'braintree') {
+        this.placeOrder();
+        return;
+      }
+
+      this.$refs[this.selectedBraintreePaymentMethod][0].doPayment();
     }
   },
   mounted () {
@@ -472,6 +555,12 @@ export default {
   &.hidden {
     display: none;
   }
+}
+
+._paypal-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 // .a-promo-code {
