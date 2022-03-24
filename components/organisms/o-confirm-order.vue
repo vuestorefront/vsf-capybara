@@ -282,9 +282,9 @@ import { SN_BRAINTREE, SET_SELECTED_METHOD } from 'src/modules/payment-braintree
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
-import CheckoutCard from 'src/modules/payment-braintree/components/CheckoutCard.vue';
-import CheckoutPayPal from 'src/modules/payment-braintree/components/CheckoutPayPal.vue';
-import CheckoutApplePay from 'src/modules/payment-braintree/components/CheckoutApplePay.vue';
+import OBraintreePaymentCard from 'theme/components/organisms/o-braintree-payment-card.vue';
+import OBraintreePaymentApplePay from 'theme/components/organisms/o-braintree-payment-apple-pay.vue';
+import OBraintreePaymentPayPal from 'theme/components/organisms/o-braintree-payment-pay-pal.vue';
 
 export default {
   name: 'OConfirmOrder',
@@ -344,17 +344,17 @@ export default {
         card: {
           code: 'card',
           name: 'Card',
-          component: CheckoutCard
+          component: OBraintreePaymentCard
         },
         applePay: {
           code: 'applePay',
           name: 'ApplePay',
-          component: CheckoutApplePay
+          component: OBraintreePaymentApplePay
         },
         paypal: {
           code: 'paypal',
           name: 'Paypal',
-          component: CheckoutPayPal
+          component: OBraintreePaymentPayPal
         }
       }
     },
