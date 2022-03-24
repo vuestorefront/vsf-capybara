@@ -9,7 +9,7 @@ import braintree, { PayPalCheckout } from 'braintree-web';
 import { PayPalCheckoutTokenizationOptions } from 'braintree-web/modules/paypal-checkout';
 
 import PaymentMethod from 'src/modules/payment-braintree/mixins/PaymentMethod';
-import { SET_PAYMENT_DATA } from 'src/modules/payment-braintree/store/mutation-types';
+import { SET_PAYMENT_DATA, SN_BRAINTREE } from 'src/modules/payment-braintree/store/mutation-types';
 
 enum FlowType {
   Vault = 'vault',
@@ -74,7 +74,7 @@ export default PaymentMethod.extend({
               return;
             }
 
-            this.$store.commit(`braintree/${SET_PAYMENT_DATA}`, {
+            this.$store.commit(`${SN_BRAINTREE}/${SET_PAYMENT_DATA}`, {
               payment_method_nonce: payload.nonce,
               budsies_payment_method_code: this.getPaymentMethodCode(payload.type)
             });

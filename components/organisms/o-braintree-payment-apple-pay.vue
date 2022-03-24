@@ -9,18 +9,10 @@ import config from 'config'
 import braintree, { ApplePay } from 'braintree-web';
 
 import PaymentMethod from 'src/modules/payment-braintree/mixins/PaymentMethod';
-import { SET_PAYMENT_DATA } from 'src/modules/payment-braintree/store/mutation-types';
-import { InjectType } from 'src/modules/shared';
-
-interface InjectedServices {
-  window: Window
-}
+import { SET_PAYMENT_DATA, SN_BRAINTREE } from 'src/modules/payment-braintree/store/mutation-types';
 
 export default PaymentMethod.extend({
   name: 'OBraintreePaymentApplePay',
-  inject: {
-    window: { from: 'WindowObject' }
-  } as unknown as InjectType<InjectedServices>,
   data () {
     return {
       applePayCheckoutInstance: undefined as undefined | ApplePay
@@ -86,7 +78,7 @@ export default PaymentMethod.extend({
           token: event.payment.token
         });
 
-        this.$store.commit(`braintree/${SET_PAYMENT_DATA}`, {
+        this.$store.commit(`${SN_BRAINTREE}/${SET_PAYMENT_DATA}`, {
           payment_method_nonce: payload.nonce,
           budsies_payment_method_code: this.getPaymentMethodCode(payload.type)
         });

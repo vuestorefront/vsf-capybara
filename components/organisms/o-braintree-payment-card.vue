@@ -9,7 +9,6 @@
             {{ $t('Card Number') }}
           </label>
           <div id="card-number" class="_input" />
-          <div class="_bar" />
         </div>
       </div>
 
@@ -19,7 +18,6 @@
             {{ $t('CVV') }}
           </label>
           <div id="cvv" class="_input" />
-          <div class="_bar" />
         </div>
 
         <div class="_field" :class="{ '-error': showExpirationDateError }">
@@ -27,7 +25,6 @@
             {{ $t('Expiration Date') }}
           </label>
           <div id="expiration-date" class="_input" />
-          <div class="_bar" />
         </div>
       </div>
 
@@ -42,9 +39,9 @@
 import braintree, { BraintreeError, HostedFields, HostedFieldsEvent } from 'braintree-web';
 import { TranslateResult } from 'vue-i18n';
 
-import PaymentMethod from 'src/modules/payment-braintree/mixins/PaymentMethod';
-import { SET_PAYMENT_DATA } from 'src/modules/payment-braintree/store/mutation-types';
 import { Dictionary } from 'src/modules/budsies';
+import PaymentMethod from 'src/modules/payment-braintree/mixins/PaymentMethod';
+import { SET_PAYMENT_DATA, SN_BRAINTREE } from 'src/modules/payment-braintree/store/mutation-types';
 
 const enum Fields {
   NUMBER = 'number',
@@ -170,7 +167,7 @@ export default PaymentMethod.extend({
       try {
         const payload = await this.hostedFieldsInstance.tokenize();
 
-        this.$store.commit(`braintree/${SET_PAYMENT_DATA}`, {
+        this.$store.commit(`${SN_BRAINTREE}/${SET_PAYMENT_DATA}`, {
           payment_method_nonce: payload.nonce,
           budsies_payment_method_code: this.getPaymentMethodCode(payload.type)
         });
