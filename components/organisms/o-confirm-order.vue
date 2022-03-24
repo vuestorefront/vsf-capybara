@@ -72,21 +72,6 @@
           </SfButton>
         </div>
       </SfAccordionItem>
-      <SfAccordionItem :header="$t('Payment method')">
-        <div class="accordion__item">
-          <div class="accordion__content">
-            <p class="content">
-              {{ paymentMethod }}
-            </p>
-          </div>
-          <SfButton
-            class="sf-button--text color-secondary accordion__edit"
-            @click="$bus.$emit('checkout-before-edit', 'payment')"
-          >
-            {{ $t('Edit') }}
-          </SfButton>
-        </div>
-      </SfAccordionItem>
       <SfAccordionItem :header="$t('Order details')">
         <div class="accordion__item">
           <transition name="fade">
