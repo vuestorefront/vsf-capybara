@@ -191,7 +191,7 @@
               :is="braintreeMethod.component"
               :key="braintreeMethod.code"
               :ref="braintreeMethod.code"
-              paypal-button-container-id="braintree-paypal-button"
+              :braintree-client="braintreeClient"
               @success="placeOrder"
               @error="onBraintreePaymentMethodError"
               @braintree-method-selected="() => changeBraintreePaymentMethod(braintreeMethod.code)"
@@ -213,19 +213,13 @@
 
     <div class="actions">
       <SfButton
-        v-show="!showPayWithPaypalButton"
+        v-show="showPlaceOrderButton"
         class="sf-button--full-width actions__button place-order-btn"
         :disabled="!productsInCart.length || isCheckoutInProgress"
         @click="onPlaceOrder"
       >
         {{ $t('Place the order') }}
       </SfButton>
-
-      <div
-        v-show="showPayWithPaypalButton"
-        class="_paypal-button"
-        id="braintree-paypal-button"
-      />
 
       <SfButton
         class="sf-button--full-width sf-button--text color-secondary actions__button actions__button--secondary"
@@ -268,9 +262,9 @@ import { SN_BRAINTREE, SET_SELECTED_METHOD } from 'src/modules/payment-braintree
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
-import OBraintreePaymentCard from 'theme/components/organisms/o-braintree-payment-card.vue';
-import OBraintreePaymentApplePay from 'theme/components/organisms/o-braintree-payment-apple-pay.vue';
-import OBraintreePaymentPayPal from 'theme/components/organisms/o-braintree-payment-pay-pal.vue';
+import PaymentCard from 'src/modules/payment-braintree/components/payment-card.vue';
+import PaymentApplePay from 'src/modules/payment-braintree/components/payment-apple-pay.vue';
+import PaymentPayPal from 'src/modules/payment-braintree/components/payment-pay-pal.vue';
 
 export default {
   name: 'OConfirmOrder',
@@ -293,7 +287,8 @@ export default {
   mixins: [OrderReview, Payment],
   data () {
     return {
-      isCheckoutInProgress: false
+      isCheckoutInProgress: false,
+      braintreeClient: undefined
     };
   },
   computed: {
@@ -330,17 +325,17 @@ export default {
         card: {
           code: 'card',
           name: 'Card',
-          component: OBraintreePaymentCard
+          component: PaymentCard
         },
         applePay: {
           code: 'applePay',
           name: 'ApplePay',
-          component: OBraintreePaymentApplePay
+          component: PaymentApplePay
         },
         paypal: {
           code: 'paypal',
           name: 'Paypal',
-          component: OBraintreePaymentPayPal
+          component: PaymentPayPal
         }
       }
     },
@@ -352,16 +347,18 @@ export default {
       return this.$store.getters['braintree/selectedMethod'];
     },
     showBraintreeMethods () {
-      return !!this.$store.getters['braintree/braintreeClient'];
+      return !!this.braintreeClient;
     },
-    showPayWithPaypalButton () {
-      return this.selectedBraintreePaymentMethod === this.braintreePaymentMethods.paypal.code;
+    showPlaceOrderButton () {
+      return !this.selectedBraintreePaymentMethod ||
+       (this.selectedBraintreePaymentMethod &&
+        this.selectedBraintreePaymentMethod !== this.braintreePaymentMethods.paypal.code);
     }
   },
   beforeCreate () {
     registerModule(OrderModule);
   },
-  created () {
+  async created () {
     this.$bus.$on(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
     this.$bus.$on(AFFIRM_MODAL_CLOSED, this.onAffirmModalClosedHandler);
     this.$bus.$on(AFFIRM_CHECKOUT_ERROR, this.onAffirmPlaceOrderError);
@@ -370,7 +367,7 @@ export default {
       return;
     }
 
-    this.$store.dispatch('braintree/createBraintreeClient');
+    this.braintreeClient = await this.$store.dispatch('braintree/createBraintreeClient');
   },
   beforeDestroy () {
     this.$bus.$off(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
@@ -548,12 +545,6 @@ export default {
   &.hidden {
     display: none;
   }
-}
-
-._paypal-button {
-  width: 100%;
-  display: flex;
-  align-items: center;
 }
 
 // .a-promo-code {
