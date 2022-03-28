@@ -68,20 +68,6 @@
     <p class="content">
       {{ paymentDetails.phoneNumber }}
     </p>
-    <div class="review__header">
-      <h3 class="review__title">
-        {{ $t('Payment method') }}
-      </h3>
-      <SfButton
-        class="sf-button--text color-secondary"
-        @click="$bus.$emit('checkout-before-edit', 'payment')"
-      >
-        {{ $t('Edit') }}
-      </SfButton>
-    </div>
-    <p class="content">
-      {{ paymentMethod }}
-    </p>
   </div>
 </template>
 <script>
@@ -98,7 +84,6 @@ export default {
       shippingDetails: 'checkout/getShippingDetails',
       shippingMethods: 'checkout/getShippingMethods',
       paymentDetails: 'checkout/getPaymentDetails',
-      paymentMethods: 'checkout/getPaymentMethods',
       personalDetails: 'checkout/getPersonalDetails'
     }),
     shippingMethod () {
@@ -106,12 +91,6 @@ export default {
         method => this.shippingDetails.shippingMethod === method.method_code
       );
       return shippingMethod ? shippingMethod.method_title : '';
-    },
-    paymentMethod () {
-      const paymentMethod = this.paymentMethods.find(
-        method => this.paymentDetails.paymentMethod === method.code
-      );
-      return paymentMethod ? paymentMethod.title : '';
     }
   }
 };
