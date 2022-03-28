@@ -192,6 +192,7 @@
               :key="braintreeMethod.code"
               :ref="braintreeMethod.code"
               :braintree-client="braintreeClient"
+              :show-content="isBraintreeMethodSelected(braintreeMethod.code)"
               @success="placeOrder"
               @error="onBraintreePaymentMethodError"
               @braintree-method-selected="() => changeBraintreePaymentMethod(braintreeMethod.code)"
@@ -523,6 +524,10 @@ export default {
       }
 
       this.$refs[this.selectedBraintreePaymentMethod][0].doPayment();
+    },
+    isBraintreeMethodSelected (methodCode) {
+      return !!this.selectedBraintreePaymentMethod &&
+       this.selectedBraintreePaymentMethod === methodCode;
     }
   },
   mounted () {
