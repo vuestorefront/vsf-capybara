@@ -24,7 +24,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
-      <SfAccordionItem :header="$t('Shipping')">
+      <SfAccordionItem :header="$t('Shipping')" v-if="!isVirtualCart">
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">

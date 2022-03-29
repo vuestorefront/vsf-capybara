@@ -156,9 +156,9 @@
             sf-button--full-width sf-button--text
             form__action-button form__action-button--secondary
           "
-          @click="$bus.$emit('checkout-before-edit', 'shipping')"
+          @click="$bus.$emit('checkout-before-edit', isVirtualCart ? 'personalDetails' :'shipping')"
         >
-          {{ $t('Edit shipping') }}
+          {{ $t(isVirtualCart ? 'Edit details' : 'Edit shipping') }}
         </SfButton>
       </div>
     </div>
@@ -169,6 +169,7 @@
 </template>
 <script>
 import { required, requiredIf, minLength } from 'vuelidate/lib/validators';
+import { mapGetters } from 'vuex';
 import {
   unicodeAlpha,
   unicodeAlphaNum
@@ -271,6 +272,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      isVirtualCart: 'cart/isVirtualCart'
+    }),
     isPhoneNumberRequired () {
       return this.payment.country && this.payment.country !== 'US';
     },
