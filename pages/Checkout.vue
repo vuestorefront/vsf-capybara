@@ -4,10 +4,10 @@
       <div class="checkout__main">
         <SfSteps
           :active="currentStep"
-          :steps="steps.map(step => step.name)"
+          :steps="availableSteps.map(step => step.name)"
           @change="changeStep"
         >
-          <SfStep v-for="step in steps" :key="step.key" :name="step.name">
+          <SfStep v-for="step in availableSteps" :key="step.key" :name="step.name">
             <component :is="step.component" :is-active="true" />
           </SfStep>
         </SfSteps>
@@ -26,9 +26,7 @@
   </div>
 </template>
 <script>
-import config from 'config';
 import Checkout from '@vue-storefront/core/pages/Checkout';
-import { isServer } from '@vue-storefront/core/helpers'
 import { SfSteps } from '@storefront-ui/vue';
 import OPayment from 'theme/components/organisms/o-payment';
 import OShipping from 'theme/components/organisms/o-shipping';
@@ -90,16 +88,24 @@ export default {
   },
   computed: {
     ...mapGetters({
-      productsInCart: 'cart/getCartItems'
+      productsInCart: 'cart/getCartItems',
+      isVirtualCart: 'cart/isVirtualCart'
     }),
     currentStep () {
-      return this.steps.findIndex(step => this.activeSection[step.key]);
+      return this.availableSteps.findIndex(step => this.activeSection[step.key]);
     },
     isSuccess () {
       return this.success === successParamValue;
     },
     showThankYouPage () {
       return this.isThankYouPage && this.isSuccess;
+    },
+    availableSteps () {
+      if (this.isVirtualCart) {
+        return this.steps.filter(step => step.key !== 'shipping');
+      }
+
+      return this.steps;
     }
   },
   beforeMount () {

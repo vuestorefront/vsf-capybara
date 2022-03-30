@@ -166,8 +166,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     recipientEmail (): string {
       return this.giftCardOrderFormData.shouldShipPhysically
-        ? this.giftCardOrderFormData.recipientEmail
-        : '';
+        ? ''
+        : this.giftCardOrderFormData.recipientEmail;
     },
     recipientName (): string {
       return this.giftCardOrderFormData.shouldSendFriend
@@ -261,13 +261,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           customer_name: this.customerName,
           recipient_name: this.recipientName,
           recipient_email: this.recipientEmail,
-          recipient_ship: this.giftCardOrderFormData.shouldShipPhysically
-            ? 'yes'
-            : 'no',
           recipient_address: '',
           message: this.customMessage,
           notify_success: 0
         };
+
+        if (this.giftCardOrderFormData.shouldShipPhysically) {
+          giftCardOptions.recipient_ship = 'yes';
+        }
 
         try {
           await this.$store.dispatch('cart/addItem', {
