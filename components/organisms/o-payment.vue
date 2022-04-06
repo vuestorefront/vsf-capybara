@@ -347,8 +347,6 @@ export default {
         this.$store.dispatch('checkout/updatePaymentDetails', { country: this.payment.country }),
         this.$store.dispatch('cart/syncPaymentMethods', { forceServerSync: true })
       ]);
-
-      this.$bus.$emit('checkout-payment-country-changed');
     },
     onGoReviewButtonClicked () {
       this.$v.$touch();
