@@ -191,6 +191,8 @@ import {
 
 const States = require('@vue-storefront/i18n/resource/states.json');
 
+const addressKeys = ['firstName', 'lastName', 'phoneNumber', 'country', 'city', 'state', 'streetAddress', 'zipCode'];
+
 export default {
   name: 'OBillingAddress',
   components: {
@@ -327,10 +329,24 @@ export default {
       }
 
       return false;
+    },
+    shippingAndBillingAddressesAreEqual () {
+      const paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
+      const shippingDetails = this.$store.getters['checkout/getShippingDetails'];
+
+      return addressKeys.every(
+        (key) => paymentDetails[key] === shippingDetails[key]
+      );
+    },
+    isBillingAddressEmpty () {
+      const paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
+      return addressKeys.every((key) => !paymentDetails[key] || key === 'country');
     }
   },
   created () {
-    this.sendToShippingAddress = true; // TODO check if address was changed
+    if (this.shippingAndBillingAddressesAreEqual || this.isBillingAddressEmpty) {
+      this.sendToShippingAddress = true;
+    }
   },
   mounted () {
     this.$nextTick(() => {
