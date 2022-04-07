@@ -28,7 +28,7 @@
 <script>
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
-import OPayment from 'theme/components/organisms/o-payment';
+import OBillingAddress from 'theme/components/organisms/o-billing-address';
 import OShipping from 'theme/components/organisms/o-shipping';
 import OConfirmOrder from 'theme/components/organisms/o-confirm-order';
 import OOrderReview from 'theme/components/organisms/o-order-review';
@@ -50,7 +50,7 @@ export default {
   },
   components: {
     SfSteps,
-    OPayment,
+    OBillingAddress,
     OShipping,
     OOrderReview,
     OOrderSummary,
@@ -75,8 +75,8 @@ export default {
         },
         {
           key: 'payment',
-          name: this.$t('Payment'),
-          component: OPayment
+          name: this.$t('Billing Address'),
+          component: OBillingAddress
         },
         {
           key: 'orderReview',

@@ -1,7 +1,7 @@
 <template>
-  <div class="o-payment">
+  <div class="o-billing-address">
     <SfHeading
-      :title="`${isVirtualCart ? 2 : 3}. ${$t('Payment')}`"
+      :title="`${isVirtualCart ? 2 : 3}. ${$t('Billing Address')}`"
       :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
@@ -192,7 +192,7 @@ import {
 const States = require('@vue-storefront/i18n/resource/states.json');
 
 export default {
-  name: 'OPayment',
+  name: 'OBillingAddress',
   components: {
     SfInput,
     SfButton,
@@ -328,6 +328,9 @@ export default {
 
       return false;
     }
+  },
+  created () {
+    this.sendToShippingAddress = true; // TODO check if address was changed
   },
   mounted () {
     this.$nextTick(() => {

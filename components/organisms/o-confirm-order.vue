@@ -50,7 +50,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
-      <SfAccordionItem :header="$t('Payment')">
+      <SfAccordionItem :header="$t('Billing Address')">
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">

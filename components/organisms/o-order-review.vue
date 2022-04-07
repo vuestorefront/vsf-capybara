@@ -49,7 +49,7 @@
     </p>
     <div class="review__header">
       <h3 class="review__title">
-        {{ $t('Payment') }}
+        {{ $t('Billing Address') }}
       </h3>
       <SfButton
         class="sf-button--text color-secondary"
