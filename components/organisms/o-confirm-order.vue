@@ -5,7 +5,8 @@
       :level="2"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfAccordion :open="$t('Details')" class="accordion mobile-only">
+
+    <SfAccordion :open="$t('Totals')" class="accordion mobile-only">
       <SfAccordionItem :header="$t('Details')">
         <div class="accordion__item">
           <div class="accordion__content">
@@ -144,20 +145,16 @@
           </transition>
         </div>
       </SfAccordionItem>
+
+      <SfAccordionItem :header="$t('Totals')">
+        <div class="accordion__content">
+          <MPriceSummary />
+        </div>
+      </SfAccordionItem>
     </SfAccordion>
 
     <o-cart-items-table :cart-items="productsInCart" />
 
-    <div class="summary mobile-only">
-      <div class="summary__content">
-        <SfHeading
-          :title="$t('Totals')"
-          :level="1"
-          class="sf-heading--left sf-heading--no-underline summary__title"
-        />
-        <MPriceSummary class="summary__total" />
-      </div>
-    </div>
     <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
     <div class="totals desktop-only">
       <div class="totals__element">
@@ -591,7 +588,6 @@ export default {
   --divider-width: 100%;
   --divider-margin: 0 0 var(--spacer-base) 0;
 }
-.summary,
 .accordion {
   position: relative;
   left: 50%;
@@ -644,27 +640,6 @@ export default {
   &__title {
     --collected-product-title-font-size: var(--font-sm);
     --collected-product-title-font-weight: var(--font-semibold);
-  }
-}
-.summary {
-  background: var(--c-light);
-  &__content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: var(--spacer-base) var(--spacer-lg);
-  }
-  &__title {
-    margin: 0 0 var(--spacer-xs) 0;
-  }
-  &__terms {
-    margin: var(--spacer-xs) 0;
-    &--link {
-      margin: 0 0 0 0.4em;
-    }
-  }
-  &__total {
-    width: 100%;
   }
 }
 .content {
