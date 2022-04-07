@@ -305,6 +305,8 @@ export default {
     .table__image {
       --image-width: 5.125rem;
       text-align: left;
+      margin-right: var(--spacer-sm);
+      min-width: var(--image-width);
     }
   }
 }
