@@ -330,7 +330,7 @@ export default {
 
       return false;
     },
-    shippingAndBillingAddressesAreEqual () {
+    isShippingAndBillingAddressesEquals () {
       const paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
       const shippingDetails = this.$store.getters['checkout/getShippingDetails'];
 
@@ -344,7 +344,7 @@ export default {
     }
   },
   created () {
-    if (this.shippingAndBillingAddressesAreEqual || this.isBillingAddressEmpty) {
+    if (this.isShippingAndBillingAddressesEquals || this.isBillingAddressEmpty) {
       this.sendToShippingAddress = true;
     }
   },
