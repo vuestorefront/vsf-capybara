@@ -590,11 +590,7 @@ export default {
 }
 .accordion {
   position: relative;
-  left: 50%;
-  right: 50%;
-  width: 100vw;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  margin: 0 calc(var(--spacer-sm) * -1);
 }
 .accordion {
   --accordion-item-content-padding: 0;
