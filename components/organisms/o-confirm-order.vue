@@ -552,9 +552,6 @@ export default {
   }
 }
 
-// .a-promo-code {
-//   margin-top: var(--spacer-xl);
-// }
 .totals {
   display: flex;
   justify-content: space-between;
@@ -562,7 +559,12 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    flex: 0 0 18.75rem;
+    flex-basis: 50%;
+    max-width: 18.75rem;
+
+    &:first-child {
+      margin-right: var(--spacer-base);
+    }
   }
   &__terms {
     &--link {
