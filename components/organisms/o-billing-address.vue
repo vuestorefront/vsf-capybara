@@ -433,7 +433,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: 0 var(--spacer-2xl) 0 var(--spacer-xs);
+    margin-right: var(--spacer-2xl);
+
     &__element {
       padding: 0 0 var(--spacer-xs) 0;
       flex: 0 0 100%;

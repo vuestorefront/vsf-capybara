@@ -395,9 +395,7 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     margin: 0 var(--spacer-2xl) 0 0;
-    &:last-of-type {
-      margin: 0 calc(var(--spacer-2xl) - var(--spacer-sm)) 0 0;
-    }
+
     &__element {
       margin: 0 0 var(--spacer-sm) 0;
       flex: 0 0 100%;
@@ -416,7 +414,7 @@ export default {
       --button-width: auto;
     }
     &__radio-group {
-      margin: 0 calc(var(--spacer-sm) * -1);
+      margin: 0;
     }
   }
 }
