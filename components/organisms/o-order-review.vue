@@ -5,69 +5,86 @@
       :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <div class="review__header">
-      <h3 class="review__title">
-        {{ $t('Details') }}
-      </h3>
-      <SfButton
-        class="sf-button--text color-secondary"
-        @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
-      >
-        {{ $t('Edit') }}
-      </SfButton>
+
+    <div class="_section">
+      <div class="review__header">
+        <h3 class="review__title">
+          {{ $t('Details') }}
+        </h3>
+
+        <SfButton
+          class="sf-button--text color-secondary"
+          @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
+        >
+          {{ $t('Edit') }}
+        </SfButton>
+      </div>
+
+      <p class="content">
+        {{ personalDetails.firstName }} {{ personalDetails.lastName }}
+      </p>
+
+      <p class="content">
+        {{ personalDetails.emailAddress }}
+      </p>
     </div>
-    <p class="content">
-      {{ personalDetails.firstName }} {{ personalDetails.lastName }}
-    </p>
-    <p class="content">
-      {{ personalDetails.emailAddress }}
-    </p>
-    <div class="review__header">
-      <h3 class="review__title">
-        {{ $t('Shipping') }}
-      </h3>
-      <SfButton
-        class="sf-button--text color-secondary"
-        @click="$bus.$emit('checkout-before-edit', 'shipping')"
-      >
-        {{ $t('Edit') }}
-      </SfButton>
+
+    <div class="_section">
+      <div class="review__header">
+        <h3 class="review__title">
+          {{ $t('Shipping') }}
+        </h3>
+
+        <SfButton
+          class="sf-button--text color-secondary"
+          @click="$bus.$emit('checkout-before-edit', 'shipping')"
+        >
+          {{ $t('Edit') }}
+        </SfButton>
+      </div>
+
+      <p class="content">
+        <span class="content__label">
+          {{ shippingMethod }}
+        </span>
+
+        {{ shippingDetails.streetAddress }}
+        {{ shippingDetails.apartmentNumber }},
+        {{ shippingDetails.zipCode }}
+        <br>
+        {{ shippingDetails.city }}, {{ shippingDetails.country }}
+      </p>
+
+      <p class="content">
+        {{ shippingDetails.phoneNumber }}
+      </p>
     </div>
-    <p class="content">
-      <span class="content__label">
-        {{ shippingMethod }}
-      </span>
-      <br>
-      {{ shippingDetails.streetAddress }}
-      {{ shippingDetails.apartmentNumber }},
-      {{ shippingDetails.zipCode }}
-      <br>
-      {{ shippingDetails.city }}, {{ shippingDetails.country }}
-    </p>
-    <p class="content">
-      {{ shippingDetails.phoneNumber }}
-    </p>
-    <div class="review__header">
-      <h3 class="review__title">
-        {{ $t('Billing Address') }}
-      </h3>
-      <SfButton
-        class="sf-button--text color-secondary"
-        @click="$bus.$emit('checkout-before-edit', 'payment')"
-      >
-        {{ $t('Edit') }}
-      </SfButton>
+
+    <div class="_section">
+      <div class="review__header">
+        <h3 class="review__title">
+          {{ $t('Billing Address') }}
+        </h3>
+
+        <SfButton
+          class="sf-button--text color-secondary"
+          @click="$bus.$emit('checkout-before-edit', 'payment')"
+        >
+          {{ $t('Edit') }}
+        </SfButton>
+      </div>
+
+      <p class="content">
+        {{ paymentDetails.streetAddress }}
+        {{ paymentDetails.apartmentNumber }},
+        {{ paymentDetails.zipCode }}
+        <br>
+        {{ paymentDetails.city }}, {{ paymentDetails.country }}
+      </p>
+      <p class="content">
+        {{ paymentDetails.phoneNumber }}
+      </p>
     </div>
-    <p class="content">
-      {{ paymentDetails.streetAddress }}
-      {{ paymentDetails.apartmentNumber }},
-      {{ paymentDetails.zipCode }}
-      <br>
-      {{ paymentDetails.city }}, {{ paymentDetails.country }}
-    </p>
-    <p class="content">
-      {{ paymentDetails.phoneNumber }}
-    </p>
   </div>
 </template>
 <script>
@@ -99,18 +116,31 @@ export default {
 .title {
   --heading-title-margin: 0 0 var(--spacer-lg) 0;
 }
+
 .review {
   box-sizing: border-box;
   width: 100%;
+
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    h3 {
-      font: inherit;
-    }
+  }
+
+  &__title {
+    margin: 0 0 var(--spacer-xs);
+    font: inherit;
   }
 }
+
+._section {
+  margin-bottom: var(--spacer-base);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
 .content {
   font-family: var(--font-family-primary);
   font-size: var(--font-xs);
@@ -118,9 +148,11 @@ export default {
   font-weight: var(--font-light);
   margin: 0;
   color: var(--c-dark-variant);
+
   &__label {
     color: var(--c-text);
     font-weight: var(--font-normal);
+    margin-bottom: var(--spacer-2xs);
   }
 }
 </style>
