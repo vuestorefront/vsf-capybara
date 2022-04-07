@@ -258,7 +258,7 @@ export default {
     }
   }
   &__button {
-    margin: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    margin: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }
 .form {
