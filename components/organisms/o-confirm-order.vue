@@ -155,7 +155,16 @@
 
     <o-cart-items-table :cart-items="productsInCart" />
 
-    <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
+    <div class="_promo-code-container mobile-only">
+      <SfHeading
+        :title="$t('Discount code')"
+        :level="3"
+        class="sf-heading--left sf-heading--no-underline title"
+      />
+
+      <APromoCode :allow-promo-code-removal="false" />
+    </div>
+
     <div class="totals desktop-only">
       <div class="totals__element">
         <APromoCode :allow-promo-code-removal="false" />
@@ -217,13 +226,6 @@
         @click="onPlaceOrder"
       >
         {{ $t('Place the order') }}
-      </SfButton>
-
-      <SfButton
-        class="sf-button--full-width sf-button--text color-secondary actions__button actions__button--secondary"
-        @click="$bus.$emit('checkout-before-edit', 'payment')"
-      >
-        {{ $t('Edit payment') }}
       </SfButton>
     </div>
   </div>
@@ -672,6 +674,25 @@ a {
   &.mobile-only {
     max-width: 100%;
     width: 20rem;
+  }
+}
+
+.accordion,
+._promo-code-container {
+  margin-bottom: var(--spacer-sm);
+}
+
+._promo-code-container {
+  ::v-deep {
+    .a-promo-code__form {
+      margin-top: 0;
+    }
+  }
+}
+
+@include for-desktop {
+  .place-order-btn {
+    width: 50%;
   }
 }
 </style>
