@@ -173,42 +173,25 @@
     <div class="form">
       <OGiftCardPayment :cart-items="cartItems" />
       <div class="form__radio-group">
-        <div v-for="method in paymentMethods" :key="method.code">
+        <component
+          v-for="method in paymentMethods"
+          :key="method.code"
+          :ref="method.code"
+          :braintree-client="braintreeClient"
+          :is="componentsByMethodCode[method.code]"
+          :show-content="payment.paymentMethod === method.code"
+          @success="placeOrder"
+          @error="onBraintreePaymentMethodError"
+        >
           <SfRadio
             v-model="payment.paymentMethod"
             :label="method.title ? method.title : method.name"
             :value="method.code"
             name="payment-method"
             class="form__radio payment-method"
-            :class="{ hidden: method.code === 'braintree' }"
             @input="onPaymentMethodChange"
           />
-        </div>
-        <template v-if="isBraintreeAvailable">
-          <div class="_braintree" v-if="showBraintreeMethods">
-            <component
-              v-for="braintreeMethod in braintreePaymentMethods"
-              :is="braintreeMethod.component"
-              :key="braintreeMethod.code"
-              :ref="braintreeMethod.code"
-              :braintree-client="braintreeClient"
-              :show-content="isBraintreeMethodSelected(braintreeMethod.code)"
-              @success="placeOrder"
-              @error="onBraintreePaymentMethodError"
-              @braintree-method-selected="() => changeBraintreePaymentMethod(braintreeMethod.code)"
-            >
-              <template #title>
-                <SfRadio
-                  :selected="selectedBraintreePaymentMethod"
-                  :label="braintreeMethod.name"
-                  :value="braintreeMethod.code"
-                  @input="changeBraintreePaymentMethod"
-                  class="form__radio"
-                />
-              </template>
-            </component>
-          </div>
-        </template>
+        </component>
       </div>
     </div>
 
@@ -259,13 +242,10 @@ import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
 import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/payment-affirm/types/AffirmCheckoutEvents';
-import { SN_BRAINTREE, SET_SELECTED_METHOD } from 'src/modules/payment-braintree/store/mutation-types';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
-import PaymentCard from 'src/modules/payment-braintree/components/payment-card.vue';
-import PaymentApplePay from 'src/modules/payment-braintree/components/payment-apple-pay.vue';
-import PaymentPayPal from 'src/modules/payment-braintree/components/payment-pay-pal.vue';
+import { getComponentByMethodCode, supportedMethodsCodes as braintreeSupportedMethodsCodes } from 'src/modules/payment-braintree';
 
 export default {
   name: 'OConfirmOrder',
@@ -306,9 +286,6 @@ export default {
     cartItems () {
       return this.$store.getters['cart/getCartItems'];
     },
-    isBraintreeAvailable () {
-      return !!this.paymentMethods.find(({ code }) => code === 'braintree');
-    },
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
         method => this.shippingDetails.shippingMethod === method.method_code
@@ -321,39 +298,23 @@ export default {
       );
       return paymentMethod ? paymentMethod.title : '';
     },
-    braintreePaymentMethods () {
-      return {
-        card: {
-          code: 'card',
-          name: 'Card',
-          component: PaymentCard
-        },
-        applePay: {
-          code: 'applePay',
-          name: 'ApplePay',
-          component: PaymentApplePay
-        },
-        paypal: {
-          code: 'paypal',
-          name: 'Paypal',
-          component: PaymentPayPal
-        }
-      }
-    },
-    selectedBraintreePaymentMethod () {
-      if (this.paymentDetails.paymentMethod !== 'braintree') {
-        return;
-      }
-
-      return this.$store.getters['braintree/selectedMethod'];
-    },
-    showBraintreeMethods () {
-      return !!this.braintreeClient;
-    },
     showPlaceOrderButton () {
-      return !this.selectedBraintreePaymentMethod ||
-       (this.selectedBraintreePaymentMethod &&
-        this.selectedBraintreePaymentMethod !== this.braintreePaymentMethods.paypal.code);
+      return !this.isBraintreeMethodSelected ||
+       (this.isBraintreeMethodSelected &&
+        this.paymentDetails.paymentMethod !== braintreeSupportedMethodsCodes.PAY_PAL);
+    },
+    componentsByMethodCode () {
+      const componentsByMethodCode = {};
+
+      this.paymentMethods.forEach((method) => {
+        const componentByMethodCode = getComponentByMethodCode(method.code);
+        componentsByMethodCode[method.code] = componentByMethodCode || 'div';
+      })
+
+      return componentsByMethodCode;
+    },
+    isBraintreeMethodSelected () {
+      return Object.values(braintreeSupportedMethodsCodes).includes(this.paymentDetails.paymentMethod);
     }
   },
   beforeCreate () {
@@ -363,10 +324,6 @@ export default {
     this.$bus.$on(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
     this.$bus.$on(AFFIRM_MODAL_CLOSED, this.onAffirmModalClosedHandler);
     this.$bus.$on(AFFIRM_CHECKOUT_ERROR, this.onAffirmPlaceOrderError);
-
-    if (!this.isBraintreeAvailable) {
-      return;
-    }
 
     this.braintreeClient = await this.$store.dispatch('braintree/createBraintreeClient');
   },
@@ -502,32 +459,17 @@ export default {
     getCartItemKey (cartItem) {
       return getCartItemKey(cartItem);
     },
-    onBraintreeMethodSelected () {
-      this.payment.paymentMethod = 'braintree';
-      this.onPaymentMethodChange();
-    },
     onPaymentMethodChange () {
       this.$bus.$emit('checkout-after-paymentMethodChanged', this.payment);
       this.changePaymentMethod();
     },
-    changeBraintreePaymentMethod (code) {
-      this.$store.commit(`${SN_BRAINTREE}/${SET_SELECTED_METHOD}`, code);
-
-      if (this.paymentDetails.paymentMethod !== 'braintree') {
-        this.onBraintreeMethodSelected();
-      }
-    },
     onPlaceOrder () {
-      if (this.paymentDetails.paymentMethod !== 'braintree') {
+      if (!this.isBraintreeMethodSelected) {
         this.placeOrder();
         return;
       }
 
-      this.$refs[this.selectedBraintreePaymentMethod][0].doPayment();
-    },
-    isBraintreeMethodSelected (methodCode) {
-      return !!this.selectedBraintreePaymentMethod &&
-       this.selectedBraintreePaymentMethod === methodCode;
+      this.$refs[this.paymentDetails.paymentMethod][0].doPayment();
     }
   },
   mounted () {
@@ -543,12 +485,6 @@ export default {
   @include for-desktop {
     --heading-title-font-size: var(--h3-font-size);
     --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
-  }
-}
-
-.payment-method {
-  &.hidden {
-    display: none;
   }
 }
 
