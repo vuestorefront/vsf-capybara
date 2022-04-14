@@ -96,9 +96,9 @@ export default {
           }
         },
         {
-          label: 'Pet Magnets',
+          label: 'Felted Magnets',
           url: {
-            name: 'printed-magnets-creation-page'
+            name: 'felted-magnets-creation-page'
           }
         }
       ],
