@@ -102,7 +102,7 @@
           <div class="form__element form__group">
             <SfCheckbox
               v-model="acceptConditions"
-              class="form__element form__checkbox"
+              class="form__checkbox"
               name="acceptConditions"
               :required="true"
               @blur="$v.acceptConditions.$touch()"
@@ -258,15 +258,13 @@ export default {
       margin: var(--spacer-lg) 0;
     }
   }
-  }
+}
 
 .a-promo-code {
   margin-top: var(--spacer-xl);
 }
+
 .form {
-  &__checkbox {
-    margin: var(--spacer-base) 0;
-  }
   &__action {
     margin: var(--spacer-sm) 0;
     &-button {
@@ -277,6 +275,10 @@ export default {
         margin: var(--spacer-base) 0;
       }
     }
+  }
+
+  &__element {
+      margin: 0 0 var(--spacer-sm) 0;
   }
   @include for-mobile {
     &__checkbox {
@@ -291,7 +293,6 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     &__element {
-      margin: 0 0 var(--spacer-base) 0;
       flex: 0 0 100%;
       &--half {
         flex: 1 1 50%;

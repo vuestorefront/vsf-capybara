@@ -444,6 +444,10 @@ export default {
     }
   }
 
+  &__element {
+      margin: 0 0 var(--spacer-sm) 0;
+  }
+
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
@@ -451,7 +455,6 @@ export default {
     margin-right: var(--spacer-2xl);
 
     &__element {
-      padding: 0 0 var(--spacer-xs) 0;
       flex: 0 0 100%;
       &--half {
         flex: 1 1 50%;

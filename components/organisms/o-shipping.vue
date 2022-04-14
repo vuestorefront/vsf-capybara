@@ -389,6 +389,9 @@ export default {
   &__radio-group {
     flex: 0 0 100%;
   }
+  &__element {
+      margin: 0 0 var(--spacer-sm) 0;
+  }
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
@@ -396,7 +399,6 @@ export default {
     margin: 0 var(--spacer-2xl) 0 0;
 
     &__element {
-      margin: 0 0 var(--spacer-sm) 0;
       flex: 0 0 100%;
       &--half {
         flex: 1 1 50%;
