@@ -1,7 +1,7 @@
 <template>
   <div class="o-order-review">
     <SfHeading
-      :title="$t('Order review')"
+      :title="$t('Details')"
       :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
@@ -9,7 +9,7 @@
     <div class="_section">
       <div class="review__header">
         <h3 class="review__title">
-          {{ $t('Details') }}
+          {{ $t('Contact') }}
         </h3>
 
         <SfButton
@@ -63,7 +63,7 @@
     <div class="_section">
       <div class="review__header">
         <h3 class="review__title">
-          {{ $t('Billing Address') }}
+          {{ $t('Billing address') }}
         </h3>
 
         <SfButton

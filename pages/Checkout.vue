@@ -65,7 +65,7 @@ export default {
       steps: [
         {
           key: 'personalDetails',
-          name: this.$t('Details'),
+          name: this.$t('Contact'),
           component: OPersonalDetails
         },
         {
@@ -75,7 +75,7 @@ export default {
         },
         {
           key: 'payment',
-          name: this.$t('Billing Address'),
+          name: this.$t('Billing address'),
           component: OBillingAddress
         },
         {

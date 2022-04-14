@@ -1,5 +1,11 @@
 <template>
   <div class="o-personal-details">
+    <SfHeading
+      :title="`${$t('Contact')}`"
+      :level="3"
+      class="sf-heading--left sf-heading--no-underline title"
+    />
+
     <div v-if="!currentUser" class="log-in desktop-only">
       <SfButton class="log-in__button color-secondary" @click="login">
         {{ $t('Log in to your account') }}
@@ -8,11 +14,6 @@
         {{ $t('or fill the details below') }}:
       </p>
     </div>
-    <SfHeading
-      :title="`1. ${$t('Details')}`"
-      :level="2"
-      class="sf-heading--left sf-heading--no-underline title"
-    />
     <div class="form">
       <SfInput
         v-model.trim="personalDetails.firstName"
@@ -121,8 +122,8 @@
       <APromoCode :allow-promo-code-removal="false" class="mobile-only">
         <template #title>
           <SfHeading
-            :title="$t('Discount Code')"
-            :level="2"
+            :title="$t('Discount code')"
+            :level="3"
             class="sf-heading--left"
           />
         </template>
@@ -244,7 +245,6 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
     --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }
@@ -255,11 +255,13 @@ export default {
     @include for-desktop {
       font-weight: var(--font-normal);
       font-size: var(--font-sm);
+      margin: var(--spacer-lg) 0;
     }
   }
-  &__button {
-    margin: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
+
+.a-promo-code {
+  margin-top: var(--spacer-xl);
 }
 .form {
   &__checkbox {

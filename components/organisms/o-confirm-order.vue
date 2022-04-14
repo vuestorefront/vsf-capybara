@@ -1,13 +1,13 @@
 <template>
   <div class="o-confirm-order">
     <SfHeading
-      :title="`${isVirtualCart ? 3 : 4}. ${$t('Review')}`"
-      :level="2"
+      :title="`${$t('Review')}`"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
 
     <SfAccordion :open="$t('Totals')" class="accordion mobile-only">
-      <SfAccordionItem :header="$t('Details')">
+      <SfAccordionItem :header="$t('Contact')">
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">
@@ -25,6 +25,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
+
       <SfAccordionItem :header="$t('Shipping')" v-if="!isVirtualCart">
         <div class="accordion__item">
           <div class="accordion__content">
@@ -51,8 +52,8 @@
           </SfButton>
         </div>
       </SfAccordionItem>
-      <SfAccordionItem :header="$t('Billing Address')">
-        <div class="accordion__item">
+
+      <SfAccordionItem :header="$t('Billing address')">
           <div class="accordion__content">
             <p class="content">
               {{ paymentDetails.streetAddress }}
@@ -73,6 +74,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
+
       <SfAccordionItem :header="$t('Order details')">
         <div class="accordion__item">
           <transition name="fade">
@@ -540,7 +542,6 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
     --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }

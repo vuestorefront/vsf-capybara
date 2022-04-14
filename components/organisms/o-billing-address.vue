@@ -1,8 +1,8 @@
 <template>
   <div class="o-billing-address">
     <SfHeading
-      :title="`${isVirtualCart ? 2 : 3}. ${$t('Billing Address')}`"
-      :level="2"
+      :title="`${$t('Billing address')}`"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form" :disabled="isAddressFormDisabled">
@@ -406,7 +406,6 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
     --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }

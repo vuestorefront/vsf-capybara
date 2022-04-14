@@ -1,8 +1,8 @@
 <template>
   <div class="o-shipping">
     <SfHeading
-      :title="`2. ${$t('Shipping')}`"
-      :level="2"
+      :title="`${$t('Shipping address')}`"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
@@ -361,7 +361,6 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
     --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
     &:last-of-type {
       --heading-padding: var(--spacer-xs) 0 var(--spacer-base) 0;
