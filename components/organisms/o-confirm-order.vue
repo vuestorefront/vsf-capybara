@@ -33,7 +33,6 @@
               <span class="content__label">
                 {{ shippingMethod }}
               </span>
-              <br>
               {{ shippingDetails.streetAddress }}
               {{ shippingDetails.apartmentNumber }},
               {{ shippingDetails.zipCode }}
@@ -54,6 +53,7 @@
       </SfAccordionItem>
 
       <SfAccordionItem :header="$t('Billing address')">
+        <div class="accordion__item accordion__item__billing-address">
           <div class="accordion__content">
             <p class="content">
               {{ paymentDetails.streetAddress }}
@@ -600,8 +600,15 @@ export default {
   --collected-product-padding: 0;
   --collected-product-image-background: var(--c-white);
   --heading-padding: 0;
+  --accordion-item-content-font-size: var(--font-sm);
   &__item {
     position: relative;
+
+    &__billing-address {
+      .accordion__content:first-child .content {
+        padding-right: 2.5em;
+      }
+    }
   }
   &__content {
     flex: 1;
@@ -617,7 +624,7 @@ export default {
 .collected-product {
   padding: var(--spacer-sm) 0;
   &:not(:last-of-type) {
-    border: 1px solid var(--_c-light-primary);
+    border: 1px solid var(--c-primary);
     border-width: 0 0 1px 0;
   }
   &__action, &__option {
