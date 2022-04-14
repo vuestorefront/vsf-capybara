@@ -45,7 +45,7 @@
             <SfInput
               class="form__element form__element--half"
               name="giftCode"
-              :label="$t('Gift Card Code')"
+                :label="$t('Gift card code')"
               :required="true"
               :valid="!errors.length"
               :error-message="errors[0]"

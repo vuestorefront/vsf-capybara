@@ -138,7 +138,7 @@
         :error-message="$t('Field is required')"
         class="form__element"
         name="phone"
-        :label="$t('Phone Number')"
+        :label="$t('Phone number')"
         :disabled="isFormFieldsDisabled"
         @blur="$v.payment.phoneNumber.$touch()"
       />
