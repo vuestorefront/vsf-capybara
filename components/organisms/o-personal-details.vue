@@ -1,5 +1,11 @@
 <template>
   <div class="o-personal-details">
+    <SfHeading
+      :title="`${$t('Contact')}`"
+      :level="3"
+      class="sf-heading--left sf-heading--no-underline title"
+    />
+
     <div v-if="!currentUser" class="log-in desktop-only">
       <SfButton class="log-in__button color-secondary" @click="login">
         {{ $t('Log in to your account') }}
@@ -8,11 +14,6 @@
         {{ $t('or fill the details below') }}:
       </p>
     </div>
-    <SfHeading
-      :title="`1. ${$t('Details')}`"
-      :level="2"
-      class="sf-heading--left sf-heading--no-underline title"
-    />
     <div class="form">
       <SfInput
         v-model.trim="personalDetails.firstName"
@@ -101,7 +102,7 @@
           <div class="form__element form__group">
             <SfCheckbox
               v-model="acceptConditions"
-              class="form__element form__checkbox"
+              class="form__checkbox"
               name="acceptConditions"
               :required="true"
               @blur="$v.acceptConditions.$touch()"
@@ -121,8 +122,8 @@
       <APromoCode :allow-promo-code-removal="false" class="mobile-only">
         <template #title>
           <SfHeading
-            :title="$t('Discount Code')"
-            :level="2"
+            :title="$t('Discount code')"
+            :level="3"
             class="sf-heading--left"
           />
         </template>
@@ -244,7 +245,6 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
     --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }
@@ -255,16 +255,16 @@ export default {
     @include for-desktop {
       font-weight: var(--font-normal);
       font-size: var(--font-sm);
+      margin: var(--spacer-lg) 0;
     }
   }
-  &__button {
-    margin: var(--spacer-2xl) 0 var(--spacer-base) 0;
-  }
 }
+
+.a-promo-code {
+  margin-top: var(--spacer-xl);
+}
+
 .form {
-  &__checkbox {
-    margin: var(--spacer-base) 0;
-  }
   &__action {
     margin: var(--spacer-sm) 0;
     &-button {
@@ -275,6 +275,10 @@ export default {
         margin: var(--spacer-base) 0;
       }
     }
+  }
+
+  &__element {
+      margin: 0 0 var(--spacer-sm) 0;
   }
   @include for-mobile {
     &__checkbox {
@@ -289,7 +293,6 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     &__element {
-      margin: 0 0 var(--spacer-base) 0;
       flex: 0 0 100%;
       &--half {
         flex: 1 1 50%;

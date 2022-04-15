@@ -1,12 +1,13 @@
 <template>
   <div class="o-confirm-order">
     <SfHeading
-      :title="`${isVirtualCart ? 3 : 4}. ${$t('Review')}`"
-      :level="2"
+      :title="`${$t('Review')}`"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfAccordion :open="$t('Details')" class="accordion mobile-only">
-      <SfAccordionItem :header="$t('Details')">
+
+    <SfAccordion :open="$t('Totals')" class="accordion mobile-only">
+      <SfAccordionItem :header="$t('Contact')">
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">
@@ -24,6 +25,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
+
       <SfAccordionItem :header="$t('Shipping')" v-if="!isVirtualCart">
         <div class="accordion__item">
           <div class="accordion__content">
@@ -31,7 +33,6 @@
               <span class="content__label">
                 {{ shippingMethod }}
               </span>
-              <br>
               {{ shippingDetails.streetAddress }}
               {{ shippingDetails.apartmentNumber }},
               {{ shippingDetails.zipCode }}
@@ -50,8 +51,9 @@
           </SfButton>
         </div>
       </SfAccordionItem>
-      <SfAccordionItem :header="$t('Payment')">
-        <div class="accordion__item">
+
+      <SfAccordionItem :header="$t('Billing address')">
+        <div class="accordion__item accordion__item__billing-address">
           <div class="accordion__content">
             <p class="content">
               {{ paymentDetails.streetAddress }}
@@ -72,6 +74,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
+
       <SfAccordionItem :header="$t('Order details')">
         <div class="accordion__item">
           <transition name="fade">
@@ -144,21 +147,26 @@
           </transition>
         </div>
       </SfAccordionItem>
+
+      <SfAccordionItem :header="$t('Totals')">
+        <div class="accordion__content">
+          <MPriceSummary />
+        </div>
+      </SfAccordionItem>
     </SfAccordion>
 
     <o-cart-items-table :cart-items="productsInCart" />
 
-    <div class="summary mobile-only">
-      <div class="summary__content">
-        <SfHeading
-          :title="$t('Totals')"
-          :level="1"
-          class="sf-heading--left sf-heading--no-underline summary__title"
-        />
-        <MPriceSummary class="summary__total" />
-      </div>
+    <div class="_promo-code-container mobile-only">
+      <SfHeading
+        :title="$t('Discount code')"
+        :level="3"
+        class="sf-heading--left sf-heading--no-underline title"
+      />
+
+      <APromoCode :allow-promo-code-removal="false" />
     </div>
-    <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
+
     <div class="totals desktop-only">
       <div class="totals__element">
         <APromoCode :allow-promo-code-removal="false" />
@@ -203,13 +211,6 @@
         @click="onPlaceOrder"
       >
         {{ $t('Place the order') }}
-      </SfButton>
-
-      <SfButton
-        class="sf-button--full-width sf-button--text color-secondary actions__button actions__button--secondary"
-        @click="$bus.$emit('checkout-before-edit', 'payment')"
-      >
-        {{ $t('Edit payment') }}
       </SfButton>
     </div>
   </div>
@@ -483,14 +484,10 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
-    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }
 
-// .a-promo-code {
-//   margin-top: var(--spacer-xl);
-// }
 .totals {
   display: flex;
   justify-content: space-between;
@@ -498,7 +495,12 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    flex: 0 0 18.75rem;
+    flex-basis: 50%;
+    max-width: 18.75rem;
+
+    &:first-child {
+      margin-right: var(--spacer-base);
+    }
   }
   &__terms {
     &--link {
@@ -525,22 +527,24 @@ export default {
   --divider-width: 100%;
   --divider-margin: 0 0 var(--spacer-base) 0;
 }
-.summary,
 .accordion {
   position: relative;
-  left: 50%;
-  right: 50%;
-  width: 100vw;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  margin: 0 calc(var(--spacer-sm) * -1);
 }
 .accordion {
   --accordion-item-content-padding: 0;
   --collected-product-padding: 0;
   --collected-product-image-background: var(--c-white);
   --heading-padding: 0;
+  --accordion-item-content-font-size: var(--font-sm);
   &__item {
     position: relative;
+
+    &__billing-address {
+      .accordion__content:first-child .content {
+        padding-right: 2.5em;
+      }
+    }
   }
   &__content {
     flex: 1;
@@ -556,7 +560,7 @@ export default {
 .collected-product {
   padding: var(--spacer-sm) 0;
   &:not(:last-of-type) {
-    border: 1px solid var(--_c-light-primary);
+    border: 1px solid var(--c-primary);
     border-width: 0 0 1px 0;
   }
   &__action, &__option {
@@ -578,27 +582,6 @@ export default {
   &__title {
     --collected-product-title-font-size: var(--font-sm);
     --collected-product-title-font-weight: var(--font-semibold);
-  }
-}
-.summary {
-  background: var(--c-light);
-  &__content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: var(--spacer-base) var(--spacer-lg);
-  }
-  &__title {
-    margin: 0 0 var(--spacer-xs) 0;
-  }
-  &__terms {
-    margin: var(--spacer-xs) 0;
-    &--link {
-      margin: 0 0 0 0.4em;
-    }
-  }
-  &__total {
-    width: 100%;
   }
 }
 .content {
@@ -635,6 +618,25 @@ a {
   &.mobile-only {
     max-width: 100%;
     width: 20rem;
+  }
+}
+
+.accordion,
+._promo-code-container {
+  margin-bottom: var(--spacer-sm);
+}
+
+._promo-code-container {
+  ::v-deep {
+    .a-promo-code__form {
+      margin-top: 0;
+    }
+  }
+}
+
+@include for-desktop {
+  .place-order-btn {
+    width: 50%;
   }
 }
 </style>
