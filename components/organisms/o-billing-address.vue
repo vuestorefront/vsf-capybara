@@ -1,8 +1,8 @@
 <template>
-  <div class="o-payment">
+  <div class="o-billing-address">
     <SfHeading
-      :title="`${isVirtualCart ? 2 : 3}. ${$t('Payment')}`"
-      :level="2"
+      :title="`${$t('Billing address')}`"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form" :disabled="isAddressFormDisabled">
@@ -138,7 +138,7 @@
         :error-message="$t('Field is required')"
         class="form__element"
         name="phone"
-        :label="$t('Phone Number')"
+        :label="$t('Phone number')"
         :disabled="isFormFieldsDisabled"
         @blur="$v.payment.phoneNumber.$touch()"
       />
@@ -191,8 +191,10 @@ import {
 
 const States = require('@vue-storefront/i18n/resource/states.json');
 
+const addressKeys = ['firstName', 'lastName', 'phoneNumber', 'country', 'city', 'state', 'streetAddress', 'zipCode'];
+
 export default {
-  name: 'OPayment',
+  name: 'OBillingAddress',
   components: {
     SfInput,
     SfButton,
@@ -327,6 +329,23 @@ export default {
       }
 
       return false;
+    },
+    isShippingAndBillingAddressesEquals () {
+      const paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
+      const shippingDetails = this.$store.getters['checkout/getShippingDetails'];
+
+      return addressKeys.every(
+        (key) => paymentDetails[key] === shippingDetails[key]
+      );
+    },
+    isBillingAddressEmpty () {
+      const paymentDetails = this.$store.getters['checkout/getPaymentDetails'];
+      return addressKeys.every((key) => !paymentDetails[key] || key === 'country');
+    }
+  },
+  created () {
+    if (this.isShippingAndBillingAddressesEquals || this.isBillingAddressEmpty) {
+      this.sendToShippingAddress = true;
     }
   },
   mounted () {
@@ -387,11 +406,7 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
-    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
-    &:last-of-type {
-      --heading-padding: var(--spacer-xs) 0 var(--spacer-base) var(--spacer-xs);
-    }
+    --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }
 
@@ -429,13 +444,17 @@ export default {
     }
   }
 
+  &__element {
+      margin: 0 0 var(--spacer-sm) 0;
+  }
+
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    margin: 0 var(--spacer-2xl) 0 var(--spacer-xs);
+    margin-right: var(--spacer-2xl);
+
     &__element {
-      padding: 0 0 var(--spacer-xs) 0;
       flex: 0 0 100%;
       &--half {
         flex: 1 1 50%;

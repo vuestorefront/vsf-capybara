@@ -1,8 +1,8 @@
 <template>
   <div class="o-shipping">
     <SfHeading
-      :title="`2. ${$t('Shipping')}`"
-      :level="2"
+      :title="`${$t('Shipping address')}`"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div class="form">
@@ -120,7 +120,7 @@
         :error-message="$t('Field is required')"
         class="form__element"
         name="phone"
-        :label="$t('Phone Number')"
+        :label="$t('Phone number')"
         :disabled="isFormFieldsDisabled"
         @blur="$v.shipping.phoneNumber.$touch()"
       />
@@ -361,8 +361,7 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
-    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
     &:last-of-type {
       --heading-padding: var(--spacer-xs) 0 var(--spacer-base) 0;
     }
@@ -390,16 +389,16 @@ export default {
   &__radio-group {
     flex: 0 0 100%;
   }
+  &__element {
+      margin: 0 0 var(--spacer-sm) 0;
+  }
   @include for-desktop {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     margin: 0 var(--spacer-2xl) 0 0;
-    &:last-of-type {
-      margin: 0 calc(var(--spacer-2xl) - var(--spacer-sm)) 0 0;
-    }
+
     &__element {
-      margin: 0 0 var(--spacer-sm) 0;
       flex: 0 0 100%;
       &--half {
         flex: 1 1 50%;
@@ -416,7 +415,7 @@ export default {
       --button-width: auto;
     }
     &__radio-group {
-      margin: 0 calc(var(--spacer-sm) * -1);
+      margin: 0;
     }
   }
 }

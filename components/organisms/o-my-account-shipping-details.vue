@@ -15,7 +15,7 @@
             <SfInput
               v-model="editedAddress.firstname"
               name="firstname"
-              :label="$t('First Name')"
+              :label="$t('First name')"
               required
               :valid="!$v.editedAddress.firstname.$error"
               :error-message="
@@ -28,7 +28,7 @@
             <SfInput
               v-model="editedAddress.lastname"
               name="lastname"
-              :label="$t('Last Name')"
+              :label="$t('Last name')"
               required
               :valid="!$v.editedAddress.lastname.$error"
               :error-message="$t('Field is required.')"
