@@ -5,6 +5,7 @@
       :product="getCurrentProduct"
       :selected-style="productDesign"
       :existing-cart-item="existingCartItem"
+      :is-felted-magnet="isFeltedMagnet"
       @style-selected="onStyleSelected"
       v-if="getCurrentProduct"
     />
@@ -68,6 +69,10 @@ export default Vue.extend({
       }
 
       return this.cartItems.find((item) => item.plushieId && item.plushieId === this.existingPlushieId);
+    },
+    isFeltedMagnet () {
+      return [this.getCurrentProduct?.parentSku, this.getCurrentProduct?.sku]
+        .includes('customFeltedMagnets_bundle');
     }
   },
   async serverPrefetch () {
@@ -98,9 +103,15 @@ export default Vue.extend({
         setCurrent: true
       });
 
-      await Promise.all([
+      const loadProductOptionsPromises = [
         this.$store.dispatch('budsies/loadExtraPhotosAddons', { productId: product.id })
-      ]);
+      ]
+
+      if (this.isFeltedMagnet) {
+        loadProductOptionsPromises.push(this.$store.dispatch('budsies/loadProductBodyparts', { productId: product.id }));
+      }
+
+      await Promise.all(loadProductOptionsPromises);
 
       catalogHooksExecutors.productPageVisited(product);
     },

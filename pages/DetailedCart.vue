@@ -192,7 +192,8 @@ const foreversProductsSkus = [
 const printedProductSkus = [
   'customPrintedSocks_bundle',
   'customPrintedMasks_bundle',
-  'customPrintedKeychains_bundle'
+  'customPrintedKeychains_bundle',
+  'customFeltedMagnets_bundle'
 ]
 
 const editableProductsSkus = [
