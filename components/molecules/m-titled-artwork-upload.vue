@@ -1,5 +1,5 @@
 <template>
-  <div class="m-side-view-artwork-upload">
+  <div class="m-titled-artwork-upload">
     <div class="_step-title" v-if="title">
       {{ title }}
     </div>
@@ -49,7 +49,7 @@ extend('required', {
 });
 
 export default Vue.extend({
-  name: 'MSideViewArtworkUpload',
+  name: 'MTitledArtworkUpload',
   components: {
     ValidationProvider,
     MArtworkUpload
@@ -96,6 +96,17 @@ export default Vue.extend({
   methods: {
     artworkUploadInitialItems (index: number): UploadedArtwork[] | undefined {
       return this.initialArtworks.length ? [this.initialArtworks[index]] : undefined;
+    },
+    clearInput (): void {
+      const uploader = this.getUploader();
+      if (!uploader) {
+        return;
+      }
+
+      uploader.clearInput();
+    },
+    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
+      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
     }
   }
 })
@@ -103,7 +114,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 
-.m-side-view-artwork-upload {
+.m-titled-artwork-upload {
   ._step-title {
     font-size: var(--font-base);
     font-weight: 800;

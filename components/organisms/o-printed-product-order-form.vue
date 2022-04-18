@@ -76,43 +76,24 @@
             </div>
 
             <div class="_artwork-upload">
-              <div class="_step-title">
-                Upload your pet's photo
-              </div>
-
-              <validation-provider
-                v-slot="{ errors }"
-                name="'Artwork'"
-                tag="div"
-                class="_uploader-wrapper"
-              >
-                <input
-                  type="hidden"
-                  name="uploaded_artwork_ids[]"
-                  :value="customerImage"
-                  required
-                >
-
-                <MArtworkUpload
-                  ref="artwork-upload"
-                  class="_file-uploader"
-                  :product-id="backendProductId"
-                  :disabled="isSubmitting"
-                  :upload-url="artworkUploadUrl"
-                  :initial-items="artworkInitialItems"
-                  @file-added="onArtworkAdd"
-                  @file-removed="onArtworkRemove"
-                />
-
-                <div class="_error-text">
-                  {{ errors[0] }}
-                </div>
-              </validation-provider>
+              <MTitledArtworkUpload
+                ref="artwork-upload"
+                class="_titled-artwork-upload"
+                :title="$t('Upload your pet\'s photo')"
+                :backend-product-id="backendProductId"
+                :upload-url="artworkUploadUrl"
+                :disabled="isSubmitting"
+                :initial-artworks="artworkInitialItems"
+                :uploaded-artwork="customerImage"
+                @file-added="onArtworkAdd"
+                @file-removed="onArtworkRemove"
+              />
             </div>
 
             <div v-if="isFeltedMagnet" class="_felted-magnets-additional-info">
-              <MSideViewArtworkUpload
-                class="_side-view-upload"
+              <MTitledArtworkUpload
+                ref="side-view-upload"
+                class="_titled-artwork-upload"
                 :title="$t('Upload Side View photo')"
                 :backend-product-id="backendProductId"
                 :upload-url="artworkUploadUrl"
@@ -123,8 +104,9 @@
                 @file-removed="() => onAdditionalArtworkRemove(0)"
               />
 
-              <MSideViewArtworkUpload
-                class="_side-view-upload"
+              <MTitledArtworkUpload
+                ref="back-view-upload"
+                class="_titled-artwork-upload"
                 :title="$t('Upload Back View photo')"
                 :backend-product-id="backendProductId"
                 :upload-url="artworkUploadUrl"
@@ -248,7 +230,7 @@ import MProductDescriptionStory from '../molecules/m-product-description-story.v
 import MZoomGallery from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MExtraFaces from '../molecules/m-extra-faces.vue';
-import MSideViewArtworkUpload from '../molecules/m-side-view-artwork-upload.vue';
+import MTitledArtworkUpload from '../molecules/m-titled-artwork-upload.vue';
 import ZoomGalleryImage from '../../interfaces/zoom-gallery-image.interface';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 import ExtraFacesConfiguratorData from '../interfaces/extra-faces-configurator-data.interface';
@@ -295,7 +277,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfSelect,
     SfButton,
     MProductDescriptionStory,
-    MSideViewArtworkUpload,
+    MTitledArtworkUpload,
     MBodypartOptionConfigurator
   },
   inject: {
@@ -458,7 +440,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         case 353:
           return ProductValue.PRINTED_KEYCHAINS;
         case 446:
-          return ProductValue.PRINTED_MAGNETS;
+          return ProductValue.FELTED_MAGNETS;
         default:
           throw new Error(
             `Can't resolve Backend product ID for Magento '${this.product.id}' product ID`
@@ -678,6 +660,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           extraFaces.clearUploaders();
         }
 
+        const sideViewUpload = this.getSideViewUpload();
+        if (sideViewUpload) {
+          sideViewUpload.clearInput();
+        }
+
+        const backViewUpload = this.getBackViewUpload();
+        if (backViewUpload) {
+          backViewUpload.clearInput();
+        }
+
         this.goToCrossSells();
       } catch (e) {
         this.$store.dispatch(
@@ -719,8 +711,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
       return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
     },
-    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
-      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
+    getUploader (): InstanceType<typeof MTitledArtworkUpload> | undefined {
+      return this.$refs['artwork-upload'] as InstanceType<typeof MTitledArtworkUpload> | undefined;
+    },
+    getSideViewUpload (): InstanceType<typeof MTitledArtworkUpload> | undefined {
+      return this.$refs['side-view-upload'] as InstanceType<typeof MTitledArtworkUpload> | undefined;
+    },
+    getBackViewUpload (): InstanceType<typeof MTitledArtworkUpload> | undefined {
+      return this.$refs['back-view-upload'] as InstanceType<typeof MTitledArtworkUpload> | undefined;
     },
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
@@ -1127,7 +1125,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         margin-top: 0.5em;
     }
 
-    ._side-view-upload {
+    ._titled-artwork-upload {
       margin-top: var(--spacer-base);
     }
 
