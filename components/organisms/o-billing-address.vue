@@ -375,6 +375,7 @@ export default {
       }
 
       this.sendDataToCheckout();
+      this.$store.dispatch('cart/syncPaymentMethods', { forceServerSync: true });
     },
     validateCountryRelatedFields () {
       this.$v.payment.state.$touch();
