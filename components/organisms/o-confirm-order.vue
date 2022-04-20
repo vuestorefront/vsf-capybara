@@ -655,7 +655,7 @@ a {
   }
 
   ._method-hint {
-    padding-left: var(--spacer-xl);
+    margin-left: calc(var(--spacer-xl) + var(--spacer-sm));
   }
 }
 </style>
