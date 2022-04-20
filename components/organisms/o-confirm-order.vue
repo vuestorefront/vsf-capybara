@@ -1,12 +1,13 @@
 <template>
   <div class="o-confirm-order">
     <SfHeading
-      :title="`${isVirtualCart ? 3 : 4}. ${$t('Review')}`"
-      :level="2"
+      :title="`${$t('Review')}`"
+      :level="3"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <SfAccordion :open="$t('Details')" class="accordion mobile-only">
-      <SfAccordionItem :header="$t('Details')">
+
+    <SfAccordion :open="$t('Totals')" class="accordion mobile-only">
+      <SfAccordionItem :header="$t('Contact')">
         <div class="accordion__item">
           <div class="accordion__content">
             <p class="content">
@@ -24,6 +25,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
+
       <SfAccordionItem :header="$t('Shipping')" v-if="!isVirtualCart">
         <div class="accordion__item">
           <div class="accordion__content">
@@ -31,7 +33,6 @@
               <span class="content__label">
                 {{ shippingMethod }}
               </span>
-              <br>
               {{ shippingDetails.streetAddress }}
               {{ shippingDetails.apartmentNumber }},
               {{ shippingDetails.zipCode }}
@@ -50,8 +51,9 @@
           </SfButton>
         </div>
       </SfAccordionItem>
-      <SfAccordionItem :header="$t('Payment')">
-        <div class="accordion__item">
+
+      <SfAccordionItem :header="$t('Billing address')">
+        <div class="accordion__item accordion__item__billing-address">
           <div class="accordion__content">
             <p class="content">
               {{ paymentDetails.streetAddress }}
@@ -72,6 +74,7 @@
           </SfButton>
         </div>
       </SfAccordionItem>
+
       <SfAccordionItem :header="$t('Order details')">
         <div class="accordion__item">
           <transition name="fade">
@@ -144,21 +147,26 @@
           </transition>
         </div>
       </SfAccordionItem>
+
+      <SfAccordionItem :header="$t('Totals')">
+        <div class="accordion__content">
+          <MPriceSummary />
+        </div>
+      </SfAccordionItem>
     </SfAccordion>
 
     <o-cart-items-table :cart-items="productsInCart" />
 
-    <div class="summary mobile-only">
-      <div class="summary__content">
-        <SfHeading
-          :title="$t('Totals')"
-          :level="1"
-          class="sf-heading--left sf-heading--no-underline summary__title"
-        />
-        <MPriceSummary class="summary__total" />
-      </div>
+    <div class="_promo-code-container mobile-only">
+      <SfHeading
+        :title="$t('Discount code')"
+        :level="3"
+        class="sf-heading--left sf-heading--no-underline title"
+      />
+
+      <APromoCode :allow-promo-code-removal="false" />
     </div>
-    <APromoCode class="mobile-only" :allow-promo-code-removal="false" />
+
     <div class="totals desktop-only">
       <div class="totals__element">
         <APromoCode :allow-promo-code-removal="false" />
@@ -173,42 +181,25 @@
     <div class="form">
       <OGiftCardPayment :cart-items="cartItems" />
       <div class="form__radio-group">
-        <div v-for="method in paymentMethods" :key="method.code">
+        <component
+          v-for="method in paymentMethods"
+          :key="method.code"
+          :ref="method.code"
+          :braintree-client="braintreeClient"
+          :is="componentsByMethodCode[method.code]"
+          :show-content="payment.paymentMethod === method.code"
+          @success="placeOrder"
+          @error="onBraintreePaymentMethodError"
+        >
           <SfRadio
             v-model="payment.paymentMethod"
             :label="method.title ? method.title : method.name"
             :value="method.code"
             name="payment-method"
             class="form__radio payment-method"
-            :class="{ hidden: method.code === 'braintree' }"
             @input="onPaymentMethodChange"
           />
-        </div>
-        <template v-if="isBraintreeAvailable">
-          <div class="_braintree" v-if="showBraintreeMethods">
-            <component
-              v-for="braintreeMethod in braintreePaymentMethods"
-              :is="braintreeMethod.component"
-              :key="braintreeMethod.code"
-              :ref="braintreeMethod.code"
-              :braintree-client="braintreeClient"
-              :show-content="isBraintreeMethodSelected(braintreeMethod.code)"
-              @success="placeOrder"
-              @error="onBraintreePaymentMethodError"
-              @braintree-method-selected="() => changeBraintreePaymentMethod(braintreeMethod.code)"
-            >
-              <template #title>
-                <SfRadio
-                  :selected="selectedBraintreePaymentMethod"
-                  :label="braintreeMethod.name"
-                  :value="braintreeMethod.code"
-                  @input="changeBraintreePaymentMethod"
-                  class="form__radio"
-                />
-              </template>
-            </component>
-          </div>
-        </template>
+        </component>
       </div>
     </div>
 
@@ -220,13 +211,6 @@
         @click="onPlaceOrder"
       >
         {{ $t('Place the order') }}
-      </SfButton>
-
-      <SfButton
-        class="sf-button--full-width sf-button--text color-secondary actions__button actions__button--secondary"
-        @click="$bus.$emit('checkout-before-edit', 'payment')"
-      >
-        {{ $t('Edit payment') }}
       </SfButton>
     </div>
   </div>
@@ -259,13 +243,10 @@ import { onlineHelper } from '@vue-storefront/core/helpers';
 import { ProductId } from 'src/modules/budsies';
 import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.function';
 import { AFFIRM_BEFORE_PLACE_ORDER, AFFIRM_MODAL_CLOSED, AFFIRM_CHECKOUT_ERROR } from 'src/modules/payment-affirm/types/AffirmCheckoutEvents';
-import { SN_BRAINTREE, SET_SELECTED_METHOD } from 'src/modules/payment-braintree/store/mutation-types';
 
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
-import PaymentCard from 'src/modules/payment-braintree/components/payment-card.vue';
-import PaymentApplePay from 'src/modules/payment-braintree/components/payment-apple-pay.vue';
-import PaymentPayPal from 'src/modules/payment-braintree/components/payment-pay-pal.vue';
+import { getComponentByMethodCode, supportedMethodsCodes as braintreeSupportedMethodsCodes } from 'src/modules/payment-braintree';
 
 export default {
   name: 'OConfirmOrder',
@@ -306,9 +287,6 @@ export default {
     cartItems () {
       return this.$store.getters['cart/getCartItems'];
     },
-    isBraintreeAvailable () {
-      return !!this.paymentMethods.find(({ code }) => code === 'braintree');
-    },
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
         method => this.shippingDetails.shippingMethod === method.method_code
@@ -321,39 +299,23 @@ export default {
       );
       return paymentMethod ? paymentMethod.title : '';
     },
-    braintreePaymentMethods () {
-      return {
-        card: {
-          code: 'card',
-          name: 'Card',
-          component: PaymentCard
-        },
-        applePay: {
-          code: 'applePay',
-          name: 'ApplePay',
-          component: PaymentApplePay
-        },
-        paypal: {
-          code: 'paypal',
-          name: 'Paypal',
-          component: PaymentPayPal
-        }
-      }
-    },
-    selectedBraintreePaymentMethod () {
-      if (this.paymentDetails.paymentMethod !== 'braintree') {
-        return;
-      }
-
-      return this.$store.getters['braintree/selectedMethod'];
-    },
-    showBraintreeMethods () {
-      return !!this.braintreeClient;
-    },
     showPlaceOrderButton () {
-      return !this.selectedBraintreePaymentMethod ||
-       (this.selectedBraintreePaymentMethod &&
-        this.selectedBraintreePaymentMethod !== this.braintreePaymentMethods.paypal.code);
+      return !this.isBraintreeMethodSelected ||
+       (this.isBraintreeMethodSelected &&
+        this.paymentDetails.paymentMethod !== braintreeSupportedMethodsCodes.PAY_PAL);
+    },
+    componentsByMethodCode () {
+      const componentsByMethodCode = {};
+
+      this.paymentMethods.forEach((method) => {
+        const componentByMethodCode = getComponentByMethodCode(method.code);
+        componentsByMethodCode[method.code] = componentByMethodCode || 'div';
+      })
+
+      return componentsByMethodCode;
+    },
+    isBraintreeMethodSelected () {
+      return Object.values(braintreeSupportedMethodsCodes).includes(this.paymentDetails.paymentMethod);
     }
   },
   beforeCreate () {
@@ -363,10 +325,6 @@ export default {
     this.$bus.$on(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
     this.$bus.$on(AFFIRM_MODAL_CLOSED, this.onAffirmModalClosedHandler);
     this.$bus.$on(AFFIRM_CHECKOUT_ERROR, this.onAffirmPlaceOrderError);
-
-    if (!this.isBraintreeAvailable) {
-      return;
-    }
 
     this.braintreeClient = await this.$store.dispatch('braintree/createBraintreeClient');
   },
@@ -502,32 +460,17 @@ export default {
     getCartItemKey (cartItem) {
       return getCartItemKey(cartItem);
     },
-    onBraintreeMethodSelected () {
-      this.payment.paymentMethod = 'braintree';
-      this.onPaymentMethodChange();
-    },
     onPaymentMethodChange () {
       this.$bus.$emit('checkout-after-paymentMethodChanged', this.payment);
       this.changePaymentMethod();
     },
-    changeBraintreePaymentMethod (code) {
-      this.$store.commit(`${SN_BRAINTREE}/${SET_SELECTED_METHOD}`, code);
-
-      if (this.paymentDetails.paymentMethod !== 'braintree') {
-        this.onBraintreeMethodSelected();
-      }
-    },
     onPlaceOrder () {
-      if (this.paymentDetails.paymentMethod !== 'braintree') {
+      if (!this.isBraintreeMethodSelected) {
         this.placeOrder();
         return;
       }
 
-      this.$refs[this.selectedBraintreePaymentMethod][0].doPayment();
-    },
-    isBraintreeMethodSelected (methodCode) {
-      return !!this.selectedBraintreePaymentMethod &&
-       this.selectedBraintreePaymentMethod === methodCode;
+      this.$refs[this.paymentDetails.paymentMethod][0].doPayment();
     }
   },
   mounted () {
@@ -541,20 +484,10 @@ export default {
 .title {
   --heading-padding: var(--spacer-base) 0;
   @include for-desktop {
-    --heading-title-font-size: var(--h3-font-size);
-    --heading-padding: var(--spacer-2xl) 0 var(--spacer-base) 0;
+    --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
 }
 
-.payment-method {
-  &.hidden {
-    display: none;
-  }
-}
-
-// .a-promo-code {
-//   margin-top: var(--spacer-xl);
-// }
 .totals {
   display: flex;
   justify-content: space-between;
@@ -562,7 +495,12 @@ export default {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    flex: 0 0 18.75rem;
+    flex-basis: 50%;
+    max-width: 18.75rem;
+
+    &:first-child {
+      margin-right: var(--spacer-base);
+    }
   }
   &__terms {
     &--link {
@@ -589,22 +527,24 @@ export default {
   --divider-width: 100%;
   --divider-margin: 0 0 var(--spacer-base) 0;
 }
-.summary,
 .accordion {
   position: relative;
-  left: 50%;
-  right: 50%;
-  width: 100vw;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  margin: 0 calc(var(--spacer-sm) * -1);
 }
 .accordion {
   --accordion-item-content-padding: 0;
   --collected-product-padding: 0;
   --collected-product-image-background: var(--c-white);
   --heading-padding: 0;
+  --accordion-item-content-font-size: var(--font-sm);
   &__item {
     position: relative;
+
+    &__billing-address {
+      .accordion__content:first-child .content {
+        padding-right: 2.5em;
+      }
+    }
   }
   &__content {
     flex: 1;
@@ -620,7 +560,7 @@ export default {
 .collected-product {
   padding: var(--spacer-sm) 0;
   &:not(:last-of-type) {
-    border: 1px solid var(--_c-light-primary);
+    border: 1px solid var(--c-primary);
     border-width: 0 0 1px 0;
   }
   &__action, &__option {
@@ -642,27 +582,6 @@ export default {
   &__title {
     --collected-product-title-font-size: var(--font-sm);
     --collected-product-title-font-weight: var(--font-semibold);
-  }
-}
-.summary {
-  background: var(--c-light);
-  &__content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: var(--spacer-base) var(--spacer-lg);
-  }
-  &__title {
-    margin: 0 0 var(--spacer-xs) 0;
-  }
-  &__terms {
-    margin: var(--spacer-xs) 0;
-    &--link {
-      margin: 0 0 0 0.4em;
-    }
-  }
-  &__total {
-    width: 100%;
   }
 }
 .content {
@@ -699,6 +618,25 @@ a {
   &.mobile-only {
     max-width: 100%;
     width: 20rem;
+  }
+}
+
+.accordion,
+._promo-code-container {
+  margin-bottom: var(--spacer-sm);
+}
+
+._promo-code-container {
+  ::v-deep {
+    .a-promo-code__form {
+      margin-top: 0;
+    }
+  }
+}
+
+@include for-desktop {
+  .place-order-btn {
+    width: 50%;
   }
 }
 </style>

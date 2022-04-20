@@ -248,9 +248,14 @@ export default {
   }
 
   .product-price {
+    --price-old-font-size: var(--font-sm);
+    --price-special-font-size: var(--font-sm);
+
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   &.o-cart-items-table--hidden-header {
@@ -305,6 +310,8 @@ export default {
     .table__image {
       --image-width: 5.125rem;
       text-align: left;
+      margin-right: var(--spacer-sm);
+      min-width: var(--image-width);
     }
   }
 }

@@ -13,6 +13,7 @@
         </template>
       </SfCheckbox>
 
+      <div class="_content" v-if="showForm || showAppliedGiftCards">
       <div class="_applied-gift-cards" v-if="showAppliedGiftCards">
         <MAppliedGiftCard
           class="_applied-gift-card"
@@ -45,7 +46,7 @@
             <SfInput
               class="form__element form__element--half"
               name="giftCode"
-              :label="$t('Gift Card Code')"
+                :label="$t('Gift card code')"
               :required="true"
               :valid="!errors.length"
               :error-message="errors[0]"
@@ -71,6 +72,7 @@
 
       <div class="_grand-total-notification" v-if="showGrandTotalNotification">
         <span> Your order’s grand total is now zero. You're all set! </span>
+      </div>
       </div>
     </template>
   </div>
@@ -98,6 +100,8 @@ export default GiftCardPayment.extend({
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 .gift-card-payment {
   display: flex;
   flex-direction: column;
@@ -111,16 +115,31 @@ export default GiftCardPayment.extend({
     margin-bottom: var(--spacer-sm);
   }
 
+  ._content {
+    background-color: var(--c-white-darken);
+    padding: var(--spacer-sm);
+    margin-bottom: var(--spacer-sm);
+  }
+
+  ._applied-gift-cards + ._form {
+    margin-top: var(--spacer-sm);
+  }
+
+  ._form {
+    --input-label-font-size: var(--font-size-base);
+  }
+
+  .form__element {
+    margin-bottom: var(--spacer-sm);
+  }
+
   ._checkbox {
     margin-bottom: var(--spacer-sm);
+    margin-left: var(--spacer-sm);
   }
 
   ._label {
     margin-bottom: var(--spacer-xs);
-  }
-
-  ._apply-button {
-    margin-bottom: var(--spacer-base);
   }
 
   ._applied-gift-card {
@@ -128,7 +147,7 @@ export default GiftCardPayment.extend({
   }
 
   ._code-error {
-    background-color: var(--c-warning-darken);
+    background-color: var(--c-warning);
     margin-bottom: var(--spacer-sm);
     padding: var(--spacer-xs) var(--spacer-sm);
     text-align: center;
@@ -161,6 +180,12 @@ export default GiftCardPayment.extend({
 
     &.-gift-card {
       margin-bottom: var(--spacer-base);
+    }
+  }
+
+  @include for-desktop {
+    ._content {
+      margin-left: var(--spacer-xl);
     }
   }
 }

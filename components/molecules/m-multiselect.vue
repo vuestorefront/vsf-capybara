@@ -43,7 +43,7 @@
       {{ label }}
     </label>
 
-    <div v-if="!valid" class="m-multiselect__error-message">
+    <div class="m-multiselect__error-message">
       <transition name="fade">
         <div v-if="!valid">
           {{ errorMessage }}
