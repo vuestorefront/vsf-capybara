@@ -14,7 +14,7 @@
       </div>
       <div class="checkout__aside desktop-only">
         <transition name="fade">
-          <div v-if="currentStep <= 2">
+          <div v-if="!isReviewStep">
             <OCartItemsTable :cart-items="productsInCart" :should-show-header="false" />
             <OOrderSummary class="checkout__aside-order" />
           </div>
@@ -39,6 +39,7 @@ import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
 import { mapGetters } from 'vuex';
 
 const successParamValue = 'success';
+const orderReviewStepKey = 'orderReview';
 
 export default {
   name: 'Checkout',
@@ -106,6 +107,9 @@ export default {
       }
 
       return this.steps;
+    },
+    isReviewStep () {
+      return this.availableSteps[this.currentStep].key === orderReviewStepKey;
     }
   },
   beforeMount () {
@@ -120,9 +124,9 @@ export default {
         Checkout.methods.activateHashSection.bind(this)();
       }
     },
-    changeStep (nextStep) {
-      if (nextStep < this.currentStep) {
-        this.$bus.$emit('checkout-before-edit', this.steps[nextStep].key);
+    changeStep (newStepIndex) {
+      if (newStepIndex < this.currentStep) {
+        this.$bus.$emit('checkout-before-edit', this.availableSteps[newStepIndex].key);
       }
     },
     async onOrderAfterPlacedHandler () {

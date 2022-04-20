@@ -169,7 +169,7 @@
           class="sf-button--full-width sf-button--text form__action-button form__action-button--secondary"
           @click="$bus.$emit('checkout-before-edit', 'personalDetails')"
         >
-          {{ $t('Edit Details') }}
+          {{ $t('Edit contact') }}
         </SfButton>
       </div>
     </div>
