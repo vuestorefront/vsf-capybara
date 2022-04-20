@@ -191,7 +191,7 @@
                   </div>
 
                   <div class="_next-step-button-container -show-for-medium-up">
-                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                    <SfButton class="color-primary" @click="onNextStepButtonClickHandler">
                       {{ $t('Next') }}
                     </SfButton>
                   </div>
@@ -244,7 +244,7 @@
                   </div>
 
                   <div class="_next-step-button-container -show-for-medium-up">
-                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                    <SfButton class="color-primary" @click="onNextStepButtonClickHandler">
                       {{ $t('Next') }}
                     </SfButton>
                   </div>
@@ -291,7 +291,7 @@
                   </div>
 
                   <div class="_next-step-button-container -show-for-medium-up">
-                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                    <SfButton class="color-primary" @click="onNextStepButtonClickHandler">
                       {{ $t('Next') }}
                     </SfButton>
                   </div>
@@ -363,7 +363,7 @@
                   </div>
 
                   <div class="_next-step-button-container -show-for-medium-up">
-                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                    <SfButton class="color-primary" @click="onNextStepButtonClickHandler">
                       {{ $t('Next') }}
                     </SfButton>
                   </div>
