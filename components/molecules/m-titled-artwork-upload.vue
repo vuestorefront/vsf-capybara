@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from 'vue';
+import { TranslateResult } from 'vue-i18n';
 import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 
@@ -76,7 +77,7 @@ export default Vue.extend({
       default: ''
     },
     title: {
-      type: String,
+      type: String as PropType<string | TranslateResult>,
       default: ''
     },
     uploadedArtwork: {
