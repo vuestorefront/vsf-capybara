@@ -129,7 +129,7 @@ export default Vue.extend({
   ._error-text {
     color: var(--c-danger-variant);
     font-size: 0.8em;
-    margin-top: 0.5em;
+    margin-top: var(--spacer-xs);
   }
 }
 </style>
