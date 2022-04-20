@@ -98,7 +98,7 @@
                 :backend-product-id="backendProductId"
                 :upload-url="artworkUploadUrl"
                 :disabled="isSubmitting"
-                :initial-artworks="[initialAdditionalArtworks[0]]"
+                :initial-artworks="frontViewInitialArtworks"
                 :uploaded-artwork="additionalArtworks[0]"
                 @file-added="(value) => onAdditionalArtworkAdd(0, value)"
                 @file-removed="() => onAdditionalArtworkRemove(0)"
@@ -111,7 +111,7 @@
                 :backend-product-id="backendProductId"
                 :upload-url="artworkUploadUrl"
                 :disabled="isSubmitting"
-                :initial-artworks="[initialAdditionalArtworks[1]]"
+                :initial-artworks="backViewInitialArtworks"
                 :uploaded-artwork="additionalArtworks[1]"
                 @file-added="(value) => onAdditionalArtworkAdd(1, value)"
                 @file-removed="() => onAdditionalArtworkRemove(1)"
@@ -564,6 +564,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     getBodypartOptions (): (id: string) => BodypartOption[] {
       return this.$store.getters['budsies/getBodypartOptions']
+    },
+    frontViewInitialArtworks (): CustomerImage[] {
+      return this.initialAdditionalArtworks[0] ? [this.initialAdditionalArtworks[0]] : [];
+    },
+    backViewInitialArtworks (): CustomerImage[] {
+      return this.initialAdditionalArtworks[1] ? [this.initialAdditionalArtworks[1]] : [];
     }
   },
   methods: {

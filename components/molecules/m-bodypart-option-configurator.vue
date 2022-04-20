@@ -3,36 +3,44 @@
     class="m-bodypart-option-configurator"
     :class="{ '-disabled': disabled }"
   >
-    <ul class="_visual-selector">
-      <li
-        class="_visual-selector-value"
-        :class="{'-color-value': isColorValue(option)}"
-        v-for="option in options"
-        :key="option.value"
-      >
-        <input
-          :id="getInputId(option)"
-          :name="name"
-          :type="inputType"
-          :value="option"
-          v-model="selectedOption"
-          :disabled="disabled"
-          @click="(event) => onChange(event, option)"
-        >
-        <label
-          :for="getInputId(option)"
-        >
-          <div
-            class="_icon"
-            :style="getIconStyle(option)"
-          />
+    <div class="_options-groups-container">
+      <div class="_group-item" v-for="group in optionsGroups" :key="group">
+        <div class="_group-title" v-if="group !== 'default'">
+          {{ group }}
+        </div>
 
-          <div class="_name">
-            {{ option.label }}
-          </div>
-        </label>
-      </li>
-    </ul>
+        <ul class="_visual-selector">
+          <li
+            class="_visual-selector-value"
+            :class="{'-color-value': isColorValue(option)}"
+            v-for="option in optionsByGroup[group]"
+            :key="option.value"
+          >
+            <input
+              :id="getInputId(option)"
+              :name="name"
+              :type="inputType"
+              :value="option"
+              v-model="selectedOption"
+              :disabled="disabled"
+              @click="(event) => onChange(event, option)"
+            >
+            <label
+              :for="getInputId(option)"
+            >
+              <div
+                class="_icon"
+                :style="getIconStyle(option)"
+              />
+
+              <div class="_name">
+                {{ option.label }}
+              </div>
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -43,6 +51,7 @@ import { getThumbnailPath } from '@vue-storefront/core/helpers/index';
 import { BodyPartValueContentType } from 'src/modules/budsies';
 
 import BodypartOption from '../interfaces/bodypart-option';
+import { Dictionary } from 'vue-router/types/router';
 
 const BODYPART_ITEM_WIDTH = 145;
 
@@ -100,6 +109,18 @@ export default Vue.extend({
     },
     inputType (): 'checkbox' | 'radio' {
       return this.maxValues > 1 ? 'checkbox' : 'radio';
+    },
+    optionsByGroup (): Dictionary<BodypartOption[]> {
+      const optionsByGroup: Dictionary<BodypartOption[]> = Object.assign({}, ...Array.from(this.optionsGroups, (k) => ({ [`${k}`]: [] })));
+
+      this.options.forEach((option) => {
+        optionsByGroup[option.group].push(option);
+      });
+
+      return optionsByGroup;
+    },
+    optionsGroups (): string[] {
+      return Array.from(new Set(this.options.map((option) => option.group)));
     }
   },
   created: function (): void {
@@ -155,6 +176,21 @@ export default Vue.extend({
 $bodypart-item-width: 145px;
 
 .m-bodypart-option-configurator {
+
+  ._group-item {
+    margin-bottom: var(--spacer-sm);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  ._group-title {
+    text-align: center;
+    font-size: var(--font-sm);
+    margin-bottom: var(--spacer-sm);
+  }
+
   ._visual-selector {
     list-style: none;
     display: flex;
