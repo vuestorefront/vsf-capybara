@@ -152,7 +152,7 @@
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
               :initial-variant="initialAddonItemId"
-              :initial-artworks="initialExtraImages"
+              :initial-artworks="initialAdditionalArtworks"
               v-if="hasExtraFaceAddons"
               @input="extraFacesData = $event"
             />
@@ -312,15 +312,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       quantity: 1,
       customerImage: undefined as CustomerImage | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
-      extraFacesData: {
-        addon: undefined,
-        storageItems: []
-      } as ExtraFacesConfiguratorData,
+      extraFacesDataAddon: undefined as ExtraPhotoAddonOption | undefined,
       isSubmitting: false,
       shouldShowDesignSelector: true,
       artworkInitialItems: [] as CustomerImage[],
       initialAddonItemId: undefined as string | undefined,
-      initialExtraImages: [] as CustomerImage[],
       additionalArtworks: [] as CustomerImage[],
       initialAdditionalArtworks: [] as CustomerImage[],
       bodypartValues
@@ -570,6 +566,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     backViewInitialArtworks (): CustomerImage[] {
       return this.initialAdditionalArtworks[1] ? [this.initialAdditionalArtworks[1]] : [];
+    },
+    extraFacesData: {
+      get (): ExtraFacesConfiguratorData {
+        return {
+          addon: this.extraFacesDataAddon,
+          storageItems: this.additionalArtworks
+        }
+      },
+      set (value: ExtraFacesConfiguratorData): void {
+        this.extraFacesDataAddon = value.addon;
+        this.additionalArtworks = value.storageItems;
+      }
     }
   },
   methods: {
@@ -588,11 +596,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      const extraFacesArtworks: CustomerImage[] = this.extraFacesData.storageItems.map(item => ({
-        id: item.id,
-        url: this.imageHandlerService.getOriginalImageUrl(item.url)
-      }));
-
       const additionalArtworks: CustomerImage[] = this.additionalArtworks.map((item) => ({
         id: item.id,
         url: this.imageHandlerService.getOriginalImageUrl(item.url)
@@ -603,7 +606,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           await this.$store.dispatch('cart/addItem', {
             productToAdd: Object.assign({}, this.product, {
               qty: this.quantity,
-              customerImages: [this.customerImage, ...extraFacesArtworks, ...additionalArtworks],
+              customerImages: [this.customerImage, ...additionalArtworks],
               uploadMethod: 'upload-now',
               bodyparts: this.getBodypartsData()
             })
@@ -628,7 +631,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     cleanExistingProductData (): void {
       this.fillEmptyCustomerImagesData();
       this.fillEmptyExtraFacesDataAddon();
-      this.fillEmptyExtraFacesDataStorageItems();
       this.fillEmptyAdditionalArtworks();
       this.fillEmptyBodypartsValues();
     },
@@ -799,12 +801,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.artworkInitialItems = [];
     },
     fillEmptyExtraFacesDataAddon (): void {
-      this.extraFacesData.addon = undefined;
+      this.extraFacesDataAddon = undefined;
       this.initialAddonItemId = undefined;
-    },
-    fillEmptyExtraFacesDataStorageItems (): void {
-      this.extraFacesData.storageItems = [];
-      this.initialExtraImages = [];
     },
     fillProductDataFromExistingCartItem (existingCartItem: CartItem): void {
       if (!existingCartItem) {
@@ -813,18 +811,11 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.fillCustomerImagesData(existingCartItem);
 
-      if (this.isFeltedMagnet) {
-        this.fillAdditionalArtworksData(existingCartItem);
-        this.fillBodypartsValues(existingCartItem);
-      } else {
-        this.fillExtraFacesData(existingCartItem);
-      }
+      this.fillAdditionalArtworksData(existingCartItem);
+      this.fillBodypartsValues(existingCartItem);
+      this.fillExtraFacesDataAddon(existingCartItem);
 
       this.fillQuantity(existingCartItem);
-    },
-    fillExtraFacesData (existingCartItem: CartItem): void {
-      this.fillExtraFacesDataAddon(existingCartItem);
-      this.fillExtraFacesDataStorageItems(existingCartItem);
     },
     fillExtraFacesDataAddon (existingCartItem: CartItem): void {
       const selectedBundleOptions = getSelectedBundleOptions(existingCartItem);
@@ -846,20 +837,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      this.extraFacesData.addon = selectedAddon;
+      this.extraFacesDataAddon = selectedAddon;
       this.initialAddonItemId = selectedAddon.id;
-    },
-    fillExtraFacesDataStorageItems (existingCartItem: CartItem): void {
-      if (!existingCartItem.customerImages || existingCartItem.customerImages.length <= 1) {
-        this.fillEmptyExtraFacesDataStorageItems();
-        return;
-      }
-
-      const customerExtraFacesImages = [...existingCartItem.customerImages];
-      customerExtraFacesImages.splice(0, 1);
-
-      this.extraFacesData.storageItems = customerExtraFacesImages;
-      this.initialExtraImages = customerExtraFacesImages;
     },
     fillQuantity (existingCartItem: CartItem): void {
       this.quantity = existingCartItem.qty;
@@ -878,20 +857,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.isSubmitting = true;
 
-      const extraFacesArtworks: CustomerImage[] = this.extraFacesData.storageItems.map(item => {
-        let url = item.url;
-
-        if (!this.initialExtraImages.find((image) => image.id === item.id)) {
-          url = this.imageHandlerService.getOriginalImageUrl(item.url);
-        }
-
-        return {
-          id: item.id,
-          url
-        }
-      });
-
-      const additionalArtworks: CustomerImage[] = this.additionalArtworks.map((item) => {
+      const additionalArtworks: CustomerImage[] = this.additionalArtworks.map(item => {
         let url = item.url;
 
         if (!this.initialAdditionalArtworks.find((image) => image.id === item.id)) {
@@ -902,14 +868,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           id: item.id,
           url
         }
-      })
+      });
 
       try {
         try {
           await this.updateClientAndServerItem({
             product: Object.assign({}, this.existingCartItem, {
               qty: this.quantity,
-              customerImages: [this.customerImage, ...extraFacesArtworks, ...additionalArtworks],
+              customerImages: [this.customerImage, ...additionalArtworks],
               product_option: setBundleProductOptionsAsync(null, { product: this.existingCartItem, bundleOptions: this.$store.state.product.current_bundle_options }),
               uploadMethod: 'upload-now',
               bodyparts: this.getBodypartsData()
@@ -952,7 +918,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      this.fillExtraFacesData(this.existingCartItem);
+      this.fillExtraFacesDataAddon(this.existingCartItem);
     },
     availableStyles: {
       handler (): void {
@@ -1029,7 +995,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       },
       immediate: true
     },
-    'extraFacesData.addon': {
+    extraFacesDataAddon: {
       handler (newValue: ExtraPhotoAddonOption | undefined) {
         if (!this.addonsBundleOption) {
           return
