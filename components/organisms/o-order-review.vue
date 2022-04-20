@@ -29,7 +29,7 @@
       </p>
     </div>
 
-    <div class="_section">
+    <div class="_section" v-if="!isVirtualCart">
       <div class="review__header">
         <h3 class="review__title">
           {{ $t('Shipping') }}
@@ -101,7 +101,8 @@ export default {
       shippingDetails: 'checkout/getShippingDetails',
       shippingMethods: 'checkout/getShippingMethods',
       paymentDetails: 'checkout/getPaymentDetails',
-      personalDetails: 'checkout/getPersonalDetails'
+      personalDetails: 'checkout/getPersonalDetails',
+      isVirtualCart: 'cart/isVirtualCart'
     }),
     shippingMethod () {
       const shippingMethod = this.shippingMethods.find(
