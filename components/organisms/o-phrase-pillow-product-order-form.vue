@@ -189,6 +189,12 @@
                   <div class="_error-text" v-if="errors.length">
                     {{ errors[0] }}
                   </div>
+
+                  <div class="_next-step-button-container -show-for-medium-up">
+                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                      {{ $t('Next') }}
+                    </SfButton>
+                  </div>
                 </div>
               </SfStep>
             </validation-provider>
@@ -236,6 +242,12 @@
                   <div class="_error-text" v-if="errors.length">
                     {{ errors[0] }}
                   </div>
+
+                  <div class="_next-step-button-container -show-for-medium-up">
+                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                      {{ $t('Next') }}
+                    </SfButton>
+                  </div>
                 </div>
               </SfStep>
             </validation-provider>
@@ -276,6 +288,12 @@
 
                   <div class="_error-text" v-if="errors.length">
                     {{ errors[0] }}
+                  </div>
+
+                  <div class="_next-step-button-container -show-for-medium-up">
+                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                      {{ $t('Next') }}
+                    </SfButton>
                   </div>
                 </div>
               </SfStep>
@@ -342,6 +360,12 @@
                       :disabled="isDisabled"
                       @input="onAccentColorSelect"
                     />
+                  </div>
+
+                  <div class="_next-step-button-container -show-for-medium-up">
+                    <SfButton class="color-secondary" @click="onNextStepButtonClickHandler">
+                      {{ $t('Next') }}
+                    </SfButton>
                   </div>
                 </div>
               </SfStep>
@@ -1331,6 +1355,9 @@ export default (
     onChangeStep (nextStep: number) {
       this.activeStepIndex = nextStep;
     },
+    onNextStepButtonClickHandler () {
+      this.onChangeStep(this.activeStepIndex + 1);
+    },
     async updateSmallBackgroundImage (): Promise<void> {
       if (!this.$refs.backgroundEditor) {
         return;
@@ -1975,6 +2002,14 @@ export default (
         }
       }
     }
+  }
+
+  ._next-step-button-container {
+    display: flex;
+    justify-content: flex-end;
+    position: sticky;
+    bottom: var(--spacer-base);
+    margin-top: var(--spacer-base);
   }
 
   @include for-desktop {
