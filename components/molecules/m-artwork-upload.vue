@@ -24,7 +24,7 @@
         :server="{
           process: processUpload,
           revert: processRevert,
-          load: loadExisting,
+          load: loadExisting
         }"
         @processfile="onFileProcessed"
         @processfiles="onAllFilesProcessed"
@@ -44,7 +44,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Vue, { PropType, VueConstructor } from 'vue';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
-import { File as FilePond, Status } from 'filepond';
+import { File as FilePond, Status, FileOrigin } from 'filepond';
 // Import image preview and file type validation plugins
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
@@ -191,7 +191,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   methods: {
     onFileRemove (error, event) {
-      this.$emit('file-removed', event.filenameWithoutExtension);
+      if (error || event.origin !== FileOrigin.LOCAL) {
+        return;
+      }
+
+      this.$emit(
+        'file-removed',
+        event.filenameWithoutExtension
+      );
     },
     clearInput (): void {
       const fileInput = this.getFileInput();

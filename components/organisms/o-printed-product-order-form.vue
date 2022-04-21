@@ -99,10 +99,10 @@
                 :backend-product-id="backendProductId"
                 :upload-url="artworkUploadUrl"
                 :disabled="isSubmitting"
-                :initial-artworks="frontViewInitialArtworks"
+                :initial-artworks="sideViewInitialArtworks"
                 :uploaded-artwork="additionalArtworks[0]"
                 @file-added="(value) => onAdditionalArtworkAdd(0, value)"
-                @file-removed="() => onAdditionalArtworkRemove(0)"
+                @file-removed="onAdditionalArtworkRemove"
               />
 
               <MTitledArtworkUpload
@@ -115,7 +115,7 @@
                 :initial-artworks="backViewInitialArtworks"
                 :uploaded-artwork="additionalArtworks[1]"
                 @file-added="(value) => onAdditionalArtworkAdd(1, value)"
-                @file-removed="() => onAdditionalArtworkRemove(1)"
+                @file-removed="onAdditionalArtworkRemove"
               />
 
               <div class="_bodypart-selector-container" v-for="bodypart in bodyparts" :key="bodypart.code">
@@ -560,7 +560,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     getBodypartOptions (): (id: string) => BodypartOption[] {
       return this.$store.getters['budsies/getBodypartOptions']
     },
-    frontViewInitialArtworks (): CustomerImage[] {
+    sideViewInitialArtworks (): CustomerImage[] {
       return this.initialAdditionalArtworks[0] ? [this.initialAdditionalArtworks[0]] : [];
     },
     backViewInitialArtworks (): CustomerImage[] {
@@ -649,8 +649,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     onAdditionalArtworkAdd (index: number, value: CustomerImage): void {
       this.additionalArtworks.splice(index, 0, value);
     },
-    onAdditionalArtworkRemove (index: number): void {
-      this.additionalArtworks.splice(index, 1);
+    onAdditionalArtworkRemove (artworkId: string): void {
+      const artworkIndex = this.additionalArtworks.findIndex(({ id }) => artworkId === id);
+
+      if (artworkIndex < 0) {
+        return;
+      }
+
+      this.additionalArtworks.splice(artworkIndex, 1);
     },
     onSubmit (): void {
       if (!this.existingCartItem) {
@@ -761,7 +767,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       customerAdditionalArtworksImages.splice(0, 1);
 
       this.additionalArtworks = customerAdditionalArtworksImages;
-      this.initialAdditionalArtworks = customerAdditionalArtworksImages;
+      this.initialAdditionalArtworks = [...customerAdditionalArtworksImages];
     },
     fillBodypartsValues (existingCartItem: CartItem): void {
       this.bodypartValues = {};
