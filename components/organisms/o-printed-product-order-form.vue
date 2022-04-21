@@ -85,6 +85,7 @@
                 :disabled="isSubmitting"
                 :initial-artworks="artworkInitialItems"
                 :uploaded-artwork="customerImage"
+                :is-required="true"
                 @file-added="onArtworkAdd"
                 @file-removed="onArtworkRemove"
               />

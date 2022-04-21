@@ -14,12 +14,11 @@
         :name="`'${title}'`"
         type="hidden"
         :value="uploadedArtworkId"
-        required
+        :required="isRequired"
       >
 
       <MArtworkUpload
         ref="artwork-upload"
-        :allow-multiple="false"
         :product-id="backendProductId"
         :upload-url="uploadUrl"
         :disabled="disabled"
@@ -83,6 +82,10 @@ export default Vue.extend({
     uploadedArtwork: {
       type: Object as PropType<UploadedArtwork | undefined>,
       default: undefined
+    },
+    isRequired: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -95,9 +98,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    artworkUploadInitialItems (index: number): UploadedArtwork[] | undefined {
-      return this.initialArtworks.length ? [this.initialArtworks[index]] : undefined;
-    },
     clearInput (): void {
       const uploader = this.getUploader();
       if (!uploader) {
