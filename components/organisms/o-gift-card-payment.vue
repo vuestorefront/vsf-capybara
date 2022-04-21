@@ -107,7 +107,7 @@ export default GiftCardPayment.extend({
   flex-direction: column;
 
   ._notice-message {
-    background-color: var(--c-light);
+    background-color: var(--c-warning-lighten);
     padding: var(--spacer-xs) var(--spacer-sm);
     position: relative;
     text-align: center;

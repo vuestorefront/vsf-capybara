@@ -16,7 +16,7 @@
       </div>
       <OFooter
         class="default-layout_footer"
-        :class="{ '-hide-on-mobile': hideFooterOnMobile }"
+        :class="{ '-show-for-medium-up': hideFooterOnMobile }"
       />
       <OModal />
       <ONotification />
@@ -137,6 +137,8 @@ export default {
 @import "~@storefront-ui/shared/styles/helpers/breakpoints";
 
 .default-layout {
+  $medium-breakpoint: 641px;
+
   &.storyblok-preview-mode {
     a,
     button {
@@ -160,11 +162,9 @@ export default {
     }
   }
 
-  @media (max-width: $tablet-min) {
-    .default-layout_footer {
-      &.-hide-on-mobile {
-        display: none;
-      }
+  @media (max-width: $medium-breakpoint - 1px) {
+    .-show-for-medium-up {
+      display: none !important;
     }
   }
 
