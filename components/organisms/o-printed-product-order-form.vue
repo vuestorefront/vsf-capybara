@@ -264,6 +264,8 @@ export interface SelectOption {
   specialPrice: number
 }
 
+const feltedMagnetSku = 'customFeltedMagnets_bundle';
+
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPrintedProductOrderForm',
   components: {
@@ -299,10 +301,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     existingCartItem: {
       type: Object as PropType<CartItem | undefined>,
       default: undefined
-    },
-    isFeltedMagnet: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
@@ -578,6 +576,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.extraFacesDataAddon = value.addon;
         this.additionalArtworks = value.storageItems;
       }
+    },
+    isFeltedMagnet () {
+      return [this.product.parentSku, this.product.sku]
+        .includes(feltedMagnetSku);
     }
   },
   methods: {
