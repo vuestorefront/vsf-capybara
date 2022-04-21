@@ -537,7 +537,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           contentTypeId: BodyPartValueContentType.IMAGE,
           image: productLink.product.image,
           optionId: this.sizeBundleOption.option_id,
-          optionValueId: productLink.id.toString()
+          optionValueId: productLink.id.toString(),
+          group: 'default'
         });
       }
 
@@ -568,7 +569,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           isSelected: false,
           contentTypeId: bodypartValue.contentTypeId,
           color: bodypartValue.color,
-          image: bodypartValue.image
+          image: bodypartValue.image,
+          group: 'default'
         });
       }
 

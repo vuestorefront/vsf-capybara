@@ -76,38 +76,74 @@
             </div>
 
             <div class="_artwork-upload">
-              <div class="_step-title">
-                Upload your pet's photo
-              </div>
+              <MTitledArtworkUpload
+                ref="artwork-upload"
+                class="_titled-artwork-upload"
+                :title="$t('Upload your pet\'s photo')"
+                :backend-product-id="backendProductId"
+                :upload-url="artworkUploadUrl"
+                :disabled="isSubmitting"
+                :initial-artworks="artworkInitialItems"
+                :uploaded-artwork="customerImage"
+                :is-required="true"
+                @file-added="onArtworkAdd"
+                @file-removed="onArtworkRemove"
+              />
+            </div>
 
-              <validation-provider
-                v-slot="{ errors }"
-                name="'Artwork'"
-                tag="div"
-                class="_uploader-wrapper"
-              >
-                <input
-                  type="hidden"
-                  name="uploaded_artwork_ids[]"
-                  :value="customerImage"
-                  required
-                >
+            <div v-if="isFeltedMagnet" class="_felted-magnets-additional-info">
+              <MTitledArtworkUpload
+                ref="side-view-upload"
+                class="_titled-artwork-upload"
+                :title="$t('Upload Side View photo')"
+                :backend-product-id="backendProductId"
+                :upload-url="artworkUploadUrl"
+                :disabled="isSubmitting"
+                :initial-artworks="sideViewInitialArtworks"
+                :uploaded-artwork="additionalArtworks[0]"
+                @file-added="(value) => onAdditionalArtworkAdd(0, value)"
+                @file-removed="onAdditionalArtworkRemove"
+              />
 
-                <MArtworkUpload
-                  ref="artwork-upload"
-                  class="_file-uploader"
-                  :product-id="backendProductId"
-                  :disabled="isSubmitting"
-                  :upload-url="artworkUploadUrl"
-                  :initial-items="artworkInitialItems"
-                  @file-added="onArtworkAdd"
-                  @file-removed="onArtworkRemove"
-                />
+              <MTitledArtworkUpload
+                ref="back-view-upload"
+                class="_titled-artwork-upload"
+                :title="$t('Upload Back View photo')"
+                :backend-product-id="backendProductId"
+                :upload-url="artworkUploadUrl"
+                :disabled="isSubmitting"
+                :initial-artworks="backViewInitialArtworks"
+                :uploaded-artwork="additionalArtworks[1]"
+                @file-added="(value) => onAdditionalArtworkAdd(1, value)"
+                @file-removed="onAdditionalArtworkRemove"
+              />
 
-                <div class="_error-text">
-                  {{ errors[0] }}
+              <div class="_bodypart-selector-container" v-for="bodypart in bodyparts" :key="bodypart.code">
+                <div class="_step-title">
+                  {{ $t(bodypart.name) }}
                 </div>
-              </validation-provider>
+
+                <validation-provider
+                  v-slot="{ errors }"
+                  :rules="bodypart.isRequired ? 'required' : ''"
+                  :name="`'${bodypart.name}'`"
+                  class="_bodypart-selector"
+                  tag="div"
+                >
+                  <m-bodypart-option-configurator
+                    :name="bodypart.code"
+                    v-model="bodypartValues[bodypart.id]"
+                    :max-values="bodypart.maxValues"
+                    :options="getBodypartOptions(bodypart.id)"
+                    :disabled="isSubmitting"
+                    type="bodypart"
+                  />
+
+                  <div class="_error-text">
+                    {{ errors[0] }}
+                  </div>
+                </validation-provider>
+              </div>
             </div>
 
             <MExtraFaces
@@ -117,7 +153,7 @@
               :disabled="isSubmitting"
               :upload-url="artworkUploadUrl"
               :initial-variant="initialAddonItemId"
-              :initial-artworks="initialExtraImages"
+              :initial-artworks="initialAdditionalArtworks"
               v-if="hasExtraFaceAddons"
               @input="extraFacesData = $event"
             />
@@ -186,7 +222,7 @@ import { getProductGallery as getGalleryByProduct, setBundleProductOptionsAsync 
 import CartItem from 'core/modules/cart/types/CartItem';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
-import { ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
+import { Bodypart, ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 import ServerError from 'src/modules/shared/types/server-error';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
@@ -195,11 +231,14 @@ import MProductDescriptionStory from '../molecules/m-product-description-story.v
 import MZoomGallery from '../molecules/m-zoom-gallery.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MExtraFaces from '../molecules/m-extra-faces.vue';
+import MTitledArtworkUpload from '../molecules/m-titled-artwork-upload.vue';
 import ZoomGalleryImage from '../../interfaces/zoom-gallery-image.interface';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 import ExtraFacesConfiguratorData from '../interfaces/extra-faces-configurator-data.interface';
 import CustomerImage from '../interfaces/customer-image.interface';
 import { InjectType } from 'src/modules/shared';
+import BodypartOption from '../interfaces/bodypart-option';
+import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
 
 extend('required', {
   ...required,
@@ -226,6 +265,8 @@ export interface SelectOption {
   specialPrice: number
 }
 
+const feltedMagnetSku = 'customFeltedMagnets_bundle';
+
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPrintedProductOrderForm',
   components: {
@@ -238,7 +279,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     MExtraFaces,
     SfSelect,
     SfButton,
-    MProductDescriptionStory
+    MProductDescriptionStory,
+    MTitledArtworkUpload,
+    MBodypartOptionConfigurator
   },
   inject: {
     imageHandlerService: { from: 'ImageHandlerService' }
@@ -262,19 +305,20 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   data () {
+    const bodypartValues: Record<string, BodypartOption | BodypartOption[] | undefined> = {};
+
     return {
       quantity: 1,
       customerImage: undefined as CustomerImage | undefined,
       // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
-      extraFacesData: {
-        addon: undefined,
-        storageItems: []
-      } as ExtraFacesConfiguratorData,
+      extraFacesDataAddon: undefined as ExtraPhotoAddonOption | undefined,
       isSubmitting: false,
       shouldShowDesignSelector: true,
       artworkInitialItems: [] as CustomerImage[],
       initialAddonItemId: undefined as string | undefined,
-      initialExtraImages: [] as CustomerImage[]
+      additionalArtworks: [] as CustomerImage[],
+      initialAdditionalArtworks: [] as CustomerImage[],
+      bodypartValues
     }
   },
   computed: {
@@ -335,6 +379,19 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       return result;
     },
+    bodyparts (): Bodypart[] {
+      if (!this.product) {
+        return [];
+      }
+
+      const bodyparts = this.$store.getters['budsies/getProductBodyparts'](this.product.id);
+
+      if (!bodyparts.length) {
+        return [];
+      }
+
+      return bodyparts;
+    },
     styleBundleOption (): BundleOption | undefined {
       if (!this.product?.bundle_options) {
         return undefined;
@@ -378,7 +435,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         case 353:
           return ProductValue.PRINTED_KEYCHAINS;
         case 446:
-          return ProductValue.PRINTED_MAGNETS;
+          return ProductValue.FELTED_MAGNETS;
         default:
           throw new Error(
             `Can't resolve Backend product ID for Magento '${this.product.id}' product ID`
@@ -499,6 +556,31 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     hasOnlyOneAvailableStyle (): boolean {
       return this.availableStyles.length === 1;
+    },
+    getBodypartOptions (): (id: string) => BodypartOption[] {
+      return this.$store.getters['budsies/getBodypartOptions']
+    },
+    sideViewInitialArtworks (): CustomerImage[] {
+      return this.initialAdditionalArtworks[0] ? [this.initialAdditionalArtworks[0]] : [];
+    },
+    backViewInitialArtworks (): CustomerImage[] {
+      return this.initialAdditionalArtworks[1] ? [this.initialAdditionalArtworks[1]] : [];
+    },
+    extraFacesData: {
+      get (): ExtraFacesConfiguratorData {
+        return {
+          addon: this.extraFacesDataAddon,
+          storageItems: this.additionalArtworks
+        }
+      },
+      set (value: ExtraFacesConfiguratorData): void {
+        this.extraFacesDataAddon = value.addon;
+        this.additionalArtworks = value.storageItems;
+      }
+    },
+    isFeltedMagnet () {
+      return [this.product.parentSku, this.product.sku]
+        .includes(feltedMagnetSku);
     }
   },
   methods: {
@@ -517,7 +599,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         { product: this.product, bundleOptions: this.$store.state.product.current_bundle_options }
       );
 
-      const extraFacesArtworks: CustomerImage[] = this.extraFacesData.storageItems.map(item => ({
+      const additionalArtworks: CustomerImage[] = this.additionalArtworks.map((item) => ({
         id: item.id,
         url: this.imageHandlerService.getOriginalImageUrl(item.url)
       }));
@@ -527,8 +609,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           await this.$store.dispatch('cart/addItem', {
             productToAdd: Object.assign({}, this.product, {
               qty: this.quantity,
-              customerImages: [this.customerImage, ...extraFacesArtworks],
-              uploadMethod: 'upload-now'
+              customerImages: [this.customerImage, ...additionalArtworks],
+              uploadMethod: 'upload-now',
+              bodyparts: this.getBodypartsData()
             })
           });
         } catch (err) {
@@ -551,7 +634,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     cleanExistingProductData (): void {
       this.fillEmptyCustomerImagesData();
       this.fillEmptyExtraFacesDataAddon();
-      this.fillEmptyExtraFacesDataStorageItems();
+      this.fillEmptyAdditionalArtworks();
+      this.fillEmptyBodypartsValues();
     },
     onArtworkAdd (value: Item): void {
       this.customerImage = {
@@ -561,6 +645,18 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     onArtworkRemove (storageItemId: string): void {
       this.customerImage = undefined;
+    },
+    onAdditionalArtworkAdd (index: number, value: CustomerImage): void {
+      this.additionalArtworks.splice(index, 0, value);
+    },
+    onAdditionalArtworkRemove (artworkId: string): void {
+      const artworkIndex = this.additionalArtworks.findIndex(({ id }) => artworkId === id);
+
+      if (artworkIndex < 0) {
+        return;
+      }
+
+      this.additionalArtworks.splice(artworkIndex, 1);
     },
     onSubmit (): void {
       if (!this.existingCartItem) {
@@ -581,6 +677,16 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           extraFaces.clearUploaders();
         }
 
+        const sideViewUpload = this.getSideViewUpload();
+        if (sideViewUpload) {
+          sideViewUpload.clearInput();
+        }
+
+        const backViewUpload = this.getBackViewUpload();
+        if (backViewUpload) {
+          backViewUpload.clearInput();
+        }
+
         this.goToCrossSells();
       } catch (e) {
         this.$store.dispatch(
@@ -597,14 +703,39 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         action1: { label: i18n.t('OK') }
       });
     },
+    getBodypartsData (): Record<string, string[]> {
+      let data: Record<string, string[]> = {};
+
+      for (const bodyPartId in this.bodypartValues) {
+        let value = this.bodypartValues[bodyPartId];
+
+        if (value === undefined) {
+          continue;
+        }
+
+        if (!Array.isArray(value)) {
+          value = [value]
+        }
+
+        data[bodyPartId] = value.map(item => item.id);
+      }
+
+      return data;
+    },
     getGallery (): HTMLElement | undefined {
       return this.$refs['gallery'] as HTMLElement | undefined;
     },
     getValidationObserver (): InstanceType<typeof ValidationObserver> | undefined {
       return this.$refs['validation-observer'] as InstanceType<typeof ValidationObserver> | undefined;
     },
-    getUploader (): InstanceType<typeof MArtworkUpload> | undefined {
-      return this.$refs['artwork-upload'] as InstanceType<typeof MArtworkUpload> | undefined;
+    getUploader (): InstanceType<typeof MTitledArtworkUpload> | undefined {
+      return this.$refs['artwork-upload'] as InstanceType<typeof MTitledArtworkUpload> | undefined;
+    },
+    getSideViewUpload (): InstanceType<typeof MTitledArtworkUpload> | undefined {
+      return this.$refs['side-view-upload'] as InstanceType<typeof MTitledArtworkUpload> | undefined;
+    },
+    getBackViewUpload (): InstanceType<typeof MTitledArtworkUpload> | undefined {
+      return this.$refs['back-view-upload'] as InstanceType<typeof MTitledArtworkUpload> | undefined;
     },
     getExtraFaces (): InstanceType<typeof MExtraFaces> | undefined {
       return this.$refs['extra-faces'] as InstanceType<typeof MExtraFaces> | undefined;
@@ -627,6 +758,37 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.$emit('style-selected', styleValue);
     },
+    fillAdditionalArtworksData (existingCartItem: CartItem): void {
+      if (!existingCartItem.customerImages || existingCartItem.customerImages.length <= 1) {
+        this.fillEmptyAdditionalArtworks();
+        return;
+      }
+      const customerAdditionalArtworksImages = [...existingCartItem.customerImages];
+      customerAdditionalArtworksImages.splice(0, 1);
+
+      this.additionalArtworks = customerAdditionalArtworksImages;
+      this.initialAdditionalArtworks = [...customerAdditionalArtworksImages];
+    },
+    fillBodypartsValues (existingCartItem: CartItem): void {
+      this.bodypartValues = {};
+
+      if (!existingCartItem.bodyparts) {
+        return;
+      }
+
+      const bodyparts: Record<string, any[]> = existingCartItem.bodyparts as Record<string, any[]>;
+
+      Object.keys(bodyparts).forEach((key: string) => {
+        Vue.set(
+          this.bodypartValues,
+          key,
+          this.getBodypartOptions(key).filter(
+            (bodypartOption: BodypartOption) => bodyparts[key].includes(bodypartOption.id) ||
+              bodyparts[key].includes(Number(bodypartOption.id))
+          )
+        );
+      });
+    },
     fillCustomerImagesData (existingCartItem: CartItem): void {
       if (!existingCartItem.customerImages?.length) {
         this.fillEmptyCustomerImagesData();
@@ -636,17 +798,20 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.customerImage = existingCartItem.customerImages[0];
       this.artworkInitialItems = [{ ...this.customerImage }]
     },
+    fillEmptyAdditionalArtworks (): void {
+      this.initialAdditionalArtworks = [];
+      this.additionalArtworks = [];
+    },
+    fillEmptyBodypartsValues (): void {
+      this.bodypartValues = {};
+    },
     fillEmptyCustomerImagesData (): void {
       this.customerImage = undefined;
       this.artworkInitialItems = [];
     },
     fillEmptyExtraFacesDataAddon (): void {
-      this.extraFacesData.addon = undefined;
+      this.extraFacesDataAddon = undefined;
       this.initialAddonItemId = undefined;
-    },
-    fillEmptyExtraFacesDataStorageItems (): void {
-      this.extraFacesData.storageItems = [];
-      this.initialExtraImages = [];
     },
     fillProductDataFromExistingCartItem (existingCartItem: CartItem): void {
       if (!existingCartItem) {
@@ -654,12 +819,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.fillCustomerImagesData(existingCartItem);
-      this.fillExtraFacesData(existingCartItem);
-      this.fillQuantity(existingCartItem);
-    },
-    fillExtraFacesData (existingCartItem: CartItem): void {
+
+      this.fillAdditionalArtworksData(existingCartItem);
+      this.fillBodypartsValues(existingCartItem);
       this.fillExtraFacesDataAddon(existingCartItem);
-      this.fillExtraFacesDataStorageItems(existingCartItem);
+
+      this.fillQuantity(existingCartItem);
     },
     fillExtraFacesDataAddon (existingCartItem: CartItem): void {
       const selectedBundleOptions = getSelectedBundleOptions(existingCartItem);
@@ -681,20 +846,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      this.extraFacesData.addon = selectedAddon;
+      this.extraFacesDataAddon = selectedAddon;
       this.initialAddonItemId = selectedAddon.id;
-    },
-    fillExtraFacesDataStorageItems (existingCartItem: CartItem): void {
-      if (!existingCartItem.customerImages || existingCartItem.customerImages.length <= 1) {
-        this.fillEmptyExtraFacesDataStorageItems();
-        return;
-      }
-
-      const customerExtraFacesImages = [...existingCartItem.customerImages];
-      customerExtraFacesImages.splice(0, 1);
-
-      this.extraFacesData.storageItems = customerExtraFacesImages;
-      this.initialExtraImages = customerExtraFacesImages;
     },
     fillQuantity (existingCartItem: CartItem): void {
       this.quantity = existingCartItem.qty;
@@ -713,10 +866,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.isSubmitting = true;
 
-      const extraFacesArtworks: CustomerImage[] = this.extraFacesData.storageItems.map(item => {
+      const additionalArtworks: CustomerImage[] = this.additionalArtworks.map(item => {
         let url = item.url;
 
-        if (!this.initialExtraImages.find((image) => image.id === item.id)) {
+        if (!this.initialAdditionalArtworks.find((image) => image.id === item.id)) {
           url = this.imageHandlerService.getOriginalImageUrl(item.url);
         }
 
@@ -731,9 +884,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           await this.updateClientAndServerItem({
             product: Object.assign({}, this.existingCartItem, {
               qty: this.quantity,
-              customerImages: [this.customerImage, ...extraFacesArtworks],
+              customerImages: [this.customerImage, ...additionalArtworks],
               product_option: setBundleProductOptionsAsync(null, { product: this.existingCartItem, bundleOptions: this.$store.state.product.current_bundle_options }),
-              uploadMethod: 'upload-now'
+              uploadMethod: 'upload-now',
+              bodyparts: this.getBodypartsData()
             }),
             forceUpdateServerItem: true
           });
@@ -773,7 +927,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      this.fillExtraFacesData(this.existingCartItem);
+      this.fillExtraFacesDataAddon(this.existingCartItem);
     },
     availableStyles: {
       handler (): void {
@@ -850,7 +1004,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       },
       immediate: true
     },
-    'extraFacesData.addon': {
+    extraFacesDataAddon: {
       handler (newValue: ExtraPhotoAddonOption | undefined) {
         if (!this.addonsBundleOption) {
           return
@@ -924,6 +1078,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         text-align: left;
     }
 
+    ._bodypart-selector-container {
+      margin-top: var(--spacer-base);
+    }
+
+    ._bodypart-selector {
+      margin-top: var(--spacer-xs);
+      text-align: center;
+    }
+
     ._artwork-upload {
         ._uploader-wrapper {
             margin-top: 0.25em;
@@ -941,6 +1104,10 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     ._error-text {
         font-size: 0.8em;
         margin-top: 0.5em;
+    }
+
+    ._titled-artwork-upload {
+      margin-top: var(--spacer-base);
     }
 
     ._description {
