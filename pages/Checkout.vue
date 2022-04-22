@@ -7,9 +7,16 @@
           :steps="availableSteps.map(step => step.name)"
           @change="changeStep"
         >
-          <SfStep v-for="step in availableSteps" :key="step.key" :name="step.name">
-            <component :is="step.component" :is-active="true" />
-          </SfStep>
+          <template>
+            <ProductionSpotCountdown
+              :can-show="canShowProductionSpotCountdown"
+              class="_production-spot-countdown"
+            />
+
+            <SfStep v-for="step in availableSteps" :key="step.key" :name="step.name">
+              <component :is="step.component" :is-active="true" />
+            </SfStep>
+          </template>
         </SfSteps>
       </div>
       <div class="checkout__aside desktop-only">
@@ -28,6 +35,9 @@
 <script>
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
+import { mapGetters } from 'vuex';
+import isCustomProduct from 'src/modules/shared/helpers/is-custom-product.function';
+
 import OBillingAddress from 'theme/components/organisms/o-billing-address';
 import OShipping from 'theme/components/organisms/o-shipping';
 import OConfirmOrder from 'theme/components/organisms/o-confirm-order';
@@ -36,7 +46,7 @@ import OOrderSummary from 'theme/components/organisms/o-order-summary';
 import OOrderSuccess from 'theme/components/organisms/o-order-success';
 import OPersonalDetails from 'theme/components/organisms/o-personal-details';
 import OCartItemsTable from 'theme/components/organisms/o-cart-items-table';
-import { mapGetters } from 'vuex';
+import ProductionSpotCountdown from 'src/modules/promotion-platform/components/ProductionSpotCountdown.vue';
 
 const successParamValue = 'success';
 const orderReviewStepKey = 'orderReview';
@@ -58,7 +68,8 @@ export default {
     OConfirmOrder,
     OPersonalDetails,
     OCartItemsTable,
-    OOrderSuccess
+    OOrderSuccess,
+    ProductionSpotCountdown
   },
   mixins: [Checkout],
   data () {
@@ -110,6 +121,9 @@ export default {
     },
     isReviewStep () {
       return this.availableSteps[this.currentStep].key === orderReviewStepKey;
+    },
+    canShowProductionSpotCountdown () {
+      return this.productsInCart.some((product) => isCustomProduct(product.sku));
     }
   },
   beforeMount () {
@@ -205,6 +219,11 @@ export default {
 }
 .checkout {
   --steps-content-padding: 0 var(--spacer-sm);
+
+  ._production-spot-countdown {
+    margin-top: var(--spacer-sm);
+  }
+
   @include for-desktop {
     --steps-content-padding: 0;
     display: flex;
