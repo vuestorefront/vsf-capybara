@@ -43,6 +43,9 @@ export default {
   beforeDestroy () {
     syncCartWhenLocalStorageChange.removeEventListener();
   },
+  serverPrefetch () {
+    return this.$store.dispatch('backend-settings/fetchSettings');
+  },
   provide: {
     ErrorConverterService: errorConverterService,
     FileProcessingRepositoryFactory: fileProcessingRepositoryFactory,
