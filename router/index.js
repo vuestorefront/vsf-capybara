@@ -164,11 +164,11 @@ let routes = [
     })
   },
   {
-    name: 'printed-magnets-creation-page',
-    path: '/plushie/index/printedMagnets/',
+    name: 'felted-magnets-creation-page',
+    path: '/plushie/index/feltedMagnets/',
     component: PrintedProduct,
     props: route => ({
-      sku: 'customPetMagnets_bundle',
+      sku: 'customFeltedMagnets_bundle',
       productDesign: route.query.product_design
     })
   },

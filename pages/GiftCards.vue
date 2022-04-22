@@ -49,6 +49,7 @@
         v-if="showStory"
         class="_giftcard-detailed-information"
         :product="product"
+        :product-sku="product.sku"
       />
     </div>
   </div>

@@ -191,14 +191,20 @@
           @success="placeOrder"
           @error="onBraintreePaymentMethodError"
         >
-          <SfRadio
-            v-model="payment.paymentMethod"
-            :label="method.title ? method.title : method.name"
-            :value="method.code"
-            name="payment-method"
-            class="form__radio payment-method"
-            @input="onPaymentMethodChange"
-          />
+          <template>
+            <SfRadio
+              v-model="payment.paymentMethod"
+              :label="method.title ? method.title : method.name"
+              :value="method.code"
+              name="payment-method"
+              class="form__radio payment-method"
+              @input="onPaymentMethodChange"
+            />
+
+            <div class="_method-hint" v-if="showMethodHint(method)">
+              {{ method.hint }}
+            </div>
+          </template>
         </component>
       </div>
     </div>
@@ -471,6 +477,9 @@ export default {
       }
 
       this.$refs[this.paymentDetails.paymentMethod][0].doPayment();
+    },
+    showMethodHint (method) {
+      return method.hint && this.paymentDetails.paymentMethod === method.code;
     }
   },
   mounted () {
@@ -486,6 +495,12 @@ export default {
   @include for-desktop {
     --heading-padding: var(--spacer-xl) 0 var(--spacer-base) 0;
   }
+}
+
+._method-hint {
+  margin-top: var(--spacer-sm);
+  font-size: var(--font-sm);
+  color: var(--c-text);
 }
 
 .totals {
@@ -637,6 +652,10 @@ a {
 @include for-desktop {
   .place-order-btn {
     width: 50%;
+  }
+
+  ._method-hint {
+    margin-left: calc(var(--spacer-xl) + var(--spacer-sm));
   }
 }
 </style>

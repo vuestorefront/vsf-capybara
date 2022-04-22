@@ -158,7 +158,7 @@
           "
           @click="$bus.$emit('checkout-before-edit', isVirtualCart ? 'personalDetails' :'shipping')"
         >
-          {{ $t(isVirtualCart ? 'Edit details' : 'Edit shipping') }}
+          {{ isVirtualCart ? $t('Edit contact') : $t('Edit shipping') }}
         </SfButton>
       </div>
     </div>

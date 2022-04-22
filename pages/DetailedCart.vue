@@ -192,7 +192,8 @@ const foreversProductsSkus = [
 const printedProductSkus = [
   'customPrintedSocks_bundle',
   'customPrintedMasks_bundle',
-  'customPrintedKeychains_bundle'
+  'customPrintedKeychains_bundle',
+  'customFeltedMagnets_bundle'
 ]
 
 const editableProductsSkus = [
@@ -256,9 +257,9 @@ export default {
           }
         },
         {
-          label: 'Pet Magnets',
+          label: 'Felted Magnets',
           url: {
-            name: 'printed-magnets-creation-page'
+            name: 'felted-magnets-creation-page'
           }
         }
       ],
