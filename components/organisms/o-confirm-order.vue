@@ -199,7 +199,17 @@
               name="payment-method"
               class="form__radio payment-method"
               @input="onPaymentMethodChange"
-            />
+            >
+              <template v-if="method.icon" #label>
+                <div class="_method-label">
+                  <img :src="method.icon" class="_method-icon">
+
+                  <div class="sf-radio__label">
+                    {{ method.title }}
+                  </div>
+                </div>
+              </template>
+            </SfRadio>
 
             <div class="_method-hint" v-if="showMethodHint(method)">
               {{ method.hint }}
@@ -501,6 +511,17 @@ export default {
   margin-top: var(--spacer-sm);
   font-size: var(--font-sm);
   color: var(--c-text);
+}
+
+._method-label {
+  display: flex;
+  align-items: flex-end;
+
+ ._method-icon {
+   height: 1.5rem;
+   margin-right: var(--spacer-sm);
+   align-self: flex-start;
+ }
 }
 
 .totals {
