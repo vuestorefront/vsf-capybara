@@ -156,7 +156,7 @@ export default {
             { name: this.$t('Custom Socks'), link: { name: 'printed-socks-creation-page' } },
             { name: this.$t('Custom Face Masks'), link: { name: 'printed-masks-creation-page' } },
             { name: this.$t('Custom Pet Keychains'), link: { name: 'printed-keychains-creation-page' } },
-            { name: this.$t('Custom Pet Magnets'), link: { name: 'printed-magnets-creation-page' } },
+            { name: this.$t('Custom Felted Magnets'), link: { name: 'felted-magnets-creation-page' } },
             { name: this.$t('Custom Bulk'), link: '/bulk-custom-stuffed-animal-manufacture' },
             { name: this.$t('Gift Cards'), link: '/giftcards' },
             { name: this.$t('Gift Box'), link: '/giftbox' },
