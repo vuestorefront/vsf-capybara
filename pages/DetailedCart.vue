@@ -299,7 +299,7 @@ export default {
       return !this.isMounted || !this.cartIsLoaded;
     },
     canShowProductionSpotCountdown () {
-      return this.products.some((product) => isCustomProduct(product.sku));
+      return this.products.some((product) => isCustomProduct(product.id));
     }
   },
   async mounted () {

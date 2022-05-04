@@ -123,7 +123,7 @@ export default {
       return this.availableSteps[this.currentStep].key === orderReviewStepKey;
     },
     canShowProductionSpotCountdown () {
-      return this.productsInCart.some((product) => isCustomProduct(product.sku));
+      return this.productsInCart.some((product) => isCustomProduct(product.id));
     }
   },
   beforeMount () {
