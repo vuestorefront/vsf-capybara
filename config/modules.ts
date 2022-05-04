@@ -22,6 +22,7 @@ import { PaymentBackendMethodsModule } from 'src/modules/payment-backend-methods
 import { PaymentAffirm } from 'src/modules/payment-affirm';
 import { UrlRewriteModule } from 'src/modules/url-rewrite';
 import { mappingFallbackForUrlRewrite } from 'src/modules/url-rewrite/mappingFallback';
+import { BackendSettings } from 'src/modules/backend-settings'
 
 import registerStoryblokComponents from 'theme/components/storyblok'
 
@@ -65,6 +66,7 @@ export function registerClientModules () {
   registerModule(PaymentBackendMethodsModule)
   registerModule(PaymentAffirm)
   registerModule(UrlRewriteModule)
+  registerModule(BackendSettings)
 }
 
 // Deprecated API, will be removed in 2.0
