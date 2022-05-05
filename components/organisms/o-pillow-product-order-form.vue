@@ -393,7 +393,8 @@ import {
   BodypartValue,
   ImageUploadMethod,
   BodyPartValueContentType,
-  ProductValue
+  ProductValue,
+  BodypartOption
 } from 'src/modules/budsies';
 import { getProductDefaultPrice } from 'theme/helpers';
 import ServerError from 'src/modules/shared/types/server-error';
@@ -401,7 +402,6 @@ import ServerError from 'src/modules/shared/types/server-error';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
-import BodypartOption from '../interfaces/bodypart-option';
 import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';

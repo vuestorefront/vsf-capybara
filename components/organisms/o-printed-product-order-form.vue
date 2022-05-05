@@ -222,7 +222,7 @@ import { getProductGallery as getGalleryByProduct, setBundleProductOptionsAsync 
 import CartItem from 'core/modules/cart/types/CartItem';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
-import { Bodypart, ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
+import { Bodypart, BodypartOption, ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 import ServerError from 'src/modules/shared/types/server-error';
 import { CustomerImage, InjectType } from 'src/modules/shared';
 
@@ -236,7 +236,6 @@ import MTitledArtworkUpload from '../molecules/m-titled-artwork-upload.vue';
 import ZoomGalleryImage from '../../interfaces/zoom-gallery-image.interface';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
 import ExtraFacesConfiguratorData from '../interfaces/extra-faces-configurator-data.interface';
-import BodypartOption from '../interfaces/bodypart-option';
 import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
 
 extend('required', {

@@ -86,7 +86,8 @@ import CartItem from 'core/modules/cart/types/CartItem';
 
 import {
   ImageUploadMethod,
-  vuexTypes as budsiesTypes
+  vuexTypes as budsiesTypes,
+  BodypartOption
 } from 'src/modules/budsies';
 import ServerError from 'src/modules/shared/types/server-error';
 import foreversCreationWizardPersistedStateService from 'theme/helpers/forevers-creation-wizard-persisted-state.service';
@@ -102,7 +103,6 @@ import ForeversWizardProductTypeStepData from '../interfaces/forevers-wizard-pro
 import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-image-upload-step-data.interface';
 import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
-import BodypartOption from '../interfaces/bodypart-option';
 import ForeversCreationWizardPersistedState from '../interfaces/forevers-creation-wizard-persisted-state.interface';
 
 export default Vue.extend({
