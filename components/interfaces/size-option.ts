@@ -1,4 +1,4 @@
-import BodypartOption from './bodypart-option';
+import { BodypartOption } from 'src/modules/budsies';
 
 export default interface SizeOption extends BodypartOption {
   optionId: number,

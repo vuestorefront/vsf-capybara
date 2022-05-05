@@ -157,7 +157,7 @@ import {
   ProductValue
 } from 'src/modules/budsies';
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
-import CustomerImage from 'theme/components/interfaces/customer-image.interface';
+import { CustomerImage } from 'src/modules/shared';
 
 import MArtworkUpload from '../../molecules/m-artwork-upload.vue';
 import MBlockStory from '../../molecules/m-block-story.vue';

@@ -32,7 +32,7 @@ import { LocalizedRoute, StoreView } from 'core/lib/types';
 import config from 'config';
 import Product from 'core/modules/catalog/types/Product';
 import { Blok } from 'src/modules/vsf-storyblok-module/components';
-import { getProductDefaultPrice } from 'theme/helpers';
+import { getProductDefaultPrice } from 'src/modules/shared';
 
 import ProductData from './interfaces/product-data.interface';
 

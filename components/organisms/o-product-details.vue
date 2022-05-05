@@ -70,7 +70,7 @@ import MProductOptionsGroup from 'theme/components/molecules/m-product-options-g
 import MSocialSharing from 'theme/components/molecules/m-social-sharing';
 import { ModalList } from 'theme/store/ui/modals';
 import { mapActions } from 'vuex';
-import { getProductDefaultPrice } from 'theme/helpers';
+import { getProductDefaultPrice } from 'src/modules/shared';
 
 export default {
   inject: {
