@@ -1,8 +1,12 @@
 import config from 'config';
 
+const defaultTitle = config.seo.defaultTitle;
+
 export default {
-  title: config.seo.defaultTitle,
-  titleTemplate: `%s`,
+  title: defaultTitle,
+  titleTemplate: (title) => {
+    return title.trim().endsWith(`| ${defaultTitle}`) ? title : `${title.trim()} | ${defaultTitle}`;
+  },
   htmlAttrs: {
     lang: 'en'
   },
