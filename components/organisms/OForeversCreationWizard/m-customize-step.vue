@@ -244,9 +244,8 @@ import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/m
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
 
-import { isVue } from 'src/modules/shared';
+import { isVue, getProductDefaultPrice } from 'src/modules/shared';
 import { Bodypart, BodypartOption } from 'src/modules/budsies';
-import { getProductDefaultPrice } from 'theme/helpers';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';

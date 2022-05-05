@@ -216,7 +216,6 @@ import {
 
 import { SfButton, SfSelect } from '@storefront-ui/vue';
 import Product from 'core/modules/catalog/types/Product';
-import { getProductDefaultPrice } from 'theme/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { getProductGallery as getGalleryByProduct, setBundleProductOptionsAsync } from '@vue-storefront/core/modules/catalog/helpers';
 import CartItem from 'core/modules/cart/types/CartItem';
@@ -224,7 +223,7 @@ import CartItem from 'core/modules/cart/types/CartItem';
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
 import { Bodypart, BodypartOption, ExtraPhotoAddon, ProductValue } from 'src/modules/budsies';
 import ServerError from 'src/modules/shared/types/server-error';
-import { CustomerImage, InjectType } from 'src/modules/shared';
+import { CustomerImage, getProductDefaultPrice, InjectType } from 'src/modules/shared';
 
 import ACustomPrice from '../atoms/a-custom-price.vue';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';

@@ -386,7 +386,7 @@ import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import Product from 'core/modules/catalog/types/Product';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
-import { InjectType, CustomerImage } from 'src/modules/shared';
+import { InjectType, CustomerImage, getProductDefaultPrice } from 'src/modules/shared';
 import {
   vuexTypes as budsiesTypes,
   Bodypart,
@@ -396,7 +396,6 @@ import {
   ProductValue,
   BodypartOption
 } from 'src/modules/budsies';
-import { getProductDefaultPrice } from 'theme/helpers';
 import ServerError from 'src/modules/shared/types/server-error';
 
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
