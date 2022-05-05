@@ -1,6 +1,8 @@
+import config from 'config';
+
 export default {
-  title: 'VSF Capybara',
-  titleTemplate: '%s - Vue Storefront',
+  title: config.seo.defaultTitle,
+  titleTemplate: `%s`,
   htmlAttrs: {
     lang: 'en'
   },
@@ -9,8 +11,7 @@ export default {
     {
       vmid: 'description',
       name: 'description',
-      content:
-        'Vue Storefront is a standalone PWA storefront for your eCommerce, possible to connect with any eCommerce backend (eg. Magento, Prestashop or Shopware) through the API.'
+      content: config.seo.defaultDescription
     },
     {
       name: 'viewport',
