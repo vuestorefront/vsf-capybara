@@ -28,6 +28,8 @@
 <script>
 import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
+import { htmlDecode } from '@vue-storefront/core/filters';
+
 import OBillingAddress from 'theme/components/organisms/o-billing-address';
 import OShipping from 'theme/components/organisms/o-shipping';
 import OConfirmOrder from 'theme/components/organisms/o-confirm-order';
@@ -182,6 +184,12 @@ export default {
         )
       });
     }
+  },
+  metaInfo () {
+    return {
+      title: htmlDecode(this.showThankYouPage ? this.$t('Thank You - You\'ve Ordered a Custom Petsie Plushie') : this.$t('Checkout')),
+      description: this.showThankYouPage ? [{ vmid: 'description', name: 'description', content: htmlDecode(this.$t('Thank you for ordering a custom Petsie toy')) }] : []
+    };
   }
 };
 </script>

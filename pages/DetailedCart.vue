@@ -178,8 +178,9 @@ import getCartItemKey from 'src/modules/budsies/helpers/get-cart-item-key.functi
 import CartEvents from 'src/modules/shared/types/cart-events';
 import EventBus from '@vue-storefront/core/compatibility/plugins/event-bus';
 import { mapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer';
-import { getBundleOptionsValues, getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions'
-import { CART_UPD_ITEM } from '@vue-storefront/core/modules/cart/store/mutation-types'
+import { getBundleOptionsValues, getSelectedBundleOptions } from '@vue-storefront/core/modules/catalog/helpers/bundleOptions';
+import { CART_UPD_ITEM } from '@vue-storefront/core/modules/cart/store/mutation-types';
+import { htmlDecode } from '@vue-storefront/core/filters';
 
 const CHANGE_QUANTITY_DEBOUNCE_TIME = 1000;
 
@@ -449,6 +450,11 @@ export default {
     processStartShopping () {
       this.$router.push(localizedRoute('/pet-gifts'));
     }
+  },
+  metaInfo () {
+    return {
+      title: htmlDecode(this.$t('Shopping Cart'))
+    };
   }
 };
 </script>
