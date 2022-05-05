@@ -386,7 +386,7 @@ import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import Product from 'core/modules/catalog/types/Product';
 
 import { ImageHandlerService, Item } from 'src/modules/file-storage';
-import { InjectType } from 'src/modules/shared';
+import { InjectType, CustomerImage } from 'src/modules/shared';
 import {
   vuexTypes as budsiesTypes,
   Bodypart,
@@ -405,7 +405,6 @@ import BodypartOption from '../interfaces/bodypart-option';
 import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
-import CustomerImage from '../interfaces/customer-image.interface';
 import MBlockStory from 'theme/components/molecules/m-block-story.vue';
 import MProductionTimeSelector from 'theme/components/molecules/m-production-time-selector.vue';
 

@@ -53,7 +53,7 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 // import FilePondPluginImageResize from "filepond-plugin-image-resize";
 import FilePondPluginImageTransform from 'filepond-plugin-image-transform';
 
-import { InjectType } from 'src/modules/shared';
+import { InjectType, CustomerImage } from 'src/modules/shared';
 
 import { ErrorConverterService } from 'src/modules/budsies';
 import {
@@ -61,8 +61,6 @@ import {
   FileProcessingRepository,
   ImageType
 } from 'src/modules/file-storage';
-
-import CustomerImage from '../interfaces/customer-image.interface';
 
 // Create component
 const FilePondComponent = vueFilePond(

@@ -90,6 +90,7 @@ import {
 } from 'src/modules/budsies';
 import ServerError from 'src/modules/shared/types/server-error';
 import foreversCreationWizardPersistedStateService from 'theme/helpers/forevers-creation-wizard-persisted-state.service';
+import { CustomerImage } from 'src/modules/shared';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -102,7 +103,6 @@ import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-ima
 import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import BodypartOption from '../interfaces/bodypart-option';
-import CustomerImage from '../interfaces/customer-image.interface';
 import ForeversCreationWizardPersistedState from '../interfaces/forevers-creation-wizard-persisted-state.interface';
 
 export default Vue.extend({
