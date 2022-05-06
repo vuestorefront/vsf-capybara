@@ -119,16 +119,18 @@ export default Vue.extend({
     }
   },
   metaInfo () {
+    const description = this.getCurrentProduct?.meta_description || this.getCurrentProduct?.short_description;
+
     return {
       title: htmlDecode(
         this.getCurrentProduct?.meta_title || this.getCurrentProduct?.name
       ),
-      meta: this.getCurrentProduct?.meta_description
+      meta: description
         ? [
           {
             vmid: 'description',
             name: 'description',
-            content: htmlDecode(this.getCurrentProduct?.meta_description)
+            content: htmlDecode(description)
           }
         ]
         : []

@@ -37,7 +37,6 @@
 <script>
 import { mapGetters, mapState } from 'vuex';
 import LazyHydrate from 'vue-lazy-hydration';
-import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 import { htmlDecode } from '@vue-storefront/core/filters';
 import { onlineHelper, isServer } from '@vue-storefront/core/helpers';
 import { catalogHooksExecutors } from '@vue-storefront/core/modules/catalog-next/hooks';
@@ -223,17 +222,18 @@ export default {
     }
   },
   metaInfo () {
-    const storeView = currentStoreView();
+    const description = this.getCurrentProduct?.meta_description || this.getCurrentProduct?.short_description;
+
     return {
       title: htmlDecode(
         this.getCurrentProduct?.meta_title || this.getCurrentProduct?.name
       ),
-      meta: this.getCurrentProduct?.meta_description
+      meta: description
         ? [
           {
             vmid: 'description',
             name: 'description',
-            content: htmlDecode(this.getCurrentProduct?.meta_description)
+            content: htmlDecode(description)
           }
         ]
         : []
