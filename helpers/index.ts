@@ -4,9 +4,7 @@ import { currentStoreView } from '@vue-storefront/core/lib/multistore'
 import { productThumbnailPath, getThumbnailPath, isServer } from '@vue-storefront/core/helpers'
 import { htmlDecode } from '@vue-storefront/core/filters'
 
-import { getProductDefaultPrice, getProductDefaultDiscount } from './price'
-
-export * from './price'
+import { getProductDefaultPrice, getProductDefaultDiscount } from 'src/modules/shared';
 
 export function getPathForStaticPage (path: string) {
   const { storeCode } = currentStoreView()

@@ -1,5 +1,5 @@
 import { ImageUploadMethod } from 'src/modules/budsies';
-import CustomerImage from './customer-image.interface';
+import { CustomerImage } from 'src/modules/shared';
 
 export default interface ForeversWizardImageUploadStepData {
   uploadMethod: ImageUploadMethod,

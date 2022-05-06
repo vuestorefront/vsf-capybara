@@ -553,7 +553,7 @@ import {
 } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
 
-import { InjectType } from 'src/modules/shared';
+import { InjectType, CustomerImage } from 'src/modules/shared';
 import {
   ErrorConverterService,
   Bodypart,
@@ -597,7 +597,6 @@ import ProductionTimeOption from '../interfaces/production-time-option.interface
 import BackgroundOffsetSettings from '../interfaces/background-offset-settings.interface';
 import ProductImage from '../interfaces/product-image.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
-import CustomerImage from '../interfaces/customer-image.interface';
 import { ValidationResult } from 'vee-validate/dist/types/types';
 
 extend('required', {

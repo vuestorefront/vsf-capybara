@@ -48,9 +48,7 @@
 import Vue, { PropType } from 'vue';
 import { getThumbnailPath } from '@vue-storefront/core/helpers/index';
 
-import { BodyPartValueContentType, Dictionary } from 'src/modules/budsies';
-
-import BodypartOption from '../interfaces/bodypart-option';
+import { BodypartOption, BodyPartValueContentType, Dictionary } from 'src/modules/budsies';
 
 const BODYPART_ITEM_WIDTH = 145;
 

@@ -82,10 +82,10 @@ import {
 } from '@storefront-ui/vue/src/utilities/mobile-observer';
 
 import { Item } from 'src/modules/file-storage';
+import { CustomerImage } from 'src/modules/shared';
 
 import MArtworkUpload from './m-artwork-upload.vue';
 import ExtraPhotoAddonOption from '../interfaces/extra-photo-addon-option.interface';
-import UploadedArtwork from '../interfaces/uploaded-artwork.interface';
 import ExtraFacesConfiguratorData from '../interfaces/extra-faces-configurator-data.interface';
 
 extend('required', {
@@ -122,14 +122,14 @@ export default Vue.extend({
       default: ''
     },
     initialArtworks: {
-      type: Array as PropType<UploadedArtwork[]>,
+      type: Array as PropType<CustomerImage[]>,
       default: () => []
     }
   },
   data () {
     return {
       fSelectedVariant: undefined as undefined | ExtraPhotoAddonOption,
-      uploaderValues: [] as UploadedArtwork[],
+      uploaderValues: [] as CustomerImage[],
       shouldShowAddonSelector: true
     }
   },
@@ -197,7 +197,7 @@ export default Vue.extend({
     ...mapMutations('product', {
       setBundleOptionValue: types.PRODUCT_SET_BUNDLE_OPTION
     }),
-    artworkUploadInitialItems (index: number): UploadedArtwork[] | undefined {
+    artworkUploadInitialItems (index: number): CustomerImage[] | undefined {
       return this.initialArtworks.length ? [this.initialArtworks[index]] : undefined;
     },
     clearUploaders (): void {
