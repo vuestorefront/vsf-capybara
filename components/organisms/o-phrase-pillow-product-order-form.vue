@@ -354,11 +354,10 @@
                     </div>
 
                     <MAccentColorSelector
-                      :value="selectedAccentColorPartValue"
+                      v-model="selectedAccentColorPartValue"
                       class="_accent-color-selector-container"
                       :accent-color-part-values="accentColorPartValues"
                       :disabled="isDisabled"
-                      @input="onAccentColorSelect"
                     />
                   </div>
 
@@ -1001,8 +1000,13 @@ export default (
 
       return accentColor;
     },
-    selectedAccentColorPartValue (): AccentColorPart | undefined {
-      return this.accentColorPartValue ? this.accentColorPartValue : this.defaultAccentColorPartValue;
+    selectedAccentColorPartValue: {
+      get (): AccentColorPart | undefined {
+        return this.accentColorPartValue ? this.accentColorPartValue : this.defaultAccentColorPartValue;
+      },
+      set (value: AccentColorPart): void {
+        this.accentColorPartValue = value;
+      }
     }
   },
   methods: {
@@ -1293,21 +1297,6 @@ export default (
         this.isSubmitting = false;
       }
     },
-    async onAccentColorSelect (value: AccentColorPart): Promise<void> {
-      const isValid = await this.validateCustomOptionsStep(value);
-
-      if (!isValid) {
-        return;
-      }
-
-      Vue.set(
-        this.stepValidateState,
-        customizerStepsData.customOptions.id,
-        'valid'
-      );
-
-      this.accentColorPartValue = value;
-    },
     onBackDesignSelect (value?: string): void {
       this.emitDesignSelectedEvent({ frontDesign: this.frontDesign, backDesign: value });
     },
@@ -1551,6 +1540,15 @@ export default (
         });
       },
       immediate: false
+    },
+    async selectedAccentColorPartValue (value) {
+      const isValid = await this.validateCustomOptionsStep(value);
+
+      Vue.set(
+        this.stepValidateState,
+        customizerStepsData.customOptions.id,
+        isValid ? 'valid' : 'invalid'
+      );
     }
   }
 });
