@@ -627,7 +627,7 @@ export default {
 }
 .empty-cart {
   --heading-title-color: var(--c-primary);
-  --heading-title-margin: 0 0 var(--spacer-base) 0;
+  --heading-title-margin: var(--spacer-2xl) 0 var(--spacer-base) 0;
   --heading-subtitle-margin: 0 0 var(--spacer-xl) 0;
   --heading-title-font-weight: var(--font-semibold);
   display: flex;
