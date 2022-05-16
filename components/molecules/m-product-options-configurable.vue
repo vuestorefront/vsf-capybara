@@ -8,6 +8,7 @@
         :value="getActiveOption(attribute)"
         :should-lock-scroll-on-open="isMobile"
         @change="handleChangeOption"
+        :disabled="isDisabled"
         class="sf-select--underlined product__select-size"
       >
         <SfSelectOption
@@ -27,6 +28,7 @@
           :key="attributeOption.id"
           :color="getColorValue(attributeOption)"
           class="product__color"
+          :class="{ '-disabled': isDisabled }"
           :selected="isColorSelected(attributeOption)"
           @click="handleChangeOption(attributeOption)"
         />
@@ -68,7 +70,8 @@ export default {
   computed: {
     ...mapMobileObserver(),
     ...mapGetters({
-      getCurrentProductOptions: 'product/getCurrentProductOptions'
+      getCurrentProductOptions: 'product/getCurrentProductOptions',
+      isAddingToCart: 'cart/getIsAdding'
     }),
     getActiveOption () {
       return (attribute) => get(this.configuration, `${attribute.attribute_code}.id`, attribute.id)
@@ -94,6 +97,9 @@ export default {
     },
     isColorSelected () {
       return attributeOption => this.configuration.color && parseInt(this.configuration.color.id) === parseInt(attributeOption.id);
+    },
+    isDisabled () {
+      return this.isAddingToCart;
     }
   },
   beforeDestroy () {
@@ -148,6 +154,11 @@ export default {
   }
   &__color {
     margin: 0 var(--spacer-2xs);
+
+    &.-disabled {
+      opacity: 0.8;
+      pointer-events: none;
+    }
   }
 }
 </style>
