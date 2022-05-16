@@ -17,8 +17,7 @@
         label-idle="Drag + Drop or <span class='filepond--label-action'> Select File </span>"
         :files="files"
         :allow-multiple="allowMultiple"
-        :allow-drop="true"
-        :drop-on-page="true"
+        :allow-drop="false"
         :drop-on-element="false"
         :file-validate-type-detect-type="detectFileType"
         :server="{
