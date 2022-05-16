@@ -448,7 +448,7 @@ export default {
       return getCartItemKey(cartItem);
     },
     processStartShopping () {
-      this.$router.push(localizedRoute('/pet-gifts'));
+      this.$router.push(localizedRoute('/'));
     }
   },
   metaInfo () {
