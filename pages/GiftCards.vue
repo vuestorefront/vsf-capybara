@@ -127,7 +127,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.$store.getters['product/getProductBySkuDictionary'];
     },
     giftCardTemplatesList (): GiftCardTemplate[] {
-      return this.$store.getters['giftCard/giftCardTemplates'];
+      return this.$store.getters['giftCard/currentStoreGiftCardTemplates'];
     },
     loggedUser () {
       return this.$store.state.user.current;
