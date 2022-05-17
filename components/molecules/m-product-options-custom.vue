@@ -14,6 +14,7 @@
           v-model="inputValues[('customOption_' + option.option_id)]"
           :maxlength="option.max_characters"
           @change="optionChanged(option)"
+          :disabled="isDisabled"
         />
       </div>
       <div v-if="option.type === 'drop_down' || option.type === 'select'">
@@ -23,6 +24,7 @@
           :should-lock-scroll-on-open="isMobile"
           @change="optionChanged(option)"
           :required="option.is_require"
+          :disabled="isDisabled"
         >
           <SfSelectOption
             v-for="opval in option.values"
@@ -43,6 +45,7 @@
           v-model="inputValues[('customOption_' + option.option_id)]"
           @change="optionChanged(option)"
           :required="option.is_require"
+          :disabled="isDisabled"
         />
       </div>
       <div v-if="option.type === 'checkbox'">
@@ -55,6 +58,7 @@
           v-model="inputValues[('customOption_' + option.option_id)]"
           @change="optionChanged(option)"
           :required="option.is_require"
+          :disabled="isDisabled"
         />
       </div>
     </div>
@@ -70,6 +74,7 @@ import {
   mapMobileObserver,
   unMapMobileObserver
 } from '@storefront-ui/vue/src/utilities/mobile-observer';
+import { mapGetters } from 'vuex';
 
 export default {
   mixins: [ProductCustomOptions],
@@ -82,6 +87,9 @@ export default {
   },
   computed: {
     ...mapMobileObserver(),
+    ...mapGetters({
+      isAddingToCart: 'cart/getIsAdding'
+    }),
     getError () {
       return optionId => {
         const error = get(this.validation.results, 'customOption_' + optionId, {})
@@ -111,6 +119,9 @@ export default {
         selectedOptions[fieldName] = selectedCustomOptionValue(option.type, option.values, this.inputValues[fieldName])
         return selectedOptions
       }, {})
+    },
+    isDisabled () {
+      return this.isAddingToCart;
     }
   },
   beforeDestroy () {

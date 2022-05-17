@@ -16,6 +16,7 @@
       :label="link.product && link.product.name"
       :name="link.product && link.product.name"
       :value="link.id"
+      :disabled="isDisabled"
       v-model="productOptionId"
     >
       <template #label="{label}">
@@ -40,6 +41,7 @@ import { ProductBundleOption } from '@vue-storefront/core/modules/catalog/compon
 import { SfHeading, SfRadio, SfDivider, SfAlert } from '@storefront-ui/vue';
 import AProductPrice from 'theme/components/atoms/a-product-price'
 import AProductQuantity from 'theme/components/atoms/a-product-quantity'
+import { mapGetters } from 'vuex';
 
 export default {
   mixins: [ProductBundleOption],
@@ -51,6 +53,12 @@ export default {
     SfDivider,
     AProductQuantity,
     SfAlert
+  },
+  computed: {
+    ...mapGetters({ isAddingToCart: 'cart/getIsAdding' }),
+    isDisabled () {
+      return this.isAddingToCart;
+    }
   }
 };
 </script>
