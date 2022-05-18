@@ -449,7 +449,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       this.$store.commit(
         'ui/registerUploader',
         {
-          uid: (fileInput as any)._uid,
+          uid: fileInput._uid,
           allowMultiple: this.allowMultiple,
           hasUploadedFiles: fileInput.getFiles().length > 0
         }
@@ -461,7 +461,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      this.$store.commit('ui/unregisterUploader', (fileInput as any)._uid);
+      this.$store.commit('ui/unregisterUploader', fileInput._uid);
     },
     async updateUploaderDataInStore (): Promise<void> {
       await this.$nextTick();
@@ -473,7 +473,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
       this.$store.commit(
         'ui/updateUploaderData',
-        { uid: (fileInput as any)._uid,
+        {
+          uid: fileInput._uid,
           dataForUpdate: {
             allowMultiple: this.allowMultiple,
             hasUploadedFiles: fileInput.getFiles().length > 0
