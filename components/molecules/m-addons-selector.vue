@@ -262,7 +262,10 @@ export default Vue.extend({
 
   &.-disabled {
     ._item {
+      --checkbox-cursor: default;
+
       opacity: 0.7;
+      cursor: default;
     }
   }
 

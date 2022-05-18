@@ -2,6 +2,7 @@
   <validation-observer
     v-slot="{ passes }"
     class="gift-card-order-form"
+    :class="{ '-disabled': isDisabled }"
     tag="div"
   >
     <div class="_form-block -amount">
@@ -538,6 +539,10 @@ $send-friend-block-max-height: 500px;
   .maxHeight-leave-to {
     max-height: 0;
     overflow: hidden;
+  }
+
+  &.-disabled {
+    --checkbox-cursor: default;
   }
 
   @include for-desktop {
