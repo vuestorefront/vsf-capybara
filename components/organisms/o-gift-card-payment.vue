@@ -14,65 +14,65 @@
       </SfCheckbox>
 
       <div class="_content" v-if="showForm || showAppliedGiftCards">
-      <div class="_applied-gift-cards" v-if="showAppliedGiftCards">
-        <MAppliedGiftCard
-          class="_applied-gift-card"
-          v-for="giftCard in appliedGiftCards"
-          :key="giftCard.code"
-          :gift-card-code="giftCard.code"
-          :gift-card-value="giftCard.value"
-        />
-      </div>
-
-      <validation-observer
-        v-slot="{ passes }"
-        tag="div"
-        class="_form"
-        v-if="showForm"
-      >
-        <validation-provider
-          v-slot="{ errors }"
-          mode="passive"
-          name="giftCode"
-          rules="required"
-          ref="giftCardCodeValidator"
-          slim
-        >
-          <div class="_form-field">
-            <div class="_code-error" v-show="showCodeError">
-              {{ codeError }}
-            </div>
-
-            <SfInput
-              class="form__element form__element--half"
-              name="giftCode"
-                :label="$t('Gift card code')"
-              :required="true"
-              :valid="!errors.length"
-              :error-message="errors[0]"
-              :value="giftCardCode"
-              @input="onGiftCardCodeChangeHandler"
-            />
-          </div>
-        </validation-provider>
-
-        <div class="_loader -gift-card" v-show="isSubmitting">
-          <SfLoader class="_sf-loader" :loading="true" />
-          <span class="_loader-text"> Adding Gift Card... </span>
+        <div class="_applied-gift-cards" v-if="showAppliedGiftCards">
+          <MAppliedGiftCard
+            class="_applied-gift-card"
+            v-for="giftCard in appliedGiftCards"
+            :key="giftCard.code"
+            :gift-card-code="giftCard.code"
+            :gift-card-value="giftCard.value"
+          />
         </div>
 
-        <SfButton
-          class="color-secondary _apply-button"
-          :disabled="isSubmitting"
-          @click.native="() => passes(() => onApplyGiftCardCode())"
+        <validation-observer
+          v-slot="{ passes }"
+          tag="div"
+          class="_form"
+          v-if="showForm"
         >
-          {{ $t('Apply Gift Card') }}
-        </SfButton>
-      </validation-observer>
+          <validation-provider
+            v-slot="{ errors }"
+            mode="passive"
+            name="giftCode"
+            rules="required"
+            ref="giftCardCodeValidator"
+            slim
+          >
+            <div class="_form-field">
+              <div class="_code-error" v-show="showCodeError">
+                {{ codeError }}
+              </div>
 
-      <div class="_grand-total-notification" v-if="showGrandTotalNotification">
-        <span> Your order’s grand total is now zero. You're all set! </span>
-      </div>
+              <SfInput
+                class="form__element form__element--half"
+                name="giftCode"
+                :label="$t('Gift card code')"
+                :required="true"
+                :valid="!errors.length"
+                :error-message="errors[0]"
+                :value="giftCardCode"
+                @input="onGiftCardCodeChangeHandler"
+              />
+            </div>
+          </validation-provider>
+
+          <div class="_loader -gift-card" v-show="isSubmitting">
+            <SfLoader class="_sf-loader" :loading="true" />
+            <span class="_loader-text"> Adding Gift Card... </span>
+          </div>
+
+          <SfButton
+            class="color-secondary _apply-button"
+            :disabled="isSubmitting"
+            @click.native="() => passes(() => onApplyGiftCardCode())"
+          >
+            {{ $t('Apply Gift Card') }}
+          </SfButton>
+        </validation-observer>
+
+        <div class="_grand-total-notification" v-if="showGrandTotalNotification">
+          <span> Your order’s grand total is now zero. You're all set! </span>
+        </div>
       </div>
     </template>
   </div>
@@ -165,6 +165,8 @@ export default GiftCardPayment.extend({
   }
 
   ._loader {
+    --loader-overlay-background: rgba(255, 255, 255, 0);
+
     display: flex;
     align-items: center;
 
