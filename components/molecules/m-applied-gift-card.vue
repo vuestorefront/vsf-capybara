@@ -159,6 +159,8 @@ export default AppliedGiftCard.extend({
   }
 
   ._loader {
+    --loader-overlay-background: rgba(255, 255, 255, 0);
+
     display: flex;
     align-items: center;
 
