@@ -178,11 +178,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   mounted (): void {
     const dropzone = this.getDropzone();
     const dropzoneOverlay = this.getDropzoneOverlay();
-    const fileInput = this.getFileInput();
 
-    if (fileInput) {
-      this.registerUploaderInStore(fileInput);
-    }
+    this.registerUploaderInStore();
 
     if (
       !dropzone ||
@@ -216,13 +213,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     this.window.removeEventListener('dragleave', this.fWindowDragHoverHandler);
     this.window.removeEventListener('drop', this.fWindowDropHandler);
 
-    const fileInput = this.getFileInput();
-
-    if (!fileInput) {
-      return;
-    }
-
-    this.unregisterUploaderInStore(fileInput);
+    this.unregisterUploaderInStore();
   },
   methods: {
     onFileRemove (error, event) {
@@ -235,13 +226,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         event.filenameWithoutExtension
       );
 
-      const fileInput = this.getFileInput();
-
-      if (!fileInput) {
-        return;
-      }
-
-      this.updateUploaderDataInStore(fileInput);
+      this.updateUploaderDataInStore();
     },
     clearInput (): void {
       const fileInput = this.getFileInput();
@@ -366,7 +351,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         load();
 
-        this.updateUploaderDataInStore(fileInput);
+        this.updateUploaderDataInStore();
 
         this.$emit('file-removed', storageItemId);
       } catch (e) {
@@ -378,33 +363,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     onFileProcessed (): void {
       this.updateStatus();
-
-      const fileInput = this.getFileInput();
-      if (!fileInput) {
-        return;
-      }
-
-      this.updateUploaderDataInStore(fileInput);
+      this.updateUploaderDataInStore();
     },
     onAllFilesProcessed (): void {
       this.updateStatus();
-
-      const fileInput = this.getFileInput();
-      if (!fileInput) {
-        return;
-      }
-
-      this.updateUploaderDataInStore(fileInput);
+      this.updateUploaderDataInStore();
     },
     onFileAbort (): void {
       this.updateStatus();
-
-      const fileInput = this.getFileInput();
-      if (!fileInput) {
-        return;
-      }
-
-      this.updateUploaderDataInStore(fileInput);
+      this.updateUploaderDataInStore();
     },
     onFileAdded (error: Error): void {
       if (error) {
@@ -412,13 +379,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.updateStatus();
-
-      const fileInput = this.getFileInput();
-      if (!fileInput) {
-        return;
-      }
-
-      this.updateUploaderDataInStore(fileInput);
+      this.updateUploaderDataInStore();
     },
     getDropzone (): HTMLElement | undefined {
       return this.$refs['dropzone'] as HTMLElement;
@@ -479,7 +440,12 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         }
       }));
     },
-    registerUploaderInStore (fileInput: VueFilePondComponent): void {
+    registerUploaderInStore (): void {
+      const fileInput = this.getFileInput();
+      if (!fileInput) {
+        return;
+      }
+
       this.$store.commit(
         'ui/registerUploader',
         {
@@ -489,11 +455,21 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         }
       )
     },
-    unregisterUploaderInStore (fileInput: VueFilePondComponent): void {
+    unregisterUploaderInStore (): void {
+      const fileInput = this.getFileInput();
+      if (!fileInput) {
+        return;
+      }
+
       this.$store.commit('ui/unregisterUploader', (fileInput as any)._uid);
     },
-    async updateUploaderDataInStore (fileInput: VueFilePondComponent): Promise<void> {
+    async updateUploaderDataInStore (): Promise<void> {
       await this.$nextTick();
+
+      const fileInput = this.getFileInput();
+      if (!fileInput) {
+        return;
+      }
 
       this.$store.commit(
         'ui/updateUploaderData',
@@ -519,9 +495,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       event.stopPropagation();
 
       const fileInput = this.getFileInput();
-      const isWindowDropAvailable = this.firstAvailablePageDropUploaderUid && this.firstAvailablePageDropUploaderUid === (fileInput as any)._uid;
 
-      if (!event.dataTransfer || !fileInput || this.disabled || !isWindowDropAvailable) {
+      if (
+        !event.dataTransfer ||
+        !fileInput ||
+        this.disabled ||
+        !this.firstAvailablePageDropUploaderUid ||
+        this.firstAvailablePageDropUploaderUid !== fileInput._uid
+      ) {
         return;
       }
 
