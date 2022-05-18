@@ -1,7 +1,11 @@
 <template>
   <div class="m-modal-authentication">
-    <SfModal :visible="isVisible" @close="closeModal">
-      <transition name="fade" mode="out-in">
+    <SfModal :visible="isVisible" @close="closeModal" ref="modal">
+      <transition
+        name="fade"
+        mode="out-in"
+        @after-enter="onTransitionAfterEnter"
+      >
         <MLogin v-if="modalData.payload === 'login'" />
         <MRegister v-if="modalData.payload === 'register'" />
         <MResetPassword v-if="modalData.payload === 'forgot-pass'" />
@@ -33,6 +37,15 @@ export default {
   methods: {
     closeModal () {
       this.$emit('close', this.modalData.name)
+    },
+    onTransitionAfterEnter () {
+      const modalComponent = this.$refs.modal;
+
+      if (!modalComponent) {
+        return;
+      }
+
+      modalComponent.updateDirectivesData();
     }
   }
 };
