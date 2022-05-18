@@ -275,6 +275,10 @@ $bodypart-item-width: 145px;
   &.-disabled {
     ._visual-selector-value {
       opacity: 0.7;
+
+      > label {
+       cursor: default;
+      }
     }
   }
 
