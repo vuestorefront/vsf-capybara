@@ -1,10 +1,13 @@
 import supportsWebP from 'supports-webp';
+
+import { artworkUploadStore } from './artwork-upload';
 import { modalStore } from './modals';
 
 export const uiStore = {
   namespaced: true,
   modules: {
-    modal: modalStore
+    modal: modalStore,
+    artworkUpload: artworkUploadStore
   },
   state: {
     sidebar: false,

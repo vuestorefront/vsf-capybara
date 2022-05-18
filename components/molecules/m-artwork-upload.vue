@@ -17,8 +17,7 @@
         label-idle="Drag + Drop or <span class='filepond--label-action'> Select File </span>"
         :files="files"
         :allow-multiple="allowMultiple"
-        :allow-drop="true"
-        :drop-on-page="true"
+        :allow-drop="false"
         :drop-on-element="false"
         :file-validate-type-detect-type="detectFileType"
         :server="{
@@ -92,7 +91,8 @@ interface FilePondInitialFile {
 
 interface InjectedServices {
   fErrorConverterService: ErrorConverterService,
-  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory
+  fFileProcessingRepositoryFactory: FileProcessingRepositoryFactory,
+  window: Window
 }
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
@@ -102,7 +102,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   },
   inject: {
     fErrorConverterService: { from: 'ErrorConverterService' },
-    fFileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' }
+    fFileProcessingRepositoryFactory: { from: 'FileProcessingRepositoryFactory' },
+    window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   props: {
     productId: {
@@ -134,7 +135,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       fFileProcessingRepository: undefined as undefined | FileProcessingRepository,
       fDragHoverHandler: undefined as undefined | ((e: DragEvent) => void),
       fDragDropHandler: undefined as undefined | ((e: DragEvent) => void),
-      files: undefined as FilePondInitialFile[] | undefined
+      files: undefined as FilePondInitialFile[] | undefined,
+      fWindowDragHoverHandler: undefined as undefined | ((e: DragEvent) => void),
+      fWindowDropHandler: undefined as undefined | ((e: DragEvent) => void)
     }
   },
   computed: {
@@ -157,6 +160,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       return this.fRemoveRequestsCount > 0;
+    },
+    firstAvailablePageDropUploaderUid (): number | undefined {
+      return this.$store.getters['ui/firstAvailablePageDropUploaderUid'];
     }
   },
   created () {
@@ -165,13 +171,24 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     );
     this.fDragHoverHandler = (e: DragEvent) => this.onDropzoneDragHover(e);
     this.fDragDropHandler = (e: DragEvent) => this.onDropzoneDrop(e);
+    this.fWindowDragHoverHandler = (e: DragEvent) => this.windowDragHoverHandler(e);
+    this.fWindowDropHandler = (e: DragEvent) => this.windowDropHandler(e);
     this.initFiles();
   },
   mounted (): void {
     const dropzone = this.getDropzone();
     const dropzoneOverlay = this.getDropzoneOverlay();
 
-    if (!dropzone || !dropzoneOverlay || !this.fDragHoverHandler || !this.fDragDropHandler) {
+    this.registerUploaderInStore();
+
+    if (
+      !dropzone ||
+      !dropzoneOverlay ||
+      !this.fDragHoverHandler ||
+      !this.fDragDropHandler ||
+      !this.fWindowDragHoverHandler ||
+      !this.fWindowDropHandler
+    ) {
       return;
     }
 
@@ -186,6 +203,17 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     dropzoneOverlay.addEventListener('drop', this.fDragDropHandler, {
       capture: true
     });
+
+    this.window.addEventListener('dragover', this.fWindowDragHoverHandler);
+    this.window.addEventListener('dragleave', this.fWindowDragHoverHandler);
+    this.window.addEventListener('drop', this.fWindowDropHandler);
+  },
+  beforeDestroy (): void {
+    this.window.removeEventListener('dragover', this.fWindowDragHoverHandler);
+    this.window.removeEventListener('dragleave', this.fWindowDragHoverHandler);
+    this.window.removeEventListener('drop', this.fWindowDropHandler);
+
+    this.unregisterUploaderInStore();
   },
   methods: {
     onFileRemove (error, event) {
@@ -197,6 +225,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         'file-removed',
         event.filenameWithoutExtension
       );
+
+      this.updateUploaderDataInStore();
     },
     clearInput (): void {
       const fileInput = this.getFileInput();
@@ -321,6 +351,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         load();
 
+        this.updateUploaderDataInStore();
+
         this.$emit('file-removed', storageItemId);
       } catch (e) {
         const errors = this.fErrorConverterService.describeError(e);
@@ -331,12 +363,15 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     },
     onFileProcessed (): void {
       this.updateStatus();
+      this.updateUploaderDataInStore();
     },
     onAllFilesProcessed (): void {
       this.updateStatus();
+      this.updateUploaderDataInStore();
     },
     onFileAbort (): void {
       this.updateStatus();
+      this.updateUploaderDataInStore();
     },
     onFileAdded (error: Error): void {
       if (error) {
@@ -344,6 +379,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       }
 
       this.updateStatus();
+      this.updateUploaderDataInStore();
     },
     getDropzone (): HTMLElement | undefined {
       return this.$refs['dropzone'] as HTMLElement;
@@ -393,13 +429,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         return;
       }
 
-      const droppedFiles = [].slice.call(e.dataTransfer.files);
-
-      try {
-        await fileInput.addFiles(droppedFiles);
-      } catch (e) {
-        //
-      }
+      await this.addFilesFromDropEvent(e, fileInput);
     },
     initFiles (): void {
       this.files = this.initialItems.map((item) => ({
@@ -409,6 +439,84 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           name: item.id
         }
       }));
+    },
+    registerUploaderInStore (): void {
+      const fileInput = this.getFileInput();
+      if (!fileInput) {
+        return;
+      }
+
+      this.$store.commit(
+        'ui/registerUploader',
+        {
+          uid: fileInput._uid,
+          allowMultiple: this.allowMultiple,
+          hasUploadedFiles: fileInput.getFiles().length > 0
+        }
+      )
+    },
+    unregisterUploaderInStore (): void {
+      const fileInput = this.getFileInput();
+      if (!fileInput) {
+        return;
+      }
+
+      this.$store.commit('ui/unregisterUploader', fileInput._uid);
+    },
+    async updateUploaderDataInStore (): Promise<void> {
+      await this.$nextTick();
+
+      const fileInput = this.getFileInput();
+      if (!fileInput) {
+        return;
+      }
+
+      this.$store.commit(
+        'ui/updateUploaderData',
+        {
+          uid: fileInput._uid,
+          dataForUpdate: {
+            allowMultiple: this.allowMultiple,
+            hasUploadedFiles: fileInput.getFiles().length > 0
+          }
+        }
+      )
+    },
+    windowDragHoverHandler (event: DragEvent): void {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (!this.firstAvailablePageDropUploaderUid) {
+        event.dataTransfer.effectAllowed = 'none';
+        event.dataTransfer.dropEffect = 'none';
+      }
+    },
+    async windowDropHandler (event: DragEvent): Promise<void> {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const fileInput = this.getFileInput();
+
+      if (
+        !event.dataTransfer ||
+        !fileInput ||
+        this.disabled ||
+        !this.firstAvailablePageDropUploaderUid ||
+        this.firstAvailablePageDropUploaderUid !== fileInput._uid
+      ) {
+        return;
+      }
+
+      await this.addFilesFromDropEvent(event, fileInput);
+    },
+    async addFilesFromDropEvent (event: DragEvent, fileInput: VueFilePondComponent): Promise<void> {
+      const droppedFiles = [].slice.call(event.dataTransfer.files);
+
+      try {
+        await fileInput.addFiles(droppedFiles);
+      } catch (e) {
+        //
+      }
     }
   },
   watch: {
