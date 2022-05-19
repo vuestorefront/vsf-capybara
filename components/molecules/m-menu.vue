@@ -32,7 +32,9 @@
             :key="item.label"
           >
             <router-link
+              class="_item-link"
               :to="item.url"
+              :class="{'-active': item.isActive && item.isActive()}"
               @click.native="$emit('close')"
             >
               <SfMenuItem :label="item.label" />
@@ -105,7 +107,13 @@ export default {
       otherProductsItems: [
         {
           label: 'Gift Boxes',
-          url: '/giftbox'
+          url: {
+            name: 'giftbox'
+          },
+          isActive: () => {
+            return this.$route.name === 'configurable-product' &&
+             this.$route.params?.parentSku === 'gift_box';
+          }
         },
         {
           label: 'Accessories',
@@ -143,8 +151,14 @@ export default {
   visibility: hidden;
   transition: 0.2s;
 
-  .router-link-exact-active {
+  .router-link-active {
     --menu-item-font-weight: bold;
+  }
+
+  ._item-link {
+    &.-active {
+      --menu-item-font-weight: bold;
+    }
   }
 
   .sf-menu-item {
