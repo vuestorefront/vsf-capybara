@@ -1,4 +1,4 @@
-import BodypartOption from './bodypart-option';
+import { BodypartOption } from 'src/modules/budsies';
 
 export default interface ForeversWizardCustomizeStepData {
   bodypartsValues: Record<string, BodypartOption | BodypartOption[] | undefined>,

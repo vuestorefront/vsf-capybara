@@ -244,9 +244,8 @@ import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/m
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
 
-import { isVue } from 'src/modules/shared';
-import { Bodypart } from 'src/modules/budsies';
-import { getProductDefaultPrice } from 'theme/helpers';
+import { isVue, getProductDefaultPrice } from 'src/modules/shared';
+import { Bodypart, BodypartOption } from 'src/modules/budsies';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
@@ -254,7 +253,6 @@ import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-confi
 import MBlockStory from '../../molecules/m-block-story.vue';
 import MProductionTimeSelector from '../../molecules/m-production-time-selector.vue';
 
-import BodypartOption from '../../interfaces/bodypart-option';
 import AddonOption from '../../interfaces/addon-option.interface';
 import ProductionTimeOption from '../../interfaces/production-time-option.interface';
 import ForeversWizardCustomizeStepData from '../../interfaces/forevers-wizard-customize-step-data.interface';

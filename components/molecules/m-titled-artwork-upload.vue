@@ -40,8 +40,9 @@ import { TranslateResult } from 'vue-i18n';
 import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 
+import { CustomerImage } from 'src/modules/shared';
+
 import MArtworkUpload from './m-artwork-upload.vue';
-import UploadedArtwork from '../interfaces/uploaded-artwork.interface';
 
 extend('required', {
   ...required,
@@ -68,7 +69,7 @@ export default Vue.extend({
       default: false
     },
     initialArtworks: {
-      type: Array as PropType<UploadedArtwork[]>,
+      type: Array as PropType<CustomerImage[]>,
       default: () => []
     },
     fieldName: {
@@ -80,7 +81,7 @@ export default Vue.extend({
       default: ''
     },
     uploadedArtwork: {
-      type: Object as PropType<UploadedArtwork | undefined>,
+      type: Object as PropType<CustomerImage | undefined>,
       default: undefined
     },
     isRequired: {

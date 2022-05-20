@@ -7,7 +7,7 @@
             <p class="no-orders__title">
               {{ $t('You currently have no orders') }}
             </p>
-            <SfButton class="no-orders__button">
+            <SfButton @click="onStartShoppingButtonClick" class="no-orders__button">
               {{ $t('Start shopping') }}
             </SfButton>
           </div>
@@ -96,6 +96,9 @@ export default {
     },
     setActiveOrder (order) {
       this.activeOrder = order ? this.ordersHistory.find(item => { return order.order_id.endsWith(item.increment_id) }) : null
+    },
+    onStartShoppingButtonClick () {
+      this.$router.push('/');
     }
   }
 }

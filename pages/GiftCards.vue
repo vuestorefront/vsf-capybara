@@ -64,6 +64,7 @@ import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { Logger } from '@vue-storefront/core/lib/logger';
 import i18n from '@vue-storefront/i18n';
 import { PRODUCT_UNSET_CURRENT } from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
+import { htmlDecode } from '@vue-storefront/core/filters';
 
 import { SfModal } from '@storefront-ui/vue';
 
@@ -126,7 +127,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.$store.getters['product/getProductBySkuDictionary'];
     },
     giftCardTemplatesList (): GiftCardTemplate[] {
-      return this.$store.getters['giftCard/giftCardTemplates'];
+      return this.$store.getters['giftCard/currentStoreGiftCardTemplates'];
     },
     loggedUser () {
       return this.$store.state.user.current;
@@ -339,6 +340,22 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     updateCustomerName (): void {
       this.giftCardOrderFormData.customerName = this.loggedUserFullName;
     }
+  },
+  metaInfo () {
+    return {
+      title: htmlDecode(
+        this.product?.meta_title || this.product?.name
+      ),
+      meta: this.product?.meta_description
+        ? [
+          {
+            vmid: 'description',
+            name: 'description',
+            content: htmlDecode(this.product?.meta_description)
+          }
+        ]
+        : []
+    };
   }
 });
 </script>

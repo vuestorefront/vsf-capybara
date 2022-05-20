@@ -104,6 +104,10 @@ export default Vue.extend({
 
     &.-disabled {
         opacity: 0.6;
+
+        ._handle {
+          cursor: default;
+        }
     }
 
     &.-skin-petsies {
@@ -114,12 +118,15 @@ export default Vue.extend({
 
         &:hover,
         &:focus {
-          &.-up {
-            background: var(--c-light);
-          }
+          background: var(--c-light);
+        }
+      }
 
-          &.-down {
-            background: var(--c-light);
+      &.-disabled {
+        ._handle {
+          &:hover,
+          &:focus {
+            background: unset;
           }
         }
       }

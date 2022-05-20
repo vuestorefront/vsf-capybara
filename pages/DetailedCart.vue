@@ -174,7 +174,7 @@ import {
 } from '@storefront-ui/vue';
 import { OrderSummary } from './DetailedCart/index.js';
 import { mapGetters, mapState } from 'vuex';
-import { getCartItemPrice } from 'theme/helpers';
+import { getCartItemPrice } from 'src/modules/shared';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
 import { onlineHelper } from '@vue-storefront/core/helpers';
@@ -187,6 +187,7 @@ import { getBundleOptionsValues, getSelectedBundleOptions } from '@vue-storefron
 import { CART_UPD_ITEM } from '@vue-storefront/core/modules/cart/store/mutation-types'
 import ProductionSpotCountdown from 'src/modules/promotion-platform/components/ProductionSpotCountdown.vue';
 import isCustomProduct from 'src/modules/shared/helpers/is-custom-product.function';
+import { htmlDecode } from '@vue-storefront/core/filters';
 
 const CHANGE_QUANTITY_DEBOUNCE_TIME = 1000;
 
@@ -458,8 +459,13 @@ export default {
       return getCartItemKey(cartItem);
     },
     processStartShopping () {
-      this.$router.push(localizedRoute('/pet-gifts'));
+      this.$router.push(localizedRoute('/'));
     }
+  },
+  metaInfo () {
+    return {
+      title: htmlDecode(this.$t('Shopping Cart'))
+    };
   }
 };
 </script>
@@ -636,7 +642,7 @@ export default {
 }
 .empty-cart {
   --heading-title-color: var(--c-primary);
-  --heading-title-margin: 0 0 var(--spacer-base) 0;
+  --heading-title-margin: var(--spacer-2xl) 0 var(--spacer-base) 0;
   --heading-subtitle-margin: 0 0 var(--spacer-xl) 0;
   --heading-title-font-weight: var(--font-semibold);
   display: flex;

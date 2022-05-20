@@ -7,7 +7,7 @@
 
 <script>
 import ACustomPrice from '../atoms/a-custom-price.vue';
-import { getProductDefaultPrice } from 'theme/helpers'
+import { getProductDefaultPrice } from 'src/modules/shared'
 
 export default {
   name: 'AProductPrice',

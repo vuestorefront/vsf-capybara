@@ -37,6 +37,8 @@ import Checkout from '@vue-storefront/core/pages/Checkout';
 import { SfSteps } from '@storefront-ui/vue';
 import { mapGetters } from 'vuex';
 import isCustomProduct from 'src/modules/shared/helpers/is-custom-product.function';
+import { htmlDecode } from '@vue-storefront/core/filters';
+import { currentStoreView } from '@vue-storefront/core/lib/multistore';
 
 import OBillingAddress from 'theme/components/organisms/o-billing-address';
 import OShipping from 'theme/components/organisms/o-shipping';
@@ -196,6 +198,14 @@ export default {
         )
       });
     }
+  },
+  metaInfo () {
+    const storeName = currentStoreView().name;
+
+    return {
+      title: htmlDecode(this.showThankYouPage ? this.$t('Thank You - You\'ve Ordered a Custom {storeName} Plushie', { storeName }) : this.$t('Checkout')),
+      description: this.showThankYouPage ? [{ vmid: 'description', name: 'description', content: htmlDecode(this.$t('Thank you for ordering a custom {storeName} toy', { storeName })) }] : []
+    };
   }
 };
 </script>

@@ -105,7 +105,7 @@ import { mapState, mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 import { onlineHelper } from '@vue-storefront/core/helpers';
 import { getThumbnailForProduct } from '@vue-storefront/core/modules/cart/helpers';
-import { getCartItemPrice, getProductPriceFromTotals } from 'theme/helpers';
+import { getCartItemPrice, getProductPriceFromTotals } from 'src/modules/shared';
 import VueOfflineMixin from 'vue-offline/mixin';
 import onEscapePress from '@vue-storefront/core/mixins/onEscapePress';
 
