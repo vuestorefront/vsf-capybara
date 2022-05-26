@@ -296,7 +296,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       // transfer: (transferId: string) => void,
       // options: any
     ) {
-      if (this.disabled || !this.fFileProcessingRepository) {
+      if (!this.fFileProcessingRepository) {
         error('Operations are disabled!');
         return;
       }
@@ -337,10 +337,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       load: () => void,
       error: (errorText: string) => void
     ) {
-      if (this.disabled) {
-        return;
-      }
-
       this.fRemoveRequestsCount++;
 
       try {
