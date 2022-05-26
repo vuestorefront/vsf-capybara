@@ -12,6 +12,8 @@
 </template>
 
 <script lang="ts">
+import { VueConstructor } from 'vue';
+import { InjectType } from 'src/modules/shared';
 import { SfButton } from '@storefront-ui/vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
 
@@ -19,11 +21,18 @@ import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import ButtonItemData from './interfaces/button-item-data.interface';
 import getUrlFromLink from './get-url-from-link';
 
-export default Blok.extend({
+interface InjectedServices {
+  window: Window
+}
+
+export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
   name: 'StoryblokButton',
   components: {
     SfButton
   },
+  inject: {
+    window: { from: 'WindowObject' }
+  } as unknown as InjectType<InjectedServices>,
   computed: {
     itemData (): ButtonItemData {
       return this.item as ButtonItemData;
@@ -51,7 +60,7 @@ export default Blok.extend({
       const isExternalUrl = url.startsWith('//') || url.startsWith('http://') || url.startsWith('https://') || url.startsWith('ftp://');
 
       if (isExternalUrl) {
-        window.open(url, '_blank');
+        this.window.open(url, '_blank');
         return;
       }
 
@@ -60,7 +69,7 @@ export default Blok.extend({
       });
 
       if (this.shouldOpenInNewWindow) {
-        window.open(route.href, '_blank');
+        this.window.open(route.href, '_blank');
         return;
       }
 

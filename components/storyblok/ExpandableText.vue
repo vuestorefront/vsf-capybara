@@ -17,11 +17,21 @@
 </template>
 
 <script lang="ts">
+import { VueConstructor } from 'vue';
+import { InjectType } from 'src/modules/shared';
+
 import { Blok } from 'src/modules/vsf-storyblok-module/components'
 import ExpandableTextData from './interfaces/expandable-text-data.interface';
 
-export default Blok.extend({
+interface InjectedServices {
+  window: Window
+}
+
+export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
   name: 'StoryblokExpandableText',
+  inject: {
+    window: { from: 'WindowObject' }
+  } as unknown as InjectType<InjectedServices>,
   data () {
     return {
       fIsExpanded: false,
@@ -89,7 +99,7 @@ export default Blok.extend({
             textBlock.getBoundingClientRect().top + windowScroll;
 
       if (textBlockTopPosition < windowScroll) {
-        window.scrollTo(0, textBlockTopPosition - this.fAuxiliaryOffset);
+        this.window.scrollTo(0, textBlockTopPosition - this.fAuxiliaryOffset);
       }
     }
   }

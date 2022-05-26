@@ -41,7 +41,8 @@ import generateImageSourcesList from './generate-image-sources-list';
 const SCREEN_WIDTH_BREAKPOINT = 768;
 
 interface InjectedServices {
-  componentWidthCalculator: ComponentWidthCalculator
+  componentWidthCalculator: ComponentWidthCalculator,
+  window: Window
 }
 
 export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
@@ -51,7 +52,8 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     CoolLightBox
   },
   inject: {
-    componentWidthCalculator: { }
+    componentWidthCalculator: { },
+    window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   data () {
     return {
@@ -116,7 +118,7 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
         return result;
       }
 
-      if (window.innerWidth >= SCREEN_WIDTH_BREAKPOINT || !this.itemData.mobile_image.filename) {
+      if (this.window.innerWidth >= SCREEN_WIDTH_BREAKPOINT || !this.itemData.mobile_image.filename) {
         return result;
       }
 
