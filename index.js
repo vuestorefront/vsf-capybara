@@ -13,7 +13,7 @@ import { module as cartModule } from './store/cart';
 import { claimsStore } from 'theme/store/claims';
 import { homepageStore } from 'theme/store/homepage';
 import { uiStore } from 'theme/store/ui';
-import { promotedStore } from 'theme/store/promoted-offers';
+// import { promotedStore } from 'theme/store/promoted-offers';
 import { instagramStore } from 'theme/store/instagram-images';
 import { defaultContentStore } from 'theme/store/default-content';
 import { StorageManager } from '@vue-storefront/core/lib/storage-manager';
@@ -42,7 +42,7 @@ function initTheme (app, router, store, config, ssrContext) {
   store.registerModule('claims', claimsStore);
   store.registerModule('homepage', homepageStore);
   store.registerModule('ui', uiStore);
-  store.registerModule('promoted', promotedStore);
+  // store.registerModule('promoted', promotedStore);
   store.registerModule('instagram', instagramStore);
   store.registerModule('defaultContent', defaultContentStore);
   if (ssrContext) {

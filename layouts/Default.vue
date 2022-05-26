@@ -125,7 +125,7 @@ export default {
   },
   serverPrefetch () {
     return Promise.all([
-      this.$store.dispatch('promoted/updatePromotedOffers'),
+      // this.$store.dispatch('promoted/updatePromotedOffers'),
       this.fetchMenuData()
     ]);
   },
