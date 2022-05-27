@@ -30,6 +30,8 @@
         @addfile="onFileAdded"
         @processfileabort="onFileAbort"
         @removefile="onFileRemove"
+        @addfilestart="updateStatus"
+        @processfilestart="updateStatus"
       />
     </div>
   </div>
@@ -43,7 +45,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
 import Vue, { PropType, VueConstructor } from 'vue';
 // Import Vue FilePond
 import vueFilePond, { VueFilePondComponent } from 'vue-filepond';
-import { File as FilePond, Status, FileOrigin } from 'filepond';
+import { File as FilePond, FileOrigin, FileStatus } from 'filepond';
 // Import image preview and file type validation plugins
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
@@ -131,7 +133,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     return {
       file: undefined as undefined | string,
       fRemoveRequestsCount: 0,
-      fPondStatus: 0,
+      fIsBusy: false,
       fFileProcessingRepository: undefined as undefined | FileProcessingRepository,
       fDragHoverHandler: undefined as undefined | ((e: DragEvent) => void),
       fDragDropHandler: undefined as undefined | ((e: DragEvent) => void),
@@ -151,15 +153,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return result;
     },
     isBusy (): boolean {
-      if (
-        [Status.EMPTY, Status.IDLE, Status.ERROR, Status.READY].indexOf(
-          this.fPondStatus
-        ) === -1
-      ) {
-        return true;
-      }
-
-      return this.fRemoveRequestsCount > 0;
+      return this.fIsBusy || this.fRemoveRequestsCount > 0;
     },
     firstAvailablePageDropUploaderUid (): number | undefined {
       return this.$store.getters['ui/firstAvailablePageDropUploaderUid'];
@@ -296,7 +290,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       // transfer: (transferId: string) => void,
       // options: any
     ) {
-      if (this.disabled || !this.fFileProcessingRepository) {
+      if (!this.fFileProcessingRepository) {
         error('Operations are disabled!');
         return;
       }
@@ -337,10 +331,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       load: () => void,
       error: (errorText: string) => void
     ) {
-      if (this.disabled) {
-        return;
-      }
-
       this.fRemoveRequestsCount++;
 
       try {
@@ -393,12 +383,25 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     updateStatus (): void {
       const fileInput = this.getFileInput();
       if (!fileInput) {
-        this.fPondStatus = 0;
+        this.fIsBusy = false;
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.fPondStatus = ((fileInput as any)._pond as FilePond).status;
+      const files = fileInput.getFiles();
+      let isBusy = false;
+
+      for (const file of files) {
+        if ([
+          FileStatus.PROCESSING,
+          FileStatus.LOADING,
+          FileStatus.PROCESSING_QUEUED
+        ].includes(file.status)) {
+          isBusy = true;
+          break;
+        }
+      }
+
+      this.fIsBusy = isBusy;
     },
     onDropzoneDragHover (e: DragEvent): void {
       e.preventDefault();
