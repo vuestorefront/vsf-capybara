@@ -20,13 +20,11 @@ import { BaseImage } from 'src/modules/budsies';
 
 import get from 'lodash-es/get';
 
-const storeView = currentStoreView();
-
 export default {
   components: { BaseImage },
   computed: {
     defaultTitle () {
-      return get(storeView, 'seo.defaultTitle', config.seo.defaultTitle);
+      return get(currentStoreView(), 'seo.defaultTitle', config.seo.defaultTitle);
     }
   }
 };
