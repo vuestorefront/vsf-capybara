@@ -338,7 +338,7 @@ export default {
   beforeCreate () {
     registerModule(OrderModule);
   },
-  async created () {
+  async beforeMount () {
     this.$bus.$on(AFFIRM_BEFORE_PLACE_ORDER, this.onAffirmBeforePlaceOrderHandler);
     this.$bus.$on(AFFIRM_MODAL_CLOSED, this.onAffirmModalClosedHandler);
     this.$bus.$on(AFFIRM_CHECKOUT_ERROR, this.onAffirmPlaceOrderError);
