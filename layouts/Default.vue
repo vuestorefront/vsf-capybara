@@ -107,27 +107,7 @@ export default {
     }),
     onOrderConfirmation (payload) {
       this.openModal({ name: ModalList.OrderConfirmation, payload });
-    },
-    fetchMenuData () {
-      return this.$store.dispatch('category/list', {
-        level:
-          config.entities.category.categoriesDynamicPrefetch &&
-          config.entities.category.categoriesDynamicPrefetchLevel >= 0
-            ? config.entities.category.categoriesDynamicPrefetchLevel
-            : null,
-        includeFields:
-          config.entities.optimize && isServer
-            ? config.entities.category.includeFields
-            : null,
-        skipCache: isServer
-      });
     }
-  },
-  serverPrefetch () {
-    return Promise.all([
-      // this.$store.dispatch('promoted/updatePromotedOffers'),
-      this.fetchMenuData()
-    ]);
   },
   metaInfo: Head
 };
