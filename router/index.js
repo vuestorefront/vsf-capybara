@@ -29,62 +29,72 @@ const CrossSells = () =>
 const GiftCards = () =>
   import(/* webpackChunkName: "vsf-gift-cards" */ 'theme/pages/GiftCards');
 
+function makeRoutesStrict (routes) {
+  return routes.map((route) => {
+    route.pathToRegexpOptions = {
+      strict: true
+    }
+
+    return route;
+  })
+}
+
 let routes = [
-  { name: 'detailed-cart', path: '/checkout/cart', component: DetailedCart },
+  { name: 'detailed-cart', path: '/checkout/cart/', component: DetailedCart },
   {
     name: 'checkout',
-    path: '/checkout/onepage/:success?',
+    path: '/checkout/onepage/:success?/',
     component: Checkout,
     props: true
   },
-  { name: 'legal', path: '/legal', component: Static },
-  { name: 'privacy', path: '/privacy', component: Static },
-  { name: 'my-account', path: '/my-account', component: MyAccount },
-  { name: 'about-us', path: '/about-us', component: Static },
-  { name: 'customer-service', path: '/customer-service', component: Static },
-  { name: 'store-locator', path: '/store-locator', component: Static },
-  { name: 'size-guide', path: '/size-guide', component: Static },
-  { name: 'delivery', path: '/delivery', component: Static },
-  { name: 'returns', path: '/returns', component: Static },
-  { name: 'contact', path: '/contact', component: Static },
-  { name: 'typography-text', path: '/typography-text', component: Typography },
-  { name: 'typography-form', path: '/typography-form', component: Typography },
-  { name: 'typography-other', path: '/typography-other', component: Typography },
+  { name: 'legal', path: '/legal/', component: Static },
+  { name: 'privacy', path: '/privacy/', component: Static },
+  { name: 'my-account', path: '/my-account/', component: MyAccount },
+  { name: 'about-us', path: '/about-us/', component: Static },
+  { name: 'customer-service', path: '/customer-service/', component: Static },
+  { name: 'store-locator', path: '/store-locator/', component: Static },
+  { name: 'size-guide', path: '/size-guide/', component: Static },
+  { name: 'delivery', path: '/delivery/', component: Static },
+  { name: 'returns', path: '/returns/', component: Static },
+  { name: 'contact', path: '/contact/', component: Static },
+  { name: 'typography-text', path: '/typography-text/', component: Typography },
+  { name: 'typography-form', path: '/typography-form/', component: Typography },
+  { name: 'typography-other', path: '/typography-other/', component: Typography },
   { name: 'page-not-found', path: '*', component: ErrorPage },
   { name: 'error', path: '/error', component: ErrorPage, meta: { layout: 'minimal' } },
-  { name: 'virtual-product', path: '/p/:parentSku/:slug', component: Product },
-  { name: 'bundle-product', path: '/p/:parentSku/:slug', component: Product },
-  { name: 'simple-product', path: '/p/:parentSku/:slug', component: Product },
-  { name: 'downloadable-product', path: '/p/:parentSku/:slug', component: Product },
-  { name: 'grouped-product', path: '/p/:parentSku/:slug', component: Product },
-  { name: 'configurable-product', path: '/p/:parentSku/:slug/:childSku', component: Product },
-  { name: 'plushToyAccessory-product', path: '/p/:parentSku/:slug', component: Product },
-  { name: 'petsiesStarProduct-product', path: '/p/:parentSku/:slug', component: Product },
-  { name: 'product', path: '/p/:parentSku/:slug/:childSku', component: Product },
-  { name: 'category', path: '/c/:slug', component: Category },
-  { name: 'cms-page', path: '/i/:slug', component: Static },
+  { name: 'virtual-product', path: '/p/:parentSku/:slug/', component: Product },
+  { name: 'bundle-product', path: '/p/:parentSku/:slug/', component: Product },
+  { name: 'simple-product', path: '/p/:parentSku/:slug/', component: Product },
+  { name: 'downloadable-product', path: '/p/:parentSku/:slug/', component: Product },
+  { name: 'grouped-product', path: '/p/:parentSku/:slug/', component: Product },
+  { name: 'configurable-product', path: '/p/:parentSku/:slug/:childSku/', component: Product },
+  { name: 'plushToyAccessory-product', path: '/p/:parentSku/:slug/', component: Product },
+  { name: 'petsiesStarProduct-product', path: '/p/:parentSku/:slug/', component: Product },
+  { name: 'product', path: '/p/:parentSku/:slug/:childSku/', component: Product },
+  { name: 'category', path: '/c/:slug/', component: Category },
+  { name: 'cms-page', path: '/i/:slug/', component: Static },
   {
     name: 'forevers-create',
-    path: '/forevers/create',
+    path: '/forevers/create/',
     component: ForeversProduct
   },
   {
     name: 'forevers-create-alias-1',
-    path: '/plushie/index/creationwizard/category_id/13',
+    path: '/plushie/index/creationwizard/category_id/13/',
     redirect: {
       name: 'forevers-create'
     }
   },
   {
     name: 'forevers-create-alias-2',
-    path: '/plushie/index/creationwizard/category_id/13/attributeId/:plushieId',
+    path: '/plushie/index/creationwizard/category_id/13/attributeId/:plushieId/',
     redirect: {
       name: 'forevers-create'
     }
   },
   {
     name: 'printed-product',
-    path: '/printed/p/:sku',
+    path: '/printed/p/:sku/',
     component: PrintedProduct,
     props: route => ({
       sku: route.params.sku,
@@ -92,18 +102,18 @@ let routes = [
       existingPlushieId: route.query.existingPlushieId
     })
   },
-  { name: 'pillow-product', path: '/pillows/create', component: PillowProduct },
+  { name: 'pillow-product', path: '/pillows/create/', component: PillowProduct },
   {
     name: 'pillow-product-alias',
-    path: '/plushie/index/create/id/:plushieId/type/pillow',
+    path: '/plushie/index/create/id/:plushieId/type/pillow/',
     redirect: {
       name: 'pillow-product'
     }
   },
-  { name: 'cross-sells', path: '/cross-sells/p/:parentSku', component: CrossSells },
+  { name: 'cross-sells', path: '/cross-sells/p/:parentSku/', component: CrossSells },
   {
     name: 'cross-sells-alias',
-    path: '/crosssell/index/index/product_id/:productId',
+    path: '/crosssell/index/index/product_id/:productId/',
     redirect: ({ params }) => {
       let parentSku = '';
 
@@ -174,7 +184,7 @@ let routes = [
   },
   {
     name: 'photo-pillows-alias-1',
-    path: '/photo-pillow/designs',
+    path: '/photo-pillow/designs/',
     redirect: {
       name: 'category',
       params: {
@@ -184,7 +194,7 @@ let routes = [
   },
   {
     name: 'photo-pillows-alias-2',
-    path: '/photo-pillows',
+    path: '/photo-pillows/',
     redirect: {
       name: 'category',
       params: {
@@ -194,7 +204,7 @@ let routes = [
   },
   {
     name: 'accessories-category-alias',
-    path: '/accessories',
+    path: '/accessories/',
     redirect: {
       name: 'category',
       params: {
@@ -203,7 +213,7 @@ let routes = [
     }
   },
   {
-    path: '/phrasepillow/index/customize',
+    path: '/phrasepillow/index/customize/',
     name: 'phrase-pillow-customize',
     component: PhrasePillowProduct,
     props: (route) => ({
@@ -213,7 +223,7 @@ let routes = [
   },
   {
     name: 'pillowSideDesign-product',
-    path: '/phrase-pillow/p/:parentSku?/:slug?',
+    path: '/phrase-pillow/p/:parentSku?/:slug?/',
     redirect: (route) => ({
       name: 'phrase-pillow-customize',
       query: {
@@ -222,11 +232,11 @@ let routes = [
       }
     })
   },
-  { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code', component: CartRecovery },
-  { name: 'gift-cards', path: '/giftcards', component: GiftCards },
+  { name: 'recover-cart', path: '/alerts/recover/cart/id/:id/code/:code/', component: CartRecovery },
+  { name: 'gift-cards', path: '/giftcards/', component: GiftCards },
   {
     name: 'giftbox',
-    path: '/giftbox',
+    path: '/giftbox/',
     redirect: {
       name: 'configurable-product',
       params: {
@@ -237,5 +247,7 @@ let routes = [
     }
   }
 ];
+
+routes = makeRoutesStrict(routes);
 
 export default routes;
