@@ -173,6 +173,15 @@ let routes = [
     })
   },
   {
+    name: 'felted-keychains-creation-page',
+    path: '/plushie/index/feltedKeychains/',
+    component: PrintedProduct,
+    props: route => ({
+      sku: 'customFeltedKeychains_bundle',
+      productDesign: route.query.product_design
+    })
+  },
+  {
     name: 'photo-pillows-alias-1',
     path: '/photo-pillow/designs',
     redirect: {
