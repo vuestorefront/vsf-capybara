@@ -232,11 +232,11 @@ export default {
       dropdownActions: [
         {
           label: 'Petsies',
-          url: '/forevers-pet-plush'
+          url: '/forevers-pet-plush/'
         },
         {
           label: 'Pet Pillow',
-          url: '/pet-pillow'
+          url: '/pet-pillow/'
         },
         {
           label: 'Photo Pillow',

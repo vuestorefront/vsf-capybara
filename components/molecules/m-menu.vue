@@ -64,11 +64,11 @@ export default {
       customProductsItems: [
         {
           label: 'Petsies Stuffed Animals',
-          url: '/forevers-pet-plush'
+          url: '/forevers-pet-plush/'
         },
         {
           label: 'Pet Shaped Pillows',
-          url: '/pet-pillow'
+          url: '/pet-pillow/'
         },
         {
           label: 'Square Photo Pillows',
@@ -126,7 +126,7 @@ export default {
         },
         {
           label: 'Bulk Orders',
-          url: '/bulk-custom-stuffed-animal-manufacture'
+          url: '/bulk-custom-stuffed-animal-manufacture/'
         }
       ]
     }

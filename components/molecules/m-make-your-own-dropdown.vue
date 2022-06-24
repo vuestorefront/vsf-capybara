@@ -61,11 +61,11 @@ export default Vue.extend({
       dropdownActions: [
         {
           label: 'Custom Petsies',
-          url: '/forevers-pet-plush'
+          url: '/forevers-pet-plush/'
         },
         {
           label: 'Custom Pillows',
-          url: '/custom-pillows'
+          url: '/custom-pillows/'
         },
         {
           label: 'Custom Socks',
@@ -93,7 +93,7 @@ export default Vue.extend({
         },
         {
           label: 'Gift Box',
-          url: '/giftbox'
+          url: { name: 'giftbox' }
         }
       ],
       isDropdownOpen: false
