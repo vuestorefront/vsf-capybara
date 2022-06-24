@@ -4,10 +4,10 @@
     :class="cssClasses"
     :style="styles"
   >
-    <router-link
+    <sb-router-link
       class="_link"
-      :to="link"
-      :target="linkTarget"
+      :link="itemData.link_url"
+      :is-new-window="itemData.target_blank"
     >
       <BaseImage
         class="_image"
@@ -19,7 +19,7 @@
       <span class="_driver-text" v-if="itemData.link_text">
         {{ itemData.link_text }}
       </span>
-    </router-link>
+    </sb-router-link>
   </div>
 </template>
 
@@ -28,12 +28,13 @@ import { VueConstructor } from 'vue';
 import { mapGetters } from 'vuex';
 
 import { InjectType } from 'src/modules/shared';
-import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
+import {
+  Blok,
+  ComponentWidthCalculator
+} from 'src/modules/vsf-storyblok-module';
 
 import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
-import { Blok } from 'src/modules/vsf-storyblok-module/components';
 
-import getUrlFromLink from './get-url-from-link';
 import generateBreakpointsSpecs from './generate-breakpoints-specs';
 import generateImageSourcesList from './generate-image-sources-list';
 import DriverData from './interfaces/driver-data.interface';
@@ -65,13 +66,6 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
       }
 
       return result;
-    },
-    link (): string {
-      return getUrlFromLink(this.itemData.link_url);
-    },
-    linkTarget (): string {
-      return this.itemData.target_blank ? '_blank'
-        : '_self';
     },
     imageSources (): ImageSourceItem[] {
       if (!this.itemData.image.filename) {

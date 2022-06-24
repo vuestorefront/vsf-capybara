@@ -16,10 +16,15 @@ import { VueConstructor } from 'vue';
 import { InjectType } from 'src/modules/shared';
 import { SfButton } from '@storefront-ui/vue';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
+import { mapGetters } from 'vuex'
 
-import { Blok } from 'src/modules/vsf-storyblok-module/components'
+import {
+  Blok,
+  getUrlFromLink,
+  isUrlExternal
+} from 'src/modules/vsf-storyblok-module'
+
 import ButtonItemData from './interfaces/button-item-data.interface';
-import getUrlFromLink from './get-url-from-link';
 
 interface InjectedServices {
   window: Window
@@ -34,11 +39,14 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   computed: {
+    ...mapGetters({
+      storeCodeFromHeader: 'storyblok/storeCode'
+    }),
     itemData (): ButtonItemData {
       return this.item as ButtonItemData;
     },
     link (): string {
-      return getUrlFromLink(this.itemData.link_url);
+      return getUrlFromLink(this.itemData.link_url, this.storeCodeFromHeader);
     },
     shouldOpenInNewWindow (): boolean {
       return !!this.itemData.target_blank;
@@ -55,9 +63,9 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
   },
   methods: {
     openLink (): void {
-      const url = getUrlFromLink(this.itemData.link_url);
+      const url = this.link;
 
-      const isExternalUrl = url.startsWith('//') || url.startsWith('http://') || url.startsWith('https://') || url.startsWith('ftp://');
+      const isExternalUrl = isUrlExternal(url);
 
       if (isExternalUrl) {
         this.window.open(url, '_blank');
