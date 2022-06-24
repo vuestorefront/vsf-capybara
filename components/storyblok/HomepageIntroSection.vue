@@ -56,24 +56,29 @@
 import { VueConstructor } from 'vue';
 import { mapGetters } from 'vuex';
 import { localizedRoute } from '@vue-storefront/core/lib/multistore';
-import { nl2br } from 'src/modules/budsies';
+import { nl2br, BaseImage, ImageSourceItem } from 'src/modules/budsies';
 
 import { InjectType } from 'src/modules/shared';
-import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
-import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
-import { Blok } from 'src/modules/vsf-storyblok-module/components';
+
+import {
+  Blok,
+  ComponentWidthCalculator,
+  getUrlFromLink,
+  isUrlExternal
+} from 'src/modules/vsf-storyblok-module';
+
 import {
   SfButton,
   SfHeading
 } from '@storefront-ui/vue';
 
 import HomepageIntroSectionData from './interfaces/homepage-intro-section-data.interface';
-import getUrlFromLink from './get-url-from-link';
 import generateBreakpointsSpecs from './generate-breakpoints-specs';
 import generateImageSourcesList from './generate-image-sources-list';
 
 interface InjectedServices {
-  componentWidthCalculator: ComponentWidthCalculator
+  componentWidthCalculator: ComponentWidthCalculator,
+  window: Window
 }
 
 export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
@@ -84,11 +89,13 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
     SfHeading
   },
   inject: {
-    componentWidthCalculator: { }
+    componentWidthCalculator: { },
+    window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   computed: {
     ...mapGetters({
-      supportsWebp: 'storyblok/supportsWebp'
+      supportsWebp: 'storyblok/supportsWebp',
+      storeCodeFromHeader: 'storyblok/storeCode'
     }),
     itemData (): HomepageIntroSectionData {
       return this.item as HomepageIntroSectionData;
@@ -107,7 +114,10 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
       return styles;
     },
     link (): string {
-      return getUrlFromLink(this.itemData.button_link);
+      return getUrlFromLink(
+        this.itemData.button_link,
+        this.storeCodeFromHeader
+      );
     },
     imageSources (): ImageSourceItem[] {
       if (!this.itemData.image.filename) {
@@ -131,7 +141,18 @@ export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServi
       return nl2br(text);
     },
     openLink (): void {
-      this.$router.push(localizedRoute(this.link));
+      const isExternalUrl = isUrlExternal(this.link);
+
+      if (isExternalUrl) {
+        this.window.open(this.link, '_blank');
+        return;
+      }
+
+      const route = this.$router.resolve({
+        path: localizedRoute(this.link)
+      });
+
+      this.$router.push(route.location);
     }
   }
 })
