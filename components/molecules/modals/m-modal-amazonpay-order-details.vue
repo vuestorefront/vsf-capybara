@@ -65,7 +65,7 @@ export default {
     goToCheckout () {
       this.closeModal()
       EventBus.$emit(CartEvents.GO_TO_CHECKOUT_FROM_CART)
-      this.$router.push(localizedRoute('/checkout/onepage'))
+      this.$router.push(localizedRoute({ name: 'checkout' }))
     },
     enableOrderButton () {
       this.isOrderButtonDisabled = false;

@@ -130,16 +130,16 @@ export default {
           children: [
             {
               name: 'About',
-              link: '/about-petsies'
+              link: '/about-petsies/'
             },
             {
               name: 'Blog',
-              link: '/blog',
+              link: '/blog/',
               target: '_blank'
             },
             {
               name: 'Refund & Return Policy',
-              link: '/craftsmanship-promise'
+              link: '/craftsmanship-promise/'
             },
             {
               name: 'Media',
@@ -151,15 +151,15 @@ export default {
         services: {
           name: this.$t('Services'),
           children: [
-            { name: this.$t('Custom Forevers'), link: '/forevers-pet-plush' },
-            { name: this.$t('Custom Pillows'), link: '/custom-pillows' },
+            { name: this.$t('Custom Forevers'), link: '/forevers-pet-plush/' },
+            { name: this.$t('Custom Pillows'), link: '/custom-pillows/' },
             { name: this.$t('Custom Socks'), link: { name: 'printed-socks-creation-page' } },
             { name: this.$t('Custom Face Masks'), link: { name: 'printed-masks-creation-page' } },
             { name: this.$t('Custom Pet Keychains'), link: { name: 'printed-keychains-creation-page' } },
             { name: this.$t('Custom Felted Magnets'), link: { name: 'felted-magnets-creation-page' } },
-            { name: this.$t('Custom Bulk'), link: '/bulk-custom-stuffed-animal-manufacture' },
-            { name: this.$t('Gift Cards'), link: '/giftcards' },
-            { name: this.$t('Gift Box'), link: '/giftbox' },
+            { name: this.$t('Custom Bulk'), link: '/bulk-custom-stuffed-animal-manufacture/' },
+            { name: this.$t('Gift Cards'), link: { name: 'gift-cards' } },
+            { name: this.$t('Gift Box'), link: { name: 'giftbox' } },
             { name: this.$t('Accessories'),
               link: {
                 name: 'category',
@@ -176,21 +176,21 @@ export default {
             {
               name: this.$t('My account'),
               ...this.isLoggedIn
-                ? { link: '/my-account' }
+                ? { link: { name: 'my-account' } }
                 : { clickHandler: () => this.openModal({ name: ModalList.Auth, payload: 'login' }) }
             },
             { name: this.$t('My Cart'), link: { name: 'detailed-cart' } },
-            { name: this.$t('Rising Starts'), link: '/rising-stars' }
+            { name: this.$t('Rising Starts'), link: '/rising-stars/' }
           ]
         },
         quickLInks: {
           name: this.$t('Quick Links'),
           children: [
-            { name: this.$t('Veterinarians'), link: '/partners' },
-            { name: this.$t('Become a Partner'), link: '/partners' },
-            { name: this.$t('Resellers'), link: '/partners' },
+            { name: this.$t('Veterinarians'), link: '/partners/' },
+            { name: this.$t('Become a Partner'), link: '/partners/' },
+            { name: this.$t('Resellers'), link: '/partners/' },
             { name: this.$t('Affiliates'), link: '/affiliates' },
-            { name: this.$t('Corporate Buying'), link: '/partners' },
+            { name: this.$t('Corporate Buying'), link: '/partners/' },
             { name: this.$t('FAQ'), link: '//support.mypetsies.com/support/home', target: '_blank' }
           ]
         }
