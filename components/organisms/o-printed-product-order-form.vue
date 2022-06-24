@@ -91,7 +91,7 @@
               />
             </div>
 
-            <div v-if="isFeltedMagnet" class="_felted-magnets-additional-info">
+            <div v-if="isFeltedProduct" class="_felted-magnets-additional-info">
               <MTitledArtworkUpload
                 ref="side-view-upload"
                 class="_titled-artwork-upload"
@@ -263,6 +263,7 @@ export interface SelectOption {
 }
 
 const feltedMagnetSku = 'customFeltedMagnets_bundle';
+const feltedKeychainsSku = 'customFeltedKeychains_bundle';
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'OPrintedProductOrderForm',
@@ -433,6 +434,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
           return ProductValue.PRINTED_KEYCHAINS;
         case 446:
           return ProductValue.FELTED_MAGNETS;
+        case 448:
+          return ProductValue.FELTED_KEYCHAINS;
         default:
           throw new Error(
             `Can't resolve Backend product ID for Magento '${this.product.id}' product ID`
@@ -575,9 +578,9 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
         this.additionalArtworks = value.storageItems;
       }
     },
-    isFeltedMagnet () {
-      return [this.product.parentSku, this.product.sku]
-        .includes(feltedMagnetSku);
+    isFeltedProduct () {
+      const skus = [this.product.parentSku, this.product.sku];
+      return skus.includes(feltedMagnetSku) || skus.includes(feltedKeychainsSku);
     }
   },
   methods: {
