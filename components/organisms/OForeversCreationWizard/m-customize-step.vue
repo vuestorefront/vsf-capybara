@@ -311,7 +311,8 @@ export default Vue.extend({
         addons: [],
         description: undefined,
         productionTime: undefined,
-        quantity: 1
+        quantity: 1,
+        size: undefined
       })
     },
     product: {
@@ -334,54 +335,34 @@ export default Vue.extend({
       type: Object as PropType<BundleOption | undefined>,
       default: undefined
     },
+    sizeBundleOption: {
+      type: Object as PropType<BundleOption | undefined>,
+      default: undefined
+    },
     addToCart: {
       type: Function as PropType<() => Promise<void>>,
       required: true
+    },
+    sizes: {
+      type: Array as PropType<SizeOption[]>,
+      default: () => []
     }
   },
   data () {
     return {
       areQuantityNotesVisible: false,
-      areEyeColorNotesVisible: false,
-      size: undefined as SizeOption | undefined
+      areEyeColorNotesVisible: false
     }
   },
   computed: {
-    sizeBundleOption (): BundleOption | undefined {
-      if (!this.product?.bundle_options) {
-        return undefined;
+    size: {
+      get (): SizeOption | undefined {
+        return this.value.size;
+      },
+      set (value: SizeOption) {
+        const newValue = { ...this.value, size: value };
+        this.$emit('input', newValue);
       }
-
-      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'product');
-    },
-    sizes (): SizeOption[] {
-      if (!this.sizeBundleOption) {
-        return [];
-      }
-
-      let availableSizes: SizeOption[] = [];
-      for (const productLink of this.sizeBundleOption.product_links) {
-        if (!productLink.product || productLink.product.sku === 'simpleForeversDog') {
-          continue;
-        }
-
-        const price = getProductDefaultPrice(productLink.product, {}, false);
-
-        availableSizes.push({
-          id: String(productLink.product.id),
-          label: productLink.product.name,
-          finalPrice: price.special ? price.special : price.regular,
-          value: productLink.product.sku,
-          isSelected: false,
-          contentTypeId: BodyPartValueContentType.IMAGE,
-          image: productLink.product.image,
-          optionId: this.sizeBundleOption.option_id,
-          optionValueId: productLink.id.toString(),
-          group: 'default'
-        });
-      }
-
-      return availableSizes;
     },
     selectedAddons: {
       get (): number[] {
@@ -529,23 +510,6 @@ export default Vue.extend({
     }
 
     this.productionTime = this.productionTimeOptions[0].optionValueId
-  },
-  watch: {
-    size: {
-      handler (newValue: SizeOption | undefined) {
-        if (!this.sizeBundleOption) {
-          Logger.error('sizeBundleOption is not defined while attempt to set size was performed', 'budsies')();
-          return
-        }
-
-        this.setBundleOptionValue({
-          optionId: this.sizeBundleOption.option_id,
-          optionQty: 1,
-          optionSelections: newValue ? [newValue.optionValueId] : []
-        });
-      },
-      immediate: false
-    }
   }
 });
 
