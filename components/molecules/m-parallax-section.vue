@@ -11,7 +11,13 @@
       ref="parallax"
     >
       <div class="_image-container">
-        <img :src="imageSrc">
+        <BaseImage
+          :srcsets="imageSources"
+          :alt="imageAlt"
+          :title="imageTitle"
+          class="_image"
+          v-if="imageSrc"
+        />
       </div>
     </div>
   </div>
@@ -19,16 +25,27 @@
 
 <script lang="ts">
 import Vue, { PropType, VueConstructor } from 'vue';
+import { mapGetters } from 'vuex';
 
+import { ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
+import { BaseImage, ImageSourceItem } from 'src/modules/budsies';
 import { InjectType } from 'src/modules/shared/types/inject-type';
 
+import generateBreakpointsSpecs from '../storyblok/generate-breakpoints-specs';
+import generateImageSourcesList from '../storyblok/generate-image-sources-list';
+
 interface InjectedServices {
+  componentWidthCalculator: ComponentWidthCalculator,
   window: Window
 }
 
 export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
   name: 'MParallaxSection',
+  components: {
+    BaseImage
+  },
   inject: {
+    componentWidthCalculator: { },
     window: { from: 'WindowObject' }
   } as unknown as InjectType<InjectedServices>,
   props: {
@@ -39,6 +56,14 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     imageSrc: {
       type: String,
       required: true
+    },
+    imageAlt: {
+      type: String,
+      default: ''
+    },
+    imageTitle: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -47,11 +72,29 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     }
   },
   computed: {
+    ...mapGetters({
+      supportsWebp: 'storyblok/supportsWebp'
+    }),
     directionValue (): number {
       return this.direction === 'down' ? +1 : -1
     },
     initialValue (): number {
       return this.direction === 'down' ? 0 : -100
+    },
+    imageSources (): ImageSourceItem[] {
+      if (!this.imageSrc) {
+        return [];
+      };
+
+      const breakpointsSpecs = generateBreakpointsSpecs(
+        this.imageSrc,
+        this.componentWidthCalculator
+      )
+
+      return generateImageSourcesList(
+        breakpointsSpecs,
+        this.supportsWebp
+      )
     }
   },
   mounted (): void {

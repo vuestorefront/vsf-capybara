@@ -2,7 +2,9 @@
   <div class="parallax" :style="styles" :class="cssClasses">
     <m-parallax-section
       :direction="direction"
-      :image-src="itemData.image_src"
+      :image-src="itemData.image.filename"
+      :image-alt="itemData.image.alt"
+      :image-title="itemData.image.title"
     >
       <template #content>
         <div class="_content">
@@ -15,7 +17,7 @@
 
 <script lang="ts">
 import { Blok, components } from 'src/modules/vsf-storyblok-module/components';
-import ParallaxData from 'src/modules/vsf-storyblok-module/types/parallax-data.interface';
+import ParallaxData from './interfaces/parallax-data.interface';
 import MParallaxSection from '../molecules/m-parallax-section.vue';
 
 export default Blok.extend({
