@@ -387,13 +387,6 @@ export default {
       const productBundleOptions = product.product_option.extension_attributes.bundle_options;
 
       product.bundle_options.forEach(option => {
-        // Hide Forevers simple products
-        if ([ProductId.FOREVERS_DOG, ProductId.FOREVERS_CAT, ProductId.FOREVERS_OTHER]
-          .includes(product.id) && option.title.toLowerCase() === 'product'
-        ) {
-          return;
-        }
-
         if (!productBundleOptions.hasOwnProperty(option.option_id)) {
           return
         }
