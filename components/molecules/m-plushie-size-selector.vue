@@ -152,8 +152,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-@import "~@storefront-ui/shared/styles/helpers/breakpoints";
-
 $size-item-width: 145px;
 
 .m-plushie-size-selector {
