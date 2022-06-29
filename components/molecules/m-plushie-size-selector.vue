@@ -144,9 +144,6 @@ export default Vue.extend({
     isShowFullPrice (option: SizeOption): boolean {
       return this.showFullPrice || !this.baseSizeOption || this.baseSizeOption.id === option.id;
     },
-    onSizeSelect (selectedSize: SizeOption): void {
-      this.$emit('input', selectedSize);
-    },
     showMostPopularIconForOption (option: SizeOption): boolean {
       return this.showMostPopularIcon && this.isMediumSizeOption(option);
     }
