@@ -125,7 +125,7 @@
           name="'Size'"
           tag="div"
         >
-          <o-plushie-size-selector
+          <m-plushie-size-selector
             name="pillow_size"
             v-model="size"
             :options="sizes"
@@ -401,7 +401,7 @@ import ServerError from 'src/modules/shared/types/server-error';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
-import OPlushieSizeSelector from '../organisms/o-plushie-size-selector.vue';
+import MPlushieSizeSelector from '../molecules/m-plushie-size-selector.vue';
 import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
@@ -439,7 +439,7 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfSelect,
     MBlockStory,
     MProductionTimeSelector,
-    OPlushieSizeSelector
+    MPlushieSizeSelector
   },
   inject: {
     window: { from: 'WindowObject' },

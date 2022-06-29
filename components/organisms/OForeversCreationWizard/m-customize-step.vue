@@ -23,7 +23,7 @@
         :title="$t('Size')"
       />
 
-      <o-plushie-size-selector
+      <m-plushie-size-selector
         name="pillow_size"
         v-model="size"
         :show-full-price="false"
@@ -273,7 +273,7 @@ import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
 import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-configurator.vue';
 import MBlockStory from '../../molecules/m-block-story.vue';
 import MProductionTimeSelector from '../../molecules/m-production-time-selector.vue';
-import OPlushieSizeSelector from '../../organisms/o-plushie-size-selector.vue';
+import MPlushieSizeSelector from '../../molecules/m-plushie-size-selector.vue';
 
 import AddonOption from '../../interfaces/addon-option.interface';
 import ProductionTimeOption from '../../interfaces/production-time-option.interface';
@@ -301,7 +301,7 @@ export default Vue.extend({
     MBodypartOptionConfigurator,
     MBlockStory,
     MProductionTimeSelector,
-    OPlushieSizeSelector
+    MPlushieSizeSelector
   },
   props: {
     value: {

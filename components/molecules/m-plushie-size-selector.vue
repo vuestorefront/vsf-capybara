@@ -1,5 +1,5 @@
 <template>
-  <div class="o-plushie-size-selector" :class="{'-disabled': disabled}">
+  <div class="m-plushie-size-selector" :class="{'-disabled': disabled}">
     <ul class="_selector">
       <li class="_selector-value"
           v-for="option in options"
@@ -43,7 +43,7 @@ import SizeOption from '../interfaces/size-option'
 const SIZE_ITEM_WIDTH = 145;
 
 export default Vue.extend({
-  name: 'OPlushieSizeSelector',
+  name: 'MPlushieSizeSelector',
   props: {
     value: {
       type: Object as PropType<SizeOption> | undefined,
@@ -159,7 +159,7 @@ export default Vue.extend({
 
 $size-item-width: 145px;
 
-.o-plushie-size-selector {
+.m-plushie-size-selector {
  ._selector {
     list-style: none;
     display: flex;
