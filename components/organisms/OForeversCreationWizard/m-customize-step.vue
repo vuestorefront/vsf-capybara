@@ -13,6 +13,33 @@
     <validation-provider
       v-slot="{ errors }"
       class="_bodypart _section"
+      rules="required"
+      tag="div"
+      :name="$t('Size')"
+    >
+      <SfHeading
+        class="-required"
+        :level="3"
+        :title="$t('Size')"
+      />
+
+      <o-plushie-size-selector
+        name="pillow_size"
+        v-model="size"
+        :show-full-price="false"
+        :show-most-popular-icon="true"
+        :options="sizes"
+        :disabled="disabled"
+      />
+
+      <div class="_error-text">
+        {{ errors[0] }}
+      </div>
+    </validation-provider>
+
+    <validation-provider
+      v-slot="{ errors }"
+      class="_bodypart _section"
       :rules="bodypart.isRequired ? 'required' : ''"
       :name="`'${bodypart.name}'`"
       v-for="bodypart in bodyparts"
@@ -25,13 +52,6 @@
         :title="bodypart.name"
         :ref="getFieldAnchorName(bodypart.name)"
       />
-
-      <div
-        class="_helper-text"
-        v-if="bodypart.code === 'size'"
-      >
-        {{ $t('The Standard size fits most animals. We recommend the Miniature size for smaller dog breeds, miniature cats, hamsters, etc.') }}
-      </div>
 
       <div
         class="_helper-text"
@@ -243,20 +263,24 @@ import Product from 'core/modules/catalog/types/Product';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
+import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import { isVue, getProductDefaultPrice } from 'src/modules/shared';
-import { Bodypart, BodypartOption } from 'src/modules/budsies';
+import { Bodypart, BodypartOption, BodyPartValueContentType } from 'src/modules/budsies';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
 import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-configurator.vue';
 import MBlockStory from '../../molecules/m-block-story.vue';
 import MProductionTimeSelector from '../../molecules/m-production-time-selector.vue';
+import OPlushieSizeSelector from '../../organisms/o-plushie-size-selector.vue';
 
 import AddonOption from '../../interfaces/addon-option.interface';
 import ProductionTimeOption from '../../interfaces/production-time-option.interface';
 import ForeversWizardCustomizeStepData from '../../interfaces/forevers-wizard-customize-step-data.interface';
 import getProductionTimeOptions from '../../../helpers/get-production-time-options';
+import SizeOption from 'theme/components/interfaces/size-option';
+import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
@@ -276,7 +300,8 @@ export default Vue.extend({
     ACustomProductQuantity,
     MBodypartOptionConfigurator,
     MBlockStory,
-    MProductionTimeSelector
+    MProductionTimeSelector,
+    OPlushieSizeSelector
   },
   props: {
     value: {
@@ -317,10 +342,47 @@ export default Vue.extend({
   data () {
     return {
       areQuantityNotesVisible: false,
-      areEyeColorNotesVisible: false
+      areEyeColorNotesVisible: false,
+      size: undefined as SizeOption | undefined
     }
   },
   computed: {
+    sizeBundleOption (): BundleOption | undefined {
+      if (!this.product?.bundle_options) {
+        return undefined;
+      }
+
+      return this.product.bundle_options.find(item => item.title.toLowerCase() === 'product');
+    },
+    sizes (): SizeOption[] {
+      if (!this.sizeBundleOption) {
+        return [];
+      }
+
+      let availableSizes: SizeOption[] = [];
+      for (const productLink of this.sizeBundleOption.product_links) {
+        if (!productLink.product || productLink.product.sku === 'simpleForeversDog') {
+          continue;
+        }
+
+        const price = getProductDefaultPrice(productLink.product, {}, false);
+
+        availableSizes.push({
+          id: String(productLink.product.id),
+          label: productLink.product.name,
+          finalPrice: price.special ? price.special : price.regular,
+          value: productLink.product.sku,
+          isSelected: false,
+          contentTypeId: BodyPartValueContentType.IMAGE,
+          image: productLink.product.image,
+          optionId: this.sizeBundleOption.option_id,
+          optionValueId: productLink.id.toString(),
+          group: 'default'
+        });
+      }
+
+      return availableSizes;
+    },
     selectedAddons: {
       get (): number[] {
         return this.value.addons;
@@ -456,7 +518,10 @@ export default Vue.extend({
     },
     updateProductionTime (productionTimeOption: ProductionTimeOption) {
       this.productionTime = productionTimeOption.optionValueId
-    }
+    },
+    ...mapMutations('product', {
+      setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
+    })
   },
   mounted () {
     if (!this.productionTimeOptions.length || this.productionTime) {
@@ -464,6 +529,23 @@ export default Vue.extend({
     }
 
     this.productionTime = this.productionTimeOptions[0].optionValueId
+  },
+  watch: {
+    size: {
+      handler (newValue: SizeOption | undefined) {
+        if (!this.sizeBundleOption) {
+          Logger.error('sizeBundleOption is not defined while attempt to set size was performed', 'budsies')();
+          return
+        }
+
+        this.setBundleOptionValue({
+          optionId: this.sizeBundleOption.option_id,
+          optionQty: 1,
+          optionSelections: newValue ? [newValue.optionValueId] : []
+        });
+      },
+      immediate: false
+    }
   }
 });
 

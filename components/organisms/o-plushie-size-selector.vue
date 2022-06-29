@@ -13,17 +13,20 @@
           :disabled="disabled"
         >
         <label :for="inputIdDictionary[option.id]">
-          <div class="_most-popular" v-if="showMostPopularIconForOption(option)" />
-          <div class="_icon" :style="iconStyleDictionary[option.id]" />
+          <div
+            class="_icon"
+            :style="iconStyleDictionary[option.id]"
+          >
+            <div class="_most-popular" v-if="showMostPopularIconForOption(option)" />
+          </div>
 
           <div class="_title">
             {{ optionTitleDictionary[option.id] }}
-          </div>
 
-          <div class="_price-delta" v-if="priceDeltaDictionary[option.id]">
-            {{ priceDeltaDictionary[option.id] }}
+            <div class="_price-delta" v-if="priceDeltaDictionary[option.id]">
+              {{ priceDeltaDictionary[option.id] }}
+            </div>
           </div>
-
         </label>
       </li>
     </ul>
@@ -119,7 +122,7 @@ export default Vue.extend({
 
         const priceDiff =
             option.finalPrice - this.baseSizeOption.finalPrice;
-        priceDeltaDictionary[option.optionId] = `${(priceDiff < 0 ? ' -$' : ' +$')}${Math.abs(priceDiff).toString()}`;
+        priceDeltaDictionary[option.id] = `${(priceDiff < 0 ? ' -$' : ' +$')}${Math.abs(priceDiff).toString()}`;
       })
 
       return priceDeltaDictionary;
@@ -135,20 +138,25 @@ export default Vue.extend({
 
   },
   methods: {
-    isShowFullPrice (sizeOption: SizeOption): boolean {
-      return this.showFullPrice || !this.baseSizeOption || this.baseSizeOption.id === sizeOption.id;
+    isMediumSizeOption (option: SizeOption): boolean {
+      return option.value.indexOf('medium') !== -1;
+    },
+    isShowFullPrice (option: SizeOption): boolean {
+      return this.showFullPrice || !this.baseSizeOption || this.baseSizeOption.id === option.id;
     },
     onSizeSelect (selectedSize: SizeOption): void {
       this.$emit('input', selectedSize);
     },
     showMostPopularIconForOption (option: SizeOption): boolean {
-      return true;
+      return this.showMostPopularIcon && this.isMediumSizeOption(option);
     }
   }
 })
 </script>
 
 <style lang="scss" scoped>
+@import "~@storefront-ui/shared/styles/helpers/breakpoints";
+
 $size-item-width: 145px;
 
 .o-plushie-size-selector {
@@ -176,18 +184,38 @@ $size-item-width: 145px;
       width: 100%;
       position: relative;
       z-index: 0;
-    }
 
-    ._most-popular {
-      position: absolute;
-      top: 0;
-      left: 0;
+      ._most-popular {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        right: 0;
+
+        &::after {
+          background: url('/assets/images/most-popular.png') no-repeat center;
+          background-size: contain;
+          border: none;
+          border-radius: 100%;
+          content: "";
+          height: 70px;
+          position: absolute;
+          right: -20px;
+          top: -15px;
+          width: 70px;
+          z-index: 3;
+        }
+      }
     }
 
     ._title {
       font-size: var(--font-xs);
       font-weight: var(--font-medium);
       margin-top: var(--spacer-sm);
+
+      ._price-delta {
+        color: var(--c-primary);
+        margin-top: var(--spacer-2xs);
+      }
     }
 
     > input {
@@ -234,5 +262,15 @@ $size-item-width: 145px;
     z-index: 2;
   }
  }
+
+ &.-disabled {
+    ._selector-value {
+      opacity: 0.7;
+
+      > label {
+       cursor: default;
+      }
+    }
+  }
 }
 </style>
