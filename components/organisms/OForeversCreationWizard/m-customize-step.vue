@@ -15,7 +15,7 @@
       class="_bodypart _section"
       rules="required"
       tag="div"
-      :name="$t('Size')"
+      :name="$t('\'Size\'')"
     >
       <SfHeading
         class="-required"
