@@ -209,7 +209,11 @@ export default Vue.extend({
 
       let availableSizes: SizeOption[] = [];
       for (const productLink of this.sizeBundleOption.product_links) {
-        if (!productLink.product || productLink.product.sku === 'simpleForeversDog') {
+        if (
+          !productLink.product ||
+          ['simpleForeversDog', 'simpleForeversCat', 'simpleForeversOther']
+            .includes(productLink.product.sku)
+        ) {
           continue;
         }
 
