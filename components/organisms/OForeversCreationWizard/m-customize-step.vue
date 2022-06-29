@@ -263,10 +263,9 @@ import Product from 'core/modules/catalog/types/Product';
 import { getProductGallery as getGalleryByProduct } from '@vue-storefront/core/modules/catalog/helpers';
 import { BundleOption } from 'core/modules/catalog/types/BundleOption';
 import { Logger } from '@vue-storefront/core/lib/logger';
-import * as catalogTypes from '@vue-storefront/core/modules/catalog/store/product/mutation-types';
 
 import { isVue, getProductDefaultPrice } from 'src/modules/shared';
-import { Bodypart, BodypartOption, BodyPartValueContentType } from 'src/modules/budsies';
+import { Bodypart, BodypartOption } from 'src/modules/budsies';
 
 import MAddonsSelector from '../../molecules/m-addons-selector.vue';
 import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
@@ -280,7 +279,6 @@ import ProductionTimeOption from '../../interfaces/production-time-option.interf
 import ForeversWizardCustomizeStepData from '../../interfaces/forevers-wizard-customize-step-data.interface';
 import getProductionTimeOptions from '../../../helpers/get-production-time-options';
 import SizeOption from 'theme/components/interfaces/size-option';
-import { mapMutations } from 'vuex';
 
 extend('required', {
   ...required,
@@ -499,10 +497,7 @@ export default Vue.extend({
     },
     updateProductionTime (productionTimeOption: ProductionTimeOption) {
       this.productionTime = productionTimeOption.optionValueId
-    },
-    ...mapMutations('product', {
-      setBundleOptionValue: catalogTypes.PRODUCT_SET_BUNDLE_OPTION
-    })
+    }
   },
   mounted () {
     if (!this.productionTimeOptions.length || this.productionTime) {
