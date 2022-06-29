@@ -160,16 +160,16 @@ export default Vue.extend({
 $size-item-width: 145px;
 
 .m-plushie-size-selector {
- ._selector {
+  ._selector {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     padding: 0;
     row-gap: 2vw;
- }
+  }
 
- ._selector-value {
+  ._selector-value {
     box-sizing: border-box;
     width: 33.33%;
     padding: 0 2%;
@@ -238,32 +238,32 @@ $size-item-width: 145px;
     }
 
     > input:checked + label ._icon::before {
-    background: rgba(52, 184, 147, 0.7);
-    border-radius: 100%;
-    content: "";
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 1;
+      background: rgba(52, 184, 147, 0.7);
+      border-radius: 100%;
+      content: "";
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    > input:checked + label ._icon::after {
+      background: url('/assets/images/sprite/ico-tick-green.png') no-repeat center #fff;
+      border: 2px solid #38b677;
+      border-radius: 100%;
+      content: "";
+      height: 24px;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 24px;
+      z-index: 2;
+    }
   }
 
-  > input:checked + label ._icon::after {
-    background: url('/assets/images/sprite/ico-tick-green.png') no-repeat center #fff;
-    border: 2px solid #38b677;
-    border-radius: 100%;
-    content: "";
-    height: 24px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 24px;
-    z-index: 2;
-  }
- }
-
- &.-disabled {
+  &.-disabled {
     ._selector-value {
       opacity: 0.7;
 
