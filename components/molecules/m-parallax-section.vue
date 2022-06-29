@@ -82,7 +82,6 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
       return this.direction === 'down' ? 0 : -100
     },
     imageSources (): ImageSourceItem[] {
-      console.log(this.imageSrc);
       if (!this.imageSrc) {
         return [];
       };
