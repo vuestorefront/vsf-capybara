@@ -13,6 +13,34 @@
     <validation-provider
       v-slot="{ errors }"
       class="_bodypart _section"
+      rules="required"
+      tag="div"
+      :name="$t('\'Size\'')"
+    >
+      <SfHeading
+        class="-required"
+        :level="3"
+        :title="$t('Size')"
+      />
+
+      <m-plushie-size-selector
+        name="pillow_size"
+        class="_options-list"
+        v-model="size"
+        :show-full-price="false"
+        :show-most-popular-icon="true"
+        :options="sizes"
+        :disabled="disabled"
+      />
+
+      <div class="_error-text">
+        {{ errors[0] }}
+      </div>
+    </validation-provider>
+
+    <validation-provider
+      v-slot="{ errors }"
+      class="_bodypart _section"
       :rules="bodypart.isRequired ? 'required' : ''"
       :name="`'${bodypart.name}'`"
       v-for="bodypart in bodyparts"
@@ -25,13 +53,6 @@
         :title="bodypart.name"
         :ref="getFieldAnchorName(bodypart.name)"
       />
-
-      <div
-        class="_helper-text"
-        v-if="bodypart.code === 'size'"
-      >
-        {{ $t('The Standard size fits most animals. We recommend the Miniature size for smaller dog breeds, miniature cats, hamsters, etc.') }}
-      </div>
 
       <div
         class="_helper-text"
@@ -252,11 +273,13 @@ import ACustomProductQuantity from '../../atoms/a-custom-product-quantity.vue';
 import MBodypartOptionConfigurator from '../../molecules/m-bodypart-option-configurator.vue';
 import MBlockStory from '../../molecules/m-block-story.vue';
 import MProductionTimeSelector from '../../molecules/m-production-time-selector.vue';
+import MPlushieSizeSelector from '../../molecules/m-plushie-size-selector.vue';
 
 import AddonOption from '../../interfaces/addon-option.interface';
 import ProductionTimeOption from '../../interfaces/production-time-option.interface';
 import ForeversWizardCustomizeStepData from '../../interfaces/forevers-wizard-customize-step-data.interface';
 import getProductionTimeOptions from '../../../helpers/get-production-time-options';
+import SizeOption from 'theme/components/interfaces/size-option';
 
 extend('required', {
   ...required,
@@ -276,7 +299,8 @@ export default Vue.extend({
     ACustomProductQuantity,
     MBodypartOptionConfigurator,
     MBlockStory,
-    MProductionTimeSelector
+    MProductionTimeSelector,
+    MPlushieSizeSelector
   },
   props: {
     value: {
@@ -286,7 +310,8 @@ export default Vue.extend({
         addons: [],
         description: undefined,
         productionTime: undefined,
-        quantity: 1
+        quantity: 1,
+        size: undefined
       })
     },
     product: {
@@ -309,9 +334,17 @@ export default Vue.extend({
       type: Object as PropType<BundleOption | undefined>,
       default: undefined
     },
+    sizeBundleOption: {
+      type: Object as PropType<BundleOption | undefined>,
+      default: undefined
+    },
     addToCart: {
       type: Function as PropType<() => Promise<void>>,
       required: true
+    },
+    sizes: {
+      type: Array as PropType<SizeOption[]>,
+      default: () => []
     }
   },
   data () {
@@ -321,6 +354,15 @@ export default Vue.extend({
     }
   },
   computed: {
+    size: {
+      get (): SizeOption | undefined {
+        return this.value.size;
+      },
+      set (value: SizeOption) {
+        const newValue = { ...this.value, size: value };
+        this.$emit('input', newValue);
+      }
+    },
     selectedAddons: {
       get (): number[] {
         return this.value.addons;

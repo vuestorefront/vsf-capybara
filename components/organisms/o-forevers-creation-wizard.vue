@@ -54,6 +54,8 @@
               :product="activeProduct"
               :addons-bundle-option="addonsBundleOption"
               :production-time-bundle-option="productionTimeBundleOption"
+              :size-bundle-option="sizeBundleOption"
+              :sizes="sizes"
               :add-to-cart="onAddToCartHandler"
               :disabled="isSubmitting"
               @next-step="nextStep"
@@ -87,11 +89,12 @@ import CartItem from 'core/modules/cart/types/CartItem';
 import {
   ImageUploadMethod,
   vuexTypes as budsiesTypes,
-  BodypartOption
+  BodypartOption,
+  BodyPartValueContentType
 } from 'src/modules/budsies';
 import ServerError from 'src/modules/shared/types/server-error';
 import foreversCreationWizardPersistedStateService from 'theme/helpers/forevers-creation-wizard-persisted-state.service';
-import { CustomerImage } from 'src/modules/shared';
+import { CustomerImage, getProductDefaultPrice } from 'src/modules/shared';
 
 import MProductTypeChooseStep from './OForeversCreationWizard/m-product-type-choose-step.vue';
 import MImageUploadStep from './OForeversCreationWizard/m-image-upload-step.vue';
@@ -104,6 +107,7 @@ import ForeversWizardImageUploadStepData from '../interfaces/forevers-wizard-ima
 import ForeversWizardPetInfoStepData from '../interfaces/forevers-wizard-pet-info-step-data.interface';
 import ForeversWizardCustomizeStepData from '../interfaces/forevers-wizard-customize-step-data.interface';
 import ForeversCreationWizardPersistedState from '../interfaces/forevers-creation-wizard-persisted-state.interface';
+import SizeOption from '../interfaces/size-option';
 
 export default Vue.extend({
   name: 'OForeversCreationWizard',
@@ -152,6 +156,7 @@ export default Vue.extend({
         addons: [],
         description: undefined,
         productionTime: undefined,
+        size: undefined,
         quantity: 1
       } as ForeversWizardCustomizeStepData,
 
@@ -193,6 +198,42 @@ export default Vue.extend({
     },
     productionTimeBundleOption (): BundleOption | undefined {
       return this.getBundleOption('production time');
+    },
+    sizeBundleOption (): BundleOption | undefined {
+      return this.getBundleOption('product');
+    },
+    sizes (): SizeOption[] {
+      if (!this.sizeBundleOption) {
+        return [];
+      }
+
+      let availableSizes: SizeOption[] = [];
+      for (const productLink of this.sizeBundleOption.product_links) {
+        if (
+          !productLink.product ||
+          ['simpleForeversDog', 'simpleForeversCat', 'simpleForeversOther']
+            .includes(productLink.product.sku)
+        ) {
+          continue;
+        }
+
+        const price = getProductDefaultPrice(productLink.product, {}, false);
+
+        availableSizes.push({
+          id: String(productLink.product.id),
+          label: productLink.product.name,
+          finalPrice: price.special ? price.special : price.regular,
+          value: productLink.product.sku,
+          isSelected: false,
+          contentTypeId: BodyPartValueContentType.IMAGE,
+          image: productLink.product.image,
+          optionId: this.sizeBundleOption.option_id,
+          optionValueId: productLink.id.toString(),
+          group: 'default'
+        });
+      }
+
+      return availableSizes;
     },
     existingCartItem (): CartItem | undefined {
       return this.cartItems.find(({ plushieId }) => plushieId && String(plushieId) === this.existingPlushieId);
@@ -391,6 +432,21 @@ export default Vue.extend({
 
       this.customizeStepData.productionTime = productOption.extension_attributes.bundle_options[this.productionTimeBundleOption.option_id].option_selections[0];
     },
+    fillSizeOption (cartItem: CartItem): void {
+      const productOption = cartItem.product_option;
+      this.customizeStepData.size = undefined;
+      if (!this.sizeBundleOption || !productOption) {
+        return;
+      }
+
+      const selectedBundleOption = productOption.extension_attributes.bundle_options[this.sizeBundleOption.option_id];
+
+      if (!selectedBundleOption) {
+        return;
+      }
+
+      this.customizeStepData.size = this.sizes.find((size) => Number.parseInt(size.optionValueId, 10) === selectedBundleOption.option_selections[0])
+    },
     fillImageUploadStepDataFromCartItem (cartItem: CartItem): void {
       this.imageUploadStepData.uploadMethod = cartItem.uploadMethod
         ? cartItem.uploadMethod as ImageUploadMethod
@@ -406,6 +462,7 @@ export default Vue.extend({
       this.fillBodypartsValues(cartItem);
       this.fillAddons(cartItem);
       this.fillProductionTime(cartItem);
+      this.fillSizeOption(cartItem);
       this.customizeStepData.description = cartItem.plushieDescription;
       this.customizeStepData.quantity = cartItem.qty;
     },
@@ -620,6 +677,21 @@ export default Vue.extend({
           this.addonsBundleOption.option_id,
           1,
           newValue
+        );
+      },
+      immediate: false
+    },
+    'customizeStepData.size': {
+      handler (newValue: SizeOption | undefined) {
+        if (!this.sizeBundleOption) {
+          Logger.error('sizeBundleOption is not defined while attempt to set size was performed', 'budsies')();
+          return
+        }
+
+        this.setBundleOptionValue(
+          this.sizeBundleOption.option_id,
+          1,
+          newValue ? [Number.parseInt(newValue.optionValueId, 10)] : []
         );
       },
       immediate: false
