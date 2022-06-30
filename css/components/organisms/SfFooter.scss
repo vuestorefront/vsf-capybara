@@ -6,6 +6,8 @@
   }
 
   .m-newsletter-subscription {
-    --c-text: var(--footer-column-title-color);
+    ._success-message {
+      --c-text: var(--footer-column-title-color);
+    }
   }
 }
