@@ -125,7 +125,7 @@
           name="'Size'"
           tag="div"
         >
-          <m-bodypart-option-configurator
+          <m-plushie-size-selector
             name="pillow_size"
             v-model="size"
             :options="sizes"
@@ -401,6 +401,7 @@ import ServerError from 'src/modules/shared/types/server-error';
 import ACustomProductQuantity from '../atoms/a-custom-product-quantity.vue';
 import MArtworkUpload from '../molecules/m-artwork-upload.vue';
 import MBodypartOptionConfigurator from '../molecules/m-bodypart-option-configurator.vue';
+import MPlushieSizeSelector from '../molecules/m-plushie-size-selector.vue';
 import SizeOption from '../interfaces/size-option';
 import ProductionTimeOption from '../interfaces/production-time-option.interface';
 import getProductionTimeOptions from '../../helpers/get-production-time-options';
@@ -437,7 +438,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
     SfHeading,
     SfSelect,
     MBlockStory,
-    MProductionTimeSelector
+    MProductionTimeSelector,
+    MPlushieSizeSelector
   },
   inject: {
     window: { from: 'WindowObject' },
@@ -529,7 +531,8 @@ export default (Vue as VueConstructor<Vue & InjectedServices>).extend({
 
         availableSizes.push({
           id: String(productLink.product.id),
-          label: productLink.product.name + ' - $' + (price.special ? price.special : price.regular),
+          label: productLink.product.name,
+          finalPrice: price.special ? price.special : price.regular,
           value: productLink.product.sku,
           isSelected: false,
           contentTypeId: BodyPartValueContentType.IMAGE,
