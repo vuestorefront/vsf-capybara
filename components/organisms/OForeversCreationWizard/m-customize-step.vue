@@ -25,6 +25,7 @@
 
       <m-plushie-size-selector
         name="pillow_size"
+        class="_options-list"
         v-model="size"
         :show-full-price="false"
         :show-most-popular-icon="true"
