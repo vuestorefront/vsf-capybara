@@ -1,5 +1,5 @@
 <template>
-  <div class="storyblok-newsletter-subscribe-form">
+  <div class="storyblok-newsletter-subscribe-form" :style="styles" :class="cssClasses">
     <MNewsletterSubscription
       name="storyblock-newsletter-subscription-form"
     />
