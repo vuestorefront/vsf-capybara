@@ -68,7 +68,7 @@ export default Blok.extend({
     },
     reviewsLink (): string {
       if (!this.itemData.link_url.url) {
-        return 'reviews';
+        return '/reviews';
       }
       return this.itemData.link_url.url;
     },
