@@ -1,0 +1,188 @@
+:root {
+
+    /* 
+        ================
+        Table of content
+        ================ */
+    
+    
+    /*  0. Imports
+        1. Primary and Secondary Colors
+        2. Border Radius Variables
+        3. Border Width Variables
+        4. Box Shadow Variables
+        5. Basic Theming Properties    - Space to override the CSS for basic elements in theme
+        6. Advance Theming Properties     - Space to override the CSS for advance elements in theme
+    */
+    
+    
+    /*  0. Imports */
+        @import "~@storefront-ui/shared/styles/helpers/breakpoints";
+    
+    /*  1. Primary and Secondary Colors */
+        // @include generate-color-variants(--_c-green-primary, #33cccc);
+        // @include generate-color-variants(--_c-green-secondary, #ccffff);
+        // @include generate-color-variants(--_c-yellow-primary, #ffff00);
+        // @include generate-color-variants(--_c-yellow-secondary, #ffff99);
+        
+        //  Color variants
+        // @include assign-color-variants(--c-primary, --_c-green-primary);
+        // @include assign-color-variants(--c-secondary, --_c-yellow-primaryy);
+        // @include assign-color-variants(--c-primary-variant, --_c-green-secondary);
+        // @include assign-color-variants(--c-secondary-variant, ---_c-yellow-secondary);
+    
+    
+    
+    /*  2. Border Radius Variables*/
+        --border-radius-s: 2px;
+        --border-radius-m: 4px;
+        --border-radius-l: 8px;
+        --border-radius-circle: 50%;
+        --border-radius-pill: 9999px;
+    
+    
+    /* 3. Border Width Variables*/
+        --border-width-s: 1px;
+        --border-width-m: 1.168px;
+        --border-width-l: 2.6px;
+    
+    
+        /* 4. Box Shadow Variables*/
+        --box-shadow-s: 0px 4px 4px var(--c-gray);
+        --box-shadow-m: 0px 4px 11px rgba(29, 31, 34, 0.1) ;
+        --box-shadow-l: 0px 4px 15px rgba(29, 31, 34, 0.1);
+    
+    
+    /* 5. Basic Theming Properties*/
+        .sf-button {
+            // border-radius: var(--button-border-radius, 0);
+        }
+    
+        .sf-divider {
+            // border: var(--divider-border, var(--divider-border-style, solid) var(--divider-border-color, var(--c-light)));
+        }
+    
+        .sf-quantity-selector {
+            // width: 100%;
+            // border-radius: 0;
+            // background-color: none;
+        }
+    
+        .notification {
+            // max-width: 100%;
+            // border-radius: 0;
+            // @include for-mobile {
+            //   max-width: 100%;
+            //   border-radius: 0;
+            // }
+        }
+    
+        .sf-search-bar__input {
+            // border: var(--search-bar-border, var(--search-bar-border-style, solid) var(--search-bar-border-color, var(--c-dark-variant)));
+            // border-width: var(--search-bar-border-width, 0 0 2px 0);
+        }
+        
+        .sf-list .sf-list__item {
+            // padding: 0; 
+            // margin: 0;
+            // @include for-mobile {
+                // padding: 0; 
+                // margin: 0;
+            // }
+        }
+    
+        .sf-bottom-navigation {
+            // background-color: orange;
+            // @include for-mobile {
+                // height: auto;
+            // }
+            // height: auto;
+        }
+     
+        .sf-footer-column__title {
+            // color: none;
+        }
+    
+    
+    /* 6. Advance Theming Properties*/
+        .sf-icon__badge {
+            // width: 1.25rem;
+            // height: 1.25rem;
+            // padding: 2px 4px;
+            // border-radius: calc(var(--bage-line-height) * 1rem);
+            // background: var(--c-danger);
+            // font-size: var(--font-2xs);
+            // line-height: 1;
+        }
+    
+        .sf-button {
+            //  width: var(--button-size, var(--button-width));
+            //  height: var(--button-size, var(--button-height));
+            //  color: var(--button-color, var(--c-light-variant));
+            //  background: var(--button-background, var(--c-primary));
+            //  box-shadow: var(--button-box-shadow);
+            //  text-transform: var(--button-text-transform, uppercase);
+            //  transition: var(--button-transition, box-shadow 150ms ease-in-out);
+            //  border-radius: var(--button-border-radius, 0);
+            //  font: var(--button-font, var(--button-font-weight, var(--font-semibold)) var(--button-font-size, var(--font-base))/var(--button-font-line-height, 1.2) var(--button-font-family, var(--font-family-secondary)));
+            //  border: var(--button-border, var(--button-border-style, solid) var(--button-border-color, var(--c-primary)));
+            //  border-width: var(--button-border-width, 0);
+        }
+    
+        .sf-circle-icon {
+            // background: var(--c-primary);
+            // box-shadow: 0 0 0 0.3125rem rgba(var(--c-primary-base), 0.3);
+            // border-radius: 50%;
+        }
+    
+        .sf-heading {
+            // font-family: var(--font-family-secondary);
+            // &__description {
+            //     font-family: var(--font-family-secondary);
+            // }
+        }
+    
+        .sf-menu-item {
+            // text-transform: var(--menu-item-text-transform);
+            // font: var(--menu-item-font, var(--menu-item-font-weight, var(--font-normal)) var(--menu-item-font-size, var(--font-base))/var(--menu-item-font-line-height, 1.4) var(--menu-item-font-family, var(--font-family-secondary)));
+            // font-weight: 0;
+            // line-height: 1;
+            // font-family: ;
+        }
+    
+        .sf-search-bar {
+            // background: var(--search-bar-background);
+            // padding: var(--search-bar-padding);
+            // width: var(--search-bar-width);
+            // height: var(--search-bar-height, 2rem);
+            // &__input {
+            //     color: black;
+            // }
+        }
+    
+        .sf-overlay {
+            // background-color: rgba(var(--c-gray-base), 0.7);
+        }
+    
+        .sf-price {
+            // &__regular {
+            //     color: var(--price-regular-color, var(--c-text));
+            //     font: var(--price-regular-font, var(--price-regular-font-weight, var(--font-medium)) var(--price-regular-font-size, var(--font-lg))/var(--price-regular-font-line-height, 1.6) var(--price-regular-font-family, var(--font-family-secondary)));
+            // }
+            // &__special {
+            //     color: var(--price-regular-color, var(--c-text));
+            //     font: var(--price-regular-font, var(--price-regular-font-weight, var(--font-medium)) var(--price-regular-font-size, var(--font-lg))/var(--price-regular-font-line-height, 1.6) var(--price-regular-font-family, var(--font-family-secondary)));
+            // }
+            // &__old {
+            //     color: var(--price-regular-color, var(--c-text));
+            //     font: var(--price-regular-font, var(--price-regular-font-weight, var(--font-medium)) var(--price-regular-font-size, var(--font-lg))/var(--price-regular-font-line-height, 1.6) var(--price-regular-font-family, var(--font-family-secondary)));
+            // }
+        }
+    
+        .sf-bar {
+            // height: var(--bar-height, 3.125rem);
+            // background-color: var(--bar-background, var(--c-light));
+            // font: var(--bar-font, var(--bar-font-weight, var(--font-medium)) var(--bar-font-size, var(--font-base))/var(--bar-font-line-height, 1.6) var(--bar-font-family, var(--font-family-secondary)));
+        }
+    
+    }
