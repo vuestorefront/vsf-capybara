@@ -9,9 +9,7 @@
       :success-message="successMessage"
       @email-changed="onEmailChanged"
       @submit="subscribe"
-    >
-      <slot />
-    </m-subscription-form>
+    />
   </div>
 </template>
 
