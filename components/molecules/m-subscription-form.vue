@@ -27,13 +27,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
-import { SfInput } from '@storefront-ui/vue';
-import MSpinnerButton from 'theme/components/molecules/m-spinner-button.vue';
 import { required, email } from 'vuelidate/lib/validators';
 
-function serverErrorValidator () {
-  return !this.errorMessage;
+import { SfInput } from '@storefront-ui/vue';
+
+import MSpinnerButton from 'theme/components/molecules/m-spinner-button.vue';
+
+function serverErrorValidator (value: string, siblings: any, vm: any) {
+  return !vm.errorMessage;
 }
 
 export default Vue.extend({
