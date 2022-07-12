@@ -45,8 +45,8 @@ export default Vue.extend({
     },
     buttonText: {
       type: String,
-      default: function () {
-        return this.$t('Join')
+      default: function (): string {
+        return this.$t('Join').toString()
       }
     },
     isSubmitting: {
@@ -55,8 +55,8 @@ export default Vue.extend({
     },
     successMessage: {
       type: String,
-      default: function () {
-        return this.$t('Thank you for your subscription!')
+      default: function (): string {
+        return this.$t('Thank you for your subscription!').toString();
       }
     },
     isSuccess: {
@@ -89,8 +89,8 @@ export default Vue.extend({
       }
 
       return !this.$v.email.required
-        ? this.$t('Field is required.')
-        : this.$t('Please provide valid e-mail address.')
+        ? this.$t('Field is required.').toString()
+        : this.$t('Please provide valid e-mail address.').toString()
     }
   },
   methods: {
