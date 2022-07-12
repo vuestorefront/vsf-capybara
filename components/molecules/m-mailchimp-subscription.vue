@@ -14,9 +14,11 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
 import MSubscriptionForm from './m-subscription-form.vue';
 
-export default {
+export default Vue.extend({
   name: 'MMailchimpSubscription',
   components: {
     MSubscriptionForm
@@ -40,7 +42,7 @@ export default {
       required: true
     }
   },
-  data (): Record<string, any> {
+  data () {
     return {
       isSubmitting: false,
       isSuccessSubscribed: false,
@@ -51,7 +53,7 @@ export default {
     onEmailChanged (): void {
       this.errorMessage = '';
     },
-    subscribe (email: string): void {
+    async subscribe (email: string): Promise<void> {
       if (this.isSubmitting) {
         return;
       }
@@ -59,24 +61,26 @@ export default {
       this.errorMessage = '';
       this.isSubmitting = true;
 
-      this.$store.dispatch('budsies/createMailchimpSubscription', {
-        email,
-        listId: this.listId
-      }).then(res => {
-        if (res.result.errorMessage) {
-          this.errorMessage = res.result.errorMessage;
+      try {
+        const response = await this.$store.dispatch('budsies/createMailchimpSubscription', {
+          email,
+          listId: this.listId
+        })
+
+        if (response.result.errorMessage) {
+          this.errorMessage = response.result.errorMessage;
           return;
         }
 
-        if (+res.resultCode !== 200) {
+        if (Number.parseInt(response.resultCode, 10) !== 200) {
           return;
         }
 
         this.isSuccessSubscribed = true;
-      }).finally(() => {
+      } finally {
         this.isSubmitting = false;
-      });
+      }
     }
   }
-};
+});
 </script>

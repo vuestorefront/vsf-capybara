@@ -27,7 +27,7 @@ export default {
       default: 'newsletter-subscription-form'
     }
   },
-  data (): Record<string, any> {
+  data () {
     return {
       isSubmitting: false,
       isSuccessSubscribed: false,
@@ -38,7 +38,7 @@ export default {
     onEmailChanged (): void {
       this.errorMessage = '';
     },
-    subscribe (email: string): void {
+    async subscribe (email: string): Promise<void> {
       if (this.isSubmitting) {
         return;
       }
@@ -46,22 +46,24 @@ export default {
       this.errorMessage = '';
       this.isSubmitting = true;
 
-      this.$store.dispatch('budsies/createNewsletterSubscription', {
-        email
-      }).then(res => {
-        if (res.result.errorMessage) {
-          this.errorMessage = res.result.errorMessage;
+      try {
+        const response = await this.$store.dispatch('budsies/createNewsletterSubscription', {
+          email
+        })
+
+        if (response.result.errorMessage) {
+          this.errorMessage = response.result.errorMessage;
           return;
         }
 
-        if (+res.resultCode !== 200) {
+        if (Number.parseInt(response.resultCode, 10) !== 200) {
           return;
         }
 
         this.isSuccessSubscribed = true;
-      }).finally(() => {
+      } finally {
         this.isSubmitting = false;
-      });
+      }
     }
   }
 };
