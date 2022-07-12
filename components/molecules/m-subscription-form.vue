@@ -33,7 +33,7 @@ import { SfInput } from '@storefront-ui/vue';
 
 import MSpinnerButton from 'theme/components/molecules/m-spinner-button.vue';
 
-function serverErrorValidator (value: string, siblings: any, vm: any) {
+function serverErrorValidator (value: string, vm: any): boolean {
   return !vm.errorMessage;
 }
 
