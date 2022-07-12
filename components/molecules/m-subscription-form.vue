@@ -5,6 +5,7 @@
     <form @submit.prevent="subscribe" class="_form" v-show="displayForm">
       <SfInput
         v-model="email"
+        class="_input"
         :name="emailInputName"
         :label="$t('E-mail address')"
         :disabled="isSubmitting"
@@ -128,6 +129,10 @@ export default Vue.extend({
   ._form {
     display: flex;
     align-items: flex-start;
+
+    ._input {
+      flex: 1;
+    }
   }
 
   ::v-deep .sf-input {
