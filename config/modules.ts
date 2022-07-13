@@ -35,7 +35,7 @@ const extendUrlVuex = {
         return result
       }
 
-      await mappingFallbackForUrlRewrite(context, payload);
+      return mappingFallbackForUrlRewrite(context, payload);
     }
   }
 }
