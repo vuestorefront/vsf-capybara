@@ -16,7 +16,7 @@ import { InjectType } from 'src/modules/shared';
 
 import MMailingListSubscription from 'theme/components/molecules/m-mailing-list-subscription.vue';
 
-import MailListSubscriptionFormData from './interfaces/mailchimp-subscription-form-data.interface';
+import MailListSubscriptionFormData from './interfaces/mailing-list-subscription-form-data.interface';
 
 interface InjectedServices {
   componentWidthCalculator: ComponentWidthCalculator
