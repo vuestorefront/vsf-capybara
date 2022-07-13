@@ -90,10 +90,11 @@ export default Vue.extend({
   },
   methods: {
     onEmailInput (): void {
-      this.$emit('email-changed', this.email);
+      this.errorMessage = '';
     },
     async onSubmitForm (): Promise<void> {
       this.$v.$touch();
+      this.errorMessage = '';
 
       if (this.$v.$invalid) {
         return;
@@ -104,7 +105,6 @@ export default Vue.extend({
       }
 
       this.isSubmitting = true;
-      this.errorMessage = '';
 
       try {
         const response = await this.subscribeAction(this.email);
