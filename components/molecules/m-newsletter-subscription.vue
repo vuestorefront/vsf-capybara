@@ -2,11 +2,7 @@
   <div class="m-newsletter-subscription">
     <m-subscription-form
       :name="name"
-      :is-submitting="isSubmitting"
-      :is-success="isSuccessSubscribed"
-      :error-message="errorMessage"
-      @email-changed="onEmailChanged"
-      @submit="subscribe"
+      :subscribe-action="createNewsletterSubscription"
     >
       <slot />
     </m-subscription-form>
@@ -14,9 +10,13 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
+import Task from '@vue-storefront/core/lib/sync/types/Task';
+
 import MSubscriptionForm from './m-subscription-form.vue';
 
-export default {
+export default Vue.extend({
   name: 'MNewsletterSubscription',
   components: {
     MSubscriptionForm
@@ -27,44 +27,12 @@ export default {
       default: 'newsletter-subscription-form'
     }
   },
-  data () {
-    return {
-      isSubmitting: false,
-      isSuccessSubscribed: false,
-      errorMessage: ''
-    };
-  },
   methods: {
-    onEmailChanged (): void {
-      this.errorMessage = '';
-    },
-    async subscribe (email: string): Promise<void> {
-      if (this.isSubmitting) {
-        return;
-      }
-
-      this.errorMessage = '';
-      this.isSubmitting = true;
-
-      try {
-        const response = await this.$store.dispatch('budsies/createNewsletterSubscription', {
-          email
-        })
-
-        if (response.result.errorMessage) {
-          this.errorMessage = response.result.errorMessage;
-          return;
-        }
-
-        if (Number.parseInt(response.resultCode, 10) !== 200) {
-          return;
-        }
-
-        this.isSuccessSubscribed = true;
-      } finally {
-        this.isSubmitting = false;
-      }
+    createNewsletterSubscription (email: string): Promise<Task> {
+      return this.$store.dispatch('budsies/createNewsletterSubscription', {
+        email
+      })
     }
   }
-};
+});
 </script>

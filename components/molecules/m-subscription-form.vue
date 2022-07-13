@@ -2,7 +2,7 @@
   <div class="m-subscription-form">
     <slot />
 
-    <form @submit.prevent="subscribe" class="_form" v-show="displayForm">
+    <form @submit.prevent="onSubmitForm" class="_form" v-show="displayForm">
       <SfInput
         v-model="email"
         class="_input"
@@ -26,10 +26,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { PropType } from 'vue';
 import { required, email } from 'vuelidate/lib/validators';
 
 import { SfInput } from '@storefront-ui/vue';
+import Task from '@vue-storefront/core/lib/sync/types/Task';
 
 import MSpinnerButton from 'theme/components/molecules/m-spinner-button.vue';
 
@@ -51,28 +52,23 @@ export default Vue.extend({
         return this.$t('Join').toString()
       }
     },
-    isSubmitting: {
-      type: Boolean,
-      default: false
-    },
     successMessage: {
       type: String,
       default: function (): string {
         return this.$t('Thank you for your subscription!').toString();
       }
     },
-    isSuccess: {
-      type: Boolean,
-      default: false
-    },
-    errorMessage: {
-      type: String,
-      default: ''
+    subscribeAction: {
+      type: Function as PropType<(email: string) => Promise<Task>>,
+      required: true
     }
   },
   data () {
     return {
-      email: ''
+      email: '',
+      errorMessage: '',
+      isSuccessSubscribed: false,
+      isSubmitting: false
     };
   },
   computed: {
@@ -80,10 +76,10 @@ export default Vue.extend({
       return this.name + '-email-input';
     },
     displayForm (): boolean {
-      return !this.isSuccess;
+      return !this.isSuccessSubscribed;
     },
     displaySuccessMessage (): boolean {
-      return this.isSuccess;
+      return this.isSuccessSubscribed;
     },
     validationError (): string {
       if (this.errorMessage) {
@@ -99,7 +95,7 @@ export default Vue.extend({
     onEmailInput (): void {
       this.$emit('email-changed', this.email);
     },
-    subscribe (): void {
+    async onSubmitForm (): Promise<void> {
       this.$v.$touch();
 
       if (this.$v.$invalid) {
@@ -110,7 +106,25 @@ export default Vue.extend({
         return;
       }
 
-      this.$emit('submit', this.email);
+      this.isSubmitting = true;
+      this.errorMessage = '';
+
+      try {
+        const response = await this.subscribeAction(this.email);
+
+        if (response.result.errorMessage) {
+          this.errorMessage = response.result.errorMessage;
+          return;
+        }
+
+        if (response.resultCode !== 200) {
+          return;
+        }
+
+        this.isSuccessSubscribed = true;
+      } finally {
+        this.isSubmitting = false;
+      }
     }
   },
   validations: {
