@@ -1,10 +1,11 @@
 {
-    "short_name": "VSF Demo",
-    "name": "Vue Storefront",
+    "short_name": "MyPetsies.com",
+    "name": "Custom Pet Stuffed Animals | Petsies",
     "background_color": "#ffffff",
     "display": "standalone",
     "theme_color": "#ffffff",
-    "start_url": "/pwa.html",
+    "start_url": "/",
+    "scope": "/",
     "icons": [
       {
         "src": "/assets/android-icon-48x48.png",
