@@ -2,7 +2,7 @@
   <div class="m-subscription-form">
     <slot />
 
-    <form @submit.prevent="onSubmitForm" class="_form" v-show="displayForm">
+    <form @submit.prevent="onSubmitForm" class="_form" v-if="displayForm">
       <SfInput
         v-model="email"
         class="_input"
@@ -19,7 +19,7 @@
       </MSpinnerButton>
     </form>
 
-    <div class="_success-message" v-show="displaySuccessMessage">
+    <div class="_success-message" v-else>
       {{ successMessage }}
     </div>
   </div>
@@ -77,9 +77,6 @@ export default Vue.extend({
     },
     displayForm (): boolean {
       return !this.isSuccessSubscribed;
-    },
-    displaySuccessMessage (): boolean {
-      return this.isSuccessSubscribed;
     },
     validationError (): string {
       if (this.errorMessage) {
