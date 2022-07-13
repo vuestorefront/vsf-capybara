@@ -1,6 +1,6 @@
 <template>
   <div class="storyblok-mailing-list-subscribe-form" :style="styles" :class="cssClasses">
-    <m-mailchimp-subscription
+    <m-mailing-list-subscription
       :button-text="buttonText"
       :list-id="listId"
       :success-message="successMessage"
