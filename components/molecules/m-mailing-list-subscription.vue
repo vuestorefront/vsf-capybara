@@ -1,5 +1,5 @@
 <template>
-  <div class="m-mailchimp-subscription">
+  <div class="m-mailing-list-subscription">
     <m-subscription-form
       :name="name"
       :is-submitting="isSubmitting"
@@ -19,14 +19,14 @@ import Vue from 'vue';
 import MSubscriptionForm from './m-subscription-form.vue';
 
 export default Vue.extend({
-  name: 'MMailchimpSubscription',
+  name: 'MMailingListSubscription',
   components: {
     MSubscriptionForm
   },
   props: {
     name: {
       type: String,
-      default: 'mailchimp-subscription-form'
+      default: 'mailing-list-subscription-form'
     },
     buttonText: {
       type: String,
@@ -62,7 +62,7 @@ export default Vue.extend({
       this.isSubmitting = true;
 
       try {
-        const response = await this.$store.dispatch('budsies/createMailchimpSubscription', {
+        const response = await this.$store.dispatch('budsies/createMailingListSubscription', {
           email,
           listId: this.listId
         })

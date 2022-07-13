@@ -1,5 +1,5 @@
 <template>
-  <div class="storyblok-mailchimp-subscribe-form" :style="styles" :class="cssClasses">
+  <div class="storyblok-mailing-list-subscribe-form" :style="styles" :class="cssClasses">
     <m-mailchimp-subscription
       :button-text="buttonText"
       :list-id="listId"
@@ -14,25 +14,25 @@ import { VueConstructor } from 'vue';
 import { Blok, ComponentWidthCalculator } from 'src/modules/vsf-storyblok-module';
 import { InjectType } from 'src/modules/shared';
 
-import MMailchimpSubscription from 'theme/components/molecules/m-mailchimp-subscription.vue';
+import MMailingListSubscription from 'theme/components/molecules/m-mailing-list-subscription.vue';
 
-import MailchimpSubscriptionFormData from './interfaces/mailchimp-subscription-form-data.interface';
+import MailListSubscriptionFormData from './interfaces/mailchimp-subscription-form-data.interface';
 
 interface InjectedServices {
   componentWidthCalculator: ComponentWidthCalculator
 }
 
 export default (Blok as VueConstructor<InstanceType<typeof Blok> & InjectedServices>).extend({
-  name: 'StoryblokMailchimpSubscribeForm',
+  name: 'StoryblokMailingListSubscribeForm',
   components: {
-    MMailchimpSubscription
+    MMailingListSubscription
   },
   inject: {
     componentWidthCalculator: { }
   } as unknown as InjectType<InjectedServices>,
   computed: {
-    itemData (): MailchimpSubscriptionFormData {
-      return this.item as MailchimpSubscriptionFormData;
+    itemData (): MailListSubscriptionFormData {
+      return this.item as MailListSubscriptionFormData;
     },
     buttonText (): string | undefined {
       return this.itemData.button_text;
