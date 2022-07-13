@@ -29,15 +29,8 @@ export default {
   link: [
     {
       rel: 'icon',
-      type: 'image/png',
-      href: '/assets/favicon-32x32.png',
-      sizes: '32x32'
-    },
-    {
-      rel: 'icon',
-      type: 'image/png',
-      href: '/assets/favicon-16x16.png',
-      sizes: '16x16'
+      type: 'image/x-icon',
+      href: '/assets/favicon.ico'
     },
     { rel: 'apple-touch-icon', href: '/assets/apple-touch-icon.png' },
     {
