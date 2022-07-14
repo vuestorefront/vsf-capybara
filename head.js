@@ -39,7 +39,6 @@ export default {
       href: '/assets/favicon-16x16.png',
       sizes: '16x16'
     },
-    { rel: 'apple-touch-icon', href: '/assets/apple-touch-icon.png' },
     { rel: 'manifest', href: '/assets/manifest.json' },
     { rel: 'preconnect', href: 'https://fonts.googleapis.com/', crossorigin: 'anonymous' },
     { rel: 'preconnect', href: 'https://fonts.gstatic.com/', crossorigin: 'anonymous' },
