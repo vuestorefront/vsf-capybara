@@ -1,4 +1,5 @@
 import { VueStorefrontModule } from '@vue-storefront/core/lib/module'
+import { LocalizedRoute } from '@vue-storefront/core/lib/types'
 import { CatalogModule } from '@vue-storefront/core/modules/catalog'
 import { CatalogNextModule } from '@vue-storefront/core/modules/catalog-next'
 import { CartModule } from '@vue-storefront/core/modules/cart'
@@ -7,6 +8,7 @@ import { NotificationModule } from '@vue-storefront/core/modules/notification'
 import { UrlModule } from '@vue-storefront/core/modules/url'
 import { BreadcrumbsModule } from '@vue-storefront/core/modules/breadcrumbs'
 import { GoogleTagManagerModule } from 'src/modules/google-tag-manager';
+import { findRouteByPath } from '@vue-storefront/core/modules/url/helpers'
 import { UserModule } from '@vue-storefront/core/modules/user'
 import { NewsletterModule } from '@vue-storefront/core/modules/newsletter'
 import { StoryblokModule } from 'src/modules/vsf-storyblok-module'
@@ -28,14 +30,20 @@ import registerStoryblokComponents from 'theme/components/storyblok'
 
 const extendUrlVuex = {
   actions: {
-    async mapFallbackUrl (context, payload: any) {
+    async mapFallbackUrl (context, payload: any): Promise<LocalizedRoute | undefined> {
       const result = await forStoryblok(context, payload);
 
       if (result) {
         return result
       }
 
-      return mappingFallbackForUrlRewrite(context, payload);
+      const redirectTargetPath = await mappingFallbackForUrlRewrite(context, payload);
+      if (!redirectTargetPath) {
+        return;
+      }
+
+      const routeByPath = findRouteByPath(redirectTargetPath);
+      return routeByPath || forStoryblok(context, { url: redirectTargetPath, params: payload.params })
     }
   }
 }
