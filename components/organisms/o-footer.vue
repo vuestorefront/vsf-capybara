@@ -129,22 +129,26 @@ export default {
           name: 'Company',
           children: [
             {
-              name: 'About',
+              name: this.$t('About'),
               link: '/about-petsies/'
             },
             {
-              name: 'Blog',
+              name: this.$t('Blog'),
               link: '/blog/',
               target: '_blank'
             },
             {
-              name: 'Refund & Return Policy',
+              name: this.$t('Refund & Return Policy'),
               link: '/craftsmanship-promise/'
             },
             {
-              name: 'Media',
+              name: this.$t('Media'),
               link: '//support.mypetsies.com/support/solutions/folders/13000003990',
               target: '_blank'
+            },
+            {
+              name: this.$t('How it Works'),
+              link: '/how-it-works/'
             }
           ]
         },
@@ -191,7 +195,8 @@ export default {
             { name: this.$t('Resellers'), link: '/partners/' },
             { name: this.$t('Affiliates'), link: '/affiliates' },
             { name: this.$t('Corporate Buying'), link: '/partners/' },
-            { name: this.$t('FAQ'), link: '//support.mypetsies.com/support/home', target: '_blank' }
+            { name: this.$t('FAQ'), link: '//support.mypetsies.com/support/home', target: '_blank' },
+            { name: this.$t('Referral Rewards'), link: '//referrals.mypetsies.com/', target: '_blank' }
           ]
         }
       };
