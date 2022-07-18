@@ -193,7 +193,7 @@ export default {
             { name: this.$t('Veterinarians'), link: '/partners/' },
             { name: this.$t('Become a Partner'), link: '/partners/' },
             { name: this.$t('Resellers'), link: '/partners/' },
-            { name: this.$t('Affiliates'), link: '/affiliates' },
+            { name: this.$t('Affiliates'), link: '/affiliate-home/' },
             { name: this.$t('Corporate Buying'), link: '/partners/' },
             { name: this.$t('FAQ'), link: '//support.mypetsies.com/support/home', target: '_blank' },
             { name: this.$t('Referral Rewards'), link: '//referrals.mypetsies.com/', target: '_blank' }
