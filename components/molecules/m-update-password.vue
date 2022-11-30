@@ -88,6 +88,10 @@ export default {
         currentPassword: this.oldPassword,
         newPassword: this.password
       })
+      this.oldPassword = '';
+      this.password = '';
+      this.rPassword = '';
+      this.$v.$reset();
     }
   },
   validations: {
