@@ -176,7 +176,7 @@ import pick from 'lodash-es/pick';
 import { required, minLength } from 'vuelidate/lib/validators';
 import { unicodeAlpha, unicodeAlphaNum } from '@vue-storefront/core/helpers/validators';
 import { SfTabs, SfInput, SfButton, SfSelect, SfIcon } from '@storefront-ui/vue';
-const Countries = require('@vue-storefront/i18n/resource/countries.json')
+const Countries = require('theme/resource/i18n/resource/countries.json')
 
 export default {
   name: 'OMyAccountShippingDetails',
